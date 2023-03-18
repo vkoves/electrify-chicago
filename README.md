@@ -8,16 +8,14 @@ Sources:
 
 ### Cleanup
 
-Note that the column "# of Buildings" in the Chicago energy benchmarking data gets converted to
-"__of_Buildings" by CSV Parse, which GraphQL does not like. Rename that column to
-"Number of Buildings" and everything is happy!
+GraphQL requires data key names to have no spaces or special characters, so there's a raw data file (only filtered by GHG emissions > 1,000 tons and year = 2020) and a cleaned file that just hast he headers renamed for GraphQL.
 
 ## To-Do List
 
-- [ ] Pick a framework - statically built VueJSS, maybe [VitePress](https://vitepress.dev/guide/getting-started)
-- [ ] Setup landing page with SCSS working
-- [ ] Get CSV data usable and on homepage
-- [ ] Setup domain and build process
+- [x] Pick a framework - statically built VueJSS, maybe [VitePress](https://vitepress.dev/guide/getting-started)
+- [x] Setup landing page with SCSS working
+- [x] Get CSV data usable and on homepage
+- [x] Setup domain and build process
 - [ ] Setup unit tests
 - [ ] Setup linting
 - [ ] Setup Typescript
