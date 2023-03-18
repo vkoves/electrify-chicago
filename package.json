@@ -1,0 +1,8 @@
+{
+  "name": "electrify-chicago",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "git@github.com:vkoves/electrify-chicago.git",
+  "author": "Viktor Köves <3187531+vkoves@users.noreply.github.com>",
+  "license": "MIT"
+}
