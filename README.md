@@ -6,6 +6,8 @@ TODOS:
 - [ ] Pick a framework - statically built VueJSS, maybe [VitePress](https://vitepress.dev/guide/getting-started)
 - [ ] Setup landing page with SCSS working
 - [ ] Get CSV data usable and on homepage
+- [ ] Setup domain and build process
+- [ ] Setup unit tests
 
 Sources:
 
