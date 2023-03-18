@@ -28,3 +28,7 @@ Note that the column "# of Buildings" in the Chicago energy benchmarking data ge
 Run `gridsome develop` to start a local dev server at `http://localhost:8080`
 
 Happy coding 🎉🙌
+
+## Deploys
+
+This site deploys automatically via Netlify by running `gridsome build`.
