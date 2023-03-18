@@ -14,3 +14,38 @@ module.exports = function (api) {
     // Use the Pages API here: https://gridsome.org/docs/pages-api/
   })
 }
+
+/**
+ * From fetching CSV data:
+ * https://gridsome.org/docs/fetching-data/#csv
+ */
+const {readFileSync} = require('fs');
+const parse = require('csv-parse/sync').parse;
+
+const DataDirectory = './src/data/';
+
+// Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
+const BuildingEmissionsDataFile = 'BenchmarkDataRenamed.csv';
+
+module.exports = function (api) {
+  api.loadSource(async (actions) => {
+    const input = readFileSync(`${DataDirectory}${BuildingEmissionsDataFile}`, 'utf8');
+
+    /**
+     * Load in building benchmarks and expose as Buildings collection
+     */
+    const Buildings = parse(input, {
+      columns: true,
+      skip_empty_lines: true,
+    });
+
+    // For debugging, useful to log the first building
+    console.log(Buildings[0]);
+
+    const collection = actions.addCollection('Buildings');
+
+    for (const building of Buildings) {
+      collection.addNode(building);
+    }
+  })
+}

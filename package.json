@@ -11,6 +11,11 @@
     "explore": "gridsome explore"
   },
   "dependencies": {
+    "csv-parse": "^5.3.6",
     "gridsome": "^0.7.0"
+  },
+  "devDependencies": {
+    "sass": "^1.59.3",
+    "sass-loader": "^10.1.1"
   }
 }
