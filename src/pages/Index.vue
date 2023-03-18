@@ -32,10 +32,6 @@ export default {
 
 <template>
   <Layout>
-
-    <!-- Learn how to use images here: https://gridsome.org/docs/images -->
-    <!-- <g-image alt="Example image" src="~/favicon.png" width="135" /> -->
-
     <h1>All Chicago Properties Sorted by Greenhouse Gas Intensity</h1>
 
     <table>
