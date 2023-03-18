@@ -4,5 +4,13 @@
   "main": "index.js",
   "repository": "git@github.com:vkoves/electrify-chicago.git",
   "author": "Viktor Köves <3187531+vkoves@users.noreply.github.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "build": "gridsome build",
+    "develop": "gridsome develop",
+    "explore": "gridsome explore"
+  },
+  "dependencies": {
+    "gridsome": "^0.7.0"
+  }
 }

@@ -1,7 +1,6 @@
 # Electrify Chicago
 
-
-TODOS:
+## To-Do List
 
 - [ ] Pick a framework - statically built VueJSS, maybe [VitePress](https://vitepress.dev/guide/getting-started)
 - [ ] Setup landing page with SCSS working
@@ -12,3 +11,9 @@ TODOS:
 Sources:
 
 - [Chicago Energy Benchmarking - Covered Buildings Data](https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking-Covered-Buildings/g5i5-yz37)
+
+## Running
+
+Run `gridsome develop` to start a local dev server at `http://localhost:8080`
+
+Happy coding 🎉🙌
