@@ -1,5 +1,7 @@
 # Electrify Chicago
 
+A site to publicize some of the most polluting buildings based on the Chicago Energy Benchmarking data published in the City of Chicago Data Portal.
+
 ## Data Import
 
 Sources:
