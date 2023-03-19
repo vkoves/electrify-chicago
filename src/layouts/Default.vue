@@ -49,21 +49,26 @@ body {
 }
 
 .layout {
-  max-width: 760px;
+  max-width: 75rem; // 1200px
   margin: 0 auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  // Account for <footer> for mobile
+  padding-bottom: 7rem;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  height: 80px;
+  margin-bottom: 1rem;
+  height: 5rem;
+
+  a + a { margin-left: 1rem; }
 }
 
 footer {
+  // Stick to bottom of screen on big displays
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -79,6 +84,10 @@ footer {
     align-items: center;
     color: $link-blue;
     gap: 0.5rem;
+  }
+
+  @media (max-width: $mobile-max-width) {
+    position: static;
   }
 }
 </style>
