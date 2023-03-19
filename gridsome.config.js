@@ -30,7 +30,7 @@ module.exports = {
     Building: [
       {
         path: '/:slugSource',
-        component: './src/pages/BuildingDetails.vue',
+        component: './src/templates/BuildingDetails.vue',
       },
     ],
   },
