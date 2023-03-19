@@ -5,22 +5,21 @@
 // Changes here require a server restart.
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
-module.exports = function (api) {
-  api.loadSource(({ addCollection }) => {
+module.exports = function(api) {
+  api.loadSource(({addCollection}) => {
     // Use the Data Store API here: https://gridsome.org/docs/data-store-api/
-  })
+  });
 
-  api.createPages(({ createPage }) => {
+  api.createPages(({createPage}) => {
     // Use the Pages API here: https://gridsome.org/docs/pages-api/
-  })
-}
+  });
+};
 
 /**
  * From fetching CSV data:
  * https://gridsome.org/docs/fetching-data/#csv
  */
 const {readFileSync} = require('fs');
-const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
 
 const DataDirectory = './src/data/';
@@ -28,7 +27,7 @@ const DataDirectory = './src/data/';
 // Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
 const BuildingEmissionsDataFile = 'BenchmarkDataRenamed.csv';
 
-module.exports = function (api) {
+module.exports = function(api) {
   api.loadSource(async (actions) => {
     const input = readFileSync(`${DataDirectory}${BuildingEmissionsDataFile}`, 'utf8');
 
@@ -43,7 +42,7 @@ module.exports = function (api) {
     // For debugging, useful to log the first building
     console.log(BuildingsData[0]);
 
-    const collection = actions.addCollection({ typeName: 'Building' });
+    const collection = actions.addCollection({typeName: 'Building'});
 
     for (const building of BuildingsData) {
       // Make a slugSource that is the property name or the address as a fallback
@@ -51,5 +50,5 @@ module.exports = function (api) {
 
       collection.addNode(building);
     }
-  })
-}
+  });
+};

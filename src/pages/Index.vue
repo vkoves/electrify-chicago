@@ -1,14 +1,14 @@
 <script>
-import { Pager } from 'gridsome';
+import {Pager} from 'gridsome';
 
 export default {
   components: {
-    Pager
+    Pager,
   },
   metaInfo: {
-    title: 'Home'
-  }
-}
+    title: 'Home',
+  },
+};
 </script>
 
 <page-query>
@@ -20,7 +20,6 @@ export default {
       }
       edges {
         node {
-          id
           Address
           PropertyName
           slugSource
@@ -37,8 +36,8 @@ export default {
   }
 </page-query>
 
-  <template>
-  <Layout>
+<template>
+  <DefaultLayout>
     <h1>Electrify Chicago</h1>
 
     <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
@@ -62,7 +61,7 @@ export default {
             <th scope="col" class="numeric">Electricity Use (kBtu)</th>
           </tr>
         </thead>
-        <tr v-for="edge in $page.allBuildings.edges" :key="edge.node.id">
+        <tr v-for="edge in $page.allBuilding.edges" :key="edge.node.id">
           <td class="property-name">
             <a :href="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
@@ -97,7 +96,7 @@ export default {
       </table>
     </div>
 
-    <Pager class="pager" :info="$page.allBuildings.pageInfo"/>
+    <Pager class="pager" :info="$page.allBuilding.pageInfo"/>
 
     <p class="footnote">
       Data Source:
@@ -106,7 +105,7 @@ export default {
         Chicago Energy Benchmarking - Covered Buildings (opens in a new tab)
       </a>
     </p>
-  </Layout>
+  </DefaultLayout>
 </template>
 
 <style lang="scss">

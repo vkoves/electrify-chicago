@@ -14,7 +14,7 @@ query ($id: ID!) {
 </page-query>
 
 <template>
-  <Layout>
+  <DefaultLayout>
     <div>
       <h1 v-html="$page.building.PropertyName" />
 
@@ -46,15 +46,15 @@ query ($id: ID!) {
       </template>
       <template v-else>?</template>
     </div>
-  </Layout>
+  </DefaultLayout>
 </template>
 
 <script>
 export default {
   metaInfo() {
     return {
-      title: this.$page.building.PropertyName
-    }
-  }
-}
+      title: this.$page.building.PropertyName,
+    };
+  },
+};
 </script>

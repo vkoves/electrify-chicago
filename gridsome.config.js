@@ -4,16 +4,21 @@
 // Changes here require a server restart.
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
-const path = require('path')
+const path = require('path');
 
-function addStyleResource (rule) {
+/**
+ * A function that loads in all our global SCSS files
+ *
+ * @param {string} rule A rule?
+ */
+function addStyleResource(rule) {
   rule.use('style-resource')
-    .loader('style-resources-loader')
-    .options({
-      patterns: [
-        path.resolve(__dirname, './src/scss/*.scss'),
-      ],
-    })
+      .loader('style-resources-loader')
+      .options({
+        patterns: [
+          path.resolve(__dirname, './src/scss/*.scss'),
+        ],
+      });
 }
 
 
@@ -25,19 +30,19 @@ module.exports = {
     Building: [
       {
         path: '/:slugSource',
-        component: './src/pages/BuildingDetails.vue'
-      }
-    ]
+        component: './src/pages/BuildingDetails.vue',
+      },
+    ],
   },
 
   // Ensure /scss folder is globally available
-  chainWebpack (config) {
+  chainWebpack(config) {
     // Load variables for all vue-files
-    const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
+    const types = ['vue-modules', 'vue', 'normal-modules', 'normal'];
 
     // or if you use scss
-    types.forEach(type => {
-      addStyleResource(config.module.rule('scss').oneOf(type))
-    })
-  }
-}
+    types.forEach((type) => {
+      addStyleResource(config.module.rule('scss').oneOf(type));
+    });
+  },
+};

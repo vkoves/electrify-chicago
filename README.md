@@ -29,6 +29,14 @@ Run `gridsome develop` to start a local dev server at `http://localhost:8080`
 
 Happy coding 🎉🙌
 
+## Run Linting
+
+Run:
+
+```
+yarn lint-fix
+```
+
 ## Deploys
 
 This site deploys automatically via Netlify by running `gridsome build`.

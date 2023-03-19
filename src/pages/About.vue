@@ -1,5 +1,5 @@
 <template>
-  <Layout>
+  <DefaultLayout>
     <h1>About Us</h1>
 
     <p>
@@ -21,16 +21,16 @@
     </p>
 
     <p>
-      <strong>Important Disclaimer:</strong> Electrify Chicago is an independent project and not affiliated with the city of
-      Chicago.
+      <strong>Important Disclaimer:</strong> Electrify Chicago is an independent project and not
+      affiliated with the city of Chicago.
     </p>
-  </Layout>
+  </DefaultLayout>
 </template>
 
 <script>
 export default {
   metaInfo: {
-    title: 'About us'
-  }
-}
+    title: 'About us',
+  },
+};
 </script>
