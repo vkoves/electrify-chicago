@@ -27,9 +27,10 @@ module.exports = {
   plugins: [],
 
   templates: {
+    // Register building details path
     Building: [
       {
-        path: '/:slugSource',
+        path: '/building/:slugSource',
         component: './src/templates/BuildingDetails.vue',
       },
     ],

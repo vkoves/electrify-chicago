@@ -11,6 +11,8 @@ query ($id: ID!) {
     PropertyName
     TotalGHGEmissions
     YearBuilt
+    DistrictChilledWaterUse
+    DistrictSteamUse
     Wards
     ZIPCode
   }
@@ -59,7 +61,7 @@ query ($id: ID!) {
         </dl>
       </div>
 
-      <h2>Emissions Information</h2>
+      <h2>Emissions & Energy Information</h2>
 
       <dl>
         <div>
@@ -97,6 +99,26 @@ query ($id: ID!) {
           <dd>
             <template v-if="$page.building.ElectricityUse">
               {{ $page.building.ElectricityUse }} kBtu
+            </template>
+            <template v-else>?</template>
+          </dd>
+        </div>
+
+        <div v-if="$page.building.DistrictSteamUse">
+          <dt>District Steam Use</dt>
+          <dd>
+            <template v-if="$page.building.DistrictSteamUse">
+              {{ $page.building.DistrictSteamUse }} kBtu
+            </template>
+            <template v-else>?</template>
+          </dd>
+        </div>
+
+        <div v-if="$page.building.DistrictChilledWaterUse">
+          <dt>District Chilled Water Use</dt>
+          <dd>
+            <template v-if="$page.building.DistrictChilledWaterUse">
+              {{ $page.building.DistrictChilledWaterUse }} kBtu
             </template>
             <template v-else>?</template>
           </dd>

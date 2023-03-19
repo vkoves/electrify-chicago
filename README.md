@@ -4,6 +4,8 @@
 
 A site to publicize some of the most polluting buildings based on the Chicago Energy Benchmarking data published in the City of Chicago Data Portal.
 
+It's powered by [VueJS 2](https://v2.vuejs.org/) and [GridSome](https://gridsome.org/)
+
 ## Data Import
 
 Sources:
@@ -14,7 +16,7 @@ Sources:
 
 GraphQL requires data key names to have no spaces or special characters, so there's a raw data file (only filtered by GHG emissions > 1,000 tons and year = 2020) and a cleaned file that just hast he headers renamed for GraphQL.
 
-## To-Do List
+## General To-Do List
 
 - [x] Pick a framework - statically built VueJSS, maybe [VitePress](https://vitepress.dev/guide/getting-started)
 - [x] Setup landing page with SCSS working
@@ -23,6 +25,16 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [ ] Setup unit tests
 - [ ] Setup linting (ESLint, Prettier, Stylelint)
 - [ ] Setup Typescript
+
+
+## Feature To-Do List
+
+- [ ] Show property owner (needs new data source)
+- [ ] Show % of energy use from the four sources (electric, gas, district chilled water, district steam)
+- [ ] Pre-process data with `numpy` to calculate things like averages for each property and rank of each
+      building overall, in their class, and in their ward
+- [ ] Create ward page that shows data by ward
+- [ ] Switch to realtime data parsing rather than pre-built? (allows for search, more filters)
 
 ## Development
 
