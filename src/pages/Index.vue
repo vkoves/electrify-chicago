@@ -13,22 +13,24 @@ export default {
 
 <page-query>
   query ($page: Int) {
-    allBuildings(sortBy: "GHGIntensity", perPage: 20, page: $page) @paginate {
+    allBuilding(sortBy: "GHGIntensity", perPage: 20, page: $page) @paginate {
       pageInfo {
         totalPages
         currentPage
       }
       edges {
         node {
-          ID
+          id
           Address
           PropertyName
+          slugSource
           GHGIntensity
           GrossFloorArea
           TotalGHGEmissions
           YearBuilt
           ElectricityUse
           NaturalGasUse
+          path
         }
       }
     }
@@ -62,7 +64,9 @@ export default {
         </thead>
         <tr v-for="edge in $page.allBuildings.edges" :key="edge.node.id">
           <td class="property-name">
-            {{ edge.node.PropertyName || edge.node.Address }}
+            <a :href="edge.node.path">
+              {{ edge.node.PropertyName || edge.node.Address }}
+            </a>
           </td>
           <td class="property-address">{{ edge.node.Address }}</td>
           <td class="numeric">

@@ -20,6 +20,16 @@ function addStyleResource (rule) {
 module.exports = {
   siteName: 'Electrify Chicago',
   plugins: [],
+
+  templates: {
+    Building: [
+      {
+        path: '/:slugSource',
+        component: './src/pages/BuildingDetails.vue'
+      }
+    ]
+  },
+
   // Ensure /scss folder is globally available
   chainWebpack (config) {
     // Load variables for all vue-files
