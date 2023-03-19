@@ -20,6 +20,13 @@ a { color: $link-blue; }
     margin-top: 1rem;
 }
 
+dl {
+  dt { font-weight: bold; }
+  dd { margin-left: 0; }
+
+  dd + dt { margin-top: 1rem; }
+}
+
 /**
  * <Pager> styling
  */

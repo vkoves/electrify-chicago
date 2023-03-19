@@ -2,13 +2,16 @@
 query ($id: ID!) {
   building(id: $id) {
     Address
-    PropertyName
+    ElectricityUse
     GHGIntensity
     GrossFloorArea
+    NaturalGasUse
+    NumberOfBuildings
+    PrimaryPropertyType
+    PropertyName
     TotalGHGEmissions
     YearBuilt
-    ElectricityUse
-    NaturalGasUse
+    ZIPCode
   }
 }
 </page-query>
@@ -18,33 +21,55 @@ query ($id: ID!) {
     <div>
       <h1 v-html="$page.building.PropertyName" />
 
-      Address
-      {{ $page.building.Address }}
+      <dl>
+        <dt>Full Address</dt>
+        <dd>{{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}</dd>
 
-      GHG Intensity
-      <template v-if="$page.building.GHGIntensity">
-        {{ $page.building.GHGIntensity }}
-      </template>
-      <template v-else>?</template>
+        <dt>Square Footage</dt>
+        <dd>{{ $page.building.GrossFloorArea }} sq. feet</dd>
 
-      Total GHG Emissions
-      <template v-if="$page.building.TotalGHGEmissions">
-        {{ $page.building.TotalGHGEmissions }}
-      </template>
-      <template v-else>?</template>
+        <dt>Year Built</dt>
+        <dd>{{ $page.building.YearBuilt }}</dd>
 
-      Natural Gas Use
+        <dt>Primary Property Type</dt>
+        <dd>{{ $page.building.PrimaryPropertyType }}</dd>
 
-      <template v-if="$page.building.NaturalGasUse">
-        {{ $page.building.NaturalGasUse }}
-      </template>
-      <template v-else>?</template>
+        <dt>Number of Buildings</dt>
+        <dd>{{ $page.building.NumberOfBuildings }}</dd>
 
-      Electricity Use
-      <template v-if="$page.building.ElectricityUse">
-        {{ $page.building.ElectricityUse }}
-      </template>
-      <template v-else>?</template>
+        <dt>GHG Intensity</dt>
+        <dd>
+          <template v-if="$page.building.GHGIntensity">
+            {{ $page.building.GHGIntensity }} kg CO<sub>2</sub>/sqft
+          </template>
+          <template v-else>?</template>
+        </dd>
+
+        <dt>Total GHG Emissions</dt>
+        <dd>
+          <template v-if="$page.building.TotalGHGEmissions">
+            {{ $page.building.TotalGHGEmissions }} metric tons CO<sub>2</sub>
+          </template>
+          <template v-else>?</template>
+        </dd>
+
+        <dt>Natural Gas Use</dt>
+        <dd>
+          <template v-if="$page.building.NaturalGasUse">
+            {{ $page.building.NaturalGasUse }} kBtu
+          </template>
+          <template v-else>?</template>
+        </dd>
+
+        <dt>Electricity Use</dt>
+        <dd>
+          <template v-if="$page.building.ElectricityUse">
+            {{ $page.building.ElectricityUse }} kBtu
+          </template>
+          <template v-else>?</template>
+        </dd>
+      </dl>
+
     </div>
   </DefaultLayout>
 </template>
