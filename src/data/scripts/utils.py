@@ -1,6 +1,8 @@
 import pandas
 import logging
 
+from typing import List
+
 # Fetch a CSV and clean it up, keeping the cols_to_keep and converting the
 # number_cols to numbers
 def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pandas.DataFrame:
@@ -19,7 +21,7 @@ def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pandas.DataFrame:
 # this function takes in a dataframe object, and reformats it to match our needs as a json object
 def json_data_builder(
     dataframe, outer_tag="default", is_array=True, array_key="emissionsByYear"
-) -> list:
+) -> List[str]:
     '''
     Process the a CSV dataframe into a JSON object
     '''
