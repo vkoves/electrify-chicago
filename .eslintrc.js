@@ -18,5 +18,6 @@ module.exports = {
   ],
   'rules': {
     'max-len': ['error', {'code': 100}],
+    'vue/multi-word-component-names': ['off'],
   },
 };

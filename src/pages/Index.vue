@@ -43,8 +43,7 @@ export default {
     <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 
     <div class="table-cont">
-      <!-- Add tabindex for keyboard access to scrollable area -->
-      <table tabindex="0">
+      <table>
         <thead>
           <tr>
             <th scope="col">Property Name / address</th>
@@ -100,6 +99,7 @@ export default {
 
     <p class="footnote">
       Data Source:
+      <!-- eslint-disable-next-line max-len -->
       <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking-Covered-Buildings/g5i5-yz37"
         target="_blank" rel="noopener noreferrer">
         Chicago Energy Benchmarking - Covered Buildings (opens in a new tab)
@@ -118,6 +118,11 @@ export default {
   table {
     width: 80rem;
     border-collapse: collapse;
+
+    a {
+      font-weight: bold;
+      text-decoration: none;
+    }
 
     thead {
       border-bottom: solid 0.125rem $grey-dark;
