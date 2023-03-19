@@ -90,8 +90,6 @@ export default {
 </template>
 
 <style lang="scss">
-@import "@/scss/colors.scss";
-
 .table-cont {
   width: 100%;
   overflow-x: auto;

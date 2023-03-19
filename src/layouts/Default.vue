@@ -9,9 +9,13 @@
 <template>
   <div>
     <div class="layout">
+      <!-- TODO: Split to a component-->
       <header class="header">
         <strong>
-          <g-link to="/">{{ $static.metadata.siteName }}</g-link>
+          <g-link to="/">
+              <g-image src="~/images/electrify-chicago-logo.svg"
+                alt="Electrify Chicago Homepage" class="site-logo" />
+          </g-link>
         </strong>
         <nav class="top-nav">
           <g-link class="nav-link" to="/">Home</g-link>
@@ -24,6 +28,7 @@
 
     </div>
 
+    <!-- TODO: Split to a component -->
     <footer>
       <div>
         Created by <a href="https://viktorkoves.com/">Viktor Köves</a>
@@ -39,15 +44,6 @@
 </template>
 
 <style lang="scss">
-@import "@/scss/colors.scss";
-
-body {
-  font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
-  margin:0;
-  padding:0;
-  line-height: 1.5;
-}
-
 .layout {
   max-width: 75rem; // 1200px
   margin: 0 auto;
@@ -57,14 +53,24 @@ body {
   padding-bottom: 7rem;
 }
 
-.header {
+header.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
   height: 5rem;
 
-  a + a { margin-left: 1rem; }
+  .site-logo {
+    height: 3rem;
+    width: auto;
+  }
+
+  nav a {
+    color: $link-blue;
+    font-weight: bold;
+
+    + a { margin-left: 1rem; }
+  }
 }
 
 footer {

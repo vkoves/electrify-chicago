@@ -1,7 +1,27 @@
 <template>
   <Layout>
-    <h1>About us</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error doloremque omnis animi, eligendi magni a voluptatum, vitae, consequuntur rerum illum odit fugit assumenda rem dolores inventore iste reprehenderit maxime! Iusto.</p>
+    <h1>About Us</h1>
+
+    <p>
+      Electrify Chicago is a project looking to shed light onto one of the biggest source's of
+      Chicago's CO<sub>2</sub> emissions - buildings. In showing more details about some of the
+      city's most polluting buildings, we hope to encourage these buildings to electrify,
+      particularly by mobilizing people related to the building - whether that be students and
+      faculty for a college building or employees and patients at a hospital.
+    </p>
+
+    <h2>Authors</h2>
+
+    <p>
+      Electrify Chicago is a project by <a href="https://viktorkoves.com/">Viktor Köves</a>
+      <a href="https://carbonchallenge.io/">The Carbon Challenge</a>
+      <a href="https://decarbmystate.com/">DecarbMyState</a> and
+    </p>
+
+    <p>
+      <strong>Important Disclaimer:</strong> Electrify Chicago is an independent project and not affiliated with the city of
+      Chicago.
+    </p>
   </Layout>
 </template>
 
