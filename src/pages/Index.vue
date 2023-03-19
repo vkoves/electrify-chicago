@@ -62,9 +62,9 @@ export default {
         </thead>
         <tr v-for="edge in $page.allBuilding.edges" :key="edge.node.id">
           <td class="property-name">
-            <a :href="edge.node.path">
+            <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
-            </a>
+            </g-link>
           </td>
           <td class="property-address">{{ edge.node.Address }}</td>
           <td class="numeric">
