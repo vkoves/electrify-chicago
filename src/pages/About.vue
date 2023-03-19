@@ -13,9 +13,11 @@
     <h2>Authors</h2>
 
     <p>
-      Electrify Chicago is a project by <a href="https://viktorkoves.com/">Viktor Köves</a>
-      <a href="https://carbonchallenge.io/">The Carbon Challenge</a>
-      <a href="https://decarbmystate.com/">DecarbMyState</a> and
+      Electrify Chicago is a project by <a href="https://viktorkoves.com/">Viktor Köves</a>, a
+      Chicago native and climate developer who created
+      <a href="https://carbonchallenge.io/">The Carbon Challenge</a> and was a significant
+      contributor to
+      <a href="https://decarbmystate.com/">DecarbMyState</a>.
     </p>
 
     <p>

@@ -59,6 +59,7 @@ header.header {
   align-items: center;
   margin-bottom: 1rem;
   height: 5rem;
+  border-bottom: solid 0.0625rem $grey;
 
   .site-logo {
     height: 3rem;
@@ -66,10 +67,23 @@ header.header {
   }
 
   nav a {
-    color: $link-blue;
     font-weight: bold;
 
     + a { margin-left: 1rem; }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+    height: auto;
+
+    .site-logo {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    nav { margin: 1rem 0; }
   }
 }
 
@@ -88,7 +102,6 @@ footer {
   a {
     display: inline-flex;
     align-items: center;
-    color: $link-blue;
     gap: 0.5rem;
   }
 

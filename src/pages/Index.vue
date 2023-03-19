@@ -37,7 +37,7 @@ export default {
 
   <template>
   <Layout>
-    <h1>All Chicago Properties Sorted by Greenhouse Gas Intensity</h1>
+    <h1>Chicago Properties by Greenhouse Gas Intensity</h1>
 
     <div class="table-cont">
       <table>
@@ -122,41 +122,5 @@ table {
   }
 
   .unit { font-size: 0.75rem; }
-}
-
-// Pager styling
-nav.pager {
-  display: inline-flex;
-  gap: 1rem;
-  margin-top: 1rem;
-
-  a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $text-main;
-    background-color: $grey;
-    width: 2.5rem;
-    aspect-ratio: 1;
-    text-align: center;
-    border-radius: 0.25rem;
-    text-decoration: none;
-    font-weight: bold;
-
-    &:hover, &:focus {
-      background-color: $grey-dark;
-    }
-
-    &.active {
-      background-color: $orange;
-      cursor: default;
-    }
-  }
-
-  @media (max-width: $mobile-max-width) {
-    gap: 0.25rem;
-
-    a { width: 2rem; }
-  }
 }
 </style>
