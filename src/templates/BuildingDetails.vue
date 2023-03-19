@@ -2,6 +2,8 @@
 query ($id: ID!) {
   building(id: $id) {
     Address
+    DistrictChilledWaterUse
+    DistrictSteamUse
     ElectricityUse
     GHGIntensity
     GrossFloorArea
@@ -9,11 +11,11 @@ query ($id: ID!) {
     NumberOfBuildings
     PrimaryPropertyType
     PropertyName
+    SiteEUI
+    SourceEUI
     TotalGHGEmissions
-    YearBuilt
-    DistrictChilledWaterUse
-    DistrictSteamUse
     Wards
+    YearBuilt
     ZIPCode
   }
 }
@@ -69,6 +71,10 @@ query ($id: ID!) {
           <dd>
             <template v-if="$page.building.GHGIntensity">
               {{ $page.building.GHGIntensity }} kg CO<sub>2</sub>/sqft
+              <br>
+              <div class="average">
+                Avg. is {{ BuildingBenchmarkStats.GHGIntensity.mean }} kg CO<sub>2</sub>/sqft
+              </div>
             </template>
             <template v-else>?</template>
           </dd>
@@ -79,6 +85,26 @@ query ($id: ID!) {
           <dd>
             <template v-if="$page.building.TotalGHGEmissions">
               {{ $page.building.TotalGHGEmissions }} metric tons CO<sub>2</sub>
+            </template>
+            <template v-else>?</template>
+          </dd>
+        </div>
+
+        <div>
+          <dt>Source Energy Usage Intensity (kBtu/sq ft)</dt>
+          <dd>
+            <template v-if="$page.building.SourceEUI">
+              {{ $page.building.SourceEUI }} kBtu
+            </template>
+            <template v-else>?</template>
+          </dd>
+        </div>
+
+        <div>
+          <dt>Site Energy Usage Intensity (kBtu/sq ft)</dt>
+          <dd>
+            <template v-if="$page.building.SiteEUI">
+              {{ $page.building.SiteEUI }} kBtu
             </template>
             <template v-else>?</template>
           </dd>
@@ -138,11 +164,21 @@ query ($id: ID!) {
 </template>
 
 <script>
+// This simple JSON is a lot easier to just use directly than going through GraphQL and it's
+// tiny
+const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
+
+// Log out stats for debugging
+console.log('BuildingBenchmarkStats', BuildingBenchmarkStats);
+
 export default {
   metaInfo() {
     return {
       title: this.$page.building.PropertyName,
     };
+  },
+  data() {
+    return {BuildingBenchmarkStats};
   },
 };
 </script>
@@ -159,4 +195,6 @@ dl {
   flex-wrap: wrap;
   gap: 2rem;
 }
+
+.average { font-size: 0.75rem; }
 </style>

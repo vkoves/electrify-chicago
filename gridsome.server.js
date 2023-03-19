@@ -24,41 +24,46 @@ const parse = require('csv-parse/sync').parse;
 
 const DataDirectory = './src/data/dist/';
 
-// Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
 const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 
 module.exports = function(api) {
   api.loadSource(async (actions) => {
-    const input = readFileSync(`${DataDirectory}${BuildingEmissionsDataFile}`, 'utf8');
-
-    /**
-     * Load in building benchmarks and expose as Buildings collection
-     */
-    const BuildingsData = parse(input, {
-      columns: true,
-      skip_empty_lines: true,
-    });
-
-    // For debugging, useful to log the first building
-    console.log(BuildingsData[0]);
-
-    const collection = actions.addCollection({typeName: 'Building'});
-
-    const collectedBuildingSlugs = [];
-
-    for (const building of BuildingsData) {
-      // Make a slugSource that is the property name or the address as a fallback
-      building.slugSource = building.PropertyName || building.Address;
-
-      // If this is a duplicate value, exit. Comment out this return to debug what these are, but
-      // there were only ~4
-      if (collectedBuildingSlugs.includes(building.slugSource)) {
-        return;
-      }
-
-      collection.addNode(building);
-
-      collectedBuildingSlugs.push(building.slugSource);
-    }
+    loadBuildingBenchmarkData(actions);
   });
 };
+
+/**
+ * Load in the building benchmark data
+ *
+ * @param {unknown} actions The actions class?
+ */
+function loadBuildingBenchmarkData(actions) {
+  const input = readFileSync(`${DataDirectory}${BuildingEmissionsDataFile}`, 'utf8');
+
+  /**
+   * Load in building benchmarks and expose as Buildings collection
+   */
+  const BuildingsData = parse(input, {
+    columns: true,
+    skip_empty_lines: true,
+  });
+
+  const collection = actions.addCollection({typeName: 'Building'});
+
+  const collectedBuildingSlugs = [];
+
+  for (const building of BuildingsData) {
+    // Make a slugSource that is the property name or the address as a fallback
+    building.slugSource = building.PropertyName || building.Address;
+
+    // If this is a duplicate value, exit. Comment out this return to debug what these are, but
+    // there were only ~4
+    if (collectedBuildingSlugs.includes(building.slugSource)) {
+      return;
+    }
+
+    collection.addNode(building);
+
+    collectedBuildingSlugs.push(building.slugSource);
+  }
+}

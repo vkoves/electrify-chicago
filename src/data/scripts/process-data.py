@@ -48,6 +48,14 @@ def calculateBuildingAverages(building_data: pandas.DataFrame) -> str:
     # isn't reasonable for statistical analysis
     benchmark_stats_df = benchmark_stats_df.round(0).astype(int)
 
+    # Rename columns to work with GraphQL (no numbers like '25%')
+    # Rename 50% to median since those tqo are equivalent
+    benchmark_stats_df.rename(index={
+        '25%': 'twentyFifthPercentile',
+        '50%': 'median',
+        '75%': 'seventyFifthPercentile',
+    }, inplace=True)
+
     # Write out the data
     filename = 'building-benchmark-stats.json';
 

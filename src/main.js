@@ -12,6 +12,6 @@ export default function(Vue, {router, head, isClient}) {
     // handle error
     // `info` is a Vue-specific error info, e.g. which lifecycle hook
     // the error was found in. Only available in 2.2.0+
-    console.error('Vue error', error, info, vm);
+    console.error('Vue error', err, info, vm);
   };
 }
