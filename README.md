@@ -24,10 +24,19 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [ ] Setup linting
 - [ ] Setup Typescript
 
+## Development
+
+## Setup
+
+Make sure you have [Yarn](https://yarnpkg.com/) installed, `cd` into the project directory (after cloning it) and run:
+
+```
+yarn install
+```
 
 ## Running
 
-Run `gridsome develop` to start a local dev server at `http://localhost:8080`
+Run `yarn develop` to start a local dev server at `http://localhost:8080`
 
 Happy coding 🎉🙌
 

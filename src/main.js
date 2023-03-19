@@ -7,4 +7,11 @@ import DefaultLayout from '~/layouts/Default.vue';
 export default function(Vue, {router, head, isClient}) {
   // Set default layout as a global component
   Vue.component('DefaultLayout', DefaultLayout);
+
+  Vue.config.errorHandler = function(err, vm, info) {
+    // handle error
+    // `info` is a Vue-specific error info, e.g. which lifecycle hook
+    // the error was found in. Only available in 2.2.0+
+    console.error('Vue error', error, info, vm);
+  };
 }
