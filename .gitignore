@@ -1,4 +1,12 @@
 node_modules/*
 .cache/*
 src/.temp/*
+
+# Ignore root dist directory from `gridsome build`, we need src/data/dist
 dist/*
+
+# Ignore data debug directory, which is just used to view the data, but makes huge
+# JSON files
+src/data/debug/*
+
+**/__pycache__/*

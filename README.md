@@ -63,3 +63,26 @@ yarn lint-fix
 ## Deploys
 
 This site deploys automatically via Netlify by running `gridsome build`.
+
+## Tools
+
+[python](https://www.python.org/) and [pandas](https://pandas.pydata.org/)
+for data processing
+
+### Run Data Processing
+
+If you update the raw data CSVs or the data scripts that post-process them (like if you are adding
+a new statistical analysis), you need to re-run the data processing.
+
+This requires:
+
+- Pip
+- Python3
+
+Run the following commands:
+
+```
+cd src/data
+pip install --no-cache-dir -r requirements.txt
+python3 scripts/process-data.py
+```

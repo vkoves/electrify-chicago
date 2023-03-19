@@ -22,10 +22,10 @@ module.exports = function(api) {
 const {readFileSync} = require('fs');
 const parse = require('csv-parse/sync').parse;
 
-const DataDirectory = './src/data/';
+const DataDirectory = './src/data/dist/';
 
 // Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
-const BuildingEmissionsDataFile = 'BenchmarkDataRenamed.csv';
+const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 
 module.exports = function(api) {
   api.loadSource(async (actions) => {
