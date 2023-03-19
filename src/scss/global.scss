@@ -8,9 +8,17 @@ body {
   line-height: 1.5;
 }
 
+a { color: $link-blue; }
+
+/**
+ * Text helpers
+ */
 .bold { font-weight: bold; }
 
-a { color: $link-blue; }
+.footnote {
+    font-size: 0.75rem;
+    margin-top: 1rem;
+}
 
 /**
  * <Pager> styling

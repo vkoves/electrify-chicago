@@ -50,7 +50,7 @@
   padding-left: 1rem;
   padding-right: 1rem;
   // Account for <footer> for mobile
-  padding-bottom: 7rem;
+  padding-bottom: 5rem;
 }
 
 header.header {
