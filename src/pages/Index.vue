@@ -22,7 +22,7 @@ export default {
         node {
           Address
           PropertyName
-          slugSource
+          PrimaryPropertyType
           GHGIntensity
           GrossFloorArea
           TotalGHGEmissions
@@ -47,26 +47,33 @@ export default {
         <thead>
           <tr>
             <th scope="col">Property Name / address</th>
-            <th scope="col">Address</th>
+            <th scope="col">Primary Property Type</th>
             <th scope="col" class="numeric">
-              Greenhouse Gas Intensity<br>
+              Greenhouse Gas Intensity<br/>
               (kg CO<sub>2</sub>/sqft)
             </th>
             <th scope="col" class="numeric">
-              Total Greenhouse Emissions<br>
+              Total Greenhouse Emissions<br/>
               (metric tons CO<sub>2</sub>)
             </th>
-            <th scope="col" class="numeric">Natural Gas Use (kBtu)</th>
-            <th scope="col" class="numeric">Electricity Use (kBtu)</th>
+            <th scope="col" class="numeric">
+              Natural Gas Use<br/>
+              (kBtu)
+            </th>
+            <th scope="col" class="numeric">
+              Electricity Use<br/>
+              (kBtu)
+            </th>
           </tr>
         </thead>
         <tr v-for="edge in $page.allBuilding.edges" :key="edge.node.id">
           <td class="property-name">
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
-            </g-link>
+            </g-link> <br/>
+            <span class="prop-address">{{ edge.node.Address }}</span>
           </td>
-          <td class="property-address">{{ edge.node.Address }}</td>
+          <td>{{ edge.node.PrimaryPropertyType }}</td>
           <td class="numeric">
             <template v-if="edge.node.GHGIntensity">
               {{ edge.node.GHGIntensity }}
@@ -116,34 +123,41 @@ export default {
   box-sizing: border-box;
 
   table {
-    width: 80rem;
+    width: 100%;
+    /// Scroll if we get below desktop size table
+    min-width: 60rem;
     border-collapse: collapse;
 
     a {
       font-weight: bold;
+      font-size: 1.125rem;
       text-decoration: none;
+      white-space: nowrap;
     }
 
     thead {
-      border-bottom: solid 0.125rem $grey-dark;
-
       tr { background-color: $grey-dark; }
+
+      th {
+        text-align: left;
+        font-size: 0.75rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
     }
 
     tr:nth-of-type(2n + 2) { background-color: $grey; }
 
     th, td {
       padding: 0.5rem;
+      line-height: 1.25;
 
+      &:first-of-type { padding-left: 1rem; }
+      &:last-of-type { padding-right: 1rem; }
       &.numeric { text-align: right; }
     }
 
-    th {
-      text-align: left;
-      font-size: 0.75rem;
-      padding-top: 0;
-      padding-bottom: 0;
-    }
+    .prop-address { font-size: 0.75rem; }
   }
 
   @media (max-width: $mobile-max-width) {

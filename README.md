@@ -21,7 +21,7 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [x] Get CSV data usable and on homepage
 - [x] Setup domain and build process
 - [ ] Setup unit tests
-- [ ] Setup linting
+- [ ] Setup linting (ESLint, Prettier, Stylelint)
 - [ ] Setup Typescript
 
 ## Development
