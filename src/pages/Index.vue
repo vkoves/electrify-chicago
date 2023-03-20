@@ -47,8 +47,6 @@ export default {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
-          GrossFloorArea
-          YearBuilt
         }
       }
     }

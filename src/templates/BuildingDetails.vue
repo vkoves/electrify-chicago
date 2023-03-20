@@ -2,6 +2,9 @@
 query ($id: ID!) {
   building(id: $id) {
     Address
+    ChicagoEnergyRating
+    CommunityArea
+    ENERGYSTARScore
     DistrictChilledWaterUse
     DistrictSteamUse
     ElectricityUse
@@ -42,17 +45,14 @@ query ($id: ID!) {
         {{ $page.building.PropertyName || $page.building.Address }}
       </h1>
 
+      <div class="address">
+        {{ $page.building.Address }}, Chicago IL, {{ Math.round($page.building.ZIPCode) }}
+      </div>
+
       <div class="building-details">
         <h2>Building Info</h2>
 
         <dl>
-          <div>
-            <dt>Full Address</dt>
-            <dd>
-              {{ $page.building.Address }}, Chicago IL, {{ Math.round($page.building.ZIPCode) }}
-            </dd>
-          </div>
-
           <div>
             <dt>Square Footage</dt>
             <dd>
@@ -82,8 +82,35 @@ query ($id: ID!) {
           </div>
 
           <div>
+            <dt>Community Area</dt>
+            <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
+          </div>
+
+          <div>
             <dt>Ward</dt>
             <dd>{{ Math.round($page.building.Wards) }}</dd>
+          </div>
+
+          <div v-if="$page.building.ChicagoEnergyRating">
+            <dt>
+              <a href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html">
+                Chicago Energy Rating
+              </a>
+            </dt>
+            <dd>
+              {{ Math.round($page.building.ChicagoEnergyRating) }} / 4
+            </dd>
+          </div>
+
+          <div v-if="$page.building.ENERGYSTARScore">
+            <dt>
+              <a href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated">
+                Energy Star Score
+              </a>
+            </dt>
+            <dd>
+              {{ Math.round($page.building.ENERGYSTARScore) }} / 100
+            </dd>
           </div>
         </dl>
       </div>
@@ -218,6 +245,11 @@ export default {
   components: {
     StatTile,
   },
+  filters: {
+    titlecase(value) {
+      return value.toLowerCase().replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+    },
+  },
   data() {
     return {
       BuildingBenchmarkStats,
@@ -227,6 +259,13 @@ export default {
 </script>
 
 <style lang="scss">
+h1 { margin-bottom: 0; }
+
+.address {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
 .building-details {
   background: #ededed;
   border-radius: 0.5rem;
@@ -254,5 +293,7 @@ dl {
   }
 
   dd, .stat-tile { height: 100%; }
+
+  .stat-tile { min-width: 18rem; }
 }
 </style>

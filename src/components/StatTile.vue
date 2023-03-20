@@ -131,7 +131,6 @@ export default {
 
 <style lang="scss">
 .stat-tile {
-  min-width: 18rem;
   padding: 1rem;
   background-color: #f5f5f5;
   border: solid 0.01625rem $grey-dark;
