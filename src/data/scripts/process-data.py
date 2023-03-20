@@ -25,7 +25,20 @@ building_cols_to_analyze =  [
     'SourceEUI',
     'SiteEUI',
     'YearBuilt',
-    'GrossFloorArea'
+    'GrossFloorArea',
+    'DistrictSteamUse',
+    'DistrictChilledWaterUse'
+]
+
+# Columns we want to rank for and append ranks to each building's data
+building_cols_to_rank = [
+    'GHGIntensity',
+    'TotalGHGEmissions',
+    'ElectricityUse',
+    'NaturalGasUse',
+    'GrossFloorArea',
+    'SourceEUI',
+    'SiteEUI',
 ]
 
 # Returns the output file if succeeds
@@ -34,10 +47,6 @@ def calculateBuildingAverages(building_data: pandas.DataFrame) -> str:
     data = building_data.copy()
 
     benchmark_stats_df = pandas.DataFrame()
-
-    # Convert our columns to average to numeric data, first by stripping commas
-    data[building_cols_to_analyze] = data[building_cols_to_analyze].apply(
-         lambda x: pandas.to_numeric(x.astype(str).str.replace(',',''), errors='coerce'))
 
     # The details columns we want to keep. Note that 50% = median
     detail_cols_to_keep = [ 'mean', 'min', 'max', '25%', '50%', '75%' ]
@@ -75,13 +84,24 @@ def processBuildingData() -> List[str]:
 
     building_data = get_and_clean_csv(data_directory + building_emissions_file)
 
+    # Convert our columns to analyze to numeric data by stripping commas, otherwise the rankings
+    # are junk
+    building_data[building_cols_to_analyze] = building_data[building_cols_to_analyze].apply(
+         lambda x: pandas.to_numeric(x.astype(str).str.replace(',',''), errors='coerce'))
+
     outputted_paths.append(calculateBuildingAverages(building_data))
 
-    ## TODO: Individual Building Stats to Calculate
-    # Rank for building_cols_to_analyze including percentage
+    # Loop through building_cols_to_rank and calculate both a numeric rank (e.g. #1 highest GHG
+    # Intensity) and a percentage (e.g. top 95% of total GHG emissions)
+    # We use descending on all columns so the biggest emitters are #1, we'll make a separate column
+    # for descending ranks
     # E.g Keating Hall is the #1 building by GHG Intensity, and lowest 25th percentile in footprint
+    for col in building_cols_to_rank:
+        building_data[col + 'Rank'] = building_data[col].rank(ascending=False)
 
-    # df['default_rank'] = df['Number_legs'].rank()
+        # The percentile rank can be ascending, we want to say this building is worse than X% of buildings
+        building_data[col + 'PercentileRank'] = building_data[col].rank(pct=True)
+        building_data[col + 'PercentileRank'] = building_data[col + 'PercentileRank'].round(3)
 
     # Export the data
     output_path = data_out_directory + building_emissions_file_out_name + '.csv'
@@ -114,4 +134,6 @@ if __name__ == '__main__':
         if path:
             print('- ' + path)
 
-    print('\nFor more understandable data, see \'data/debug\' directory');
+    print('\nFor more understandable data, see \'data/debug\' directory')
+
+    print('\nNote: You must restart `gridsome develop` for data changes to take effect.');

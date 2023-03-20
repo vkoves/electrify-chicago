@@ -17,6 +17,20 @@ query ($id: ID!) {
     Wards
     YearBuilt
     ZIPCode
+    GHGIntensityRank
+    GHGIntensityPercentileRank
+    TotalGHGEmissionsRank
+    TotalGHGEmissionsPercentileRank
+    ElectricityUseRank
+    ElectricityUsePercentileRank
+    NaturalGasUseRank
+    NaturalGasUsePercentileRank
+    GrossFloorAreaRank
+    GrossFloorAreaPercentileRank
+    SourceEUIRank
+    SourceEUIPercentileRank
+    SiteEUIRank
+    SiteEUIPercentileRank
   }
 }
 </page-query>
@@ -37,7 +51,14 @@ query ($id: ID!) {
 
           <div>
             <dt>Square Footage</dt>
-            <dd>{{ $page.building.GrossFloorArea }} sq. feet</dd>
+            <dd>
+              <StatTile
+              :building="$page.building"
+              :statKey="'GrossFloorArea'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'sqft'"
+              />
+            </dd>
           </div>
 
           <div>
@@ -65,88 +86,102 @@ query ($id: ID!) {
 
       <h2>Emissions & Energy Information</h2>
 
-      <dl>
+      <dl class="emission-stats">
         <div>
-          <dt>GHG Intensity</dt>
+          <dt>Greenhouse Gas Intensity</dt>
           <dd>
-            <template v-if="$page.building.GHGIntensity">
-              {{ $page.building.GHGIntensity }} kg CO<sub>2</sub>/sqft
-              <br>
-              <div class="average">
-                Avg. is {{ BuildingBenchmarkStats.GHGIntensity.mean }} kg CO<sub>2</sub>/sqft
-              </div>
-            </template>
-            <template v-else>?</template>
+            <StatTile
+              :building="$page.building"
+              :statKey="'GHGIntensity'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'kg CO<sub>2</sub> / sqft'"
+              />
           </dd>
         </div>
 
         <div>
-          <dt>Total GHG Emissions</dt>
+          <dt>Total Greenhouse Gas Emissions</dt>
           <dd>
-            <template v-if="$page.building.TotalGHGEmissions">
-              {{ $page.building.TotalGHGEmissions }} metric tons CO<sub>2</sub>
-            </template>
-            <template v-else>?</template>
+            <StatTile
+              :building="$page.building"
+              :statKey="'TotalGHGEmissions'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'metric tons CO<sub>2</sub>'"
+              />
           </dd>
         </div>
 
         <div>
-          <dt>Source Energy Usage Intensity (kBtu/sq ft)</dt>
+          <dt>Source Energy Usage Intensity</dt>
           <dd>
-            <template v-if="$page.building.SourceEUI">
-              {{ $page.building.SourceEUI }} kBtu
-            </template>
-            <template v-else>?</template>
+            <StatTile
+              :building="$page.building"
+              :statKey="'SourceEUI'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'kBtu / sq ft'"
+              />
           </dd>
         </div>
 
         <div>
-          <dt>Site Energy Usage Intensity (kBtu/sq ft)</dt>
+          <dt>Site Energy Usage Intensity</dt>
           <dd>
-            <template v-if="$page.building.SiteEUI">
-              {{ $page.building.SiteEUI }} kBtu
-            </template>
-            <template v-else>?</template>
+            <StatTile
+              :building="$page.building"
+              :statKey="'SiteEUI'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'kBtu / sq ft'"
+              />
+
+            {{  $page.buildingSiteEUIRank }}
           </dd>
         </div>
 
         <div>
           <dt>Natural Gas Use</dt>
           <dd>
-            <template v-if="$page.building.NaturalGasUse">
-              {{ $page.building.NaturalGasUse }} kBtu
-            </template>
-            <template v-else>?</template>
+            <StatTile
+              :building="$page.building"
+              :statKey="'NaturalGasUse'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'kBtu'"
+              />
           </dd>
         </div>
 
         <div>
           <dt>Electricity Use</dt>
           <dd>
-            <template v-if="$page.building.ElectricityUse">
-              {{ $page.building.ElectricityUse }} kBtu
-            </template>
-            <template v-else>?</template>
+            <StatTile
+              :building="$page.building"
+              :statKey="'ElectricityUse'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'kBtu'"
+              />
           </dd>
         </div>
 
         <div v-if="$page.building.DistrictSteamUse">
           <dt>District Steam Use</dt>
           <dd>
-            <template v-if="$page.building.DistrictSteamUse">
-              {{ $page.building.DistrictSteamUse }} kBtu
-            </template>
-            <template v-else>?</template>
+            <StatTile
+              :building="$page.building"
+              :statKey="'DistrictSteamUse'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'kBtu'"
+              />
           </dd>
         </div>
 
         <div v-if="$page.building.DistrictChilledWaterUse">
           <dt>District Chilled Water Use</dt>
           <dd>
-            <template v-if="$page.building.DistrictChilledWaterUse">
-              {{ $page.building.DistrictChilledWaterUse }} kBtu
-            </template>
-            <template v-else>?</template>
+            <StatTile
+              :building="$page.building"
+              :statKey="'DistrictChilledWaterUse'"
+              :stats="BuildingBenchmarkStats"
+              :unit="'kBtu'"
+              />
           </dd>
         </div>
       </dl>
@@ -164,6 +199,8 @@ query ($id: ID!) {
 </template>
 
 <script>
+import StatTile from '~/components/StatTile.vue';
+
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
@@ -176,6 +213,9 @@ export default {
     return {
       title: this.$page.building.PropertyName,
     };
+  },
+  components: {
+    StatTile,
   },
   data() {
     return {BuildingBenchmarkStats};
@@ -196,5 +236,12 @@ dl {
   gap: 2rem;
 }
 
-.average { font-size: 0.75rem; }
+.emission-stats {
+  margin-bottom: 5rem;
+
+  dt {
+    font-weight: normal;
+    margin-bottom: 0.25rem;
+  }
+}
 </style>
