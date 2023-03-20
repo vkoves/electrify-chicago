@@ -13,10 +13,10 @@
 
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
-        <g-image v-if="isAboveAverage"
-        src="~/images/arrow-up-bad.svg" width="20" title="Above Average" />
-        <g-image v-else
-        src="~/images/arrow-down-good.svg" width="20" title="Below Average" />
+        <img v-if="isAboveAverage"
+          src="/arrow-up-bad.svg" width="20" title="Above Average" />
+        <img v-else
+          src="/arrow-down-good.svg" width="20" title="Below Average" />
       </template>
     </div>
 

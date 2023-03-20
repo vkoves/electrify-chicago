@@ -13,7 +13,7 @@
       <header class="header">
         <strong>
           <g-link to="/">
-              <g-image src="~/images/electrify-chicago-logo.svg"
+              <img src="/electrify-chicago-logo.svg"
                 alt="Electrify Chicago Homepage" class="site-logo" />
           </g-link>
         </strong>
@@ -35,7 +35,7 @@
       </div>
       <div>
         <a href="https://github.com/vkoves/electrify-chicago">
-          <g-image alt="" src="~/images/github-mark.svg" width="16" />
+          <img alt="" src="/github-mark.svg" width="16" />
           Contribute to Electrify Chicago on GitHub
         </a>
       </div>
