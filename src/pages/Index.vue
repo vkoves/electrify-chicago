@@ -1,35 +1,54 @@
 <script>
 import {Pager} from 'gridsome';
+import RankText from '~/components/RankText.vue';
+
+// This simple JSON is a lot easier to just use directly than going through GraphQL and it's
+// tiny
+const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
 
 export default {
   components: {
     Pager,
+    RankText,
   },
   metaInfo: {
     title: 'Home',
+  },
+  data() {
+    return {
+      BuildingBenchmarkStats,
+    };
   },
 };
 </script>
 
 <page-query>
   query ($page: Int) {
-    allBuilding(sortBy: "GHGIntensity", perPage: 20, page: $page) @paginate {
+    allBuilding(sortBy: "GHGIntensity", perPage: 15, page: $page) @paginate {
       pageInfo {
         totalPages
         currentPage
       }
       edges {
         node {
-          Address
           PropertyName
+          Address
+          path
           PrimaryPropertyType
           GHGIntensity
-          GrossFloorArea
+          GHGIntensityRank
+          GHGIntensityPercentileRank
           TotalGHGEmissions
-          YearBuilt
+          TotalGHGEmissionsRank
+          TotalGHGEmissionsPercentileRank
           ElectricityUse
+          ElectricityUseRank
+          ElectricityUsePercentileRank
           NaturalGasUse
-          path
+          NaturalGasUseRank
+          NaturalGasUsePercentileRank
+          GrossFloorArea
+          YearBuilt
         }
       }
     }
@@ -66,39 +85,49 @@ export default {
             </th>
           </tr>
         </thead>
-        <tr v-for="edge in $page.allBuilding.edges" :key="edge.node.id">
-          <td class="property-name">
-            <g-link :to="edge.node.path">
-              {{ edge.node.PropertyName || edge.node.Address }}
-            </g-link> <br/>
-            <span class="prop-address">{{ edge.node.Address }}</span>
-          </td>
-          <td>{{ edge.node.PrimaryPropertyType }}</td>
-          <td class="numeric">
-            <template v-if="edge.node.GHGIntensity">
-              {{ edge.node.GHGIntensity }}
-            </template>
-            <template v-else>?</template>
-          </td>
-          <td class="numeric">
-            <template v-if="edge.node.TotalGHGEmissions">
-              {{ edge.node.TotalGHGEmissions }}
-            </template>
-            <template v-else>?</template>
+        <tbody>
+          <tr v-for="edge in $page.allBuilding.edges" :key="edge.node.id">
+            <td class="property-name">
+              <g-link :to="edge.node.path">
+                {{ edge.node.PropertyName || edge.node.Address }}
+              </g-link> <br/>
+              <div class="prop-address">{{ edge.node.Address }}</div>
             </td>
-          <td class="numeric">
-            <template v-if="edge.node.NaturalGasUse">
-              {{ edge.node.NaturalGasUse }}
-            </template>
-            <template v-else>?</template>
-          </td>
-          <td class="numeric">
-            <template v-if="edge.node.ElectricityUse">
-              {{ edge.node.ElectricityUse }}
-            </template>
-            <template v-else>?</template>
-          </td>
-        </tr>
+            <td>{{ edge.node.PrimaryPropertyType }}</td>
+            <td class="numeric">
+              <template v-if="edge.node.GHGIntensity">
+                <RankText
+                  :building="edge.node"
+                  :stats="BuildingBenchmarkStats" statKey="GHGIntensity"/>
+              </template>
+              <template v-else>-</template>
+            </td>
+            <td class="numeric">
+              <template v-if="edge.node.TotalGHGEmissions">
+                <RankText
+                  :building="edge.node"
+                  :stats="BuildingBenchmarkStats" statKey="GHGIntensity"/>
+              </template>
+              <template v-else>-</template>
+              </td>
+            <td class="numeric">
+              <template v-if="edge.node.NaturalGasUse">
+                <RankText
+                  :building="edge.node"
+                  :stats="BuildingBenchmarkStats" statKey="NaturalGasUse"/>
+              </template>
+              <template v-else>-</template>
+            </td>
+            <td class="numeric">
+              <template v-if="edge.node.ElectricityUse">
+                <RankText
+                  :building="edge.node"
+                  :stats="BuildingBenchmarkStats" statKey="ElectricityUse"/>
+              </template>
+              <template v-else>-</template>
+            </td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
@@ -130,7 +159,7 @@ export default {
 
     a {
       font-weight: bold;
-      font-size: 1.125rem;
+      font-size: 1.125em;
       text-decoration: none;
       white-space: nowrap;
     }
@@ -146,10 +175,8 @@ export default {
       }
     }
 
-    tr:nth-of-type(2n + 2) { background-color: $grey; }
-
     th, td {
-      padding: 0.5rem;
+      padding: 0.75rem;
       line-height: 1.25;
 
       &:first-of-type { padding-left: 1rem; }
@@ -157,7 +184,12 @@ export default {
       &.numeric { text-align: right; }
     }
 
-    .prop-address { font-size: 0.75rem; }
+    tr:nth-of-type(2n + 2) { background-color: $grey; }
+
+    .prop-address {
+      font-size: 0.75em;
+      margin-top: 0.25em;
+    }
   }
 
   @media (max-width: $mobile-max-width) {
@@ -169,7 +201,7 @@ export default {
       width: 60rem;
 
       // Shrink table font-size on mobile to fit more
-      td { font-size: 0.75rem; }
+      td { font-size: 0.825rem; }
       td.property-name, td.property-address { width: 10rem; }
     }
   }

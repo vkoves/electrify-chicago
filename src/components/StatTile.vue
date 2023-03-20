@@ -6,53 +6,53 @@
     '-good': concernLevel === 1,
     '-sq-footage': unit === 'sqft',
   }">
-    <template v-if="building[statKey]">
-        <!-- The actual stat value-->
-        <div class="stat-value">
-          {{ statValue }} <span v-html="unit"/>
+  <template v-if="building[statKey]">
+    <!-- The actual stat value-->
+    <div class="stat-value">
+      {{ statValue }} <span v-html="unit"/>
 
-          <!-- Show icons for below or above average if we have an average for this stat -->
-          <template v-if="stats[statKey]"">
-            <g-image v-if="isAboveAverage"
-              src="~/images/arrow-up-bad.svg" width="20" title="Above Average" />
-            <g-image v-else
-              src="~/images/arrow-down-good.svg" width="20" title="Below Average" />
-          </template>
-        </div>
+      <!-- Show icons for below or above average if we have an average for this stat -->
+      <template v-if="stats[statKey]">
+        <g-image v-if="isAboveAverage"
+        src="~/images/arrow-up-bad.svg" width="20" title="Above Average" />
+        <g-image v-else
+        src="~/images/arrow-down-good.svg" width="20" title="Below Average" />
+      </template>
+    </div>
 
-        <!-- Only show the rank if in the top 50 of a category, #102th highest emitter
-         doesn't mean much -->
-        <div v-if="statRank && statRank <= 50" class="rank">
-          #{{ statRank }} {{ rankLabel }}
-        </div>
+    <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
+    <div v-if="statRank && statRank <= 50" class="rank">
+      #{{ statRank }} {{ rankLabel }}
+    </div>
 
-        <!-- Don't show percentile if the top 10, it'll just be 'Higher than 100%' -->
-        <div v-if="statRankPercent && statRank > 10" class="percentile">
-          <!-- If stat rank is < 50%, invert it.
-            E.g higher than of other buildings becomes less than 99% of buildings-->
-          <template v-if="statRankPercent > 50">
-            Higher than {{ statRankPercent }}% of other buildings
-          </template>
-          <template v-else>
-            Lower than {{ 100 - statRankPercent }}% of other buildings
-          </template>
-        </div>
+    <!-- Don't show percentile if the top 20, it'll just be 'Higher than 100%' -->
+    <div v-if="statRankPercent && statRank > 20" class="percentile">
+      <!-- If stat rank is < 50%, invert it.
+        E.g higher than of other buildings becomes less than 99% of buildings-->
+        <template v-if="statRankPercent > 50">
+          Higher than {{ statRankPercent }}% of other buildings
+        </template>
+        <template v-else>
+          Lower than {{ 100 - statRankPercent }}% of other buildings
+        </template>
+      </div>
 
-        <div class="average" v-if="stats[statKey]">
-          Average: {{ stats[statKey].mean.toLocaleString() }} <span v-html="unit"/><br/>
-        </div>
+      <div class="average" v-if="stats[statKey]">
+        Average among benchmarked buildings: <br/>
+        {{ stats[statKey].mean.toLocaleString() }} <span v-html="unit"/><br/>
+      </div>
     </template>
     <template v-else>
-    ?
+      ?
     </template>
   </div>
 </template>
 
 <script>
 /**
- * A  tile that can show the stats for a building, including whether it's
- * doing better or worse than average, it's rank and percentile rank
- */
+  * A  tile that can show the stats for a building, including whether it's
+  * doing better or worse than average, it's rank and percentile rank
+  */
 export default {
   name: 'StatTile',
   props: {
@@ -63,7 +63,8 @@ export default {
   },
   computed: {
     isAboveAverage() {
-      return this.building[this.statKey] > this.stats[this.statKey].mean;
+      return this.building[this.statKey] &&
+        this.building[this.statKey] > this.stats[this.statKey].mean;
     },
 
     statValue() {
@@ -85,7 +86,7 @@ export default {
       if (this.unit === 'sqft') {
         return 'Largest';
       } else if (this.statRank <= 10) {
-        return 'Worst in Chicago 🚨 ';
+        return 'Highest in Chicago 🚨 ';
       } else {
         return 'Highest in Chicago 🚩';
       }
@@ -103,8 +104,11 @@ export default {
         return 3;
       } else if (this.isAboveAverage) {
         return 2;
-      } else {
+      } else if (this.building[this.statKey]) {
         return 1;
+      } else {
+        // Return 0 if we have no value
+        return 0;
       }
     },
 
@@ -123,53 +127,55 @@ export default {
 
 <style lang="scss">
 .stat-tile {
-    min-width: 18rem;
-    padding: 1rem;
-    background-color: #f5f5f5;
-    border: solid 0.01625rem $grey-dark;
-    box-sizing: border-box;
-    border-radius: 0.25rem;
+  min-width: 18rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border: solid 0.01625rem $grey-dark;
+  box-sizing: border-box;
+  border-radius: 0.25rem;
 
-    &.-very-bad {
-      background-color: #ffd9d9;
-      border-color: red;
-    }
-    &.-bad {
-        background-color: #ffedf0;
-        border-color: red;
-    }
+  &.-very-bad {
+    background-color: #ffd9d9;
+    border-color: red;
+  }
+  &.-bad {
+    background-color: #ffedf0;
+    border-color: red;
+  }
 
-    // Also be pretty subtle for indicating medium attributes
-    &.-medium {
-      border-color: #935700;
-    }
+  // Also be pretty subtle for indicating medium attributes
+  &.-medium {
+    border-color: #935700;
+  }
 
-    // Very subtly highlight good attributes
-    &.-good { border-color: green; }
+  // Very subtly highlight good attributes
+  &.-good { border-color: green; }
 
-    // Square footage should override and clear anything since that's not really an
-    // environmental factor, just an interesting stat
-    &.-sq-footage {
-      padding: 0;
-      background-color: transparent;
-      border: none;
-    }
+  // Square footage should override and clear anything since that's not really an
+  // environmental factor, just an interesting stat
+  &.-sq-footage {
+    padding: 0;
+    background-color: transparent;
+    border: none;
+  }
 
-    .stat-value {
-        font-size: 1.25rem;
+  .stat-value {
+    font-size: 1.25rem;
 
-        img { vertical-align: -0.25rem; }
-    }
+    img { vertical-align: -0.25rem; }
+  }
 
-    .rank {
-      font-weight: bold;
-    }
+  .rank {
+    font-weight: bold;
+  }
 
-    .average, .percentile { font-size: 0.75rem; }
+  .average, .percentile { font-size: 0.75rem; }
 
-    .percentile {
-        font-weight: normal;
-        margin-bottom: 0.25rem;
-    }
+  .average { margin-top: 0.5rem; }
+
+  .percentile {
+    font-weight: normal;
+    margin-bottom: 0.25rem;
+  }
 }
 </style>

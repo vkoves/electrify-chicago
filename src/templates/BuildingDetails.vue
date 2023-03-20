@@ -38,7 +38,9 @@ query ($id: ID!) {
 <template>
   <DefaultLayout>
     <div>
-      <h1 v-html="$page.building.PropertyName" />
+      <h1>
+        {{ $page.building.PropertyName || $page.building.Address }}
+      </h1>
 
       <div class="building-details">
         <h2>Building Info</h2>
@@ -118,7 +120,7 @@ query ($id: ID!) {
               :building="$page.building"
               :statKey="'SourceEUI'"
               :stats="BuildingBenchmarkStats"
-              :unit="'kBtu / sq ft'"
+              :unit="'kBtu / sqft'"
               />
           </dd>
         </div>
@@ -130,7 +132,7 @@ query ($id: ID!) {
               :building="$page.building"
               :statKey="'SiteEUI'"
               :stats="BuildingBenchmarkStats"
-              :unit="'kBtu / sq ft'"
+              :unit="'kBtu / sqft'"
               />
 
             {{  $page.buildingSiteEUIRank }}
@@ -215,7 +217,9 @@ export default {
     StatTile,
   },
   data() {
-    return {BuildingBenchmarkStats};
+    return {
+      BuildingBenchmarkStats,
+    };
   },
 };
 </script>
@@ -236,9 +240,17 @@ dl {
 .emission-stats {
   margin-bottom: 5rem;
 
+  > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
   dt {
     font-weight: normal;
     margin-bottom: 0.25rem;
   }
+
+  dd, .stat-tile { height: 100%; }
 }
 </style>

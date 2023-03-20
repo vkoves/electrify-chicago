@@ -50,20 +50,10 @@ function loadBuildingBenchmarkData(actions) {
 
   const collection = actions.addCollection({typeName: 'Building'});
 
-  const collectedBuildingSlugs = [];
-
   for (const building of BuildingsData) {
     // Make a slugSource that is the property name or the address as a fallback
     building.slugSource = building.PropertyName || building.Address;
 
-    // If this is a duplicate value, exit. Comment out this return to debug what these are, but
-    // there were only ~4
-    if (collectedBuildingSlugs.includes(building.slugSource)) {
-      return;
-    }
-
     collection.addNode(building);
-
-    collectedBuildingSlugs.push(building.slugSource);
   }
 }
