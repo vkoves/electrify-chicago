@@ -1,7 +1,8 @@
 <template>
   <div class="rank-text">
     <div class="stat-value">
-      {{ statValue }}
+      <template v-if="round">{{ Math.round(statValue).toLocaleString() }}</template>
+      <template v-else>{{ statValue.toLocaleString() }}</template>
 
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
@@ -41,8 +42,9 @@ export default {
   name: 'RankText',
   props: {
     building: Object,
-    stats: Object,
+    round: Boolean,
     statKey: String,
+    stats: Object,
   },
   computed: {
     isAboveAverage() {
@@ -51,7 +53,7 @@ export default {
     },
 
     statValue() {
-      return parseFloat(this.building[this.statKey]).toLocaleString();
+      return parseFloat(this.building[this.statKey]);
     },
 
     // Returns a rounded number or undefined if no rank
@@ -88,8 +90,9 @@ export default {
     white-space: nowrap;
 
     img {
-      vertical-align: -0.4em;
-      width: 1.5em;
+      width: 1.25em;
+      margin-right: -0.5rem;
+      vertical-align: -0.25em;
     }
   }
 
