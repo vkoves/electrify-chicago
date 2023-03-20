@@ -3,11 +3,11 @@
     <h1>About Us</h1>
 
     <p>
-      Electrify Chicago is a project looking to shed light onto one of the biggest source's of
-      Chicago's CO<sub>2</sub> emissions - buildings. In showing more details about some of the
-      city's most polluting buildings, we hope to encourage these buildings to electrify,
-      particularly by mobilizing people related to the building - whether that be students and
-      faculty for a college building or employees and patients at a hospital.
+      Electrify Chicago is a project looking to shed light onto one of the biggest sources of
+      Chicago's CO<sub>2</sub> emissions - buildings. By providing more information about some of
+      the city's largest and most polluting buildings, we hope to encourage these buildings to
+      electrify, particularly by mobilizing people related to the building - whether that be
+      students and faculty for a college building or employees and patients at a hospital.
     </p>
 
     <h2>Authors</h2>
