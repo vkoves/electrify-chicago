@@ -49,7 +49,7 @@ export default {
   computed: {
     isAboveMedian() {
       return this.building[this.statKey] &&
-        this.building[this.statKey] > this.stats[this.statKey].mean;
+        this.building[this.statKey] > this.stats[this.statKey].median;
     },
 
     statValue() {

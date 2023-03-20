@@ -77,7 +77,7 @@ export default {
   <DefaultLayout>
     <h1>Search Benchmarked Buildings</h1>
 
-        <p>
+    <p>
       <strong>Note:</strong> This only includes buildings whose emissions are reported
       under the Chicago Energy Benchmarking Ordinance. According to the City &ldquo;As of 2016,
       this list includes all commercial, institutional, and residential buildings larger than
@@ -94,6 +94,15 @@ export default {
     </form>
 
     <BuildingsTable :buildings="searchResults" />
+
+    <div v-if="searchResults.length === 0" class="no-results-msg">
+        <h2>No results found!</h2>
+
+        <p>
+            There may be a typo in your query or in the underlying data, or the building you are
+            looking for may not be in our dataset.
+        </p>
+    </div>
 
     <p class="footnote">
       Data Source:
@@ -134,5 +143,11 @@ form.search {
     button {
         border-left: none;
     }
+}
+
+.no-results-msg {
+    background-color: $grey;
+    padding: 1rem;
+    text-align: center;
 }
 </style>
