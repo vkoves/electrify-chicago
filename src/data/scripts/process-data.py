@@ -41,6 +41,23 @@ building_cols_to_rank = [
     'SiteEUI',
 ]
 
+# Columns that should be strings because they are immutable identifiers
+string_cols = [
+    'ChicagoEnergyRating',
+]
+
+# Int columns that are numbers (and can get averaged) but should be rounded
+int_cols = [
+    'NumberOfBuildings',
+    'ENERGYSTARScore',
+    # TODO: Move to string after figuring out why the X.0 is showing up
+    'Wards',
+    'CensusTracts',
+    'ZIPCode',
+    'CommunityAreas',
+    'HistoricalWards2003-2015'
+]
+
 # Returns the output file if succeeds
 def calculateBuildingAverages(building_data: pandas.DataFrame) -> str:
     # Clone the input data to prevent manipulating it on accident
@@ -88,6 +105,13 @@ def processBuildingData() -> List[str]:
     # are junk
     building_data[building_cols_to_analyze] = building_data[building_cols_to_analyze].apply(
          lambda x: pandas.to_numeric(x.astype(str).str.replace(',',''), errors='coerce'))
+
+    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
+    # up (e.g. zipcode of 60614 or Ward 9)
+    building_data[string_cols] = building_data[string_cols].astype(str)
+
+    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings
+    building_data[int_cols] = building_data[int_cols].astype('Int64')
 
     outputted_paths.append(calculateBuildingAverages(building_data))
 

@@ -46,7 +46,7 @@ query ($id: ID!) {
       </h1>
 
       <div class="address">
-        {{ $page.building.Address }}, Chicago IL, {{ Math.round($page.building.ZIPCode) }}
+        {{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}
       </div>
 
       <div class="building-details">
@@ -86,10 +86,13 @@ query ($id: ID!) {
             <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
           </div>
 
-          <div>
-            <dt>Ward</dt>
-            <dd>{{ Math.round($page.building.Wards) }}</dd>
-          </div>
+          <!--
+            Hidden for now because it's wrong in the source data
+            <div>
+              <dt>Ward</dt>
+              <dd>{{ $page.building.Wards }}</dd>
+            </div>
+          -->
 
           <div v-if="$page.building.ChicagoEnergyRating">
             <dt>
@@ -98,7 +101,7 @@ query ($id: ID!) {
               </a>
             </dt>
             <dd>
-              {{ Math.round($page.building.ChicagoEnergyRating) }} / 4
+              {{ $page.building.ChicagoEnergyRating }} / 4
             </dd>
           </div>
 
@@ -109,7 +112,7 @@ query ($id: ID!) {
               </a>
             </dt>
             <dd>
-              {{ Math.round($page.building.ENERGYSTARScore) }} / 100
+              {{ $page.building.ENERGYSTARScore }} / 100
             </dd>
           </div>
         </dl>
