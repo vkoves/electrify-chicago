@@ -19,7 +19,8 @@
         </strong>
         <nav class="top-nav">
           <g-link class="nav-link" to="/">Home</g-link>
-          <g-link class="nav-link" to="/about/">About</g-link>
+          <g-link class="nav-link" to="/about">About</g-link>
+          <g-link class="nav-link" to="/search">Search Buildings</g-link>
         </nav>
       </header>
 

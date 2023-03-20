@@ -1,34 +1,54 @@
 <script>
-import {Pager} from 'gridsome';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
 
+const MaxBuildings = 20;
+
 export default {
   components: {
     BuildingsTable,
-    Pager,
   },
   metaInfo: {
-    title: 'Home',
+    title: 'Search',
   },
   data() {
     return {
       BuildingBenchmarkStats,
+      search: '',
+      searchResults: [],
     };
+  },
+  created: function() {
+    this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
+  },
+  methods: {
+    submitSearch(event) {
+      event.preventDefault();
+
+      const query = this.search.toLowerCase().trim();
+
+      if (!query) {
+        this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
+        return;
+      }
+
+      const results = this.$static.allBuilding.edges.filter((post) => {
+        return post.node.PropertyName.toLowerCase().includes(query)
+            || post.node.Address.toLowerCase().includes(query);
+      });
+
+      this.searchResults = results.slice(0, MaxBuildings);
+    },
   },
 };
 </script>
 
-<page-query>
-  query ($page: Int) {
-    allBuilding(sortBy: "GHGIntensity", perPage: 15, page: $page) @paginate {
-      pageInfo {
-        totalPages
-        currentPage
-      }
+<static-query>
+  query {
+    allBuilding(sortBy: "GHGIntensity") {
       edges {
         node {
           PropertyName
@@ -51,15 +71,13 @@ export default {
       }
     }
   }
-</page-query>
+</static-query>
 
 <template>
   <DefaultLayout>
-    <h1>Electrify Chicago</h1>
+    <h1>Search Benchmarked Buildings</h1>
 
-    <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
-
-    <p>
+        <p>
       <strong>Note:</strong> This only includes buildings whose emissions are reported
       under the Chicago Energy Benchmarking Ordinance. According to the City &ldquo;As of 2016,
       this list includes all commercial, institutional, and residential buildings larger than
@@ -68,9 +86,14 @@ export default {
       </blockquote>
     </p>
 
-    <BuildingsTable :buildings="$page.allBuilding.edges" />
+    <form class="search">
+        <label for="search">Search Benchmarked Buildings</label>
+        <input type="text" name="search" id="search"
+            placeholder="Search property name or address" v-model="search">
+        <button v-on:click="submitSearch" type="submit">Search</button>
+    </form>
 
-    <Pager class="pager" :info="$page.allBuilding.pageInfo"/>
+    <BuildingsTable :buildings="searchResults" />
 
     <p class="footnote">
       Data Source:
@@ -84,5 +107,32 @@ export default {
 </template>
 
 <style lang="scss">
+form.search {
+    background: $grey;
+    padding: 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
 
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+    }
+
+    input, button {
+       padding: 0.5rem;
+       box-sizing: border-box;
+       height: 2.5rem;
+       border: solid 0.125rem $grey-dark;
+    }
+
+    input {
+        min-width: 15rem;
+        border-right: none;
+    }
+
+    button {
+        border-left: none;
+    }
+}
 </style>
