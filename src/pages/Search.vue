@@ -24,7 +24,8 @@ export default {
   },
   created: function() {
     const splitParams = window.location.search.split(`${QueryParamKey}=`);
-    const urlSearchParam = splitParams.length > 1 ? splitParams[1] : null;
+    // Make sure to URI decode to convert params like 'Jewel%20Osco' -> 'Jewel Osco'
+    const urlSearchParam = splitParams.length > 1 ? decodeURI(splitParams[1]) : null;
 
     if (urlSearchParam) {
       this.search = urlSearchParam;
@@ -99,11 +100,14 @@ export default {
       </blockquote>
     </p>
 
-    <form class="search">
+    <form class="search-form -page">
         <label for="search">Search Benchmarked Buildings</label>
-        <input type="text" name="search" id="search"
-            placeholder="Search property name or address" v-model="search">
-        <button v-on:click="submitSearch" type="submit">Search</button>
+
+        <div class="input-cont">
+          <input type="text" name="search" id="search"
+              placeholder="Search property name or address" v-model="search">
+          <button v-on:click="submitSearch" type="submit">Search</button>
+        </div>
     </form>
 
     <BuildingsTable :buildings="searchResults" />
@@ -129,38 +133,39 @@ export default {
 </template>
 
 <style lang="scss">
-form.search {
-    background: $grey;
-    padding: 1rem;
-    border-radius: 0.25rem;
-    margin-bottom: 1rem;
+form.search-form.-page {
+  background: $grey;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
 
-    label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 0.25rem;
-    }
+  label {
+    display: block;
+    margin-bottom: 0.25rem;
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
 
-    input, button {
-       padding: 0.5rem;
-       box-sizing: border-box;
-       height: 2.5rem;
-       border: solid 0.125rem $grey-dark;
-    }
+  .input-cont {
+    width: 25rem;
+    max-width: 100%;
 
-    input {
-        min-width: 15rem;
-        border-right: none;
-    }
+    // Slightly round search instead of full pill
+    $border-radius: 0.25rem;
 
-    button {
-        border-left: none;
-    }
+    input { border-radius: $border-radius 0 0 $border-radius; }
+    button { border-radius: 0 $border-radius $border-radius 0; }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    padding: 0.5rem;
+  }
 }
 
 .no-results-msg {
-    background-color: $grey;
-    padding: 1rem;
-    text-align: center;
+  background-color: $grey;
+  padding: 1rem;
+  text-align: center;
 }
 </style>

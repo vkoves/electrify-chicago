@@ -28,6 +28,40 @@ dl {
   dd + dt { margin-top: 1rem; }
 }
 
+/** Search Form styling */
+form.search-form {
+
+  .input-cont {
+    display: flex;
+    white-space: nowrap;
+  }
+
+  input, button {
+    height: 2.5rem;
+    box-sizing: border-box;
+    // TODO: Move to colors
+    border: solid 0.0625rem $grey;
+    padding: 0 1rem;
+  }
+
+  $border-radius: 5rem;
+
+  input {
+    border-radius: $border-radius 0 0 $border-radius;
+    width: 12.5rem;
+    border-right: none;
+    padding-right: 0;
+    font-size: 0.75rem;
+    flex-grow: 1;
+  }
+
+  button {
+    border-radius: 0 $border-radius $border-radius 0;
+    border-left: none;
+    font-weight: bold;
+  }
+}
+
 /**
  * <Pager> styling
  */
@@ -64,4 +98,4 @@ nav.pager {
 
       a { width: 2rem; }
     }
-  }
+}
