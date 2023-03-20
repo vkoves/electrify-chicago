@@ -75,9 +75,9 @@ export default {
     <p class="footnote">
       Data Source:
       <!-- eslint-disable-next-line max-len -->
-      <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking-Covered-Buildings/g5i5-yz37"
+      <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
         target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking - Covered Buildings (opens in a new tab)
+        Chicago Energy Benchmarking Data (opens in a new tab)
       </a>
     </p>
   </DefaultLayout>
