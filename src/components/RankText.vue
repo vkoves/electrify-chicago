@@ -6,10 +6,10 @@
 
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
-        <img v-if="isAboveAverage"
-          src="/arrow-up-bad.svg" width="20" title="Above Average" />
+        <img v-if="isAboveMedian"
+          src="/arrow-up-bad.svg" width="20" title="Above Median Building" />
         <img v-else
-          src="/arrow-down-good.svg" width="20" title="Below Average" />
+          src="/arrow-down-good.svg" width="20" title="Below Median Building" />
       </template>
     </div>
 
@@ -47,7 +47,7 @@ export default {
     stats: Object,
   },
   computed: {
-    isAboveAverage() {
+    isAboveMedian() {
       return this.building[this.statKey] &&
         this.building[this.statKey] > this.stats[this.statKey].mean;
     },

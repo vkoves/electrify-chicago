@@ -11,12 +11,12 @@
     <div class="stat-value">
       {{ statValue }} <span v-html="unit"/>
 
-      <!-- Show icons for below or above average if we have an average for this stat -->
+      <!-- Show icons for below or above median if we have a median for this stat -->
       <template v-if="stats[statKey]">
-        <img v-if="isAboveAverage"
-          src="/arrow-up-bad.svg" width="20" title="Above Average" />
+        <img v-if="isAboveMedian"
+          src="/arrow-up-bad.svg" width="20" title="Above median building" />
         <img v-else
-          src="/arrow-down-good.svg" width="20" title="Below Average" />
+          src="/arrow-down-good.svg" width="20" title="Below median building" />
       </template>
     </div>
 
@@ -38,8 +38,12 @@
       </div>
 
       <div class="average" v-if="stats[statKey]">
-        Average benchmarked building: <br/>
-        {{ stats[statKey].mean.toLocaleString() }} <span v-html="unit"/><br/>
+        <!--
+          Average benchmarked building: <br/>
+          {{ stats[statKey].mean.toLocaleString() }} <span v-html="unit"/><br/>
+        -->
+        Median benchmarked building: <br/>
+        {{ stats[statKey].median.toLocaleString() }} <span v-html="unit"/><br/>
       </div>
     </template>
     <template v-else>
@@ -62,9 +66,9 @@ export default {
     unit: String,
   },
   computed: {
-    isAboveAverage() {
+    isAboveMedian() {
       return this.building[this.statKey] &&
-        this.building[this.statKey] > this.stats[this.statKey].mean;
+        this.building[this.statKey] > this.stats[this.statKey].median;
     },
 
     statValue() {
@@ -102,7 +106,7 @@ export default {
         return 4;
       } else if (this.statRank <= 30) {
         return 3;
-      } else if (this.isAboveAverage) {
+      } else if (this.isAboveMedian) {
         return 2;
       } else if (this.building[this.statKey]) {
         return 1;
