@@ -23,6 +23,10 @@ export default {
     };
   },
   created: function() {
+    // Make sure on load we have some data
+    this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
+  },
+  mounted: function() {
     const splitParams = window.location.search.split(`${QueryParamKey}=`);
     // Make sure to URI decode to convert params like 'Jewel%20Osco' -> 'Jewel Osco'
     const urlSearchParam = splitParams.length > 1 ? decodeURI(splitParams[1]) : null;
