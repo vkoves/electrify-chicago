@@ -47,7 +47,12 @@
       </div>
     </template>
     <template v-else>
-      ?
+      Not Reported
+
+      <p class="empty-notice">
+        This data was not reported for this building. <br>
+        This may mean a value of zero for this field.
+      </p>
     </template>
   </div>
 </template>
@@ -179,6 +184,10 @@ export default {
   .percentile {
     font-weight: normal;
     margin-bottom: 0.25rem;
+  }
+
+  .empty-notice {
+    font-size: 0.75rem;
   }
 }
 </style>
