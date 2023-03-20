@@ -4,7 +4,7 @@
     '-bad': concernLevel === 3,
     '-medium': concernLevel === 2,
     '-good': concernLevel === 1,
-    '-sq-footage': unit === 'sqft',
+    '-sq-footage': isSquareFootage,
   }">
   <template v-if="building[statKey]">
     <!-- The actual stat value-->
@@ -14,9 +14,11 @@
       <!-- Show icons for below or above median if we have a median for this stat -->
       <template v-if="stats[statKey]">
         <img v-if="isAboveMedian"
-          src="/arrow-up-bad.svg" width="20" title="Above median building" />
+          :src="isSquareFootage ? '/arrow-up-neutral.svg' : '/arrow-up-bad.svg'"
+          width="20" title="Above median building" />
         <img v-else
-          src="/arrow-down-good.svg" width="20" title="Below median building" />
+          :src="isSquareFootage ? '/arrow-down-neutral.svg' : '/arrow-down-good.svg'"
+          width="20" title="Below median building" />
       </template>
     </div>
 
@@ -76,6 +78,12 @@ export default {
         this.building[this.statKey] > this.stats[this.statKey].median;
     },
 
+    // Square footage isn't directly climate related, so we show stats but treat it as
+    // value-neutral - a building isn't worse _just_ because it's bigger
+    isSquareFootage() {
+      return this.unit === 'sqft';
+    },
+
     statValue() {
       return parseFloat(this.building[this.statKey]).toLocaleString();
     },
@@ -92,7 +100,7 @@ export default {
     },
 
     rankLabel() {
-      if (this.unit === 'sqft') {
+      if (this.isSquareFootage) {
         return 'Largest';
       } else if (this.statRank <= 10) {
         return 'Highest in Chicago 🚨 ';
