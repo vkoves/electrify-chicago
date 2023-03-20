@@ -118,11 +118,6 @@ export default {
       return Math.round(statRankPercent * 100);
     },
   },
-  methods: {
-    onClick() {
-      this.message = 'Here you go :)';
-    },
-  },
 };
 </script>
 

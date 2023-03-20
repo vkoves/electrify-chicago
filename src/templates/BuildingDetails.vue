@@ -79,7 +79,7 @@ query ($id: ID!) {
 
           <div>
             <dt>Ward</dt>
-            <dd>{{ $page.building.Wards }}</dd>
+            <dd>{{ Math.round($page.building.Wards) }}</dd>
           </div>
         </dl>
       </div>
@@ -204,9 +204,6 @@ import StatTile from '~/components/StatTile.vue';
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
-
-// Log out stats for debugging
-console.log('BuildingBenchmarkStats', BuildingBenchmarkStats);
 
 export default {
   metaInfo() {
