@@ -6,6 +6,25 @@
   }
 </static-query>
 
+<script>
+export default {
+  data() {
+    return {
+      searchQuery: '',
+    };
+  },
+  methods: {
+    submitSearch(event) {
+      if (event) {
+        event.preventDefault();
+      }
+
+      document.location.href = `/search?q=${this.searchQuery}`;
+    },
+  },
+};
+</script>
+
 <template>
   <div>
     <div class="layout">
@@ -20,7 +39,12 @@
         <nav class="top-nav">
           <g-link class="nav-link" to="/">Home</g-link>
           <g-link class="nav-link" to="/about">About</g-link>
-          <g-link class="nav-link" to="/search">Search Buildings</g-link>
+          <form class="header-search">
+              <input type="text" name="search" id="search"
+                aria-label="Search benchmarked buildings"
+                placeholder="Search property name/address" v-model="searchQuery">
+              <button v-on:click="submitSearch" type="submit">Search</button>
+          </form>
         </nav>
       </header>
 
@@ -67,10 +91,41 @@ header.header {
     width: auto;
   }
 
-  nav a {
-    font-weight: bold;
+  .top-nav {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
 
-    + a { margin-left: 1rem; }
+    a { font-weight: bold; }
+  }
+
+  form.header-search {
+    display: flex;
+    white-space: nowrap;
+
+    input, button {
+      height: 2.5rem;
+      box-sizing: border-box;
+      // TODO: Move to colors
+      border: solid 0.0625rem $grey;
+      padding: 0 1rem;
+    }
+
+    input {
+      border-radius: 1rem 0 0 1rem;
+      width: 12.5rem;
+      border-right: none;
+      padding-right: 0;
+      font-size: 0.75rem;
+      flex-grow: 1;
+    }
+
+    button {
+      border-radius: 0 1rem 1rem 0;
+      border-left: none;
+      font-weight: bold;
+    }
   }
 
   @media (max-width: $mobile-max-width) {
@@ -83,6 +138,8 @@ header.header {
       width: 100%;
       height: auto;
     }
+
+    form.header-search { width: 100%; }
 
     nav { margin: 1rem 0; }
   }

@@ -29,8 +29,7 @@ export default {
     if (urlSearchParam) {
       this.search = urlSearchParam;
       this.submitSearch();
-    }
-    else {
+    } else {
       this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
     }
   },
@@ -50,8 +49,8 @@ export default {
       }
 
       const results = this.$static.allBuilding.edges.filter((post) => {
-        return post.node.PropertyName.toLowerCase().includes(query)
-            || post.node.Address.toLowerCase().includes(query);
+        return post.node.PropertyName.toLowerCase().includes(query) ||
+            post.node.Address.toLowerCase().includes(query);
       });
 
       this.searchResults = results.slice(0, MaxBuildings);
