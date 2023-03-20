@@ -48,7 +48,9 @@ query ($id: ID!) {
         <dl>
           <div>
             <dt>Full Address</dt>
-            <dd>{{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}</dd>
+            <dd>
+              {{ $page.building.Address }}, Chicago IL, {{ Math.round($page.building.ZIPCode) }}
+            </dd>
           </div>
 
           <div>
