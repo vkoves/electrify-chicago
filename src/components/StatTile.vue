@@ -38,7 +38,7 @@
       </div>
 
       <div class="average" v-if="stats[statKey]">
-        Average among benchmarked buildings: <br/>
+        Average benchmarked building: <br/>
         {{ stats[statKey].mean.toLocaleString() }} <span v-html="unit"/><br/>
       </div>
     </template>
