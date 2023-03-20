@@ -6,6 +6,7 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
 
 const MaxBuildings = 20;
+const QueryParamKey = 'q';
 
 export default {
   components: {
@@ -22,13 +23,26 @@ export default {
     };
   },
   created: function() {
-    this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
+    const splitParams = window.location.search.split(`${QueryParamKey}=`);
+    const urlSearchParam = splitParams.length > 1 ? splitParams[1] : null;
+
+    if (urlSearchParam) {
+      this.search = urlSearchParam;
+      this.submitSearch();
+    }
+    else {
+      this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
+    }
   },
   methods: {
     submitSearch(event) {
-      event.preventDefault();
+      if (event) {
+        event.preventDefault();
+      }
 
       const query = this.search.toLowerCase().trim();
+
+      window.history.pushState(null, null, `/search?${QueryParamKey}=${query}`);
 
       if (!query) {
         this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
