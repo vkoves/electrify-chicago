@@ -14,4 +14,21 @@ export default function(Vue, {router, head, isClient}) {
     // the error was found in. Only available in 2.2.0+
     console.error('Vue error', err, info, vm);
   };
+
+  // Add meta description
+  head.meta.push({
+    name: 'description',
+    content: 'Learn about Chicago\'s most polluting buildings, and why we need to electrify!',
+  });
+
+  // Add social images
+  head.meta.push({
+    name: 'og:image',
+    content: 'https://electrifychicago.net/social-image.png',
+  });
+
+  head.meta.push({
+    name: 'twitter:image',
+    content: 'https://electrifychicago.net/social-image.png',
+  });
 }
