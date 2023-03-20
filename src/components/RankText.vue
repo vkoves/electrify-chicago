@@ -2,7 +2,7 @@
   <div class="rank-text">
     <div class="stat-value">
       <template v-if="round">{{ Math.round(statValue).toLocaleString() }}</template>
-      <template v-else>{{ statValue.toLocaleString() }}</template>
+      <template v-else>{{ statValue.toFixed(1) }}</template>
 
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
