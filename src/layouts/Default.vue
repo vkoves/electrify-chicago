@@ -132,15 +132,18 @@ header.header {
     height: auto;
     gap: 0;
 
+    .logo-link {
+      flex-shrink: initial;
+
+      .site-logo {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    }
+
     // Tighten vertical gap
     .top-nav { gap: 1.25rem 1.5rem; }
-
-    .site-logo {
-      display: block;
-      width: 100%;
-      max-width: 80%;
-      height: auto;
-    }
 
     form.search-form { width: 100%; }
 
