@@ -19,14 +19,15 @@
         <span class="rank-num">#{{ statRank }}</span> {{ rankLabel }}
       </div>
       <!-- Don't show percentile if the top 10, it'll just be 'Higher than 100%' -->
-      <div v-else-if="statRankPercent" class="percentile">
+      <div v-else-if="typeof statRankPercent === 'number'" class="percentile">
         <!-- If stat rank is < 50%, invert it.
           E.g higher than of other buildings becomes less than 99% of buildings-->
         <template v-if="statRankPercent > 50">
           Highest {{ 100 - statRankPercent }}%
         </template>
         <template v-else>
-          Lowest {{ statRankPercent }}%
+          <!-- Never show Lowest 0%, show Lowest 1% -->
+          Lowest {{ Math.max(statRankPercent, 1) }}%
         </template>
       </div>
     </div>

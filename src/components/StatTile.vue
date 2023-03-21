@@ -28,14 +28,15 @@
     </div>
 
     <!-- Don't show percentile if the top 20, it'll just be 'Higher than 100%' -->
-    <div v-if="statRankPercent && statRank > 20" class="percentile">
+    <div v-if="typeof statRankPercent === 'number' && statRank > 20" class="percentile">
       <!-- If stat rank is < 50%, invert it.
-        E.g higher than of other buildings becomes less than 99% of buildings-->
+        E.g higher than of benchmarked buildings becomes less than 99% of buildings-->
         <template v-if="statRankPercent > 50">
-          Higher than {{ statRankPercent }}% of other buildings
+          Higher than {{ statRankPercent }}% of benchmarked buildings
         </template>
         <template v-else>
-          Lower than {{ 100 - statRankPercent }}% of other buildings
+          <!-- Never show lower than 100%, top out at 100%-->
+          Lower than {{ Math.min(99, 100 - statRankPercent) }}% of benchmarked buildings
         </template>
       </div>
 
