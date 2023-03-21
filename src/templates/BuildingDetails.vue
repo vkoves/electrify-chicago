@@ -228,6 +228,14 @@ query ($id: ID!) {
           Chicago Energy Benchmarking Data Covered Buildings (opens in a new tab)
         </a>
       </p>
+
+      <p class="footnote">
+        To better understand Source & Site Energy Use Intensity (EUI) see
+        <a href="https://portfoliomanager.energystar.gov/pdf/reference/US%20National%20Median%20Table.pdf"
+          target="_blank" rel="noopener noreferrer">
+          U.S. Energy Use Intensity by Property Type | ENERGY STAR (opens in a new tab)
+        </a>
+      </p>
     </div>
   </DefaultLayout>
 </template>
