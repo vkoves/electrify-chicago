@@ -7,9 +7,11 @@
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
         <img v-if="isAboveMedian"
-          src="/arrow-up-bad.svg" width="20" title="Above Median Building" />
+          :src="isSquareFootage ? '/arrow-up-neutral.svg' : '/arrow-up-bad.svg'"
+          width="20" title="Above median building" />
         <img v-else
-          src="/arrow-down-good.svg" width="20" title="Below Median Building" />
+          :src="isSquareFootage ? '/arrow-down-neutral.svg' : '/arrow-down-good.svg'"
+          width="20" title="Below median building" />
       </template>
     </div>
 
@@ -55,6 +57,10 @@ export default {
     isAboveMedian() {
       return this.building[this.statKey] &&
         this.building[this.statKey] > this.stats[this.statKey].median;
+    },
+
+    isSquareFootage() {
+      return this.statKey === 'GrossFloorArea';
     },
 
     statValue() {

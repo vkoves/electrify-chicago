@@ -1,5 +1,6 @@
 <script>
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import DataDisclaimer from '../components/DataDisclaimer.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -11,6 +12,7 @@ const QueryParamKey = 'q';
 export default {
   components: {
     BuildingsTable,
+    DataDisclaimer,
   },
   metaInfo: {
     title: 'Search',
@@ -95,14 +97,7 @@ export default {
   <DefaultLayout>
     <h1>Search Benchmarked Buildings</h1>
 
-    <p>
-      <strong>Note:</strong> This only includes buildings whose emissions are reported
-      under the Chicago Energy Benchmarking Ordinance. According to the City &ldquo;As of 2016,
-      this list includes all commercial, institutional, and residential buildings larger than
-      50,000 square feet.&rdquo; This dataset is also then filtered to only buildings with reported
-      emissions > 1,000 metric tons.
-      </blockquote>
-    </p>
+    <DataDisclaimer/>
 
     <form class="search-form -page">
         <label for="search">Search Benchmarked Buildings</label>

@@ -4,8 +4,7 @@
 
 <script>
 /**
- * A  tile that can show the stats for a building, including whether it's
- * doing better or worse than average, it's rank and percentile rank
+ * A new tab icon for links
  */
 export default {
   name: 'NewTabIcon',

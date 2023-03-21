@@ -30,15 +30,20 @@ export default {
     <div class="layout">
       <!-- TODO: Split to a component-->
       <header class="header">
-        <strong>
-          <g-link to="/">
-              <img src="/electrify-chicago-logo.svg"
-                alt="Electrify Chicago Homepage" class="site-logo" />
-          </g-link>
-        </strong>
+        <g-link to="/" class="logo-link">
+          <img src="/electrify-chicago-logo.svg"
+              alt="Electrify Chicago Homepage" class="site-logo" />
+        </g-link>
         <nav class="top-nav">
           <g-link class="nav-link" to="/">Home</g-link>
           <g-link class="nav-link" to="/about">About</g-link>
+          <g-link class="nav-link" to="/top-gas-users">Top Gas Users</g-link>
+          <g-link class="nav-link" to="/top-emitters">Top Emitters</g-link>
+          <g-link class="nav-link" to="/biggest-buildings">Biggest Buildings</g-link>
+          <!--
+            <g-link class="nav-link" to="/top-electricity-users">Top Electricity Users</g-link>
+          -->
+
           <form class="search-form">
             <div class="input-cont">
               <input type="text" name="search" id="search"
@@ -85,13 +90,19 @@ header.header {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
-  height: 5rem;
   border-bottom: solid $border-thin $grey;
+  padding: 1rem 0;
+  gap: 2rem;
 
-  .site-logo {
-    height: 3rem;
-    width: auto;
+  .logo-link {
+    flex-shrink: 0;
+
+    .site-logo {
+      height: 3rem;
+      width: auto;
+    }
   }
+
 
   .top-nav {
     display: flex;
@@ -99,13 +110,28 @@ header.header {
     align-items: center;
     flex-wrap: wrap;
 
-    a { font-weight: bold; }
+    a {
+      font-weight: bold;
+      color: $black;
+      text-decoration: none;
+      padding: 0.2rem 0;
+
+      // Style current page link
+      &.active--exact {
+        box-shadow: 0 0.5rem $chicago-blue;
+        text-decoration: none;
+      }
+    }
   }
 
   @media (max-width: $mobile-max-width) {
     flex-wrap: wrap;
     margin-top: 0.5rem;
     height: auto;
+    gap: 0;
+
+    // Tighten vertical gap
+    .top-nav { gap: 1.25rem 1.5rem; }
 
     .site-logo {
       display: block;

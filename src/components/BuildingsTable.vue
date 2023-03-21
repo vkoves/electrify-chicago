@@ -11,6 +11,7 @@ export default {
   },
   props: {
     buildings: Array,
+    showSquareFootage: Boolean,
   },
   data() {
     return {
@@ -27,6 +28,9 @@ export default {
         <tr>
           <th scope="col">Property Name / address</th>
           <th scope="col">Primary Property Type</th>
+          <th v-if="showSquareFootage">
+            Square Footage
+          </th>
           <th scope="col" class="numeric">
             Greenhouse Gas Intensity<br/>
             (kg CO<sub>2</sub>/sqft)
@@ -54,6 +58,18 @@ export default {
             <div class="prop-address">{{ edge.node.Address }}</div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>
+
+          <!-- Square footage is optional, only shown on BiggestBuildings -->
+          <td v-if="showSquareFootage" class="numeric">
+            <template v-if="edge.node.GrossFloorArea">
+              <RankText
+                :building="edge.node"
+                :round="true"
+                :stats="BuildingBenchmarkStats" statKey="GrossFloorArea"/>
+            </template>
+            <template v-else>-</template>
+          </td>
+
           <td class="numeric">
             <template v-if="edge.node.GHGIntensity">
               <RankText
@@ -70,7 +86,7 @@ export default {
                 :stats="BuildingBenchmarkStats" statKey="TotalGHGEmissions"/>
             </template>
             <template v-else>-</template>
-            </td>
+          </td>
           <td class="numeric">
             <template v-if="edge.node.NaturalGasUse">
               <RankText
