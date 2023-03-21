@@ -151,8 +151,6 @@ export default {
     table {
       width: 60rem;
 
-      // Shrink table font-size on mobile to fit more
-      td { font-size: 0.825rem; }
       td.property-name, td.property-address { width: 10rem; }
     }
   }

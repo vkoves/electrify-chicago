@@ -220,6 +220,12 @@ query ($id: ID!) {
         </div>
       </dl>
 
+      <p class="constrained">
+        <strong>Important Note:</strong> Rankings are among included buildings, which are those
+        who reported under the Chicago Energy Benchmarking Ordinance with an emissions greater
+        than 1,000 metric tons.
+      </p>
+
       <p class="footnote">
         Data Source:
         <!-- eslint-disable-next-line max-len -->
@@ -290,7 +296,7 @@ dl {
 }
 
 .emission-stats {
-  margin-bottom: 5rem;
+  margin-bottom: 1rem;
 
   > div {
     display: flex;

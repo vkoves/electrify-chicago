@@ -47,10 +47,13 @@ img.-shadowed {
   &.-img { margin-top: 0; ;}
 }
 
-.layout-constrained {
+// Use .constrained for a reasonable max-width for text readability
+.layout-constrained, .constrained {
   max-width: 50rem;
-  margin: auto;
+
+  &.layout-constrained { margin: auto; }
 }
+
 
 
 /** Search Form styling */

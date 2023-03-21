@@ -25,6 +25,10 @@
         <template v-if="statRankPercent > 50">
           Highest {{ 100 - statRankPercent }}%
         </template>
+        <!-- Show lowest 30 instead of percentiles -->
+        <template v-else-if="statRankInverted <= 30">
+          #{{ statRankInverted }} Lowest
+        </template>
         <template v-else>
           <!-- Never show Lowest 0%, show Lowest 1% -->
           Lowest {{ Math.max(statRankPercent, 1) }}%
@@ -68,6 +72,19 @@ export default {
       }
     },
 
+    // Returns the inverse of a rank, so the # lowest in a category
+    // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
+    statRankInverted() {
+      if (this.statRank) {
+        const countForStat = this.stats[this.statKey].count;
+
+        // Rank 100/100 should invert to #1 lowest, not #0
+        return countForStat - this.statRank + 1;
+      }
+
+      return null;
+    },
+
     rankLabel() {
       return `Highest`;
     },
@@ -97,7 +114,7 @@ export default {
     }
   }
 
-  .rank, .percentile { font-size: smaller; }
+  .rank, .percentile { font-size: x-small; }
 
   .rank-label { margin-top: 0.25rem; }
 }
