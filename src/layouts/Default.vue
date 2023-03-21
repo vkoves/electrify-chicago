@@ -134,6 +134,7 @@ header.header {
 
     .logo-link {
       flex-shrink: initial;
+      max-width: 22rem;
 
       .site-logo {
         display: block;

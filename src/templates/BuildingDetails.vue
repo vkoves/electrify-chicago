@@ -310,7 +310,9 @@ h1 { margin-bottom: 0; }
 .building-details {
   background: #ededed;
   border-radius: 0.5rem;
-  padding: 0.25rem 2rem 0.5rem;
+  padding: 1rem 2rem;
+
+  h2 { margin-top: 0; }
 }
 
 dl {
@@ -340,4 +342,16 @@ dl {
 
   .stat-tile { min-width: 18rem; }
 }
+
+@media (max-width: $mobile-max-width) {
+    // Break GMaps link to new line
+    .address .google-maps-link {
+      display: block;
+      margin-left: 0;
+    }
+
+    .building-details {
+      padding: 1rem;
+    }
+  }
 </style>
