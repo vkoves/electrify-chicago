@@ -222,7 +222,7 @@ query ($id: ID!) {
 
       <p class="constrained">
         <strong>Important Note:</strong> Rankings are among included buildings, which are those
-        who reported under the Chicago Energy Benchmarking Ordinance with an emissions greater
+        who reported under the Chicago Energy Benchmarking Ordinance with emissions greater
         than 1,000 metric tons.
       </p>
 
