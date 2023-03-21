@@ -47,6 +47,11 @@ query ($id: ID!) {
 
       <div class="address">
         {{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}
+        <a :href="'https://www.google.com/maps/search/' + encodedAddress"
+          class="google-maps-link"
+          target="_blank" rel="noopener noreferrer">
+          Find on Google Maps <NewTabIcon/>
+        </a>
       </div>
 
       <div class="building-details">
@@ -231,7 +236,7 @@ query ($id: ID!) {
         <!-- eslint-disable-next-line max-len -->
         <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
           target="_blank" rel="noopener noreferrer">
-          Chicago Energy Benchmarking Data Covered Buildings (opens in a new tab)
+          Chicago Energy Benchmarking Data Covered Buildings <NewTabIcon/>
         </a>
       </p>
 
@@ -239,7 +244,7 @@ query ($id: ID!) {
         To better understand Source & Site Energy Use Intensity (EUI) see
         <a href="https://portfoliomanager.energystar.gov/pdf/reference/US%20National%20Median%20Table.pdf"
           target="_blank" rel="noopener noreferrer">
-          U.S. Energy Use Intensity by Property Type | ENERGY STAR (opens in a new tab)
+          U.S. Energy Use Intensity by Property Type | ENERGY STAR <NewTabIcon/>
         </a>
       </p>
     </div>
@@ -247,6 +252,7 @@ query ($id: ID!) {
 </template>
 
 <script>
+import NewTabIcon from '~/components/NewTabIcon.vue';
 import StatTile from '~/components/StatTile.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
@@ -260,6 +266,7 @@ export default {
     };
   },
   components: {
+    NewTabIcon,
     StatTile,
   },
   filters: {
@@ -272,6 +279,18 @@ export default {
       BuildingBenchmarkStats,
     };
   },
+  computed: {
+    encodedAddress() {
+      const propertyName = this.$page.building.PropertyName;
+      const propertyAddr = this.$page.building.Address + ' , Chicago IL';
+
+      if (propertyName) {
+        return encodeURI(`${propertyName} ${propertyAddr}`);
+      } else {
+        return encodeURI(propertyAddr);
+      }
+    },
+  },
 };
 </script>
 
@@ -281,6 +300,11 @@ h1 { margin-bottom: 0; }
 .address {
   font-size: 1.25rem;
   margin-bottom: 1rem;
+
+  .google-maps-link {
+    font-size: 0.825rem;
+    margin-left: 0.5rem;
+  }
 }
 
 .building-details {

@@ -17,7 +17,13 @@ module.exports = {
     'vue',
   ],
   'rules': {
-    'max-len': ['error', {'code': 100}],
+    'max-len': ['error', {
+      'code': 100,
+      // Fixes errors in HTML files with long links
+      'ignoreUrls': true,
+    }],
     'vue/multi-word-component-names': ['off'],
+    // This rule is for Vue3, and Gridsome uses Vue2
+    'vue/no-deprecated-filter': ['off'],
   },
 };

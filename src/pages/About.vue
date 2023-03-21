@@ -43,7 +43,7 @@
         Source:
         <a href="https://decarbmystate.com/illinois#power"
           target="_blank" rel="noopener noreferrer">
-          Illinois Power | Decarb My State
+          Illinois Power | Decarb My State <NewTabIcon/>
         </a>
       </p>
 
@@ -72,9 +72,12 @@
 </template>
 
 <script>
+import NewTabIcon from '../components/NewTabIcon.vue';
+
 export default {
   metaInfo: {
     title: 'About us',
   },
+  components: {NewTabIcon},
 };
 </script>

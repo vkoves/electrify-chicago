@@ -1,6 +1,7 @@
 <script>
 import {Pager} from 'gridsome';
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -10,6 +11,7 @@ export default {
   components: {
     BuildingsTable,
     Pager,
+    NewTabIcon,
   },
   metaInfo: {
     title: 'Home',
@@ -65,7 +67,6 @@ export default {
       this list includes all commercial, institutional, and residential buildings larger than
       50,000 square feet.&rdquo; This dataset is also then filtered to only buildings with reported
       emissions > 1,000 metric tons.
-      </blockquote>
     </p>
 
     <BuildingsTable :buildings="$page.allBuilding.edges" />
@@ -74,10 +75,9 @@ export default {
 
     <p class="footnote">
       Data Source:
-      <!-- eslint-disable-next-line max-len -->
       <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
         target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking Data (opens in a new tab)
+        Chicago Energy Benchmarking Data <NewTabIcon/>
       </a>
     </p>
   </DefaultLayout>

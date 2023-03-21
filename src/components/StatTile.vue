@@ -28,8 +28,8 @@
       #{{ statRank }} {{ rankLabel }}
     </div>
 
-    <!-- If in the lowest 30, show that -->
-    <div v-if="statRankInverted && statRankInverted <= 30" class="rank">
+    <!-- If in the lowest 30, show that unless square footage -->
+    <div v-if="!isSquareFootage && statRankInverted && statRankInverted <= 30" class="rank">
       #{{ statRankInverted }} Lowest 🏆
     </div>
 
