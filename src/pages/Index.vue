@@ -2,6 +2,7 @@
 import {Pager} from 'gridsome';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import DataDisclaimer from '../components/DataDisclaimer.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -12,6 +13,7 @@ export default {
     BuildingsTable,
     Pager,
     NewTabIcon,
+    DataDisclaimer,
   },
   metaInfo: {
     title: 'Home',
@@ -61,13 +63,7 @@ export default {
 
     <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 
-    <p>
-      <strong>Note:</strong> This only includes buildings whose emissions are reported
-      under the Chicago Energy Benchmarking Ordinance. According to the City &ldquo;As of 2016,
-      this list includes all commercial, institutional, and residential buildings larger than
-      50,000 square feet.&rdquo; This dataset is also then filtered to only buildings with reported
-      emissions > 1,000 metric tons.
-    </p>
+    <DataDisclaimer/>
 
     <BuildingsTable :buildings="$page.allBuilding.edges" />
 

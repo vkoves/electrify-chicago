@@ -12,7 +12,7 @@ export default {
     DataDisclaimer,
   },
   metaInfo: {
-    title: 'Top Gas Users',
+    title: 'Biggest Electricity Users',
   },
   data() {
     return {

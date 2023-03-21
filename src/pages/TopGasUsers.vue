@@ -12,7 +12,7 @@ export default {
     DataDisclaimer,
   },
   metaInfo: {
-    title: 'Top Gas Users',
+    title: 'Biggest Natural Gas Users',
   },
   data() {
     return {
@@ -51,7 +51,7 @@ export default {
 
 <template>
   <DefaultLayout>
-    <h1>Top Natural Gas Users</h1>
+    <h1>Top Buildings by Natural Gas Use</h1>
 
     <DataDisclaimer/>
 
