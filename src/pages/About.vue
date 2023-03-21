@@ -1,29 +1,73 @@
 <template>
   <DefaultLayout>
-    <h1>About Us</h1>
+    <div class="layout-constrained">
+      <h1>About Us</h1>
 
-    <p>
-      Electrify Chicago is a project looking to shed light onto one of the biggest sources of
-      Chicago's CO<sub>2</sub> emissions - buildings. By providing more information about some of
-      the city's largest and most polluting buildings, we hope to encourage these buildings to
-      electrify, particularly by mobilizing people related to the building - whether that be
-      students and faculty for a college building or employees and patients at a hospital.
-    </p>
+      <p class="constrained">
+        Electrify Chicago is an independent open-source project looking to shed light onto one of
+        the biggest sources of Chicago's CO<sub>2</sub> emissions - buildings. By providing more
+        information about some of the city's largest and most polluting buildings, we hope t
+        encourage these buildings to electrify, particularly by mobilizing people related to the
+        building - whether that be students and faculty for a college building or employees and
+        patients at a hospital.
+      </p>
 
-    <h2>Authors</h2>
+      <p class="large-text bold">
+        Our Goal: Get Large Buildings to <u>Electrify</u> & Use Less Energy
+      </p>
 
-    <p>
-      Electrify Chicago is a project by <a href="https://viktorkoves.com/">Viktor Köves</a>, a
-      Chicago native and climate developer who created
-      <a href="https://carbonchallenge.io/">The Carbon Challenge</a> and was a significant
-      contributor to
-      <a href="https://decarbmystate.com/">DecarbMyState</a>.
-    </p>
+      <h2>But Why Electrify?</h2>
 
-    <p>
-      <strong>Important Disclaimer:</strong> Electrify Chicago is an independent project and not
-      affiliated with the city of Chicago.
-    </p>
+      <p class="constrained">
+        In simple terms, because we can scalably produce electricity without emitting CO<sub>2</sub>
+        and exacerbating the climate crisis. In fact, <em>this decade</em> (the 2020s) is an
+        especially crucial one for tackling climate change
+        (<a href="https://www.nytimes.com/2023/03/20/climate/global-warming-ipcc-earth.html"
+        >&ldquo;World Has Less Than a Decade to Stop Catastrophic Warming&hellip;&rdquo;
+        | The New York Times</a>), and shifting away from burning fossil fuels to using electricity
+        <strong>today</strong> is a crucial step in that journey.
+      </p>
+
+      <p class="constrained">
+        Even better, <strong>Illinois' grid in particular is already powered mostly by carbon-free
+        energy</strong> and is improving every year!
+      </p>
+
+      <img
+        alt="Pie chart showing that 67% of Illinois power is Carbon-Free, with 58% from Nuclear and
+        9% from Wind. Then 18% comes from Coal and 14% from Natural Gas."
+        class="-shadowed"
+        src="/il-power-chart.png" width="500" />
+
+      <p class="footnote -img">
+        Source:
+        <a href="https://decarbmystate.com/illinois#power"
+          target="_blank" rel="noopener noreferrer">
+          Illinois Power | Decarb My State
+        </a>
+      </p>
+
+      <p>
+        This means that buildings using only electricity cause less emissions every year as the
+        power grid is moved to carbon-free sources, without any further changes to the building.
+        On the other hand, fossil-fuel powered appliances will continue to emit as long as they are
+        used.
+      </p>
+
+      <h2>Authors</h2>
+
+      <p>
+        Electrify Chicago is a project by <a href="https://viktorkoves.com/">Viktor Köves</a>, a
+        Chicago native and climate developer who was part of the volunteer team behind
+        <a href="https://decarbmystate.com/">DecarbMyState</a> and built
+        <a href="https://carbonchallenge.io/">The Carbon Challenge</a>.
+      </p>
+
+      <p>
+        <strong>Important Disclaimer:</strong> Electrify Chicago is an independent project and not
+        affiliated with the city of Chicago.
+      </p>
+    </div>
   </DefaultLayout>
 </template>
 

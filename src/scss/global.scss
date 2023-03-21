@@ -1,3 +1,7 @@
+// Manually import other SCSS files here so we can use them
+@import './colors';
+@import './spacing';
+
 /**
  * Global Styles
  */
@@ -16,17 +20,38 @@ a { color: $link-blue; }
  */
 .bold { font-weight: bold; }
 
-.footnote {
-    font-size: 0.75rem;
-    margin-top: 1rem;
-}
-
 dl {
   dt { font-weight: bold; }
   dd { margin-left: 0; }
 
   dd + dt { margin-top: 1rem; }
 }
+
+img {
+  max-width: 100%;
+}
+
+img.-shadowed {
+  border: solid $border-thin $grey;
+  box-shadow: 0.125rem 0.125rem 0.125rem $box-shadow-main;
+}
+
+.large-text {
+  font-size: 1.3em;
+}
+
+.footnote {
+  font-size: 0.75rem;
+  margin-top: 1rem;
+
+  &.-img { margin-top: 0; ;}
+}
+
+.layout-constrained {
+  max-width: 50rem;
+  margin: auto;
+}
+
 
 /** Search Form styling */
 form.search-form {
@@ -39,8 +64,7 @@ form.search-form {
   input, button {
     height: 2.5rem;
     box-sizing: border-box;
-    // TODO: Move to colors
-    border: solid 0.0625rem $grey;
+    border: solid $border-thin $grey;
     padding: 0 1rem;
   }
 

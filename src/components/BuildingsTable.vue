@@ -99,7 +99,7 @@ export default {
 .table-cont {
   width: 100%;
   overflow-x: auto;
-  border: solid 0.0625rem $grey-dark;
+  border: solid $border-thin $grey-dark;
   box-sizing: border-box;
 
   table {
