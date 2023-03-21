@@ -77,6 +77,8 @@ export default {
 
 <style lang="scss">
 .layout {
+  // Make sure footer is always at the bottom
+  min-height: calc(100vh - 10rem);
   max-width: 75rem; // 1200px
   margin: 0 auto;
   padding-left: 1rem;
@@ -136,6 +138,7 @@ header.header {
     .site-logo {
       display: block;
       width: 100%;
+      max-width: 80%;
       height: auto;
     }
 
@@ -146,9 +149,6 @@ header.header {
 }
 
 footer {
-  // Stick to bottom of screen on big displays
-  position: fixed;
-  bottom: 0;
   width: 100%;
   text-align: center;
   padding: 1rem 0;
