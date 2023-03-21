@@ -4,6 +4,7 @@
     '-bad': concernLevel === 3,
     '-medium': concernLevel === 2,
     '-good': concernLevel === 1,
+    '-great': concernLevel === 0,
     '-sq-footage': isSquareFootage,
   }">
   <template v-if="building[statKey]">
@@ -27,16 +28,21 @@
       #{{ statRank }} {{ rankLabel }}
     </div>
 
+    <!-- If in the lowest 30, show that -->
+    <div v-if="statRankInverted <= 30" class="rank">
+      #{{ statRankInverted }} Lowest 🏆
+    </div>
+
     <!-- Don't show percentile if the top 20, it'll just be 'Higher than 100%' -->
     <div v-if="typeof statRankPercent === 'number' && statRank > 20" class="percentile">
       <!-- If stat rank is < 50%, invert it.
         E.g higher than of benchmarked buildings becomes less than 99% of buildings-->
         <template v-if="statRankPercent > 50">
-          Higher than {{ statRankPercent }}% of benchmarked buildings
+          Higher than {{ statRankPercent }}% of others
         </template>
         <template v-else>
           <!-- Never show lower than 100%, top out at 100%-->
-          Lower than {{ Math.min(99, 100 - statRankPercent) }}% of benchmarked buildings
+          Lower than {{ Math.min(99, 100 - statRankPercent) }}% of others
         </template>
       </div>
 
@@ -96,8 +102,21 @@ export default {
       if (statRank) {
         return Math.round(parseFloat(statRank));
       } else {
-        return undefined;
+        return null;
       }
+    },
+
+    // Returns the inverse of a rank, so the # lowest in a category
+    // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
+    statRankInverted() {
+      if (this.statRank) {
+        const countForStat = this.stats[this.statKey].count;
+
+        // Rank 100/100 should invert to #1 lowest, not #0
+        return countForStat - this.statRank + 1;
+      }
+
+      return null;
     },
 
     rankLabel() {
@@ -111,30 +130,37 @@ export default {
     },
 
     // Returns a number 1 - 4 for how concerned we should be about this stat
+    // 0 = outstanding performer in category
     // 1 = no concern
     // 2 = medium concern (above average)
     // 3 = high category (top 30)
     // 4 = very high concern (top 10 in category)
     concernLevel() {
+      // Return null if we have no stats
+      if (!this.statRank) {
+        return null;
+      }
+
       if (this.statRank <= 10) {
         return 4;
       } else if (this.statRank <= 30) {
         return 3;
       } else if (this.isAboveMedian) {
         return 2;
-      } else if (this.building[this.statKey]) {
+      } else if (this.statRankInverted >= 30 && this.building[this.statKey]) {
         return 1;
-      } else {
-        // Return 0 if we have no value
+      } else if (this.statRankInverted <= 30) {
         return 0;
       }
+
+      return null;
     },
 
     statRankPercent() {
       const statRankPercent = this.building[this.statKey + 'PercentileRank'];
 
       if (!statRankPercent) {
-        return undefined;
+        return null;
       }
 
       return Math.round(statRankPercent * 100);
@@ -167,6 +193,12 @@ export default {
 
   // Very subtly highlight good attributes
   &.-good { border-color: green; }
+
+  // Highlight best in class buildings
+  &.-great {
+    border-color: green;
+    background-color: #e9ffe9;
+  }
 
   // Square footage should override and clear anything since that's not really an
   // environmental factor, just an interesting stat

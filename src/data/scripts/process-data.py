@@ -58,17 +58,19 @@ int_cols = [
     'HistoricalWards2003-2015'
 ]
 
+# Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
+# median values for fields
 # Returns the output file if succeeds
-def calculateBuildingAverages(building_data: pandas.DataFrame) -> str:
+def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     # Clone the input data to prevent manipulating it on accident
-    data = building_data.copy()
+    building_data = building_data_in.copy()
 
     benchmark_stats_df = pandas.DataFrame()
 
     # The details columns we want to keep. Note that 50% = median
-    detail_cols_to_keep = [ 'mean', 'min', 'max', '25%', '50%', '75%' ]
+    detail_cols_to_keep = [ 'count', 'mean', 'min', 'max', '25%', '50%', '75%' ]
 
-    benchmark_stats_df = data[building_cols_to_analyze].describe().loc[detail_cols_to_keep]
+    benchmark_stats_df = building_data[building_cols_to_analyze].describe().loc[detail_cols_to_keep]
 
     # Round all data to an int, all of the building data is pretty large values so the precision
     # isn't reasonable for statistical analysis
@@ -113,7 +115,7 @@ def processBuildingData() -> List[str]:
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings
     building_data[int_cols] = building_data[int_cols].astype('Int64')
 
-    outputted_paths.append(calculateBuildingAverages(building_data))
+    outputted_paths.append(calculateBuildingStats(building_data))
 
     # Loop through building_cols_to_rank and calculate both a numeric rank (e.g. #1 highest GHG
     # Intensity) and a percentage (e.g. top 95% of total GHG emissions)
