@@ -6,7 +6,7 @@ import DataDisclaimer from '../components/DataDisclaimer.vue';
 // tiny
 const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
 
-const MaxBuildings = 20;
+const MaxBuildings = 50;
 const QueryParamKey = 'q';
 
 export default {
@@ -20,6 +20,7 @@ export default {
   data() {
     return {
       BuildingBenchmarkStats,
+      MaxBuildings,
       search: '',
       searchResults: [],
     };
@@ -41,6 +42,20 @@ export default {
     }
   },
   methods: {
+    searchRank(buildingEdge, query) {
+      let matchScore = 0;
+
+      if (buildingEdge.node.PropertyName.toLowerCase().includes(query)) {
+        matchScore += 3;
+      } else if (buildingEdge.node.Address.toLowerCase().includes(query)) {
+        matchScore += 2;
+      } else if (buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)) {
+        matchScore += 1;
+      }
+
+      return matchScore;
+    },
+
     submitSearch(event) {
       if (event) {
         event.preventDefault();
@@ -55,9 +70,15 @@ export default {
         return;
       }
 
-      const results = this.$static.allBuilding.edges.filter((post) => {
-        return post.node.PropertyName.toLowerCase().includes(query) ||
-            post.node.Address.toLowerCase().includes(query);
+      let results = this.$static.allBuilding.edges.filter((buildingEdge) => {
+        return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
+          buildingEdge.node.Address.toLowerCase().includes(query) ||
+          buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
+      });
+
+      // Sort by name matches, then address, then property type
+      results = results.sort((buildingEdgeA, buildingEdgeB) => {
+        return this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query);
       });
 
       this.searchResults = results.slice(0, MaxBuildings);
@@ -98,6 +119,10 @@ export default {
   <DefaultLayout>
     <h1>Search Benchmarked Buildings</h1>
 
+    <p>
+      Note that results are limited to the first {{ MaxBuildings }} matches.
+    </p>
+
     <DataDisclaimer/>
 
     <form class="search-form -page">
@@ -105,7 +130,7 @@ export default {
 
         <div class="input-cont">
           <input type="text" name="search" id="search"
-              placeholder="Search property name or address" v-model="search">
+              placeholder="Search property name, type, or address" v-model="search">
           <button v-on:click="submitSearch" type="submit">Search</button>
         </div>
     </form>
