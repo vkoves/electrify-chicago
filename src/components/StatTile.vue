@@ -35,8 +35,9 @@
         #{{ statRankInverted }} Lowest 🏆
     </div>
 
-    <!-- Don't show percentile if the top 20, it'll just be 'Higher than 100%' -->
-    <div v-if="typeof statRankPercent === 'number' && statRank > FlagRankMax" class="percentile">
+    <!-- Only show percentile if we don't have a flag or alarm -->
+    <div v-if="typeof statRankPercent === 'number' && statRank > RankConfig.FlagRankMax"
+      class="percentile">
       <!-- If stat rank is < 50%, invert it.
         E.g higher than of benchmarked buildings becomes less than 99% of buildings-->
         <template v-if="statRankPercent > 50">
