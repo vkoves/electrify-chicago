@@ -64,8 +64,30 @@
       </p>
 
       <p>
-        <strong>Important Disclaimer:</strong> Electrify Chicago is an independent project and not
-        affiliated with the city of Chicago.
+        Electrify Chicago is an independent project and not affiliated with or endorsed by the City
+        of Chicago.
+      </p>
+
+      <h2>Sources</h2>
+
+      <p>
+        Data is primarily sourced from the publicly available
+        <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+          target="_blank" rel="noopener noreferrer">
+          Chicago Energy Benchmarking Data <NewTabIcon/>
+        </a>, which is data collected and published under the
+        <a href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html">
+          Chicago Energy Benchmarking Ordinance <NewTabIcon/>
+        </a>. This site shows data for the year 2020 (the latest available of March 2023) and
+        filtered down to buildings with total emissions > 1,000 metric tons.
+      </p>
+
+      <h2>Contact Us</h2>
+
+      <p>
+        Found a bug or have a feature request?
+        <a href="https://github.com/vkoves/electrify-chicago/issues/new">
+          File an issue on the Electrify Chicago GitHub</a>!
       </p>
     </div>
   </DefaultLayout>

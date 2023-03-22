@@ -41,7 +41,7 @@ query ($id: ID!) {
 
 <template>
   <DefaultLayout>
-    <div>
+    <div class="building-details-page">
       <div>
         <h1>
           {{ $page.building.PropertyName || $page.building.Address }}
@@ -250,12 +250,32 @@ query ($id: ID!) {
         </a>
       </p>
 
-      <p class="footnote">
-        To better understand Source & Site Energy Use Intensity (EUI) see
-        <a href="https://portfoliomanager.energystar.gov/pdf/reference/US%20National%20Median%20Table.pdf"
-          target="_blank" rel="noopener noreferrer">
-          U.S. Energy Use Intensity by Property Type | ENERGY STAR <NewTabIcon/>
-        </a>
+      <p>
+        Additional Resources:
+
+        <ul>
+          <li>
+            <a href="https://www.chicago.gov/city/en/depts/mayor/supp_info/chicago-energy-benchmarking/Chicago_Energy_Benchmarking_Beyond_Benchmarking.html"
+              target="_blank" rel="noopener noreferrer">
+              Chicago Energy Benchmarking: Taking Action to Improve Energy Efficiency
+              | City of Chicago <NewTabIcon/>
+            </a>
+          </li>
+
+          <li>
+            <a href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
+              target="_blank" rel="noopener noreferrer">
+              Chicago Average EUIs and ENERGY STAR scores by property type [PDF] <NewTabIcon/>
+            </a>
+          </li>
+
+          <li>
+            <a href="https://portfoliomanager.energystar.gov/pdf/reference/US%20National%20Median%20Table.pdf"
+              target="_blank" rel="noopener noreferrer">
+              U.S. Energy Use Intensity by Property Type | ENERGY STAR [PDF] <NewTabIcon/>
+            </a>
+          </li>
+        </ul>
       </p>
     </div>
   </DefaultLayout>
@@ -309,55 +329,64 @@ export default {
 </script>
 
 <style lang="scss">
-h1 { margin-bottom: 0; }
+.building-details-page {
 
-.address {
-  font-size: 1.25rem;
-  margin-bottom: 1rem;
+  h1 { margin-bottom: 0; }
 
-  .google-maps-link {
-    font-size: 0.825rem;
-    margin-left: 0.5rem;
+  .address {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+
+    .google-maps-link {
+      font-size: 0.825rem;
+      margin-left: 0.5rem;
+    }
   }
-}
 
-.building-details {
-  background: #ededed;
-  border-radius: 0.5rem;
-  padding: 1rem 2rem;
+  .building-details {
+    background: #ededed;
+    border-radius: 0.5rem;
+    padding: 1rem 2rem;
 
-  h2 { margin-top: 0; }
-}
+    h2 { margin-top: 0; }
+  }
 
-dl {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-}
-
-.emission-stats {
-  margin-bottom: 1rem;
-
-  > div {
+  dl {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    flex-basis: 30%;
-    flex-grow: 1;
-    max-width: 25rem;
+    flex-wrap: wrap;
+    gap: 2rem;
   }
 
-  dt {
-    font-weight: normal;
-    margin-bottom: 0.25rem;
+  .emission-stats {
+    margin-bottom: 1rem;
+
+    > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-basis: 30%;
+      flex-grow: 1;
+      max-width: 25rem;
+    }
+
+    dt {
+      font-weight: normal;
+      margin-bottom: 0.25rem;
+    }
+
+    dd, .stat-tile { height: 100%; }
+
+    .stat-tile { min-width: 18rem; }
+
   }
 
-  dd, .stat-tile { height: 100%; }
+  ul {
+    margin-top: 0.5rem;
 
-  .stat-tile { min-width: 18rem; }
-}
+    li + li { margin-top: 0.25rem; }
+  }
 
-@media (max-width: $mobile-max-width) {
+  @media (max-width: $mobile-max-width) {
     // Break GMaps link to new line
     .address .google-maps-link {
       display: block;
@@ -368,4 +397,5 @@ dl {
       padding: 1rem;
     }
   }
+}
 </style>

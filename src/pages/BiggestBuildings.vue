@@ -1,6 +1,7 @@
 <script>
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '../components/DataDisclaimer.vue';
+import NewTabIcon from '../components/NewTabIcon.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -10,6 +11,7 @@ export default {
   components: {
     BuildingsTable,
     DataDisclaimer,
+    NewTabIcon,
   },
   metaInfo: {
     title: 'Top Gas Users',
@@ -66,7 +68,7 @@ export default {
       <!-- eslint-disable-next-line max-len -->
       <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
         target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking Data (opens in a new tab)
+        Chicago Energy Benchmarking Data <NewTabIcon/>
       </a>
     </p>
   </DefaultLayout>
