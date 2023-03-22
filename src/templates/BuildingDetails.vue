@@ -43,6 +43,7 @@ query ($id: ID!) {
     <div>
       <h1>
         {{ $page.building.PropertyName || $page.building.Address }}
+        <OverallRankEmoji :building="$page.building" :stats="BuildingBenchmarkStats"/>
       </h1>
 
       <div class="address">
@@ -254,6 +255,7 @@ query ($id: ID!) {
 <script>
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import StatTile from '~/components/StatTile.vue';
+import OverallRankEmoji from '../components/OverallRankEmoji.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -268,6 +270,7 @@ export default {
   components: {
     NewTabIcon,
     StatTile,
+    OverallRankEmoji,
   },
   filters: {
     titlecase(value) {

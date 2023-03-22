@@ -1,5 +1,6 @@
 <script>
 import RankText from '~/components/RankText.vue';
+import OverallRankEmoji from './OverallRankEmoji.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -8,6 +9,7 @@ const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.js
 export default {
   components: {
     RankText,
+    OverallRankEmoji,
   },
   props: {
     buildings: Array,
@@ -54,7 +56,9 @@ export default {
           <td class="property-name">
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
-            </g-link> <br/>
+            </g-link>
+            <OverallRankEmoji :building="edge.node" :stats="BuildingBenchmarkStats"/>
+            <br/>
             <div class="prop-address">{{ edge.node.Address }}</div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>

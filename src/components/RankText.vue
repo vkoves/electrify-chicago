@@ -17,7 +17,7 @@
 
     <div class="rank-label">
       <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
-      <div v-if="statRank && statRank <= 10" class="rank">
+      <div v-if="statRank && statRank <= RankConfig.FlagRankMax" class="rank">
         <span class="rank-num">#{{ statRank }}</span> {{ rankLabel }}
       </div>
       <!-- Don't show percentile if the top 10, it'll just be 'Higher than 100%' -->
@@ -28,7 +28,7 @@
           Highest {{ 100 - statRankPercent }}%
         </template>
         <!-- Show lowest 30 instead of percentiles -->
-        <template v-else-if="statRankInverted <= 30">
+        <template v-else-if="statRankInverted <= RankConfig.TrophyRankInvertedMax">
           #{{ statRankInverted }} Lowest
         </template>
         <template v-else>
@@ -41,6 +41,8 @@
 </template>
 
 <script>
+import {RankConfig} from '../common-functions';
+
 /**
  * A  tile that can show the stats for a building, including whether it's
  * doing better or worse than average, it's rank and percentile rank
@@ -53,6 +55,10 @@ export default {
     statKey: String,
     stats: Object,
   },
+  data: () => ({
+    // Expose RankConfig to template
+    RankConfig,
+  }),
   computed: {
     isAboveMedian() {
       return this.building[this.statKey] &&

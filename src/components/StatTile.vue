@@ -28,9 +28,11 @@
       #{{ statRank }} {{ rankLabel }}
     </div>
 
-    <!-- If in the lowest 30, show that unless square footage -->
-    <div v-if="!isSquareFootage && statRankInverted && statRankInverted <= 30" class="rank">
-      #{{ statRankInverted }} Lowest 🏆
+    <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
+    <div v-if="!isSquareFootage && statRankInverted
+      && statRankInverted <= RankConfig.TrophyRankInvertedMax"
+      class="rank">
+        #{{ statRankInverted }} Lowest 🏆
     </div>
 
     <!-- Don't show percentile if the top 20, it'll just be 'Higher than 100%' -->
@@ -46,11 +48,7 @@
         </template>
       </div>
 
-      <div class="average" v-if="stats[statKey]">
-        <!--
-          Average benchmarked building: <br/>
-          {{ stats[statKey].mean.toLocaleString() }} <span v-html="unit"/><br/>
-        -->
+      <div  v-if="stats[statKey]" class="median">
         Median benchmarked building: <br/>
         {{ stats[statKey].median.toLocaleString() }} <span v-html="unit"/><br/>
       </div>
@@ -67,11 +65,11 @@
 </template>
 
 <script>
-import {returnRankLabel} from '../common-functions';
+import {RankConfig, getRankLabel} from '../common-functions';
 
 /**
   * A  tile that can show the stats for a building, including whether it's
-  * doing better or worse than average, it's rank and percentile rank
+  * doing better or worse than median, it's rank and percentile rank
   */
 export default {
   name: 'StatTile',
@@ -81,6 +79,10 @@ export default {
     stats: Object,
     unit: String,
   },
+  data: () => ({
+    // Expose RankConfig to template
+    RankConfig,
+  }),
   computed: {
     isAboveMedian() {
       return this.building[this.statKey] &&
@@ -122,13 +124,13 @@ export default {
     },
 
     rankLabel() {
-      return returnRankLabel(this.statRank, this.isSquareFootage);
+      return getRankLabel(this.statRank, this.isSquareFootage);
     },
 
     // Returns a number 1 - 4 for how concerned we should be about this stat
     // 0 = outstanding performer in category
     // 1 = no concern
-    // 2 = medium concern (above average)
+    // 2 = medium concern (above median)
     // 3 = high category (top 30)
     // 4 = very high concern (top 10 in category)
     concernLevel() {
@@ -214,9 +216,9 @@ export default {
     font-weight: bold;
   }
 
-  .average, .percentile { font-size: 0.75rem; }
+  .median, .percentile { font-size: 0.75rem; }
 
-  .average { margin-top: 0.5rem; }
+  .median { margin-top: 0.5rem; }
 
   .percentile {
     font-weight: normal;
