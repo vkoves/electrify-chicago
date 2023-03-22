@@ -29,13 +29,14 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 
 ## Feature To-Do List
 
-- [ ] Show property owner (needs new data source)
-- [ ] Show % of energy use from the four sources (electric, gas, district chilled water, district steam)
+- [x] Show property owner (manually tagged)
 - [x] Pre-process data to calculate things like averages for each property and rank of each
       building overall, in their class (TODO), and in their ward (TODO)
-- [ ] Create ward page that shows data by ward
-- [ ] Figure out a way to rank buildings by opportunity for improvement
-- [ ] Add colors/emoji to table view to give more context (e.g. so people know Keating is super bad)
+- [x] Add colors/emoji to table view to give more context (e.g. so people know Keating is super bad)
+- [ ] Show % of energy use from the four sources (electric, gas, district chilled water, district steam)
+- [ ] Create ward page that shows data by ward (needs new data source)
+- [ ] Figure out a way to rank buildings by opportunity for improvement (perhaps higher than avg.
+      in category, uses a lot of natural gas?)
 
 ## Development
 
