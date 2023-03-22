@@ -27,6 +27,7 @@ export default {
     allBuilding(sortBy: "TotalGHGEmissions", limit: 20) {
       edges {
         node {
+          slugSource
           PropertyName
           Address
           path

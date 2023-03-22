@@ -1,6 +1,7 @@
 <script>
 import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from './OverallRankEmoji.vue';
+import OwnerLogo from './OwnerLogo.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -10,7 +11,8 @@ export default {
   components: {
     RankText,
     OverallRankEmoji,
-  },
+    OwnerLogo
+},
   props: {
     buildings: Array,
     showSquareFootage: Boolean,
@@ -58,6 +60,7 @@ export default {
               {{ edge.node.PropertyName || edge.node.Address }}
             </g-link>
             <OverallRankEmoji :building="edge.node" :stats="BuildingBenchmarkStats"/>
+            <OwnerLogo :building="edge.node" :isSmall="true"/>
             <br/>
             <div class="prop-address">{{ edge.node.Address }}</div>
           </td>

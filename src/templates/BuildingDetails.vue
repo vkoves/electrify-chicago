@@ -1,6 +1,7 @@
 <page-query>
 query ($id: ID!) {
   building(id: $id) {
+    slugSource
     Address
     ChicagoEnergyRating
     CommunityArea
@@ -41,10 +42,14 @@ query ($id: ID!) {
 <template>
   <DefaultLayout>
     <div>
-      <h1>
-        {{ $page.building.PropertyName || $page.building.Address }}
-        <OverallRankEmoji :building="$page.building" :stats="BuildingBenchmarkStats"/>
-      </h1>
+      <div>
+        <h1>
+          {{ $page.building.PropertyName || $page.building.Address }}
+          <OverallRankEmoji :building="$page.building" :stats="BuildingBenchmarkStats"/>
+        </h1>
+
+        <OwnerLogo :building="$page.building"/>
+      </div>
 
       <div class="address">
         {{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}
@@ -255,6 +260,7 @@ query ($id: ID!) {
 <script>
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import StatTile from '~/components/StatTile.vue';
+import OwnerLogo from '~/components/OwnerLogo.vue';
 import OverallRankEmoji from '../components/OverallRankEmoji.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
@@ -269,8 +275,9 @@ export default {
   },
   components: {
     NewTabIcon,
-    StatTile,
     OverallRankEmoji,
+    OwnerLogo,
+    StatTile,
   },
   filters: {
     titlecase(value) {

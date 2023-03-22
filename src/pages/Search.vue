@@ -71,6 +71,7 @@ export default {
     allBuilding(sortBy: "GHGIntensity") {
       edges {
         node {
+          slugSource
           PropertyName
           Address
           path

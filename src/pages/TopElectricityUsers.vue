@@ -27,6 +27,7 @@ export default {
     allBuilding(sortBy: "ElectricityUse", limit: 20) {
       edges {
         node {
+          slugSource
           PropertyName
           Address
           path
