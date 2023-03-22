@@ -236,9 +236,9 @@ query ($id: ID!) {
       </dl>
 
       <p class="constrained">
-        <strong>Important Note:</strong> Rankings are among included buildings, which are those
-        who reported under the Chicago Energy Benchmarking Ordinance with emissions greater
-        than 1,000 metric tons.
+        <strong>* Important Note:</strong> Rankings and medians are among <em>included</em>
+        buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
+        the year 2020 with emissions greater than 1,000 metric tons.
       </p>
 
       <p class="footnote">
@@ -371,7 +371,8 @@ export default {
 
     dt {
       font-weight: normal;
-      margin-bottom: 0.25rem;
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
     }
 
     dd, .stat-tile { height: 100%; }

@@ -36,21 +36,28 @@
     </div>
 
     <!-- Don't show percentile if the top 20, it'll just be 'Higher than 100%' -->
-    <div v-if="typeof statRankPercent === 'number' && statRank > 20" class="percentile">
+    <div v-if="typeof statRankPercent === 'number' && statRank > FlagRankMax" class="percentile">
       <!-- If stat rank is < 50%, invert it.
         E.g higher than of benchmarked buildings becomes less than 99% of buildings-->
         <template v-if="statRankPercent > 50">
           Higher than {{ statRankPercent }}% of others
         </template>
-        <template v-else>
+        <!-- Only show lower than X% if not getting a trophy-->
+        <template v-else-if="statRankInverted > RankConfig.TrophyRankInvertedMax">
           <!-- Never show lower than 100%, top out at 100%-->
           Lower than {{ Math.min(99, 100 - statRankPercent) }}% of others
         </template>
       </div>
 
+      <div v-if="medianMultipleMsg" class="median-comparison">
+        <span class="val">{{ medianMultipleMsg }}</span> the median
+      </div>
+
       <div  v-if="stats[statKey]" class="median">
-        Median benchmarked building: <br/>
-        {{ stats[statKey].median.toLocaleString() }} <span v-html="unit"/><br/>
+        Median benchmarked building*: <br/>
+        <div class="median-val">
+          {{ stats[statKey].median.toLocaleString() }} <span v-html="unit"/>
+        </div>
       </div>
     </template>
     <template v-else>
@@ -93,6 +100,35 @@ export default {
     // value-neutral - a building isn't worse _just_ because it's bigger
     isSquareFootage() {
       return this.unit === 'sqft';
+    },
+
+    /**
+     * Returns the multipier for this building's stat compared to the median (e.g. '3' times median
+     * '1/5' median)
+     *
+     * @return {string|null}
+     */
+    medianMultipleMsg() {
+      const median = this.stats[this.statKey].median;
+      const statValueNum = parseFloat(this.building[this.statKey]);
+
+      if (median) {
+        const medianMult = statValueNum / median;
+
+        // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
+        if (medianMult > 5) {
+          return Math.round(medianMult) + 'x';
+        } else if (medianMult > 1) {
+          return medianMult.toFixed(1) + 'x';
+        } else if (medianMult < 0.5) {
+          // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
+          return `1/${Math.round(1 / medianMult )}`;
+        } else {
+          return medianMult.toFixed(1) + 'x';
+        }
+      }
+
+      return null;
     },
 
     statValue() {
@@ -207,18 +243,34 @@ export default {
   }
 
   .stat-value {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
+    font-weight: bold;
 
     img { vertical-align: -0.25rem; }
   }
 
-  .rank {
-    font-weight: bold;
+  // Apply a semi-bold to rank
+  .rank { font-weight: 500; }
+
+  .median-comparison {
+    font-size: 0.75rem;
+
+    .val {
+      font-size: 0.875rem;
+      font-weight: bold;
+    }
   }
 
   .median, .percentile { font-size: 0.75rem; }
 
-  .median { margin-top: 0.5rem; }
+  .median {
+    margin-top: 0.5rem;
+
+    .median-val {
+      font-weight: 500;
+      font-size: larger;
+    }
+  }
 
   .percentile {
     font-weight: normal;
