@@ -99,7 +99,7 @@ query ($id: ID!) {
             </div>
           -->
 
-          <div v-if="$page.building.ChicagoEnergyRating">
+          <div v-if="typeof $page.building.ChicagoEnergyRating === 'number'">
             <dt>
               <a href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html">
                 Chicago Energy Rating
