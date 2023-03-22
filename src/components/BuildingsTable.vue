@@ -11,8 +11,8 @@ export default {
   components: {
     RankText,
     OverallRankEmoji,
-    OwnerLogo
-},
+    OwnerLogo,
+  },
   props: {
     buildings: Array,
     showSquareFootage: Boolean,
@@ -61,7 +61,7 @@ export default {
             </g-link>
             <OverallRankEmoji :building="edge.node" :stats="BuildingBenchmarkStats"/>
             <OwnerLogo :building="edge.node" :isSmall="true"/>
-            <br/>
+
             <div class="prop-address">{{ edge.node.Address }}</div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>

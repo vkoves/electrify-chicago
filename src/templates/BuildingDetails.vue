@@ -47,8 +47,6 @@ query ($id: ID!) {
           {{ $page.building.PropertyName || $page.building.Address }}
           <OverallRankEmoji :building="$page.building" :stats="BuildingBenchmarkStats"/>
         </h1>
-
-        <OwnerLogo :building="$page.building"/>
       </div>
 
       <div class="address">
@@ -126,7 +124,13 @@ query ($id: ID!) {
               {{ $page.building.ENERGYSTARScore }} / 100
             </dd>
           </div>
+
+          <div>
+            <dt>Owner</dt>
+            <OwnerLogo :building="$page.building"/>
+          </div>
         </dl>
+
       </div>
 
       <h2>Emissions & Energy Information</h2>

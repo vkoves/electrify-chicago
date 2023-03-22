@@ -1,12 +1,20 @@
 <template>
-    <div v-if="owner" class="owner-cont" :class="{ '-small': isSmall }">
-        <img v-if="!isSmall" :src="ownerLogoSrc" :alt="owner.name"/>
-        <div v-if="!isSmall" class="owner-label">
-            <strong>Note:</strong> Owner manually tagged
-        </div>
+    <!-- On large views we'll say the owner is unknown, in a table we output nothing -->
+    <div v-if="owner || !isSmall" class="owner-cont" :class="{
+        '-small': isSmall,
+        '-unknown': !owner
+    }">
+        <template v-if="owner">
+            <img v-if="!isSmall" :src="ownerLogoSrc" :alt="owner.name"/>
+            <div v-if="!isSmall " class="owner-label">
+                <strong>Note:</strong> Owner manually tagged
+            </div>
 
-        <!-- If small view should short building name -->
-        <span v-if="isSmall">({{ owner.nameShort }})</span>
+            <!-- If small view should short building name -->
+            <span v-if="isSmall">({{ owner.nameShort }})</span>
+        </template>
+
+        <div v-if="!isSmall && !owner">Unknown</div>
     </div>
 </template>
 
@@ -64,9 +72,12 @@ export default {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 
+  &.-small, &.-unknown { margin: 0; }
+
   &.-small {
     display: inline-block;
     font-size: small;
+    margin: 0;
   }
 
   .owner-label {
@@ -74,6 +85,6 @@ export default {
     font-size: smaller;
   }
 
-  img { max-width: 20rem; }
+  img { width: 20rem; }
 }
 </style>
