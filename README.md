@@ -34,7 +34,8 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [x] Pre-process data to calculate things like averages for each property and rank of each
       building overall, in their class (TODO), and in their ward (TODO)
 - [ ] Create ward page that shows data by ward
-- [ ] Switch to realtime data parsing rather than pre-built? (allows for search, more filters)
+- [ ] Figure out a way to rank buildings by opportunity for improvement
+- [ ] Add colors/emoji to table view to give more context (e.g. so people know Keating is super bad)
 
 ## Development
 

@@ -24,7 +24,7 @@
     </div>
 
     <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
-    <div v-if="statRank && statRank <= 50" class="rank">
+    <div v-if="statRank && rankLabel" class="rank">
       #{{ statRank }} {{ rankLabel }}
     </div>
 
@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import {returnRankLabel} from '../common-functions';
+
 /**
   * A  tile that can show the stats for a building, including whether it's
   * doing better or worse than average, it's rank and percentile rank
@@ -120,13 +122,7 @@ export default {
     },
 
     rankLabel() {
-      if (this.isSquareFootage) {
-        return 'Largest';
-      } else if (this.statRank <= 10) {
-        return 'Highest in Chicago 🚨 ';
-      } else {
-        return 'Highest in Chicago 🚩';
-      }
+      return returnRankLabel(this.statRank, this.isSquareFootage);
     },
 
     // Returns a number 1 - 4 for how concerned we should be about this stat
