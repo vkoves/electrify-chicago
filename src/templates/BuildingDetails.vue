@@ -103,10 +103,13 @@ query ($id: ID!) {
             </div>
           -->
 
-          <div v-if="typeof $page.building.ChicagoEnergyRating === 'number'">
+          <!-- Show energy rating if it's a float value (not blank or NaN) -->
+          <div v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))">
             <dt>
-              <a href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html">
+              <a href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
+              target="_blank" rel="noopener noreferrer">
                 Chicago Energy Rating
+                <NewTabIcon/>
               </a>
             </dt>
             <dd>
@@ -116,8 +119,10 @@ query ($id: ID!) {
 
           <div v-if="$page.building.ENERGYSTARScore">
             <dt>
-              <a href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated">
+              <a href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
+                target="_blank" rel="noopener noreferrer">
                 Energy Star Score
+                <NewTabIcon/>
               </a>
             </dt>
             <dd>
@@ -346,9 +351,11 @@ export default {
   .building-details {
     background: #ededed;
     border-radius: 0.5rem;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
 
     h2 { margin-top: 0; }
+
+    dt { font-size: 0.825rem; }
   }
 
   dl {
