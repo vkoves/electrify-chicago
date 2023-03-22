@@ -6,7 +6,7 @@
     }">
         <template v-if="owner">
             <img v-if="!isSmall" :src="ownerLogoSrc" :alt="owner.name"/>
-            <div v-if="!isSmall " class="owner-label">
+            <div v-if="!isSmall" class="owner-label">
                 <strong>Note:</strong> Owner manually tagged
             </div>
 

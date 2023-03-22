@@ -24,7 +24,7 @@
     </div>
 
     <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
-    <div v-if="statRank && rankLabel" class="rank">
+    <div v-if="statRank && statRank <= RankConfig.FlagRankMax && rankLabel" class="rank">
       #{{ statRank }} {{ rankLabel }}
     </div>
 

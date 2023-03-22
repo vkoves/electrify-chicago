@@ -1,6 +1,6 @@
 <template>
   <details class="data-disclaimer">
-    <summary>Note: Data only includes large Chicago buildings</summary>
+    <summary>Note: Data only includes large Chicago buildings from 2020</summary>
 
     <p class="constrained">
         <strong>Note:</strong> This data only includes buildings whose emissions are reported
@@ -8,6 +8,10 @@
         this list includes all commercial, institutional, and residential buildings larger than
         50,000 square feet.&rdquo; This dataset is also then filtered to only buildings with
         reported emissions > 1,000 metric tons.
+    </p>
+
+    <p class="constrained">
+      This data is also from 2020, but when new benchmark data is available, we'll update the site.
     </p>
   </details>
 </template>
