@@ -65,8 +65,7 @@
       Not Reported
 
       <p class="empty-notice">
-        This data was not reported for this building. <br>
-        This may mean a value of zero for this field.
+        This data was not reported for this building, which may mean a value of zero for this field.
       </p>
     </template>
   </div>
