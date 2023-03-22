@@ -27,7 +27,7 @@ export default {
 
 <template>
   <div class="table-cont">
-    <table>
+    <table :class="{ '-with-sq-footage': showSquareFootage }">
       <thead>
         <tr>
           <th scope="col">Property Name / address</th>
@@ -127,9 +127,14 @@ export default {
 
   table {
     width: 100%;
-    /// Scroll if we get below desktop size table
+    // Scroll if we get below desktop size table
     min-width: 60rem;
     border-collapse: collapse;
+
+    // Increase width if showing square footage (biggest buildings page)
+    &.-with-sq-footage {
+      min-width: 80rem;
+    }
 
     a {
       font-weight: bold;

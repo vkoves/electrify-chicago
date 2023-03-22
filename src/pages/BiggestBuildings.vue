@@ -24,7 +24,7 @@ export default {
 
 <static-query>
   query {
-    allBuilding(sortBy: "GrossFloorArea", limit: 20) {
+    allBuilding(sortBy: "GrossFloorArea", limit: 50) {
       edges {
         node {
           slugSource
@@ -55,7 +55,7 @@ export default {
 
 <template>
   <DefaultLayout>
-    <h1>Top Buildings By Square Footage</h1>
+    <h1>Top {{ this.$static.allBuilding.edges.length }} Buildings By Square Footage</h1>
 
     <DataDisclaimer/>
 

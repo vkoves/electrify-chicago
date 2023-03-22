@@ -24,7 +24,7 @@ export default {
 
 <static-query>
   query {
-    allBuilding(sortBy: "TotalGHGEmissions", limit: 20) {
+    allBuilding(sortBy: "TotalGHGEmissions", limit: 50) {
       edges {
         node {
           slugSource
@@ -52,7 +52,7 @@ export default {
 
 <template>
   <DefaultLayout>
-    <h1>Top Buildings by Greenhouse Gas Emissions</h1>
+    <h1>Top {{ this.$static.allBuilding.edges.length }} Buildings by Greenhouse Gas Emissions</h1>
 
     <DataDisclaimer/>
 

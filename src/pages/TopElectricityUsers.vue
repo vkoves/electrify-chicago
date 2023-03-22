@@ -24,7 +24,7 @@ export default {
 
 <static-query>
   query {
-    allBuilding(sortBy: "ElectricityUse", limit: 20) {
+    allBuilding(sortBy: "ElectricityUse", limit: 50) {
       edges {
         node {
           slugSource
@@ -52,7 +52,7 @@ export default {
 
 <template>
   <DefaultLayout>
-    <h1>Top Electricity Users</h1>
+    <h1>Top {{ this.$static.allBuilding.edges.length }} Electricity Users</h1>
 
     <DataDisclaimer/>
 
