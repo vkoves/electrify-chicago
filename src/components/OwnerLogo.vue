@@ -14,7 +14,7 @@
             <span v-if="isSmall">({{ owner.nameShort }})</span>
         </template>
 
-        <div v-if="!isSmall && !owner">Unknown</div>
+        <div v-if="!isSmall && !owner">Not Tagged</div>
     </div>
 </template>
 
