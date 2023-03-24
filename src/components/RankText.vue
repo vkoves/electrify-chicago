@@ -1,27 +1,43 @@
 <template>
   <div class="rank-text">
     <div class="stat-value">
-      <template v-if="round">{{ Math.round(statValue).toLocaleString() }}</template>
-      <template v-else>{{ statValue.toFixed(1) }}</template>
+      <template v-if="round">
+        {{ Math.round(statValue).toLocaleString() }}
+      </template>
+      <template v-else>
+        {{ statValue.toFixed(1) }}
+      </template>
 
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
-        <img v-if="isAboveMedian"
+        <img
+          v-if="isAboveMedian"
           :src="isSquareFootage ? '/arrow-up-neutral.svg' : '/arrow-up-bad.svg'"
-          width="20" title="Above median building" />
-        <img v-else
+          width="20"
+          title="Above median building"
+        >
+        <img
+          v-else
           :src="isSquareFootage ? '/arrow-down-neutral.svg' : '/arrow-down-good.svg'"
-          width="20" title="Below median building" />
+          width="20"
+          title="Below median building"
+        >
       </template>
     </div>
 
     <div class="rank-label">
       <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
-      <div v-if="statRank && statRank <= RankConfig.FlagRankMax" class="rank">
+      <div
+        v-if="statRank && statRank <= RankConfig.FlagRankMax"
+        class="rank"
+      >
         <span class="rank-num">#{{ statRank }}</span> {{ rankLabel }}
       </div>
       <!-- Don't show percentile if the top 10, it'll just be 'Higher than 100%' -->
-      <div v-else-if="typeof statRankPercent === 'number'" class="percentile">
+      <div
+        v-else-if="typeof statRankPercent === 'number'"
+        class="percentile"
+      >
         <!-- If stat rank is < 50%, invert it.
           E.g higher than of other buildings becomes less than 99% of buildings-->
         <template v-if="statRankPercent > 50">

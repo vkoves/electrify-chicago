@@ -30,87 +30,137 @@ export default {
     <table :class="{ '-with-sq-footage': showSquareFootage }">
       <thead>
         <tr>
-          <th scope="col">Property Name / address</th>
-          <th scope="col">Primary Property Type</th>
+          <th scope="col">
+            Property Name / address
+          </th>
+          <th scope="col">
+            Primary Property Type
+          </th>
           <th v-if="showSquareFootage">
             Square Footage
           </th>
-          <th scope="col" class="numeric">
-            Greenhouse Gas Intensity<br/>
+          <th
+            scope="col"
+            class="numeric"
+          >
+            Greenhouse Gas Intensity<br>
             (kg CO<sub>2</sub>/sqft)
           </th>
-          <th scope="col" class="numeric">
-            Total Greenhouse Emissions<br/>
+          <th
+            scope="col"
+            class="numeric"
+          >
+            Total Greenhouse Emissions<br>
             (metric tons CO<sub>2</sub>)
           </th>
-          <th scope="col" class="numeric">
-            Natural Gas Use<br/>
+          <th
+            scope="col"
+            class="numeric"
+          >
+            Natural Gas Use<br>
             (kBtu)
           </th>
-          <th scope="col" class="numeric">
-            Electricity Use<br/>
+          <th
+            scope="col"
+            class="numeric"
+          >
+            Electricity Use<br>
             (kBtu)
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="edge in buildings" :key="edge.node.id">
+        <tr
+          v-for="edge in buildings"
+          :key="edge.node.id"
+        >
           <td class="property-name">
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
             </g-link>
-            <OverallRankEmoji :building="edge.node" :stats="BuildingBenchmarkStats"/>
-            <OwnerLogo :building="edge.node" :isSmall="true"/>
+            <OverallRankEmoji
+              :building="edge.node"
+              :stats="BuildingBenchmarkStats"
+            />
+            <OwnerLogo
+              :building="edge.node"
+              :is-small="true"
+            />
 
-            <div class="prop-address">{{ edge.node.Address }}</div>
+            <div class="prop-address">
+              {{ edge.node.Address }}
+            </div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>
 
           <!-- Square footage is optional, only shown on BiggestBuildings -->
-          <td v-if="showSquareFootage" class="numeric">
+          <td
+            v-if="showSquareFootage"
+            class="numeric"
+          >
             <template v-if="edge.node.GrossFloorArea">
               <RankText
                 :building="edge.node"
                 :round="true"
-                :stats="BuildingBenchmarkStats" statKey="GrossFloorArea"/>
+                :stats="BuildingBenchmarkStats"
+                stat-key="GrossFloorArea"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
 
           <td class="numeric">
             <template v-if="edge.node.GHGIntensity">
               <RankText
                 :building="edge.node"
-                :stats="BuildingBenchmarkStats" statKey="GHGIntensity"/>
+                :stats="BuildingBenchmarkStats"
+                stat-key="GHGIntensity"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
           <td class="numeric">
             <template v-if="edge.node.TotalGHGEmissions">
               <RankText
                 :building="edge.node"
                 :round="true"
-                :stats="BuildingBenchmarkStats" statKey="TotalGHGEmissions"/>
+                :stats="BuildingBenchmarkStats"
+                stat-key="TotalGHGEmissions"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
           <td class="numeric">
             <template v-if="edge.node.NaturalGasUse">
               <RankText
                 :building="edge.node"
                 :round="true"
-                :stats="BuildingBenchmarkStats" statKey="NaturalGasUse"/>
+                :stats="BuildingBenchmarkStats"
+                stat-key="NaturalGasUse"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
           <td class="numeric">
             <template v-if="edge.node.ElectricityUse">
               <RankText
                 :building="edge.node"
                 :round="true"
-                :stats="BuildingBenchmarkStats" statKey="ElectricityUse"/>
+                :stats="BuildingBenchmarkStats"
+                stat-key="ElectricityUse"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
         </tr>
       </tbody>

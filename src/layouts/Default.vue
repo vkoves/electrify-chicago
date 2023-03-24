@@ -30,34 +30,74 @@ export default {
     <div class="layout">
       <!-- TODO: Split to a component-->
       <header class="header">
-        <g-link to="/" class="logo-link">
-          <img src="/electrify-chicago-logo.svg"
-              alt="Electrify Chicago Homepage" class="site-logo" />
+        <g-link
+          to="/"
+          class="logo-link"
+        >
+          <img
+            src="/electrify-chicago-logo.svg"
+            alt="Electrify Chicago Homepage"
+            class="site-logo"
+          >
         </g-link>
         <nav class="top-nav">
-          <g-link class="nav-link" to="/">Home</g-link>
-          <g-link class="nav-link" to="/about">About</g-link>
-          <g-link class="nav-link" to="/top-gas-users">Top Gas Users</g-link>
-          <g-link class="nav-link" to="/top-emitters">Top Emitters</g-link>
-          <g-link class="nav-link" to="/biggest-buildings">Biggest Buildings</g-link>
+          <g-link
+            class="nav-link"
+            to="/"
+          >
+            Home
+          </g-link>
+          <g-link
+            class="nav-link"
+            to="/about"
+          >
+            About
+          </g-link>
+          <g-link
+            class="nav-link"
+            to="/top-gas-users"
+          >
+            Top Gas Users
+          </g-link>
+          <g-link
+            class="nav-link"
+            to="/top-emitters"
+          >
+            Top Emitters
+          </g-link>
+          <g-link
+            class="nav-link"
+            to="/biggest-buildings"
+          >
+            Biggest Buildings
+          </g-link>
           <!--
             <g-link class="nav-link" to="/top-electricity-users">Top Electricity Users</g-link>
           -->
 
           <form class="search-form">
             <div class="input-cont">
-              <input type="text" name="search" id="search"
+              <input
+                id="search"
+                v-model="searchQuery"
+                type="text"
+                name="search"
                 aria-label="Search benchmarked buildings"
-                placeholder="Search property name/address" v-model="searchQuery">
-              <button v-on:click="submitSearch" type="submit">Search</button>
+                placeholder="Search property name/address"
+              >
+              <button
+                type="submit"
+                @click="submitSearch"
+              >
+                Search
+              </button>
             </div>
           </form>
         </nav>
       </header>
 
       <!-- The main content -->
-      <slot/>
-
+      <slot />
     </div>
 
     <!-- TODO: Split to a component -->
@@ -67,7 +107,11 @@ export default {
       </div>
       <div>
         <a href="https://github.com/vkoves/electrify-chicago">
-          <img alt="" src="/github-mark.svg" width="16" />
+          <img
+            alt=""
+            src="/github-mark.svg"
+            width="16"
+          >
           Contribute to Electrify Chicago on GitHub
         </a>
       </div>

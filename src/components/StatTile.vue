@@ -1,44 +1,60 @@
 <template>
-  <div class="stat-tile" :class="{
-    '-very-bad': concernLevel === 4,
-    '-bad': concernLevel === 3,
-    '-medium': concernLevel === 2,
-    '-good': concernLevel === 1,
-    '-great': concernLevel === 0,
-    '-sq-footage': isSquareFootage,
-  }">
-  <template v-if="building[statKey]">
-    <!-- The actual stat value-->
-    <div class="stat-value">
-      {{ statValue }} <span v-html="unit"/>
+  <div
+    class="stat-tile"
+    :class="{
+      '-very-bad': concernLevel === 4,
+      '-bad': concernLevel === 3,
+      '-medium': concernLevel === 2,
+      '-good': concernLevel === 1,
+      '-great': concernLevel === 0,
+      '-sq-footage': isSquareFootage,
+    }"
+  >
+    <template v-if="building[statKey]">
+      <!-- The actual stat value-->
+      <div class="stat-value">
+        {{ statValue }} <span v-html="unit" />
 
-      <!-- Show icons for below or above median if we have a median for this stat -->
-      <template v-if="stats[statKey]">
-        <img v-if="isAboveMedian"
-          :src="isSquareFootage ? '/arrow-up-neutral.svg' : '/arrow-up-bad.svg'"
-          width="20" title="Above median building" />
-        <img v-else
-          :src="isSquareFootage ? '/arrow-down-neutral.svg' : '/arrow-down-good.svg'"
-          width="20" title="Below median building" />
-      </template>
-    </div>
+        <!-- Show icons for below or above median if we have a median for this stat -->
+        <template v-if="stats[statKey]">
+          <img
+            v-if="isAboveMedian"
+            :src="isSquareFootage ? '/arrow-up-neutral.svg' : '/arrow-up-bad.svg'"
+            width="20"
+            title="Above median building"
+          >
+          <img
+            v-else
+            :src="isSquareFootage ? '/arrow-down-neutral.svg' : '/arrow-down-good.svg'"
+            width="20"
+            title="Below median building"
+          >
+        </template>
+      </div>
 
-    <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
-    <div v-if="statRank && statRank <= RankConfig.FlagRankMax && rankLabel" class="rank">
-      #{{ statRank }} {{ rankLabel }}
-    </div>
+      <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
+      <div
+        v-if="statRank && statRank <= RankConfig.FlagRankMax && rankLabel"
+        class="rank"
+      >
+        #{{ statRank }} {{ rankLabel }}
+      </div>
 
-    <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
-    <div v-if="!isSquareFootage && statRankInverted
-      && statRankInverted <= RankConfig.TrophyRankInvertedMax"
-      class="rank">
+      <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
+      <div
+        v-if="!isSquareFootage && statRankInverted
+          && statRankInverted <= RankConfig.TrophyRankInvertedMax"
+        class="rank"
+      >
         #{{ statRankInverted }} Lowest 🏆
-    </div>
+      </div>
 
-    <!-- Only show percentile if we don't have a flag or alarm -->
-    <div v-if="typeof statRankPercent === 'number' && statRank > RankConfig.FlagRankMax"
-      class="percentile">
-      <!-- If stat rank is < 50%, invert it.
+      <!-- Only show percentile if we don't have a flag or alarm -->
+      <div
+        v-if="typeof statRankPercent === 'number' && statRank > RankConfig.FlagRankMax"
+        class="percentile"
+      >
+        <!-- If stat rank is < 50%, invert it.
         E.g higher than of benchmarked buildings becomes less than 99% of buildings-->
         <template v-if="statRankPercent > 50">
           Higher than {{ statRankPercent }}% of others
@@ -50,14 +66,20 @@
         </template>
       </div>
 
-      <div v-if="medianMultipleMsg" class="median-comparison">
+      <div
+        v-if="medianMultipleMsg"
+        class="median-comparison"
+      >
         <span class="val">{{ medianMultipleMsg }}</span> the median
       </div>
 
-      <div  v-if="stats[statKey]" class="median">
-        Median benchmarked building*: <br/>
+      <div
+        v-if="stats[statKey]"
+        class="median"
+      >
+        Median benchmarked building*: <br>
         <div class="median-val">
-          {{ stats[statKey].median.toLocaleString() }} <span v-html="unit"/>
+          {{ stats[statKey].median.toLocaleString() }} <span v-html="unit" />
         </div>
       </div>
     </template>

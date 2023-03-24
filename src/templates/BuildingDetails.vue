@@ -45,16 +45,22 @@ query ($id: ID!) {
       <div>
         <h1>
           {{ $page.building.PropertyName || $page.building.Address }}
-          <OverallRankEmoji :building="$page.building" :stats="BuildingBenchmarkStats"/>
+          <OverallRankEmoji
+            :building="$page.building"
+            :stats="BuildingBenchmarkStats"
+          />
         </h1>
       </div>
 
       <div class="address">
         {{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}
-        <a :href="'https://www.google.com/maps/search/' + encodedAddress"
+        <a
+          :href="'https://www.google.com/maps/search/' + encodedAddress"
           class="google-maps-link"
-          target="_blank" rel="noopener noreferrer">
-          Find on Google Maps <NewTabIcon/>
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Find on Google Maps <NewTabIcon />
         </a>
       </div>
 
@@ -66,10 +72,10 @@ query ($id: ID!) {
             <dt>Square Footage</dt>
             <dd>
               <StatTile
-              :building="$page.building"
-              :statKey="'GrossFloorArea'"
-              :stats="BuildingBenchmarkStats"
-              :unit="'sqft'"
+                :building="$page.building"
+                :stat-key="'GrossFloorArea'"
+                :stats="BuildingBenchmarkStats"
+                :unit="'sqft'"
               />
             </dd>
           </div>
@@ -106,10 +112,13 @@ query ($id: ID!) {
           <!-- Show energy rating if it's a float value (not blank or NaN) -->
           <div v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))">
             <dt>
-              <a href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
-              target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Chicago Energy Rating
-                <NewTabIcon/>
+                <NewTabIcon />
               </a>
             </dt>
             <dd>
@@ -119,10 +128,13 @@ query ($id: ID!) {
 
           <div v-if="$page.building.ENERGYSTARScore">
             <dt>
-              <a href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
-                target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Energy Star Score
-                <NewTabIcon/>
+                <NewTabIcon />
               </a>
             </dt>
             <dd>
@@ -132,10 +144,9 @@ query ($id: ID!) {
 
           <div>
             <dt>Owner</dt>
-            <OwnerLogo :building="$page.building"/>
+            <OwnerLogo :building="$page.building" />
           </div>
         </dl>
-
       </div>
 
       <h2>Emissions & Energy Information</h2>
@@ -146,10 +157,10 @@ query ($id: ID!) {
           <dd>
             <StatTile
               :building="$page.building"
-              :statKey="'GHGIntensity'"
+              :stat-key="'GHGIntensity'"
               :stats="BuildingBenchmarkStats"
               :unit="'kg CO<sub>2</sub> / sqft'"
-              />
+            />
           </dd>
         </div>
 
@@ -158,10 +169,10 @@ query ($id: ID!) {
           <dd>
             <StatTile
               :building="$page.building"
-              :statKey="'TotalGHGEmissions'"
+              :stat-key="'TotalGHGEmissions'"
               :stats="BuildingBenchmarkStats"
               :unit="'metric tons CO<sub>2</sub>'"
-              />
+            />
           </dd>
         </div>
 
@@ -170,10 +181,10 @@ query ($id: ID!) {
           <dd>
             <StatTile
               :building="$page.building"
-              :statKey="'SourceEUI'"
+              :stat-key="'SourceEUI'"
               :stats="BuildingBenchmarkStats"
               :unit="'kBtu / sqft'"
-              />
+            />
           </dd>
         </div>
 
@@ -182,12 +193,12 @@ query ($id: ID!) {
           <dd>
             <StatTile
               :building="$page.building"
-              :statKey="'SiteEUI'"
+              :stat-key="'SiteEUI'"
               :stats="BuildingBenchmarkStats"
               :unit="'kBtu / sqft'"
-              />
+            />
 
-            {{  $page.buildingSiteEUIRank }}
+            {{ $page.buildingSiteEUIRank }}
           </dd>
         </div>
 
@@ -196,10 +207,10 @@ query ($id: ID!) {
           <dd>
             <StatTile
               :building="$page.building"
-              :statKey="'NaturalGasUse'"
+              :stat-key="'NaturalGasUse'"
               :stats="BuildingBenchmarkStats"
               :unit="'kBtu'"
-              />
+            />
           </dd>
         </div>
 
@@ -208,10 +219,10 @@ query ($id: ID!) {
           <dd>
             <StatTile
               :building="$page.building"
-              :statKey="'ElectricityUse'"
+              :stat-key="'ElectricityUse'"
               :stats="BuildingBenchmarkStats"
               :unit="'kBtu'"
-              />
+            />
           </dd>
         </div>
 
@@ -220,10 +231,10 @@ query ($id: ID!) {
           <dd>
             <StatTile
               :building="$page.building"
-              :statKey="'DistrictSteamUse'"
+              :stat-key="'DistrictSteamUse'"
               :stats="BuildingBenchmarkStats"
               :unit="'kBtu'"
-              />
+            />
           </dd>
         </div>
 
@@ -232,10 +243,10 @@ query ($id: ID!) {
           <dd>
             <StatTile
               :building="$page.building"
-              :statKey="'DistrictChilledWaterUse'"
+              :stat-key="'DistrictChilledWaterUse'"
               :stats="BuildingBenchmarkStats"
               :unit="'kBtu'"
-              />
+            />
           </dd>
         </div>
       </dl>
@@ -249,9 +260,12 @@ query ($id: ID!) {
       <p class="footnote">
         Data Source:
         <!-- eslint-disable-next-line max-len -->
-        <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank" rel="noopener noreferrer">
-          Chicago Energy Benchmarking Data Covered Buildings <NewTabIcon/>
+        <a
+          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Chicago Energy Benchmarking Data Covered Buildings <NewTabIcon />
         </a>
       </p>
 
@@ -260,24 +274,33 @@ query ($id: ID!) {
 
         <ul>
           <li>
-            <a href="https://www.chicago.gov/city/en/depts/mayor/supp_info/chicago-energy-benchmarking/Chicago_Energy_Benchmarking_Beyond_Benchmarking.html"
-              target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://www.chicago.gov/city/en/depts/mayor/supp_info/chicago-energy-benchmarking/Chicago_Energy_Benchmarking_Beyond_Benchmarking.html"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Chicago Energy Benchmarking: Taking Action to Improve Energy Efficiency
-              | City of Chicago <NewTabIcon/>
+              | City of Chicago <NewTabIcon />
             </a>
           </li>
 
           <li>
-            <a href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
-              target="_blank" rel="noopener noreferrer">
-              Chicago Average EUIs and ENERGY STAR scores by property type [PDF] <NewTabIcon/>
+            <a
+              href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Chicago Average EUIs and ENERGY STAR scores by property type [PDF] <NewTabIcon />
             </a>
           </li>
 
           <li>
-            <a href="https://portfoliomanager.energystar.gov/pdf/reference/US%20National%20Median%20Table.pdf"
-              target="_blank" rel="noopener noreferrer">
-              U.S. Energy Use Intensity by Property Type | ENERGY STAR [PDF] <NewTabIcon/>
+            <a
+              href="https://portfoliomanager.energystar.gov/pdf/reference/US%20National%20Median%20Table.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              U.S. Energy Use Intensity by Property Type | ENERGY STAR [PDF] <NewTabIcon />
             </a>
           </li>
         </ul>

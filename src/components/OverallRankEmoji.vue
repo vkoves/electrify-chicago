@@ -1,9 +1,12 @@
 <template>
-    <span v-if="overallRank">
-        <span class="overall-rank-emoji" :title="overallRank.msg">
-            {{ overallRank.emoji }}
-        </span>
+  <span v-if="overallRank">
+    <span
+      class="overall-rank-emoji"
+      :title="overallRank.msg"
+    >
+      {{ overallRank.emoji }}
     </span>
+  </span>
 </template>
 
 <script lang="ts">
@@ -23,7 +26,7 @@ export default class OverallRankEmoji extends Vue {
   get overallRank() {
     return getOverallRankEmoji(this.building!, this.stats!);
   }
-};
+}
 </script>
 
 <style lang="scss">

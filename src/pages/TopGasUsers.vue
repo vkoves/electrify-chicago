@@ -52,18 +52,21 @@ export default {
 
 <template>
   <DefaultLayout>
-    <h1>Top {{ this.$static.allBuilding.edges.length }} Buildings by Natural Gas Use</h1>
+    <h1>Top {{ $static.allBuilding.edges.length }} Buildings by Natural Gas Use</h1>
 
-    <DataDisclaimer/>
+    <DataDisclaimer />
 
-    <BuildingsTable :buildings="this.$static.allBuilding.edges" />
+    <BuildingsTable :buildings="$static.allBuilding.edges" />
 
     <p class="footnote">
       Data Source:
       <!-- eslint-disable-next-line max-len -->
-      <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking Data <NewTabIcon/>
+      <a
+        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chicago Energy Benchmarking Data <NewTabIcon />
       </a>
     </p>
   </DefaultLayout>

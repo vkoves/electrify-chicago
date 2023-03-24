@@ -20,6 +20,7 @@
     "webpack": "^4.0.0"
   },
   "devDependencies": {
+    "@types/sindresorhus__slugify": "^0.9.3",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "eslint": ">=5.16.0",

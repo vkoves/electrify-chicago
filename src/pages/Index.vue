@@ -64,17 +64,23 @@ export default {
 
     <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 
-    <DataDisclaimer/>
+    <DataDisclaimer />
 
     <BuildingsTable :buildings="$page.allBuilding.edges" />
 
-    <Pager class="pager" :info="$page.allBuilding.pageInfo"/>
+    <Pager
+      class="pager"
+      :info="$page.allBuilding.pageInfo"
+    />
 
     <p class="footnote">
       Data Source:
-      <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking Data <NewTabIcon/>
+      <a
+        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chicago Energy Benchmarking Data <NewTabIcon />
       </a>
     </p>
   </DefaultLayout>

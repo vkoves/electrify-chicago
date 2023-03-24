@@ -125,35 +125,51 @@ export default {
       Note that results are limited to the first {{ MaxBuildings }} matches.
     </p>
 
-    <DataDisclaimer/>
+    <DataDisclaimer />
 
     <form class="search-form -page">
-        <label for="search">Search Benchmarked Buildings</label>
+      <label for="search">Search Benchmarked Buildings</label>
 
-        <div class="input-cont">
-          <input type="text" name="search" id="search"
-              placeholder="Search property name, type, or address" v-model="search">
-          <button v-on:click="submitSearch" type="submit">Search</button>
-        </div>
+      <div class="input-cont">
+        <input
+          id="search"
+          v-model="search"
+          type="text"
+          name="search"
+          placeholder="Search property name, type, or address"
+        >
+        <button
+          type="submit"
+          @click="submitSearch"
+        >
+          Search
+        </button>
+      </div>
     </form>
 
     <BuildingsTable :buildings="searchResults" />
 
-    <div v-if="searchResults.length === 0" class="no-results-msg">
-        <h2>No results found!</h2>
+    <div
+      v-if="searchResults.length === 0"
+      class="no-results-msg"
+    >
+      <h2>No results found!</h2>
 
-        <p>
-            There may be a typo in your query or in the underlying data, or the building you are
-            looking for may not be in our dataset.
-        </p>
+      <p>
+        There may be a typo in your query or in the underlying data, or the building you are
+        looking for may not be in our dataset.
+      </p>
     </div>
 
     <p class="footnote">
       Data Source:
       <!-- eslint-disable-next-line max-len -->
-      <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking Data <NewTabIcon/>
+      <a
+        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chicago Energy Benchmarking Data <NewTabIcon />
       </a>
     </p>
   </DefaultLayout>

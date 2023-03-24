@@ -5,16 +5,14 @@ module.exports = {
   },
   'extends': [
     'eslint:recommended',
-    'plugin:vue/vue3-essential',
-    'plugin:vue/recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
-  ],
-  'overrides': [
+    'plugin:vue/recommended',
   ],
   'parserOptions': {
-    'ecmaVersion': 'latest',
-    'sourceType': 'module',
+    "parser": "@typescript-eslint/parser",
+    "project": "./tsconfig.json",
+    'extraFileExtensions': [ '.vue' ]
   },
   'plugins': [
     'vue',
@@ -30,4 +28,13 @@ module.exports = {
     'vue/no-deprecated-filter': ['off'],
     '@typescript-eslint/indent': ['error', 2],
   },
+  'overrides': [
+    {
+      'files': ['*.vue'],
+      'rules': {
+        'indent': 'off',
+        '@typescript-eslint/indent': 'off'
+      }
+    }
+  ]
 };
