@@ -81,7 +81,7 @@ export const RankedColumns = [
  * @return {number|null}
  */
 export function getStatRankInverted(
-  statKey: string, statRank: number, buildingStats: IBuildingBenchmarkStats
+  statKey: string, statRank: number, buildingStats: IBuildingBenchmarkStats,
 ): number | null {
   if (statRank) {
     const countForStat = buildingStats[statKey].count;
@@ -109,7 +109,7 @@ export function getStatRankInverted(
  */
 export function getOverallRankEmoji(
   building: IBuilding,
-  buildingStats: IBuildingBenchmarkStats
+  buildingStats: IBuildingBenchmarkStats,
 ): { msg: string, emoji: string } | null {
   let worstEmoji: string | null = null;
   let hasTrophyCategory = false;

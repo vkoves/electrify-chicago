@@ -27,6 +27,14 @@ module.exports = {
     // This rule is for Vue3, and Gridsome uses Vue2
     'vue/no-deprecated-filter': ['off'],
     '@typescript-eslint/indent': ['error', 2],
+    "semi": ["error", "always"],
+    "arrow-parens": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
+    "@typescript-eslint/explicit-function-return-type": ["error", {
+      "allowExpressions": true,
+      "allowHigherOrderFunctions": true,
+      "allowTypedFunctionExpressions": true
+    }]
   },
   'overrides': [
     {
