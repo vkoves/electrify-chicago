@@ -80,7 +80,9 @@ export const RankedColumns = [
  * @param {Object} buildingStats
  * @return {number|null}
  */
-export function getStatRankInverted(statKey: string, statRank: number, buildingStats: IBuildingBenchmarkStats): number | null {
+export function getStatRankInverted(
+  statKey: string, statRank: number, buildingStats: IBuildingBenchmarkStats
+): number | null {
   if (statRank) {
     const countForStat = buildingStats[statKey].count;
 

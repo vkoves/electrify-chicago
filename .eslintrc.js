@@ -4,8 +4,11 @@ module.exports = {
     'es2021': true,
   },
   'extends': [
+    'eslint:recommended',
     'plugin:vue/vue3-essential',
-    'google',
+    'plugin:vue/recommended',
+    'plugin:@typescript-eslint/eslint-recommended',
+    'plugin:@typescript-eslint/recommended',
   ],
   'overrides': [
   ],
@@ -25,5 +28,6 @@ module.exports = {
     'vue/multi-word-component-names': ['off'],
     // This rule is for Vue3, and Gridsome uses Vue2
     'vue/no-deprecated-filter': ['off'],
+    '@typescript-eslint/indent': ['error', 2],
   },
 };

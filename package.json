@@ -9,7 +9,8 @@
     "build": "gridsome build",
     "develop": "gridsome develop",
     "explore": "gridsome explore",
-    "lint-fix": "yarn eslint ./src --fix"
+    "lint": "eslint --ext .ts,.vue ./src",
+    "lint-fix": "yarn lint --fix"
   },
   "dependencies": {
     "csv-parse": "^5.3.6",
@@ -19,8 +20,12 @@
     "webpack": "^4.0.0"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
     "eslint": ">=5.16.0",
-    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.9.0",
     "gridsome-plugin-typescript": "^0.4.0",
     "sass": "^1.59.3",
