@@ -23,7 +23,8 @@
         and exacerbating the climate crisis. In fact, <em>this decade</em> (the 2020s) is an
         especially crucial one for tackling climate change
         (<a href="https://www.nytimes.com/2023/03/20/climate/global-warming-ipcc-earth.html">&ldquo;World Has Less Than a Decade to Stop Catastrophic Warming&hellip;&rdquo;
-          | The New York Times</a>), and shifting away from burning fossil fuels to using electricity
+          | The New York Times</a>), and shifting away from burning fossil fuels to using
+        electricity
         <strong>today</strong> is a crucial step in that journey.
       </p>
 

@@ -16,7 +16,8 @@ export interface IBuildingBenchmarkStats {
 /**
  * An individual building object
  *
- * TODO: Type
+ * TODO: Type this more strictly, maybe with Python generating a types file with
+ * all of the parameter types
  */
 export interface IBuilding {
   [buildingKey: string]: string | number | boolean;
