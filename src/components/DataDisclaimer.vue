@@ -20,7 +20,7 @@
   </details>
 </template>
 
-<script>
+<script lang="ts">
 import NewTabIcon from './NewTabIcon.vue';
 
 /**

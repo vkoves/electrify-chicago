@@ -6,28 +6,23 @@
     </span>
 </template>
 
-<script>
-import {getOverallRankEmoji} from '../common-functions';
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
+import {getOverallRankEmoji, IBuilding, IBuildingBenchmarkStats} from '../common-functions';
 
 /**
  * A component that shows an emoji to summarize a building, showing the worse of the alarm or flag
  * emoji if those apply, or the trophy emoji if there's no flags and the building gets a trophy
  */
-export default {
-  name: 'OverallRankEmoji',
-  props: {
-    building: Object,
-    stats: Object,
-  },
-  methods: {
-    // Expose getOverallRankEmoji to template
-    getOverallRankEmoji,
-  },
-  computed: {
-    overallRank() {
-      return getOverallRankEmoji(this.building, this.stats);
-    },
-  },
+@Component
+export default class OverallRankEmoji extends Vue {
+  @Prop({required: true}) building!: IBuilding;
+  @Prop({required: true}) stats!: IBuildingBenchmarkStats;
+
+  get overallRank() {
+    return getOverallRankEmoji(this.building!, this.stats!);
+  }
 };
 </script>
 

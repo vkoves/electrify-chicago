@@ -1,3 +1,28 @@
+export interface IBuildingBenchmarkStat {
+  count: number;
+  mean: number;
+  min: number;
+  max: number;
+  twentyFifthPercentile: number;
+  median: number;
+  seventyFifthPercentile: number;
+}
+
+/** The type of building-benchmark-stats.json */
+export interface IBuildingBenchmarkStats {
+  [statKey: string]: IBuildingBenchmarkStat;
+}
+
+/**
+ * An individual building object
+ *
+ * TODO: Type
+ */
+export interface IBuilding {
+  [buildingKey: string]: string | number | boolean;
+}
+
+
 /**
  * A constant for what we use as min and max values for flagged ranks
  */
@@ -21,12 +46,8 @@ export const RankConfig = {
 /**
  * Returns a string rank for very bad buildings, or null if not in top 50
  * worst
- *
- * @param {number} statRank
- * @param {boolean} isSquareFootage
- * @return {string | null}
  */
-export function getRankLabel(statRank, isSquareFootage) {
+export function getRankLabel(statRank: number, isSquareFootage: boolean): string | null {
   if (isSquareFootage) {
     return 'Largest';
   } else if (statRank <= RankConfig.AlarmRankMax) {
@@ -57,9 +78,9 @@ export const RankedColumns = [
  * @param {string} statKey
  * @param {number} statRank
  * @param {Object} buildingStats
- * @return {string|null}
+ * @return {number|null}
  */
-export function getStatRankInverted(statKey, statRank, buildingStats) {
+export function getStatRankInverted(statKey: string, statRank: number, buildingStats: IBuildingBenchmarkStats): number | null {
   if (statRank) {
     const countForStat = buildingStats[statKey].count;
 
@@ -84,14 +105,18 @@ export function getStatRankInverted(statKey, statRank, buildingStats) {
  * @return {{ msg: string, emoji: string }| null} Returns an object with a message and an emoji if
  * an emoji is applicable, otherwise returns null
  */
-export function getOverallRankEmoji(building, buildingStats) {
-  let worstEmoji = null;
+export function getOverallRankEmoji(
+  building: IBuilding,
+  buildingStats: IBuildingBenchmarkStats
+): { msg: string, emoji: string } | null {
+  let worstEmoji: string | null = null;
   let hasTrophyCategory = false;
 
   // Loop through all ranked columns to get the worst emoji and whether any stats earn the building
   // a trophy
   RankedColumns.forEach((columnKey) => {
-    const statRank = parseFloat(building[columnKey + 'Rank']);
+    const val = building[columnKey + 'Rank'];
+    const statRank = parseFloat((val ?? '').toString());
     const statRankInverted = getStatRankInverted(columnKey, statRank, buildingStats);
 
     // Ignore the column if rank is NaN
@@ -105,7 +130,7 @@ export function getOverallRankEmoji(building, buildingStats) {
     } else if (statRank <= RankConfig.FlagRankMax && worstEmoji !== RankConfig.AlarmEmoji) {
       // If the worstEmoji isn't the alarm and we meet the flag rank, set to flag
       worstEmoji = RankConfig.FlagEmoji;
-    } else if (statRankInverted <= RankConfig.TrophyRankInvertedMax) {
+    } else if (statRankInverted && statRankInverted <= RankConfig.TrophyRankInvertedMax) {
       hasTrophyCategory = true;
     }
   });
