@@ -50,7 +50,7 @@ import {IBuilding} from '../common-functions';
 @Component
 export default class OwnerLogo extends Vue {
   @Prop({required: true}) building!: IBuilding;
-  @Prop() isSmall = false;
+  @Prop({ default: false }) isSmall!: boolean;
 
   /**
    * Returns the BuildingOwners object associated with the passed building so we can get the logo

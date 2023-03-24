@@ -6,23 +6,21 @@
   }
 </static-query>
 
-<script>
-export default {
-  data() {
-    return {
-      searchQuery: '',
-    };
-  },
-  methods: {
-    submitSearch(event) {
-      if (event) {
-        event.preventDefault();
-      }
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
 
-      document.location.href = `/search?q=${this.searchQuery}`;
-    },
-  },
-};
+@Component
+export default class Default extends Vue {
+  searchQuery = '';
+
+  submitSearch(event?: MouseEvent): void {
+    if (event) {
+      event.preventDefault();
+    }
+
+    document.location.href = `/search?q=${this.searchQuery}`;
+  }
+}
 </script>
 
 <template>
