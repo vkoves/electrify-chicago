@@ -1,25 +1,24 @@
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '../components/DataDisclaimer.vue';
+import NewTabIcon from '../components/NewTabIcon.vue';
 
-// This simple JSON is a lot easier to just use directly than going through GraphQL and it's
-// tiny
-const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
-
-export default {
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
   components: {
     BuildingsTable,
     DataDisclaimer,
+    NewTabIcon,
   },
-  metaInfo: {
-    title: 'Top Emitters',
+  metaInfo() {
+    return { title:  'Top Emitters' };
   },
-  data() {
-    return {
-      BuildingBenchmarkStats,
-    };
-  },
-};
+})
+export default class TopEmitters extends Vue {
+}
 </script>
 
 <static-query>
@@ -66,7 +65,7 @@ export default {
         target="_blank"
         rel="noopener noreferrer"
       >
-        Chicago Energy Benchmarking Data (opens in a new tab)
+        Chicago Energy Benchmarking Data <NewTabIcon />
       </a>
     </p>
   </DefaultLayout>

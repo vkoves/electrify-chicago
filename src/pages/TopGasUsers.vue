@@ -14,13 +14,11 @@ import NewTabIcon from '../components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Biggest Natural Gas Users' }
+    return { title:  'Biggest Natural Gas Users' };
   },
 })
 export default class TopGasUsers extends Vue {
-  // ? $context has to be defined here. Otherwise TypeScript complains about not existin variable
-  public $context: any;
-};
+}
 </script>
 
 <static-query>

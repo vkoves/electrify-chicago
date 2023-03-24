@@ -100,13 +100,21 @@
   </DefaultLayout>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
 import NewTabIcon from '../components/NewTabIcon.vue';
 
-export default {
-  metaInfo: {
-    title: 'About us',
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
+  components: {
+    NewTabIcon,
   },
-  components: {NewTabIcon},
-};
+  metaInfo() {
+    return { title:  'About Us' };
+  },
+})
+export default class About extends Vue {
+}
 </script>
