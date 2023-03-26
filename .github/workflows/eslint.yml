@@ -32,7 +32,7 @@ jobs:
         run: yarn install
 
       - name: Run ESLint
-        run: yarn lint
+        run: yarn lint-ci
         continue-on-error: true
 
       - name: Upload analysis results to GitHub

@@ -10,6 +10,7 @@
     "develop": "gridsome develop",
     "explore": "gridsome explore",
     "lint": "yarn eslint --ext .ts,.vue ./src",
+    "lint-ci": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "lint-fix": "yarn lint --fix"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "webpack": "^4.0.0"
   },
   "devDependencies": {
+    "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@types/sindresorhus__slugify": "^0.9.3",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
