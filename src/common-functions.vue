@@ -23,6 +23,9 @@ export interface IBuildingBenchmarkStats {
  * all of the parameter types
  */
 export interface IBuilding {
+  PropertyName: string;
+  Address: string;
+  PrimaryPropertyType: string;
   [buildingKey: string]: string | number | boolean;
 }
 

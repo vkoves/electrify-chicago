@@ -1,5 +1,8 @@
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import { IBuilding } from '../common-functions.vue';
 import DataDisclaimer from '../components/DataDisclaimer.vue';
 import NewTabIcon from '../components/NewTabIcon.vue';
 
@@ -7,10 +10,11 @@ import NewTabIcon from '../components/NewTabIcon.vue';
 // tiny
 const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
 
-const MaxBuildings = 50;
-const QueryParamKey = 'q';
+interface IBuildingEdge {
+  node: IBuilding;
+}
 
-export default {
+@Component<any>({
   components: {
     BuildingsTable,
     DataDisclaimer,
@@ -19,20 +23,26 @@ export default {
   metaInfo: {
     title: 'Search',
   },
-  data() {
-    return {
-      BuildingBenchmarkStats,
-      MaxBuildings,
-      search: '',
-      searchResults: [],
-    };
-  },
-  created: function() {
+})
+export default class Search extends Vue {
+  readonly BuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly MaxBuildings = 50;
+  readonly QueryParamKey = 'q';
+
+  search = '';
+
+  searchResults: Array<IBuilding> = [];
+
+  /** Set by Gridsome to results of GraphQL query */
+  $static: any;
+
+  created(): void {
     // Make sure on load we have some data
-    this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
-  },
-  mounted: function() {
-    const splitParams = window.location.search.split(`${QueryParamKey}=`);
+    this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+  }
+
+  mounted(): void {
+    const splitParams = window.location.search.split(`${this.QueryParamKey}=`);
     // Make sure to URI decode to convert params like 'Jewel%20Osco' -> 'Jewel Osco'
     const urlSearchParam = splitParams.length > 1 ? decodeURI(splitParams[1]) : null;
 
@@ -40,53 +50,52 @@ export default {
       this.search = urlSearchParam;
       this.submitSearch();
     } else {
-      this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
+      this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
     }
-  },
-  methods: {
-    searchRank(buildingEdge, query) {
-      let matchScore = 0;
+  }
 
-      if (buildingEdge.node.PropertyName.toLowerCase().includes(query)) {
-        matchScore += 3;
-      } else if (buildingEdge.node.Address.toLowerCase().includes(query)) {
-        matchScore += 2;
-      } else if (buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)) {
-        matchScore += 1;
-      }
+  searchRank(buildingEdge: IBuildingEdge, query: string): number {
+    let matchScore = 0;
 
-      return matchScore;
-    },
+    if (buildingEdge.node.PropertyName.toLowerCase().includes(query)) {
+      matchScore += 3;
+    } else if (buildingEdge.node.Address.toLowerCase().includes(query)) {
+      matchScore += 2;
+    } else if (buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)) {
+      matchScore += 1;
+    }
 
-    submitSearch(event) {
-      if (event) {
-        event.preventDefault();
-      }
+    return matchScore;
+  }
 
-      const query = this.search.toLowerCase().trim();
+  submitSearch(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
 
-      window.history.pushState(null, null, `/search?${QueryParamKey}=${query}`);
+    const query = this.search.toLowerCase().trim();
 
-      if (!query) {
-        this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
-        return;
-      }
+    window.history.pushState(null, '', `/search?${this.QueryParamKey}=${query}`);
 
-      let results = this.$static.allBuilding.edges.filter((buildingEdge) => {
-        return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
-          buildingEdge.node.Address.toLowerCase().includes(query) ||
-          buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
-      });
+    if (!query) {
+      this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+      return;
+    }
 
-      // Sort by name matches, then address, then property type
-      results = results.sort((buildingEdgeA, buildingEdgeB) => {
-        return this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query);
-      });
+    let results = this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
+      return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
+        buildingEdge.node.Address.toLowerCase().includes(query) ||
+        buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
+    });
 
-      this.searchResults = results.slice(0, MaxBuildings);
-    },
-  },
-};
+    // Sort by name matches, then address, then property type
+    results = results.sort((buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) => {
+      return this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query);
+    });
+
+    this.searchResults = results.slice(0, this.MaxBuildings);
+  }
+}
 </script>
 
 <static-query>

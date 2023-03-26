@@ -345,6 +345,8 @@ const BuildingBenchmarkStats: IBuildingBenchmarkStats
 export default class BuildingDetails  extends Vue {
   /** Expose stats to readme */
   BuildingBenchmarkStats: typeof BuildingBenchmarkStats = BuildingBenchmarkStats;
+
+   /** Set by Gridsome to results of GraphQL query */
   $page: any;
 
   get encodedAddress(): string {

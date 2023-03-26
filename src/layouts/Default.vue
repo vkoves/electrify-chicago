@@ -13,7 +13,7 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class Default extends Vue {
   searchQuery = '';
 
-  submitSearch(event?: MouseEvent): void {
+  submitSearch(event?: Event): void {
     if (event) {
       event.preventDefault();
     }

@@ -4,7 +4,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from './OverallRankEmoji.vue';
 import OwnerLogo from './OwnerLogo.vue';
-
 import { IBuilding } from '../common-functions';
 
 
@@ -104,7 +103,7 @@ export default class BuildingsTable extends Vue {
             <template v-if="edge.node.GrossFloorArea">
               <RankText
                 :building="edge.node"
-                :shouldRound="true"
+                :should-round="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="GrossFloorArea"
               />
@@ -130,7 +129,7 @@ export default class BuildingsTable extends Vue {
             <template v-if="edge.node.TotalGHGEmissions">
               <RankText
                 :building="edge.node"
-                :shouldRound="true"
+                :should-round="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="TotalGHGEmissions"
               />
@@ -143,7 +142,7 @@ export default class BuildingsTable extends Vue {
             <template v-if="edge.node.NaturalGasUse">
               <RankText
                 :building="edge.node"
-                :shouldRound="true"
+                :should-round="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="NaturalGasUse"
               />
@@ -156,7 +155,7 @@ export default class BuildingsTable extends Vue {
             <template v-if="edge.node.ElectricityUse">
               <RankText
                 :building="edge.node"
-                :shouldRound="true"
+                :should-round="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="ElectricityUse"
               />
