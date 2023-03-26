@@ -22,9 +22,9 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [x] Setup landing page with SCSS working
 - [x] Get CSV data usable and on homepage
 - [x] Setup domain and build process
+- [x] Setup Typescript
+- [ ] Setup linting in CI (ESLin ✅️, Prettier, Stylelint)
 - [ ] Setup unit tests
-- [ ] Setup linting (ESLint, Prettier, Stylelint)
-- [ ] Setup Typescript
 
 
 ## Feature To-Do List
@@ -56,7 +56,7 @@ Happy coding 🎉🙌
 
 ## Run Linting
 
-Run:
+To run linting with auto-fix, run:
 
 ```
 yarn lint-fix
