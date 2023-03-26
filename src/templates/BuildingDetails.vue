@@ -309,17 +309,22 @@ query ($id: ID!) {
   </DefaultLayout>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import StatTile from '~/components/StatTile.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
-import OverallRankEmoji from '../components/OverallRankEmoji.vue';
+import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
+import { IBuildingBenchmarkStats } from '../common-functions';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
+const BuildingBenchmarkStats: IBuildingBenchmarkStats
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+  = require('../data/dist/building-benchmark-stats.json');
 
-export default {
+@Component<any>({
   metaInfo() {
     return {
       title: this.$page.building.PropertyName,
@@ -332,28 +337,28 @@ export default {
     StatTile,
   },
   filters: {
-    titlecase(value) {
+    titlecase(value: string) {
       return value.toLowerCase().replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
     },
   },
-  data() {
-    return {
-      BuildingBenchmarkStats,
-    };
-  },
-  computed: {
-    encodedAddress() {
-      const propertyName = this.$page.building.PropertyName;
-      const propertyAddr = this.$page.building.Address + ' , Chicago IL';
+})
+export default class BuildingDetails  extends Vue {
+  /** Expose stats to readme */
+  BuildingBenchmarkStats: typeof BuildingBenchmarkStats = BuildingBenchmarkStats;
+  $page: any;
 
-      if (propertyName) {
-        return encodeURI(`${propertyName} ${propertyAddr}`);
-      } else {
-        return encodeURI(propertyAddr);
-      }
-    },
-  },
-};
+  get encodedAddress(): string {
+    const propertyName = this.$page.building.PropertyName;
+    const propertyAddr = this.$page.building.Address + ' , Chicago IL';
+
+    // If we know the property name, providing it in our Google Maps search may improve accuracy
+    if (propertyName) {
+      return encodeURI(`${propertyName} ${propertyAddr}`);
+    } else {
+      return encodeURI(propertyAddr);
+    }
+  }
+}
 </script>
 
 <style lang="scss">

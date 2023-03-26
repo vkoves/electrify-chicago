@@ -69,15 +69,11 @@ export default class OwnerLogo extends Vue {
 
   /**
    * Returns a path to the owner logo, if the owner is known
-   *
-   * @return {string|null}
    */
-  get ownerLogoSrc() {
-    if (!this.owner) {
-      return null;
-    }
+  get ownerLogoSrc(): string | null {
+    const logo = this.isSmall ? this.owner?.logoSmall : this.owner?.logoLarge;
 
-    return this.isSmall ? this.owner.logoSmall : this.owner.logoLarge;
+    return logo ?? null;
   }
 }
 </script>

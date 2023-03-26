@@ -93,136 +93,138 @@
   </div>
 </template>
 
-<script>
-import {RankConfig, getRankLabel} from '../common-functions';
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
+import {
+  RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats
+} from '../common-functions';
 
 /**
   * A  tile that can show the stats for a building, including whether it's
   * doing better or worse than median, it's rank and percentile rank
   */
-export default {
-  name: 'StatTile',
-  props: {
-    building: Object,
-    statKey: String,
-    stats: Object,
-    unit: String,
-  },
-  data: () => ({
-    // Expose RankConfig to template
-    RankConfig,
-  }),
-  computed: {
-    isAboveMedian() {
-      return this.building[this.statKey] &&
-        this.building[this.statKey] > this.stats[this.statKey].median;
-    },
+@Component
+export default class StatTile extends Vue {
+  @Prop({required: true}) building!: IBuilding;
+  @Prop({required: true}) statKey!: string;
+  @Prop({required: true}) stats!: IBuildingBenchmarkStats;
+  @Prop({required: true}) unit!: string;
 
-    // Square footage isn't directly climate related, so we show stats but treat it as
-    // value-neutral - a building isn't worse _just_ because it's bigger
-    isSquareFootage() {
-      return this.unit === 'sqft';
-    },
+  // Expose RankConfig to template
+  RankConfig = RankConfig;
 
-    /**
-     * Returns the multipier for this building's stat compared to the median (e.g. '3' times median
-     * '1/5' median)
-     *
-     * @return {string|null}
-     */
-    medianMultipleMsg() {
-      const median = this.stats[this.statKey].median;
-      const statValueNum = parseFloat(this.building[this.statKey]);
+  get isAboveMedian(): boolean {
+    return this.building[this.statKey] !== null &&
+      this.building[this.statKey] as number > this.stats[this.statKey].median;
+  }
 
-      if (median) {
-        const medianMult = statValueNum / median;
+  // Square footage isn't directly climate related, so we show stats but treat it as
+  // value-neutral - a building isn't worse _just_ because it's bigger
+  get isSquareFootage(): boolean {
+    return this.unit === 'sqft';
+  }
 
-        // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
-        if (medianMult > 5) {
-          return Math.round(medianMult) + 'x';
-        } else if (medianMult > 1) {
-          return medianMult.toFixed(1) + 'x';
-        } else if (medianMult < 0.5) {
-          // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
-          return `1/${Math.round(1 / medianMult )}`;
-        } else {
-          return medianMult.toFixed(1) + 'x';
-        }
-      }
+  /**
+   * Returns the multipier for this building's stat compared to the median (e.g. '3' times median
+   * '1/5' median)
+   */
+  get medianMultipleMsg(): string | null {
+    const median = this.stats[this.statKey].median;
+    const statValueNum = parseFloat(this.building[this.statKey] as string);
 
-      return null;
-    },
+    if (median) {
+      const medianMult = statValueNum / median;
 
-    statValue() {
-      return parseFloat(this.building[this.statKey]).toLocaleString();
-    },
-
-    // Returns a rounded number or undefined if no rank
-    statRank() {
-      const statRank = this.building[this.statKey + 'Rank'];
-
-      if (statRank) {
-        return Math.round(parseFloat(statRank));
+      // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
+      if (medianMult > 5) {
+        return Math.round(medianMult) + 'x';
+      } else if (medianMult > 1) {
+        return medianMult.toFixed(1) + 'x';
+      } else if (medianMult < 0.5) {
+        // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
+        return `1/${Math.round(1 / medianMult )}`;
       } else {
-        return null;
+        return medianMult.toFixed(1) + 'x';
       }
-    },
+    }
 
-    // Returns the inverse of a rank, so the # lowest in a category
-    // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
-    statRankInverted() {
-      if (this.statRank) {
-        const countForStat = this.stats[this.statKey].count;
+    return null;
+  }
 
-        // Rank 100/100 should invert to #1 lowest, not #0
-        return countForStat - this.statRank + 1;
-      }
+  get statValue(): string {
+    return parseFloat(this.building[this.statKey] as string).toLocaleString();
+  }
 
+  // Returns a rounded number or undefined if no rank
+  get statRank(): number | null {
+    const statRank = this.building[this.statKey + 'Rank'] as string;
+
+    if (statRank) {
+      return Math.round(parseFloat(statRank));
+    } else {
       return null;
-    },
+    }
+  }
 
-    rankLabel() {
-      return getRankLabel(this.statRank, this.isSquareFootage);
-    },
+  // Returns the inverse of a rank, so the # lowest in a category
+  // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
+  get statRankInverted(): number | null {
+    if (this.statRank) {
+      const countForStat = this.stats[this.statKey].count;
 
-    // Returns a number 1 - 4 for how concerned we should be about this stat
-    // 0 = outstanding performer in category
-    // 1 = no concern
-    // 2 = medium concern (above median)
-    // 3 = high category (top 30)
-    // 4 = very high concern (top 10 in category)
-    concernLevel() {
-      // Return null if we have no stats
-      if (!this.statRank) {
-        return null;
-      }
+      // Rank 100/100 should invert to #1 lowest, not #0
+      return countForStat - this.statRank + 1;
+    }
 
-      if (this.statRank <= 10) {
-        return 4;
-      } else if (this.statRank <= 30) {
-        return 3;
-      } else if (this.isAboveMedian) {
-        return 2;
-      } else if (this.statRankInverted >= 30 && this.building[this.statKey]) {
-        return 1;
-      } else if (this.statRankInverted <= 30) {
-        return 0;
-      }
+    return null;
+  }
 
+  get rankLabel(): string | null {
+    if (!this.statRank) {
       return null;
-    },
+    }
 
-    statRankPercent() {
-      const statRankPercent = this.building[this.statKey + 'PercentileRank'];
+    return getRankLabel(this.statRank, this.isSquareFootage);
+  }
 
-      if (!statRankPercent) {
-        return null;
-      }
+  // Returns a number 1 - 4 for how concerned we should be about this stat
+  // 0 = outstanding performer in category
+  // 1 = no concern
+  // 2 = medium concern (above median)
+  // 3 = high category (top 30)
+  // 4 = very high concern (top 10 in category)
+  get concernLevel(): number | null {
+    // Return null if we have no stats
+    if (!this.statRank) {
+      return null;
+    }
 
-      return Math.round(statRankPercent * 100);
-    },
-  },
-};
+    if (this.statRank <= 10) {
+      return 4;
+    } else if (this.statRank <= 30) {
+      return 3;
+    } else if (this.isAboveMedian) {
+      return 2;
+    } else if (this.statRankInverted && this.statRankInverted >= 30) {
+      return 1;
+    } else if (this.statRankInverted && this.statRankInverted <= 30) {
+      return 0;
+    }
+
+    return null;
+  }
+
+  get statRankPercent(): number | null {
+    const statRankPercent = this.building[this.statKey + 'PercentileRank'] as number;
+
+    if (!statRankPercent) {
+      return null;
+    }
+
+    return Math.round(statRankPercent * 100);
+  }
+}
 </script>
 
 <style lang="scss">
