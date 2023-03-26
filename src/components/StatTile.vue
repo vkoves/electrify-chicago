@@ -97,7 +97,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {
-  RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats
+  RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats,
 } from '../common-functions';
 
 /**

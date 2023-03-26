@@ -1,5 +1,5 @@
 <script lang="ts">
-export default { }
+export default { };
 
 /**
  * A file containing supplementary building info based on their slug. This can be used

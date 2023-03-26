@@ -1,5 +1,5 @@
 <script lang="ts">
-export default { }
+export default { };
 
 export interface IBuildingBenchmarkStat {
   count: number;
