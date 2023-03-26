@@ -1,28 +1,31 @@
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from './OverallRankEmoji.vue';
 import OwnerLogo from './OwnerLogo.vue';
+
+import { IBuilding } from '../common-functions';
+
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
 
-export default {
+@Component({
   components: {
     RankText,
     OverallRankEmoji,
     OwnerLogo,
   },
-  props: {
-    buildings: Array,
-    showSquareFootage: Boolean,
-  },
-  data() {
-    return {
-      BuildingBenchmarkStats,
-    };
-  },
-};
+})
+export default class BuildingsTable extends Vue {
+  @Prop({required:true}) buildings!: Array<IBuilding>;
+  @Prop({default: false}) showSquareFootage!: boolean;
+
+  /** Expose stats to template */
+  BuildingBenchmarkStats = BuildingBenchmarkStats;
+}
 </script>
 
 <template>
