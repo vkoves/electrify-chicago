@@ -101,7 +101,7 @@ export default {
             <template v-if="edge.node.GrossFloorArea">
               <RankText
                 :building="edge.node"
-                :round="true"
+                :shouldRound="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="GrossFloorArea"
               />
@@ -127,7 +127,7 @@ export default {
             <template v-if="edge.node.TotalGHGEmissions">
               <RankText
                 :building="edge.node"
-                :round="true"
+                :shouldRound="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="TotalGHGEmissions"
               />
@@ -140,7 +140,7 @@ export default {
             <template v-if="edge.node.NaturalGasUse">
               <RankText
                 :building="edge.node"
-                :round="true"
+                :shouldRound="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="NaturalGasUse"
               />
@@ -153,7 +153,7 @@ export default {
             <template v-if="edge.node.ElectricityUse">
               <RankText
                 :building="edge.node"
-                :round="true"
+                :shouldRound="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="ElectricityUse"
               />

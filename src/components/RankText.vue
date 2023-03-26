@@ -1,12 +1,8 @@
 <template>
   <div class="rank-text">
     <div class="stat-value">
-      <template v-if="round">
-        {{ Math.round(statValue).toLocaleString() }}
-      </template>
-      <template v-else>
-        {{ statValue.toFixed(1) }}
-      </template>
+      <span v-if="shouldRound">{{ Math.round(statValue).toLocaleString() }}</span>
+      <span v-else>{{ statValue.toFixed(1) }}</span>
 
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
@@ -56,78 +52,76 @@
   </div>
 </template>
 
-<script>
-import {RankConfig} from '../common-functions';
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
+import { RankConfig, IBuilding, IBuildingBenchmarkStats } from '../common-functions';
 
 /**
  * A  tile that can show the stats for a building, including whether it's
  * doing better or worse than average, it's rank and percentile rank
  */
-export default {
-  name: 'RankText',
-  props: {
-    building: Object,
-    round: Boolean,
-    statKey: String,
-    stats: Object,
-  },
-  data: () => ({
-    // Expose RankConfig to template
-    RankConfig,
-  }),
-  computed: {
-    isAboveMedian() {
-      return this.building[this.statKey] &&
-        this.building[this.statKey] > this.stats[this.statKey].median;
-    },
+@Component
+export default class RankText extends Vue {
+  @Prop({required: true}) building!: IBuilding;
+  @Prop({required: true}) statKey!: string;
+  @Prop({required: true}) stats!: IBuildingBenchmarkStats;
+  @Prop({default: false}) shouldRound!: boolean;
 
-    isSquareFootage() {
-      return this.statKey === 'GrossFloorArea';
-    },
+  // Expose RankConfig to template
+  RankConfig = RankConfig;
 
-    statValue() {
-      return parseFloat(this.building[this.statKey]);
-    },
+  get isAboveMedian(): boolean {
+    return typeof this.building[this.statKey] &&
+      this.building[this.statKey] as number > this.stats[this.statKey].median;
+  }
 
-    // Returns a rounded number or undefined if no rank
-    statRank() {
-      const statRank = this.building[this.statKey + 'Rank'];
+  get isSquareFootage(): boolean {
+    return this.statKey === 'GrossFloorArea';
+  }
 
-      if (statRank) {
-        return Math.round(parseFloat(statRank));
-      } else {
-        return undefined;
-      }
-    },
+  get statValue(): number {
+    return parseFloat(this.building[this.statKey] as string);
+  }
 
-    // Returns the inverse of a rank, so the # lowest in a category
-    // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
-    statRankInverted() {
-      if (this.statRank) {
-        const countForStat = this.stats[this.statKey].count;
+  // Returns a rounded number or null if no rank
+  get statRank(): number | null {
+    const statRank = this.building[this.statKey + 'Rank'] as string;
 
-        // Rank 100/100 should invert to #1 lowest, not #0
-        return countForStat - this.statRank + 1;
-      }
-
+    if (statRank) {
+      return Math.round(parseFloat(statRank));
+    } else {
       return null;
-    },
+    }
+  }
 
-    rankLabel() {
-      return `Highest`;
-    },
+  // Returns the inverse of a rank, so the # lowest in a category
+  // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
+  get statRankInverted(): number | null {
+    if (this.statRank) {
+      const countForStat = this.stats[this.statKey].count;
 
-    statRankPercent() {
-      const statRankPercent = this.building[this.statKey + 'PercentileRank'];
+      // Rank 100/100 should invert to #1 lowest, not #0
+      return countForStat - this.statRank + 1;
+    }
 
-      if (!statRankPercent) {
-        return undefined;
-      }
+    return null;
+  }
 
-      return Math.round(statRankPercent * 100);
-    },
-  },
-};
+  get rankLabel(): string {
+    return `Highest`;
+  }
+
+  get statRankPercent(): number | null {
+    const statRankPercent = this.building[this.statKey + 'PercentileRank'] as number;
+
+    if (!statRankPercent) {
+      return null;
+    }
+
+    return Math.round(statRankPercent * 100);
+  }
+}
 </script>
 
 <style lang="scss">
