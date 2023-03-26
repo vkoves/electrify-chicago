@@ -9,7 +9,8 @@
     "build": "gridsome build",
     "develop": "gridsome develop",
     "explore": "gridsome explore",
-    "lint-fix": "yarn eslint ./src --fix"
+    "lint": "yarn eslint ./src --fix",
+    "lint-fix": "yarn lint --fix"
   },
   "dependencies": {
     "csv-parse": "^5.3.6",
