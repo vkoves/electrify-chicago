@@ -1,8 +1,12 @@
 <template>
-  <img class="new-tab-icon" src="/new-tab.svg" alt="(opens in a new tab)">
+  <img
+    class="new-tab-icon"
+    src="/new-tab.svg"
+    alt="(opens in a new tab)"
+  >
 </template>
 
-<script>
+<script lang="ts">
 /**
  * A new tab icon for links
  */

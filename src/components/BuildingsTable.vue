@@ -1,28 +1,31 @@
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from './OverallRankEmoji.vue';
 import OwnerLogo from './OwnerLogo.vue';
+import { IBuilding } from '~/common-functions.vue';
+
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
+import * as BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import { IBuildingBenchmarkStats } from '~/common-functions.vue';
 
-export default {
+@Component({
   components: {
     RankText,
     OverallRankEmoji,
     OwnerLogo,
   },
-  props: {
-    buildings: Array,
-    showSquareFootage: Boolean,
-  },
-  data() {
-    return {
-      BuildingBenchmarkStats,
-    };
-  },
-};
+})
+export default class BuildingsTable extends Vue {
+  @Prop({required:true}) buildings!: Array<IBuilding>;
+  @Prop({default: false}) showSquareFootage!: boolean;
+
+  /** Expose stats to template */
+  BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+}
 </script>
 
 <template>
@@ -30,87 +33,137 @@ export default {
     <table :class="{ '-with-sq-footage': showSquareFootage }">
       <thead>
         <tr>
-          <th scope="col">Property Name / address</th>
-          <th scope="col">Primary Property Type</th>
+          <th scope="col">
+            Property Name / address
+          </th>
+          <th scope="col">
+            Primary Property Type
+          </th>
           <th v-if="showSquareFootage">
             Square Footage
           </th>
-          <th scope="col" class="numeric">
-            Greenhouse Gas Intensity<br/>
+          <th
+            scope="col"
+            class="numeric"
+          >
+            Greenhouse Gas Intensity<br>
             (kg CO<sub>2</sub>/sqft)
           </th>
-          <th scope="col" class="numeric">
-            Total Greenhouse Emissions<br/>
+          <th
+            scope="col"
+            class="numeric"
+          >
+            Total Greenhouse Emissions<br>
             (metric tons CO<sub>2</sub>)
           </th>
-          <th scope="col" class="numeric">
-            Natural Gas Use<br/>
+          <th
+            scope="col"
+            class="numeric"
+          >
+            Natural Gas Use<br>
             (kBtu)
           </th>
-          <th scope="col" class="numeric">
-            Electricity Use<br/>
+          <th
+            scope="col"
+            class="numeric"
+          >
+            Electricity Use<br>
             (kBtu)
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="edge in buildings" :key="edge.node.id">
+        <tr
+          v-for="edge in buildings"
+          :key="edge.node.id"
+        >
           <td class="property-name">
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
             </g-link>
-            <OverallRankEmoji :building="edge.node" :stats="BuildingBenchmarkStats"/>
-            <OwnerLogo :building="edge.node" :isSmall="true"/>
+            <OverallRankEmoji
+              :building="edge.node"
+              :stats="BuildingBenchmarkStats"
+            />
+            <OwnerLogo
+              :building="edge.node"
+              :is-small="true"
+            />
 
-            <div class="prop-address">{{ edge.node.Address }}</div>
+            <div class="prop-address">
+              {{ edge.node.Address }}
+            </div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>
 
           <!-- Square footage is optional, only shown on BiggestBuildings -->
-          <td v-if="showSquareFootage" class="numeric">
+          <td
+            v-if="showSquareFootage"
+            class="numeric"
+          >
             <template v-if="edge.node.GrossFloorArea">
               <RankText
                 :building="edge.node"
-                :round="true"
-                :stats="BuildingBenchmarkStats" statKey="GrossFloorArea"/>
+                :should-round="true"
+                :stats="BuildingBenchmarkStats"
+                stat-key="GrossFloorArea"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
 
           <td class="numeric">
             <template v-if="edge.node.GHGIntensity">
               <RankText
                 :building="edge.node"
-                :stats="BuildingBenchmarkStats" statKey="GHGIntensity"/>
+                :stats="BuildingBenchmarkStats"
+                stat-key="GHGIntensity"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
           <td class="numeric">
             <template v-if="edge.node.TotalGHGEmissions">
               <RankText
                 :building="edge.node"
-                :round="true"
-                :stats="BuildingBenchmarkStats" statKey="TotalGHGEmissions"/>
+                :should-round="true"
+                :stats="BuildingBenchmarkStats"
+                stat-key="TotalGHGEmissions"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
           <td class="numeric">
             <template v-if="edge.node.NaturalGasUse">
               <RankText
                 :building="edge.node"
-                :round="true"
-                :stats="BuildingBenchmarkStats" statKey="NaturalGasUse"/>
+                :should-round="true"
+                :stats="BuildingBenchmarkStats"
+                stat-key="NaturalGasUse"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
           <td class="numeric">
             <template v-if="edge.node.ElectricityUse">
               <RankText
                 :building="edge.node"
-                :round="true"
-                :stats="BuildingBenchmarkStats" statKey="ElectricityUse"/>
+                :should-round="true"
+                :stats="BuildingBenchmarkStats"
+                stat-key="ElectricityUse"
+              />
             </template>
-            <template v-else>-</template>
+            <template v-else>
+              -
+            </template>
           </td>
         </tr>
       </tbody>

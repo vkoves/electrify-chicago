@@ -1,23 +1,27 @@
+<script lang="ts">
+export default { };
+
 /**
  * A file containing supplementary building info based on their slug. This can be used
  * for things like adding custom images, notes, or building owners to very important buildings
  * (e.g. the top 10 worst or best).
  */
 
+export interface IBuildingOwner {
+  key: string;
+  name: string;
+  nameShort: string; // Name for table view
+  logoSmall?: string; // A square logo for table view
+  logoLarge?: string; // Any size logo for building details
+}
 
 /**
  * An object containing the name and logos of custom flagged building owners
  *
- * IBuildingOwner {
- *   key: string;
- *   name: string;
- *   logoSmall?: string; // A square logo for table view
- *   logoLarge?: string; // Any size logo for building details
- * }
  *
- * Type { [key: string]: IBuildingOwner}
+ * Type
  */
-export const BuildingOwners = {
+export const BuildingOwners: { [key: string]: IBuildingOwner } = {
   depaul: {
     key: 'depaul',
     name: 'DePaul University',
@@ -34,15 +38,16 @@ export const BuildingOwners = {
   },
 };
 
+export interface IBuildingCustomInfo {
+  owner?: string; // key from BuildingOwners
+}
+
 /**
  * An object containing our custom details about buildings. These are hand coded based on the
  * building slug
  *
- * export interface IBuildingCustomInfo {
- *   owner?: string; // key from BuildingOwners
- * }
  */
-export const BuildingsCustomInfo = {
+export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo } = {
   // Depaul Buildings
   // Helpful source: https://www.depaul.edu/campus-maps/Pages/default.aspx
   'mc-gowan-north': {owner: BuildingOwners.depaul.key},
@@ -62,3 +67,4 @@ export const BuildingsCustomInfo = {
   'john-t-rettaliata-engineering-center': {owner: BuildingOwners.iit.key},
   'mc-cormick-tribune-campus-center': {owner: BuildingOwners.iit.key},
 };
+</script>

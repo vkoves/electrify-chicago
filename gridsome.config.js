@@ -24,7 +24,11 @@ function addStyleResource(rule) {
 
 module.exports = {
   siteName: 'Electrify Chicago',
-  plugins: [],
+  plugins: [
+    {
+      use: 'gridsome-plugin-typescript',
+    },
+  ],
 
   templates: {
     // Register building details path

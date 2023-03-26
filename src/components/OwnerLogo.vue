@@ -1,70 +1,81 @@
 <template>
-    <!-- On large views we'll say the owner is unknown, in a table we output nothing -->
-    <div v-if="owner || !isSmall" class="owner-cont" :class="{
-        '-small': isSmall,
-        '-unknown': !owner
-    }">
-        <template v-if="owner">
-            <img v-if="!isSmall" :src="ownerLogoSrc" :alt="owner.name"/>
-            <div v-if="!isSmall" class="owner-label">
-                <strong>Note:</strong> Owner manually tagged
-            </div>
+  <!-- On large views we'll say the owner is unknown, in a table we output nothing -->
+  <div
+    v-if="owner || !isSmall"
+    class="owner-cont"
+    :class="{
+      '-small': isSmall,
+      '-unknown': !owner
+    }"
+  >
+    <template v-if="owner">
+      <img
+        v-if="!isSmall"
+        :src="ownerLogoSrc"
+        :alt="owner.name"
+      >
+      <div
+        v-if="!isSmall"
+        class="owner-label"
+      >
+        <strong>Note:</strong> Owner manually tagged
+      </div>
 
-            <!-- If small view should short building name -->
-            <span v-if="isSmall">({{ owner.nameShort }})</span>
-        </template>
+      <!-- If small view should short building name -->
+      <span v-if="isSmall">({{ owner.nameShort }})</span>
+    </template>
 
-        <div v-if="!isSmall && !owner">Not Tagged</div>
+    <div v-if="!isSmall && !owner">
+      Not Tagged
     </div>
+  </div>
 </template>
 
-<script>
+<script lang="ts">
 // The function Gridsome uses to make slugs, so it should match
 import slugify from '@sindresorhus/slugify';
-import {BuildingsCustomInfo, BuildingOwners} from '../constants/buildings-custom-info';
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
+import {IBuilding} from '~/common-functions.vue';
+import {
+  BuildingsCustomInfo,
+  IBuildingOwner,
+  BuildingOwners,
+} from '~/constants/buildings-custom-info.vue';
 
 /**
  * A component that given a building shows the logo of its owner if one is set in
  * BuildingsCustomInfo
  */
-export default {
-  name: 'OwnerLogo',
-  props: {
-    building: Object,
-    isSmall: Boolean,
-  },
-  computed: {
-    /**
-     * Returns the BuildingOwners object associated with the passed building so we can get the logo
-     * and name, if one was set.
-     *
-     * @return {IBuildingOwner | null}
-     */
-    owner() {
-      const buildingSlug = slugify(this.building.slugSource);
-      const buildingCustomInfo = BuildingsCustomInfo[buildingSlug];
+@Component
+export default class OwnerLogo extends Vue {
+  @Prop({required: true}) building!: IBuilding;
+  @Prop({ default: false }) isSmall!: boolean;
 
-      if (buildingCustomInfo) {
-        return BuildingOwners[buildingCustomInfo.owner];
-      }
+  /**
+   * Returns the BuildingOwners object associated with the passed building so we can get the logo
+   * and name, if one was set.
+   */
+  get owner(): IBuildingOwner | null {
+    const buildingSlug = slugify(this.building.slugSource as string);
+    const buildingCustomInfo = BuildingsCustomInfo[buildingSlug];
 
-      return null;
-    },
+    if (buildingCustomInfo?.owner) {
+      return BuildingOwners[buildingCustomInfo.owner];
+    }
 
-    /**
-     * Returns a path to the owner logo, if the owner is known
-     *
-     * @return {string|null}
-     */
-    ownerLogoSrc() {
-      if (!this.owner) {
-        return null;
-      }
+    return null;
+  }
 
-      return this.isSmall ? this.owner.logoSmall : this.owner.logoLarge;
-    },
-  },
-};
+  /**
+   * Returns a path to the owner logo, if the owner is known
+   */
+  get ownerLogoSrc(): string | null {
+    const logo = this.isSmall ? this.owner?.logoSmall : this.owner?.logoLarge;
+
+    return logo ?? null;
+  }
+}
 </script>
 
 <style lang="scss">
