@@ -1,27 +1,24 @@
-<script>
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '../components/DataDisclaimer.vue';
-import NewTabIcon from '../components/NewTabIcon.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
-// This simple JSON is a lot easier to just use directly than going through GraphQL and it's
-// tiny
-const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
-
-export default {
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
   components: {
     BuildingsTable,
     DataDisclaimer,
     NewTabIcon,
   },
-  metaInfo: {
-    title: 'Top Gas Users',
+  metaInfo() {
+    return { title:  'Biggest Buildings' };
   },
-  data() {
-    return {
-      BuildingBenchmarkStats,
-    };
-  },
-};
+})
+export default class BiggestBuildings extends Vue {
+}
 </script>
 
 <static-query>
@@ -57,18 +54,24 @@ export default {
 
 <template>
   <DefaultLayout>
-    <h1>Top {{ this.$static.allBuilding.edges.length }} Buildings By Square Footage</h1>
+    <h1>Top {{ $static.allBuilding.edges.length }} Buildings By Square Footage</h1>
 
-    <DataDisclaimer/>
+    <DataDisclaimer />
 
-    <BuildingsTable :buildings="this.$static.allBuilding.edges" :showSquareFootage="true" />
+    <BuildingsTable
+      :buildings="$static.allBuilding.edges"
+      :show-square-footage="true"
+    />
 
     <p class="footnote">
       Data Source:
       <!-- eslint-disable-next-line max-len -->
-      <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking Data <NewTabIcon/>
+      <a
+        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chicago Energy Benchmarking Data <NewTabIcon />
       </a>
     </p>
   </DefaultLayout>

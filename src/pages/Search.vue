@@ -1,16 +1,20 @@
-<script>
+<script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '../components/DataDisclaimer.vue';
-import NewTabIcon from '../components/NewTabIcon.vue';
+import { IBuilding, IBuildingBenchmarkStats } from '~/common-functions.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
+import * as BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
-const MaxBuildings = 50;
-const QueryParamKey = 'q';
+interface IBuildingEdge {
+  node: IBuilding;
+}
 
-export default {
+@Component<any>({
   components: {
     BuildingsTable,
     DataDisclaimer,
@@ -19,20 +23,26 @@ export default {
   metaInfo: {
     title: 'Search',
   },
-  data() {
-    return {
-      BuildingBenchmarkStats,
-      MaxBuildings,
-      search: '',
-      searchResults: [],
-    };
-  },
-  created: function() {
+})
+export default class Search extends Vue {
+  readonly   BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly MaxBuildings = 50;
+  readonly QueryParamKey = 'q';
+
+  search = '';
+
+  searchResults: Array<IBuilding> = [];
+
+  /** Set by Gridsome to results of GraphQL query */
+  $static: any;
+
+  created(): void {
     // Make sure on load we have some data
-    this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
-  },
-  mounted: function() {
-    const splitParams = window.location.search.split(`${QueryParamKey}=`);
+    this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+  }
+
+  mounted(): void {
+    const splitParams = window.location.search.split(`${this.QueryParamKey}=`);
     // Make sure to URI decode to convert params like 'Jewel%20Osco' -> 'Jewel Osco'
     const urlSearchParam = splitParams.length > 1 ? decodeURI(splitParams[1]) : null;
 
@@ -40,53 +50,52 @@ export default {
       this.search = urlSearchParam;
       this.submitSearch();
     } else {
-      this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
+      this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
     }
-  },
-  methods: {
-    searchRank(buildingEdge, query) {
-      let matchScore = 0;
+  }
 
-      if (buildingEdge.node.PropertyName.toLowerCase().includes(query)) {
-        matchScore += 3;
-      } else if (buildingEdge.node.Address.toLowerCase().includes(query)) {
-        matchScore += 2;
-      } else if (buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)) {
-        matchScore += 1;
-      }
+  searchRank(buildingEdge: IBuildingEdge, query: string): number {
+    let matchScore = 0;
 
-      return matchScore;
-    },
+    if (buildingEdge.node.PropertyName.toLowerCase().includes(query)) {
+      matchScore += 3;
+    } else if (buildingEdge.node.Address.toLowerCase().includes(query)) {
+      matchScore += 2;
+    } else if (buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)) {
+      matchScore += 1;
+    }
 
-    submitSearch(event) {
-      if (event) {
-        event.preventDefault();
-      }
+    return matchScore;
+  }
 
-      const query = this.search.toLowerCase().trim();
+  submitSearch(event?: Event): void {
+    if (event) {
+      event.preventDefault();
+    }
 
-      window.history.pushState(null, null, `/search?${QueryParamKey}=${query}`);
+    const query = this.search.toLowerCase().trim();
 
-      if (!query) {
-        this.searchResults = this.$static.allBuilding.edges.slice(0, MaxBuildings);
-        return;
-      }
+    window.history.pushState(null, '', `/search?${this.QueryParamKey}=${query}`);
 
-      let results = this.$static.allBuilding.edges.filter((buildingEdge) => {
-        return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
-          buildingEdge.node.Address.toLowerCase().includes(query) ||
-          buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
-      });
+    if (!query) {
+      this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+      return;
+    }
 
-      // Sort by name matches, then address, then property type
-      results = results.sort((buildingEdgeA, buildingEdgeB) => {
-        return this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query);
-      });
+    let results = this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
+      return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
+        buildingEdge.node.Address.toLowerCase().includes(query) ||
+        buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
+    });
 
-      this.searchResults = results.slice(0, MaxBuildings);
-    },
-  },
-};
+    // Sort by name matches, then address, then property type
+    results = results.sort((buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) => {
+      return this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query);
+    });
+
+    this.searchResults = results.slice(0, this.MaxBuildings);
+  }
+}
 </script>
 
 <static-query>
@@ -125,35 +134,51 @@ export default {
       Note that results are limited to the first {{ MaxBuildings }} matches.
     </p>
 
-    <DataDisclaimer/>
+    <DataDisclaimer />
 
     <form class="search-form -page">
-        <label for="search">Search Benchmarked Buildings</label>
+      <label for="search">Search Benchmarked Buildings</label>
 
-        <div class="input-cont">
-          <input type="text" name="search" id="search"
-              placeholder="Search property name, type, or address" v-model="search">
-          <button v-on:click="submitSearch" type="submit">Search</button>
-        </div>
+      <div class="input-cont">
+        <input
+          id="search"
+          v-model="search"
+          type="text"
+          name="search"
+          placeholder="Search property name, type, or address"
+        >
+        <button
+          type="submit"
+          @click="submitSearch"
+        >
+          Search
+        </button>
+      </div>
     </form>
 
     <BuildingsTable :buildings="searchResults" />
 
-    <div v-if="searchResults.length === 0" class="no-results-msg">
-        <h2>No results found!</h2>
+    <div
+      v-if="searchResults.length === 0"
+      class="no-results-msg"
+    >
+      <h2>No results found!</h2>
 
-        <p>
-            There may be a typo in your query or in the underlying data, or the building you are
-            looking for may not be in our dataset.
-        </p>
+      <p>
+        There may be a typo in your query or in the underlying data, or the building you are
+        looking for may not be in our dataset.
+      </p>
     </div>
 
     <p class="footnote">
       Data Source:
       <!-- eslint-disable-next-line max-len -->
-      <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking Data <NewTabIcon/>
+      <a
+        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chicago Energy Benchmarking Data <NewTabIcon />
       </a>
     </p>
   </DefaultLayout>

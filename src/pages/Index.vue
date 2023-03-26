@@ -1,29 +1,29 @@
-<script>
-import {Pager} from 'gridsome';
+<script lang="ts">
+// Gridsome doesn't have types, so can't import it properly
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+const Pager = require('gridsome').Pager;
+
+import { Component, Vue } from 'vue-property-decorator';
+
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import DataDisclaimer from '../components/DataDisclaimer.vue';
 
-// This simple JSON is a lot easier to just use directly than going through GraphQL and it's
-// tiny
-const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
-
-export default {
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
   components: {
     BuildingsTable,
-    Pager,
-    NewTabIcon,
     DataDisclaimer,
+    NewTabIcon,
+    Pager,
   },
-  metaInfo: {
-    title: 'Home',
+  metaInfo() {
+    return { title:  'Biggest Buildings' };
   },
-  data() {
-    return {
-      BuildingBenchmarkStats,
-    };
-  },
-};
+})
+export default class BiggestBuildings extends Vue {
+}
 </script>
 
 <page-query>
@@ -64,17 +64,23 @@ export default {
 
     <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 
-    <DataDisclaimer/>
+    <DataDisclaimer />
 
     <BuildingsTable :buildings="$page.allBuilding.edges" />
 
-    <Pager class="pager" :info="$page.allBuilding.pageInfo"/>
+    <Pager
+      class="pager"
+      :info="$page.allBuilding.pageInfo"
+    />
 
     <p class="footnote">
       Data Source:
-      <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank" rel="noopener noreferrer">
-        Chicago Energy Benchmarking Data <NewTabIcon/>
+      <a
+        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Chicago Energy Benchmarking Data <NewTabIcon />
       </a>
     </p>
   </DefaultLayout>

@@ -22,28 +22,33 @@
         In simple terms, because we can scalably produce electricity without emitting CO<sub>2</sub>
         and exacerbating the climate crisis. In fact, <em>this decade</em> (the 2020s) is an
         especially crucial one for tackling climate change
-        (<a href="https://www.nytimes.com/2023/03/20/climate/global-warming-ipcc-earth.html"
-        >&ldquo;World Has Less Than a Decade to Stop Catastrophic Warming&hellip;&rdquo;
-        | The New York Times</a>), and shifting away from burning fossil fuels to using electricity
+        (<a href="https://www.nytimes.com/2023/03/20/climate/global-warming-ipcc-earth.html">&ldquo;World Has Less Than a Decade to Stop Catastrophic Warming&hellip;&rdquo;
+          | The New York Times</a>), and shifting away from burning fossil fuels to using
+        electricity
         <strong>today</strong> is a crucial step in that journey.
       </p>
 
       <p class="constrained">
         Even better, <strong>Illinois' grid in particular is already powered mostly by carbon-free
-        energy</strong> and is improving every year!
+          energy</strong> and is improving every year!
       </p>
 
       <img
         alt="Pie chart showing that 67% of Illinois power is Carbon-Free, with 58% from Nuclear and
         9% from Wind. Then 18% comes from Coal and 14% from Natural Gas."
         class="-shadowed"
-        src="/il-power-chart.png" width="500" />
+        src="/il-power-chart.png"
+        width="500"
+      >
 
       <p class="footnote -img">
         Source:
-        <a href="https://decarbmystate.com/illinois#power"
-          target="_blank" rel="noopener noreferrer">
-          Illinois Power | Decarb My State <NewTabIcon/>
+        <a
+          href="https://decarbmystate.com/illinois#power"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Illinois Power | Decarb My State <NewTabIcon />
         </a>
       </p>
 
@@ -72,12 +77,15 @@
 
       <p>
         Data is primarily sourced from the publicly available
-        <a href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank" rel="noopener noreferrer">
-          Chicago Energy Benchmarking Data <NewTabIcon/>
+        <a
+          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Chicago Energy Benchmarking Data <NewTabIcon />
         </a>, which is data collected and published under the
         <a href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html">
-          Chicago Energy Benchmarking Ordinance <NewTabIcon/>
+          Chicago Energy Benchmarking Ordinance <NewTabIcon />
         </a>. This site shows data for the year 2020 (the latest available of March 2023) and
         filtered down to buildings with total emissions > 1,000 metric tons.
       </p>
@@ -93,13 +101,21 @@
   </DefaultLayout>
 </template>
 
-<script>
-import NewTabIcon from '../components/NewTabIcon.vue';
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
 
-export default {
-  metaInfo: {
-    title: 'About us',
+import NewTabIcon from '~/components/NewTabIcon.vue';
+
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
+  components: {
+    NewTabIcon,
   },
-  components: {NewTabIcon},
-};
+  metaInfo() {
+    return { title:  'About Us' };
+  },
+})
+export default class About extends Vue {
+}
 </script>
