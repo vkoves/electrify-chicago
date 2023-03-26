@@ -24,7 +24,7 @@ export default class OverallRankEmoji extends Vue {
   @Prop({required: true}) stats!: IBuildingBenchmarkStats;
 
   get overallRank(): { msg: string, emoji: string } | null {
-    return getOverallRankEmoji(this.building!, this.stats!);
+    return getOverallRankEmoji(this.building, this.stats);
   }
 }
 </script>

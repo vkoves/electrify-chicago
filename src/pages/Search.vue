@@ -8,7 +8,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-import * as BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 interface IBuildingEdge {
   node: IBuilding;

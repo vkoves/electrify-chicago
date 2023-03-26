@@ -99,7 +99,7 @@ export default class RankText extends Vue {
   // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
   get statRankInverted(): number | null {
     if (this.statRank) {
-      const countForStat = this.stats[this.statKey].count;
+      const countForStat = this.stats[this.statKey]?.count;
 
       // Rank 100/100 should invert to #1 lowest, not #0
       return countForStat - this.statRank + 1;
