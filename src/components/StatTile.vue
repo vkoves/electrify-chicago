@@ -98,7 +98,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {
   RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats,
-} from '../common-functions';
+} from '~/common-functions.vue';
 
 /**
   * A  tile that can show the stats for a building, including whether it's

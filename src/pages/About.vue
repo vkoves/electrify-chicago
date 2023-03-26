@@ -104,7 +104,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import NewTabIcon from '../components/NewTabIcon.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37

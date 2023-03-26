@@ -12,7 +12,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import {getOverallRankEmoji, IBuilding, IBuildingBenchmarkStats} from '../common-functions';
+import {getOverallRankEmoji, IBuilding, IBuildingBenchmarkStats} from '~/common-functions.vue';
 
 /**
  * A component that shows an emoji to summarize a building, showing the worse of the alarm or flag

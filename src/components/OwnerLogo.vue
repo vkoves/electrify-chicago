@@ -35,13 +35,13 @@
 // The function Gridsome uses to make slugs, so it should match
 import slugify from '@sindresorhus/slugify';
 import { Component, Prop, Vue } from 'vue-property-decorator';
+
+import {IBuilding} from '~/common-functions.vue';
 import {
   BuildingsCustomInfo,
   IBuildingOwner,
   BuildingOwners,
-} from '../constants/buildings-custom-info';
-
-import {IBuilding} from '../common-functions';
+} from '~/constants/buildings-custom-info.vue';
 
 /**
  * A component that given a building shows the logo of its owner if one is set in

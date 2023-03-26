@@ -1,12 +1,13 @@
 <script lang="ts">
 // Gridsome doesn't have types, so can't import it properly
+// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
 const Pager = require('gridsome').Pager;
 
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '../components/DataDisclaimer.vue';
-import NewTabIcon from '../components/NewTabIcon.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37

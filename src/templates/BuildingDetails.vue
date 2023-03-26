@@ -316,13 +316,11 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import StatTile from '~/components/StatTile.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
-import { IBuildingBenchmarkStats } from '../common-functions';
+import { IBuildingBenchmarkStats } from '~/common-functions.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-const BuildingBenchmarkStats: IBuildingBenchmarkStats
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-  = require('../data/dist/building-benchmark-stats.json');
+import * as BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 @Component<any>({
   metaInfo() {
@@ -344,7 +342,7 @@ const BuildingBenchmarkStats: IBuildingBenchmarkStats
 })
 export default class BuildingDetails  extends Vue {
   /** Expose stats to readme */
-  BuildingBenchmarkStats: typeof BuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
    /** Set by Gridsome to results of GraphQL query */
   $page: any;

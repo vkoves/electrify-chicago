@@ -2,13 +2,13 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import { IBuilding } from '../common-functions.vue';
-import DataDisclaimer from '../components/DataDisclaimer.vue';
-import NewTabIcon from '../components/NewTabIcon.vue';
+import { IBuilding, IBuildingBenchmarkStats } from '~/common-functions.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-const BuildingBenchmarkStats = require('../data/dist/building-benchmark-stats.json');
+import * as BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 interface IBuildingEdge {
   node: IBuilding;
@@ -25,7 +25,7 @@ interface IBuildingEdge {
   },
 })
 export default class Search extends Vue {
-  readonly BuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly   BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
   readonly MaxBuildings = 50;
   readonly QueryParamKey = 'q';
 
