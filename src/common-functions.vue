@@ -1,3 +1,6 @@
+<script lang="ts">
+export default { }
+
 export interface IBuildingBenchmarkStat {
   count: number;
   mean: number;
@@ -153,3 +156,4 @@ export function getOverallRankEmoji(
 
   return null;
 }
+</script>

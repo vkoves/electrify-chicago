@@ -1,3 +1,6 @@
+<script lang="ts">
+export default { }
+
 /**
  * A file containing supplementary building info based on their slug. This can be used
  * for things like adding custom images, notes, or building owners to very important buildings
@@ -64,3 +67,4 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   'john-t-rettaliata-engineering-center': {owner: BuildingOwners.iit.key},
   'mc-cormick-tribune-campus-center': {owner: BuildingOwners.iit.key},
 };
+</script>
