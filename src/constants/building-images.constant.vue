@@ -34,6 +34,7 @@ const BuildingImagesBase = '/building-imgs/';
  * - Make the photo landscape style, cropped to 1000px wide
  * - Have extra space on the bottom for the text, but crop pretty tightly up top to save space
  * - If the image must be TALL, make it ~600px wide (e.g. Marina Towers, Aqua)
+ * - Use the JPG format with 80% quality for a good compromise of file size and quality
  */
 export const BuildingImages: IBuildingImages = {
     /**
@@ -85,6 +86,17 @@ export const BuildingImages: IBuildingImages = {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:Merchandise_Mart_080405.jpg',
         imgUrl: BuildingImagesBase + 'merchandise-mart.jpg',
         isTall: true,
+    },
+    'the-monadnock-building': {
+        attributionUrl: 'https://goo.gl/maps/8CUXVcLq7k9uS3yr7',
+        imgUrl: BuildingImagesBase + 'monadnock-building.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'king-college-prep-cps': {
+        attributionUrl: 'https://goo.gl/maps/Y4AVkhcaFhuQAk5j6',
+        imgUrl: BuildingImagesBase + 'king-college-prep.jpg',
+        fromGoogleMaps: true,
     },
 
     /**
