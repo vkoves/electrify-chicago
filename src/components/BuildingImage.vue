@@ -54,24 +54,28 @@ export default class BuildingImage extends Vue {
 }
 </script>
 
-  <style lang="scss">
-  .building-img-cont {
+<style lang="scss">
+.building-img-cont {
 
-    &.-tall {
-      text-align: right;
+  &.-tall {
+    text-align: right;
 
-      img { max-height: 35rem; }
-      p { text-align: left; }
-    }
-
-    img {
-      border-radius: 0.5rem;
-      max-height: 30rem;
-    }
-
-    .attribution {
-      font-size: 0.75rem;
-      margin-top: 0.25rem;
-    }
+    img { max-height: 35rem; }
+    p { text-align: left; }
   }
-  </style>
+
+  img {
+    border-radius: 0.5rem;
+    max-height: 30rem;
+  }
+
+  .attribution {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  @media (max-width: $mobile-max-width) {
+    &.-tall { text-align: left; }
+  }
+}
+</style>

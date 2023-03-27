@@ -52,8 +52,7 @@ query ($id: ID!) {
         <div class="building-header-text">
           <div>
             <h1>
-              {{ $page.building.PropertyName || $page.building.Address }}
-              <OverallRankEmoji
+              {{ $page.building.PropertyName || $page.building.Address }}&nbsp;<OverallRankEmoji
                 :building="$page.building"
                 :stats="BuildingBenchmarkStats"
                 :large-view="true"
@@ -500,11 +499,22 @@ export default class BuildingDetails  extends Vue {
 
       .building-header-text { position: relative; }
 
-      &.-has-img.-img-tall {
-        grid-template-areas:
-          "title"
-          "img"
-          "details";
+      &.-has-img {
+        &:not(.-img-tall), &.-img-tall {
+          grid-template-areas:
+            "title"
+            "img"
+            "details";
+        }
+
+        &:not(.-img-tall) .building-header-text {
+          grid-area: title;
+          position: relative;
+          bottom: 0;
+          width: 100%;
+          background: none;
+          padding-bottom: 1rem;
+        }
       }
     }
 
