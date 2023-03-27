@@ -63,7 +63,10 @@ export default class BiggestBuildings extends Vue {
 <template>
   <DefaultLayout>
     <div class="homepage">
-      <h1 id="main-content" tabindex="-1">
+      <h1
+        id="main-content"
+        tabindex="-1"
+      >
         Electrify Chicago
       </h1>
 

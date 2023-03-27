@@ -6,7 +6,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 @Component<any>({
   components: {
     NewTabIcon,
-  }
+  },
 })
 export default class EmissionsBreakdownGraph extends Vue {
 }

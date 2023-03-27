@@ -55,7 +55,10 @@ export default class TopGasUsers extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
+    <h1
+      id="main-content"
+      tabindex="-1"
+    >
       Cleanest {{ $static.allBuilding.edges.length }} Buildings by Greenhouse Gas Intensity
     </h1>
 

@@ -128,7 +128,10 @@ export default class Search extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
+    <h1
+      id="main-content"
+      tabindex="-1"
+    >
       Search Benchmarked Buildings
     </h1>
 

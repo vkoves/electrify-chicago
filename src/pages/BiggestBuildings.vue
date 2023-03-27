@@ -54,7 +54,10 @@ export default class BiggestBuildings extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
+    <h1
+      id="main-content"
+      tabindex="-1"
+    >
       Top {{ $static.allBuilding.edges.length }} Buildings By Square Footage
     </h1>
 
