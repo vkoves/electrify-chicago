@@ -435,7 +435,7 @@ export default class BuildingDetails  extends Vue {
   }
 
 
-  h1 { margin-bottom: 0; }
+  h1 { margin: 0; }
 
   .address {
     font-size: 1.25rem;

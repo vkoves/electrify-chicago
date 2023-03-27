@@ -1,5 +1,9 @@
 <template>
-  <span v-if="overallRank" class="overall-rank-emoji-cont">
+  <div
+    v-if="overallRank"
+    class="overall-rank-emoji-cont"
+    :class="{ '-large': largeView }"
+  >
     <span
       class="overall-rank-emoji"
       :title="overallRank.msg"
@@ -15,7 +19,7 @@
     >
       📷
     </span>
-  </span>
+  </div>
 </template>
 
 <script lang="ts">
@@ -48,11 +52,17 @@ export default class OverallRankEmoji extends Vue {
 
 <style lang="scss">
 .overall-rank-emoji-cont {
+  display: inline;
   white-space: nowrap;
+
   .overall-rank-emoji, .has-img-emoji {
     vertical-align: 0.2em;
   }
 
   .overall-rank-emoji { font-size: 0.925em; }
+
+  &.-large {
+    .overall-rank-emoji { font-size: 0.8em; }
+  }
 }
 </style>
