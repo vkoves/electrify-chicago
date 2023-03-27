@@ -38,9 +38,9 @@ dl {
   dd + dt { margin-top: 1rem; }
 }
 
-img {
-  max-width: 100%;
-}
+summary:focus { outline-offset: 0; }
+
+img { max-width: 100%; }
 
 img.-shadowed {
   border: solid $border-thin $grey;
@@ -62,6 +62,7 @@ img.-shadowed {
 .layout-constrained, .constrained {
   max-width: 50rem;
 
+  &.-wide { max-width: 60rem; }
   &.layout-constrained { margin: auto; }
 }
 

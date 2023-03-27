@@ -191,7 +191,7 @@ export default class BuildingsTable extends Vue {
 // that impossible otherwise
 .table-cont {
   width: 100%;
-  height: 70vh;
+  height: 80vh;
   overflow: auto;
   border: solid $border-thin $grey-dark;
   box-sizing: border-box;
@@ -209,7 +209,7 @@ export default class BuildingsTable extends Vue {
 
     a {
       font-weight: bold;
-      font-size: 1.125em;
+      font-size: 1.25em;
       text-decoration: none;
       white-space: nowrap;
     }
@@ -257,6 +257,12 @@ export default class BuildingsTable extends Vue {
 
       td.property-name, td.property-address { width: 10rem; }
     }
+  }
+
+  // On very short screens < 640px, disable vertical scrolling on the table, since it's view
+  // height based and makes it very annoying at high zoom
+  @media (max-height: 40rem) {
+    height: auto;
   }
 }
 </style>

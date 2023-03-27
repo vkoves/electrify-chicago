@@ -59,7 +59,7 @@ export default class TopGasUsers extends Vue {
       Cleanest {{ $static.allBuilding.edges.length }} Buildings by Greenhouse Gas Intensity
     </h1>
 
-    <p>
+    <p class="constrained">
       The median building in our dataset emits {{ BuildingBenchmarkStats.GHGIntensity.median }}
       CO<sub>2</sub> kg / square foot, but these buildings are Chicago's best in class and emit
       <em>way</em> less! Some, like
