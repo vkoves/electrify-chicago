@@ -86,7 +86,7 @@ export default class BiggestBuildings extends Vue {
             building photographs and label multi-building owners like universities.
           </p>
 
-          <EmissionsBreakdownGraph class="-mobile"/>
+          <EmissionsBreakdownGraph class="-mobile" />
 
           <p class="constrained -wide">
             You can start by looking at Chicago's buildings with the highest greenhouse gas
@@ -100,7 +100,7 @@ export default class BiggestBuildings extends Vue {
           <DataDisclaimer />
         </div>
 
-        <EmissionsBreakdownGraph class="-desktop"/>
+        <EmissionsBreakdownGraph class="-desktop" />
       </div>
 
       <BuildingsTable :buildings="$page.allBuilding.edges" />
