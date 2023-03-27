@@ -51,11 +51,25 @@ export default class TopGasUsers extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1>Top {{ $static.allBuilding.edges.length }} Buildings by Natural Gas Use</h1>
+    <h1
+      id="main-content"
+      tabindex="-1"
+    >
+      Top {{ $static.allBuilding.edges.length }} Buildings by Natural Gas Use
+    </h1>
+
+    <p class="constrained -wide">
+      These buildings are the largest consumers of natural gas (methane) in the city. Natural gas
+      in these buildings is typically used for heating gas and water, and since electrifying the
+      grid won't clean up these emissions it's an important set of buildings to focus on!
+    </p>
 
     <DataDisclaimer />
 
-    <BuildingsTable :buildings="$static.allBuilding.edges" />
+    <BuildingsTable
+      :buildings="$static.allBuilding.edges"
+      :show-gas-use="true"
+    />
 
     <p class="footnote">
       Data Source:

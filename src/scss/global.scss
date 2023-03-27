@@ -13,7 +13,19 @@ body {
   &, * { font-family: 'Roboto', sans-serif; }
 }
 
+*:focus {
+  outline: dashed $chicago-red;
+  outline-offset: 0.125rem;
+}
+
 a { color: $link-blue; }
+
+h1, h2, h3, h4, h5, h6 {
+   &:focus {
+    border-bottom: solid 0.5rem $chicago-blue;
+    outline: none;
+  }
+}
 
 /**
  * Text helpers
@@ -27,9 +39,9 @@ dl {
   dd + dt { margin-top: 1rem; }
 }
 
-img {
-  max-width: 100%;
-}
+summary:focus { outline-offset: 0; }
+
+img { max-width: 100%; }
 
 img.-shadowed {
   border: solid $border-thin $grey;
@@ -51,14 +63,12 @@ img.-shadowed {
 .layout-constrained, .constrained {
   max-width: 50rem;
 
+  &.-wide { max-width: 60rem; }
   &.layout-constrained { margin: auto; }
 }
 
-
-
 /** Search Form styling */
 form.search-form {
-
   .input-cont {
     display: flex;
     white-space: nowrap;
@@ -75,10 +85,9 @@ form.search-form {
 
   input {
     border-radius: $border-radius 0 0 $border-radius;
-    width: 12.5rem;
+    width: 14rem;
     border-right: none;
     padding-right: 0;
-    font-size: 0.75rem;
     flex-grow: 1;
   }
 
@@ -86,6 +95,12 @@ form.search-form {
     border-radius: 0 $border-radius $border-radius 0;
     border-left: none;
     font-weight: bold;
+    background-color: $grey;
+    cursor: pointer;
+
+    &:hover, &:focus {
+      background-color: $grey-dark;
+    }
   }
 }
 
