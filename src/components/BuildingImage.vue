@@ -8,15 +8,15 @@
 
     <p class="attribution">
       <strong>Attribution:</strong>
-      {{ buildingImg.fromGoogleMaps ? '© Google ' + currentYear :  '' }}
+      {{ buildingImg.fromGoogleMaps ? '© Google ' + currentYear : '' }}
       <a
+        ref="noopener noreferrer"
         :href="buildingImg.attributionUrl"
         target="_blank"
-        ref="noopener noreferrer"
       >
         Image Source
         <NewTabIcon />
-      </a>. Image cropped from original.
+      </a>. Cropped from original.
     </p>
   </div>
 </template>
@@ -60,6 +60,7 @@ export default class BuildingImage extends Vue {
       text-align: right;
 
       img { max-height: 35rem; }
+      p { text-align: left; }
     }
 
     img {

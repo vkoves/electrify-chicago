@@ -81,6 +81,11 @@ export const BuildingImages: IBuildingImages = {
         imgUrl: BuildingImagesBase + 'john-hancock.jpg',
         isTall: true,
     },
+    'merchandise-mart': {
+        attributionUrl: 'https://commons.wikimedia.org/wiki/File:Merchandise_Mart_080405.jpg',
+        imgUrl: BuildingImagesBase + 'merchandise-mart.jpg',
+        isTall: true,
+    },
 
     /**
      * IIT (Illinois Tech) buildings
@@ -108,9 +113,38 @@ export const BuildingImages: IBuildingImages = {
     /**
      * Misc. High Emitters
      */
+    'digital-lakeside': {
+        attributionUrl: 'https://goo.gl/maps/1H9Wct1qprbtzNux9',
+        imgUrl: BuildingImagesBase + 'digital-lakeside.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    '352-360-w-wellington-ave': {
+        attributionUrl: 'https://goo.gl/maps/cqJ8Ao4PCyKktJqW7',
+        imgUrl: BuildingImagesBase + '352-w-wellington.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
     'lowden-homes': {
         attributionUrl: 'https://goo.gl/maps/StosjYVtT3XjeQ8J7',
         imgUrl: BuildingImagesBase + 'lowden-homes.jpg',
+        fromGoogleMaps: true,
+    },
+    'core-site': {
+        attributionUrl: 'https://goo.gl/maps/hLejrJBazqKHTs5x9',
+        imgUrl: BuildingImagesBase + 'core-site.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'digital-printer-s-row': {
+        attributionUrl: 'https://goo.gl/maps/F3dnKuzJ29cTxD6F7',
+        imgUrl: BuildingImagesBase + 'digital-printers-row.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'shop-and-save-market-nagle': {
+        attributionUrl: 'https://goo.gl/maps/DRpUvwYquHtWFaT58',
+        imgUrl: BuildingImagesBase + 'shop-and-save-nagle.jpg',
         fromGoogleMaps: true,
     },
 };

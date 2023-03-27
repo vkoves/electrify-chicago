@@ -45,9 +45,9 @@ query ($id: ID!) {
       <div
         class="building-header"
         :class="{
-        '-has-img': Boolean(buildingImg),
-        '-img-tall': Boolean(buildingImg?.isTall)
-      }"
+          '-has-img': Boolean(buildingImg),
+          '-img-tall': Boolean(buildingImg?.isTall)
+        }"
       >
         <div class="building-header-text">
           <div>
@@ -56,6 +56,7 @@ query ($id: ID!) {
               <OverallRankEmoji
                 :building="$page.building"
                 :stats="BuildingBenchmarkStats"
+                :large-view="true"
               />
             </h1>
           </div>
@@ -74,91 +75,83 @@ query ($id: ID!) {
         </div>
 
         <BuildingImage :building="$page.building" />
-      </div>
 
-      <div class="building-details">
-        <h2>Building Info</h2>
+        <div class="building-details">
+          <h2>Building Info</h2>
 
-        <dl>
-          <div>
-            <dt>Square Footage</dt>
-            <dd>
-              <StatTile
-                :building="$page.building"
-                :stat-key="'GrossFloorArea'"
-                :stats="BuildingBenchmarkStats"
-                :unit="'sqft'"
-              />
-            </dd>
-          </div>
-
-          <div>
-            <dt>Built</dt>
-            <dd>{{ $page.building.YearBuilt }}</dd>
-          </div>
-
-          <div>
-            <dt>Primary Property Type</dt>
-            <dd>{{ $page.building.PrimaryPropertyType }}</dd>
-          </div>
-
-          <!-- Only show building count if set and > 1, most are 1 -->
-          <div v-if="$page.building.NumberOfBuildings && $page.building.NumberOfBuildings > 1">
-            <dt>Building Count</dt>
-            <dd>{{ $page.building.NumberOfBuildings }}</dd>
-          </div>
-
-          <div>
-            <dt>Community Area</dt>
-            <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
-          </div>
-
-          <!--
-            Hidden for now because it's wrong in the source data
+          <dl>
             <div>
-              <dt>Ward</dt>
-              <dd>{{ $page.building.Wards }}</dd>
+              <dt>Square Footage</dt>
+              <dd>
+                <StatTile
+                  :building="$page.building"
+                  :stat-key="'GrossFloorArea'"
+                  :stats="BuildingBenchmarkStats"
+                  :unit="'sqft'"
+                />
+              </dd>
             </div>
-          -->
 
-          <!-- Show energy rating if it's a float value (not blank or NaN) -->
-          <div v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))">
-            <dt>
-              <a
-                href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Chicago Energy Rating
-                <NewTabIcon />
-              </a>
-            </dt>
-            <dd>
-              {{ $page.building.ChicagoEnergyRating }} / 4
-            </dd>
-          </div>
+            <div>
+              <dt>Built</dt>
+              <dd>{{ $page.building.YearBuilt }}</dd>
+            </div>
 
-          <div v-if="$page.building.ENERGYSTARScore">
-            <dt>
-              <a
-                href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Energy Star Score
-                <NewTabIcon />
-              </a>
-            </dt>
-            <dd>
-              {{ $page.building.ENERGYSTARScore }} / 100
-            </dd>
-          </div>
+            <div>
+              <dt>Primary Property Type</dt>
+              <dd>{{ $page.building.PrimaryPropertyType }}</dd>
+            </div>
 
-          <div>
-            <dt>Owner</dt>
-            <OwnerLogo :building="$page.building" />
-          </div>
-        </dl>
+            <!-- Only show building count if set and > 1, most are 1 -->
+            <div v-if="$page.building.NumberOfBuildings && $page.building.NumberOfBuildings > 1">
+              <dt>Building Count</dt>
+              <dd>{{ $page.building.NumberOfBuildings }}</dd>
+            </div>
+
+            <div>
+              <dt>Community Area</dt>
+              <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
+            </div>
+
+            <!-- Show energy rating if it's a float value (not blank or NaN) -->
+            <div v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))">
+              <dt>
+                <a
+                  href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Chicago Energy Rating
+                  <NewTabIcon />
+                </a>
+              </dt>
+              <dd>
+                {{ $page.building.ChicagoEnergyRating }} / 4
+              </dd>
+            </div>
+
+            <div v-if="$page.building.ENERGYSTARScore">
+              <dt>
+                <a
+                  href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Energy Star Score
+                  <NewTabIcon />
+                </a>
+              </dt>
+              <dd>
+                {{ $page.building.ENERGYSTARScore }} / 100
+              </dd>
+            </div>
+
+            <div>
+              <dt>Owner</dt>
+              <OwnerLogo :building="$page.building" />
+            </div>
+          </dl>
+        </div>
       </div>
 
       <h2>Emissions & Energy Information</h2>
@@ -387,27 +380,57 @@ export default class BuildingDetails  extends Vue {
     position: relative;
     min-height: 8rem;
 
-    // Tall images for tall building, like Marina Towers
+    // For tall images we have the title and building details on the left
     &.-img-tall {
-      display: flex;
-      gap: 1rem;
+      display: grid;
       align-items: center;
       justify-content: space-between;
+      gap: 0 2rem;
+      grid-template-areas:
+        "title img"
+        "details img";
+
+      .building-header-text {
+        grid-area: title;
+        align-self: end;
+      }
+      .building-details {
+        grid-area: details;
+        align-self: start;
+      }
+      .building-img-cont { grid-area: img; }
     }
 
     &:not(.-img-tall) {
-      .building-img-cont { width: 80%; }
+      display: grid;
+      grid-template-areas:
+        "img"
+        "details";
+
+      .building-header-text {
+        grid-area: img;
+      }
+      .building-img-cont {
+        grid-area: img;
+        width: 80%;
+      }
+      .building-details {
+        grid-area: details;
+        align-self: start;
+      }
 
       .building-header-text {
         position: absolute;
         z-index: 10;
         backdrop-filter: blur(0.0625rem);
         background: rgb(255 255 255 / 75%);
-        bottom: 3rem;
+        bottom: 4rem;
         width: 60%;
-        padding-left: 1rem;
+        padding: 0.5rem 1rem;
         border-top-right-radius: 0.5rem;
         border-bottom-right-radius: 0.5rem;
+
+        h1, .address { margin: 0; }
       }
     }
   }
@@ -476,6 +499,13 @@ export default class BuildingDetails  extends Vue {
       .building-img-cont, .building-header-text { width: 100%; }
 
       .building-header-text { position: relative; }
+
+      &.-has-img.-img-tall {
+        grid-template-areas:
+          "title"
+          "img"
+          "details";
+      }
     }
 
     // Break GMaps link to new line

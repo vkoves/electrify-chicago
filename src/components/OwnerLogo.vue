@@ -36,7 +36,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {IBuilding} from '~/common-functions.vue';
 import {
-  BuildingsCustomInfo,
   IBuildingOwner,
   BuildingOwners,
 } from '~/constants/buildings-custom-info.constant.vue';

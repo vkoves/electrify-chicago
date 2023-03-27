@@ -6,6 +6,15 @@
     >
       {{ overallRank.emoji }}
     </span>
+
+    <!-- Show image emoji on tables -->
+    <span
+      v-if="hasBuildingImg && !largeView"
+      class="has-img-emoji"
+      title="Has Image"
+    >
+      📷
+    </span>
   </span>
 </template>
 
@@ -13,6 +22,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {getOverallRankEmoji, IBuilding, IBuildingBenchmarkStats} from '~/common-functions.vue';
+import { getBuildingImage } from '../constants/building-images.constant.vue';
 
 /**
  * A component that shows an emoji to summarize a building, showing the worse of the alarm or flag
@@ -23,15 +33,23 @@ export default class OverallRankEmoji extends Vue {
   @Prop({required: true}) building!: IBuilding;
   @Prop({required: true}) stats!: IBuildingBenchmarkStats;
 
+  /** Whether this is a large view of the emoji (e.g. in an <h1> on the details page) */
+  @Prop({default: false}) largeView!: boolean;
+
   get overallRank(): { msg: string, emoji: string } | null {
     return getOverallRankEmoji(this.building, this.stats);
+  }
+
+  get hasBuildingImg(): boolean {
+    return Boolean(getBuildingImage(this.building));
   }
 }
 </script>
 
 <style lang="scss">
-.overall-rank-emoji {
-  font-size: 0.8em;
+.overall-rank-emoji, .has-img-emoji {
   vertical-align: 0.2em;
 }
+
+.overall-rank-emoji { font-size: 0.925em; }
 </style>

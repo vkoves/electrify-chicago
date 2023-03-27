@@ -1,5 +1,5 @@
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import { IBuilding, IBuildingBenchmarkStats } from '~/common-functions.vue';
