@@ -13,7 +13,18 @@ body {
   &, * { font-family: 'Roboto', sans-serif; }
 }
 
+*:focus {
+  outline: dashed $chicago-red;
+  outline-offset: 0.125rem;
+}
+
 a { color: $link-blue; }
+
+h1, h2, h3, h4, h5, h6 {
+  &:target {
+    border-bottom: solid 0.5rem $chicago-blue;
+  }
+}
 
 /**
  * Text helpers
@@ -54,8 +65,6 @@ img.-shadowed {
   &.layout-constrained { margin: auto; }
 }
 
-
-
 /** Search Form styling */
 form.search-form {
   .input-cont {
@@ -74,10 +83,9 @@ form.search-form {
 
   input {
     border-radius: $border-radius 0 0 $border-radius;
-    width: 12.5rem;
+    width: 14rem;
     border-right: none;
     padding-right: 0;
-    font-size: 0.75rem;
     flex-grow: 1;
   }
 

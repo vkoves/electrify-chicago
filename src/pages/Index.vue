@@ -60,7 +60,24 @@ export default class BiggestBuildings extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1>Electrify Chicago</h1>
+    <h1 id="main-content">
+      Electrify Chicago
+    </h1>
+
+    <p class="constrained">
+      <!-- TODO: Move to consolidated sources object-->
+      According to the <a
+        ref="noopener noreferrer"
+        href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
+        target="_blank"
+      >
+        2022 Chicago Climate Action Plan<NewTabIcon />
+      </a>, a whopping <strong>69% of Chicago's emissions come from buildings</strong>, making it
+      our biggest challenge and <em>our biggest opportunity</em> as a city to tackle climate change.
+      At Electrify Chicago we want to showcase some of the best and worst performing buildings in
+      the city using publicly available data and manual annotations to add building photographs and
+      label owners.
+    </p>
 
     <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 

@@ -93,10 +93,20 @@ export const BuildingImages: IBuildingImages = {
         fromGoogleMaps: true,
         isTall: true,
     },
+
+    /**
+     * Particularly Low GHG Intensity Buildings
+     */
     'king-college-prep-cps': {
         attributionUrl: 'https://goo.gl/maps/Y4AVkhcaFhuQAk5j6',
         imgUrl: BuildingImagesBase + 'king-college-prep.jpg',
         fromGoogleMaps: true,
+    },
+    'clinton-complex-condominium-association': {
+        attributionUrl: 'https://goo.gl/maps/XdsAqhXxDBsQSGLC9',
+        imgUrl: BuildingImagesBase + 'clinton-complex-condos.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
     },
 
     /**

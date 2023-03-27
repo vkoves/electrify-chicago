@@ -128,7 +128,9 @@ export default class Search extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1>Search Benchmarked Buildings</h1>
+    <h1 id="main-content">
+      Search Benchmarked Buildings
+    </h1>
 
     <p>
       Note that results are limited to the first {{ MaxBuildings }} matches.
@@ -186,8 +188,6 @@ export default class Search extends Vue {
 
 <style lang="scss">
 form.search-form.-page {
-  background: $grey;
-  padding: 1rem;
   border-radius: 0.25rem;
   margin-bottom: 1rem;
 
@@ -206,7 +206,10 @@ form.search-form.-page {
     // Slightly round search instead of full pill
     $border-radius: 0.25rem;
 
-    input { border-radius: $border-radius 0 0 $border-radius; }
+    input {
+      border-radius: $border-radius 0 0 $border-radius;
+      font-size: 1rem;
+    }
     button { border-radius: 0 $border-radius $border-radius 0; }
   }
 

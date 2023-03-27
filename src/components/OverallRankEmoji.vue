@@ -37,7 +37,7 @@ export default class OverallRankEmoji extends Vue {
   @Prop({required: true}) building!: IBuilding;
   @Prop({required: true}) stats!: IBuildingBenchmarkStats;
 
-  /** Whether this is a large view of the emoji (e.g. in an <h1> on the details page) */
+  /** Whether this is a large view of the emoji (e.g. in the title of the details page) */
   @Prop({default: false}) largeView!: boolean;
 
   get overallRank(): { msg: string, emoji: string } | null {

@@ -1,7 +1,9 @@
 <template>
   <DefaultLayout>
     <div class="layout-constrained">
-      <h1>About Us</h1>
+      <h1 id="main-content">
+        About Us
+      </h1>
 
       <p class="constrained">
         Electrify Chicago is an independent open-source project looking to shed light onto one of

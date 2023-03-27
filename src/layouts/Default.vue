@@ -28,6 +28,13 @@ export default class Default extends Vue {
     <div class="layout">
       <!-- TODO: Split to a component-->
       <header class="header">
+        <a
+          href="#main-content"
+          class="nav-link skip-to-main"
+        >
+          Skip to Main Content
+        </a>
+
         <g-link
           to="/"
           class="logo-link"
@@ -38,6 +45,7 @@ export default class Default extends Vue {
             class="site-logo"
           >
         </g-link>
+
         <nav class="top-nav">
           <g-link
             class="nav-link"
@@ -45,30 +53,42 @@ export default class Default extends Vue {
           >
             Home
           </g-link>
+
           <g-link
             class="nav-link"
             to="/about"
           >
             About
           </g-link>
+
           <g-link
             class="nav-link"
             to="/top-gas-users"
           >
             Top Gas Users
           </g-link>
+
           <g-link
             class="nav-link"
             to="/top-emitters"
           >
             Top Emitters
           </g-link>
+
           <g-link
             class="nav-link"
             to="/biggest-buildings"
           >
             Biggest Buildings
           </g-link>
+
+          <g-link
+            class="nav-link"
+            to="/cleanest-buildings"
+          >
+            Cleanest Buildings
+          </g-link>
+
           <!--
             <g-link class="nav-link" to="/top-electricity-users">Top Electricity Users</g-link>
           -->
@@ -138,7 +158,25 @@ header.header {
   padding: 1rem 0;
   gap: 2rem;
 
+  // An off screen anchor link that goes on screen when focused
+  .nav-link.skip-to-main {
+    position: absolute;
+    background: $chicago-blue;
+    color: $white;
+    border-top: none;
+    border-radius: 0 0 0.5rem 0.5rem;
+    padding: 1rem;
+    top: -10rem;
+    outline-offset: 0.1rem;
+    padding: 0.5rem 2rem;
+
+    &:focus {
+      top: 0;
+    }
+  }
+
   .logo-link {
+    display: inline-flex;
     flex-shrink: 0;
 
     .site-logo {
@@ -153,18 +191,21 @@ header.header {
     gap: 1.5rem;
     align-items: center;
     flex-wrap: wrap;
+    padding: 0.5rem 0;
+  }
 
-    a {
-      font-weight: bold;
-      color: $black;
+  .nav-link {
+    font-weight: bold;
+    color: $black;
+    text-decoration: none;
+    padding: 0.1rem 0.2rem;
+    // Increase outline offset to prevent outline from intersecting the blue shadow
+    outline-offset: 0.5rem;
+
+    // Style current page link
+    &.active--exact {
+      box-shadow: 0 0.35rem $chicago-blue;
       text-decoration: none;
-      padding: 0.2rem 0;
-
-      // Style current page link
-      &.active--exact {
-        box-shadow: 0 0.5rem $chicago-blue;
-        text-decoration: none;
-      }
     }
   }
 

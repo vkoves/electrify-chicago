@@ -21,7 +21,12 @@ import { IBuildingBenchmarkStats } from '~/common-functions.vue';
 })
 export default class BuildingsTable extends Vue {
   @Prop({required:true}) buildings!: Array<IBuilding>;
+
   @Prop({default: false}) showSquareFootage!: boolean;
+
+  @Prop({default: false}) showGasUse!: boolean;
+
+  @Prop({default: false}) showElectricityUse!: boolean;
 
   /** Expose stats to template */
   BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
@@ -43,20 +48,7 @@ export default class BuildingsTable extends Vue {
             Square Footage
           </th>
           <th
-            scope="col"
-            class="numeric"
-          >
-            Greenhouse Gas Intensity<br>
-            (kg CO<sub>2</sub>/sqft)
-          </th>
-          <th
-            scope="col"
-            class="numeric"
-          >
-            Total Greenhouse Emissions<br>
-            (metric tons CO<sub>2</sub>)
-          </th>
-          <th
+            v-if="showGasUse"
             scope="col"
             class="numeric"
           >
@@ -64,11 +56,26 @@ export default class BuildingsTable extends Vue {
             (kBtu)
           </th>
           <th
+            v-if="showElectricityUse"
             scope="col"
             class="numeric"
           >
             Electricity Use<br>
             (kBtu)
+          </th>
+          <th
+            scope="col"
+            class="numeric emissions-int"
+          >
+            Greenhouse Gas Intensity<br>
+            (kg CO<sub>2</sub>/sqft)
+          </th>
+          <th
+            scope="col"
+            class="numeric emissions"
+          >
+            Total Greenhouse Emissions<br>
+            (metric tons CO<sub>2</sub>)
           </th>
         </tr>
       </thead>
@@ -114,6 +121,40 @@ export default class BuildingsTable extends Vue {
             </template>
           </td>
 
+          <td
+            v-if="showGasUse"
+            class="numeric"
+          >
+            <template v-if="edge.node.NaturalGasUse">
+              <RankText
+                :building="edge.node"
+                :should-round="true"
+                :stats="BuildingBenchmarkStats"
+                stat-key="NaturalGasUse"
+              />
+            </template>
+            <template v-else>
+              -
+            </template>
+          </td>
+          <td
+            v-if="showElectricityUse"
+            class="numeric"
+          >
+            <template v-if="edge.node.ElectricityUse">
+              <RankText
+                :building="edge.node"
+                :should-round="true"
+                :stats="BuildingBenchmarkStats"
+                stat-key="ElectricityUse"
+              />
+            </template>
+            <template v-else>
+              -
+            </template>
+          </td>
+
+          <!-- GHG Intensity is shown on all tables -->
           <td class="numeric">
             <template v-if="edge.node.GHGIntensity">
               <RankText
@@ -139,32 +180,6 @@ export default class BuildingsTable extends Vue {
               -
             </template>
           </td>
-          <td class="numeric">
-            <template v-if="edge.node.NaturalGasUse">
-              <RankText
-                :building="edge.node"
-                :should-round="true"
-                :stats="BuildingBenchmarkStats"
-                stat-key="NaturalGasUse"
-              />
-            </template>
-            <template v-else>
-              -
-            </template>
-          </td>
-          <td class="numeric">
-            <template v-if="edge.node.ElectricityUse">
-              <RankText
-                :building="edge.node"
-                :should-round="true"
-                :stats="BuildingBenchmarkStats"
-                stat-key="ElectricityUse"
-              />
-            </template>
-            <template v-else>
-              -
-            </template>
-          </td>
         </tr>
       </tbody>
     </table>
@@ -172,9 +187,12 @@ export default class BuildingsTable extends Vue {
 </template>
 
 <style lang="scss">
+// Make the whole table scroll in a constrained container so we can have a sticky header - CSS makes
+// that impossible otherwise
 .table-cont {
   width: 100%;
-  overflow-x: auto;
+  height: 70vh;
+  overflow: auto;
   border: solid $border-thin $grey-dark;
   box-sizing: border-box;
 
@@ -197,11 +215,15 @@ export default class BuildingsTable extends Vue {
     }
 
     thead {
+      position: sticky;
+      top: 0;
+
       tr { background-color: $grey-dark; }
 
       th {
         text-align: left;
-        font-size: 0.75rem;
+        font-weight: bold;
+        line-height: 1.5;
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
       }
@@ -214,6 +236,7 @@ export default class BuildingsTable extends Vue {
       &:first-of-type { padding-left: 1rem; }
       &:last-of-type { padding-right: 1rem; }
       &.numeric { text-align: right; }
+      &.emissions, &.emissions-int { width: 20%; }
     }
 
     tr:nth-of-type(2n + 2) { background-color: $grey; }
