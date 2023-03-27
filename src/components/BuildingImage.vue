@@ -4,7 +4,8 @@
     class="building-img-cont"
     :class="{ '-tall': Boolean(buildingImg.isTall) }"
   >
-    <img :src="buildingImg.imgUrl">
+    <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
+    <img :src="buildingImg.imgUrl" alt="">
 
     <p class="attribution">
       <strong>Attribution:</strong>
