@@ -21,8 +21,9 @@ body {
 a { color: $link-blue; }
 
 h1, h2, h3, h4, h5, h6 {
-  &:target {
+   &:focus {
     border-bottom: solid 0.5rem $chicago-blue;
+    outline: none;
   }
 }
 

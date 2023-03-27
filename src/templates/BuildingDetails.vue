@@ -51,7 +51,7 @@ query ($id: ID!) {
       >
         <div class="building-header-text">
           <div>
-            <h1 id="main-content">
+            <h1 id="main-content" tabindex="-1">
               {{ $page.building.PropertyName || $page.building.Address }}&nbsp;<OverallRankEmoji
                 :building="$page.building"
                 :stats="BuildingBenchmarkStats"

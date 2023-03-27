@@ -13,6 +13,13 @@ import { Component, Vue } from 'vue-property-decorator';
 export default class Default extends Vue {
   searchQuery = '';
 
+  focusMain(): void {
+    console.log('focus main');
+    const mainHeading = document.getElementById('main-content');
+
+    mainHeading!.focus();
+  }
+
   submitSearch(event?: Event): void {
     if (event) {
       event.preventDefault();
@@ -31,6 +38,7 @@ export default class Default extends Vue {
         <a
           href="#main-content"
           class="nav-link skip-to-main"
+          @click="focusMain"
         >
           Skip to Main Content
         </a>

@@ -1,7 +1,7 @@
 <template>
   <DefaultLayout>
     <div class="layout-constrained">
-      <h1 id="main-content">
+      <h1 id="main-content" tabindex="-1">
         About Us
       </h1>
 

@@ -1,7 +1,15 @@
 <script lang="ts">
-export default {
-  name: 'EmissionsBreakdownGraph',
-};
+import { Component, Vue } from 'vue-property-decorator';
+
+import NewTabIcon from '~/components/NewTabIcon.vue';
+
+@Component<any>({
+  components: {
+    NewTabIcon,
+  }
+})
+export default class EmissionsBreakdownGraph extends Vue {
+}
 </script>
 
 <template>

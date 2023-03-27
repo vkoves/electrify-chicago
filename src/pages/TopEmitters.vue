@@ -51,7 +51,7 @@ export default class TopEmitters extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1 id="main-content">
+    <h1 id="main-content" tabindex="-1">
       Top {{ $static.allBuilding.edges.length }} Buildings by Greenhouse Gas Emissions
     </h1>
 

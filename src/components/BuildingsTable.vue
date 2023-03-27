@@ -191,7 +191,7 @@ export default class BuildingsTable extends Vue {
 // that impossible otherwise
 .table-cont {
   width: 100%;
-  height: 80vh;
+  max-height: 80vh;
   overflow: auto;
   border: solid $border-thin $grey-dark;
   box-sizing: border-box;
@@ -262,7 +262,7 @@ export default class BuildingsTable extends Vue {
   // On very short screens < 640px, disable vertical scrolling on the table, since it's view
   // height based and makes it very annoying at high zoom
   @media (max-height: 40rem) {
-    height: auto;
+    max-height: none;
   }
 }
 </style>

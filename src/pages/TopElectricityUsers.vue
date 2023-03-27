@@ -51,7 +51,7 @@ export default class TopElectricityUsers extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1 id="main-content">
+    <h1 id="main-content" tabindex="-1">
       Top {{ $static.allBuilding.edges.length }} Electricity Users
     </h1>
 
