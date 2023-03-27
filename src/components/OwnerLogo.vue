@@ -32,8 +32,6 @@
 </template>
 
 <script lang="ts">
-// The function Gridsome uses to make slugs, so it should match
-import slugify from '@sindresorhus/slugify';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {IBuilding} from '~/common-functions.vue';
@@ -41,7 +39,8 @@ import {
   BuildingsCustomInfo,
   IBuildingOwner,
   BuildingOwners,
-} from '~/constants/buildings-custom-info.vue';
+} from '~/constants/buildings-custom-info.constant.vue';
+import { getBuildingCustomInfo } from '../constants/buildings-custom-info.constant.vue';
 
 /**
  * A component that given a building shows the logo of its owner if one is set in
@@ -57,8 +56,7 @@ export default class OwnerLogo extends Vue {
    * and name, if one was set.
    */
   get owner(): IBuildingOwner | null {
-    const buildingSlug = slugify(this.building.slugSource as string);
-    const buildingCustomInfo = BuildingsCustomInfo[buildingSlug];
+    const buildingCustomInfo = getBuildingCustomInfo(this.building);
 
     if (buildingCustomInfo?.owner) {
       return BuildingOwners[buildingCustomInfo.owner];

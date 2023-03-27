@@ -1,4 +1,8 @@
 <script lang="ts">
+// The function Gridsome uses to make slugs, so it should match
+import slugify from '@sindresorhus/slugify';
+import { IBuilding } from '../common-functions.vue';
+
 export default { };
 
 /**
@@ -15,13 +19,14 @@ export interface IBuildingOwner {
   logoLarge?: string; // Any size logo for building details
 }
 
+export interface IBuildingOwners {
+  [ownerKey: string]: IBuildingOwner;
+}
+
 /**
  * An object containing the name and logos of custom flagged building owners
- *
- *
- * Type
  */
-export const BuildingOwners: { [key: string]: IBuildingOwner } = {
+export const BuildingOwners: IBuildingOwners = {
   depaul: {
     key: 'depaul',
     name: 'DePaul University',
@@ -67,4 +72,10 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   'john-t-rettaliata-engineering-center': {owner: BuildingOwners.iit.key},
   'mc-cormick-tribune-campus-center': {owner: BuildingOwners.iit.key},
 };
+
+export function getBuildingCustomInfo(building: IBuilding): IBuildingCustomInfo | null {
+  const buildingSlug = slugify(building.slugSource as string);
+
+  return BuildingsCustomInfo[buildingSlug] ?? null;
+}
 </script>

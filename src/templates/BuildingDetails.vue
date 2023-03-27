@@ -42,26 +42,38 @@ query ($id: ID!) {
 <template>
   <DefaultLayout>
     <div class="building-details-page">
-      <div>
-        <h1>
-          {{ $page.building.PropertyName || $page.building.Address }}
-          <OverallRankEmoji
-            :building="$page.building"
-            :stats="BuildingBenchmarkStats"
-          />
-        </h1>
-      </div>
+      <div
+        class="building-header"
+        :class="{
+        '-has-img': Boolean(buildingImg),
+        '-img-tall': Boolean(buildingImg?.isTall)
+      }"
+      >
+        <div class="building-header-text">
+          <div>
+            <h1>
+              {{ $page.building.PropertyName || $page.building.Address }}
+              <OverallRankEmoji
+                :building="$page.building"
+                :stats="BuildingBenchmarkStats"
+              />
+            </h1>
+          </div>
 
-      <div class="address">
-        {{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}
-        <a
-          :href="'https://www.google.com/maps/search/' + encodedAddress"
-          class="google-maps-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Find on Google Maps <NewTabIcon />
-        </a>
+          <div class="address">
+            {{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}
+            <a
+              :href="'https://www.google.com/maps/search/' + encodedAddress"
+              class="google-maps-link"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Find on Google Maps <NewTabIcon />
+            </a>
+          </div>
+        </div>
+
+        <BuildingImage :building="$page.building" />
       </div>
 
       <div class="building-details">
@@ -316,11 +328,13 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import StatTile from '~/components/StatTile.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
+import BuildingImage from '~/components/BuildingImage.vue';
 import { IBuildingBenchmarkStats } from '~/common-functions.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
 
 @Component<any>({
   metaInfo() {
@@ -329,6 +343,7 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
     };
   },
   components: {
+    BuildingImage,
     NewTabIcon,
     OverallRankEmoji,
     OwnerLogo,
@@ -358,11 +373,45 @@ export default class BuildingDetails  extends Vue {
       return encodeURI(propertyAddr);
     }
   }
+
+  get buildingImg(): IBuildingImage | null {
+    return getBuildingImage(this.$page.building);
+  }
 }
 </script>
 
 <style lang="scss">
 .building-details-page {
+  // Style the header specifically for when we have an image
+  .building-header.-has-img {
+    position: relative;
+    min-height: 8rem;
+
+    // Tall images for tall building, like Marina Towers
+    &.-img-tall {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &:not(.-img-tall) {
+      .building-img-cont { width: 80%; }
+
+      .building-header-text {
+        position: absolute;
+        z-index: 10;
+        backdrop-filter: blur(0.0625rem);
+        background: rgb(255 255 255 / 75%);
+        bottom: 3rem;
+        width: 60%;
+        padding-left: 1rem;
+        border-top-right-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
+      }
+    }
+  }
+
 
   h1 { margin-bottom: 0; }
 
@@ -423,6 +472,12 @@ export default class BuildingDetails  extends Vue {
   }
 
   @media (max-width: $mobile-max-width) {
+    .building-header {
+      .building-img-cont, .building-header-text { width: 100%; }
+
+      .building-header-text { position: relative; }
+    }
+
     // Break GMaps link to new line
     .address .google-maps-link {
       display: block;
