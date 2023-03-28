@@ -18,7 +18,7 @@
         v-if="!isSmall"
         class="owner-label"
       >
-        <strong>Note:</strong> Owner manually tagged
+        <strong>Note:</strong> Owner manually tagged. Logo used under fair use.
       </div>
 
       <!-- If small view should short building name -->
@@ -89,8 +89,9 @@ export default class OwnerLogo extends Vue {
   }
 
   .owner-label {
+    margin-top: 0.25rem;
     margin-bottom: 0.5rem;
-    font-size: smaller;
+    font-size: 0.75rem;
   }
 
   img { width: 20rem; }

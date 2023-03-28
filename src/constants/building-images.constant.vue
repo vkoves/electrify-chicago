@@ -133,6 +133,45 @@ export const BuildingImages: IBuildingImages = {
     },
 
     /**
+     * UChicago Buildings
+     */
+    '6045-kenwood-building': {
+        attributionUrl: 'https://goo.gl/maps/TyJgFT4wfqyRaFtt5',
+        imgUrl: BuildingImagesBase + '6045-s-kenwood.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'accelerator-high-energy-physics': {
+        attributionUrl: 'https://goo.gl/maps/gkWsHoymmwNiwDAU6',
+        imgUrl: BuildingImagesBase + 'uchicago-accelerator-ellis.jpg',
+        fromGoogleMaps: true,
+    },
+    'gordon-center-for-integrative-science-gcis': {
+        attributionUrl: 'https://goo.gl/maps/wgyeibwbqyr1UdvY9',
+        imgUrl: BuildingImagesBase + 'gordon-center.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'hinds-laboratory': {
+        attributionUrl: 'https://goo.gl/maps/yManrKMWU5xFEVQC8',
+        imgUrl: BuildingImagesBase + 'uchicago-hinds-laboratory.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'searle-chemistry-laboratory': {
+        attributionUrl: 'https://goo.gl/maps/ME1PsC6gepn5W5Ms7',
+        imgUrl: BuildingImagesBase + 'searle-chemistry-laboratory.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'william-eckhardt-research-center': {
+        attributionUrl: 'https://goo.gl/maps/GJaEQAau4odVgF2A6',
+        imgUrl: BuildingImagesBase + 'william-eckhardt-research-center.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+
+    /**
      * Misc. High Emitters
      */
     'digital-lakeside': {

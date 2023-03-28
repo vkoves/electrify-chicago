@@ -363,7 +363,10 @@ export default class BuildingDetails  extends Vue {
 
     // If we know the property name, providing it in our Google Maps search may improve accuracy
     if (propertyName) {
-      return encodeURI(`${propertyName} ${propertyAddr}`);
+      // Slashes break the URL, so just swap them for spaces
+      const propertyNameCleaned = propertyName.replaceAll('/', ' ');
+
+      return encodeURI(`${propertyNameCleaned} ${propertyAddr}`);
     } else {
       return encodeURI(propertyAddr);
     }
