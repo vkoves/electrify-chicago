@@ -69,7 +69,7 @@ export default class LargeOwners extends Vue {
 
       <p class="constrained -wide">
         <strong>Note:</strong> All building owners are manually tagged through public data, like
-        university building directories.
+        university building directories, and are thus may be an incomplete list.
       </p>
 
       <p class="constrained -wide">
