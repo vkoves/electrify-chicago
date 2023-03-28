@@ -131,6 +131,11 @@ export const BuildingImages: IBuildingImages = {
         fromGoogleMaps: true,
         isTall: true,
     },
+    'mc-cormick-tribune-campus-center': {
+        attributionUrl: 'https://goo.gl/maps/nnGyrZ4nZZ1oaK6J6',
+        imgUrl: BuildingImagesBase + 'mccormick-tribune-campus-center.jpg',
+        fromGoogleMaps: true,
+    },
 
     /**
      * UChicago Buildings

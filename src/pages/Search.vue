@@ -10,9 +10,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
-interface IBuildingEdge {
-  node: IBuilding;
-}
+interface IBuildingEdge { node: IBuilding; }
 
 @Component<any>({
   components: {
@@ -25,16 +23,17 @@ interface IBuildingEdge {
   },
 })
 export default class Search extends Vue {
-  readonly   BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
   readonly MaxBuildings = 50;
   readonly QueryParamKey = 'q';
+
+  /** Set by Gridsome to results of GraphQL query */
+  readonly $static: any;
 
   search = '';
 
   searchResults: Array<IBuilding> = [];
 
-  /** Set by Gridsome to results of GraphQL query */
-  $static: any;
 
   created(): void {
     // Make sure on load we have some data

@@ -92,6 +92,13 @@ export default class Default extends Vue {
 
           <g-link
             class="nav-link"
+            to="/large-owners"
+          >
+            Large Owners
+          </g-link>
+
+          <g-link
+            class="nav-link"
             to="/cleanest-buildings"
           >
             Cleanest Buildings

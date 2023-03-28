@@ -8,24 +8,33 @@
       '-unknown': !owner
     }"
   >
-    <template v-if="owner">
-      <img
-        v-if="!isSmall"
-        :src="ownerLogoSrc"
-        :alt="owner.name"
+    <div v-if="owner && !isSmall">
+      <g-link
+        v-if="owner"
+        :to="'/owner/' + owner.key"
       >
-      <div
-        v-if="!isSmall"
-        class="owner-label"
-      >
+        <img
+          v-if="!isSmall"
+          :src="ownerLogoSrc"
+          :alt="owner.name"
+        >
+        <div
+          v-if="!isSmall"
+          class="owner-label"
+        />
+
+        View All Tagged {{ owner.nameShort }} Buildings
+      </g-link>
+
+      <p class="footnote">
         <strong>Note:</strong> Owner manually tagged. Logo used under fair use.
-      </div>
+      </p>
+    </div>
 
-      <!-- If small view should short building name -->
-      <span v-if="isSmall">({{ owner.nameShort }})</span>
-    </template>
+    <!-- If small view should short building name -->
+    <span v-if="owner && isSmall">({{ owner.nameShort }})</span>
 
-    <div v-if="!isSmall && !owner">
+    <div v-if="!owner && !isSmall">
       Not Tagged
     </div>
   </div>

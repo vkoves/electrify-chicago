@@ -37,7 +37,7 @@ export const BuildingOwners: IBuildingOwners = {
 
   iit: {
     key: 'iit',
-    name: 'Illinois Institute of Technology (Illinois Tech)',
+    name: 'Illinois Institute of Technology',
     nameShort: 'Illinois Tech',
     logoSmall: '/building-owners/iit/logo-small.png',
     logoLarge: '/building-owners/iit/logo-large.svg',
@@ -58,6 +58,11 @@ export const BuildingOwners: IBuildingOwners = {
     logoSmall: '/building-owners/northwestern/northwestern-large.png',
     logoLarge: '/building-owners/northwestern/northwestern-large.png',
   },
+
+  /**
+   * IMPORTANT! If you add a new building owner, make sure to add it to the gridsome.server.js to
+   * register the owner page, since it cannot import this file.
+   */
 };
 
 export interface IBuildingCustomInfo {
