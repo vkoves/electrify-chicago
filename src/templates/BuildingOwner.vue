@@ -20,7 +20,7 @@ interface IBuildingEdge { node: IBuilding; }
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Biggest Buildings' };
+    return { title:  (this.currOwner?.nameShort + ' Buildings') || 'Building Owner' };
   },
 })
 export default class BiggestBuildings extends Vue {
