@@ -1,5 +1,4 @@
 <script lang="ts">
-import slugify from '@sindresorhus/slugify';
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
@@ -46,8 +45,10 @@ export default class BiggestBuildings extends Vue {
   filterBuildings(ownerId: string): void {
     // Loop through BuildingsCustomInfo to get the slugs of buildings we are looking for
     const ownerBuildingsSlugs: Array<string> = Object.entries(BuildingsCustomInfo)
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .filter(([ buildingSlug, buildingInfo ]: [string, IBuildingCustomInfo]) => {
         return buildingInfo.owner === ownerId;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       }).map(([ buildingSlug, buildingInfo ]: [string, IBuildingCustomInfo]) => buildingSlug);
 
     this.buildingsFiltered =
