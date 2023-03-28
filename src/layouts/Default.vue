@@ -14,7 +14,6 @@ export default class Default extends Vue {
   searchQuery = '';
 
   focusMain(): void {
-    console.log('focus main');
     const mainHeading = document.getElementById('main-content');
 
     mainHeading!.focus();

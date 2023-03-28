@@ -519,7 +519,7 @@ export default class BuildingDetails  extends Vue {
           bottom: 0;
           width: 100%;
           background: none;
-          padding-bottom: 1rem;
+          padding: 0 0 1rem 0;
         }
       }
     }

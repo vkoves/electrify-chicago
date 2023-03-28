@@ -50,8 +50,6 @@ export default class BiggestBuildings extends Vue {
         return buildingInfo.owner === ownerId;
       }).map(([ buildingSlug, buildingInfo ]: [string, IBuildingCustomInfo]) => buildingSlug);
 
-    console.log({ ownerBuildingsSlugs });
-
     this.buildingsFiltered =
       this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
         return ownerBuildingsSlugs.some((ownedBuildingSlug) =>
