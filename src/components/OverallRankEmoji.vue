@@ -1,10 +1,10 @@
 <template>
   <div
-    v-if="overallRank"
     class="overall-rank-emoji-cont"
     :class="{ '-large': largeView }"
   >
     <span
+      v-if="overallRank"
       class="overall-rank-emoji"
       :title="overallRank.msg"
     >

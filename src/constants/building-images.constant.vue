@@ -117,8 +117,9 @@ export const BuildingImages: IBuildingImages = {
         imgUrl: BuildingImagesBase + 'herman-hall.jpg',
     },
     'keating-hall': {
-        attributionUrl: 'https://buildinghistory.iit.edu/image/AS_2015_010',
+        attributionUrl: 'https://goo.gl/maps/nuWwajKGroNySAQU7',
         imgUrl: BuildingImagesBase + 'keating-hall.jpg',
+        fromGoogleMaps: true,
     },
     'tech-business-center': {
         attributionUrl: 'https://goo.gl/maps/aT7PYiyMQzmSwQ8f6',
@@ -128,6 +129,50 @@ export const BuildingImages: IBuildingImages = {
     'iit-tower': {
         attributionUrl: 'https://goo.gl/maps/pW2F1yfAvwKjwFL27',
         imgUrl: BuildingImagesBase + 'iit-tower.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'mc-cormick-tribune-campus-center': {
+        attributionUrl: 'https://goo.gl/maps/nnGyrZ4nZZ1oaK6J6',
+        imgUrl: BuildingImagesBase + 'mccormick-tribune-campus-center.jpg',
+        fromGoogleMaps: true,
+    },
+
+    /**
+     * UChicago Buildings
+     */
+    '6045-kenwood-building': {
+        attributionUrl: 'https://goo.gl/maps/TyJgFT4wfqyRaFtt5',
+        imgUrl: BuildingImagesBase + '6045-s-kenwood.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'accelerator-high-energy-physics': {
+        attributionUrl: 'https://goo.gl/maps/gkWsHoymmwNiwDAU6',
+        imgUrl: BuildingImagesBase + 'uchicago-accelerator-ellis.jpg',
+        fromGoogleMaps: true,
+    },
+    'gordon-center-for-integrative-science-gcis': {
+        attributionUrl: 'https://goo.gl/maps/wgyeibwbqyr1UdvY9',
+        imgUrl: BuildingImagesBase + 'gordon-center.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'hinds-laboratory': {
+        attributionUrl: 'https://goo.gl/maps/yManrKMWU5xFEVQC8',
+        imgUrl: BuildingImagesBase + 'uchicago-hinds-laboratory.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'searle-chemistry-laboratory': {
+        attributionUrl: 'https://goo.gl/maps/ME1PsC6gepn5W5Ms7',
+        imgUrl: BuildingImagesBase + 'searle-chemistry-laboratory.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'william-eckhardt-research-center': {
+        attributionUrl: 'https://goo.gl/maps/GJaEQAau4odVgF2A6',
+        imgUrl: BuildingImagesBase + 'william-eckhardt-research-center.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },

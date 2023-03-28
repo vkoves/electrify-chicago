@@ -8,24 +8,33 @@
       '-unknown': !owner
     }"
   >
-    <template v-if="owner">
-      <img
-        v-if="!isSmall"
-        :src="ownerLogoSrc"
-        :alt="owner.name"
+    <div v-if="owner && !isSmall">
+      <g-link
+        v-if="owner"
+        :to="'/owner/' + owner.key"
       >
-      <div
-        v-if="!isSmall"
-        class="owner-label"
-      >
-        <strong>Note:</strong> Owner manually tagged
-      </div>
+        <img
+          v-if="!isSmall"
+          :src="ownerLogoSrc"
+          :alt="owner.name"
+        >
+        <div
+          v-if="!isSmall"
+          class="owner-label"
+        />
 
-      <!-- If small view should short building name -->
-      <span v-if="isSmall">({{ owner.nameShort }})</span>
-    </template>
+        View All Tagged {{ owner.nameShort }} Buildings
+      </g-link>
 
-    <div v-if="!isSmall && !owner">
+      <p class="footnote">
+        <strong>Note:</strong> Owner manually tagged. Logo used under fair use.
+      </p>
+    </div>
+
+    <!-- If small view should short building name -->
+    <span v-if="owner && isSmall">({{ owner.nameShort }})</span>
+
+    <div v-if="!owner && !isSmall">
       Not Tagged
     </div>
   </div>
@@ -89,8 +98,9 @@ export default class OwnerLogo extends Vue {
   }
 
   .owner-label {
+    margin-top: 0.25rem;
     margin-bottom: 0.5rem;
-    font-size: smaller;
+    font-size: 0.75rem;
   }
 
   img { width: 20rem; }

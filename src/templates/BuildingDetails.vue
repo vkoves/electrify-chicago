@@ -363,7 +363,10 @@ export default class BuildingDetails  extends Vue {
 
     // If we know the property name, providing it in our Google Maps search may improve accuracy
     if (propertyName) {
-      return encodeURI(`${propertyName} ${propertyAddr}`);
+      // Slashes break the URL, so just swap them for spaces
+      const propertyNameCleaned = propertyName.replaceAll('/', ' ');
+
+      return encodeURI(`${propertyNameCleaned} ${propertyAddr}`);
     } else {
       return encodeURI(propertyAddr);
     }
@@ -480,7 +483,6 @@ export default class BuildingDetails  extends Vue {
 
     dt {
       font-weight: normal;
-      font-size: 1.25rem;
       margin-bottom: 0.5rem;
     }
 
@@ -510,13 +512,23 @@ export default class BuildingDetails  extends Vue {
             "details";
         }
 
-        &:not(.-img-tall) .building-header-text {
-          grid-area: title;
-          position: relative;
-          bottom: 0;
-          width: 100%;
-          background: none;
-          padding-bottom: 1rem;
+        &:not(.-img-tall) {
+          .building-header-text {
+            grid-area: title;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            background: none;
+            padding: 0 0 1rem 0;
+          }
+
+          // On mobile wide images can go full width
+          .building-img-cont { width: 100%; }
+        }
+
+        &.-img-tall {
+          // Constrain tall images on mobile so they don't take up the whole view height
+          .building-img-cont { width: 75%; }
         }
       }
     }

@@ -14,7 +14,6 @@ export default class Default extends Vue {
   searchQuery = '';
 
   focusMain(): void {
-    console.log('focus main');
     const mainHeading = document.getElementById('main-content');
 
     mainHeading!.focus();
@@ -88,6 +87,13 @@ export default class Default extends Vue {
             to="/biggest-buildings"
           >
             Biggest Buildings
+          </g-link>
+
+          <g-link
+            class="nav-link"
+            to="/large-owners"
+          >
+            Large Owners
           </g-link>
 
           <g-link

@@ -5,16 +5,6 @@
 // Changes here require a server restart.
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
-module.exports = function(api) {
-  api.loadSource(({addCollection}) => {
-    // Use the Data Store API here: https://gridsome.org/docs/data-store-api/
-  });
-
-  api.createPages(({createPage}) => {
-    // Use the Pages API here: https://gridsome.org/docs/pages-api/
-  });
-};
-
 /**
  * From fetching CSV data:
  * https://gridsome.org/docs/fetching-data/#csv
@@ -26,9 +16,32 @@ const DataDirectory = './src/data/dist/';
 
 const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 
+// This is an array equivalent of Object.keys(BuildingOwners) but this file can't use Typescript and
+// import that file
+const BuildingOwnerIds = [
+  'depaul',
+  'uchicago',
+  'iit',
+  'northwestern'
+]
+
 module.exports = function(api) {
+  // Use the Data Store API here: https://gridsome.org/docs/data-store-api/
   api.loadSource(async (actions) => {
     loadBuildingBenchmarkData(actions);
+  });
+
+  // Use the Pages API here: https://gridsome.org/docs/pages-api/
+  api.createPages(({ createPage }) => {
+    // Create pages for building owners. This could be a dynamic route, but making it this way
+    // should let them get statically built as expected
+    BuildingOwnerIds.forEach(ownerId => {
+      createPage({
+        path: `/owner/${ownerId}`,
+        component: './src/templates/BuildingOwner.vue',
+        context: { ownerId },
+      })
+    })
   });
 };
 
