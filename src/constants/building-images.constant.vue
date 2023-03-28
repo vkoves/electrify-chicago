@@ -117,8 +117,9 @@ export const BuildingImages: IBuildingImages = {
         imgUrl: BuildingImagesBase + 'herman-hall.jpg',
     },
     'keating-hall': {
-        attributionUrl: 'https://buildinghistory.iit.edu/image/AS_2015_010',
+        attributionUrl: 'https://goo.gl/maps/nuWwajKGroNySAQU7',
         imgUrl: BuildingImagesBase + 'keating-hall.jpg',
+        fromGoogleMaps: true,
     },
     'tech-business-center': {
         attributionUrl: 'https://goo.gl/maps/aT7PYiyMQzmSwQ8f6',
