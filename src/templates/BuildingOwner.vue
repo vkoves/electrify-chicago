@@ -28,12 +28,14 @@ export default class BiggestBuildings extends Vue {
 
   /** Set by Gridsome to results of GraphQL query */
   readonly $static: any;
+  readonly $context: any;
 
   currOwner?: IBuildingOwner;
   buildingsFiltered: Array<IBuilding> = [];
 
   created(): void {
-    const ownerId: string = window.location.pathname.split('/owner/')[1];
+    // Pull owner ID from the context provided in the gridsome.server page creation
+    const ownerId: string = this.$context.ownerId;
 
     if (BuildingOwners[ownerId]) {
       this.currOwner = BuildingOwners[ownerId];
