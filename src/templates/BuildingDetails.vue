@@ -178,7 +178,7 @@ query ($id: ID!) {
               :building="$page.building"
               :stat-key="'TotalGHGEmissions'"
               :stats="BuildingBenchmarkStats"
-              :unit="'metric tons CO<sub>2</sub>'"
+              :unit="'metric tons CO<sub>2</sub> eq.'"
             />
           </dd>
         </div>
