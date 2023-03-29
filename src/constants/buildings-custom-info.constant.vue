@@ -84,6 +84,7 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   'de-paul-center': {owner: BuildingOwners.depaul.key},
   'depaul-university-holtschneider-performance-center': {owner: BuildingOwners.depaul.key},
   'student-center': {owner: BuildingOwners.depaul.key},
+  'centennial-hall': {owner: BuildingOwners.depaul.key},
 
   /**
    * IIT buildings
@@ -111,6 +112,13 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   'jones-laboratory': {owner: BuildingOwners.uchicago.key},
   'searle-chemistry-laboratory': {owner: BuildingOwners.uchicago.key},
   'william-eckhardt-research-center': {owner: BuildingOwners.uchicago.key},
+  'ratner-athletics-center': {owner: BuildingOwners.uchicago.key},
+  'crerar-library': {owner: BuildingOwners.uchicago.key},
+  'renee-granville-grossman-residential-commons': {owner: BuildingOwners.uchicago.key},
+  'campus-residential-north-commons': {owner: BuildingOwners.uchicago.key},
+  'burton-judson-courts': {owner: BuildingOwners.uchicago.key},
+  'international-house':  {owner: BuildingOwners.uchicago.key},
+  'saieh-hall-for-economics':  {owner: BuildingOwners.uchicago.key},
 
   /**
    * Northwestern Buildings
@@ -120,6 +128,7 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '320-e-superior-street': { owner: BuildingOwners.northwestern.key },
   '300-e-superior-street': { owner: BuildingOwners.northwestern.key },
   'nmh-olson-pavilion': { owner: BuildingOwners.northwestern.key },
+  'northwestern-university-chicago-campus': { owner: BuildingOwners.northwestern.key },
 };
 
 export function getBuildingCustomInfo(building: IBuilding): IBuildingCustomInfo | null {

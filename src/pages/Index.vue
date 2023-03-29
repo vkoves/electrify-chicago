@@ -25,6 +25,20 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
   },
 })
 export default class BiggestBuildings extends Vue {
+  /** Set by Gridsome to results of GraphQL query */
+  $page: any;
+
+  pageInput = 0;
+
+  created(): void {
+    this.pageInput = this.$page.allBuilding.pageInfo.currentPage;
+  }
+
+  jumpToPage(event: Event): void {
+    event.preventDefault();
+
+    window.location.href = `/${this.pageInput}`;
+  }
 }
 </script>
 
@@ -108,10 +122,29 @@ export default class BiggestBuildings extends Vue {
 
       <BuildingsTable :buildings="$page.allBuilding.edges" />
 
-      <Pager
-        class="pager"
-        :info="$page.allBuilding.pageInfo"
-      />
+      <div class="pager-cont">
+        <Pager
+          class="pager"
+          :info="$page.allBuilding.pageInfo"
+        />
+
+        <form class="page-form search-form">
+          <label>Go to Page</label>
+
+          <div class="input-cont">
+            <input
+              v-model="pageInput"
+              type="number"
+            >
+            <button
+              type="submit"
+              @click="jumpToPage"
+            >
+              Jump
+            </button>
+          </div>
+        </form>
+      </div>
 
       <p class="footnote">
         Data Source:
@@ -147,6 +180,29 @@ export default class BiggestBuildings extends Vue {
     p { margin: 0; }
   }
 
+  .page-form {
+    input, button { height: 2rem; }
+
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.825rem;
+      font-weight: bold;
+    }
+
+    input { width: 3.5rem;}
+  }
+
+  .pager-cont {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 1rem;
+    gap: 1rem;
+
+    .pager { margin-top: 0; }
+  }
+
   @media (max-width: $mobile-max-width) {
     .row { display: block; }
 
@@ -156,6 +212,11 @@ export default class BiggestBuildings extends Vue {
 
       &.-mobile { display: block; }
       &.-desktop { display: none; }
+    }
+
+    .pager-cont {
+      flex-direction: column;
+      align-items: flex-start;
     }
   }
 }

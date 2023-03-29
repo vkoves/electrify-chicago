@@ -108,6 +108,18 @@ export const BuildingImages: IBuildingImages = {
         fromGoogleMaps: true,
         isTall: true,
     },
+    'state-place-condominium-association': {
+        attributionUrl: 'https://goo.gl/maps/exkd8jYSeNUmjer99',
+        imgUrl: BuildingImagesBase + 'state-place-condos.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
+    'park-1500-lofts': {
+        attributionUrl: 'https://goo.gl/maps/3fQf99PGpCzEU1Vs6',
+        imgUrl: BuildingImagesBase + 'park-1500-lofts.jpg',
+        fromGoogleMaps: true,
+        isTall: true,
+    },
 
     /**
      * IIT (Illinois Tech) buildings
