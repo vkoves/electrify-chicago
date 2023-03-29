@@ -155,7 +155,9 @@ export default class BiggestBuildings extends Vue {
       <h2>Building Stats</h2>
 
       <ul class="stats">
-        <li class="bold">{{ buildingsFiltered.length }} Tagged Buildings</li>
+        <li class="bold">
+          {{ buildingsFiltered.length }} Tagged Buildings
+        </li>
 
         <li>
           <strong>
