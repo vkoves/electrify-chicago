@@ -20,7 +20,7 @@ import { IBuildingBenchmarkStats } from '~/common-functions.vue';
   },
 })
 export default class BuildingsTable extends Vue {
-  @Prop({required:true}) buildings!: Array<IBuilding>;
+  @Prop({required:true}) buildings!: Array<{ node: IBuilding }>;
 
   @Prop({default: false}) showSquareFootage!: boolean;
 
@@ -75,7 +75,7 @@ export default class BuildingsTable extends Vue {
             class="numeric emissions"
           >
             Total Greenhouse Emissions<br>
-            (metric tons CO<sub>2</sub>)
+            (metric tons CO<sub>2</sub> eq.)
           </th>
         </tr>
       </thead>

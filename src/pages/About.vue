@@ -92,7 +92,8 @@
         <a href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html">
           Chicago Energy Benchmarking Ordinance <NewTabIcon />
         </a>. This site shows data for the year 2020 (the latest available of March 2023) and
-        filtered down to buildings with total emissions > 1,000 metric tons.
+        filtered down to buildings with total emissions > 1,000 metric tons CO<sub>2</sub>
+        equivalent.
       </p>
 
       <h2>Contact Us</h2>

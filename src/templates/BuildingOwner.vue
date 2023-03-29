@@ -4,10 +4,12 @@ import { Component, Vue } from 'vue-property-decorator';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuilding } from '../common-functions';
+import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
 import {
   BuildingOwners, IBuildingOwner, BuildingsCustomInfo, IBuildingCustomInfo,
 } from '../constants/buildings-custom-info.constant.vue';
+
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 interface IBuildingEdge { node: IBuilding; }
 
@@ -26,12 +28,22 @@ interface IBuildingEdge { node: IBuilding; }
 export default class BiggestBuildings extends Vue {
   readonly BuildingOwners = BuildingOwners;
 
+  /** Expose stats to template */
+  BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+
   /** Set by Gridsome to results of GraphQL query */
   readonly $static: any;
   readonly $context: any;
 
   currOwner?: IBuildingOwner;
-  buildingsFiltered: Array<IBuilding> = [];
+
+  buildingsFiltered: Array<IBuildingEdge> = [];
+
+  avgGHGIntensity?: string;
+  medianGHGIntensityMultiple?: string;
+
+  totalGHGEmissions?: string;
+  medianGHGEmissionsMultiple?: string;
 
   created(): void {
     // Pull owner ID from the context provided in the gridsome.server page creation
@@ -41,6 +53,7 @@ export default class BiggestBuildings extends Vue {
       this.currOwner = BuildingOwners[ownerId];
 
       this.filterBuildings(ownerId);
+      this.calculateOwnedBuildingStats();
     }
   }
 
@@ -58,6 +71,27 @@ export default class BiggestBuildings extends Vue {
         return ownerBuildingsSlugs.some((ownedBuildingSlug) =>
           (buildingEdge.node.path as string).includes(ownedBuildingSlug));
       });
+  }
+
+  calculateOwnedBuildingStats(): void {
+    let totalGHGEmissions = 0;
+    let totalGHGIntensity = 0;
+
+    this.buildingsFiltered.forEach((buildingEdge: IBuildingEdge) => {
+      const building: IBuilding = buildingEdge.node;
+
+      totalGHGIntensity += parseFloat(building.GHGIntensity as string);
+      totalGHGEmissions += parseFloat(building.TotalGHGEmissions as string);
+    });
+
+    this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
+    const avgGHGIntensity: number = totalGHGIntensity / this.buildingsFiltered.length;
+    this.avgGHGIntensity = avgGHGIntensity.toFixed(1);
+
+    this.medianGHGIntensityMultiple =
+      (avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median).toFixed(0);
+    this.medianGHGEmissionsMultiple =
+      (totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median).toFixed(0);
   }
 }
 </script>
@@ -113,11 +147,44 @@ export default class BiggestBuildings extends Vue {
         {{ currOwner.name }}
       </h1>
 
-      <!-- TODO: Add intro text
       <p class="constrained -wide">
-        Lorem ipsum
+        These are buildings that we have manually tagged as being owned by {{ currOwner.name }},
+        so this may not be a definitive list.
       </p>
-      -->
+
+      <h2>Building Stats</h2>
+
+      <ul class="stats">
+        <li class="bold">{{ buildingsFiltered.length }} Tagged Buildings</li>
+
+        <li>
+          <strong>
+            Total Emissions:
+            {{ totalGHGEmissions }} metric tons CO<sub>2</sub> equivalent
+          </strong>
+
+          <p class="footnote">
+            <strong>
+              Equivalent to {{ medianGHGEmissionsMultiple }} of the median benchmarked
+              building
+            </strong>
+            ({{ BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString() }}
+            tons CO<sub>2</sub>e)
+          </p>
+        </li>
+
+        <li>
+          <strong>
+            Average GHG Intensity:
+            {{ avgGHGIntensity }} kg CO<sub>2</sub>/sqft
+          </strong>
+
+          <p class="footnote">
+            <strong>{{ medianGHGIntensityMultiple }}x the median benchmarked building</strong>
+            ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg CO<sub>2</sub>/sqft)
+          </p>
+        </li>
+      </ul>
 
       <DataDisclaimer />
 
@@ -155,6 +222,17 @@ export default class BiggestBuildings extends Vue {
       width: 20rem;
       margin-bottom: 1rem;
     }
+  }
+
+  h2 { margin-bottom: 0.5rem; }
+
+  .stats {
+    margin-top: 0;
+    padding-left: 1.25rem;
+
+    li + li { margin-top: 0.5rem; }
+
+    .footnote { margin: 0rem; }
   }
 }
 </style>
