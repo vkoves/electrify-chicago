@@ -5,7 +5,7 @@
   >
     <span
       v-if="overallRank"
-      class="overall-rank-emoji"
+      class="emoji overall-rank-emoji"
       :title="overallRank.msg"
     >
       {{ overallRank.emoji }}
@@ -14,8 +14,8 @@
     <!-- Show image emoji on tables -->
     <span
       v-if="hasBuildingImg && !largeView"
-      class="has-img-emoji"
-      title="Has Image"
+      class="emoji has-img-emoji"
+      title="Has building photograph"
     >
       📷
     </span>
@@ -55,8 +55,9 @@ export default class OverallRankEmoji extends Vue {
   display: inline;
   white-space: nowrap;
 
-  .overall-rank-emoji, .has-img-emoji {
+  .emoji {
     vertical-align: 0.2em;
+    cursor: help;
   }
 
   .overall-rank-emoji { font-size: 0.925em; }
