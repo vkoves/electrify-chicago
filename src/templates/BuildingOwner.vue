@@ -178,7 +178,7 @@ export default class BiggestBuildings extends Vue {
         <li>
           <strong>
             Average GHG Intensity:
-            {{ avgGHGIntensity }} kg CO<sub>2</sub>/sqft
+            {{ avgGHGIntensity }} kg CO<sub>2</sub>e/sqft
           </strong>
 
           <p class="footnote">

@@ -166,7 +166,7 @@ query ($id: ID!) {
               :building="$page.building"
               :stat-key="'GHGIntensity'"
               :stats="BuildingBenchmarkStats"
-              :unit="'kg CO<sub>2</sub> / sqft'"
+              :unit="'kg CO<sub>2</sub>e / sqft'"
             />
           </dd>
         </div>

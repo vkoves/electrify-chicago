@@ -35,13 +35,13 @@ export default class BuildingsTable extends Vue {
 
 <template>
   <div class="table-cont">
-    <table :class="{ '-with-sq-footage': showSquareFootage }">
+    <table :class="{ '-wide': showSquareFootage || showGasUse || showElectricityUse }">
       <thead>
         <tr>
           <th scope="col">
             Property Name / address
           </th>
-          <th scope="col">
+          <th scope="col" class="prop-type">
             Primary Property Type
           </th>
           <th v-if="showSquareFootage">
@@ -50,32 +50,32 @@ export default class BuildingsTable extends Vue {
           <th
             v-if="showGasUse"
             scope="col"
-            class="numeric"
+            class="numeric wide-col"
           >
             Natural Gas Use<br>
-            (kBtu)
+            <span class="unit">(kBtu)</span>
           </th>
           <th
             v-if="showElectricityUse"
             scope="col"
-            class="numeric"
+            class="numeric wide-col"
           >
             Electricity Use<br>
-            (kBtu)
+            <span class="unit">(kBtu)</span>
           </th>
           <th
             scope="col"
-            class="numeric emissions-int"
+            class="numeric wide-col"
           >
             Greenhouse Gas Intensity<br>
-            (kg CO<sub>2</sub>/sqft)
+            <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
           </th>
           <th
             scope="col"
-            class="numeric emissions"
+            class="numeric wide-col"
           >
             Total Greenhouse Emissions<br>
-            (metric tons CO<sub>2</sub> eq.)
+            <span class="unit">(metric tons CO<sub>2</sub> eq.)</span>
           </th>
         </tr>
       </thead>
@@ -113,6 +113,7 @@ export default class BuildingsTable extends Vue {
                 :building="edge.node"
                 :should-round="true"
                 :stats="BuildingBenchmarkStats"
+                :unit="'sqft'"
                 stat-key="GrossFloorArea"
               />
             </template>
@@ -130,6 +131,7 @@ export default class BuildingsTable extends Vue {
                 :building="edge.node"
                 :should-round="true"
                 :stats="BuildingBenchmarkStats"
+                :unit="'kBtu'"
                 stat-key="NaturalGasUse"
               />
             </template>
@@ -146,6 +148,7 @@ export default class BuildingsTable extends Vue {
                 :building="edge.node"
                 :should-round="true"
                 :stats="BuildingBenchmarkStats"
+                :unit="'kBtu'"
                 stat-key="ElectricityUse"
               />
             </template>
@@ -161,6 +164,7 @@ export default class BuildingsTable extends Vue {
                 :building="edge.node"
                 :stats="BuildingBenchmarkStats"
                 stat-key="GHGIntensity"
+                :unit="'kg/sqft'"
               />
             </template>
             <template v-else>
@@ -174,6 +178,7 @@ export default class BuildingsTable extends Vue {
                 :should-round="true"
                 :stats="BuildingBenchmarkStats"
                 stat-key="TotalGHGEmissions"
+                :unit="'tons'"
               />
             </template>
             <template v-else>
@@ -202,14 +207,17 @@ export default class BuildingsTable extends Vue {
     min-width: 60rem;
     border-collapse: collapse;
 
-    // Increase width if showing square footage (biggest buildings page)
-    &.-with-sq-footage {
-      min-width: 80rem;
+    // Increase width if showing extra columns on specific pages
+    &.-wide {
+      min-width: 88rem;
+
+      // Wide columns shouldn't be as wide if we have more of them
+      .wide-col { width: 17%; }
     }
 
     a {
       font-weight: bold;
-      font-size: 1.25em;
+      font-size: 1.125em;
       text-decoration: none;
       white-space: nowrap;
     }
@@ -222,10 +230,15 @@ export default class BuildingsTable extends Vue {
 
       th {
         text-align: left;
-        font-weight: bold;
-        line-height: 1.5;
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        font-weight: 500;
+        line-height: 1.25;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+
+        .unit {
+          font-size: smaller;
+          font-weight: normal;
+        }
       }
     }
 
@@ -236,7 +249,8 @@ export default class BuildingsTable extends Vue {
       &:first-of-type { padding-left: 1rem; }
       &:last-of-type { padding-right: 1rem; }
       &.numeric { text-align: right; }
-      &.emissions, &.emissions-int { width: 20%; }
+      &.wide-col { width: 20%; }
+      &.prop-type { width: 12rem; }
     }
 
     tr:nth-of-type(2n + 2) { background-color: $grey; }

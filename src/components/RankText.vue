@@ -3,6 +3,7 @@
     <div class="stat-value">
       <span v-if="shouldRound">{{ Math.round(statValue).toLocaleString() }}</span>
       <span v-else>{{ statValue.toFixed(1) }}</span>
+      <span v-if="unit" class="unit" v-html="' ' + unit"></span>
 
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
@@ -64,9 +65,14 @@ import { RankConfig, IBuilding, IBuildingBenchmarkStats } from '~/common-functio
 @Component
 export default class RankText extends Vue {
   @Prop({required: true}) building!: IBuilding;
+
   @Prop({required: true}) statKey!: string;
+
   @Prop({required: true}) stats!: IBuildingBenchmarkStats;
+
   @Prop({default: false}) shouldRound!: boolean;
+
+  @Prop() unit?: string;
 
   // Expose RankConfig to template
   RankConfig = RankConfig;
@@ -128,6 +134,8 @@ export default class RankText extends Vue {
 .rank-text {
   .stat-value {
     white-space: nowrap;
+
+    .unit { font-size: smaller; }
 
     img {
       width: 1.25em;
