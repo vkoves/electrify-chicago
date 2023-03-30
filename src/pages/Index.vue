@@ -21,7 +21,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     Pager,
   },
   metaInfo() {
-    return { title:  'Biggest Buildings' };
+    return { title:  'Home' };
   },
 })
 export default class BiggestBuildings extends Vue {
