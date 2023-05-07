@@ -293,7 +293,7 @@ query ($id: ID!) {
 
           <li>
             <a
-              href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
+              href="https://www.chicagobuilding.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
               target="_blank"
               rel="noopener noreferrer"
             >

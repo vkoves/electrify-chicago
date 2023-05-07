@@ -38,6 +38,7 @@ export default class BiggestBuildings extends Vue {
     // Center of Chicago at Madison & State
     const MapCenter: [ number, number ] = [41.882051, -87.627831];
 
+    // Fix Leaflet markers not working. Source: https://stackoverflow.com/a/65761448
     delete (Leaflet.Icon.Default.prototype as any)._getIconUrl;
 
     Leaflet.Icon.Default.mergeOptions({
@@ -55,22 +56,29 @@ export default class BiggestBuildings extends Vue {
 
     const buildingNodes = this.$page.allBuilding.edges;
 
-
     console.log('buildingNodes[0]', buildingNodes[0].node);
 
-    buildingNodes.forEach((buildingNode: { node: IBuilding }, index: number) => {
-      const buildingObj: IBuilding = buildingNode.node;
+    const MaxBuildings = 100;
 
-      if (index > 5) {
-        return;
-      }
+    buildingNodes
+    .slice(0, MaxBuildings)
+    .forEach((buildingNode: { node: IBuilding }, index: number) => {
+      const currBuilding: IBuilding = buildingNode.node;
 
       const buildingCoords: [ number, number ] = [
-        parseFloat(buildingObj.Latitude),
-        parseFloat(buildingObj.Longitude)
+        parseFloat(currBuilding.Latitude),
+        parseFloat(currBuilding.Longitude)
       ];
 
-      Leaflet.marker(buildingCoords).addTo(map);
+      const marker = Leaflet.marker(buildingCoords).addTo(map);
+
+      marker.bindPopup(
+        `
+          <h1>${ currBuilding.PropertyName || currBuilding.Address }</h1>
+          ${ currBuilding.PropertyName ? currBuilding.Address : '' }
+          <a href="${currBuilding.path}">View Details</a>
+        `
+      );
     });
 
 
@@ -130,16 +138,7 @@ export default class BiggestBuildings extends Vue {
         Buildings Map
       </h1>
 
-      <p>
-        <strong>Note:</strong> This is only buildings who reported data under Chicago's Energy
-        Benchmarking data in 2020 and had emissions > 1,000 metric tons CO<sub>2e</sub>. Learn more
-        about our sources on <g-link
-          class="nav-link"
-          to="/about"
-        >
-          the about page
-        </g-link>.
-      </p>
+      <DataDisclaimer/>
 
       <div id="buildings-map" />
 
@@ -166,6 +165,20 @@ export default class BiggestBuildings extends Vue {
   #buildings-map {
     width: 40rem;
     height: 40rem;
+  }
+
+  .leaflet-popup {
+    h1 {
+      font-size: 1.25rem;
+      margin-bottom: 0;
+    }
+
+    a {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: bold;
+      font-size: 1rem;
+    }
   }
 }
 </style>
