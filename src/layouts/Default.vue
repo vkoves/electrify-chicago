@@ -103,6 +103,13 @@ export default class Default extends Vue {
             Cleanest Buildings
           </g-link>
 
+          <g-link
+            class="nav-link"
+            to="/map"
+          >
+            Map
+          </g-link>
+
           <!--
             <g-link class="nav-link" to="/top-electricity-users">Top Electricity Users</g-link>
           -->

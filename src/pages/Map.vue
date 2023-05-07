@@ -7,10 +7,11 @@ import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
+import { IBuildingBenchmarkStats, IBuilding, IBuildingNode } from '../common-functions.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import BuildingImage from '../components/BuildingImage.vue';
+import { array } from 'prop-types';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -28,7 +29,9 @@ import BuildingImage from '../components/BuildingImage.vue';
     };
   },
 })
-export default class BiggestBuildings extends Vue {
+export default class MapPage extends Vue {
+  static readonly MaxBuildingsCount = 50;
+
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
@@ -40,6 +43,12 @@ export default class BiggestBuildings extends Vue {
 
   currBuilding?: IBuilding;
 
+  map?: Leaflet.Map;
+
+  mainLayerGroup?: Leaflet.LayerGroup;
+
+  zipCodes: Array<number> = [];
+
   /* Declare dynamic template data for VueJS */
   data(): any {
     return { currBuilding: this.currBuilding };
@@ -47,6 +56,7 @@ export default class BiggestBuildings extends Vue {
 
   mounted(): void {
     this.setupMap();
+    this.setupZipCodes();
   }
 
   setupMap(): void {
@@ -62,40 +72,77 @@ export default class BiggestBuildings extends Vue {
       shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
 
-    const map = Leaflet.map('buildings-map').setView(MapCenter, 13);
+    this.map = Leaflet.map('buildings-map').setView(MapCenter, 13);
 
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(map);
+    }).addTo(this.map!);
 
+    this.mainLayerGroup = Leaflet.layerGroup().addTo(this.map);
+
+    this.mapDefaultBuildings();
+  }
+
+  /**
+   * Map the default buildings which is the top `MapPage.MaxBuildingsCount` buildings sorted by
+   * GHG intensity
+   */
+  mapDefaultBuildings(): void {
     const buildingNodes = this.$page.allBuilding.edges;
 
-    console.log('buildingNodes[0]', buildingNodes[0].node);
+    // limit to the first MaxBuildingsCount buildings, that means those N highest GHG
+    // intensity buildings are shown
+    const topBuildings = buildingNodes.slice(0, MapPage.MaxBuildingsCount);
 
-    const MaxBuildings = 100;
+    this.addBuildingsToMap(topBuildings);
+  }
 
+  addBuildingsToMap(buildingNodes: Array<IBuildingNode>): void {
     buildingNodes
-    .slice(0, MaxBuildings)
-    .forEach((buildingNode: { node: IBuilding }, index: number) => {
-      const currBuilding: IBuilding = buildingNode.node;
+      .forEach((buildingNode: IBuildingNode, index: number) => {
+        const currBuilding: IBuilding = buildingNode.node;
 
-      const buildingCoords: [ number, number ] = [
-        parseFloat(currBuilding.Latitude),
-        parseFloat(currBuilding.Longitude),
-      ];
+        const buildingCoords: [ number, number ] = [
+          parseFloat(currBuilding.Latitude),
+          parseFloat(currBuilding.Longitude),
+        ];
 
-      const marker = Leaflet.marker(buildingCoords).addTo(map);
+        const MarkerOptions: Leaflet.MarkerOptions = {
+          riseOnHover: true,
+        };
 
-      marker.bindPopup(() => {
-        (this as any).currBuilding = currBuilding;
-         console.log('this.$refs.mapPopup', this.$refs.mapPopup);
+        const marker = Leaflet.marker(buildingCoords, MarkerOptions).addTo(this.mainLayerGroup!);
 
-        return this.$refs.mapPopup;
+        marker.bindPopup(() => {
+          (this as any).currBuilding = currBuilding;
+          console.log('this.$refs.mapPopup', this.$refs.mapPopup);
+
+          return this.$refs.mapPopup;
+        });
       });
-    });
+  }
 
+  setupZipCodes(): void {
+    const buildingNodes = this.$page.allBuilding.edges;
+    const allZipCodes: Array<number> = buildingNodes
+      .filter((buildingNode: IBuildingNode) => (buildingNode.node.ZIPCode as string).trim().length)
+      .map((buildingNode: IBuildingNode) => parseInt(buildingNode.node.ZIPCode as string));
 
+    this.zipCodes = this.unique(allZipCodes).sort();
+  }
+
+  reset(): void {
+    this.mainLayerGroup?.clearLayers();
+    this.mapDefaultBuildings();
+  }
+
+  private unique<T>(array: Array<T>): Array<T> {
+    function onlyUnique(value: T, index: number, array: Array<T>): boolean {
+      return array.indexOf(value) === index;
+    }
+
+    return array.filter(onlyUnique);
   }
 }
 </script>
@@ -112,6 +159,7 @@ export default class BiggestBuildings extends Vue {
           slugSource
           PropertyName
           Address
+          ZIPCode
           Latitude
           Longitude
           path
@@ -156,6 +204,17 @@ export default class BiggestBuildings extends Vue {
       </h1>
 
       <DataDisclaimer />
+
+      <form>
+        Show All In Zipcode
+
+        <button
+          type="button"
+          @click="reset"
+        >
+          Reset
+        </button>
+      </form>
 
       <div id="buildings-map" />
 
@@ -217,9 +276,9 @@ export default class BiggestBuildings extends Vue {
             </div>
 
             <a
-              href="${currBuilding.path}"
+              :href="currBuilding.path"
               class="details-link"
-            >View Details</a>
+            >View More Details</a>
           </div>
         </div>
       </div>
@@ -281,7 +340,7 @@ export default class BiggestBuildings extends Vue {
 
     a.details-link {
       display: block;
-      margin-top: 0.5rem;
+      margin: 0.5rem 0;
       font-weight: bold;
       font-size: 1rem;
     }

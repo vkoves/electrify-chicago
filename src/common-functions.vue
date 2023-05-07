@@ -31,6 +31,8 @@ export interface IBuilding {
   [buildingKey: string]: string | number | boolean;
 }
 
+/** How GraphQL passes back a building */
+export interface IBuildingNode { node: IBuilding }
 
 /**
  * A constant for what we use as min and max values for flagged ranks
