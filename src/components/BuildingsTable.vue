@@ -41,7 +41,10 @@ export default class BuildingsTable extends Vue {
           <th scope="col">
             Property Name / address
           </th>
-          <th scope="col" class="prop-type">
+          <th
+            scope="col"
+            class="prop-type"
+          >
             Primary Property Type
           </th>
           <th v-if="showSquareFootage">

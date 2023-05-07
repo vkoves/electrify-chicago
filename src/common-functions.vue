@@ -26,6 +26,8 @@ export interface IBuilding {
   PropertyName: string;
   Address: string;
   PrimaryPropertyType: string;
+  Latitude: string;
+  Longitude: string;
   [buildingKey: string]: string | number | boolean;
 }
 

@@ -16,12 +16,14 @@
   "dependencies": {
     "csv-parse": "^5.3.6",
     "gridsome": "^0.7.0",
+    "leaflet": "^1.9.3",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
     "webpack": "^4.0.0"
   },
   "devDependencies": {
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
+    "@types/leaflet": "^1.9.3",
     "@types/sindresorhus__slugify": "^0.9.3",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",

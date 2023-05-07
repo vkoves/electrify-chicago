@@ -3,7 +3,11 @@
     <div class="stat-value">
       <span v-if="shouldRound">{{ Math.round(statValue).toLocaleString() }}</span>
       <span v-else>{{ statValue.toFixed(1) }}</span>
-      <span v-if="unit" class="unit" v-html="' ' + unit"></span>
+      <span
+        v-if="unit"
+        class="unit"
+        v-html="' ' + unit"
+      />
 
       <!-- Show icons for below or above average if we have an average for this stat -->
       <template v-if="stats[statKey]">
