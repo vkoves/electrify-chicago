@@ -3,16 +3,24 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import * as Leaflet from 'leaflet';
 
+import RankText from '~/components/RankText.vue';
+import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuilding } from '../common-functions.vue';
+import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
+
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import BuildingImage from '../components/BuildingImage.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
+    BuildingImage,
     DataDisclaimer,
     NewTabIcon,
+    OverallRankEmoji,
+    RankText,
   },
   metaInfo() {
     return {
@@ -21,13 +29,20 @@ import { IBuilding } from '../common-functions.vue';
   },
 })
 export default class BiggestBuildings extends Vue {
+  /** Expose stats to template */
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+
   /** Set by Gridsome to results of GraphQL query */
-  $page: any;
+  $page!: any;
 
-  pageInput = 0;
+  /** VueJS template refs */
+  $refs!: { 'mapPopup': any };
 
-  created(): void {
-    this.pageInput = this.$page.allBuilding.pageInfo.currentPage;
+  currBuilding?: IBuilding;
+
+  /* Declare dynamic template data for VueJS */
+  data(): any {
+    return { currBuilding: this.currBuilding };
   }
 
   mounted(): void {
@@ -67,18 +82,17 @@ export default class BiggestBuildings extends Vue {
 
       const buildingCoords: [ number, number ] = [
         parseFloat(currBuilding.Latitude),
-        parseFloat(currBuilding.Longitude)
+        parseFloat(currBuilding.Longitude),
       ];
 
       const marker = Leaflet.marker(buildingCoords).addTo(map);
 
-      marker.bindPopup(
-        `
-          <h1>${ currBuilding.PropertyName || currBuilding.Address }</h1>
-          ${ currBuilding.PropertyName ? currBuilding.Address : '' }
-          <a href="${currBuilding.path}">View Details</a>
-        `
-      );
+      marker.bindPopup(() => {
+        (this as any).currBuilding = currBuilding;
+         console.log('this.$refs.mapPopup', this.$refs.mapPopup);
+
+        return this.$refs.mapPopup;
+      });
     });
 
 
@@ -102,6 +116,9 @@ export default class BiggestBuildings extends Vue {
           Longitude
           path
           PrimaryPropertyType
+          GrossFloorArea
+          GrossFloorAreaRank
+          GrossFloorAreaPercentileRank
           GHGIntensity
           GHGIntensityRank
           GHGIntensityPercentileRank
@@ -138,9 +155,74 @@ export default class BiggestBuildings extends Vue {
         Buildings Map
       </h1>
 
-      <DataDisclaimer/>
+      <DataDisclaimer />
 
       <div id="buildings-map" />
+
+      <div v-show="false">
+        <!-- The map popup used by Leaflet, so we can do Vue things -->
+        <div
+          ref="mapPopup"
+          class="map-popup"
+        >
+          <div v-if="currBuilding">
+            <h1>
+              {{ currBuilding.PropertyName || currBuilding.Address }}
+
+              <OverallRankEmoji
+                :building="currBuilding"
+                :stats="BuildingBenchmarkStats"
+              />
+            </h1>
+
+            {{ currBuilding.PropertyName ? currBuilding.Address : '' }}
+
+            <BuildingImage :building="currBuilding" />
+
+            <div class="stats-list">
+              <div>
+                <h2>Square Footage</h2>
+
+                <RankText
+                  :building="currBuilding"
+                  :should-round="true"
+                  :stats="BuildingBenchmarkStats"
+                  :unit="'sqft'"
+                  stat-key="GrossFloorArea"
+                />
+              </div>
+
+              <div>
+                <h2>GHG Intensity</h2>
+
+                <RankText
+                  :building="currBuilding"
+                  :stats="BuildingBenchmarkStats"
+                  stat-key="GHGIntensity"
+                  :unit="'kg/sqft'"
+                />
+              </div>
+
+              <div>
+                <h2>Total GHG Emissions</h2>
+
+                <RankText
+                  :building="currBuilding"
+                  :should-round="true"
+                  :stats="BuildingBenchmarkStats"
+                  stat-key="TotalGHGEmissions"
+                  :unit="'tons'"
+                />
+              </div>
+            </div>
+
+            <a
+              href="${currBuilding.path}"
+              class="details-link"
+            >View Details</a>
+          </div>
+        </div>
+      </div>
 
       <!--
         <BuildingsTable :buildings="$page.allBuilding.edges" />
@@ -163,17 +245,41 @@ export default class BiggestBuildings extends Vue {
 <style lang="scss">
 .map-page {
   #buildings-map {
-    width: 40rem;
-    height: 40rem;
+    max-width: 100%;
+    width: 100%;
+    aspect-ratio: 1.8/1;
   }
 
-  .leaflet-popup {
+  .map-popup {
+    width: 20rem;
+    font-size: 1rem;
+
     h1 {
       font-size: 1.25rem;
-      margin-bottom: 0;
+      margin-bottom: 0.25rem;
     }
 
-    a {
+    .stats-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 2rem;
+    }
+
+    h2 {
+      font-size: 0.875rem;
+      margin: 0;
+    }
+
+    .building-img-cont {
+      text-align: left;
+
+      img {
+        max-width: 16rem;
+        max-height: 12rem;
+      }
+    }
+
+    a.details-link {
       display: block;
       margin-top: 0.5rem;
       font-weight: bold;
