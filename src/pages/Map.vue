@@ -194,9 +194,24 @@ export default class MapPage extends Vue {
 
     googleMapsScriptElem!.onload = () => {
       const searchInput = this.$refs.googleMapsSearchInput;
+      const google = (window as any).google;
+
+      // NW edge of O'Hare down to long of South edge
+      const southwest = { lat: 41.644624, lng: -87.939760 };
+      // SE edge of Chicago but up at Northern edge of O'hare
+      const northeast = { lat: 42.007430, lng: -87.524611 };
+      const chicagoBounds = new google.maps.LatLngBounds(southwest, northeast);
+
+      // Limit search to Chicago strictly, if we can't find an address in Chicago we should show
+      // nothing
+      const searchOptions = {
+        bounds: chicagoBounds,
+        strictBounds: true,
+      };
+
       // Setup places searchbox, learn more here:
       // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
-      const searchBox = new (window as any).google.maps.places.SearchBox(searchInput);
+      const searchBox = new google.maps.places.SearchBox(searchInput, searchOptions);
 
       // Hook into places being selected
       searchBox.addListener("places_changed", () => {
