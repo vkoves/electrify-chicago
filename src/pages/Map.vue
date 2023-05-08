@@ -31,14 +31,6 @@ const GoogleMapsScriptId = 'google-maps-script';
   metaInfo() {
     return {
       title:  'Map',
-      script: [
-        // Load in the Google Maps API
-        {
-          id: GoogleMapsScriptId,
-          src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places',
-          body: true,
-        },
-      ],
       link: [
         {
           // Leaflet CSS
@@ -201,10 +193,12 @@ export default class MapPage extends Vue {
 
   /** Setup the Google Maps search box */
   setupGoogleMapsSearch(): void {
-    console.log('setupGoogleMapsSearch');
-    const googleMapsScriptElem = document.getElementById(GoogleMapsScriptId);
+    // Create a <script> element to import Google Maps, then hook into it for the autocomplete input
+    const googleMapsScriptElem = document.createElement('script');
+    googleMapsScriptElem.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places';
+    document.body.appendChild(googleMapsScriptElem);
 
-    googleMapsScriptElem!.onload = () => {
+    googleMapsScriptElem.onload = () => {
       const searchInput = this.$refs.googleMapsSearchInput;
       const google = (window as any).google;
 
