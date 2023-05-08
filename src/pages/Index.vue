@@ -129,11 +129,13 @@ export default class BiggestBuildings extends Vue {
         <div>
           <div class="page-number">
             Page {{ $page.allBuilding.pageInfo.currentPage }} of
-            {{ $page.allBuilding.pageInfo.totalPages}}
+            {{ $page.allBuilding.pageInfo.totalPages }}
 
             (Building
-            #{{ 1 + ($page.allBuilding.pageInfo.currentPage - 1) * $page.allBuilding.pageInfo.perPage }}
-            to #{{ ($page.allBuilding.pageInfo.currentPage - 1) * $page.allBuilding.pageInfo.perPage + $page.allBuilding.edges.length }})
+            #{{ 1 + ($page.allBuilding.pageInfo.currentPage - 1)
+              * $page.allBuilding.pageInfo.perPage }}
+            to #{{ ($page.allBuilding.pageInfo.currentPage - 1)
+              * $page.allBuilding.pageInfo.perPage + $page.allBuilding.edges.length }})
           </div>
 
           <Pager
