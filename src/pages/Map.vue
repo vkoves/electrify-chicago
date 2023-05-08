@@ -430,10 +430,6 @@ export default class MapPage extends Vue {
 <page-query>
   query {
     allBuilding(sortBy: "GHGIntensity") {
-      pageInfo {
-        totalPages
-        currentPage
-      }
       edges {
         node {
           slugSource
