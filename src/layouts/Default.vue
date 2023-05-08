@@ -63,9 +63,9 @@ export default class Default extends Vue {
 
           <g-link
             class="nav-link"
-            to="/about"
+            to="/map"
           >
-            About
+            Map
           </g-link>
 
           <g-link
@@ -105,9 +105,9 @@ export default class Default extends Vue {
 
           <g-link
             class="nav-link"
-            to="/map"
+            to="/about"
           >
-            Map
+            About
           </g-link>
 
           <!--

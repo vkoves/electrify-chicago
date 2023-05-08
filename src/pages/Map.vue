@@ -2,16 +2,18 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import * as Leaflet from 'leaflet';
+import 'leaflet.gridlayer.googlemutant';
 
 import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuildingBenchmarkStats, IBuilding, IBuildingNode, getOverallRankEmoji, RankConfig } from '../common-functions.vue';
+import {
+  IBuildingBenchmarkStats, IBuilding, IBuildingNode, getOverallRankEmoji, RankConfig,
+} from '../common-functions.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import BuildingImage from '../components/BuildingImage.vue';
-import { array } from 'prop-types';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -25,7 +27,23 @@ import { array } from 'prop-types';
   },
   metaInfo() {
     return {
-     title:  'Map',
+      title:  'Map',
+      script: [
+        // Load in the Google Maps API
+        {
+          src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU',
+          defer: 'true',
+          async: 'true',
+          body: true,
+        },
+      ],
+      link: [
+        {
+          // Leaflet CSS
+          href: 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css',
+          rel: 'stylesheet',
+        },
+      ],
     };
   },
 })
@@ -39,6 +57,12 @@ export default class MapPage extends Vue {
     DefaultZoom: 11,
     // Center of Chicago at Madison & State
     Center: [41.86, -87.627831] as [ number, number ],
+    // How many px of scroll equals one zoom level - default is 60, we go higher since the whole
+    // dataset is just Chicago
+    WheelPxPerZoomLevel: 480,
+    // How much the + and - icons adjust zoom
+    ZoomDelta: 0.25,
+    ZoomSnap: 0.25,
   };
 
   icons: { [iconName: string]: Leaflet.Icon } = {};
@@ -72,13 +96,25 @@ export default class MapPage extends Vue {
   setupMap(): void {
     this.setupMapIcons();
 
-    this.map = Leaflet.map('buildings-map')
+    this.map = Leaflet.map('buildings-map', {
+        zoomDelta: this.MapConfig.ZoomDelta,
+        wheelPxPerZoomLevel: this.MapConfig.WheelPxPerZoomLevel,
+        zoomSnap: this.MapConfig.ZoomSnap,
+      })
       .setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
 
-    Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    }).addTo(this.map!);
+    const UsingGoogle = true;
+
+    if (UsingGoogle) {
+      this.setupGoogleMutant();
+    }
+    else {
+      Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      }).addTo(this.map!);
+    }
+
 
     this.mainFeatureGroup = Leaflet.featureGroup().addTo(this.map);
 
@@ -97,10 +133,10 @@ export default class MapPage extends Vue {
 
     const CustomMarkerIcon = Leaflet.Icon.extend({
         options: {
-            shadowUrl: 'marker-shadow.png',
             iconSize:     [25, 41],
             iconAnchor:   [13, 10],
-        }
+            shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+        },
     });
 
     this.icons.red = new (CustomMarkerIcon as any)({
@@ -116,8 +152,20 @@ export default class MapPage extends Vue {
     }) as Leaflet.Icon;
 
     this.icons.grey = new (CustomMarkerIcon as any)({
-        iconUrl: 'map-markers/marker-grey.png',
+        iconUrl: 'map-markers/marker-blue.png',
     }) as Leaflet.Icon;
+  }
+
+  setupGoogleMutant(): void {
+    (Leaflet.gridLayer as any)
+      .googleMutant({
+        type: "roadmap", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+        styles: [
+          // Disable icons for other points of interest, but keep neighborhood & street labels
+          { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+        ],
+      })
+      .addTo(this.map);
   }
 
   /**
@@ -151,6 +199,10 @@ export default class MapPage extends Vue {
   }
 
   applyFilters(): void {
+    if (!this.formZip) {
+      return;
+    }
+
     const buildingNodes = this.$page.allBuilding.edges;
     const filteredBuildings = buildingNodes
     .filter((buildingNode: IBuildingNode) =>
@@ -273,14 +325,6 @@ export default class MapPage extends Vue {
 
 <template>
   <DefaultLayout>
-    <!-- Leaflet CSS -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-      integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
-      crossorigin=""
-    >
-
     <div class="map-page">
       <h1
         id="main-content"
@@ -341,9 +385,7 @@ export default class MapPage extends Vue {
         >
           <div v-if="currBuilding">
             <h1>
-              {{ currBuilding.PropertyName || currBuilding.Address }}
-
-              <OverallRankEmoji
+              {{ currBuilding.PropertyName || currBuilding.Address }}&nbsp;<OverallRankEmoji
                 :building="currBuilding"
                 :stats="BuildingBenchmarkStats"
               />
@@ -390,7 +432,7 @@ export default class MapPage extends Vue {
                   />
                 </div>
               </div>
-          </div>
+            </div>
 
             <a
               :href="currBuilding.path"

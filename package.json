@@ -16,7 +16,8 @@
   "dependencies": {
     "csv-parse": "^5.3.6",
     "gridsome": "^0.7.0",
-    "leaflet": "^1.9.3",
+    "leaflet": "~1.7.0",
+    "leaflet.gridlayer.googlemutant": "^0.14.0",
     "vue-class-component": "^7.2.6",
     "vue-property-decorator": "^9.1.2",
     "webpack": "^4.0.0"

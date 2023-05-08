@@ -6200,10 +6200,15 @@ latest-version@^5.0.0:
   dependencies:
     package-json "^6.3.0"
 
-leaflet@^1.9.3:
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.9.3.tgz#52ec436954964e2d3d39e0d433da4b2500d74414"
-  integrity sha512-iB2cR9vAkDOu5l3HAay2obcUHZ7xwUBBjph8+PGtmW/2lYhbLizWtG7nTeYht36WfOslixQF9D/uSIzhZgGMfQ==
+leaflet.gridlayer.googlemutant@^0.14.0:
+  version "0.14.0"
+  resolved "https://registry.yarnpkg.com/leaflet.gridlayer.googlemutant/-/leaflet.gridlayer.googlemutant-0.14.0.tgz#9f086ffbb6bb4d1e8f008336c997701d04da9628"
+  integrity sha512-DJ4hchHcqSf+znygd7r20pKijwHwGFrtf60FJeIafTbO6qsYC+65beGz+v42sYxUEKnQL2HmdPB8znWgsY8gBg==
+
+leaflet@~1.7.0:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.7.1.tgz#10d684916edfe1bf41d688a3b97127c0322a2a19"
+  integrity sha512-/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw==
 
 leven@^3.1.0:
   version "3.1.0"
