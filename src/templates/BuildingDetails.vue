@@ -455,7 +455,7 @@ export default class BuildingDetails  extends Vue {
 
   .building-details {
     background: #ededed;
-    border-radius: 0.5rem;
+    border-radius: $brd-rad-medium;
     padding: 1rem 1.5rem;
 
     h2 { margin-top: 0; }

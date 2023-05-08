@@ -35,6 +35,12 @@ export default class MapPage extends Vue {
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
+  readonly MapConfig = {
+    DefaultZoom: 11,
+    // Center of Chicago at Madison & State
+    Center: [41.882051, -87.627831] as [ number, number ],
+  };
+
   /** Set by Gridsome to results of GraphQL query */
   $page!: any;
 
@@ -43,9 +49,11 @@ export default class MapPage extends Vue {
 
   currBuilding?: IBuilding;
 
+  formZip: number | string = '';
+
   map?: Leaflet.Map;
 
-  mainLayerGroup?: Leaflet.LayerGroup;
+  mainFeatureGroup?: Leaflet.FeatureGroup;
 
   zipCodes: Array<number> = [];
 
@@ -60,9 +68,6 @@ export default class MapPage extends Vue {
   }
 
   setupMap(): void {
-    // Center of Chicago at Madison & State
-    const MapCenter: [ number, number ] = [41.882051, -87.627831];
-
     // Fix Leaflet markers not working. Source: https://stackoverflow.com/a/65761448
     delete (Leaflet.Icon.Default.prototype as any)._getIconUrl;
 
@@ -72,14 +77,14 @@ export default class MapPage extends Vue {
       shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
 
-    this.map = Leaflet.map('buildings-map').setView(MapCenter, 13);
+    this.map = Leaflet.map('buildings-map').setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
 
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.map!);
 
-    this.mainLayerGroup = Leaflet.layerGroup().addTo(this.map);
+    this.mainFeatureGroup = Leaflet.featureGroup().addTo(this.map);
 
     this.mapDefaultBuildings();
   }
@@ -98,9 +103,41 @@ export default class MapPage extends Vue {
     this.addBuildingsToMap(topBuildings);
   }
 
+  setupZipCodes(): void {
+    const buildingNodes = this.$page.allBuilding.edges;
+    const allZipCodes: Array<number> = buildingNodes
+      .filter((buildingNode: IBuildingNode) => (buildingNode.node.ZIPCode as string).trim().length)
+      .map((buildingNode: IBuildingNode) => parseInt(buildingNode.node.ZIPCode as string));
+
+    this.zipCodes = this.unique(allZipCodes).sort();
+  }
+
+  reset(): void {
+    this.clearMarkers();
+    this.mapDefaultBuildings();
+  }
+
+  submitFilters(): void {
+    this.clearMarkers();
+
+    const buildingNodes = this.$page.allBuilding.edges;
+
+    console.log('zipcode', this.formZip);
+
+    const filteredBuildings = buildingNodes
+      .filter((buildingNode: IBuildingNode) => buildingNode.node.ZIPCode === this.formZip.toString());
+
+    this.addBuildingsToMap(filteredBuildings);
+    this.autofitMap();
+  }
+
+  /**
+   * Add a given array of building nodes to the map as markers with popups - does not clear
+   * existing markers
+   */
   addBuildingsToMap(buildingNodes: Array<IBuildingNode>): void {
     buildingNodes
-      .forEach((buildingNode: IBuildingNode, index: number) => {
+      .forEach((buildingNode: IBuildingNode) => {
         const currBuilding: IBuilding = buildingNode.node;
 
         const buildingCoords: [ number, number ] = [
@@ -112,29 +149,22 @@ export default class MapPage extends Vue {
           riseOnHover: true,
         };
 
-        const marker = Leaflet.marker(buildingCoords, MarkerOptions).addTo(this.mainLayerGroup!);
+        const marker = Leaflet.marker(buildingCoords, MarkerOptions).addTo(this.mainFeatureGroup!);
 
         marker.bindPopup(() => {
-          (this as any).currBuilding = currBuilding;
-          console.log('this.$refs.mapPopup', this.$refs.mapPopup);
+          this.currBuilding = currBuilding;
 
           return this.$refs.mapPopup;
         });
       });
   }
 
-  setupZipCodes(): void {
-    const buildingNodes = this.$page.allBuilding.edges;
-    const allZipCodes: Array<number> = buildingNodes
-      .filter((buildingNode: IBuildingNode) => (buildingNode.node.ZIPCode as string).trim().length)
-      .map((buildingNode: IBuildingNode) => parseInt(buildingNode.node.ZIPCode as string));
-
-    this.zipCodes = this.unique(allZipCodes).sort();
+  private clearMarkers(): void {
+    this.mainFeatureGroup?.clearLayers();
   }
 
-  reset(): void {
-    this.mainLayerGroup?.clearLayers();
-    this.mapDefaultBuildings();
+  private autofitMap(): void {
+    this.map!.fitBounds(this.mainFeatureGroup!.getBounds());
   }
 
   private unique<T>(array: Array<T>): Array<T> {
@@ -206,14 +236,43 @@ export default class MapPage extends Vue {
       <DataDisclaimer />
 
       <form>
-        Show All In Zipcode
+        <h2>Filter Buildings</h2>
 
-        <button
-          type="button"
-          @click="reset"
+        <label>Filter Zip Code</label>
+        <select
+          id="zipcode"
+          v-model="formZip"
         >
-          Reset
-        </button>
+          <option
+            disabled
+            :value="''"
+          >
+            Choose Zipcode
+          </option>
+          <option
+            v-for="zipcode in zipCodes"
+            :key="zipcode"
+            :value="zipcode"
+          >
+            {{ zipcode }}
+          </option>"
+        </select>
+
+        <div class="button-row">
+          <button
+            type="button"
+            @click="reset"
+          >
+            Reset
+          </button>
+
+          <button
+            type="button"
+            @click="submitFilters"
+          >
+            Submit
+          </button>
+        </div>
       </form>
 
       <div id="buildings-map" />
@@ -307,6 +366,27 @@ export default class MapPage extends Vue {
     max-width: 100%;
     width: 100%;
     aspect-ratio: 1.8/1;
+    margin-top: 1rem;
+  }
+
+  form {
+    background-color: $grey-light;
+    padding: 1rem;
+    max-width: 20rem;
+    border-radius: $brd-rad-medium;
+
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    label, select { display: block; }
+
+    .button-row {
+      display: flex;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
   }
 
   .map-popup {

@@ -28,6 +28,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /**
+ * Default Form Styling
+ */
+select {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+button {
+  padding: 0.5rem 1rem 0.3rem 1rem;
+  background-color: $white;
+  border-radius: $brd-rad-small;
+  color: $black;
+  border: none;
+  border-bottom: solid 0.4rem $chicago-blue;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/**
  * Text helpers
  */
 .bold { font-weight: bold; }
@@ -39,6 +59,7 @@ dl {
   dd + dt { margin-top: 1rem; }
 }
 
+summary { cursor: pointer; }
 summary:focus { outline-offset: 0; }
 
 img { max-width: 100%; }
@@ -96,7 +117,6 @@ form.search-form {
     border-left: none;
     font-weight: bold;
     background-color: $grey;
-    cursor: pointer;
 
     &:hover, &:focus {
       background-color: $grey-dark;
@@ -121,7 +141,7 @@ nav.pager {
       width: 2.5rem;
       aspect-ratio: 1;
       text-align: center;
-      border-radius: 0.25rem;
+      border-radius: $brd-rad-small;
       text-decoration: none;
       font-weight: bold;
 

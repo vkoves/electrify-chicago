@@ -185,7 +185,7 @@ header.header {
     background: $chicago-blue;
     color: $white;
     border-top: none;
-    border-radius: 0 0 0.5rem 0.5rem;
+    border-radius: 0 0 $brd-rad-medium $brd-rad-medium;
     padding: 1rem;
     top: -10rem;
     outline-offset: 0.1rem;
