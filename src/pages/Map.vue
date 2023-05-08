@@ -303,6 +303,10 @@ export default class MapPage extends Vue {
     this.map!.setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
   }
 
+  cancelEvent(event: Event): void {
+    event.preventDefault();
+  }
+
   applyFilters(event: Event): void {
     event.preventDefault();
 
@@ -460,7 +464,10 @@ export default class MapPage extends Vue {
       <form>
         <h2>Filter Buildings</h2>
 
-        <p v-if="errorMessage" class="error-message">
+        <p
+          v-if="errorMessage"
+          class="error-message"
+        >
           {{ errorMessage }}
         </p>
 
@@ -469,17 +476,30 @@ export default class MapPage extends Vue {
           ref="googleMapsSearchInput"
           v-model="formGoogleMapsSearchInput"
           type="text"
-          placeholder="Type address or place">
+          placeholder="Type address or place"
+          @keydown.enter="cancelEvent"
+        >
 
         <label for="search-dist">Search Distance</label>
-        <select id="search-dist" v-model="formSearchDistanceMiles">
-          <option :value="0.25">1/4 mile</option>
-          <option :value="0.5">1/2 mile</option>
-          <option :value="1">1 mile</option>
-          <option :value="2">2 miles</option>
+        <select
+          id="search-dist"
+          v-model="formSearchDistanceMiles"
+        >
+          <option :value="0.25">
+            1/4 mile
+          </option>
+          <option :value="0.5">
+            1/2 mile
+          </option>
+          <option :value="1">
+            1 mile
+          </option>
+          <option :value="2">
+            2 miles
+          </option>
         </select>
 
-        <hr/>
+        <hr>
 
         <label>Or Filter Zip Code</label>
         <select
