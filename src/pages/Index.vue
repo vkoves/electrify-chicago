@@ -46,8 +46,11 @@ export default class BiggestBuildings extends Vue {
   query ($page: Int) {
     allBuilding(sortBy: "GHGIntensity", perPage: 15, page: $page) @paginate {
       pageInfo {
+        hasNextPage
         totalPages
         currentPage
+        perPage
+        hasPreviousPage
       }
       edges {
         node {
@@ -123,10 +126,21 @@ export default class BiggestBuildings extends Vue {
       <BuildingsTable :buildings="$page.allBuilding.edges" />
 
       <div class="pager-cont">
-        <Pager
-          class="pager"
-          :info="$page.allBuilding.pageInfo"
-        />
+        <div>
+          <div class="page-number">
+            Page {{ $page.allBuilding.pageInfo.currentPage }} of
+            {{ $page.allBuilding.pageInfo.totalPages}}
+
+            (Building
+            #{{ 1 + ($page.allBuilding.pageInfo.currentPage - 1) * $page.allBuilding.pageInfo.perPage }}
+            to #{{ ($page.allBuilding.pageInfo.currentPage - 1) * $page.allBuilding.pageInfo.perPage + $page.allBuilding.edges.length }})
+          </div>
+
+          <Pager
+            class="pager"
+            :info="$page.allBuilding.pageInfo"
+          />
+        </div>
 
         <form class="page-form search-form">
           <label>Go to Page</label>
@@ -201,6 +215,12 @@ export default class BiggestBuildings extends Vue {
     gap: 1rem;
 
     .pager { margin-top: 0; }
+
+    .page-number {
+      font-weight: bold;
+      font-size: smaller;
+      margin-bottom: 0.25rem;
+    }
   }
 
   @media (max-width: $mobile-max-width) {
