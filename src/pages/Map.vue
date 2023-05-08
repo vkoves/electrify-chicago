@@ -42,7 +42,7 @@ const GoogleMapsScriptId = 'google-maps-script';
   },
 })
 export default class MapPage extends Vue {
-  static readonly MaxBuildingsCount = 50;
+  static readonly MaxBuildingsCount = 100;
 
   static readonly OneMileInMeters = 1609.344 /* eq. to 1mi */;
 
@@ -61,10 +61,6 @@ export default class MapPage extends Vue {
     ZoomSnap: 0.25,
   };
 
-  Leaflet!: typeof Leaflet;
-
-  icons: { [iconName: string]: Leaflet.Icon } = {};
-
   /** Set by Gridsome to results of GraphQL query */
   $page!: any;
 
@@ -74,9 +70,13 @@ export default class MapPage extends Vue {
     googleMapsSearchInput: any,
   };
 
+  Leaflet!: typeof Leaflet;
+
   currBuilding?: IBuilding;
 
   errorMessage?: string | null = null;
+
+  icons: { [iconName: string]: Leaflet.Icon } = {};
 
   formGoogleMapsSearchInput = '';
   formZip: number | string = '';
@@ -85,6 +85,9 @@ export default class MapPage extends Vue {
   formSearchDistanceMiles = 1;
 
   map?: Leaflet.Map;
+
+  /** A message indicating what is being shown on the map */
+  mapStatus: string = '';
 
   mainFeatureGroup?: Leaflet.FeatureGroup;
 
@@ -288,6 +291,9 @@ export default class MapPage extends Vue {
     const topBuildings = buildingNodes.slice(0, MapPage.MaxBuildingsCount);
 
     this.addBuildingsToMap(topBuildings);
+
+    this.mapStatus = `Top ${MapPage.MaxBuildingsCount} highest GHG intensity buildings of `
+      + `${buildingNodes.length.toLocaleString()} total`;
   }
 
   setupZipCodes(): void {
@@ -339,9 +345,11 @@ export default class MapPage extends Vue {
           buildingNode.node.ZIPCode === this.formZip.toString());
 
       this.addBuildingsToMap(filteredBuildings);
+      this.mapStatus = `Buildings in zipcode ${this.formZip}`;
     }
     else {
       this.showBuildingsAroundPoint(this.formPointCoords!);
+      this.mapStatus = `Buildings within ${this.formSearchDistanceMiles} mile of point`;
     }
 
     this.autofitMap();
@@ -469,67 +477,74 @@ export default class MapPage extends Vue {
 
       <DataDisclaimer />
 
-      <form>
-        <h2>Filter Buildings</h2>
+      <details class="filter-details">
+        <summary>Filter Buildings</summary>
+        <form>
+          <h2>Filter Buildings</h2>
 
-        <p v-if="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </p>
+          <p v-if="errorMessage" class="error-message">
+            {{ errorMessage }}
+          </p>
 
-        <label>Find Buildings Near Address or Place</label>
-        <input
-          ref="googleMapsSearchInput"
-          v-model="formGoogleMapsSearchInput"
-          type="text"
-          @keydown.enter="cancelEvent"
-          placeholder="Type address or place">
+          <label>Find Buildings Near Address or Place</label>
+          <input
+            ref="googleMapsSearchInput"
+            v-model="formGoogleMapsSearchInput"
+            type="text"
+            @keydown.enter="cancelEvent"
+            placeholder="Type address or place">
 
-        <label for="search-dist">Search Distance</label>
-        <select id="search-dist" v-model="formSearchDistanceMiles">
-          <option :value="0.25">1/4 mile</option>
-          <option :value="0.5">1/2 mile</option>
-          <option :value="1">1 mile</option>
-          <option :value="2">2 miles</option>
-        </select>
+          <label for="search-dist">Search Distance</label>
+          <select id="search-dist" v-model="formSearchDistanceMiles">
+            <option :value="0.25">1/4 mile</option>
+            <option :value="0.5">1/2 mile</option>
+            <option :value="1">1 mile</option>
+            <option :value="2">2 miles</option>
+          </select>
 
-        <hr/>
+          <hr/>
 
-        <label>Or Filter Zip Code</label>
-        <select
-          id="zipcode"
-          v-model="formZip"
-        >
-          <option
-            disabled
-            :value="''"
+          <label>Or Filter Zip Code</label>
+          <select
+            id="zipcode"
+            v-model="formZip"
           >
-            Choose Zipcode
-          </option>
-          <option
-            v-for="zipcode in zipCodes"
-            :key="zipcode"
-            :value="zipcode"
-          >
-            {{ zipcode }}
-          </option>"
-        </select>
+            <option
+              disabled
+              :value="''"
+            >
+              Choose Zipcode
+            </option>
+            <option
+              v-for="zipcode in zipCodes"
+              :key="zipcode"
+              :value="zipcode"
+            >
+              {{ zipcode }}
+            </option>"
+          </select>
 
-        <div class="button-row">
-          <button
-            type="button"
-            @click="reset"
-          >
-            Reset
-          </button>
+          <div class="button-row">
+            <button
+              type="button"
+              @click="reset"
+            >
+              Reset
+            </button>
 
-          <button
-            type="submit"
-            @click="applyFilters"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
+            <button
+              type="submit"
+              @click="applyFilters"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </details>
+
+      <p class="map-status">
+        <strong>Filtering By:</strong> {{ mapStatus }}
+      </p>
 
       <div id="buildings-map" />
 
@@ -618,11 +633,23 @@ export default class MapPage extends Vue {
 
 <style lang="scss">
 .map-page {
+  .map-status {
+    background-color: $grey-light;
+    padding: 0.5rem 1rem;
+    margin-bottom: 0;
+  }
+
   #buildings-map {
     max-width: 100%;
     width: 100%;
     aspect-ratio: 1.7/1;
-    margin-top: 1rem;
+  }
+
+  details.filter-details {
+    summary {
+      font-weight: bold;
+      font-size: 1.25rem;
+    }
   }
 
   form {
@@ -650,6 +677,11 @@ export default class MapPage extends Vue {
     }
 
     label, select { display: block; }
+
+    label {
+      font-size: 0.825rem;
+      margin-top: 0.25rem;
+    }
 
     .button-row {
       display: flex;
