@@ -1,8 +1,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import * as Leaflet from 'leaflet';
-import 'leaflet.gridlayer.googlemutant';
+// For types, we actually set window.Leaflet for runtime
+import type * as Leaflet from 'leaflet';
 
 import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
@@ -36,8 +36,6 @@ const GoogleMapsScriptId = 'google-maps-script';
         {
           id: GoogleMapsScriptId,
           src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places',
-          defer: 'true',
-          async: 'true',
           body: true,
         },
       ],
@@ -71,6 +69,8 @@ export default class MapPage extends Vue {
     ZoomSnap: 0.25,
   };
 
+  Leaflet!: typeof Leaflet;
+
   icons: { [iconName: string]: Leaflet.Icon } = {};
 
   /** Set by Gridsome to results of GraphQL query */
@@ -103,21 +103,28 @@ export default class MapPage extends Vue {
     return { currBuilding: this.currBuilding };
   }
 
-  mounted(): void {
-    this.setupMap();
-    this.setupZipCodes();
+  async mounted(): Promise<void> {
+    // Do nothing if rendering the static HTML files - there's nothing we can do map wise and
+    // Gridsome gets cranky importing Leaflet
+    if ((process as any).isClient) {
+      // Runtime Leaflet imports
+      this.Leaflet = require('leaflet');
+      require('leaflet.gridlayer.googlemutant');
 
+      this.setupMap();
+      this.setupZipCodes();
 
-    // Wait a frame so the <script> tags get added
-    setTimeout(() => {
-      this.setupGoogleMapsSearch();
-    });
+      // Wait a bit so the <script> tags get added
+      setTimeout(() => {
+        this.setupGoogleMapsSearch();
+      });
+    }
   }
 
   setupMap(): void {
     this.setupMapIcons();
 
-    this.map = Leaflet.map('buildings-map', {
+    this.map = this.Leaflet.map('buildings-map', {
         zoomDelta: this.MapConfig.ZoomDelta,
         wheelPxPerZoomLevel: this.MapConfig.WheelPxPerZoomLevel,
         zoomSnap: this.MapConfig.ZoomSnap,
@@ -130,28 +137,28 @@ export default class MapPage extends Vue {
       this.setupGoogleMutant();
     }
     else {
-      Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      this.Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(this.map!);
     }
 
-    this.mainFeatureGroup = Leaflet.featureGroup().addTo(this.map);
+    this.mainFeatureGroup = this.Leaflet.featureGroup().addTo(this.map);
 
     this.mapDefaultBuildings();
   }
 
   setupMapIcons(): void {
     // Fix Leaflet markers not working. Source: https://stackoverflow.com/a/65761448
-    delete (Leaflet.Icon.Default.prototype as any)._getIconUrl;
+    delete (this.Leaflet.Icon.Default.prototype as any)._getIconUrl;
 
-    Leaflet.Icon.Default.mergeOptions({
+    this.Leaflet.Icon.Default.mergeOptions({
       iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
       iconUrl: require('leaflet/dist/images/marker-icon.png'),
       shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
 
-    const CustomMarkerIcon = Leaflet.Icon.extend({
+    const CustomMarkerIcon = this.Leaflet.Icon.extend({
         options: {
             iconSize:     [25, 41],
             iconAnchor:   [13, 10],
@@ -160,24 +167,28 @@ export default class MapPage extends Vue {
     });
 
     this.icons.red = new (CustomMarkerIcon as any)({
-        iconUrl: 'map-markers/marker-red.png',
+      iconUrl: 'map-markers/marker-red.png',
     }) as Leaflet.Icon;
 
     this.icons.green = new (CustomMarkerIcon as any)({
-        iconUrl: 'map-markers/marker-green.png',
+      iconUrl: 'map-markers/marker-green.png',
     }) as Leaflet.Icon;
 
     this.icons.orange = new (CustomMarkerIcon as any)({
-        iconUrl: 'map-markers/marker-orange.png',
+      iconUrl: 'map-markers/marker-orange.png',
     }) as Leaflet.Icon;
 
     this.icons.grey = new (CustomMarkerIcon as any)({
-        iconUrl: 'map-markers/marker-blue.png',
+      iconUrl: 'map-markers/marker-grey.png',
+    }) as Leaflet.Icon;
+
+    this.icons.blue = new (CustomMarkerIcon as any)({
+      iconUrl: 'map-markers/marker-blue.png',
     }) as Leaflet.Icon;
   }
 
   setupGoogleMutant(): void {
-    (Leaflet.gridLayer as any)
+    (this.Leaflet.gridLayer as any)
       .googleMutant({
         type: "roadmap", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
         styles: [
@@ -190,6 +201,7 @@ export default class MapPage extends Vue {
 
   /** Setup the Google Maps search box */
   setupGoogleMapsSearch(): void {
+    console.log('setupGoogleMapsSearch');
     const googleMapsScriptElem = document.getElementById(GoogleMapsScriptId);
 
     googleMapsScriptElem!.onload = () => {
@@ -241,21 +253,23 @@ export default class MapPage extends Vue {
 
     const MarkerOptions: Leaflet.MarkerOptions = {
       riseOnHover: false,
+      icon: this.icons.grey,
+      opacity: 0.95,
     };
 
     // Create a default marker for the search location
-    Leaflet.marker(coordinates, MarkerOptions)
+    this.Leaflet.marker(coordinates, MarkerOptions)
       .addTo(this.mainFeatureGroup!);
 
     const SearchRadiusMeters = MapPage.OneMileInMeters * this.formSearchDistanceMiles;
-    Leaflet.circle(coordinates, { radius: SearchRadiusMeters }).addTo(this.mainFeatureGroup!);
+    this.Leaflet.circle(coordinates, { radius: SearchRadiusMeters }).addTo(this.mainFeatureGroup!);
 
-    const inputPoint = Leaflet.latLng(coordinates);
+    const inputPoint = this.Leaflet.latLng(coordinates);
     const buildingNodes = this.$page.allBuilding.edges;
 
     // Calculate the distance to each building and filter by those within a mile
     const pointsNearInputPoint = buildingNodes.filter((buildingNode: IBuildingNode) => {
-      const buildingPoint = Leaflet.latLng(
+      const buildingPoint = this.Leaflet.latLng(
         parseFloat(buildingNode.node.Latitude),
         parseFloat(buildingNode.node.Longitude),
       );
@@ -358,7 +372,7 @@ export default class MapPage extends Vue {
           icon: this.getBuildingIcon(currBuilding),
         };
 
-        const marker = Leaflet.marker(buildingCoords, MarkerOptions)
+        const marker = this.Leaflet.marker(buildingCoords, MarkerOptions)
           .addTo(this.mainFeatureGroup!);
 
         marker.bindPopup(() => {
@@ -389,7 +403,7 @@ export default class MapPage extends Vue {
       return this.icons.green;
     }
     else {
-      return this.icons.grey;
+      return this.icons.blue;
     }
   }
 
@@ -464,10 +478,7 @@ export default class MapPage extends Vue {
       <form>
         <h2>Filter Buildings</h2>
 
-        <p
-          v-if="errorMessage"
-          class="error-message"
-        >
+        <p v-if="errorMessage" class="error-message">
           {{ errorMessage }}
         </p>
 
@@ -476,30 +487,18 @@ export default class MapPage extends Vue {
           ref="googleMapsSearchInput"
           v-model="formGoogleMapsSearchInput"
           type="text"
-          placeholder="Type address or place"
           @keydown.enter="cancelEvent"
-        >
+          placeholder="Type address or place">
 
         <label for="search-dist">Search Distance</label>
-        <select
-          id="search-dist"
-          v-model="formSearchDistanceMiles"
-        >
-          <option :value="0.25">
-            1/4 mile
-          </option>
-          <option :value="0.5">
-            1/2 mile
-          </option>
-          <option :value="1">
-            1 mile
-          </option>
-          <option :value="2">
-            2 miles
-          </option>
+        <select id="search-dist" v-model="formSearchDistanceMiles">
+          <option :value="0.25">1/4 mile</option>
+          <option :value="0.5">1/2 mile</option>
+          <option :value="1">1 mile</option>
+          <option :value="2">2 miles</option>
         </select>
 
-        <hr>
+        <hr/>
 
         <label>Or Filter Zip Code</label>
         <select
