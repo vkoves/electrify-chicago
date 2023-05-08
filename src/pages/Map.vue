@@ -15,6 +15,9 @@ import {
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import BuildingImage from '../components/BuildingImage.vue';
 
+/** The ID of the google maps <script> tag, so we can tack on an onload */
+const GoogleMapsScriptId = 'google-maps-script';
+
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
@@ -31,7 +34,8 @@ import BuildingImage from '../components/BuildingImage.vue';
       script: [
         // Load in the Google Maps API
         {
-          src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU',
+          id: GoogleMapsScriptId,
+          src: 'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places',
           defer: 'true',
           async: 'true',
           body: true,
@@ -49,6 +53,8 @@ import BuildingImage from '../components/BuildingImage.vue';
 })
 export default class MapPage extends Vue {
   static readonly MaxBuildingsCount = 50;
+
+  static readonly OneMileInMeters = 1609.344 /* eq. to 1mi */;
 
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
@@ -71,11 +77,20 @@ export default class MapPage extends Vue {
   $page!: any;
 
   /** VueJS template refs */
-  $refs!: { 'mapPopup': any };
+  $refs!: {
+    mapPopup: any,
+    googleMapsSearchInput: any,
+  };
 
   currBuilding?: IBuilding;
 
+  errorMessage?: string | null = null;
+
+  formGoogleMapsSearchInput = '';
   formZip: number | string = '';
+  /** The coordinates of the place the user searched in the Google Maps box */
+  formPointCoords: [ number, number ] | null = null;
+  formSearchDistanceMiles = 1;
 
   map?: Leaflet.Map;
 
@@ -91,6 +106,12 @@ export default class MapPage extends Vue {
   mounted(): void {
     this.setupMap();
     this.setupZipCodes();
+
+
+    // Wait a frame so the <script> tags get added
+    setTimeout(() => {
+      this.setupGoogleMapsSearch();
+    });
   }
 
   setupMap(): void {
@@ -114,7 +135,6 @@ export default class MapPage extends Vue {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(this.map!);
     }
-
 
     this.mainFeatureGroup = Leaflet.featureGroup().addTo(this.map);
 
@@ -168,6 +188,71 @@ export default class MapPage extends Vue {
       .addTo(this.map);
   }
 
+  /** Setup the Google Maps search box */
+  setupGoogleMapsSearch(): void {
+    const googleMapsScriptElem = document.getElementById(GoogleMapsScriptId);
+
+    googleMapsScriptElem!.onload = () => {
+      const searchInput = this.$refs.googleMapsSearchInput;
+      // Setup places searchbox, learn more here:
+      // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
+      const searchBox = new (window as any).google.maps.places.SearchBox(searchInput);
+
+      // Hook into places being selected
+      searchBox.addListener("places_changed", () => {
+        const places = searchBox.getPlaces();
+
+        if (places.length === 0) {
+          return;
+        }
+
+        // Clear form zip and store the coordinates
+        this.formZip = '';
+
+        this.formPointCoords = [
+          places[0].geometry.location.lat(),
+          places[0].geometry.location.lng(),
+        ];
+      });
+    };
+  }
+
+  /**
+   * Show buildings around a given point, so users can put in an address and see what properties are
+   * in the dataset nearby
+   */
+  showBuildingsAroundPoint(coordinates: [ number, number ]): void {
+    this.clearMarkers();
+
+    const MarkerOptions: Leaflet.MarkerOptions = {
+      riseOnHover: false,
+    };
+
+    // Create a default marker for the search location
+    Leaflet.marker(coordinates, MarkerOptions)
+      .addTo(this.mainFeatureGroup!);
+
+    const SearchRadiusMeters = MapPage.OneMileInMeters * this.formSearchDistanceMiles;
+    Leaflet.circle(coordinates, { radius: SearchRadiusMeters }).addTo(this.mainFeatureGroup!);
+
+    const inputPoint = Leaflet.latLng(coordinates);
+    const buildingNodes = this.$page.allBuilding.edges;
+
+    // Calculate the distance to each building and filter by those within a mile
+    const pointsNearInputPoint = buildingNodes.filter((buildingNode: IBuildingNode) => {
+      const buildingPoint = Leaflet.latLng(
+        parseFloat(buildingNode.node.Latitude),
+        parseFloat(buildingNode.node.Longitude),
+      );
+      const buildingDistanceToPointMeters = buildingPoint.distanceTo(inputPoint);
+
+      return buildingDistanceToPointMeters <= SearchRadiusMeters;
+    });
+
+    this.addBuildingsToMap(pointsNearInputPoint);
+    this.autofitMap();
+  }
+
   /**
    * Map the default buildings which is the top `MapPage.MaxBuildingsCount` buildings sorted by
    * GHG intensity
@@ -193,23 +278,45 @@ export default class MapPage extends Vue {
 
   reset(): void {
     this.formZip = '';
+    this.formGoogleMapsSearchInput = '';
+    this.formPointCoords = null;
+    this.formSearchDistanceMiles = 1;
+    this.errorMessage = '';
+
     this.clearMarkers();
     this.mapDefaultBuildings();
     this.map!.setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
   }
 
-  applyFilters(): void {
-    if (!this.formZip) {
+  applyFilters(event: Event): void {
+    event.preventDefault();
+
+    // Exit if neither zipcode or address specified and show error
+    if (!this.formZip && !this.formPointCoords) {
+      this.errorMessage = 'Pick an address to filter around or a zipcode!';
       return;
     }
 
-    const buildingNodes = this.$page.allBuilding.edges;
-    const filteredBuildings = buildingNodes
-    .filter((buildingNode: IBuildingNode) =>
-      buildingNode.node.ZIPCode === this.formZip.toString());
-
     this.clearMarkers();
-    this.addBuildingsToMap(filteredBuildings);
+    this.errorMessage = '';
+
+    // Prioritize zipcode, since clicking a place in search will clear zip
+    if (this.formZip) {
+      // Clear place search inputs
+      this.formGoogleMapsSearchInput = '';
+      this.formPointCoords = null;
+
+      const buildingNodes = this.$page.allBuilding.edges;
+      const filteredBuildings = buildingNodes
+        .filter((buildingNode: IBuildingNode) =>
+          buildingNode.node.ZIPCode === this.formZip.toString());
+
+      this.addBuildingsToMap(filteredBuildings);
+    }
+    else {
+      this.showBuildingsAroundPoint(this.formPointCoords!);
+    }
+
     this.autofitMap();
   }
 
@@ -237,9 +344,9 @@ export default class MapPage extends Vue {
 
         marker.bindPopup(() => {
           this.currBuilding = currBuilding;
-
           return this.$refs.mapPopup;
         }, {
+          // Fix popup max-width
           maxWidth: "auto",
         } as any);
       });
@@ -338,7 +445,28 @@ export default class MapPage extends Vue {
       <form>
         <h2>Filter Buildings</h2>
 
-        <label>Filter Zip Code</label>
+        <p v-if="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </p>
+
+        <label>Find Buildings Near Address or Place</label>
+        <input
+          ref="googleMapsSearchInput"
+          v-model="formGoogleMapsSearchInput"
+          type="text"
+          placeholder="Type address or place">
+
+        <label for="search-dist">Search Distance</label>
+        <select id="search-dist" v-model="formSearchDistanceMiles">
+          <option :value="0.25">1/4 mile</option>
+          <option :value="0.5">1/2 mile</option>
+          <option :value="1">1 mile</option>
+          <option :value="2">2 miles</option>
+        </select>
+
+        <hr/>
+
+        <label>Or Filter Zip Code</label>
         <select
           id="zipcode"
           v-model="formZip"
@@ -367,7 +495,7 @@ export default class MapPage extends Vue {
           </button>
 
           <button
-            type="button"
+            type="submit"
             @click="applyFilters"
           >
             Submit
@@ -472,12 +600,25 @@ export default class MapPage extends Vue {
   form {
     background-color: $grey-light;
     padding: 1rem;
-    max-width: 20rem;
     border-radius: $brd-rad-medium;
 
     h2 {
       margin: 0;
       font-size: 1.25rem;
+    }
+
+    .error-message {
+      color: $chicago-red;
+      background: $white;
+      border-bottom: solid $border-medium $chicago-red;
+      padding: 0.1rem 0.5rem;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      box-sizing: border-box;
     }
 
     label, select { display: block; }
