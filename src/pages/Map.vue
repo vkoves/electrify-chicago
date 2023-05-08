@@ -159,23 +159,23 @@ export default class MapPage extends Vue {
     });
 
     this.icons.red = new (CustomMarkerIcon as any)({
-      iconUrl: 'map-markers/marker-red.png',
+      iconUrl: '/map-markers/marker-red.png',
     }) as Leaflet.Icon;
 
     this.icons.green = new (CustomMarkerIcon as any)({
-      iconUrl: 'map-markers/marker-green.png',
+      iconUrl: '/map-markers/marker-green.png',
     }) as Leaflet.Icon;
 
     this.icons.orange = new (CustomMarkerIcon as any)({
-      iconUrl: 'map-markers/marker-orange.png',
+      iconUrl: '/map-markers/marker-orange.png',
     }) as Leaflet.Icon;
 
     this.icons.grey = new (CustomMarkerIcon as any)({
-      iconUrl: 'map-markers/marker-grey.png',
+      iconUrl: '/map-markers/marker-grey.png',
     }) as Leaflet.Icon;
 
     this.icons.blue = new (CustomMarkerIcon as any)({
-      iconUrl: 'map-markers/marker-blue.png',
+      iconUrl: '/map-markers/marker-blue.png',
     }) as Leaflet.Icon;
   }
 
