@@ -71,6 +71,8 @@ This site deploys automatically via Netlify by running `gridsome build`.
 [python](https://www.python.org/) and [pandas](https://pandas.pydata.org/)
 for data processing
 
+Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
+
 ### Run Data Processing
 
 If you update the raw data CSVs or the data scripts that post-process them (like if you are adding

@@ -39,10 +39,10 @@ export default {
 <style lang="scss">
 .data-disclaimer {
   background: $grey;
-  border-radius: 0.5rem;
+  border-radius: $brd-rad-medium;
   margin-bottom: 1rem;
 
-  summary, p { padding: 1rem; }
+  summary, p { padding: 0.5rem 1rem; }
 
   summary {
     font-weight: bold;
@@ -50,8 +50,7 @@ export default {
   }
 
   p {
-    margin: 0;
-    padding-top: 0;
+    margin-top: 0.5rem;
   }
 }
 </style>

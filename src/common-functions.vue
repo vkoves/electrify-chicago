@@ -26,9 +26,13 @@ export interface IBuilding {
   PropertyName: string;
   Address: string;
   PrimaryPropertyType: string;
+  Latitude: string;
+  Longitude: string;
   [buildingKey: string]: string | number | boolean;
 }
 
+/** How GraphQL passes back a building */
+export interface IBuildingNode { node: IBuilding }
 
 /**
  * A constant for what we use as min and max values for flagged ranks

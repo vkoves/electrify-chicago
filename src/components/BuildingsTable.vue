@@ -20,6 +20,9 @@ import { IBuildingBenchmarkStats } from '~/common-functions.vue';
   },
 })
 export default class BuildingsTable extends Vue {
+  /** Expose stats to template */
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+
   @Prop({required:true}) buildings!: Array<{ node: IBuilding }>;
 
   @Prop({default: false}) showSquareFootage!: boolean;
@@ -27,9 +30,6 @@ export default class BuildingsTable extends Vue {
   @Prop({default: false}) showGasUse!: boolean;
 
   @Prop({default: false}) showElectricityUse!: boolean;
-
-  /** Expose stats to template */
-  BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 }
 </script>
 
@@ -41,7 +41,10 @@ export default class BuildingsTable extends Vue {
           <th scope="col">
             Property Name / address
           </th>
-          <th scope="col" class="prop-type">
+          <th
+            scope="col"
+            class="prop-type"
+          >
             Primary Property Type
           </th>
           <th v-if="showSquareFootage">

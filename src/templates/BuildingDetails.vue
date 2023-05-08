@@ -293,7 +293,7 @@ query ($id: ID!) {
 
           <li>
             <a
-              href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
+              href="https://www.chicagobuilding.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -455,7 +455,7 @@ export default class BuildingDetails  extends Vue {
 
   .building-details {
     background: #ededed;
-    border-radius: 0.5rem;
+    border-radius: $brd-rad-medium;
     padding: 1rem 1.5rem;
 
     h2 { margin-top: 0; }

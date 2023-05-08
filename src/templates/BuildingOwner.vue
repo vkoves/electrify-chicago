@@ -29,7 +29,7 @@ export default class BiggestBuildings extends Vue {
   readonly BuildingOwners = BuildingOwners;
 
   /** Expose stats to template */
-  BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
   /** Set by Gridsome to results of GraphQL query */
   readonly $static: any;

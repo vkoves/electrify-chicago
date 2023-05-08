@@ -68,7 +68,7 @@ export default class BuildingImage extends Vue {
   }
 
   img {
-    border-radius: 0.5rem;
+    border-radius: $brd-rad-medium;
     max-height: 30rem;
   }
 

@@ -233,7 +233,7 @@ export default class StatTile extends Vue {
   background-color: #f5f5f5;
   border: solid 0.01625rem $grey-dark;
   box-sizing: border-box;
-  border-radius: 0.25rem;
+  border-radius: $brd-rad-small;
 
   &.-very-bad {
     background-color: #ffd9d9;

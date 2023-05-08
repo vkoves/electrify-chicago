@@ -63,9 +63,9 @@ export default class Default extends Vue {
 
           <g-link
             class="nav-link"
-            to="/about"
+            to="/map"
           >
-            About
+            Map
           </g-link>
 
           <g-link
@@ -101,6 +101,13 @@ export default class Default extends Vue {
             to="/cleanest-buildings"
           >
             Cleanest Buildings
+          </g-link>
+
+          <g-link
+            class="nav-link"
+            to="/about"
+          >
+            About
           </g-link>
 
           <!--
@@ -178,7 +185,7 @@ header.header {
     background: $chicago-blue;
     color: $white;
     border-top: none;
-    border-radius: 0 0 0.5rem 0.5rem;
+    border-radius: 0 0 $brd-rad-medium $brd-rad-medium;
     padding: 1rem;
     top: -10rem;
     outline-offset: 0.1rem;

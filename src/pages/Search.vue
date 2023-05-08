@@ -190,7 +190,7 @@ export default class Search extends Vue {
 
 <style lang="scss">
 form.search-form.-page {
-  border-radius: 0.25rem;
+  border-radius: $brd-rad-small;
   margin-bottom: 1rem;
 
   label {
@@ -206,13 +206,13 @@ form.search-form.-page {
     max-width: 100%;
 
     // Slightly round search instead of full pill
-    $border-radius: 0.25rem;
+    $search-border-radius: $brd-rad-medium;
 
     input {
-      border-radius: $border-radius 0 0 $border-radius;
+      border-radius: $search-border-radius 0 0 $search-border-radius;
       font-size: 1rem;
     }
-    button { border-radius: 0 $border-radius $border-radius 0; }
+    button { border-radius: 0 $search-border-radius $search-border-radius 0; }
   }
 
   @media (max-width: $mobile-max-width) {
