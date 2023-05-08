@@ -7,7 +7,7 @@ import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuildingBenchmarkStats, IBuilding, IBuildingNode } from '../common-functions.vue';
+import { IBuildingBenchmarkStats, IBuilding, IBuildingNode, getOverallRankEmoji, RankConfig } from '../common-functions.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import BuildingImage from '../components/BuildingImage.vue';
@@ -38,8 +38,10 @@ export default class MapPage extends Vue {
   readonly MapConfig = {
     DefaultZoom: 11,
     // Center of Chicago at Madison & State
-    Center: [41.882051, -87.627831] as [ number, number ],
+    Center: [41.86, -87.627831] as [ number, number ],
   };
+
+  icons: { [iconName: string]: Leaflet.Icon } = {};
 
   /** Set by Gridsome to results of GraphQL query */
   $page!: any;
@@ -68,16 +70,10 @@ export default class MapPage extends Vue {
   }
 
   setupMap(): void {
-    // Fix Leaflet markers not working. Source: https://stackoverflow.com/a/65761448
-    delete (Leaflet.Icon.Default.prototype as any)._getIconUrl;
+    this.setupMapIcons();
 
-    Leaflet.Icon.Default.mergeOptions({
-      iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-      iconUrl: require('leaflet/dist/images/marker-icon.png'),
-      shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-    });
-
-    this.map = Leaflet.map('buildings-map').setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
+    this.map = Leaflet.map('buildings-map')
+      .setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
 
     Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -87,6 +83,41 @@ export default class MapPage extends Vue {
     this.mainFeatureGroup = Leaflet.featureGroup().addTo(this.map);
 
     this.mapDefaultBuildings();
+  }
+
+  setupMapIcons(): void {
+    // Fix Leaflet markers not working. Source: https://stackoverflow.com/a/65761448
+    delete (Leaflet.Icon.Default.prototype as any)._getIconUrl;
+
+    Leaflet.Icon.Default.mergeOptions({
+      iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+      iconUrl: require('leaflet/dist/images/marker-icon.png'),
+      shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+    });
+
+    const CustomMarkerIcon = Leaflet.Icon.extend({
+        options: {
+            shadowUrl: 'marker-shadow.png',
+            iconSize:     [25, 41],
+            iconAnchor:   [13, 10],
+        }
+    });
+
+    this.icons.red = new (CustomMarkerIcon as any)({
+        iconUrl: 'map-markers/marker-red.png',
+    }) as Leaflet.Icon;
+
+    this.icons.green = new (CustomMarkerIcon as any)({
+        iconUrl: 'map-markers/marker-green.png',
+    }) as Leaflet.Icon;
+
+    this.icons.orange = new (CustomMarkerIcon as any)({
+        iconUrl: 'map-markers/marker-orange.png',
+    }) as Leaflet.Icon;
+
+    this.icons.grey = new (CustomMarkerIcon as any)({
+        iconUrl: 'map-markers/marker-grey.png',
+    }) as Leaflet.Icon;
   }
 
   /**
@@ -113,20 +144,19 @@ export default class MapPage extends Vue {
   }
 
   reset(): void {
+    this.formZip = '';
     this.clearMarkers();
     this.mapDefaultBuildings();
+    this.map!.setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
   }
 
-  submitFilters(): void {
-    this.clearMarkers();
-
+  applyFilters(): void {
     const buildingNodes = this.$page.allBuilding.edges;
-
-    console.log('zipcode', this.formZip);
-
     const filteredBuildings = buildingNodes
-      .filter((buildingNode: IBuildingNode) => buildingNode.node.ZIPCode === this.formZip.toString());
+    .filter((buildingNode: IBuildingNode) =>
+      buildingNode.node.ZIPCode === this.formZip.toString());
 
+    this.clearMarkers();
     this.addBuildingsToMap(filteredBuildings);
     this.autofitMap();
   }
@@ -147,16 +177,42 @@ export default class MapPage extends Vue {
 
         const MarkerOptions: Leaflet.MarkerOptions = {
           riseOnHover: true,
+          icon: this.getBuildingIcon(currBuilding),
         };
 
-        const marker = Leaflet.marker(buildingCoords, MarkerOptions).addTo(this.mainFeatureGroup!);
+        const marker = Leaflet.marker(buildingCoords, MarkerOptions)
+          .addTo(this.mainFeatureGroup!);
 
         marker.bindPopup(() => {
           this.currBuilding = currBuilding;
 
           return this.$refs.mapPopup;
-        });
+        }, {
+          maxWidth: "auto",
+        } as any);
       });
+  }
+
+  /**
+   * Return a color coded icon for a building based on it's rank emoji (e.g. a trophy maps to green
+   * while an alarm is red)
+   */
+  getBuildingIcon(building: IBuilding): Leaflet.Icon {
+    const rankEmoji: string | undefined
+      = getOverallRankEmoji(building, this.BuildingBenchmarkStats)?.emoji;
+
+    if (rankEmoji === RankConfig.AlarmEmoji) {
+      return this.icons.red;
+    }
+    else if (rankEmoji === RankConfig.FlagEmoji) {
+      return this.icons.orange;
+    }
+    else if (rankEmoji === RankConfig.TrophyEmoji) {
+      return this.icons.green;
+    }
+    else {
+      return this.icons.grey;
+    }
   }
 
   private clearMarkers(): void {
@@ -268,7 +324,7 @@ export default class MapPage extends Vue {
 
           <button
             type="button"
-            @click="submitFilters"
+            @click="applyFilters"
           >
             Submit
           </button>
@@ -295,44 +351,46 @@ export default class MapPage extends Vue {
 
             {{ currBuilding.PropertyName ? currBuilding.Address : '' }}
 
-            <BuildingImage :building="currBuilding" />
+            <div class="popup-main">
+              <BuildingImage :building="currBuilding" />
 
-            <div class="stats-list">
-              <div>
-                <h2>Square Footage</h2>
+              <div class="stats-list">
+                <div>
+                  <h2>Square Footage</h2>
 
-                <RankText
-                  :building="currBuilding"
-                  :should-round="true"
-                  :stats="BuildingBenchmarkStats"
-                  :unit="'sqft'"
-                  stat-key="GrossFloorArea"
-                />
+                  <RankText
+                    :building="currBuilding"
+                    :should-round="true"
+                    :stats="BuildingBenchmarkStats"
+                    :unit="'sqft'"
+                    stat-key="GrossFloorArea"
+                  />
+                </div>
+
+                <div>
+                  <h2>GHG Intensity</h2>
+
+                  <RankText
+                    :building="currBuilding"
+                    :stats="BuildingBenchmarkStats"
+                    stat-key="GHGIntensity"
+                    :unit="'kg/sqft'"
+                  />
+                </div>
+
+                <div>
+                  <h2>Total GHG Emissions</h2>
+
+                  <RankText
+                    :building="currBuilding"
+                    :should-round="true"
+                    :stats="BuildingBenchmarkStats"
+                    stat-key="TotalGHGEmissions"
+                    :unit="'tons'"
+                  />
+                </div>
               </div>
-
-              <div>
-                <h2>GHG Intensity</h2>
-
-                <RankText
-                  :building="currBuilding"
-                  :stats="BuildingBenchmarkStats"
-                  stat-key="GHGIntensity"
-                  :unit="'kg/sqft'"
-                />
-              </div>
-
-              <div>
-                <h2>Total GHG Emissions</h2>
-
-                <RankText
-                  :building="currBuilding"
-                  :should-round="true"
-                  :stats="BuildingBenchmarkStats"
-                  stat-key="TotalGHGEmissions"
-                  :unit="'tons'"
-                />
-              </div>
-            </div>
+          </div>
 
             <a
               :href="currBuilding.path"
@@ -365,7 +423,7 @@ export default class MapPage extends Vue {
   #buildings-map {
     max-width: 100%;
     width: 100%;
-    aspect-ratio: 1.8/1;
+    aspect-ratio: 1.7/1;
     margin-top: 1rem;
   }
 
@@ -391,7 +449,13 @@ export default class MapPage extends Vue {
 
   .map-popup {
     width: 20rem;
+    min-height: 10rem;
     font-size: 1rem;
+
+    .popup-main {
+      display: flex;
+      gap: 1rem;
+    }
 
     h1 {
       font-size: 1.25rem;
@@ -400,8 +464,15 @@ export default class MapPage extends Vue {
 
     .stats-list {
       display: flex;
+      flex-direction: row;
       flex-wrap: wrap;
-      gap: 1rem 2rem;
+      gap: 1rem;
+      margin-top: 0.5rem;
+
+      .rank-label {
+        margin-top: 0;
+        font-size: small;
+      }
     }
 
     h2 {
@@ -412,17 +483,27 @@ export default class MapPage extends Vue {
     .building-img-cont {
       text-align: left;
 
+      &, img {
+        max-width: 10rem;
+      }
+
       img {
-        max-width: 16rem;
-        max-height: 12rem;
+        max-height: 8rem;
       }
     }
 
     a.details-link {
       display: block;
-      margin: 0.5rem 0;
+      margin: 0.5rem 0 0.75rem 0;
       font-weight: bold;
       font-size: 1rem;
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    #buildings-map {
+      // flip map to square to fit portrait displays
+      aspect-ratio: 1;
     }
   }
 }
