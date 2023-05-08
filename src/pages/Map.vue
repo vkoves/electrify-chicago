@@ -87,7 +87,7 @@ export default class MapPage extends Vue {
   map?: Leaflet.Map;
 
   /** A message indicating what is being shown on the map */
-  mapStatus: string = '';
+  mapStatus = '';
 
   mainFeatureGroup?: Leaflet.FeatureGroup;
 
@@ -345,7 +345,7 @@ export default class MapPage extends Vue {
           buildingNode.node.ZIPCode === this.formZip.toString());
 
       this.addBuildingsToMap(filteredBuildings);
-      this.mapStatus = `Buildings in zipcode ${this.formZip}`;
+      this.mapStatus = `Buildings in Zipcode ${this.formZip} (according to dataset)`;
     }
     else {
       this.showBuildingsAroundPoint(this.formPointCoords!);
@@ -482,7 +482,10 @@ export default class MapPage extends Vue {
         <form>
           <h2>Filter Buildings</h2>
 
-          <p v-if="errorMessage" class="error-message">
+          <p
+            v-if="errorMessage"
+            class="error-message"
+          >
             {{ errorMessage }}
           </p>
 
@@ -491,18 +494,30 @@ export default class MapPage extends Vue {
             ref="googleMapsSearchInput"
             v-model="formGoogleMapsSearchInput"
             type="text"
+            placeholder="Type address or place"
             @keydown.enter="cancelEvent"
-            placeholder="Type address or place">
+          >
 
           <label for="search-dist">Search Distance</label>
-          <select id="search-dist" v-model="formSearchDistanceMiles">
-            <option :value="0.25">1/4 mile</option>
-            <option :value="0.5">1/2 mile</option>
-            <option :value="1">1 mile</option>
-            <option :value="2">2 miles</option>
+          <select
+            id="search-dist"
+            v-model="formSearchDistanceMiles"
+          >
+            <option :value="0.25">
+              1/4 mile
+            </option>
+            <option :value="0.5">
+              1/2 mile
+            </option>
+            <option :value="1">
+              1 mile
+            </option>
+            <option :value="2">
+              2 miles
+            </option>
           </select>
 
-          <hr/>
+          <hr>
 
           <label>Or Filter Zip Code</label>
           <select
