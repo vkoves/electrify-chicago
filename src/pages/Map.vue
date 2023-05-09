@@ -78,7 +78,6 @@ export default class MapPage extends Vue {
 
   icons: { [iconName: string]: Leaflet.Icon } = {};
 
-  formGoogleMapsSearchInput = '';
   formZip: number | string = '';
   /** The coordinates of the place the user searched in the Google Maps box */
   formPointCoords: [ number, number ] | null = null;
@@ -306,9 +305,8 @@ export default class MapPage extends Vue {
   }
 
   reset(): void {
+    this.clearSearch();
     this.formZip = '';
-    this.formGoogleMapsSearchInput = '';
-    this.formPointCoords = null;
     this.formSearchDistanceMiles = 1;
     this.errorMessage = '';
 
@@ -335,9 +333,7 @@ export default class MapPage extends Vue {
 
     // Prioritize zipcode, since clicking a place in search will clear zip
     if (this.formZip) {
-      // Clear place search inputs
-      this.formGoogleMapsSearchInput = '';
-      this.formPointCoords = null;
+      this.clearSearch();
 
       const buildingNodes = this.$page.allBuilding.edges;
       const filteredBuildings = buildingNodes
@@ -411,6 +407,11 @@ export default class MapPage extends Vue {
 
   private clearMarkers(): void {
     this.mainFeatureGroup?.clearLayers();
+  }
+
+  private clearSearch(): void {
+    this.$refs.googleMapsSearchInput.value = '';
+    this.formPointCoords = null;
   }
 
   private autofitMap(): void {
@@ -488,7 +489,6 @@ export default class MapPage extends Vue {
           <label>Find Buildings Near Address or Place</label>
           <input
             ref="googleMapsSearchInput"
-            v-model="formGoogleMapsSearchInput"
             type="text"
             placeholder="Type address or place"
             @keydown.enter="cancelEvent"
