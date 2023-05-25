@@ -16,6 +16,8 @@ export default class EmissionsBreakdownGraph extends Vue {
   <div class="emissions-breakdown">
     <img
       src="/chicago-2017-ghg-emissions.png"
+      width="167"
+      height="400"
       alt="2017 GHG Emissions -
         31M metric tons CO2 equivalent
         69% buildings
