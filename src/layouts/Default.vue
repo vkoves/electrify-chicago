@@ -49,6 +49,8 @@ export default class Default extends Vue {
           <img
             src="/electrify-chicago-logo.svg"
             alt="Electrify Chicago Homepage"
+            width="334"
+            height="48"
             class="site-logo"
           >
         </g-link>
