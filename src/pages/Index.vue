@@ -145,10 +145,11 @@ export default class BiggestBuildings extends Vue {
         </div>
 
         <form class="page-form search-form">
-          <label>Go to Page</label>
+          <label for="page-num">Go to Page</label>
 
           <div class="input-cont">
             <input
+              id="page-num"
               v-model="pageInput"
               type="number"
             >

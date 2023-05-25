@@ -486,8 +486,9 @@ export default class MapPage extends Vue {
             {{ errorMessage }}
           </p>
 
-          <label>Find Buildings Near Address or Place</label>
+          <label for="addr-input">Find Buildings Near Address or Place</label>
           <input
+            id="addr-input"
             ref="googleMapsSearchInput"
             type="text"
             placeholder="Type address or place"
@@ -515,7 +516,7 @@ export default class MapPage extends Vue {
 
           <hr>
 
-          <label>Or Filter Zip Code</label>
+          <label for="zipcode">Or Filter Zip Code</label>
           <select
             id="zipcode"
             v-model="formZip"
