@@ -203,7 +203,10 @@ export default class Search extends Vue {
 
       <div>
         <label for="property-type">Filter Property Type</label>
-        <select id="property-type" v-model="propertyTypeFilter">
+        <select
+          id="property-type"
+          v-model="propertyTypeFilter"
+        >
           <option
             v-for="propertyType in propertyTypeOptions"
             :key="propertyType.value ?? propertyType"
