@@ -9,6 +9,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import PropertyTypesConstant from '../data/dist/property-types.json';
 
 interface IBuildingEdge { node: IBuilding; }
 
@@ -30,14 +31,22 @@ export default class Search extends Vue {
   /** Set by Gridsome to results of GraphQL query */
   readonly $static: any;
 
-  search = '';
+  /** The search query */
+  searchFilter = '';
 
-  searchResults: Array<IBuilding> = [];
+  /** The selected property type filter */
+  propertyTypeFilter = '';
 
+  propertyTypeOptions: Array<{ label: string, value: string} | string> = [
+    { label: 'Select Property Type', value: '' },
+  ].concat(PropertyTypesConstant.propertyTypes as any);
+
+  searchResults: Array<IBuildingEdge> = [];
+  totalResultsCount = 0;
 
   created(): void {
     // Make sure on load we have some data
-    this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+    this.setSearchResults(this.$static.allBuilding.edges);
   }
 
   mounted(): void {
@@ -46,7 +55,7 @@ export default class Search extends Vue {
     const urlSearchParam = splitParams.length > 1 ? decodeURI(splitParams[1]) : null;
 
     if (urlSearchParam) {
-      this.search = urlSearchParam;
+      this.searchFilter = urlSearchParam;
       this.submitSearch();
     } else {
       this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
@@ -72,27 +81,50 @@ export default class Search extends Vue {
       event.preventDefault();
     }
 
-    const query = this.search.toLowerCase().trim();
+    const query = this.searchFilter.toLowerCase().trim();
 
+    // Update URL bar with search query so refresh persists search
     window.history.pushState(null, '', `/search?${this.QueryParamKey}=${query}`);
 
-    if (!query) {
-      this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+    let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
+
+    // If no filters are provided, return our max number
+    if (!query && !this.propertyTypeFilter) {
+      this.setSearchResults(buildingsResults);
       return;
     }
 
-    let results = this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
+    buildingsResults = buildingsResults.filter((buildingEdge: IBuildingEdge) => {
       return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
         buildingEdge.node.Address.toLowerCase().includes(query) ||
         buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
     });
 
     // Sort by name matches, then address, then property type
-    results = results.sort((buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) => {
-      return this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query);
-    });
+    buildingsResults = buildingsResults
+    .sort((buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
+      this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query));
 
-    this.searchResults = results.slice(0, this.MaxBuildings);
+    // If property type filter is specified, filter down by that
+    if (this.propertyTypeFilter) {
+      buildingsResults = buildingsResults.filter((buildingEdge: IBuildingEdge) => {
+        return buildingEdge.node.PrimaryPropertyType.toLowerCase()
+          === this.propertyTypeFilter.toLowerCase();
+      });
+
+      this.setSearchResults(buildingsResults);
+    }
+    else {
+     this.setSearchResults(buildingsResults);
+    }
+  }
+
+  /**
+   * Set the searchResults to a trimmed version of
+   */
+  setSearchResults(allResults: Array<IBuildingEdge>): void {
+    this.totalResultsCount = allResults.length;
+    this.searchResults = allResults.slice(0, this.MaxBuildings);
   }
 }
 </script>
@@ -140,19 +172,34 @@ export default class Search extends Vue {
 
     <DataDisclaimer />
 
-    <form class="search-form -page">
-      <label for="search">Search Benchmarked Buildings</label>
-
+    <form>
       <div class="input-cont">
+        <label for="page-search">
+          Search Benchmarked Buildings
+        </label>
         <input
-          id="search"
-          v-model="search"
+          id="page-search"
+          v-model="searchFilter"
           type="text"
           name="search"
           placeholder="Search property name, type, or address"
         >
+      </div>
+      <div>
+        <label for="property-type">Filter Property Type</label>
+        <select id="property-type" v-model="propertyTypeFilter">
+          <option
+            v-for="propertyType in propertyTypeOptions"
+            :key="propertyType.value ?? propertyType"
+            :value="propertyType.value ?? propertyType"
+          >
+            {{ propertyType.label || propertyType }}
+          </option>
+        </select>
+
         <button
           type="submit"
+          class="-grey"
           @click="submitSearch"
         >
           Search
@@ -174,6 +221,11 @@ export default class Search extends Vue {
       </p>
     </div>
 
+    <p>
+      Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total {{ totalResultsCount }}
+      matching buildings
+    </p>
+
     <p class="footnote">
       Data Source:
       <!-- eslint-disable-next-line max-len -->
@@ -189,14 +241,14 @@ export default class Search extends Vue {
 </template>
 
 <style lang="scss">
-form.search-form.-page {
+form {
   border-radius: $brd-rad-small;
   margin-bottom: 1rem;
 
   label {
     display: block;
     margin-bottom: 0.25rem;
-    margin-left: 0.5rem;
+    margin-top: 0.5rem;
     font-size: 0.75rem;
     font-weight: 500;
   }
@@ -205,14 +257,14 @@ form.search-form.-page {
     width: 25rem;
     max-width: 100%;
 
-    // Slightly round search instead of full pill
-    $search-border-radius: $brd-rad-medium;
+    input { font-size: 1rem; }
+  }
 
-    input {
-      border-radius: $search-border-radius 0 0 $search-border-radius;
-      font-size: 1rem;
-    }
-    button { border-radius: 0 $search-border-radius $search-border-radius 0; }
+  input, select { padding: 0.5rem; }
+
+  button {
+    padding: 0.5rem 1rem;
+    margin-left: 0.5rem;
   }
 
   @media (max-width: $mobile-max-width) {

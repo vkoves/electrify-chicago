@@ -7,6 +7,6 @@ dist/*
 
 # Ignore data debug directory, which is just used to view the data, but makes huge
 # JSON files
-src/data/debug/*
+src/data/debug/*.json
 
 **/__pycache__/*
