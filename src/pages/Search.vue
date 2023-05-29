@@ -9,6 +9,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import PropertyTypesConstant from '../data/dist/property-types.json';
 
 interface IBuildingEdge { node: IBuilding; }
 
@@ -24,33 +25,48 @@ interface IBuildingEdge { node: IBuilding; }
 })
 export default class Search extends Vue {
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
-  readonly MaxBuildings = 50;
-  readonly QueryParamKey = 'q';
+  readonly MaxBuildings = 100;
+
+  readonly QueryParamKeys = {
+    search: 'q',
+    propertyType: 'type',
+  };
 
   /** Set by Gridsome to results of GraphQL query */
   readonly $static: any;
 
-  search = '';
+  /** The search query */
+  searchFilter = '';
 
-  searchResults: Array<IBuilding> = [];
+  /** The selected property type filter */
+  propertyTypeFilter = '';
 
+  propertyTypeOptions: Array<{ label: string, value: string} | string> = [
+    { label: 'Select Property Type', value: '' },
+  ].concat(PropertyTypesConstant.propertyTypes as any);
+
+  searchResults: Array<IBuildingEdge> = [];
+  totalResultsCount = 0;
 
   created(): void {
     // Make sure on load we have some data
-    this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+    this.setSearchResults(this.$static.allBuilding.edges);
   }
 
   mounted(): void {
-    const splitParams = window.location.search.split(`${this.QueryParamKey}=`);
-    // Make sure to URI decode to convert params like 'Jewel%20Osco' -> 'Jewel Osco'
-    const urlSearchParam = splitParams.length > 1 ? decodeURI(splitParams[1]) : null;
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlSearchParam = urlParams.get(this.QueryParamKeys.search);
+    const urlPropertyTypeParam = urlParams.get(this.QueryParamKeys.propertyType);
 
     if (urlSearchParam) {
-      this.search = urlSearchParam;
-      this.submitSearch();
-    } else {
-      this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+      this.searchFilter = urlSearchParam;
     }
+
+    if (urlPropertyTypeParam) {
+      this.propertyTypeFilter = urlPropertyTypeParam;
+    }
+
+    this.submitSearch();
   }
 
   searchRank(buildingEdge: IBuildingEdge, query: string): number {
@@ -72,27 +88,58 @@ export default class Search extends Vue {
       event.preventDefault();
     }
 
-    const query = this.search.toLowerCase().trim();
+    const query = this.searchFilter.toLowerCase().trim();
 
-    window.history.pushState(null, '', `/search?${this.QueryParamKey}=${query}`);
+    const propertyFilterEncoded = encodeURIComponent(this.propertyTypeFilter);
 
-    if (!query) {
-      this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
+    // Update URL bar with search query so refresh persists search
+    let newUrl = `/search?${this.QueryParamKeys.search}=${query}`;
+
+    if (propertyFilterEncoded) {
+      newUrl += `&${this.QueryParamKeys.propertyType}=${propertyFilterEncoded}`;
+    }
+
+    window.history.pushState(null, '', newUrl);
+
+    let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
+
+    // If no filters are provided, return our max number
+    if (!query && !this.propertyTypeFilter) {
+      this.setSearchResults(buildingsResults);
       return;
     }
 
-    let results = this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
+    buildingsResults = buildingsResults.filter((buildingEdge: IBuildingEdge) => {
       return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
         buildingEdge.node.Address.toLowerCase().includes(query) ||
         buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
     });
 
     // Sort by name matches, then address, then property type
-    results = results.sort((buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) => {
-      return this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query);
-    });
+    buildingsResults = buildingsResults
+    .sort((buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
+      this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query));
 
-    this.searchResults = results.slice(0, this.MaxBuildings);
+    // If property type filter is specified, filter down by that
+    if (this.propertyTypeFilter) {
+      buildingsResults = buildingsResults.filter((buildingEdge: IBuildingEdge) => {
+        return buildingEdge.node.PrimaryPropertyType.toLowerCase()
+          === this.propertyTypeFilter.toLowerCase();
+      });
+
+      this.setSearchResults(buildingsResults);
+    }
+    else {
+     this.setSearchResults(buildingsResults);
+    }
+  }
+
+  /**
+   * Set the searchResults to a trimmed version of
+   */
+  setSearchResults(allResults: Array<IBuildingEdge>): void {
+    this.totalResultsCount = allResults.length;
+    this.searchResults = allResults.slice(0, this.MaxBuildings);
   }
 }
 </script>
@@ -140,24 +187,43 @@ export default class Search extends Vue {
 
     <DataDisclaimer />
 
-    <form class="search-form -page">
-      <label for="search">Search Benchmarked Buildings</label>
-
-      <div class="input-cont">
+    <form>
+      <div>
+        <label for="page-search">
+          Search Benchmarked Buildings
+        </label>
         <input
-          id="search"
-          v-model="search"
+          id="page-search"
+          v-model="searchFilter"
           type="text"
           name="search"
           placeholder="Search property name, type, or address"
         >
-        <button
-          type="submit"
-          @click="submitSearch"
-        >
-          Search
-        </button>
       </div>
+
+      <div>
+        <label for="property-type">Filter Property Type</label>
+        <select
+          id="property-type"
+          v-model="propertyTypeFilter"
+        >
+          <option
+            v-for="propertyType in propertyTypeOptions"
+            :key="propertyType.value ?? propertyType"
+            :value="propertyType.value ?? propertyType"
+          >
+            {{ propertyType.label || propertyType }}
+          </option>
+        </select>
+      </div>
+
+      <button
+        type="submit"
+        class="-grey"
+        @click="submitSearch"
+      >
+        Search
+      </button>
     </form>
 
     <BuildingsTable :buildings="searchResults" />
@@ -174,6 +240,11 @@ export default class Search extends Vue {
       </p>
     </div>
 
+    <p>
+      Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total {{ totalResultsCount }}
+      matching buildings
+    </p>
+
     <p class="footnote">
       Data Source:
       <!-- eslint-disable-next-line max-len -->
@@ -189,34 +260,34 @@ export default class Search extends Vue {
 </template>
 
 <style lang="scss">
-form.search-form.-page {
+form {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
   border-radius: $brd-rad-small;
   margin-bottom: 1rem;
 
   label {
     display: block;
     margin-bottom: 0.25rem;
-    margin-left: 0.5rem;
     font-size: 0.75rem;
     font-weight: 500;
   }
 
-  .input-cont {
-    width: 25rem;
-    max-width: 100%;
+  input, select { padding: 0.5rem; }
 
-    // Slightly round search instead of full pill
-    $search-border-radius: $brd-rad-medium;
+  input[type="text"] { width: 15rem; }
 
-    input {
-      border-radius: $search-border-radius 0 0 $search-border-radius;
-      font-size: 1rem;
-    }
-    button { border-radius: 0 $search-border-radius $search-border-radius 0; }
-  }
+  button { padding: 0.5rem 1rem; }
 
+  select { max-width: 12rem; }
+
+  /** Mobile Styling */
   @media (max-width: $mobile-max-width) {
     padding: 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
 }
 

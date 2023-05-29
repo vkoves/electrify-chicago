@@ -45,6 +45,15 @@ button {
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
+
+  &.-grey {
+    background-color: $grey;
+    border-bottom: none;
+
+    &:hover, &:focus {
+      background-color: $grey-dark;
+    }
+  }
 }
 
 /**
