@@ -26,7 +26,11 @@ interface IBuildingEdge { node: IBuilding; }
 export default class Search extends Vue {
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
   readonly MaxBuildings = 100;
-  readonly QueryParamKey = 'q';
+
+  readonly QueryParamKeys = {
+    search: 'q',
+    propertyType: 'type',
+  };
 
   /** Set by Gridsome to results of GraphQL query */
   readonly $static: any;
@@ -50,16 +54,19 @@ export default class Search extends Vue {
   }
 
   mounted(): void {
-    const splitParams = window.location.search.split(`${this.QueryParamKey}=`);
-    // Make sure to URI decode to convert params like 'Jewel%20Osco' -> 'Jewel Osco'
-    const urlSearchParam = splitParams.length > 1 ? decodeURI(splitParams[1]) : null;
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlSearchParam = urlParams.get(this.QueryParamKeys.search);
+    const urlPropertyTypeParam = urlParams.get(this.QueryParamKeys.propertyType);
 
     if (urlSearchParam) {
       this.searchFilter = urlSearchParam;
-      this.submitSearch();
-    } else {
-      this.searchResults = this.$static.allBuilding.edges.slice(0, this.MaxBuildings);
     }
+
+    if (urlPropertyTypeParam) {
+      this.propertyTypeFilter = urlPropertyTypeParam;
+    }
+
+    this.submitSearch();
   }
 
   searchRank(buildingEdge: IBuildingEdge, query: string): number {
@@ -83,8 +90,16 @@ export default class Search extends Vue {
 
     const query = this.searchFilter.toLowerCase().trim();
 
+    const propertyFilterEncoded = encodeURIComponent(this.propertyTypeFilter);
+
     // Update URL bar with search query so refresh persists search
-    window.history.pushState(null, '', `/search?${this.QueryParamKey}=${query}`);
+    let newUrl = `/search?${this.QueryParamKeys.search}=${query}`;
+
+    if (propertyFilterEncoded) {
+      newUrl += `&${this.QueryParamKeys.propertyType}=${propertyFilterEncoded}`;
+    }
+
+    window.history.pushState(null, '', newUrl);
 
     let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
 
@@ -173,7 +188,7 @@ export default class Search extends Vue {
     <DataDisclaimer />
 
     <form>
-      <div class="input-cont">
+      <div>
         <label for="page-search">
           Search Benchmarked Buildings
         </label>
@@ -185,6 +200,7 @@ export default class Search extends Vue {
           placeholder="Search property name, type, or address"
         >
       </div>
+
       <div>
         <label for="property-type">Filter Property Type</label>
         <select id="property-type" v-model="propertyTypeFilter">
@@ -196,15 +212,15 @@ export default class Search extends Vue {
             {{ propertyType.label || propertyType }}
           </option>
         </select>
-
-        <button
-          type="submit"
-          class="-grey"
-          @click="submitSearch"
-        >
-          Search
-        </button>
       </div>
+
+      <button
+        type="submit"
+        class="-grey"
+        @click="submitSearch"
+      >
+        Search
+      </button>
     </form>
 
     <BuildingsTable :buildings="searchResults" />
@@ -242,33 +258,33 @@ export default class Search extends Vue {
 
 <style lang="scss">
 form {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
   border-radius: $brd-rad-small;
   margin-bottom: 1rem;
 
   label {
     display: block;
     margin-bottom: 0.25rem;
-    margin-top: 0.5rem;
     font-size: 0.75rem;
     font-weight: 500;
   }
 
-  .input-cont {
-    width: 25rem;
-    max-width: 100%;
-
-    input { font-size: 1rem; }
-  }
-
   input, select { padding: 0.5rem; }
 
-  button {
-    padding: 0.5rem 1rem;
-    margin-left: 0.5rem;
-  }
+  input[type="text"] { width: 15rem; }
 
+  button { padding: 0.5rem 1rem; }
+
+  select { max-width: 12rem; }
+
+  /** Mobile Styling */
   @media (max-width: $mobile-max-width) {
     padding: 0.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
   }
 }
 
