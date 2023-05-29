@@ -25,7 +25,7 @@ interface IBuildingEdge { node: IBuilding; }
 })
 export default class Search extends Vue {
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
-  readonly MaxBuildings = 50;
+  readonly MaxBuildings = 100;
   readonly QueryParamKey = 'q';
 
   /** Set by Gridsome to results of GraphQL query */
