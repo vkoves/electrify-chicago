@@ -10,3 +10,5 @@ dist/*
 src/data/debug/*.json
 
 **/__pycache__/*
+
+.DS_Store
