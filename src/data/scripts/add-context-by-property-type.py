@@ -16,16 +16,18 @@ building_cols_to_rank = [
 ]
 
 building_data = pd.read_csv(path_to_buildings_csv)
-
+sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
 
 def calculateBuildingStatistics():
-    pass
+    building_staistics_by_property_type = {}
+    sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
+
+    for col in building_cols_to_rank:
+        print(col, sorted_by_property_type[col].mean())
 
 
 def rankByType():
     building_data = pd.read_csv(path_to_buildings_csv)
-
-    sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
 
     for col in building_cols_to_rank:
         building_data[col +
@@ -36,4 +38,5 @@ def rankByType():
 
 
 if __name__ == "__main__":
-    rankByType()
+    # rankByType()
+    calculateBuildingStatistics()
