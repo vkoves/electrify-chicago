@@ -57,13 +57,17 @@ def calculateBuildingStatistics():
 
 
 def rankByType():
+    #calculates the bulding statistics along with the rankings
     calculateBuildingStatistics()
+
+    #inputted data
     building_data = pd.read_csv(path_to_buildings_csv)
 
+    #use pandas to rank each value for each property and store as category+"RankByProperty"
     for col in building_cols_to_rank:
         building_data[col +
                       'RankByPropertyType'] = sorted_by_property_type[col].rank(ascending=False)
-
+    
     building_data.to_csv("./dist/building-benchmarks.csv", sep=',',
                          encoding='utf-8', index=False)
 
