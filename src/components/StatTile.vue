@@ -211,7 +211,8 @@ export default class StatTile extends Vue {
       return null;
     }
 
-    return getRankLabelByProperty(this.propertyStatRank, this.isSquareFootage, this.building["PrimaryPropertyType"]);
+    return getRankLabelByProperty(this.propertyStatRank, this.isSquareFootage, 
+      this.building["PrimaryPropertyType"]);
   }
 
   // Returns a number 1 - 4 for how concerned we should be about this stat

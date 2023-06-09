@@ -70,7 +70,8 @@ export function getRankLabel(statRank: number, isSquareFootage: boolean): string
   }
 }
 
-export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean, propertyType: string): string | null {
+export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean, 
+  propertyType: string): string | null {
   if (isSquareFootage) {
     return 'Largest';
   } else if (statRank <= RankConfig.AlarmRankMax) {
