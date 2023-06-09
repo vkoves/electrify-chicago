@@ -70,6 +70,18 @@ export function getRankLabel(statRank: number, isSquareFootage: boolean): string
   }
 }
 
+export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean, propertyType: string): string | null {
+  if (isSquareFootage) {
+    return 'Largest';
+  } else if (statRank <= RankConfig.AlarmRankMax) {
+    return `Highest of ${propertyType} ${RankConfig.AlarmEmoji}`;
+  } else if (statRank <= RankConfig.FlagRankMax) {
+    return `Highest of ${propertyType} ${RankConfig.FlagEmoji}`;
+  } else {
+    return null;
+  }
+}
+
 /**
  * Columns that have rankings (format of _Rank and _PercentileRank)
  */

@@ -40,6 +40,13 @@
         #{{ statRank }} {{ rankLabel }}
       </div>
 
+      <div
+        v-if="propertyStatRank && propertyStatRank <= RankConfig.FlagRankMax && propertyRankLabel"
+        class="property-rank"
+      >
+        #{{ propertyStatRank }} {{ propertyRankLabel }}
+      </div>
+
       <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
       <div
         v-if="!isSquareFootage && statRankInverted
@@ -97,7 +104,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {
-  RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats,
+  RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats, getRankLabelByProperty,
 } from '~/common-functions.vue';
 
 /**
@@ -167,6 +174,17 @@ export default class StatTile extends Vue {
     }
   }
 
+  // Returns a rounded number or undefined if no rank
+  get propertyStatRank(): number | null {
+    const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
+
+    if (statRank) {
+      return Math.round(parseFloat(statRank));
+    } else {
+      return null;
+    }
+  }
+
   // Returns the inverse of a rank, so the # lowest in a category
   // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
   get statRankInverted(): number | null {
@@ -186,6 +204,14 @@ export default class StatTile extends Vue {
     }
 
     return getRankLabel(this.statRank, this.isSquareFootage);
+  }
+
+  get propertyRankLabel(): string | null {
+    if (!this.propertyStatRank) {
+      return null;
+    }
+
+    return getRankLabelByProperty(this.propertyStatRank, this.isSquareFootage, this.building["PrimaryPropertyType"]);
   }
 
   // Returns a number 1 - 4 for how concerned we should be about this stat

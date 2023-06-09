@@ -35,6 +35,13 @@ query ($id: ID!) {
     SourceEUIPercentileRank
     SiteEUIRank
     SiteEUIPercentileRank
+    GHGIntensityRankByPropertyType
+    TotalGHGEmissionsRankByPropertyType
+    ElectricityUseRankByPropertyType
+    NaturalGasUseRankByPropertyType
+    GrossFloorAreaRankByPropertyType
+    SourceEUIRankByPropertyType
+    SiteEUIRankByPropertyType
   }
 }
 </page-query>
