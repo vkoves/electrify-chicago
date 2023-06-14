@@ -56,6 +56,15 @@
         #{{ statRankInverted }} Lowest 🏆
       </div>
 
+      <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
+      <div
+        v-if="!isSquareFootage && statRankInvertedByProperty
+          && statRankInvertedByProperty <= RankConfig.TrophyRankInvertedMax"
+        class="rank"
+      >
+        #{{ statRankInvertedByProperty }} Lowest of {{this.building["PrimaryPropertyType"]}} 🏆
+      </div>
+
       <!-- Only show percentile if we don't have a flag or alarm -->
       <div
         v-if="typeof statRankPercent === 'number' && statRank > RankConfig.FlagRankMax"
@@ -199,8 +208,11 @@ export default class StatTile extends Vue {
   }
 
   get statRankInvertedByProperty(): number | null {
+    const buildingStatsByPropertyType = require("../data/dist/building-statistics-by-property-type.json")
+    const properStatBlock = buildingStatsByPropertyType[this.building["PrimaryPropertyType"]]
+    const countForStatByProperty = properStatBlock[this.statKey]["count"]
+
     if (this.propertyStatRank) {
-      const countForStatByProperty = this.stats[this.statKey].count;
 
       // Rank 100/100 should invert to #1 lowest, not #0
       return countForStatByProperty - this.propertyStatRank + 1;
