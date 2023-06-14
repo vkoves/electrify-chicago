@@ -75,13 +75,13 @@ export function getRankLabel(statRank: number, isSquareFootage: boolean): string
  * type, or null if not in top 50 worst
  */
 export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean, 
-  propertyType: string): string | null {
+  propertyTag: string): string | null {
   if (isSquareFootage) {
     return 'Largest';
   } else if (statRank <= RankConfig.AlarmRankMax) {
-    return `Highest of ${propertyType} ${RankConfig.AlarmEmoji}`;
+    return `Highest of ${propertyTag} ${RankConfig.AlarmEmoji}`;
   } else if (statRank <= RankConfig.FlagRankMax) {
-    return `Highest of ${propertyType} ${RankConfig.FlagEmoji}`;
+    return `Highest of ${propertyTag} ${RankConfig.FlagEmoji}`;
   } else {
     return null;
   }
