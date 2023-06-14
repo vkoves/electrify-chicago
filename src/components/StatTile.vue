@@ -62,7 +62,7 @@
           && statRankInvertedByProperty <= RankConfig.TrophyRankInvertedMax"
         class="rank"
       >
-        #{{ statRankInvertedByProperty }} Lowest of {{this.pluralismForPropertyType}} 🏆
+        #{{ statRankInvertedByProperty }} Lowest of {{ pluralismForPropertyType }} 🏆
       </div>
 
       <!-- Only show percentile if we don't have a flag or alarm -->
@@ -134,9 +134,6 @@ export default class StatTile extends Vue {
   get pluralismForPropertyType(): string {
     let pluralismForProperty = "s";
     let curPropertyType = this.building["PrimaryPropertyType"];
-
-    console.log(curPropertyType + " prop type")
-    console.log(typeof(curPropertyType))
 
     if (["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts", "Multifamily Housing"].includes(curPropertyType))
     {
