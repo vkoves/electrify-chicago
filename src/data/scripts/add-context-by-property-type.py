@@ -15,10 +15,10 @@ building_cols_to_rank = [
     'SiteEUI',
 ]
 
-#raw building data
+# raw building data
 building_data = pd.read_csv(path_to_buildings_csv)
 
-#sorted data based on each property type: the order is alphabetical
+# sorted data based on each property type: the order is alphabetical
 sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
 
 
@@ -26,13 +26,13 @@ def calculateBuildingStatistics():
     building_staistics_by_property_type = {}
     all_property_types = pd.read_json("./dist/property-types.json")
 
-    #looping through both all the property types and all teh columns we want to get data on
+    # looping through both all the property types and all the columns we want to get data on
     for i, property in enumerate(all_property_types["propertyTypes"]):
 
         cur_property_type_stats = {}
         for col in building_cols_to_rank:
 
-            #finding the mean, count, min, max, and quartiles of each category for each building type
+            # finding the mean, count, min, max, and quartiles of each category for each building type
             cur_mean = round(sorted_by_property_type[col].mean()[i].item(), 3)
             cur_count = round(
                 sorted_by_property_type[col].count()[i].item(), 3)
