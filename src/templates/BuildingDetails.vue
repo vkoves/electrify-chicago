@@ -2,6 +2,7 @@
 query ($id: ID!) {
   building(id: $id) {
     slugSource
+    ID
     Address
     ChicagoEnergyRating
     CommunityArea
@@ -74,6 +75,10 @@ query ($id: ID!) {
               Find on Google Maps <NewTabIcon />
             </a>
           </div>
+
+          <p class="building-id">
+            Chicago Building ID: {{ $page.building.ID }}
+          </p>
         </div>
 
         <BuildingImage :building="$page.building" />
@@ -440,17 +445,20 @@ export default class BuildingDetails  extends Vue {
     }
   }
 
-
   h1 { margin: 0; }
 
   .address {
     font-size: 1.25rem;
-    margin-bottom: 1rem;
 
     .google-maps-link {
       font-size: 0.825rem;
       margin-left: 0.5rem;
     }
+  }
+
+  .building-id {
+    font-size: 0.75rem;
+    margin-top: 0;;
   }
 
   .building-details {
