@@ -38,9 +38,10 @@ module.exports = {
         component: './src/templates/BuildingDetails.vue',
       },
       {
-        name: 'building-by-id',
+        // A path that redirects from a building ID to the canonical slug URL
+        name: 'building-id-redirect',
         path: '/building-id/:ID',
-        component: './src/templates/BuildingDetails.vue',
+        component: './src/templates/BuildingIDRedirect.vue',
       },
     ],
   },
