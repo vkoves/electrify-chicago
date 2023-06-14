@@ -198,6 +198,17 @@ export default class StatTile extends Vue {
     return null;
   }
 
+  get statRankInvertedByProperty(): number | null {
+    if (this.propertyStatRank) {
+      const countForStatByProperty = this.stats[this.statKey].count;
+
+      // Rank 100/100 should invert to #1 lowest, not #0
+      return countForStatByProperty - this.propertyStatRank + 1;
+    }
+
+    return null;
+  }
+
   get rankLabel(): string | null {
     if (!this.statRank) {
       return null;

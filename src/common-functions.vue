@@ -72,8 +72,7 @@ export function getRankLabel(statRank: number, isSquareFootage: boolean): string
 
 /**
  * Returns a string rank for very bad buildings per primary property 
- * type, or null if not in top 50
- * worst
+ * type, or null if not in top 50 worst
  */
 export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean, 
   propertyType: string): string | null {
