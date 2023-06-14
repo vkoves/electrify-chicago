@@ -135,11 +135,14 @@ export default class StatTile extends Vue {
     let pluralismForProperty = "s";
     let curPropertyType = this.building["PrimaryPropertyType"];
 
-    if (["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts", "Multifamily Housing"].includes(curPropertyType))
+    if (["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts", 
+      "Multifamily Housing"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType + " Buildings";
     }
-    else if (["College/University", "Laboratory", "Mixed Use Property", "Residence Hall/Dormitory", "Residential Care Facility", "Senior Care Community", "Senior Living Community", "Worship Facility"].includes(curPropertyType))
+    else if (["College/University", "Laboratory", "Mixed Use Property", 
+      "Residence Hall/Dormitory", "Residential Care Facility", "Senior Care Community", 
+      "Senior Living Community", "Worship Facility"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType.slice(0, -1) + "ies";
     }
@@ -147,7 +150,9 @@ export default class StatTile extends Vue {
     {
       pluralismForProperty = "Hospitals (General Medical & Surgical)";
     }
-    else if (["Other", "Other - Education", "Other - Entertainment/Public Assembly", "Other - Mall", "Other - Public Services", "Other - Recreation", "Other - Specialty Hospital"].includes(curPropertyType))
+    else if (["Other", "Other - Education", "Other - Entertainment/Public Assembly", 
+      "Other - Mall", "Other - Public Services", "Other - Recreation", 
+      "Other - Specialty Hospital"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType;
     }
@@ -236,12 +241,17 @@ export default class StatTile extends Vue {
     return null;
   }
 
+  // Returns the inverse of a rank, so the # lowest in a category
+  // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
+  // Only returns a rank if there are 80 or more buildings per rank
+  // (50 highest and 30 lowest)
   get statRankInvertedByProperty(): number | null {
-    const buildingStatsByPropertyType = require("../data/dist/building-statistics-by-property-type.json");
+    const buildingStatsByPropertyType = 
+      require("../data/dist/building-statistics-by-property-type.json");
     const properStatBlock = buildingStatsByPropertyType[this.building["PrimaryPropertyType"]];
     const countForStatByProperty = properStatBlock[this.statKey]["count"];
 
-    if (this.propertyStatRank) {
+    if (this.propertyStatRank && countForStatByProperty >= 80) {
 
       // Rank 100/100 should invert to #1 lowest, not #0
       return countForStatByProperty - this.propertyStatRank + 1;
