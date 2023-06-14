@@ -110,6 +110,7 @@
 </template>
 
 <script lang="ts">
+import { ReactiveFlags } from 'vue';
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {
@@ -129,6 +130,34 @@ export default class StatTile extends Vue {
 
   // Expose RankConfig to template
   RankConfig = RankConfig;
+
+  get pluralismForPropertyType(): string {
+    let pluralismForProperty = "s";
+    let curPropertyType = this.building["PrimaryPropertyType"];
+
+    if (curPropertyType in ["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts"])
+    {
+      pluralismForProperty = curPropertyType + " Buildings";
+    }
+    else if (curPropertyType in ["College/University", "Laboratory", "Mixed Use Property", "Residence Hall/Dormitory", "Residential Care Facility", "Senior Care Community", "Senior Living Community", "Worship Facility"])
+    {
+      pluralismForProperty = curPropertyType.slice(0, -1) + "ies";
+    }
+    else if (curPropertyType == "Hospital (General Medical & Surgical)")
+    {
+      pluralismForProperty = "Hospitals (General Medical & Surgical)";
+    }
+    else if (curPropertyType in ["Multifamily Housing", "Other", "Other - Education", "Other - Entertainment/Public Assembly", "Other - Mall", "Other - Public Services", "Other - Recreation", "Other - Specialty Hospital"])
+    {
+      pluralismForProperty = curPropertyType;
+    }
+    else
+    {
+      pluralismForProperty = curPropertyType + "s"
+    }
+
+    return pluralismForProperty;
+  }
 
   get isAboveMedian(): boolean {
     return this.building[this.statKey] !== null &&
