@@ -153,7 +153,7 @@ export default class StatTile extends Vue {
     }
     else
     {
-      pluralismForProperty = curPropertyType + "s"
+      pluralismForProperty = curPropertyType + "s";
     }
 
     return pluralismForProperty;
@@ -237,9 +237,9 @@ export default class StatTile extends Vue {
   }
 
   get statRankInvertedByProperty(): number | null {
-    const buildingStatsByPropertyType = require("../data/dist/building-statistics-by-property-type.json")
-    const properStatBlock = buildingStatsByPropertyType[this.building["PrimaryPropertyType"]]
-    const countForStatByProperty = properStatBlock[this.statKey]["count"]
+    const buildingStatsByPropertyType = require("../data/dist/building-statistics-by-property-type.json");
+    const properStatBlock = buildingStatsByPropertyType[this.building["PrimaryPropertyType"]];
+    const countForStatByProperty = properStatBlock[this.statKey]["count"];
 
     if (this.propertyStatRank) {
 
