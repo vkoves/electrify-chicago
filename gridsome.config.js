@@ -37,6 +37,11 @@ module.exports = {
         path: '/building/:slugSource',
         component: './src/templates/BuildingDetails.vue',
       },
+      {
+        name: 'building-by-id',
+        path: '/building-id/:ID',
+        component: './src/templates/BuildingDetails.vue',
+      },
     ],
   },
 
