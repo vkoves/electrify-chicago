@@ -62,7 +62,7 @@
           && statRankInvertedByProperty <= RankConfig.TrophyRankInvertedMax"
         class="rank"
       >
-        #{{ statRankInvertedByProperty }} Lowest of {{this.building["PrimaryPropertyType"]}} 🏆
+        #{{ statRankInvertedByProperty }} Lowest of {{this.pluralismForPropertyType}} 🏆
       </div>
 
       <!-- Only show percentile if we don't have a flag or alarm -->
@@ -135,11 +135,14 @@ export default class StatTile extends Vue {
     let pluralismForProperty = "s";
     let curPropertyType = this.building["PrimaryPropertyType"];
 
-    if (curPropertyType in ["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts"])
+    console.log(curPropertyType + " prop type")
+    console.log(typeof(curPropertyType))
+
+    if (["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts", "Multifamily Housing"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType + " Buildings";
     }
-    else if (curPropertyType in ["College/University", "Laboratory", "Mixed Use Property", "Residence Hall/Dormitory", "Residential Care Facility", "Senior Care Community", "Senior Living Community", "Worship Facility"])
+    else if (["College/University", "Laboratory", "Mixed Use Property", "Residence Hall/Dormitory", "Residential Care Facility", "Senior Care Community", "Senior Living Community", "Worship Facility"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType.slice(0, -1) + "ies";
     }
@@ -147,7 +150,7 @@ export default class StatTile extends Vue {
     {
       pluralismForProperty = "Hospitals (General Medical & Surgical)";
     }
-    else if (curPropertyType in ["Multifamily Housing", "Other", "Other - Education", "Other - Entertainment/Public Assembly", "Other - Mall", "Other - Public Services", "Other - Recreation", "Other - Specialty Hospital"])
+    else if (["Other", "Other - Education", "Other - Entertainment/Public Assembly", "Other - Mall", "Other - Public Services", "Other - Recreation", "Other - Specialty Hospital"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType;
     }
@@ -264,7 +267,7 @@ export default class StatTile extends Vue {
     }
 
     return getRankLabelByProperty(this.propertyStatRank, this.isSquareFootage, 
-      this.building["PrimaryPropertyType"]);
+      this.pluralismForPropertyType);
   }
 
   // Returns a number 1 - 4 for how concerned we should be about this stat
