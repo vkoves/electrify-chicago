@@ -109,9 +109,8 @@
   </div>
 </template>
 
-<script lang="ts" type="module">
+<script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json" assert { type: 'json' };
 
 import {
   RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats, getRankLabelByProperty,
@@ -246,8 +245,8 @@ export default class StatTile extends Vue {
   // Only returns a rank if there are 80 or more buildings per rank
   // (50 highest and 30 lowest)
   get statRankInvertedByProperty(): number | null {
-    // const buildingStatsByPropertyType = 
-    //   require("../data/dist/building-statistics-by-property-type.json");
+    const buildingStatsByPropertyType = 
+      require("../data/dist/building-statistics-by-property-type.json");
     const properStatBlock = buildingStatsByPropertyType[this.building["PrimaryPropertyType"]];
     const countForStatByProperty = properStatBlock[this.statKey]["count"];
 
