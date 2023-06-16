@@ -111,7 +111,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json"
+import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json";
 
 import {
   RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats, getRankLabelByProperty,
