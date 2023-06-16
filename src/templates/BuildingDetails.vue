@@ -294,8 +294,8 @@ query ($id: ID!) {
           In other words,
           <strong>buildings should look to move all on-site uses of fossil fuels (including
             space heating, water heating, and cooking) to electrically powered systems</strong> like
-          industrial grade heat pumps, heat pump water heaters, and induction stoves With Illinois'
-          current electric supply just using the same amount of energy from electricity, rather than
+          industrial grade heat pumps, heat pump water heaters, and induction stoves. With Illinois'
+          current electric supply, just using the same amount of energy from electricity, rather than
           natural gas (aka methane) will dramatically reduce greenhouse gas emissions.
           This is because Illinois' grid in 2020 was already 67% carbon-free
           (see <a
