@@ -111,7 +111,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json"
+import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json";
 
 import {
   RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats, getRankLabelByProperty,
@@ -137,17 +137,22 @@ export default class StatTile extends Vue {
   // Expose RankConfig to template
   RankConfig = RankConfig;
 
+  /** The primary property type of the current building as it shows in the data */
+  get propertyType(): string {
+    return this.building["PrimaryPropertyType"];
+  }
+
   get pluralismForPropertyType(): string {
     let pluralismForProperty;
-    let curPropertyType = this.building["PrimaryPropertyType"];
+    let curPropertyType = this.propertyType;
 
-    if (["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts", 
+    if (["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts",
       "Multifamily Housing"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType + " Buildings";
     }
-    else if (["College/University", "Laboratory", "Mixed Use Property", 
-      "Residence Hall/Dormitory", "Residential Care Facility", "Senior Care Community", 
+    else if (["College/University", "Laboratory", "Mixed Use Property",
+      "Residence Hall/Dormitory", "Residential Care Facility", "Senior Care Community",
       "Senior Living Community", "Worship Facility"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType.slice(0, -1) + "ies";
@@ -156,8 +161,8 @@ export default class StatTile extends Vue {
     {
       pluralismForProperty = "Hospitals (General Medical & Surgical)";
     }
-    else if (["Other", "Other - Education", "Other - Entertainment/Public Assembly", 
-      "Other - Mall", "Other - Public Services", "Other - Recreation", 
+    else if (["Other", "Other - Education", "Other - Entertainment/Public Assembly",
+      "Other - Mall", "Other - Public Services", "Other - Recreation",
       "Other - Specialty Hospital"].includes(curPropertyType))
     {
       pluralismForProperty = curPropertyType;
@@ -225,11 +230,6 @@ export default class StatTile extends Vue {
 
   // Returns a rounded number or undefined if no rank
   get propertyStatRank(): number | null {
-    if (["DistrictSteamUse", "DistrictChilledWaterUse"].includes(this.statKey))
-    {
-      return null;
-    }
-
     const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
 
     if (statRank) {
@@ -257,14 +257,9 @@ export default class StatTile extends Vue {
   // Only returns a rank if there are 80 or more buildings per rank
   // (50 highest and 30 lowest)
   get statRankInvertedByProperty(): number | null {
-    if (["DistrictSteamUse", "DistrictChilledWaterUse"].includes(this.statKey))
-    {
-      return null;
-    }
-    
-    const primaryPropertyType:string = this.building["PrimaryPropertyType"];
+    const primaryPropertyType:string = this.propertyType;
     const properStatBlock = this.BuildingStatsByPropertyType[primaryPropertyType];
-    const countForStatByProperty = properStatBlock[this.statKey]["count"];
+    const countForStatByProperty = properStatBlock[this.statKey]?.count;
 
     if (this.propertyStatRank && countForStatByProperty >= 80) {
       // Rank 100/100 should invert to #1 lowest, not #0
@@ -287,7 +282,7 @@ export default class StatTile extends Vue {
       return null;
     }
 
-    return getRankLabelByProperty(this.propertyStatRank, this.isSquareFootage, 
+    return getRankLabelByProperty(this.propertyStatRank, this.isSquareFootage,
       this.pluralismForPropertyType);
   }
 

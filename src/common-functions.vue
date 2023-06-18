@@ -71,13 +71,13 @@ export function getRankLabel(statRank: number, isSquareFootage: boolean): string
 }
 
 /**
- * Returns a string rank for very bad buildings per primary property 
+ * Returns a string rank for very bad buildings per primary property
  * type, or null if not in top 50 worst
  */
-export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean, 
+export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean,
   propertyTag: string): string | null {
   if (isSquareFootage) {
-    return 'Largest';
+    return `Largest of ${propertyTag}`;
   } else if (statRank <= RankConfig.AlarmRankMax) {
     return `Highest of ${propertyTag} ${RankConfig.AlarmEmoji}`;
   } else if (statRank <= RankConfig.FlagRankMax) {

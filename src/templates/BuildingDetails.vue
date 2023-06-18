@@ -108,7 +108,14 @@ query ($id: ID!) {
 
             <div>
               <dt>Primary Property Type</dt>
-              <dd>{{ $page.building.PrimaryPropertyType }}</dd>
+              <dd>
+                <g-link
+                class="nav-link"
+                :to="`/search?q=${propertyTypeEncoded}`"
+              >
+                {{ $page.building.PrimaryPropertyType }}
+              </g-link>
+              </dd>
             </div>
 
             <!-- Only show building count if set and > 1, most are 1 -->
@@ -337,6 +344,7 @@ import { IBuildingBenchmarkStats } from '~/common-functions.vue';
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
+import { IBuilding } from '../common-functions.vue';
 
 @Component<any>({
   metaInfo() {
@@ -364,14 +372,33 @@ export default class BuildingDetails  extends Vue {
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
 
+  /** A helper to get the current building, but with proper typing */
+  get building(): IBuilding {
+    return this.$page.building;
+  }
+
+  /** The primary property type of the current building as it shows in the data */
+  get propertyType(): string {
+    return this.building.PrimaryPropertyType;
+  }
+
+  /** The primary property type of the current building, URL encoded for a link */
+  get propertyTypeEncoded(): string {
+    return encodeURIComponent(this.propertyType);
+  }
+
+  /**
+   * A URL encoded complete address of the current building to use as a query param for a Google
+   * Maps link
+   */
   get encodedAddress(): string {
-    const propertyName = this.$page.building.PropertyName;
-    const propertyAddr = this.$page.building.Address + ' , Chicago IL';
+    const propertyName = this.building.PropertyName;
+    const propertyAddr = this.building.Address + ' , Chicago IL';
 
     // If we know the property name, providing it in our Google Maps search may improve accuracy
     if (propertyName) {
       // Slashes break the URL, so just swap them for spaces
-      const propertyNameCleaned = propertyName.replaceAll('/', ' ');
+      const propertyNameCleaned = propertyName.replace(/\//g, ' ');
 
       return encodeURI(`${propertyNameCleaned} ${propertyAddr}`);
     } else {
@@ -380,7 +407,7 @@ export default class BuildingDetails  extends Vue {
   }
 
   get buildingImg(): IBuildingImage | null {
-    return getBuildingImage(this.$page.building);
+    return getBuildingImage(this.building);
   }
 }
 </script>
