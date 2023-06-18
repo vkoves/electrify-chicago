@@ -225,6 +225,11 @@ export default class StatTile extends Vue {
 
   // Returns a rounded number or undefined if no rank
   get propertyStatRank(): number | null {
+    if (["DistrictSteamUse", "DistrictChilledWaterUse"].includes(this.statKey))
+    {
+      return null;
+    }
+
     const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
 
     if (statRank) {
@@ -252,6 +257,11 @@ export default class StatTile extends Vue {
   // Only returns a rank if there are 80 or more buildings per rank
   // (50 highest and 30 lowest)
   get statRankInvertedByProperty(): number | null {
+    if (["DistrictSteamUse", "DistrictChilledWaterUse"].includes(this.statKey))
+    {
+      return null;
+    }
+    
     const primaryPropertyType:string = this.building["PrimaryPropertyType"];
     const properStatBlock = this.BuildingStatsByPropertyType[primaryPropertyType];
     const countForStatByProperty = properStatBlock[this.statKey]["count"];
