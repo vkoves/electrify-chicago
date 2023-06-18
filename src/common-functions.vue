@@ -71,6 +71,23 @@ export function getRankLabel(statRank: number, isSquareFootage: boolean): string
 }
 
 /**
+ * Returns a string rank for very bad buildings per primary property
+ * type, or null if not in top 50 worst
+ */
+export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean,
+  propertyTag: string): string | null {
+  if (isSquareFootage) {
+    return `Largest of ${propertyTag}`;
+  } else if (statRank <= RankConfig.AlarmRankMax) {
+    return `Highest of ${propertyTag} ${RankConfig.AlarmEmoji}`;
+  } else if (statRank <= RankConfig.FlagRankMax) {
+    return `Highest of ${propertyTag} ${RankConfig.FlagEmoji}`;
+  } else {
+    return null;
+  }
+}
+
+/**
  * Columns that have rankings (format of _Rank and _PercentileRank)
  */
 export const RankedColumns = [
