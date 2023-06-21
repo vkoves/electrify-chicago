@@ -33,7 +33,6 @@ def calculateBuildingStatistics():
         for col in building_cols_to_rank:
 
             # finding the mean, count, min, max, and quartiles of each category for each building type
-            cur_mean = round(sorted_by_property_type[col].mean()[i].item(), 3)
             cur_count = round(
                 sorted_by_property_type[col].count()[i].item(), 3)
 
@@ -43,12 +42,12 @@ def calculateBuildingStatistics():
             cur_first_quartile = round(
                 sorted_by_property_type[col].quantile(q=0.25)[i].item(), 3)
             cur_median = round(
-                sorted_by_property_type[col].quantile(q=0.5)[i].item(), 3)
+                sorted_by_property_type[col].quantile(q=0.5)[i].item(), 1)
             cur_third_quartile = round(
                 sorted_by_property_type[col].quantile(q=0.75)[i].item(), 3)
-            
-            cur_property_type_stats[col] = {"mean": cur_mean, "count": cur_count, "min": cur_min, "max": cur_max,
-                                                         "twentyFifthPercentile": cur_first_quartile, "median": cur_median, "seventyFifthPercentile": cur_third_quartile}
+
+            cur_property_type_stats[col] = {"count": cur_count, "min": cur_min, "max": cur_max,
+                                            "twentyFifthPercentile": cur_first_quartile, "median": cur_median, "seventyFifthPercentile": cur_third_quartile}
 
         building_staistics_by_property_type[property] = cur_property_type_stats
 
@@ -57,17 +56,17 @@ def calculateBuildingStatistics():
 
 
 def rankByType():
-    #calculates the bulding statistics along with the rankings
+    # calculates the bulding statistics along with the rankings
     calculateBuildingStatistics()
 
-    #inputted data
+    # inputted data
     building_data = pd.read_csv(path_to_buildings_csv)
 
-    #use pandas to rank each value for each property and store as category+"RankByProperty"
+    # use pandas to rank each value for each property and store as category+"RankByProperty"
     for col in building_cols_to_rank:
         building_data[col +
                       'RankByPropertyType'] = sorted_by_property_type[col].rank(ascending=False)
-    
+
     building_data.to_csv("./dist/building-benchmarks.csv", sep=',',
                          encoding='utf-8', index=False)
 

@@ -98,6 +98,16 @@
           {{ stats[statKey].median.toLocaleString() }} <span v-html="unit" />
         </div>
       </div>
+
+      <div
+        v-if="BuildingStatsByPropertyType[this.propertyType][this.statKey]"
+        class="median"
+      >
+        Median benchmarked {{ this.propertyType }}*: <br>
+        <div class="median-val">
+          {{ BuildingStatsByPropertyType[this.propertyType][this.statKey].median.toLocaleString() }} <span v-html="unit" />
+        </div>
+      </div>
     </template>
     <template v-else>
       Not Reported

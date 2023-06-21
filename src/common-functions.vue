@@ -3,7 +3,6 @@ export default { };
 
 export interface IBuildingBenchmarkStat {
   count: number;
-  mean: number;
   min: number;
   max: number;
   twentyFifthPercentile: number;
