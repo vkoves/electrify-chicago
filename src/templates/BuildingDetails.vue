@@ -176,6 +176,9 @@ query ($id: ID!) {
       </div>
 
       <h2>Emissions & Energy Information</h2>
+      <p class="year-note">
+        For {{ DataYear }}
+      </p>
 
       <dl class="emission-stats">
         <div>
@@ -280,7 +283,7 @@ query ($id: ID!) {
       <p class="constrained">
         <strong>* Important Note:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
-        the year 2020 with emissions greater than 1,000 metric tons.
+        the year {{ DataYear }} with emissions greater than 1,000 metric tons.
       </p>
 
       <p class="footnote">
@@ -420,6 +423,8 @@ export default class BuildingDetails  extends Vue {
   /** Expose stats to readme */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
+  readonly DataYear: number = 2020;
+
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
 
@@ -527,7 +532,12 @@ export default class BuildingDetails  extends Vue {
 
   h1 { margin: 0; }
 
-  h2 { margin: 2.5rem 0 0.5rem 0; }
+  h2 { margin: 2.5rem 0 0; }
+
+  p.year-note {
+    font-size: 0.825rem;
+    margin-top: 0;
+  }
 
   .address {
     font-size: 1.25rem;

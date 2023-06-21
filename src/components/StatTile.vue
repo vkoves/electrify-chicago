@@ -59,7 +59,7 @@
       <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
       <div
         v-if="!isSquareFootage && propertyStatRankInverted"
-        class="rank"
+        class="property-rank"
       >
         #{{ propertyStatRankInverted }} Lowest of {{ pluralismForPropertyType }} 🏆
       </div>
@@ -85,30 +85,22 @@
         v-if="medianMultipleMsgCityWide"
         class="median-comparison"
       >
-        <span class="val">{{ medianMultipleMsgCityWide }}</span> the median,
+        <div>
+          <span class="val">{{ medianMultipleMsgCityWide }} median</span>
 
-        <span class="val">{{ medianMultiplePropertyType }}</span> the median {{ propertyType }}
-      </div>
-
-
-      <div
-        v-if="stats[statKey]"
-        class="median"
-      >
-        Median Chicago building*: <br>
-        <div class="median-val">
-          {{ stats[statKey].median.toLocaleString() }} <span v-html="unit" />
+          <div class="median-val">
+            {{ stats[statKey].median.toLocaleString() }}
+            <span v-html="unit" />
+          </div>
         </div>
-      </div>
 
-      <div
-        v-if="BuildingStatsByPropertyType[propertyType][statKey]"
-        class="median"
-      >
-        Median {{ propertyType }}*: <br>
-        <div class="median-val">
-          {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }}
-          <span v-html="unit" />
+        <div v-if="medianMultiplePropertyType">
+          <span class="val">{{ medianMultiplePropertyType }} median {{ propertyType }}</span>
+
+          <div class="median-val">
+            {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }}
+            <span v-html="unit" />
+          </div>
         </div>
       </div>
     </template>
@@ -436,25 +428,23 @@ export default class StatTile extends Vue {
   // Apply a semi-bold to rank
   .rank { font-weight: 500; }
 
+  .property-rank { font-size: small; }
+
   .median-comparison {
-    font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
 
     .val {
-      font-size: 0.875rem;
-      font-weight: bold;
+      font-size: large;
+      font-weight: 500;
     }
+
+    .median-val { font-size: small; }
   }
 
   .median, .percentile { font-size: 0.75rem; }
-
-  .median {
-    margin-top: 0.5rem;
-
-    .median-val {
-      font-weight: 500;
-      font-size: larger;
-    }
-  }
 
   .percentile {
     font-weight: normal;
