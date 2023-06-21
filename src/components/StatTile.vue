@@ -83,10 +83,10 @@
       </div>
 
       <div
-        v-if="medianMultipleMsg"
+        v-if="medianMultipleMsgCityWide"
         class="median-comparison"
       >
-        <span class="val">{{ medianMultipleMsg }}</span> the median
+        <span class="val">{{ medianMultipleMsgCityWide }}</span> the median
       </div>
 
       <div
@@ -201,9 +201,9 @@ export default class StatTile extends Vue {
    * Returns the multipier for this building's stat compared to the median (e.g. '3' times median
    * '1/5' median)
    */
-  get medianMultipleMsg(): string | null {
-    const median = this.stats[this.statKey].median;
-    const statValueNum = parseFloat(this.building[this.statKey] as string);
+  medianMultipleMsg(median:number, statValueNum:number): string | null {
+    // const median = this.stats[this.statKey].median;
+    // const statValueNum = parseFloat(this.building[this.statKey] as string);
 
     if (median) {
       const medianMult = statValueNum / median;
@@ -222,6 +222,13 @@ export default class StatTile extends Vue {
     }
 
     return null;
+  }
+
+  get medianMultipleMsgCityWide(): string | null {
+    const median = this.stats[this.statKey].median;
+    const statValueNum = parseFloat(this.building[this.statKey] as string);
+
+    return this.medianMultipleMsg(median, statValueNum);
   }
 
   get statValue(): string {
