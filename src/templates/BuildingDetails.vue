@@ -163,7 +163,7 @@ query ($id: ID!) {
                 </a>
               </dt>
               <dd>
-                {{ $page.building.ENERGYSTARScore }} / 100
+                {{ Math.round($page.building.ENERGYSTARScore) }} / 100
               </dd>
             </div>
 
