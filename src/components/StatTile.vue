@@ -53,7 +53,7 @@
           && statRankInverted <= RankConfig.TrophyRankInvertedMax"
         class="rank"
       >
-        #{{ statRankInverted }} Lowest in Chicago 🏆
+        #{{ statRankInverted }} Lowest in Chicago* 🏆
       </div>
 
       <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->

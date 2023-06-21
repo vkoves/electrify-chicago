@@ -61,9 +61,9 @@ export function getRankLabel(statRank: number, isSquareFootage: boolean): string
   if (isSquareFootage) {
     return 'Largest';
   } else if (statRank <= RankConfig.AlarmRankMax) {
-    return `Highest in Chicago ${RankConfig.AlarmEmoji}`;
+    return `Highest in Chicago* ${RankConfig.AlarmEmoji}`;
   } else if (statRank <= RankConfig.FlagRankMax) {
-    return `Highest in Chicago ${RankConfig.FlagEmoji}`;
+    return `Highest in Chicago* ${RankConfig.FlagEmoji}`;
   } else {
     return null;
   }
