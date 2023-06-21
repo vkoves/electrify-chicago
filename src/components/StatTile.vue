@@ -58,11 +58,10 @@
 
       <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
       <div
-        v-if="!isSquareFootage && statRankInvertedByProperty
-          && statRankInvertedByProperty <= RankConfig.TrophyRankInvertedMax"
+        v-if="!isSquareFootage && propertyStatRankInverted"
         class="rank"
       >
-        #{{ statRankInvertedByProperty }} Lowest of {{ pluralismForPropertyType }} 🏆
+        #{{ propertyStatRankInverted }} Lowest of {{ pluralismForPropertyType }} 🏆
       </div>
 
       <!-- Only show percentile if we don't have a flag or alarm -->
@@ -90,7 +89,7 @@
 
         <span class="val">{{ medianMultiplePropertyType }}</span> the median {{ propertyType }}
       </div>
-      
+
 
       <div
         v-if="stats[statKey]"
@@ -108,7 +107,7 @@
       >
         Median benchmarked {{ propertyType }}*: <br>
         <div class="median-val">
-          {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }} 
+          {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }}
           <span v-html="unit" />
         </div>
       </div>
@@ -144,6 +143,7 @@ export interface PropertyByBuildingStats
 @Component
 export default class StatTile extends Vue {
   readonly BuildingStatsByPropertyType:PropertyByBuildingStats = buildingStatsByPropertyType;
+
   @Prop({required: true}) building!: IBuilding;
   @Prop({required: true}) statKey!: string;
   @Prop({required: true}) stats!: IBuildingBenchmarkStats;
@@ -255,17 +255,6 @@ export default class StatTile extends Vue {
     }
   }
 
-  // Returns a rounded number or undefined if no rank
-  get propertyStatRank(): number | null {
-    const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
-
-    if (statRank) {
-      return Math.round(parseFloat(statRank));
-    } else {
-      return null;
-    }
-  }
-
   // Returns the inverse of a rank, so the # lowest in a category
   // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
   get statRankInverted(): number | null {
@@ -279,18 +268,66 @@ export default class StatTile extends Vue {
     return null;
   }
 
-  // Returns the inverse of a rank, so the # lowest in a category
-  // E.g rank #100 Highest/100 total in GHG intensity is #1 Lowest
-  // Only returns a rank if there are 80 or more buildings per rank
-  // (50 highest and 30 lowest)
-  get statRankInvertedByProperty(): number | null {
-    const primaryPropertyType:string = this.propertyType;
-    const properStatBlock = this.BuildingStatsByPropertyType[primaryPropertyType];
-    const countForStatByProperty = properStatBlock[this.statKey]?.count;
+  get propertiesToAwardThisType(): number {
+    const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
+    const numBuildingsOfType = properStatBlock[this.statKey]?.count;
 
-    if (this.propertyStatRank && countForStatByProperty >= 80) {
+    /**
+     * The amount of buildings we should give a category specific trophy or alarm to based on the
+     * size of the category. E.g, 3: 1 means if we have >= 3 buildings of a type we give out a #1
+     * best and #1 worst
+     */
+    const PropertiesToAwardByMinTypeSize: { [min: number]: number } = {
+      3: 1,
+      6: 2,
+      9: 3,
+      20: 5,
+    };
+
+    let amountToRank = 0;
+
+    Object.entries(PropertiesToAwardByMinTypeSize).forEach(([min, propToRank]) => {
+      if (numBuildingsOfType >= parseInt(min)) {
+        amountToRank = propToRank;
+      }
+    });
+
+    return amountToRank;
+  }
+
+  /**
+   * Return the rank of a building in its property, IF it should be rendered
+   */
+  get propertyStatRank(): number | null {
+    const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
+
+    console.log('propertiesToAwardThisType', this.propertiesToAwardThisType);
+
+    if (statRank && parseFloat(statRank) <= this.propertiesToAwardThisType) {
+      return Math.round(parseFloat(statRank));
+    }
+
+    return null;
+  }
+
+  /**
+   * Returns the inverted rank (#X lowest) for a stat given its property type, IF
+   * it should be rendered
+   */
+  get propertyStatRankInverted(): number | null {
+    const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
+    const numBuildingsOfType: number = properStatBlock[this.statKey]?.count;
+    const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
+
+    if (statRank) {
+      const statRankNum = Math.round(parseFloat(statRank));
       // Rank 100/100 should invert to #1 lowest, not #0
-      return countForStatByProperty - this.propertyStatRank + 1;
+      const rankInverted =  numBuildingsOfType - statRankNum + 1;
+
+      console.log({ rankInverted });
+
+      // Only return the inverted rank if it's bad enough for this category
+      return rankInverted <= this.propertiesToAwardThisType ? rankInverted : null;
     }
 
     return null;
