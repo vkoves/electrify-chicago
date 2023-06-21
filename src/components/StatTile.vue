@@ -88,7 +88,7 @@
       >
         <span class="val">{{ medianMultipleMsgCityWide }}</span> the median,
 
-        <span class="val">{{ medianMultiplePropertyType }}</span> the median {{ this.propertyType }}
+        <span class="val">{{ medianMultiplePropertyType }}</span> the median {{ propertyType }}
       </div>
       
 
@@ -108,7 +108,8 @@
       >
         Median benchmarked {{ propertyType }}*: <br>
         <div class="median-val">
-          {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }} <span v-html="unit" />
+          {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }} 
+          <span v-html="unit" />
         </div>
       </div>
     </template>
