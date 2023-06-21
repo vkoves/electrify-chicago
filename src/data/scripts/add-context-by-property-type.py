@@ -15,15 +15,31 @@ building_cols_to_rank = [
     'SiteEUI',
 ]
 
+# Columns that should be strings because they are immutable identifiers
+string_cols = [
+    'ChicagoEnergyRating',
+]
+
+# Int columns that are numbers (and can get averaged) but should be rounded
+int_cols = [
+    'NumberOfBuildings',
+    'ENERGYSTARScore',
+    # TODO: Move to string after figuring out why the X.0 is showing up
+    'Wards',
+    'CensusTracts',
+    'ZIPCode',
+    'CommunityAreas',
+    'HistoricalWards2003-2015'
+]
+
 # raw building data
 building_data = pd.read_csv(path_to_buildings_csv)
 
 # sorted data based on each property type: the order is alphabetical
 sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
 
-
 def calculateBuildingStatistics():
-    building_staistics_by_property_type = {}
+    stats_by_property_type = {}
     all_property_types = pd.read_json("./dist/property-types.json")
 
     # looping through both all the property types and all the columns we want to get data on
@@ -49,14 +65,14 @@ def calculateBuildingStatistics():
             cur_property_type_stats[col] = {"count": cur_count, "min": cur_min, "max": cur_max,
                                             "twentyFifthPercentile": cur_first_quartile, "median": cur_median, "seventyFifthPercentile": cur_third_quartile}
 
-        building_staistics_by_property_type[property] = cur_property_type_stats
+        stats_by_property_type[property] = cur_property_type_stats
 
     with open("./dist/building-statistics-by-property-type.json", "w") as property_stats_file:
-        json.dump(building_staistics_by_property_type, property_stats_file)
+        json.dump(stats_by_property_type, property_stats_file)
 
-
-def rankByType():
-    # calculates the bulding statistics along with the rankings
+# Ranks buildings in relation to their property type, then re-exporting the file
+def rankBuildingsByPropertyType():
+    # calculates the statistics for building property types (e.g. average GHG intensity for Hotels)
     calculateBuildingStatistics()
 
     # inputted data
@@ -67,9 +83,8 @@ def rankByType():
         building_data[col +
                       'RankByPropertyType'] = sorted_by_property_type[col].rank(ascending=False)
 
-    building_data.to_csv("./dist/building-benchmarks.csv", sep=',',
-                         encoding='utf-8', index=False)
+    building_data.to_csv(path_to_buildings_csv, sep=',', encoding='utf-8', index=False)
 
 
 if __name__ == "__main__":
-    rankByType()
+    rankBuildingsByPropertyType()

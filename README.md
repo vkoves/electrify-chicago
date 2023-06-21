@@ -89,4 +89,5 @@ Run the following commands:
 cd src/data
 pip install --no-cache-dir -r requirements.txt
 python3 scripts/process-data.py
+python3 scripts/add-context-by-property-type.py
 ```
