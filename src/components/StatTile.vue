@@ -282,6 +282,8 @@ export default class StatTile extends Vue {
       6: 2,
       9: 3,
       20: 5,
+      50: 10,
+      80: 15,
     };
 
     let amountToRank = 0;
@@ -300,8 +302,6 @@ export default class StatTile extends Vue {
    */
   get propertyStatRank(): number | null {
     const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
-
-    console.log('propertiesToAwardThisType', this.propertiesToAwardThisType);
 
     if (statRank && parseFloat(statRank) <= this.propertiesToAwardThisType) {
       return Math.round(parseFloat(statRank));
@@ -323,8 +323,6 @@ export default class StatTile extends Vue {
       const statRankNum = Math.round(parseFloat(statRank));
       // Rank 100/100 should invert to #1 lowest, not #0
       const rankInverted =  numBuildingsOfType - statRankNum + 1;
-
-      console.log({ rankInverted });
 
       // Only return the inverted rank if it's bad enough for this category
       return rankInverted <= this.propertiesToAwardThisType ? rankInverted : null;
