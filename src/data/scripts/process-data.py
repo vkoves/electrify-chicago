@@ -6,18 +6,18 @@ from typing import List
 from utils import get_and_clean_csv, json_data_builder
 
 # Assume run in /data
-data_directory = './source/';
-data_out_directory = './dist/';
+data_directory = './source/'
+data_out_directory = './dist/'
 
 # The /debug directory is to have a well formatted JSON for reading
-data_debug_directory = './debug/';
+data_debug_directory = './debug/'
 
 # Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
-building_emissions_file = 'BenchmarkDataRenamed.csv';
+building_emissions_file = 'BenchmarkDataRenamed.csv'
 building_emissions_file_out_name = 'building-benchmarks'
 
 # Columns we want to run statistical analysis and ranking on - order matters here
-building_cols_to_analyze =  [
+building_cols_to_analyze = [
     'GHGIntensity',
     'TotalGHGEmissions',
     'ElectricityUse',
@@ -61,6 +61,8 @@ int_cols = [
 # Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
 # median values for fields
 # Returns the output file if succeeds
+
+
 def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     # Clone the input data to prevent manipulating it on accident
     building_data = building_data_in.copy()
@@ -68,13 +70,14 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     benchmark_stats_df = pandas.DataFrame()
 
     # The details columns we want to keep. Note that 50% = median
-    detail_cols_to_keep = [ 'count', 'mean', 'min', 'max', '25%', '50%', '75%' ]
+    detail_cols_to_keep = ['count', 'mean', 'min', 'max', '25%', '50%', '75%']
 
-    benchmark_stats_df = building_data[building_cols_to_analyze].describe().loc[detail_cols_to_keep]
+    benchmark_stats_df = building_data[building_cols_to_analyze].describe(
+    ).loc[detail_cols_to_keep]
 
     # Round all data to an int, all of the building data is pretty large values so the precision
     # isn't reasonable for statistical analysis
-    benchmark_stats_df = benchmark_stats_df.round(0).astype(int)
+    benchmark_stats_df = benchmark_stats_df.round(1)
 
     # Rename columns to work with GraphQL (no numbers like '25%')
     # Rename 50% to median since those tqo are equivalent
@@ -85,7 +88,7 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     }, inplace=True)
 
     # Write out the data
-    filename = 'building-benchmark-stats.json';
+    filename = 'building-benchmark-stats.json'
 
     outputted_path = data_out_directory + filename
 
@@ -112,7 +115,7 @@ def processBuildingData() -> List[str]:
     # Convert our columns to analyze to numeric data by stripping commas, otherwise the rankings
     # are junk
     building_data[building_cols_to_analyze] = building_data[building_cols_to_analyze].apply(
-         lambda x: pandas.to_numeric(x.astype(str).str.replace(',',''), errors='coerce'))
+        lambda x: pandas.to_numeric(x.astype(str).str.replace(',', ''), errors='coerce'))
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
@@ -132,8 +135,10 @@ def processBuildingData() -> List[str]:
         building_data[col + 'Rank'] = building_data[col].rank(ascending=False)
 
         # The percentile rank can be ascending, we want to say this building is worse than X% of buildings
-        building_data[col + 'PercentileRank'] = building_data[col].rank(pct=True)
-        building_data[col + 'PercentileRank'] = building_data[col + 'PercentileRank'].round(3)
+        building_data[col +
+                      'PercentileRank'] = building_data[col].rank(pct=True)
+        building_data[col + 'PercentileRank'] = building_data[col +
+                                                              'PercentileRank'].round(3)
 
     # Export the data
     output_path = data_out_directory + building_emissions_file_out_name + '.csv'
@@ -148,10 +153,11 @@ def processBuildingData() -> List[str]:
     # We write out files to a /debug directory that is .gitignored with indentation to
     # make it readable but to not have to store giant files
     with open(
-        data_debug_directory + building_emissions_file_out_name + '.json', 'w', encoding='utf-8') as f:
-            json.dump(debug_json_data, f, ensure_ascii=True, indent=4)
+            data_debug_directory + building_emissions_file_out_name + '.json', 'w', encoding='utf-8') as f:
+        json.dump(debug_json_data, f, ensure_ascii=True, indent=4)
 
     return outputted_paths
+
 
 if __name__ == '__main__':
     print("Starting data processing, this may take a few seconds...")
@@ -168,4 +174,4 @@ if __name__ == '__main__':
 
     print('\nFor more understandable data, see \'data/debug\' directory')
 
-    print('\nNote: You must restart `gridsome develop` for data changes to take effect.');
+    print('\nNote: You must restart `gridsome develop` for data changes to take effect.')

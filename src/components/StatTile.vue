@@ -53,7 +53,7 @@
           && statRankInverted <= RankConfig.TrophyRankInvertedMax"
         class="rank"
       >
-        #{{ statRankInverted }} Lowest 🏆
+        #{{ statRankInverted }} Lowest in Chicago* 🏆
       </div>
 
       <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
@@ -83,11 +83,14 @@
       </div>
 
       <div
-        v-if="medianMultipleMsg"
+        v-if="medianMultipleMsgCityWide"
         class="median-comparison"
       >
-        <span class="val">{{ medianMultipleMsg }}</span> the median
+        <span class="val">{{ medianMultipleMsgCityWide }}</span> the median,
+
+        <span class="val">{{ medianMultiplePropertyType }}</span> the median {{ propertyType }}
       </div>
+      
 
       <div
         v-if="stats[statKey]"
@@ -96,6 +99,17 @@
         Median benchmarked building*: <br>
         <div class="median-val">
           {{ stats[statKey].median.toLocaleString() }} <span v-html="unit" />
+        </div>
+      </div>
+
+      <div
+        v-if="BuildingStatsByPropertyType[propertyType][statKey]"
+        class="median"
+      >
+        Median benchmarked {{ propertyType }}*: <br>
+        <div class="median-val">
+          {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }} 
+          <span v-html="unit" />
         </div>
       </div>
     </template>
@@ -191,10 +205,7 @@ export default class StatTile extends Vue {
    * Returns the multipier for this building's stat compared to the median (e.g. '3' times median
    * '1/5' median)
    */
-  get medianMultipleMsg(): string | null {
-    const median = this.stats[this.statKey].median;
-    const statValueNum = parseFloat(this.building[this.statKey] as string);
-
+  medianMultipleMsg(median:number, statValueNum:number): string | null {
     if (median) {
       const medianMult = statValueNum / median;
 
@@ -212,6 +223,21 @@ export default class StatTile extends Vue {
     }
 
     return null;
+  }
+
+  // Returns the multiplier of the median across the whole city
+  get medianMultipleMsgCityWide(): string | null {
+    const median = this.stats[this.statKey].median;
+    const statValueNum = parseFloat(this.building[this.statKey] as string);
+
+    return this.medianMultipleMsg(median, statValueNum);
+  }
+
+  get medianMultiplePropertyType(): string | null {
+    const median = this.BuildingStatsByPropertyType[this.propertyType][this.statKey]?.median;
+    const statValueNum = parseFloat(this.building[this.statKey] as string);
+
+    return this.medianMultipleMsg(median, statValueNum);
   }
 
   get statValue(): string {
