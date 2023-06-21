@@ -83,6 +83,13 @@ def rankBuildingsByPropertyType():
         building_data[col +
                       'RankByPropertyType'] = sorted_by_property_type[col].rank(ascending=False)
 
+    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
+    # up (e.g. zipcode of 60614 or Ward 9)
+    building_data[string_cols] = building_data[string_cols].astype(str)
+
+    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
+    building_data[int_cols] = building_data[int_cols].astype('Int64')
+
     building_data.to_csv(path_to_buildings_csv, sep=',', encoding='utf-8', index=False)
 
 

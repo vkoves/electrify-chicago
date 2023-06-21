@@ -72,7 +72,7 @@ query ($id: ID!) {
           </div>
 
           <div class="address">
-            {{ $page.building.Address }}, Chicago IL, {{ Math.round($page.building.ZIPCode) }}
+            {{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}
             <a
               :href="'https://www.google.com/maps/search/' + encodedAddress"
               class="google-maps-link"
@@ -163,7 +163,7 @@ query ($id: ID!) {
                 </a>
               </dt>
               <dd>
-                {{ Math.round($page.building.ENERGYSTARScore) }} / 100
+                {{ $page.building.ENERGYSTARScore }} / 100
               </dd>
             </div>
 

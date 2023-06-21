@@ -338,7 +338,7 @@ export default class MapPage extends Vue {
       const buildingNodes = this.$page.allBuilding.edges;
       const filteredBuildings = buildingNodes
         .filter((buildingNode: IBuildingNode) =>
-          parseInt(buildingNode.node.ZIPCode.toString()) === this.formZip);
+          buildingNode.node.ZIPCode === this.formZip.toString());
 
       this.addBuildingsToMap(filteredBuildings);
       this.mapStatus = `Buildings in Zipcode ${this.formZip} (according to dataset)`;
