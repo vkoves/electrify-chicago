@@ -53,7 +53,7 @@
           && statRankInverted <= RankConfig.TrophyRankInvertedMax"
         class="rank"
       >
-        #{{ statRankInverted }} Lowest 🏆
+        #{{ statRankInverted }} Lowest in Chicago 🏆
       </div>
 
       <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
@@ -86,8 +86,11 @@
         v-if="medianMultipleMsgCityWide"
         class="median-comparison"
       >
-        <span class="val">{{ medianMultipleMsgCityWide }}</span> the median
+        <span class="val">{{ medianMultipleMsgCityWide }}</span> the median,
+
+        <span class="val">{{ medianMultiplePropertyType }}</span> the median {{ this.propertyType }}
       </div>
+      
 
       <div
         v-if="stats[statKey]"
@@ -202,9 +205,6 @@ export default class StatTile extends Vue {
    * '1/5' median)
    */
   medianMultipleMsg(median:number, statValueNum:number): string | null {
-    // const median = this.stats[this.statKey].median;
-    // const statValueNum = parseFloat(this.building[this.statKey] as string);
-
     if (median) {
       const medianMult = statValueNum / median;
 
@@ -224,8 +224,16 @@ export default class StatTile extends Vue {
     return null;
   }
 
+  // Returns the multiplier of the median across the whole city
   get medianMultipleMsgCityWide(): string | null {
     const median = this.stats[this.statKey].median;
+    const statValueNum = parseFloat(this.building[this.statKey] as string);
+
+    return this.medianMultipleMsg(median, statValueNum);
+  }
+
+  get medianMultiplePropertyType(): string | null {
+    const median = this.BuildingStatsByPropertyType[this.propertyType][this.statKey]?.median;
     const statValueNum = parseFloat(this.building[this.statKey] as string);
 
     return this.medianMultipleMsg(median, statValueNum);

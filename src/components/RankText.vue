@@ -46,7 +46,7 @@
         </template>
         <!-- Show lowest 30 instead of percentiles -->
         <template v-else-if="statRankInverted <= RankConfig.TrophyRankInvertedMax">
-          #{{ statRankInverted }} Lowest
+          #{{ statRankInverted }} Lowest in Chicago
         </template>
         <template v-else>
           <!-- Never show Lowest 0%, show Lowest 1% -->
