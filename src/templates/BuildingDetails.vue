@@ -116,7 +116,7 @@ query ($id: ID!) {
               <dd>
                 <g-link
                   class="nav-link"
-                  :to="`/search?q=${propertyTypeEncoded}`"
+                  :to="`/search?type=${propertyTypeEncoded}`"
                 >
                   {{ $page.building.PrimaryPropertyType }}
                 </g-link>
