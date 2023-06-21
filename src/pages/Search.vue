@@ -174,126 +174,130 @@ export default class Search extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1
-      id="main-content"
-      tabindex="-1"
-    >
-      Search Benchmarked Buildings
-    </h1>
-
-    <p>
-      Note that results are limited to the first {{ MaxBuildings }} matches.
-    </p>
-
-    <DataDisclaimer />
-
-    <form>
-      <div>
-        <label for="page-search">
-          Search Benchmarked Buildings
-        </label>
-        <input
-          id="page-search"
-          v-model="searchFilter"
-          type="text"
-          name="search"
-          placeholder="Search property name, type, or address"
-        >
-      </div>
-
-      <div>
-        <label for="property-type">Filter Property Type</label>
-        <select
-          id="property-type"
-          v-model="propertyTypeFilter"
-        >
-          <option
-            v-for="propertyType in propertyTypeOptions"
-            :key="propertyType.value ?? propertyType"
-            :value="propertyType.value ?? propertyType"
-          >
-            {{ propertyType.label || propertyType }}
-          </option>
-        </select>
-      </div>
-
-      <button
-        type="submit"
-        class="-grey"
-        @click="submitSearch"
+    <div class="search-page">
+      <h1
+        id="main-content"
+        tabindex="-1"
       >
-        Search
-      </button>
-    </form>
-
-    <BuildingsTable :buildings="searchResults" />
-
-    <div
-      v-if="searchResults.length === 0"
-      class="no-results-msg"
-    >
-      <h2>No results found!</h2>
+        Search Benchmarked Buildings
+      </h1>
 
       <p>
-        There may be a typo in your query or in the underlying data, or the building you are
-        looking for may not be in our dataset.
+        Note that results are limited to the first {{ MaxBuildings }} matches.
+      </p>
+
+      <DataDisclaimer />
+
+      <form>
+        <div>
+          <label for="page-search">
+            Search Benchmarked Buildings
+          </label>
+          <input
+            id="page-search"
+            v-model="searchFilter"
+            type="text"
+            name="search"
+            placeholder="Search property name, type, or address"
+          >
+        </div>
+
+        <div>
+          <label for="property-type">Filter Property Type</label>
+          <select
+            id="property-type"
+            v-model="propertyTypeFilter"
+          >
+            <option
+              v-for="propertyType in propertyTypeOptions"
+              :key="propertyType.value ?? propertyType"
+              :value="propertyType.value ?? propertyType"
+            >
+              {{ propertyType.label || propertyType }}
+            </option>
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          class="-grey"
+          @click="submitSearch"
+        >
+          Search
+        </button>
+      </form>
+
+      <BuildingsTable :buildings="searchResults" />
+
+      <div
+        v-if="searchResults.length === 0"
+        class="no-results-msg"
+      >
+        <h2>No results found!</h2>
+
+        <p>
+          There may be a typo in your query or in the underlying data, or the building you are
+          looking for may not be in our dataset.
+        </p>
+      </div>
+
+      <p>
+        Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total {{ totalResultsCount }}
+        matching buildings
+      </p>
+
+      <p class="footnote">
+        Data Source:
+        <!-- eslint-disable-next-line max-len -->
+        <a
+          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Chicago Energy Benchmarking Data <NewTabIcon />
+        </a>
       </p>
     </div>
-
-    <p>
-      Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total {{ totalResultsCount }}
-      matching buildings
-    </p>
-
-    <p class="footnote">
-      Data Source:
-      <!-- eslint-disable-next-line max-len -->
-      <a
-        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Chicago Energy Benchmarking Data <NewTabIcon />
-      </a>
-    </p>
   </DefaultLayout>
 </template>
 
 <style lang="scss">
-form {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.5rem;
-  border-radius: $brd-rad-small;
-  margin-bottom: 1rem;
+.search-page {
+  form {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    border-radius: $brd-rad-small;
+    margin-bottom: 1rem;
 
-  label {
-    display: block;
-    margin-bottom: 0.25rem;
-    font-size: 0.75rem;
-    font-weight: 500;
+    label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    input, select { padding: 0.5rem; }
+
+    input[type="text"] { width: 15rem; }
+
+    button { padding: 0.5rem 1rem; }
+
+    select { max-width: 12rem; }
+
+    /** Mobile Styling */
+    @media (max-width: $mobile-max-width) {
+      padding: 0.5rem;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
   }
 
-  input, select { padding: 0.5rem; }
-
-  input[type="text"] { width: 15rem; }
-
-  button { padding: 0.5rem 1rem; }
-
-  select { max-width: 12rem; }
-
-  /** Mobile Styling */
-  @media (max-width: $mobile-max-width) {
-    padding: 0.5rem;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+  .no-results-msg {
+    background-color: $grey;
+    padding: 1rem;
+    text-align: center;
   }
-}
-
-.no-results-msg {
-  background-color: $grey;
-  padding: 1rem;
-  text-align: center;
 }
 </style>
