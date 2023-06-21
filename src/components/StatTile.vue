@@ -100,12 +100,12 @@
       </div>
 
       <div
-        v-if="BuildingStatsByPropertyType[this.propertyType][this.statKey]"
+        v-if="BuildingStatsByPropertyType[propertyType][statKey]"
         class="median"
       >
-        Median benchmarked {{ this.propertyType }}*: <br>
+        Median benchmarked {{ propertyType }}*: <br>
         <div class="median-val">
-          {{ BuildingStatsByPropertyType[this.propertyType][this.statKey].median.toLocaleString() }} <span v-html="unit" />
+          {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }} <span v-html="unit" />
         </div>
       </div>
     </template>
