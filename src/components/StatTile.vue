@@ -72,12 +72,12 @@
         <!-- If stat rank is < 50%, invert it.
         E.g higher than of benchmarked buildings becomes less than 99% of buildings-->
         <template v-if="statRankPercent > 50">
-          Higher than {{ statRankPercent }}% of others
+          Higher than {{ statRankPercent }}% of all buildings
         </template>
         <!-- Only show lower than X% if not getting a trophy-->
         <template v-else-if="statRankInverted > RankConfig.TrophyRankInvertedMax">
           <!-- Never show lower than 100%, top out at 100%-->
-          Lower than {{ Math.min(99, 100 - statRankPercent) }}% of others
+          Lower than {{ Math.min(99, 100 - statRankPercent) }}% of all buildings
         </template>
       </div>
 
@@ -95,7 +95,7 @@
         v-if="stats[statKey]"
         class="median"
       >
-        Median benchmarked building*: <br>
+        Median Chicago building*: <br>
         <div class="median-val">
           {{ stats[statKey].median.toLocaleString() }} <span v-html="unit" />
         </div>
@@ -105,7 +105,7 @@
         v-if="BuildingStatsByPropertyType[propertyType][statKey]"
         class="median"
       >
-        Median benchmarked {{ propertyType }}*: <br>
+        Median {{ propertyType }}*: <br>
         <div class="median-val">
           {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }}
           <span v-html="unit" />
