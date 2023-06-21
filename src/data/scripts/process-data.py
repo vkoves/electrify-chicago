@@ -121,7 +121,7 @@ def processBuildingData() -> List[str]:
     # up (e.g. zipcode of 60614 or Ward 9)
     building_data[string_cols] = building_data[string_cols].astype(str)
 
-    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings
+    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
     building_data[int_cols] = building_data[int_cols].astype('Int64')
 
     outputted_paths.append(calculateBuildingStats(building_data))
