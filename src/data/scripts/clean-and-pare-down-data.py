@@ -3,6 +3,24 @@ from utils import get_and_clean_csv
 
 data_directory = './source/'
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
+data_out_file = "BenchmarkDatRenamed.csv"
+
+# Columns that should be strings because they are immutable identifiers
+string_cols = [
+    'ChicagoEnergyRating',
+]
+
+# Int columns that are numbers (and can get averaged) but should be rounded
+int_cols = [
+    'NumberOfBuildings',
+    'ENERGYSTARScore',
+    # TODO: Move to string after figuring out why the X.0 is showing up
+    'Wards',
+    'CensusTracts',
+    'ZIPCode',
+    'CommunityAreas',
+    'HistoricalWards2003-2015'
+]
 
 if __name__ == "__main__":
     building_data = get_and_clean_csv(data_directory + building_emissions_file)
@@ -42,6 +60,26 @@ if __name__ == "__main__":
         "Census Tracts": "CensusTracts",
         "Historical Wards 2003-2015": "HistoricalWards2003-2015" }
     building_data.rename(columns=replace_headers,inplace=True)
-    latestyear = building_data["DataYear"].max()
+    latest_year = building_data["DataYear"].max()
+    recent_data_set = building_data[building_data["DataYear"]==latest_year]
 
-    print(latestyear)
+    all_recent_submitted_data = recent_data_set[recent_data_set["ReportingStatus"]=="Submitted"]
+    
+    all_recent_submitted_data.to_csv(data_directory+data_out_file, sep=',', encoding='utf-8', index=False)
+
+    # new_zip_code_array = []
+    # for zc in all_recent_submitted_data["ZipCodes"]:
+
+
+    # all_recent_submitted_data["ZipCodes"] = all_recent_submitted_data["ZipCodes"].astype(str).str.split("-")
+
+    print(all_recent_submitted_data["ZipCodes"])
+
+    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
+    # up (e.g. zipcode of 60614 or Ward 9)
+    # all_recent_submitted_data[string_cols] = building_data[string_cols].astype(str)
+
+    # # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
+    # all_recent_submitted_data[int_cols] = building_data[int_cols].astype('Int64')
+
+    # print(all_recent_submitted_data)
