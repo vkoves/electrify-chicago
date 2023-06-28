@@ -31,21 +31,6 @@ export default class Default extends Vue {
 
 <template>
   <div>
-    <ClientOnly>
-      <!-- Google tag (gtag.js) -->
-      <script
-        async
-        src="https://www.googletagmanager.com/gtag/js?id=G-D4F03H5C02"
-      />
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-D4F03H5C02');
-      </script>
-    </ClientOnly>
-
     <div class="layout">
       <!-- TODO: Split to a component-->
       <header class="header">

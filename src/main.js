@@ -37,4 +37,18 @@ export default function(Vue, {router, head, isClient}) {
     name: 'twitter:image',
     content: 'https://electrifychicago.net/social-image.png',
   });
+
+  head.script.push({
+    src: 'https://www.googletagmanager.com/gtag/js?id=G-D4F03H5C02',
+    async: true,
+  });
+
+  // Google analytics code
+  if (isClient) {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-D4F03H5C02');
+  }
 }
