@@ -65,17 +65,13 @@ if __name__ == "__main__":
     recent_data_set = building_data[building_data["DataYear"]==latest_year]
 
     all_recent_submitted_data = recent_data_set[recent_data_set["ReportingStatus"]=="Submitted"]
-    
-    
 
-    new_zip_code_array = []
-    for row in all_recent_submitted_data.iterrows():
-        zc = row[1]["ZIPCode"]
-        # print(row[1]["ZIPCode"])
-        if zc is None:
-            print(-1)
-            all_recent_submitted_data.loc[row,"ZIPCode"] = -1
+    # for i, row in all_recent_submitted_data.iterrows():
+    #     print(all_recent_submitted_data.loc[:, "ZIPCode"][i])
 
+    # all_recent_submitted_data["ZIPCode"] = all_recent_submitted_data["ZIPCode"].replace(["NaN"], -1)
+
+    # print(all_recent_submitted_data.loc[:, "ZIPCode"])
 
     # all_recent_submitted_data["ZipCodes"] = all_recent_submitted_data["ZipCodes"].astype(str).str.split("-")
 
@@ -87,4 +83,3 @@ if __name__ == "__main__":
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
     all_recent_submitted_data[int_cols] = building_data[int_cols].astype('Int64')
     all_recent_submitted_data.to_csv(data_directory+data_out_file, sep=',', encoding='utf-8', index=False)
-    # print(all_recent_submitted_data)
