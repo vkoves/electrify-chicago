@@ -66,16 +66,6 @@ if __name__ == "__main__":
 
     all_recent_submitted_data = recent_data_set[recent_data_set["ReportingStatus"]=="Submitted"]
 
-    # for i, row in all_recent_submitted_data.iterrows():
-    #     print(all_recent_submitted_data.loc[:, "ZIPCode"][i])
-
-    # all_recent_submitted_data["ZIPCode"] = all_recent_submitted_data["ZIPCode"].replace(["NaN"], -1)
-
-    # print(all_recent_submitted_data.loc[:, "ZIPCode"])
-
-    # all_recent_submitted_data["ZipCodes"] = all_recent_submitted_data["ZipCodes"].astype(str).str.split("-")
-
-
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
     all_recent_submitted_data[string_cols] = building_data[string_cols].astype(str)
