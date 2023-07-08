@@ -13,7 +13,7 @@ data_out_directory = './dist/'
 data_debug_directory = './debug/'
 
 # Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
-building_emissions_file = 'BenchmarkDataRenamed.csv'
+building_emissions_file = 'ChicagoEnergyBenchmarkingThisYear.csv'
 building_emissions_file_out_name = 'building-benchmarks'
 
 # Columns we want to run statistical analysis and ranking on - order matters here
@@ -44,6 +44,7 @@ building_cols_to_rank = [
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
     'ChicagoEnergyRating',
+    'ZIPCode',
 ]
 
 # Int columns that are numbers (and can get averaged) but should be rounded
@@ -53,7 +54,6 @@ int_cols = [
     # TODO: Move to string after figuring out why the X.0 is showing up
     'Wards',
     'CensusTracts',
-    'ZIPCode',
     'CommunityAreas',
     'HistoricalWards2003-2015'
 ]

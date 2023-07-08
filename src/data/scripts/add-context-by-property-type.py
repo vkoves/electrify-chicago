@@ -18,6 +18,7 @@ building_cols_to_rank = [
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
     'ChicagoEnergyRating',
+    'ZIPCode',
 ]
 
 # Int columns that are numbers (and can get averaged) but should be rounded
@@ -27,7 +28,6 @@ int_cols = [
     # TODO: Move to string after figuring out why the X.0 is showing up
     'Wards',
     'CensusTracts',
-    'ZIPCode',
     'CommunityAreas',
     'HistoricalWards2003-2015'
 ]
