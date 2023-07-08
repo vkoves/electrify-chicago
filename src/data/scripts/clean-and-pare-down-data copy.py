@@ -66,9 +66,7 @@ if __name__ == "__main__":
     all_submitted_data = building_data[building_data["ReportingStatus"]=="Submitted"]
 
     all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
-    all_submitted_data.drop_duplicates(subset=['ID'], keep='last')
-
-    all_recent_submitted_data = all_submitted_data
+    all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last')
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
