@@ -3,7 +3,7 @@ from utils import get_and_clean_csv
 
 data_directory = './source/'
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
-data_out_file = "ChicagoEnergyBenchmarkingAllNewestInstances.csv"
+data_out_file = "ChicagoEnergyBenchmarkingAllNewestInstances.csv.csv"
 
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
@@ -62,11 +62,9 @@ if __name__ == "__main__":
         "Historical Wards 2003-2015": "HistoricalWards2003-2015" }
     building_data.rename(columns=replace_headers,inplace=True)
     latest_year = building_data["DataYear"].max()
+    recent_data_set = building_data[building_data["DataYear"]==latest_year]
 
-    all_submitted_data = building_data[building_data["ReportingStatus"]=="Submitted"]
-
-    all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
-    all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last')
+    all_recent_submitted_data = recent_data_set[recent_data_set["ReportingStatus"]=="Submitted"]
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
