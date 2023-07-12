@@ -2,6 +2,7 @@
 query ($id: ID!) {
   building(id: $id) {
     slugSource
+    DataYear
     ID
     Address
     ChicagoEnergyRating
@@ -91,7 +92,9 @@ query ($id: ID!) {
         <BuildingImage :building="$page.building" />
 
         <div class="building-details">
-          <h2>Building Info</h2>
+          <h2>Building Info</h2> 
+          
+          <div v-if="dataYear<2021"><p>This data is out of date</p></div>
 
           <dl>
             <div>
@@ -436,6 +439,11 @@ export default class BuildingDetails  extends Vue {
   /** The primary property type of the current building as it shows in the data */
   get propertyType(): string {
     return this.building.PrimaryPropertyType;
+  }
+  
+  /** The year of the data for this specific building */
+  get dataYear(): number {
+    return this.building.DataYear as number;
   }
 
   /** The primary property type of the current building, URL encoded for a link */
