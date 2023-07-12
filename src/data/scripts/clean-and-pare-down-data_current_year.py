@@ -64,9 +64,9 @@ if __name__ == "__main__":
     latest_year = building_data["DataYear"].max()
     recent_data_set = building_data[building_data["DataYear"]==latest_year]
 
-    # all_recent_submitted_data = recent_data_set[(recent_data_set["ReportingStatus"]=="Submitted" or recent_data_set["ReportingStatus"]=="Submitted Data")]
+    submitted_flags = ["Submitted", "Submitted Data"]
 
-    all_recent_submitted_data = recent_data_set.where(recent_data_set['ReportingStatus']=="Submitted") | (recent_data_set['ReportingStatus']=="Submitted Data")
+    all_recent_submitted_data = recent_data_set[recent_data_set['ReportingStatus'].isin(submitted_flags)]
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
