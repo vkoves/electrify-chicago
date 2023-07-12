@@ -91,10 +91,12 @@ query ($id: ID!) {
 
         <BuildingImage :building="$page.building" />
 
+        <div class="building-banner" v-if="dataYear < LatestDataYear">
+          <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }}, <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
+        </div>
+
         <div class="building-details">
           <h2>Building Info</h2> 
-          
-          <div v-if="dataYear<2021"><p>This data is out of date</p></div>
 
           <dl>
             <div>
@@ -180,7 +182,7 @@ query ($id: ID!) {
 
       <h2>Emissions & Energy Information</h2>
       <p class="year-note">
-        For {{ DataYear }}
+        For {{ dataYear }}
       </p>
 
       <dl class="emission-stats">
@@ -286,7 +288,7 @@ query ($id: ID!) {
       <p class="constrained">
         <strong>* Important Note:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
-        the year {{ DataYear }} with emissions greater than 1,000 metric tons.
+        the year {{ LatestDataYear }} with emissions greater than 1,000 metric tons.
       </p>
 
       <p class="footnote">
@@ -426,7 +428,11 @@ export default class BuildingDetails  extends Vue {
   /** Expose stats to readme */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
-  readonly DataYear: number = 2020;
+  /**
+   * The year most/the latest buildings data is from - if this building's year is older than this, we 
+   * show a warning that the data is old
+   */
+  readonly LatestDataYear: number = 2021;
 
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
@@ -491,6 +497,7 @@ export default class BuildingDetails  extends Vue {
       gap: 0 2rem;
       grid-template-areas:
         "title img"
+        "banner img"
         "details img";
 
       .building-header-text {
@@ -502,17 +509,20 @@ export default class BuildingDetails  extends Vue {
         align-self: start;
       }
       .building-img-cont { grid-area: img; }
+      .building-banner { grid-area: banner; }
     }
 
     &:not(.-img-tall) {
       display: grid;
       grid-template-areas:
         "img"
+        "banner"
         "details";
 
       .building-header-text {
         grid-area: img;
       }
+      .building-banner { grid-area: banner; }
       .building-img-cont {
         grid-area: img;
         width: 80%;
@@ -542,6 +552,17 @@ export default class BuildingDetails  extends Vue {
 
   h2 { margin: 2.5rem 0 0; }
 
+  .building-banner {
+    padding: 1rem;
+    background-color: $warning-background;
+    border: dashed 0.125rem $warning-border;
+    border-radius: $brd-rad-small;
+    margin-bottom: 1rem;
+    justify-self: flex-start;
+
+    span.emoji { margin-right: 0.5rem; }
+  }
+  
   p.year-note {
     font-size: 0.825rem;
     margin-top: 0;
