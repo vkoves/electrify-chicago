@@ -61,9 +61,8 @@ if __name__ == "__main__":
         "Census Tracts": "CensusTracts",
         "Historical Wards 2003-2015": "HistoricalWards2003-2015" }
     building_data.rename(columns=replace_headers,inplace=True)
-    latest_year = building_data["DataYear"].max()
 
-    all_submitted_data = building_data[building_data["ReportingStatus"]=="Submitted"]
+    all_submitted_data = building_data.loc[(building_data['ReportingStatus'] == "Submitted") | (building_data['ReportingStatus'] == "Submitted Data")].copy()
 
     all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
     all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last')
