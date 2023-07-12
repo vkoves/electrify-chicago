@@ -3,7 +3,7 @@ from utils import get_and_clean_csv
 
 data_directory = './source/'
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
-data_out_file = "ChicagoEnergyBenchmarkingThisYear.csv"
+data_out_file = "ChicagoEnergyBenchmarkingAllNewestInstances.csv"
 
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
