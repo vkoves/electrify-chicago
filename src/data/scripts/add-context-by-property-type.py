@@ -65,6 +65,9 @@ def calculateBuildingStatistics():
             cur_property_type_stats[col] = {"count": cur_count, "min": cur_min, "max": cur_max,
                                             "twentyFifthPercentile": cur_first_quartile, "median": cur_median, "seventyFifthPercentile": cur_third_quartile}
 
+        if cur_count == 0:
+            continue
+            
         stats_by_property_type[property] = cur_property_type_stats
 
     with open("./dist/building-statistics-by-property-type.json", "w") as property_stats_file:
