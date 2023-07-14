@@ -91,8 +91,12 @@ query ($id: ID!) {
 
         <BuildingImage :building="$page.building" />
 
-        <div class="building-banner" v-if="dataYear < LatestDataYear">
-          <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }}, <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
+        <div
+          v-if="dataYear < LatestDataYear"
+          class="building-banner"
+        >
+          <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }}, 
+          <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
         </div>
 
         <div class="building-details">
@@ -429,8 +433,8 @@ export default class BuildingDetails  extends Vue {
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
   /**
-   * The year most/the latest buildings data is from - if this building's year is older than this, we 
-   * show a warning that the data is old
+   * The year most/the latest buildings data is from - if this building's year is older than this,
+   *  we show a warning that the data is old
    */
   readonly LatestDataYear: number = 2021;
 
