@@ -66,7 +66,7 @@ export default class TopGasUsers extends Vue {
       The median building in our dataset emits {{ BuildingBenchmarkStats.GHGIntensity.median }}
       CO<sub>2</sub> kg / square foot, but these buildings are Chicago's best in class and emit
       <em>way</em> less! Some, like
-      <g-link to="/building/marina-towers-condominium-association/">
+      <g-link to="/building/marina-towers">
         Marina Towers
       </g-link>, are
       large residential buildings, but other buildings in this list include offices, hotels, and

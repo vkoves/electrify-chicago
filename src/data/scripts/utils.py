@@ -1,3 +1,7 @@
+###
+### Utils - Basic utilities for file processing that are agnostic to the specific
+### data being processed
+###
 import pandas
 import logging
 

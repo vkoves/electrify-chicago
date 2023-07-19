@@ -35,6 +35,8 @@ const BuildingImagesBase = '/building-imgs/';
  * - Have extra space on the bottom for the text, but crop pretty tightly up top to save space
  * - If the image must be TALL, make it ~600px wide (e.g. Marina Towers, Aqua)
  * - Use the JPG format with 80% quality for a good compromise of file size and quality
+ *
+ * TODO: Move to using building IDs, because slugs change with data updates
  */
 export const BuildingImages: IBuildingImages = {
     /**
@@ -52,7 +54,7 @@ export const BuildingImages: IBuildingImages = {
     /**
      * General Famous Buildings
      */
-    'marina-towers-condominium-association': {
+    'marina-towers': {
         attributionUrl: 'https://en.wikipedia.org/wiki/File:Marina_City,_Chicago,_Illinois,_Estados_Unidos,_2012-10-20,_DD_01.jpg',
         imgUrl: BuildingImagesBase + 'marina-towers.jpg',
         isTall: true,
@@ -67,12 +69,12 @@ export const BuildingImages: IBuildingImages = {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:20070110_McCormick_Place_(4).JPG',
         imgUrl: BuildingImagesBase + 'mccormick-place.jpg',
     },
-    'aqua': {
+    'aqua-at-lakeshore-east': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:Aqua_(Building)_cropped.jpg',
         imgUrl: BuildingImagesBase + 'aqua.jpg',
         isTall: true,
     },
-    'willis-tower': {
+    'willis-tower-rivion-llc': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:Chicago_Sears_Tower.jpg',
         imgUrl: BuildingImagesBase + 'willis-tower.jpg',
         isTall: true,
@@ -82,7 +84,7 @@ export const BuildingImages: IBuildingImages = {
         imgUrl: BuildingImagesBase + 'john-hancock.jpg',
         isTall: true,
     },
-    'merchandise-mart': {
+    'the-mart-chicago': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:Merchandise_Mart_080405.jpg',
         imgUrl: BuildingImagesBase + 'merchandise-mart.jpg',
         isTall: true,
@@ -102,19 +104,19 @@ export const BuildingImages: IBuildingImages = {
         imgUrl: BuildingImagesBase + 'king-college-prep.jpg',
         fromGoogleMaps: true,
     },
-    'clinton-complex-condominium-association': {
+    'clinton-complex': {
         attributionUrl: 'https://goo.gl/maps/XdsAqhXxDBsQSGLC9',
         imgUrl: BuildingImagesBase + 'clinton-complex-condos.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'state-place-condominium-association': {
+    'state-place-centre': {
         attributionUrl: 'https://goo.gl/maps/exkd8jYSeNUmjer99',
         imgUrl: BuildingImagesBase + 'state-place-condos.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'park-1500-lofts': {
+    'park-1500-loft': {
         attributionUrl: 'https://goo.gl/maps/3fQf99PGpCzEU1Vs6',
         imgUrl: BuildingImagesBase + 'park-1500-lofts.jpg',
         fromGoogleMaps: true,
@@ -144,7 +146,7 @@ export const BuildingImages: IBuildingImages = {
         fromGoogleMaps: true,
         isTall: true,
     },
-    'mc-cormick-tribune-campus-center': {
+    'mc-cormick-tribune-campus-center-mtcc': {
         attributionUrl: 'https://goo.gl/maps/nnGyrZ4nZZ1oaK6J6',
         imgUrl: BuildingImagesBase + 'mccormick-tribune-campus-center.jpg',
         fromGoogleMaps: true,
@@ -159,7 +161,7 @@ export const BuildingImages: IBuildingImages = {
         fromGoogleMaps: true,
         isTall: true,
     },
-    'accelerator-high-energy-physics': {
+    'accelerator-building': {
         attributionUrl: 'https://goo.gl/maps/gkWsHoymmwNiwDAU6',
         imgUrl: BuildingImagesBase + 'uchicago-accelerator-ellis.jpg',
         fromGoogleMaps: true,
@@ -182,7 +184,7 @@ export const BuildingImages: IBuildingImages = {
         fromGoogleMaps: true,
         isTall: true,
     },
-    'william-eckhardt-research-center': {
+    'william-eckhardt-research-center-erc': {
         attributionUrl: 'https://goo.gl/maps/GJaEQAau4odVgF2A6',
         imgUrl: BuildingImagesBase + 'william-eckhardt-research-center.jpg',
         fromGoogleMaps: true,
@@ -192,13 +194,13 @@ export const BuildingImages: IBuildingImages = {
     /**
      * Misc. High Emitters
      */
-    'digital-lakeside': {
+    '350-e-cermak': {
         attributionUrl: 'https://goo.gl/maps/1H9Wct1qprbtzNux9',
         imgUrl: BuildingImagesBase + 'digital-lakeside.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    '352-360-w-wellington-ave': {
+    'wellington-condominium': {
         attributionUrl: 'https://goo.gl/maps/cqJ8Ao4PCyKktJqW7',
         imgUrl: BuildingImagesBase + '352-w-wellington.jpg',
         fromGoogleMaps: true,
@@ -209,13 +211,13 @@ export const BuildingImages: IBuildingImages = {
         imgUrl: BuildingImagesBase + 'lowden-homes.jpg',
         fromGoogleMaps: true,
     },
-    'core-site': {
+    'c-h1': {
         attributionUrl: 'https://goo.gl/maps/hLejrJBazqKHTs5x9',
         imgUrl: BuildingImagesBase + 'core-site.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'digital-printer-s-row': {
+    '600-780-s-federal-st': {
         attributionUrl: 'https://goo.gl/maps/F3dnKuzJ29cTxD6F7',
         imgUrl: BuildingImagesBase + 'digital-printers-row.jpg',
         fromGoogleMaps: true,

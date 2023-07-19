@@ -73,6 +73,7 @@ export interface IBuildingCustomInfo {
  * An object containing our custom details about buildings. These are hand coded based on the
  * building slug
  *
+ * TODO: Move to more stable building ID
  */
 export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo } = {
   /**
@@ -82,7 +83,7 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   'mc-gowan-north': {owner: BuildingOwners.depaul.key},
   'mc-gowan-south': {owner: BuildingOwners.depaul.key},
   'de-paul-center': {owner: BuildingOwners.depaul.key},
-  'depaul-university-holtschneider-performance-center': {owner: BuildingOwners.depaul.key},
+  'holtschneider-performance-center': {owner: BuildingOwners.depaul.key},
   'student-center': {owner: BuildingOwners.depaul.key},
   'centennial-hall': {owner: BuildingOwners.depaul.key},
 
@@ -90,6 +91,7 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
    * IIT buildings
    * Helpful source: https://en.wikipedia.org/wiki/List_of_Illinois_Institute_of_Technology_buildings
    */
+  'crown-hall': {owner: BuildingOwners.iit.key},
   'keating-hall': {owner: BuildingOwners.iit.key},
   'life-science-research-building': {owner: BuildingOwners.iit.key},
   'tech-business-center': {owner: BuildingOwners.iit.key},

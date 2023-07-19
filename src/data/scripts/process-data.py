@@ -4,6 +4,7 @@ import pandas
 
 from typing import List
 from utils import get_and_clean_csv, json_data_builder
+from building_utils import clean_property_name
 
 # Assume run in /data
 data_directory = './source/'
@@ -43,6 +44,7 @@ building_cols_to_rank = [
 
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
+    'PropertyName',
     'ChicagoEnergyRating',
     'ZIPCode',
 ]
@@ -61,8 +63,6 @@ int_cols = [
 # Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
 # median values for fields
 # Returns the output file if succeeds
-
-
 def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     # Clone the input data to prevent manipulating it on accident
     building_data = building_data_in.copy()
@@ -123,6 +123,8 @@ def processBuildingData() -> List[str]:
 
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
     building_data[int_cols] = building_data[int_cols].astype('Int64')
+
+    building_data['PropertyName'] = building_data['PropertyName'].map(clean_property_name)
 
     outputted_paths.append(calculateBuildingStats(building_data))
 

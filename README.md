@@ -23,20 +23,18 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [x] Get CSV data usable and on homepage
 - [x] Setup domain and build process
 - [x] Setup Typescript
-- [ ] Setup linting in CI (ESLin ✅️, Prettier, Stylelint)
+- [ ] Setup linting in CI (ESLint ✅️, Prettier, Stylelint)
 - [ ] Setup unit tests
 
 
 ## Feature To-Do List
 
 - [x] Show property owner (manually tagged)
-- [x] Pre-process data to calculate things like averages for each property and rank of each
-      building overall, in their class (TODO), and in their ward (TODO)
+- [x] Pre-process data to calculate things like averages for each property and rank of each building overall, in their class (TODO), and in their ward (TODO)
 - [x] Add colors/emoji to table view to give more context (e.g. so people know Keating is super bad)
 - [ ] Show % of energy use from the four sources (electric, gas, district chilled water, district steam)
 - [ ] Create ward page that shows data by ward (needs new data source)
-- [ ] Figure out a way to rank buildings by opportunity for improvement (perhaps higher than avg.
-      in category, uses a lot of natural gas?)
+- [ ] Figure out a way to rank buildings by opportunity for improvement (perhaps higher than avg. in category, uses a lot of natural gas?)
 
 ## Development
 
@@ -90,4 +88,6 @@ cd src/data
 pip install --no-cache-dir -r requirements.txt
 python3 scripts/process-data.py
 python3 scripts/add-context-by-property-type.py
+python3 scripts/clean-and-pare-down-data_all_years.py
+python3 scripts/clean-and-pare-down-data_current_year.py
 ```
