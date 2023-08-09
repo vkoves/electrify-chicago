@@ -62,10 +62,14 @@ if __name__ == "__main__":
         "Historical Wards 2003-2015": "HistoricalWards2003-2015" }
     building_data.rename(columns=replace_headers,inplace=True)
 
-    all_submitted_data = building_data.loc[(building_data['ReportingStatus'] == "Submitted") | (building_data['ReportingStatus'] == "Submitted Data")].copy()
+    has_ghg_intensity = building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
+    has_ghg_intensity.to_csv("./source/remove_no_ghg.csv", sep=',', encoding='utf-8', index=False)
+
+    all_submitted_data = has_ghg_intensity.loc[(has_ghg_intensity['ReportingStatus'] == "Submitted") | (has_ghg_intensity['ReportingStatus'] == "Submitted Data")].copy()
+    all_submitted_data.to_csv("./source/remove_no_submit.csv", sep=',', encoding='utf-8', index=False)
 
     all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
-    all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last')
+    all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)

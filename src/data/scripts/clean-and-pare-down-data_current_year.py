@@ -64,7 +64,9 @@ if __name__ == "__main__":
     latest_year = building_data["DataYear"].max()
     recent_data_set = building_data[building_data["DataYear"]==latest_year]
 
-    all_recent_submitted_data = recent_data_set.loc[(recent_data_set['ReportingStatus'] == "Submitted") | (recent_data_set['ReportingStatus'] == "Submitted Data")].copy()
+    has_ghg_intensity = recent_data_set.loc[(recent_data_set['GHGIntensity'] is not None) & (recent_data_set['GHGIntensity'] != 0)].copy()
+
+    all_recent_submitted_data = has_ghg_intensity.loc[(has_ghg_intensity['ReportingStatus'] == "Submitted") | (has_ghg_intensity['ReportingStatus'] == "Submitted Data")].copy()
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
