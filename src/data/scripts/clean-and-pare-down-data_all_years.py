@@ -63,10 +63,9 @@ if __name__ == "__main__":
     building_data.rename(columns=replace_headers,inplace=True)
 
     has_ghg_intensity = building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
-    has_ghg_intensity.to_csv("./source/remove_no_ghg.csv", sep=',', encoding='utf-8', index=False)
+    has_ghg_intensity
 
     all_submitted_data = has_ghg_intensity.loc[(has_ghg_intensity['ReportingStatus'] == "Submitted") | (has_ghg_intensity['ReportingStatus'] == "Submitted Data")].copy()
-    all_submitted_data.to_csv("./source/remove_no_submit.csv", sep=',', encoding='utf-8', index=False)
 
     all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
     all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()

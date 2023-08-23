@@ -78,16 +78,13 @@ a new statistical analysis), you need to re-run the data processing.
 
 This requires:
 
-- Pip
-- Python3
+- pip
+- python 3.9
 
 Run the following commands:
 
 ```
 cd src/data
 pip install --no-cache-dir -r requirements.txt
-python3 scripts/process-data.py
-python3 scripts/add-context-by-property-type.py
-python3 scripts/clean-and-pare-down-data_all_years.py
-python3 scripts/clean-and-pare-down-data_current_year.py
+bash run_all.sh
 ```
