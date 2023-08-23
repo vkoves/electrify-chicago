@@ -45,7 +45,8 @@ sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
 
 # get a list of all unique property types
 property_types = sorted_by_property_type.groups.keys()
-print("property types", property_types)
+
+# TODO: output property_types to a json file for use in the frontend
 
 def calculateBuildingStatistics():
     stats_by_property_type = {}
