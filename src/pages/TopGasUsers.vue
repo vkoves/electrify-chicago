@@ -23,7 +23,7 @@ export default class TopGasUsers extends Vue {
 
 <static-query>
   query {
-    allBuilding(sortBy: "NaturalGasUse", limit: 50) {
+    allBuilding(filter: { DataYear: { eq: "2021" } }, sortBy: "NaturalGasUse", limit: 50) {
       edges {
         node {
           slugSource

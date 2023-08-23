@@ -146,7 +146,7 @@ export default class Search extends Vue {
 
 <static-query>
   query {
-    allBuilding(sortBy: "GHGIntensity") {
+    allBuilding(filter: { DataYear: { eq: "2021" } }, sortBy: "GHGIntensity") {
       edges {
         node {
           slugSource

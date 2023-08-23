@@ -23,7 +23,7 @@ export default class TopEmitters extends Vue {
 
 <static-query>
   query {
-    allBuilding(sortBy: "TotalGHGEmissions", limit: 50) {
+    allBuilding(filter: { DataYear: { eq: "2021" } }, sortBy: "TotalGHGEmissions", limit: 50) {
       edges {
         node {
           slugSource

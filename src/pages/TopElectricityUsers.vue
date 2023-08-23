@@ -23,7 +23,7 @@ export default class TopElectricityUsers extends Vue {
 
 <static-query>
   query {
-    allBuilding(sortBy: "ElectricityUse", limit: 50) {
+    allBuilding(filter: { DataYear: { eq: "2021" } }, sortBy: "ElectricityUse", limit: 50) {
       edges {
         node {
           slugSource

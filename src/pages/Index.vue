@@ -44,7 +44,9 @@ export default class BiggestBuildings extends Vue {
 
 <page-query>
   query ($page: Int) {
-    allBuilding(sortBy: "GHGIntensity", perPage: 15, page: $page) @paginate {
+    allBuilding(
+      filter: { DataYear: { eq: "2021" } }, sortBy: "GHGIntensity", perPage: 15, page: $page
+    ) @paginate {
       pageInfo {
         hasNextPage
         totalPages

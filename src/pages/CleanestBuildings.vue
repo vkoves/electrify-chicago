@@ -27,7 +27,9 @@ export default class TopGasUsers extends Vue {
 
 <static-query>
   query {
-    allBuilding(sortBy: "GHGIntensity", order: ASC, limit: 50) {
+    allBuilding(
+      filter: { DataYear: { eq: "2021" } }, sortBy: "GHGIntensity", order: ASC, limit: 50
+    ) {
       edges {
         node {
           slugSource
