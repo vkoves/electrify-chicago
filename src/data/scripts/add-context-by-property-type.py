@@ -1,7 +1,6 @@
 import pandas as pd
 import json
 
-path_to_property_type_json = "./dist/property-types.json"
 path_to_buildings_csv = "./dist/building-benchmarks.csv"
 
 # Columns we want to rank for and append ranks to each building's data
@@ -35,22 +34,31 @@ int_cols = [
 # raw building data
 building_data = pd.read_csv(path_to_buildings_csv)
 
+# find the latest year
+latest_year = building_data["DataYear"].max()
+
+# filter just data for the max year
+building_data = building_data[building_data["DataYear"] == latest_year]
+
 # sorted data based on each property type: the order is alphabetical
 sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
 
+# get a list of all unique property types
+property_types = sorted_by_property_type.groups.keys()
+print("property types", property_types)
+
 def calculateBuildingStatistics():
     stats_by_property_type = {}
-    all_property_types = pd.read_json("./dist/property-types.json")
 
     # looping through both all the property types and all the columns we want to get data on
-    for i, property in enumerate(all_property_types["propertyTypes"]):
+    for i, property in enumerate(property_types):
+        print("property", property)
 
         cur_property_type_stats = {}
         for col in building_cols_to_rank:
 
             # finding the mean, count, min, max, and quartiles of each category for each building type
-            cur_count = round(
-                sorted_by_property_type[col].count()[i].item(), 3)
+            cur_count = sorted_by_property_type[col].count()[i].item()
 
             cur_min = round(sorted_by_property_type[col].min()[i].item(), 3)
             cur_max = round(sorted_by_property_type[col].max()[i].item(), 3)
