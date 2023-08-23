@@ -126,7 +126,13 @@ def processBuildingData() -> List[str]:
 
     building_data['PropertyName'] = building_data['PropertyName'].map(clean_property_name)
 
-    outputted_paths.append(calculateBuildingStats(building_data))
+    # find the latest year in the data
+    latest_year = building_data['DataYear'].max()
+
+    # filter out all buildings that aren't the latest year
+    latest_building_data = building_data[building_data['DataYear'] == latest_year]
+
+    outputted_paths.append(calculateBuildingStats(latest_building_data))
 
     # Loop through building_cols_to_rank and calculate both a numeric rank (e.g. #1 highest GHG
     # Intensity) and a percentage (e.g. top 95% of total GHG emissions)
@@ -134,13 +140,10 @@ def processBuildingData() -> List[str]:
     # for descending ranks
     # E.g Keating Hall is the #1 building by GHG Intensity, and lowest 25th percentile in footprint
     for col in building_cols_to_rank:
-        building_data[col + 'Rank'] = building_data[col].rank(ascending=False)
+        building_data[col + 'Rank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(ascending=False)
 
         # The percentile rank can be ascending, we want to say this building is worse than X% of buildings
-        building_data[col +
-                      'PercentileRank'] = building_data[col].rank(pct=True)
-        building_data[col + 'PercentileRank'] = building_data[col +
-                                                              'PercentileRank'].round(3)
+        building_data[col + 'PercentileRank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(pct=True).round(3)
 
     # Export the data
     output_path = data_out_directory + building_emissions_file_out_name + '.csv'
