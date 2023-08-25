@@ -88,7 +88,10 @@
       >
         <div>
           <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
-          <span v-if="stats[statKey] > 0" class="val">
+          <span
+            v-if="stats[statKey] > 0"
+            class="val"
+          >
             {{ medianMultipleMsgCityWide }} median
           </span>
           <span v-else>
@@ -103,7 +106,10 @@
 
         <div v-if="medianMultiplePropertyType">
           <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
-          <span v-if="stats[statKey] > 0" class="val">
+          <span
+            v-if="stats[statKey] > 0"
+            class="val"
+          >
             {{ medianMultiplePropertyType }} median {{ propertyType }}
           </span>
           <span v-else>
@@ -118,8 +124,13 @@
       </div>
 
       <!-- Natural Gas specific message -->
-      <div v-if="statValue === '0' && statKey === 'NaturalGasUse'" class="no-gas-note">
-        <div class="bold">This Building Didn't Burn Any Natural Gas! 🎉</div>
+      <div
+        v-if="statValue === '0' && statKey === 'NaturalGasUse'"
+        class="no-gas-note"
+      >
+        <div class="bold">
+          This Building Didn't Burn Any Natural Gas! 🎉
+        </div>
 
         <div class="smaller">
           It may still have natural gas burned to generate its electricity or in a

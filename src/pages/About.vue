@@ -113,10 +113,14 @@
 
       <ul>
         <li>
-          <g-link to="/top-electricity-users">Top Electricity Use</g-link>
+          <g-link to="/top-electricity-users">
+            Top Electricity Use
+          </g-link>
         </li>
         <li>
-          <g-link to="/biggest-gas-free-buildings">Biggest Gas Free Buildings</g-link>
+          <g-link to="/biggest-gas-free-buildings">
+            Biggest Gas Free Buildings
+          </g-link>
         </li>
       </ul>
     </div>
