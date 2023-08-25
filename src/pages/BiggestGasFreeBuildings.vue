@@ -26,7 +26,11 @@ export default class TopGasUsers extends Vue {
 <static-query>
   query {
     allBuilding(
-      filter: { DataYear: { eq: "2021" }, NaturalGasUse: { eq: "0.0" } },
+      filter: {
+        DataYear: { eq: "2021" },
+        NaturalGasUse: { eq: "0.0" },
+        DistrictSteamUse: { eq: "0.0" }
+      },
       sortBy: "GrossFloorArea", limit: 500
     ) {
       edges {
@@ -50,6 +54,7 @@ export default class TopGasUsers extends Vue {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
+          DistrictSteamUse
         }
       }
     }
@@ -62,13 +67,19 @@ export default class TopGasUsers extends Vue {
       id="main-content"
       tabindex="-1"
     >
-      Biggest {{ $static.allBuilding.edges.length }} Gas Free Buildings
+      Chicago's {{ $static.allBuilding.edges.length }} Fully Gas Free Buildings
     </h1>
 
     <p class="constrained -wide">
-      These buildings are the largest consumers of natural gas (methane) in the city. Natural gas
-      in these buildings is typically used for heating gas and water, and since electrifying the
-      grid won't clean up these emissions it's an important set of buildings to focus on!
+      These buildings are already all-electric, and feature some of the most famous buildings in
+      the city! If even the John Hancock center or Marina Towers can run off of only electricity,
+      your building can too.
+    </p>
+
+    <p class="constrained -wide">
+      <strong>Note:</strong> This list is of buildings that use neither natural gas nor a district
+      steam system, since all district steam systems in the city are currently powered by burning
+      natural gas (to the best of our knowledge).
     </p>
 
     <DataDisclaimer />
