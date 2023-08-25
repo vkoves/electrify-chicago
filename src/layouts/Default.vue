@@ -112,10 +112,6 @@ export default class Default extends Vue {
             About
           </g-link>
 
-          <!--
-            <g-link class="nav-link" to="/top-electricity-users">Top Electricity Users</g-link>
-          -->
-
           <form class="search-form">
             <div class="input-cont">
               <input

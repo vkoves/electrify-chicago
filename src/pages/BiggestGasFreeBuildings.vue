@@ -1,0 +1,86 @@
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+import BuildingsTable from '~/components/BuildingsTable.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
+
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
+  components: {
+    BuildingsTable,
+    DataDisclaimer,
+    DataSourceFootnote,
+    NewTabIcon,
+  },
+  metaInfo() {
+    return { title:  'Biggest Natural Gas Users' };
+  },
+})
+export default class TopGasUsers extends Vue {
+}
+</script>
+
+<static-query>
+  query {
+    allBuilding(
+      filter: { DataYear: { eq: "2021" }, NaturalGasUse: { eq: "0.0" } },
+      sortBy: "GrossFloorArea", limit: 500
+    ) {
+      edges {
+        node {
+          slugSource
+          ID
+          PropertyName
+          Address
+          path
+          GrossFloorArea
+          PrimaryPropertyType
+          GHGIntensity
+          GHGIntensityRank
+          GHGIntensityPercentileRank
+          TotalGHGEmissions
+          TotalGHGEmissionsRank
+          TotalGHGEmissionsPercentileRank
+          ElectricityUse
+          ElectricityUseRank
+          ElectricityUsePercentileRank
+          NaturalGasUse
+          NaturalGasUseRank
+          NaturalGasUsePercentileRank
+        }
+      }
+    }
+  }
+</static-query>
+
+<template>
+  <DefaultLayout>
+    <h1
+      id="main-content"
+      tabindex="-1"
+    >
+      Biggest {{ $static.allBuilding.edges.length }} Gas Free Buildings
+    </h1>
+
+    <p class="constrained -wide">
+      These buildings are the largest consumers of natural gas (methane) in the city. Natural gas
+      in these buildings is typically used for heating gas and water, and since electrifying the
+      grid won't clean up these emissions it's an important set of buildings to focus on!
+    </p>
+
+    <DataDisclaimer />
+
+    <BuildingsTable
+      :buildings="$static.allBuilding.edges"
+      :show-square-footage="true"
+    />
+
+    <DataSourceFootnote />
+  </DefaultLayout>
+</template>
+
+<style lang="scss">
+</style>

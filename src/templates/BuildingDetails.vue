@@ -117,7 +117,7 @@ query ($id: ID!) {
 
             <div>
               <dt>Built</dt>
-              <dd>{{ $page.building.YearBuilt }}</dd>
+              <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
             </div>
 
             <div>

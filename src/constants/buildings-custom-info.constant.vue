@@ -150,6 +150,8 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '156942': {owner: BuildingOwners.uchicago.key},
   '254181':  {owner: BuildingOwners.uchicago.key},
   '252047':  {owner: BuildingOwners.uchicago.key},
+  // Bookstore!
+  '252041': {owner: BuildingOwners.uchicago.key},
 
   /**
    * Northwestern Buildings

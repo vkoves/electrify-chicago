@@ -103,6 +103,22 @@
         <a href="https://github.com/vkoves/electrify-chicago/issues/new">
           File an issue on the Electrify Chicago GitHub</a>!
       </p>
+
+      <h2>Other Interesting Pages</h2>
+
+      <p>
+        There are a lot of interesting ways to view this data, here are a few pages that aren't
+        featured in our header but could be useful:
+      </p>
+
+      <ul>
+        <li>
+          <g-link to="/top-electricity-users">Top Electricity Use</g-link>
+        </li>
+        <li>
+          <g-link to="/biggest-gas-free-buildings">Biggest Gas Free Buildings</g-link>
+        </li>
+      </ul>
     </div>
   </DefaultLayout>
 </template>
