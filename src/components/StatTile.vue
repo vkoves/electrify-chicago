@@ -40,6 +40,7 @@
         #{{ statRank }} {{ rankLabel }}
       </div>
 
+      <!-- Rank amongst property type -->
       <div
         v-if="propertyStatRank && propertyStatRank <= RankConfig.FlagRankMax && propertyRankLabel"
         class="property-rank"
@@ -86,7 +87,13 @@
         class="median-comparison"
       >
         <div>
-          <span class="val">{{ medianMultipleMsgCityWide }} median</span>
+          <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
+          <span v-if="stats[statKey] > 0" class="val">
+            {{ medianMultipleMsgCityWide }} median
+          </span>
+          <span v-else>
+            Median Chicago Building
+          </span>
 
           <div class="median-val">
             {{ stats[statKey].median.toLocaleString() }}
@@ -95,13 +102,31 @@
         </div>
 
         <div v-if="medianMultiplePropertyType">
-          <span class="val">{{ medianMultiplePropertyType }} median {{ propertyType }}</span>
+          <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
+          <span v-if="stats[statKey] > 0" class="val">
+            {{ medianMultiplePropertyType }} median {{ propertyType }}
+          </span>
+          <span v-else>
+            Median {{ propertyType }}
+          </span>
 
           <div class="median-val">
             {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }}
             <span v-html="unit" />
           </div>
         </div>
+      </div>
+
+      <!-- Natural Gas specific message -->
+      <div v-if="statValue === '0' && statKey === 'NaturalGasUse'" class="no-gas-note">
+        <div class="bold">This Building Didn't Burn Any Natural Gas! 🎉</div>
+
+        <div class="smaller">
+          It may still have natural gas burned to generate its electricity or in a
+          district heating system, but no gas was burned on-site.
+        </div>
+
+        <!-- TODO: Check for district heat use -->
       </div>
     </template>
     <template v-else>
@@ -454,5 +479,7 @@ export default class StatTile extends Vue {
   .empty-notice {
     font-size: 0.75rem;
   }
+
+  .no-gas-note { margin-top: 0.75rem; }
 }
 </style>

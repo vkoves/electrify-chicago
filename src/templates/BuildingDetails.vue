@@ -264,7 +264,8 @@ query ($id: ID!) {
           </dd>
         </div>
 
-        <div v-if="$page.building.DistrictSteamUse">
+        <!-- Most buildings don't use district steam, so only show if > 0 -->
+        <div v-if="$page.building.DistrictSteamUse > 0">
           <dt>District Steam Use</dt>
           <dd>
             <StatTile
@@ -276,7 +277,8 @@ query ($id: ID!) {
           </dd>
         </div>
 
-        <div v-if="$page.building.DistrictChilledWaterUse">
+        <!-- Most buildings don't use district chilling, so only show if > 0 -->
+        <div v-if="$page.building.DistrictChilledWaterUse > 0">
           <dt>District Chilled Water Use</dt>
           <dd>
             <StatTile
@@ -292,7 +294,7 @@ query ($id: ID!) {
       <p class="constrained">
         <strong>* Important Note:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
-        the year {{ LatestDataYear }} with emissions greater than 1,000 metric tons.
+        the year {{ LatestDataYear }}, which only applies to buildings over 50,000 square feet.
       </p>
 
       <DataSourceFootnote />
