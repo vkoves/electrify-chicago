@@ -3,6 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
 import {
@@ -19,6 +20,7 @@ interface IBuildingEdge { node: IBuilding; }
   components: {
     BuildingsTable,
     DataDisclaimer,
+    DataSourceFootnote,
     NewTabIcon,
   },
   metaInfo() {
@@ -194,17 +196,7 @@ export default class BiggestBuildings extends Vue {
         :buildings="buildingsFiltered"
       />
 
-      <p class="footnote">
-        Data Source:
-        <!-- eslint-disable-next-line max-len -->
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Chicago Energy Benchmarking Data <NewTabIcon />
-        </a>
-      </p>
+      <DataDataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>

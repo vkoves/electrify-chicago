@@ -24,6 +24,7 @@ export default class EmissionsBreakdownGraph extends Vue {
         24% transportation
         7% waste"
     >
+
     <p class="footnote">
       <a
         ref="noopener noreferrer"

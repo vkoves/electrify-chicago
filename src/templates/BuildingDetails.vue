@@ -95,12 +95,12 @@ query ($id: ID!) {
           v-if="dataYear < LatestDataYear"
           class="building-banner"
         >
-          <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }}, 
+          <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }},
           <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
         </div>
 
         <div class="building-details">
-          <h2>Building Info</h2> 
+          <h2>Building Info</h2>
 
           <dl>
             <div>
@@ -295,17 +295,7 @@ query ($id: ID!) {
         the year {{ LatestDataYear }} with emissions greater than 1,000 metric tons.
       </p>
 
-      <p class="footnote">
-        Data Source:
-        <!-- eslint-disable-next-line max-len -->
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Chicago Energy Benchmarking Data Covered Buildings <NewTabIcon />
-        </a>
-      </p>
+      <DataSourceFootnote />
 
       <section class="takeaways">
         <h2>What Should We Do About This?</h2>
@@ -396,11 +386,13 @@ query ($id: ID!) {
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import NewTabIcon from '~/components/NewTabIcon.vue';
-import StatTile from '~/components/StatTile.vue';
-import OwnerLogo from '~/components/OwnerLogo.vue';
-import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
+import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
+import OwnerLogo from '~/components/OwnerLogo.vue';
+import StatTile from '~/components/StatTile.vue';
+
 import { IBuildingBenchmarkStats } from '~/common-functions.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
@@ -417,6 +409,7 @@ import { IBuilding } from '../common-functions.vue';
   },
   components: {
     BuildingImage,
+    DataSourceFootnote,
     NewTabIcon,
     OverallRankEmoji,
     OwnerLogo,
@@ -450,7 +443,7 @@ export default class BuildingDetails  extends Vue {
   get propertyType(): string {
     return this.building.PrimaryPropertyType;
   }
-  
+
   /** The year of the data for this specific building */
   get dataYear(): number {
     return this.building.DataYear as number;
@@ -566,7 +559,7 @@ export default class BuildingDetails  extends Vue {
 
     span.emoji { margin-right: 0.5rem; }
   }
-  
+
   p.year-note {
     font-size: 0.825rem;
     margin-top: 0;

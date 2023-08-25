@@ -4,6 +4,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
@@ -14,6 +15,7 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
     BuildingsTable,
     DataDisclaimer,
     NewTabIcon,
+    DataSourceFootnote,
   },
   metaInfo() {
     return { title:  'Biggest Natural Gas Users' };
@@ -83,17 +85,7 @@ export default class TopGasUsers extends Vue {
 
     <BuildingsTable :buildings="$static.allBuilding.edges" />
 
-    <p class="footnote">
-      Data Source:
-      <!-- eslint-disable-next-line max-len -->
-      <a
-        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Chicago Energy Benchmarking Data <NewTabIcon />
-      </a>
-    </p>
+    <DataSourceFootnote />
   </DefaultLayout>
 </template>
 
