@@ -140,6 +140,11 @@ export const BuildingImages: IBuildingImages = {
     /**
      * IIT (Illinois Tech) buildings
      */
+    // Crown Hall
+    '256419': {
+        attributionUrl: 'https://commons.wikimedia.org/wiki/File:S.R._Crown_Hall.jpg',
+        imgUrl: BuildingImagesBase + 'crown-hall.jpg',
+    },
     // herman-hall
     '256427': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:IIT_Hermann_Hall_1.jpg',
