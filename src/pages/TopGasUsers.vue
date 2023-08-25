@@ -29,6 +29,7 @@ export default class TopGasUsers extends Vue {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path

@@ -19,7 +19,7 @@ import NewTabIcon from './NewTabIcon.vue';
  * A common footnote paragraph
  */
 export default {
-  name: 'DataDataSourceFootnote',
+  name: 'DataSourceFootnote',
   components: {NewTabIcon},
 };
 </script>

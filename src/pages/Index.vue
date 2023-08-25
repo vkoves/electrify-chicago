@@ -57,6 +57,7 @@ export default class BiggestBuildings extends Vue {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path

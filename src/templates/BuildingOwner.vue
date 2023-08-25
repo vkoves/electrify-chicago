@@ -60,18 +60,18 @@ export default class BiggestBuildings extends Vue {
   }
 
   filterBuildings(ownerId: string): void {
-    // Loop through BuildingsCustomInfo to get the slugs of buildings we are looking for
+    // Loop through BuildingsCustomInfo to get the IDs of buildings we are looking for
     const ownerBuildingsSlugs: Array<string> = Object.entries(BuildingsCustomInfo)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .filter(([ buildingSlug, buildingInfo ]: [string, IBuildingCustomInfo]) => {
+      .filter(([ buildingID, buildingInfo ]: [string, IBuildingCustomInfo]) => {
         return buildingInfo.owner === ownerId;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      }).map(([ buildingSlug, buildingInfo ]: [string, IBuildingCustomInfo]) => buildingSlug);
+      }).map(([ buildingID, buildingInfo ]: [string, IBuildingCustomInfo]) => buildingID);
 
     this.buildingsFiltered =
       this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
-        return ownerBuildingsSlugs.some((ownedBuildingSlug) =>
-          (buildingEdge.node.path as string).includes(ownedBuildingSlug));
+        return ownerBuildingsSlugs.some((ownedBuildingID) =>
+          buildingEdge.node.ID  === ownedBuildingID);
       });
   }
 
@@ -108,6 +108,7 @@ export default class BiggestBuildings extends Vue {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path
@@ -196,7 +197,7 @@ export default class BiggestBuildings extends Vue {
         :buildings="buildingsFiltered"
       />
 
-      <DataDataSourceFootnote />
+      <DataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>

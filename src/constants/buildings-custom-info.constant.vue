@@ -80,61 +80,95 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
    * Depaul Buildings
    * Helpful source: https://www.depaul.edu/campus-maps/Pages/default.aspx
    */
-  'mc-gowan-north': {owner: BuildingOwners.depaul.key},
-  'mc-gowan-south': {owner: BuildingOwners.depaul.key},
-  'de-paul-center': {owner: BuildingOwners.depaul.key},
-  'holtschneider-performance-center': {owner: BuildingOwners.depaul.key},
-  'student-center': {owner: BuildingOwners.depaul.key},
-  'centennial-hall': {owner: BuildingOwners.depaul.key},
+  // Mc-Gowan-North
+  '251330': {owner: BuildingOwners.depaul.key},
+  // Mc-Gowan-South
+  '119808': {owner: BuildingOwners.depaul.key},
+  // De-Paul-Center
+  '101562': {owner: BuildingOwners.depaul.key},
+  // Holtschneider-Performance-Center
+  '254989': {owner: BuildingOwners.depaul.key},
+  // Student-Center
+  '251335': {owner: BuildingOwners.depaul.key},
+  // Centennial-Hall
+  '251326': {owner: BuildingOwners.depaul.key},
 
   /**
    * IIT buildings
    * Helpful source: https://en.wikipedia.org/wiki/List_of_Illinois_Institute_of_Technology_buildings
    */
-  'crown-hall': {owner: BuildingOwners.iit.key},
-  'keating-hall': {owner: BuildingOwners.iit.key},
-  'life-science-research-building': {owner: BuildingOwners.iit.key},
-  'tech-business-center': {owner: BuildingOwners.iit.key},
-  'herman-hall': {owner: BuildingOwners.iit.key},
-  'iit-tower': {owner: BuildingOwners.iit.key},
-  'iit-stuart-school-of-business': {owner: BuildingOwners.iit.key},
-  'john-t-rettaliata-engineering-center': {owner: BuildingOwners.iit.key},
-  'mc-cormick-tribune-campus-center': {owner: BuildingOwners.iit.key},
+  // Crown Hall
+  '256419': {owner: BuildingOwners.iit.key},
+  // Keating Hall
+  '256434': {owner: BuildingOwners.iit.key},
+  // Life Science Research Building
+  '256439': {owner: BuildingOwners.iit.key},
+  // Tech Business Center
+  '256438': {owner: BuildingOwners.iit.key},
+  // Herman Hall
+  '256427': {owner: BuildingOwners.iit.key},
+  // IIT Tower
+  '256440': {owner: BuildingOwners.iit.key},
+  // IIT Stuart School Of Business
+  '158403': {owner: BuildingOwners.iit.key},
+  // John T Rettaliata Engineering Center
+  '256420': {owner: BuildingOwners.iit.key},
+  // McCormick Tribune Campus Center
+  '256428': {owner: BuildingOwners.iit.key},
 
   /**
    * UChicago Buildings
    * Helpful source: https://registrar.uchicago.edu/faculty-staff/classroom-scheduling/buildings-directory-2/
    */
-  '1155-e-60th-st': {owner: BuildingOwners.uchicago.key},
-  '5841-s-maryland-ave-m-c0985': {owner: BuildingOwners.uchicago.key},
-  '6045-kenwood-building': {owner: BuildingOwners.uchicago.key},
-  'accelerator-high-energy-physics': {owner: BuildingOwners.uchicago.key},
-  'gordon-center-for-integrative-science-gcis': {owner: BuildingOwners.uchicago.key},
-  'hinds-laboratory': {owner: BuildingOwners.uchicago.key},
-  'jones-laboratory': {owner: BuildingOwners.uchicago.key},
-  'searle-chemistry-laboratory': {owner: BuildingOwners.uchicago.key},
-  'william-eckhardt-research-center': {owner: BuildingOwners.uchicago.key},
-  'ratner-athletics-center': {owner: BuildingOwners.uchicago.key},
-  'crerar-library': {owner: BuildingOwners.uchicago.key},
-  'renee-granville-grossman-residential-commons': {owner: BuildingOwners.uchicago.key},
-  'campus-residential-north-commons': {owner: BuildingOwners.uchicago.key},
-  'burton-judson-courts': {owner: BuildingOwners.uchicago.key},
-  'international-house':  {owner: BuildingOwners.uchicago.key},
-  'saieh-hall-for-economics':  {owner: BuildingOwners.uchicago.key},
+  // 1155 E 60th St
+  '136212': {owner: BuildingOwners.uchicago.key},
+  // 5841 S Maryland Ave M C0985
+  '256838': {owner: BuildingOwners.uchicago.key},
+  // 6045 Kenwood Building
+  '172151': {owner: BuildingOwners.uchicago.key},
+  // Accelerator High Energy Physics
+  '252039': {owner: BuildingOwners.uchicago.key},
+  // Gordon Center For Integrative Science Gcis
+  '110848': {owner: BuildingOwners.uchicago.key},
+  // Hinds Laboratory
+  '173925': {owner: BuildingOwners.uchicago.key},
+  // Jones Laboratory
+  '252050': {owner: BuildingOwners.uchicago.key},
+  // Searle Chemistry Laboratory
+  '134735': {owner: BuildingOwners.uchicago.key},
+  // William Eckhardt Research Center
+  '254382': {owner: BuildingOwners.uchicago.key},
+  // Ratner Athletics Center
+  '252037': {owner: BuildingOwners.uchicago.key},
+  // Crerar Library
+  '252038': {owner: BuildingOwners.uchicago.key},
+  // Renee Granville Grossman Residential Commons
+  '252043': {owner: BuildingOwners.uchicago.key},
+  // Campus Residential North Commons
+  '254381': {owner: BuildingOwners.uchicago.key},
+  // Burton Judson Courts
+  '156942': {owner: BuildingOwners.uchicago.key},
+  '254181':  {owner: BuildingOwners.uchicago.key},
+  '252047':  {owner: BuildingOwners.uchicago.key},
 
   /**
    * Northwestern Buildings
    * No helpful resource, but Googling each of these will pull up a Northwestern page
    */
-  '303-e-superior-street': { owner: BuildingOwners.northwestern.key },
-  '320-e-superior-street': { owner: BuildingOwners.northwestern.key },
-  '300-e-superior-street': { owner: BuildingOwners.northwestern.key },
-  'nmh-olson-pavilion': { owner: BuildingOwners.northwestern.key },
-  'northwestern-university-chicago-campus': { owner: BuildingOwners.northwestern.key },
+  // 303 E Superior Street
+  '256405': { owner: BuildingOwners.northwestern.key },
+  // 320 E Superior Street
+  '256408': { owner: BuildingOwners.northwestern.key },
+  // 300 E Superior Street
+  '256410': { owner: BuildingOwners.northwestern.key },
+  // NMH Olson Pavilion
+  '103748': { owner: BuildingOwners.northwestern.key },
+  // Northwestern University Chicago Campus
+  '101840': { owner: BuildingOwners.northwestern.key },
 };
 
 export function getBuildingCustomInfo(building: IBuilding): IBuildingCustomInfo | null {
-  const buildingSlug = slugify(building.slugSource as string);
+  const buildingSlug = slugify(building.ID as string);
 
   return BuildingsCustomInfo[buildingSlug] ?? null;
 }

@@ -29,6 +29,7 @@ export default class TopEmitters extends Vue {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path

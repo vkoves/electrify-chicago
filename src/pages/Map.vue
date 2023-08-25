@@ -437,6 +437,7 @@ export default class MapPage extends Vue {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           ZIPCode

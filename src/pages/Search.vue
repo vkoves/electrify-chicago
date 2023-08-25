@@ -150,6 +150,7 @@ export default class Search extends Vue {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path

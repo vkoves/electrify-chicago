@@ -42,11 +42,13 @@ export const BuildingImages: IBuildingImages = {
     /**
      * Museums
      */
-    'the-art-institute-of-chicago': {
+    // the-art-institute-of-chicago
+    '160196': {
         attributionUrl: 'https://en.wikipedia.org/wiki/File:Art_Institute_of_Chicago_(51575570710).jpg',
         imgUrl: BuildingImagesBase + 'art-institute.jpg',
     },
-    'john-g-shedd-aquarium': {
+    // john-g-shedd-aquarium
+    '166134': {
         attributionUrl: 'https://en.wikipedia.org/wiki/File:Shedd_Aquarium_E.jpg',
         imgUrl: BuildingImagesBase + 'shedd-aquarium.jpg',
     },
@@ -54,42 +56,50 @@ export const BuildingImages: IBuildingImages = {
     /**
      * General Famous Buildings
      */
-    'marina-towers': {
+    // marina-towers-condominium-association
+    '239096': {
         attributionUrl: 'https://en.wikipedia.org/wiki/File:Marina_City,_Chicago,_Illinois,_Estados_Unidos,_2012-10-20,_DD_01.jpg',
         imgUrl: BuildingImagesBase + 'marina-towers.jpg',
         isTall: true,
     },
-    'navy-pier-inc': {
+    // navy-pier-inc
+    '105864': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:Navy_Pier_1190x1585.jpg',
         imgUrl: BuildingImagesBase + 'navy-pier.jpg',
         isTall: true,
     },
     // McCormick Place
-    'metropolitan-pier-and-exposition-authority': {
+    // metropolitan-pier-and-exposition-authority
+    '101551': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:20070110_McCormick_Place_(4).JPG',
         imgUrl: BuildingImagesBase + 'mccormick-place.jpg',
     },
-    'aqua-at-lakeshore-east': {
+    // aqua
+    '231019': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:Aqua_(Building)_cropped.jpg',
         imgUrl: BuildingImagesBase + 'aqua.jpg',
         isTall: true,
     },
-    'willis-tower-rivion-llc': {
+    // willis-tower
+    '103606': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:Chicago_Sears_Tower.jpg',
         imgUrl: BuildingImagesBase + 'willis-tower.jpg',
         isTall: true,
     },
-    'the-john-hancock-center': {
+    // the-john-hancock-center
+    '100429': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:John_Hancock_Center_viewed_from_Navy_Pier.jpg',
         imgUrl: BuildingImagesBase + 'john-hancock.jpg',
         isTall: true,
     },
-    'the-mart-chicago': {
+    // merchandise-mart
+    '103656': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:Merchandise_Mart_080405.jpg',
         imgUrl: BuildingImagesBase + 'merchandise-mart.jpg',
         isTall: true,
     },
-    'the-monadnock-building': {
+    // the-monadnock-building
+    '101567': {
         attributionUrl: 'https://goo.gl/maps/8CUXVcLq7k9uS3yr7',
         imgUrl: BuildingImagesBase + 'monadnock-building.jpg',
         fromGoogleMaps: true,
@@ -99,24 +109,28 @@ export const BuildingImages: IBuildingImages = {
     /**
      * Particularly Low GHG Intensity Buildings
      */
-    'king-college-prep-cps': {
+    // king-college-prep-cps
+    '101572': {
         attributionUrl: 'https://goo.gl/maps/Y4AVkhcaFhuQAk5j6',
         imgUrl: BuildingImagesBase + 'king-college-prep.jpg',
         fromGoogleMaps: true,
     },
-    'clinton-complex': {
+    // clinton-complex-condominium-association
+    '254105': {
         attributionUrl: 'https://goo.gl/maps/XdsAqhXxDBsQSGLC9',
         imgUrl: BuildingImagesBase + 'clinton-complex-condos.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'state-place-centre': {
+    // state-place-condominium-association
+    '229402': {
         attributionUrl: 'https://goo.gl/maps/exkd8jYSeNUmjer99',
         imgUrl: BuildingImagesBase + 'state-place-condos.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'park-1500-loft': {
+    // park-1500-lofts
+    '239994': {
         attributionUrl: 'https://goo.gl/maps/3fQf99PGpCzEU1Vs6',
         imgUrl: BuildingImagesBase + 'park-1500-lofts.jpg',
         fromGoogleMaps: true,
@@ -126,27 +140,32 @@ export const BuildingImages: IBuildingImages = {
     /**
      * IIT (Illinois Tech) buildings
      */
-    'herman-hall': {
+    // herman-hall
+    '256427': {
         attributionUrl: 'https://commons.wikimedia.org/wiki/File:IIT_Hermann_Hall_1.jpg',
         imgUrl: BuildingImagesBase + 'herman-hall.jpg',
     },
-    'keating-hall': {
+    // keating-hall
+    '256434': {
         attributionUrl: 'https://goo.gl/maps/nuWwajKGroNySAQU7',
         imgUrl: BuildingImagesBase + 'keating-hall.jpg',
         fromGoogleMaps: true,
     },
-    'tech-business-center': {
+    // tech-business-center
+    '256438': {
         attributionUrl: 'https://goo.gl/maps/aT7PYiyMQzmSwQ8f6',
         imgUrl: BuildingImagesBase + 'tech-business-center.jpg',
         fromGoogleMaps: true,
     },
-    'iit-tower': {
+    // iit-tower
+    '256440': {
         attributionUrl: 'https://goo.gl/maps/pW2F1yfAvwKjwFL27',
         imgUrl: BuildingImagesBase + 'iit-tower.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'mc-cormick-tribune-campus-center-mtcc': {
+    // mc-cormick-tribune-campus-center
+    '256428': {
         attributionUrl: 'https://goo.gl/maps/nnGyrZ4nZZ1oaK6J6',
         imgUrl: BuildingImagesBase + 'mccormick-tribune-campus-center.jpg',
         fromGoogleMaps: true,
@@ -155,36 +174,42 @@ export const BuildingImages: IBuildingImages = {
     /**
      * UChicago Buildings
      */
-    '6045-kenwood-building': {
+    // 6045-kenwood-building
+    '172151': {
         attributionUrl: 'https://goo.gl/maps/TyJgFT4wfqyRaFtt5',
         imgUrl: BuildingImagesBase + '6045-s-kenwood.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'accelerator-building': {
+    // accelerator-high-energy-physics
+    '252039': {
         attributionUrl: 'https://goo.gl/maps/gkWsHoymmwNiwDAU6',
         imgUrl: BuildingImagesBase + 'uchicago-accelerator-ellis.jpg',
         fromGoogleMaps: true,
     },
-    'gordon-center-for-integrative-science-gcis': {
+    // gordon-center-for-integrative-science-gcis
+    '110848': {
         attributionUrl: 'https://goo.gl/maps/wgyeibwbqyr1UdvY9',
         imgUrl: BuildingImagesBase + 'gordon-center.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'hinds-laboratory': {
+    // hinds-laboratory
+    '173925': {
         attributionUrl: 'https://goo.gl/maps/yManrKMWU5xFEVQC8',
         imgUrl: BuildingImagesBase + 'uchicago-hinds-laboratory.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'searle-chemistry-laboratory': {
+    // searle-chemistry-laboratory
+    '134735': {
         attributionUrl: 'https://goo.gl/maps/ME1PsC6gepn5W5Ms7',
         imgUrl: BuildingImagesBase + 'searle-chemistry-laboratory.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'william-eckhardt-research-center-erc': {
+    // william-eckhardt-research-center
+    '254382': {
         attributionUrl: 'https://goo.gl/maps/GJaEQAau4odVgF2A6',
         imgUrl: BuildingImagesBase + 'william-eckhardt-research-center.jpg',
         fromGoogleMaps: true,
@@ -194,36 +219,42 @@ export const BuildingImages: IBuildingImages = {
     /**
      * Misc. High Emitters
      */
-    '350-e-cermak': {
+    // digital-lakeside
+    '101185': {
         attributionUrl: 'https://goo.gl/maps/1H9Wct1qprbtzNux9',
         imgUrl: BuildingImagesBase + 'digital-lakeside.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'wellington-condominium': {
+    // 352-360-w-wellington-ave
+    '159651': {
         attributionUrl: 'https://goo.gl/maps/cqJ8Ao4PCyKktJqW7',
         imgUrl: BuildingImagesBase + '352-w-wellington.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'lowden-homes': {
+    // lowden-homes
+    '250075': {
         attributionUrl: 'https://goo.gl/maps/StosjYVtT3XjeQ8J7',
         imgUrl: BuildingImagesBase + 'lowden-homes.jpg',
         fromGoogleMaps: true,
     },
-    'c-h1': {
+    // core-site
+    '131236': {
         attributionUrl: 'https://goo.gl/maps/hLejrJBazqKHTs5x9',
         imgUrl: BuildingImagesBase + 'core-site.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    '600-780-s-federal-st': {
+    // digital-printer-s-row
+    '168367': {
         attributionUrl: 'https://goo.gl/maps/F3dnKuzJ29cTxD6F7',
         imgUrl: BuildingImagesBase + 'digital-printers-row.jpg',
         fromGoogleMaps: true,
         isTall: true,
     },
-    'shop-and-save-market-nagle': {
+    // shop-and-save-market-nagle
+    '173497': {
         attributionUrl: 'https://goo.gl/maps/DRpUvwYquHtWFaT58',
         imgUrl: BuildingImagesBase + 'shop-and-save-nagle.jpg',
         fromGoogleMaps: true,
@@ -234,7 +265,7 @@ export const BuildingImages: IBuildingImages = {
  * A helper function to get the building image object for a given building
  */
 export function getBuildingImage(building: IBuilding): IBuildingImage | null {
-    const buildingSlug = slugify(building.slugSource as string);
+    const buildingSlug = slugify(building.ID as string);
     const buildingImageObj = BuildingImages[buildingSlug];
 
     return buildingImageObj ?? null;
