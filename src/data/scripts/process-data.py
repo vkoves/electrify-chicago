@@ -4,6 +4,7 @@ import pandas
 
 from typing import List
 from utils import get_and_clean_csv, json_data_builder
+from building_utils import clean_property_name
 
 # Assume run in /data
 data_directory = './source/'
@@ -13,7 +14,7 @@ data_out_directory = './dist/'
 data_debug_directory = './debug/'
 
 # Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
-building_emissions_file = 'BenchmarkDataRenamed.csv'
+building_emissions_file = 'ChicagoEnergyBenchmarkingAllNewestInstances.csv'
 building_emissions_file_out_name = 'building-benchmarks'
 
 # Columns we want to run statistical analysis and ranking on - order matters here
@@ -43,7 +44,9 @@ building_cols_to_rank = [
 
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
+    'PropertyName',
     'ChicagoEnergyRating',
+    'ZIPCode',
 ]
 
 # Int columns that are numbers (and can get averaged) but should be rounded
@@ -53,7 +56,6 @@ int_cols = [
     # TODO: Move to string after figuring out why the X.0 is showing up
     'Wards',
     'CensusTracts',
-    'ZIPCode',
     'CommunityAreas',
     'HistoricalWards2003-2015'
 ]
@@ -61,8 +63,6 @@ int_cols = [
 # Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
 # median values for fields
 # Returns the output file if succeeds
-
-
 def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     # Clone the input data to prevent manipulating it on accident
     building_data = building_data_in.copy()
@@ -124,7 +124,15 @@ def processBuildingData() -> List[str]:
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
     building_data[int_cols] = building_data[int_cols].astype('Int64')
 
-    outputted_paths.append(calculateBuildingStats(building_data))
+    building_data['PropertyName'] = building_data['PropertyName'].map(clean_property_name)
+
+    # find the latest year in the data
+    latest_year = building_data['DataYear'].max()
+
+    # filter out all buildings that aren't the latest year
+    latest_building_data = building_data[building_data['DataYear'] == latest_year]
+
+    outputted_paths.append(calculateBuildingStats(latest_building_data))
 
     # Loop through building_cols_to_rank and calculate both a numeric rank (e.g. #1 highest GHG
     # Intensity) and a percentage (e.g. top 95% of total GHG emissions)
@@ -132,13 +140,10 @@ def processBuildingData() -> List[str]:
     # for descending ranks
     # E.g Keating Hall is the #1 building by GHG Intensity, and lowest 25th percentile in footprint
     for col in building_cols_to_rank:
-        building_data[col + 'Rank'] = building_data[col].rank(ascending=False)
+        building_data[col + 'Rank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(ascending=False)
 
         # The percentile rank can be ascending, we want to say this building is worse than X% of buildings
-        building_data[col +
-                      'PercentileRank'] = building_data[col].rank(pct=True)
-        building_data[col + 'PercentileRank'] = building_data[col +
-                                                              'PercentileRank'].round(3)
+        building_data[col + 'PercentileRank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(pct=True).round(3)
 
     # Export the data
     output_path = data_out_directory + building_emissions_file_out_name + '.csv'

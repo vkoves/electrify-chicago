@@ -3,6 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
 import {
@@ -19,6 +20,7 @@ interface IBuildingEdge { node: IBuilding; }
   components: {
     BuildingsTable,
     DataDisclaimer,
+    DataSourceFootnote,
     NewTabIcon,
   },
   metaInfo() {
@@ -58,18 +60,18 @@ export default class BiggestBuildings extends Vue {
   }
 
   filterBuildings(ownerId: string): void {
-    // Loop through BuildingsCustomInfo to get the slugs of buildings we are looking for
+    // Loop through BuildingsCustomInfo to get the IDs of buildings we are looking for
     const ownerBuildingsSlugs: Array<string> = Object.entries(BuildingsCustomInfo)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .filter(([ buildingSlug, buildingInfo ]: [string, IBuildingCustomInfo]) => {
+      .filter(([ buildingID, buildingInfo ]: [string, IBuildingCustomInfo]) => {
         return buildingInfo.owner === ownerId;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      }).map(([ buildingSlug, buildingInfo ]: [string, IBuildingCustomInfo]) => buildingSlug);
+      }).map(([ buildingID, buildingInfo ]: [string, IBuildingCustomInfo]) => buildingID);
 
     this.buildingsFiltered =
       this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
-        return ownerBuildingsSlugs.some((ownedBuildingSlug) =>
-          (buildingEdge.node.path as string).includes(ownedBuildingSlug));
+        return ownerBuildingsSlugs.some((ownedBuildingID) =>
+          buildingEdge.node.ID  === ownedBuildingID);
       });
   }
 
@@ -106,6 +108,7 @@ export default class BiggestBuildings extends Vue {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path
@@ -194,17 +197,7 @@ export default class BiggestBuildings extends Vue {
         :buildings="buildingsFiltered"
       />
 
-      <p class="footnote">
-        Data Source:
-        <!-- eslint-disable-next-line max-len -->
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Chicago Energy Benchmarking Data <NewTabIcon />
-        </a>
-      </p>
+      <DataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>

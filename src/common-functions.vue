@@ -27,6 +27,11 @@ export interface IBuilding {
   PrimaryPropertyType: string;
   Latitude: string;
   Longitude: string;
+
+
+  NaturalGasUse: string;
+  DistrictSteamUse: string;
+
   [buildingKey: string]: string | number | boolean;
 }
 

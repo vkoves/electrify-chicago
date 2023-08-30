@@ -1,3 +1,21 @@
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+import NewTabIcon from '~/components/NewTabIcon.vue';
+
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
+  components: {
+    NewTabIcon,
+  },
+  metaInfo() {
+    return { title:  'About Us' };
+  },
+})
+export default class About extends Vue {
+}
+</script>
 <template>
   <DefaultLayout>
     <div class="layout-constrained">
@@ -64,6 +82,14 @@
         used.
       </p>
 
+      <h2>Updates</h2>
+
+      See our <g-link to="/release-notes">
+        Release Notes
+      </g-link> page to see data updates and other
+      information, or check activity on our
+      <a href="https://github.com/vkoves/electrify-chicago">GitHub repo</a>!
+
       <h2>Authors</h2>
 
       <p>
@@ -103,25 +129,26 @@
         <a href="https://github.com/vkoves/electrify-chicago/issues/new">
           File an issue on the Electrify Chicago GitHub</a>!
       </p>
+
+      <h2>Other Interesting Pages</h2>
+
+      <p>
+        There are a lot of interesting ways to view this data, here are a few pages that aren't
+        featured in our header but could be useful:
+      </p>
+
+      <ul>
+        <li>
+          <g-link to="/top-electricity-users">
+            Top Electricity Use
+          </g-link>
+        </li>
+        <li>
+          <g-link to="/biggest-gas-free-buildings">
+            Biggest Gas Free Buildings
+          </g-link>
+        </li>
+      </ul>
     </div>
   </DefaultLayout>
 </template>
-
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-
-import NewTabIcon from '~/components/NewTabIcon.vue';
-
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
-@Component<any>({
-  components: {
-    NewTabIcon,
-  },
-  metaInfo() {
-    return { title:  'About Us' };
-  },
-})
-export default class About extends Vue {
-}
-</script>

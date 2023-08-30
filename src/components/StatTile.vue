@@ -40,6 +40,7 @@
         #{{ statRank }} {{ rankLabel }}
       </div>
 
+      <!-- Rank amongst property type -->
       <div
         v-if="propertyStatRank && propertyStatRank <= RankConfig.FlagRankMax && propertyRankLabel"
         class="property-rank"
@@ -86,7 +87,16 @@
         class="median-comparison"
       >
         <div>
-          <span class="val">{{ medianMultipleMsgCityWide }} median</span>
+          <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
+          <span
+            v-if="stats[statKey] > 0"
+            class="val"
+          >
+            {{ medianMultipleMsgCityWide }} median
+          </span>
+          <span v-else>
+            Median Chicago Building
+          </span>
 
           <div class="median-val">
             {{ stats[statKey].median.toLocaleString() }}
@@ -95,12 +105,60 @@
         </div>
 
         <div v-if="medianMultiplePropertyType">
-          <span class="val">{{ medianMultiplePropertyType }} median {{ propertyType }}</span>
+          <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
+          <span
+            v-if="stats[statKey] > 0"
+            class="val"
+          >
+            {{ medianMultiplePropertyType }} median {{ propertyType }}
+          </span>
+          <span v-else>
+            Median {{ propertyType }}
+          </span>
 
           <div class="median-val">
             {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }}
             <span v-html="unit" />
           </div>
+        </div>
+      </div>
+      <p
+        v-else
+        class="no-stat-msg"
+      >
+        Most buildings don't use
+        <span v-if="statKey === 'DistrictSteamUse'">district steam</span>
+        <span v-else-if="statKey === 'DistrictChilledWaterUse'">district chilling</span>
+        <span v-else>this</span>,
+        so we don't currently have comparison data.
+      </p>
+
+      <!-- Natural Gas specific message -->
+      <div
+        v-if="statValue === '0' && statKey === 'NaturalGasUse'"
+        class="no-gas-msg"
+      >
+        <div v-if="fullyGasFree">
+          <div class="bold">
+            This Building Didn't Burn Any Natural Gas! 🎉
+          </div>
+
+          <p class="smaller">
+            This building burned no natural gas on-site and isn't connected to a district heating
+            system, meaning it's fully electric!
+          </p>
+        </div>
+        <div v-else>
+          <div class="bold">
+            This Building Uses District Heating ❗
+          </div>
+
+          <p class="smaller">
+            Although this building didn't burn any natural gas on site, it's connected to a district
+            heating system, a centralized system for heating multiple buildings. District heating
+            systems can be fully electric, but in Chicago most district heating systems are natural
+            gas powered, meaning this building was most likely still heated with natural gas.
+          </p>
         </div>
       </div>
     </template>
@@ -149,6 +207,16 @@ export default class StatTile extends Vue {
     return this.building["PrimaryPropertyType"];
   }
 
+
+  /**
+   * Whether a building is _fully_ gas free, meaning no natural gas burned on-site or to heat it
+   * through a district heating system.
+   */
+  get fullyGasFree(): boolean {
+    return parseFloat(this.building.NaturalGasUse) === 0
+      && parseFloat(this.building.DistrictSteamUse) === 0;
+  }
+
   get pluralismForPropertyType(): string {
     let pluralismForProperty;
     let curPropertyType = this.propertyType;
@@ -194,7 +262,7 @@ export default class StatTile extends Vue {
   }
 
   /**
-   * Returns the multipier for this building's stat compared to the median (e.g. '3' times median
+   * Returns the multiplier for this building's stat compared to the median (e.g. '3' times median
    * '1/5' median)
    */
   medianMultipleMsg(median:number, statValueNum:number): string | null {
@@ -453,6 +521,17 @@ export default class StatTile extends Vue {
 
   .empty-notice {
     font-size: 0.75rem;
+  }
+
+  .no-gas-msg {
+    margin-top: 0.75rem;
+
+    p { margin: 0.25rem 0 0; }
+  }
+
+  .no-stat-msg {
+    font-size: 0.75rem;
+    margin-bottom: 0;
   }
 }
 </style>

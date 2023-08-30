@@ -29,6 +29,7 @@ export default class LargeOwners extends Vue {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path

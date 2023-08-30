@@ -2,6 +2,7 @@
 query ($id: ID!) {
   building(id: $id) {
     slugSource
+    DataYear
     ID
     Address
     ChicagoEnergyRating
@@ -90,6 +91,14 @@ query ($id: ID!) {
 
         <BuildingImage :building="$page.building" />
 
+        <div
+          v-if="dataYear < LatestDataYear"
+          class="building-banner"
+        >
+          <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }},
+          <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
+        </div>
+
         <div class="building-details">
           <h2>Building Info</h2>
 
@@ -108,7 +117,7 @@ query ($id: ID!) {
 
             <div>
               <dt>Built</dt>
-              <dd>{{ $page.building.YearBuilt }}</dd>
+              <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
             </div>
 
             <div>
@@ -177,7 +186,7 @@ query ($id: ID!) {
 
       <h2>Emissions & Energy Information</h2>
       <p class="year-note">
-        For {{ DataYear }}
+        For {{ dataYear }}
       </p>
 
       <dl class="emission-stats">
@@ -255,7 +264,8 @@ query ($id: ID!) {
           </dd>
         </div>
 
-        <div v-if="$page.building.DistrictSteamUse">
+        <!-- Most buildings don't use district steam, so only show if > 0 -->
+        <div v-if="$page.building.DistrictSteamUse > 0">
           <dt>District Steam Use</dt>
           <dd>
             <StatTile
@@ -267,7 +277,8 @@ query ($id: ID!) {
           </dd>
         </div>
 
-        <div v-if="$page.building.DistrictChilledWaterUse">
+        <!-- Most buildings don't use district chilling, so only show if > 0 -->
+        <div v-if="$page.building.DistrictChilledWaterUse > 0">
           <dt>District Chilled Water Use</dt>
           <dd>
             <StatTile
@@ -283,20 +294,10 @@ query ($id: ID!) {
       <p class="constrained">
         <strong>* Important Note:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
-        the year {{ DataYear }} with emissions greater than 1,000 metric tons.
+        the year {{ LatestDataYear }}, which only applies to buildings over 50,000 square feet.
       </p>
 
-      <p class="footnote">
-        Data Source:
-        <!-- eslint-disable-next-line max-len -->
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Chicago Energy Benchmarking Data Covered Buildings <NewTabIcon />
-        </a>
-      </p>
+      <DataSourceFootnote />
 
       <section class="takeaways">
         <h2>What Should We Do About This?</h2>
@@ -387,11 +388,13 @@ query ($id: ID!) {
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import NewTabIcon from '~/components/NewTabIcon.vue';
-import StatTile from '~/components/StatTile.vue';
-import OwnerLogo from '~/components/OwnerLogo.vue';
-import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
+import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
+import OwnerLogo from '~/components/OwnerLogo.vue';
+import StatTile from '~/components/StatTile.vue';
+
 import { IBuildingBenchmarkStats } from '~/common-functions.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
@@ -408,6 +411,7 @@ import { IBuilding } from '../common-functions.vue';
   },
   components: {
     BuildingImage,
+    DataSourceFootnote,
     NewTabIcon,
     OverallRankEmoji,
     OwnerLogo,
@@ -423,7 +427,11 @@ export default class BuildingDetails  extends Vue {
   /** Expose stats to readme */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
-  readonly DataYear: number = 2020;
+  /**
+   * The year most/the latest buildings data is from - if this building's year is older than this,
+   *  we show a warning that the data is old
+   */
+  readonly LatestDataYear: number = 2021;
 
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
@@ -436,6 +444,11 @@ export default class BuildingDetails  extends Vue {
   /** The primary property type of the current building as it shows in the data */
   get propertyType(): string {
     return this.building.PrimaryPropertyType;
+  }
+
+  /** The year of the data for this specific building */
+  get dataYear(): number {
+    return this.building.DataYear as number;
   }
 
   /** The primary property type of the current building, URL encoded for a link */
@@ -483,6 +496,7 @@ export default class BuildingDetails  extends Vue {
       gap: 0 2rem;
       grid-template-areas:
         "title img"
+        "banner img"
         "details img";
 
       .building-header-text {
@@ -494,17 +508,20 @@ export default class BuildingDetails  extends Vue {
         align-self: start;
       }
       .building-img-cont { grid-area: img; }
+      .building-banner { grid-area: banner; }
     }
 
     &:not(.-img-tall) {
       display: grid;
       grid-template-areas:
         "img"
+        "banner"
         "details";
 
       .building-header-text {
         grid-area: img;
       }
+      .building-banner { grid-area: banner; }
       .building-img-cont {
         grid-area: img;
         width: 80%;
@@ -533,6 +550,17 @@ export default class BuildingDetails  extends Vue {
   h1 { margin: 0; }
 
   h2 { margin: 2.5rem 0 0; }
+
+  .building-banner {
+    padding: 1rem;
+    background-color: $warning-background;
+    border: dashed 0.125rem $warning-border;
+    border-radius: $brd-rad-small;
+    margin-bottom: 1rem;
+    justify-self: flex-start;
+
+    span.emoji { margin-right: 0.5rem; }
+  }
 
   p.year-note {
     font-size: 0.825rem;

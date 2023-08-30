@@ -4,6 +4,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
@@ -14,12 +15,13 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
     BuildingsTable,
     DataDisclaimer,
     NewTabIcon,
+    DataSourceFootnote,
   },
   metaInfo() {
-    return { title:  'Biggest Natural Gas Users' };
+    return { title:  'Cleanest Buildings' };
   },
 })
-export default class TopGasUsers extends Vue {
+export default class CleanestBuildings extends Vue {
   /** Expose BuildingBenchmarkStats to template */
   BuildingBenchmarkStats = BuildingBenchmarkStats;
 }
@@ -27,10 +29,13 @@ export default class TopGasUsers extends Vue {
 
 <static-query>
   query {
-    allBuilding(sortBy: "GHGIntensity", order: ASC, limit: 50) {
+    allBuilding(
+      filter: { DataYear: { eq: "2021" } }, sortBy: "GHGIntensity", order: ASC, limit: 50
+    ) {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path
@@ -66,7 +71,7 @@ export default class TopGasUsers extends Vue {
       The median building in our dataset emits {{ BuildingBenchmarkStats.GHGIntensity.median }}
       CO<sub>2</sub> kg / square foot, but these buildings are Chicago's best in class and emit
       <em>way</em> less! Some, like
-      <g-link to="/building/marina-towers-condominium-association/">
+      <g-link to="/building/marina-towers">
         Marina Towers
       </g-link>, are
       large residential buildings, but other buildings in this list include offices, hotels, and
@@ -81,17 +86,7 @@ export default class TopGasUsers extends Vue {
 
     <BuildingsTable :buildings="$static.allBuilding.edges" />
 
-    <p class="footnote">
-      Data Source:
-      <!-- eslint-disable-next-line max-len -->
-      <a
-        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Chicago Energy Benchmarking Data <NewTabIcon />
-      </a>
-    </p>
+    <DataSourceFootnote />
   </DefaultLayout>
 </template>
 

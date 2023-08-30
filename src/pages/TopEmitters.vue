@@ -3,6 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
@@ -11,6 +12,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
   components: {
     BuildingsTable,
     DataDisclaimer,
+    DataSourceFootnote,
     NewTabIcon,
   },
   metaInfo() {
@@ -23,10 +25,11 @@ export default class TopEmitters extends Vue {
 
 <static-query>
   query {
-    allBuilding(sortBy: "TotalGHGEmissions", limit: 50) {
+    allBuilding(filter: { DataYear: { eq: "2021" } }, sortBy: "TotalGHGEmissions", limit: 50) {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           path
@@ -81,17 +84,7 @@ export default class TopEmitters extends Vue {
 
     <BuildingsTable :buildings="$static.allBuilding.edges" />
 
-    <p class="footnote">
-      Data Source:
-      <!-- eslint-disable-next-line max-len -->
-      <a
-        href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Chicago Energy Benchmarking Data <NewTabIcon />
-      </a>
-    </p>
+    <DataSourceFootnote />
   </DefaultLayout>
 </template>
 

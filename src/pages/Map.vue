@@ -8,6 +8,8 @@ import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+
 import {
   IBuildingBenchmarkStats, IBuilding, IBuildingNode, getOverallRankEmoji, RankConfig,
 } from '../common-functions.vue';
@@ -24,6 +26,7 @@ const GoogleMapsScriptId = 'google-maps-script';
   components: {
     BuildingImage,
     DataDisclaimer,
+    DataSourceFootnote,
     NewTabIcon,
     OverallRankEmoji,
     RankText,
@@ -430,10 +433,11 @@ export default class MapPage extends Vue {
 
 <page-query>
   query {
-    allBuilding(sortBy: "GHGIntensity") {
+    allBuilding(filter: { DataYear: { eq: "2021" } }, sortBy: "GHGIntensity") {
       edges {
         node {
           slugSource
+          ID
           PropertyName
           Address
           ZIPCode
@@ -629,16 +633,7 @@ export default class MapPage extends Vue {
         <BuildingsTable :buildings="$page.allBuilding.edges" />
       -->
 
-      <p class="footnote">
-        Data Source:
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Chicago Energy Benchmarking Data <NewTabIcon />
-        </a>
-      </p>
+      <DataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>

@@ -78,9 +78,11 @@ img.-shadowed {
   box-shadow: 0.125rem 0.125rem 0.125rem $box-shadow-main;
 }
 
-.large-text {
-  font-size: 1.3em;
-}
+.large-text { font-size: 1.3em; }
+
+.smaller { font-size: smaller; }
+
+.x-small-text { font-size: 0.75rem; }
 
 .footnote {
   font-size: 0.75rem;
