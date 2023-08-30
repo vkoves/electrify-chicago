@@ -84,7 +84,9 @@ export default class About extends Vue {
 
       <h2>Updates</h2>
 
-      See our <g-link to="/release-notes">Release Notes</g-link> page to see data updates and other
+      See our <g-link to="/release-notes">
+        Release Notes
+      </g-link> page to see data updates and other
       information, or check activity on our
       <a href="https://github.com/vkoves/electrify-chicago">GitHub repo</a>!
 
