@@ -1,3 +1,21 @@
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+
+import NewTabIcon from '~/components/NewTabIcon.vue';
+
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
+  components: {
+    NewTabIcon,
+  },
+  metaInfo() {
+    return { title:  'About Us' };
+  },
+})
+export default class About extends Vue {
+}
+</script>
 <template>
   <DefaultLayout>
     <div class="layout-constrained">
@@ -64,6 +82,12 @@
         used.
       </p>
 
+      <h2>Updates</h2>
+
+      See our <g-link to="/release-notes">Release Notes</g-link> page to see data updates and other
+      information, or check activity on our
+      <a href="https://github.com/vkoves/electrify-chicago">GitHub repo</a>!
+
       <h2>Authors</h2>
 
       <p>
@@ -126,22 +150,3 @@
     </div>
   </DefaultLayout>
 </template>
-
-<script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-
-import NewTabIcon from '~/components/NewTabIcon.vue';
-
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
-@Component<any>({
-  components: {
-    NewTabIcon,
-  },
-  metaInfo() {
-    return { title:  'About Us' };
-  },
-})
-export default class About extends Vue {
-}
-</script>

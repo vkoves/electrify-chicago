@@ -16,7 +16,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Biggest Natural Gas Users' };
+    return { title:  'Biggest Gas Free Buildings' };
   },
 })
 export default class TopGasUsers extends Vue {

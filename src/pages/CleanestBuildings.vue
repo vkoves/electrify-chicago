@@ -18,10 +18,10 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
     DataSourceFootnote,
   },
   metaInfo() {
-    return { title:  'Biggest Natural Gas Users' };
+    return { title:  'Cleanest Buildings' };
   },
 })
-export default class TopGasUsers extends Vue {
+export default class CleanestBuildings extends Vue {
   /** Expose BuildingBenchmarkStats to template */
   BuildingBenchmarkStats = BuildingBenchmarkStats;
 }
