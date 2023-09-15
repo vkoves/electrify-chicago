@@ -2,6 +2,7 @@ import pandas as pd
 import json
 
 path_to_buildings_csv = "./dist/building-benchmarks.csv"
+property_types_file = "./dist/property-types.json"
 
 # Columns we want to rank for and append ranks to each building's data
 building_cols_to_rank = [
@@ -47,6 +48,11 @@ sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
 property_types = sorted_by_property_type.groups.keys()
 
 # TODO: output property_types to a json file for use in the frontend
+def generate_property_types():
+    # output property_types to a json file for use in the frontend
+    property_types_json = {"propertyTypes": list(property_types)}
+    with open(property_types_file, 'w', encoding='latin1') as json_file:
+        json.dump(property_types_json, json_file)
 
 def calculateBuildingStatistics():
     stats_by_property_type = {}
@@ -104,6 +110,6 @@ def rankBuildingsByPropertyType():
 
     building_data.to_csv(path_to_buildings_csv, sep=',', encoding='utf-8', index=False)
 
-
 if __name__ == "__main__":
     rankBuildingsByPropertyType()
+    generate_property_types()
