@@ -115,6 +115,14 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '256420': {owner: BuildingOwners.iit.key},
   // McCormick Tribune Campus Center
   '256428': {owner: BuildingOwners.iit.key},
+  // Stuart Building
+  '256424': {owner: BuildingOwners.iit.key},
+  // Wishnick Hall
+  '256425': {owner: BuildingOwners.iit.key},
+  // Siegal Hall
+  '256433': {owner: BuildingOwners.iit.key},
+  // Incubator?
+  '256435': {owner: BuildingOwners.iit.key},
 
   /**
    * UChicago Buildings
@@ -152,6 +160,8 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '252047':  {owner: BuildingOwners.uchicago.key},
   // Bookstore!
   '252041': {owner: BuildingOwners.uchicago.key},
+  // Booth School
+  '102455': {owner: BuildingOwners.uchicago.key},
 
   /**
    * Northwestern Buildings
@@ -167,6 +177,8 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '103748': { owner: BuildingOwners.northwestern.key },
   // Northwestern University Chicago Campus
   '101840': { owner: BuildingOwners.northwestern.key },
+  // Morton Medical Research Building
+  '256409': { owner: BuildingOwners.northwestern.key },
 };
 
 export function getBuildingCustomInfo(building: IBuilding): IBuildingCustomInfo | null {
