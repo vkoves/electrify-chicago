@@ -14,6 +14,14 @@ import PropertyTypesConstant from '../data/dist/property-types.json';
 
 interface IBuildingEdge { node: IBuilding; }
 
+interface IPageInfo {
+  currentPage: number,
+  hasNextPage: boolean,
+  hasPreviousPage: boolean,
+  perPage: number,
+  totalPages: number,
+};
+
 @Component<any>({
   components: {
     BuildingsTable,
@@ -39,6 +47,8 @@ export default class Search extends Vue {
 
   /** The search query */
   searchFilter = '';
+
+  pagingData?: IPageInfo;
 
   /** The selected property type filter */
   propertyTypeFilter = '';
@@ -142,6 +152,16 @@ export default class Search extends Vue {
   setSearchResults(allResults: Array<IBuildingEdge>): void {
     this.totalResultsCount = allResults.length;
     this.searchResults = allResults.slice(0, this.MaxBuildings);
+
+    const pageSize = 15;
+
+    this.pagingData = {
+      currentPage: 1,
+      hasNextPage: true,
+      hasPreviousPage: false,
+      perPage: pageSize,
+      totalPages: Math.ceil(this.searchResults.length / pageSize),
+    }
   }
 }
 </script>
@@ -248,6 +268,11 @@ export default class Search extends Vue {
         Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total {{ totalResultsCount }}
         matching buildings
       </p>
+
+      <Pager v-if="pagingData"
+        class="pager"
+        :info="pagingData"
+      />
 
       <DataSourceFootnote />
     </div>
