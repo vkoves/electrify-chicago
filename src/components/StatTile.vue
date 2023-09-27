@@ -32,6 +32,10 @@
         </template>
       </div>
 
+      <div v-if="costEstimate">
+        Estimated Cost: ${{ Math.round(costEstimate).toLocaleString() }}
+      </div>
+
       <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
       <div
         v-if="statRank && statRank <= RankConfig.FlagRankMax && rankLabel"
@@ -178,7 +182,12 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json";
 
 import {
-  RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats, getRankLabelByProperty,
+  estimateUtilitySpend,
+  getRankLabel,
+  getRankLabelByProperty,
+  IBuilding,
+  IBuildingBenchmarkStats,
+  RankConfig,
 } from '~/common-functions.vue';
 
 export interface PropertyByBuildingStats
@@ -215,6 +224,22 @@ export default class StatTile extends Vue {
   get fullyGasFree(): boolean {
     return parseFloat(this.building.NaturalGasUse) === 0
       && parseFloat(this.building.DistrictSteamUse) === 0;
+  }
+
+  /** The estimated cost for the given utility */
+  get costEstimate(): number | null {
+    if (this.statKey === 'ElectricityUse') {
+      console.log('statValue', this.building[this.statKey]);
+
+      return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), true);
+    }
+    else if (this.statKey === 'NaturalGasUse') {
+      console.log('statValue', this.building[this.statKey]);
+
+      return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), false);
+    }
+
+    return null;
   }
 
   get pluralismForPropertyType(): string {

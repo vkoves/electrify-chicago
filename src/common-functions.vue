@@ -184,4 +184,31 @@ export function getOverallRankEmoji(
 
   return null;
 }
+
+export const UtilityCosts = {
+  year: 2021,
+  source: 'https://www.bls.gov/regions/midwest/news-release/AverageEnergyPrices_Chicago.htm',
+  electricCostPerKWh: 0.147,
+  gasCostPerTherm: 1.101,
+};
+
+/**
+ * Given an amount of natural gas or electricity used by a building, returns a cost
+ * estimate of how much a building would have spent at average retail prices for
+ * that energy.
+ */
+export function estimateUtilitySpend(energyUseKbtu: number, isElectric: boolean): number {
+  const kwhToKbtuMult = 3.412; // 1kWh = 3.412 kBtu
+  const thermToKbtuMult = 99.976; // 1th = 99.976 kBtu
+
+  const costPerKbtuNatGas = UtilityCosts.gasCostPerTherm / thermToKbtuMult;
+  const costPerKbtuElectric = UtilityCosts.electricCostPerKWh / kwhToKbtuMult;
+
+  const costPerKbtu = isElectric ? costPerKbtuElectric : costPerKbtuNatGas;
+
+  return costPerKbtu * energyUseKbtu;
+
+  // Keating nat gas cost: $708,860.13
+  // Keating electric cost: $82,898.53026
+}
 </script>
