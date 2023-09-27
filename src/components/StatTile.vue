@@ -229,13 +229,9 @@ export default class StatTile extends Vue {
   /** The estimated cost for the given utility */
   get costEstimate(): number | null {
     if (this.statKey === 'ElectricityUse') {
-      console.log('statValue', this.building[this.statKey]);
-
       return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), true);
     }
     else if (this.statKey === 'NaturalGasUse') {
-      console.log('statValue', this.building[this.statKey]);
-
       return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), false);
     }
 
