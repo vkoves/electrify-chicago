@@ -46,6 +46,14 @@ Make sure you have [Yarn](https://yarnpkg.com/) installed, `cd` into the project
 yarn install
 ```
 
+If you encounter a dependency error on macOS such as `sharp Prebuilt libvips 8.10.5 binaries are not yet available for darwin-arm64v8`, you'll need to install these dependencies separately. Install the [Brew package manager](https://brew.sh/), then run the following commands:
+
+```
+brew install --build-from-source gcc
+xcode-select install
+brew install vips
+```
+
 ## Running
 
 Run `yarn develop` to start a local dev server at `http://localhost:8080`
