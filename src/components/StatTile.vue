@@ -295,7 +295,7 @@ export default class StatTile extends Vue {
 
   get medianMultiplePropertyType(): string | null {
     if (!this.BuildingStatsByPropertyType[this.propertyType]) {
-      return null
+      return null;
     }
     const median = this.BuildingStatsByPropertyType[this.propertyType][this.statKey]?.median;
     const statValueNum = parseFloat(this.building[this.statKey] as string);
@@ -334,7 +334,7 @@ export default class StatTile extends Vue {
   get propertiesToAwardThisType(): number {
     const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
     if (!properStatBlock) {
-      return 0
+      return 0;
     }
     const numBuildingsOfType = properStatBlock[this.statKey]?.count;
 
@@ -383,7 +383,7 @@ export default class StatTile extends Vue {
   get propertyStatRankInverted(): number | null {
     const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
     if (!properStatBlock) {
-      return null
+      return null;
     }
     const numBuildingsOfType: number = properStatBlock[this.statKey]?.count;
     const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
