@@ -252,7 +252,7 @@ export default class StatTile extends Vue {
 
   get isAboveMedian(): boolean {
     return this.building[this.statKey] !== null &&
-      this.building[this.statKey] as number > this.stats[this.statKey].median;
+    this.building[this.statKey] as number > this.stats[this.statKey].median;
   }
 
   // Square footage isn't directly climate related, so we show stats but treat it as
@@ -294,6 +294,9 @@ export default class StatTile extends Vue {
   }
 
   get medianMultiplePropertyType(): string | null {
+    if (!this.BuildingStatsByPropertyType[this.propertyType]) {
+      return null
+    }
     const median = this.BuildingStatsByPropertyType[this.propertyType][this.statKey]?.median;
     const statValueNum = parseFloat(this.building[this.statKey] as string);
 
@@ -330,6 +333,9 @@ export default class StatTile extends Vue {
 
   get propertiesToAwardThisType(): number {
     const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
+    if (!properStatBlock) {
+      return 0
+    }
     const numBuildingsOfType = properStatBlock[this.statKey]?.count;
 
     /**
@@ -376,6 +382,9 @@ export default class StatTile extends Vue {
    */
   get propertyStatRankInverted(): number | null {
     const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
+    if (!properStatBlock) {
+      return null
+    }
     const numBuildingsOfType: number = properStatBlock[this.statKey]?.count;
     const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
 
