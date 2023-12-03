@@ -34,7 +34,7 @@
 
       <div v-if="costEstimate" class="bill-estimate">
         <strong>Est. {{ statKey === 'NaturalGasUse' ? 'Gas' : 'Electric' }} Bill:</strong>
-        ${{ Math.round(costEstimate).toLocaleString() }} **
+        ${{ Math.round(costEstimate).toLocaleString() }} for {{ building.DataYear }}**
       </div>
 
       <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
