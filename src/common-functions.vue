@@ -185,6 +185,10 @@ export function getOverallRankEmoji(
   return null;
 }
 
+/**
+ * A constant for Chicago avg. utility costs in the latest data year, which we use to estimate an
+ * upper bound of how much a building would pay for gas and electric
+ */
 export const UtilityCosts = {
   year: 2021,
   source: 'https://www.bls.gov/regions/midwest/news-release/AverageEnergyPrices_Chicago.htm',
@@ -196,6 +200,11 @@ export const UtilityCosts = {
  * Given an amount of natural gas or electricity used by a building, returns a cost
  * estimate of how much a building would have spent at average retail prices for
  * that energy.
+ *
+ * For testing, Viktor manually used the 2021 values to calculate:
+ *
+ * Keating nat gas cost: $708,860.13
+ * Keating electric cost: $82,898.53
  */
 export function estimateUtilitySpend(energyUseKbtu: number, isElectric: boolean): number {
   const kwhToKbtuMult = 3.412; // 1kWh = 3.412 kBtu
@@ -206,9 +215,20 @@ export function estimateUtilitySpend(energyUseKbtu: number, isElectric: boolean)
 
   const costPerKbtu = isElectric ? costPerKbtuElectric : costPerKbtuNatGas;
 
-  return costPerKbtu * energyUseKbtu;
+  const estimateRaw = costPerKbtu * energyUseKbtu;
 
-  // Keating nat gas cost: $708,860.13
-  // Keating electric cost: $82,898.53026
+
+  // If > $1,000 round to the nearest 100 (e.g. $12,345 -> $12,000)
+  if (estimateRaw > 1_000) {
+    return Math.round(estimateRaw / 1_000) * 1_000;
+  }
+  // If < $1,000 but > $100 round to the nearest 100 (e.g. $812 -> $800)
+  else if (estimateRaw > 100) {
+    return Math.round(estimateRaw / 100) * 100;
+  }
+  // If < $100 round to the nearest 10 (e.g. $87.50 -> $90)
+  else {
+    return Math.round(estimateRaw / 10) * 10;
+  }
 }
 </script>

@@ -32,8 +32,9 @@
         </template>
       </div>
 
-      <div v-if="costEstimate">
-        Estimated Cost: ${{ Math.round(costEstimate).toLocaleString() }}
+      <div v-if="costEstimate" class="bill-estimate">
+        <strong>Est. {{ statKey === 'NaturalGasUse' ? 'Gas' : 'Electric' }} Bill:</strong>
+        ${{ Math.round(costEstimate).toLocaleString() }} **
       </div>
 
       <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
@@ -188,7 +189,7 @@ import {
   IBuilding,
   IBuildingBenchmarkStats,
   RankConfig,
-} from '~/common-functions.vue';
+} from '../common-functions.vue';
 
 /**
  * A group of all the core stats by property type (e.g. GHG intensity median)
@@ -535,6 +536,8 @@ export default class StatTile extends Vue {
   .rank { font-weight: 500; }
 
   .property-rank { font-size: small; }
+
+  .bill-estimate { margin-bottom: 0.25rem; }
 
   .median-comparison {
     display: flex;
