@@ -190,6 +190,9 @@ import {
   RankConfig,
 } from '~/common-functions.vue';
 
+/**
+ * A group of all the core stats by property type (e.g. GHG intensity median)
+ */
 export interface PropertyByBuildingStats
 {
   [propertyType: string]: IBuildingBenchmarkStats;
@@ -201,7 +204,7 @@ export interface PropertyByBuildingStats
   */
 @Component
 export default class StatTile extends Vue {
-  readonly BuildingStatsByPropertyType:PropertyByBuildingStats = buildingStatsByPropertyType;
+  readonly BuildingStatsByPropertyType: PropertyByBuildingStats = buildingStatsByPropertyType;
 
   @Prop({required: true}) building!: IBuilding;
   @Prop({required: true}) statKey!: string;
@@ -353,11 +356,14 @@ export default class StatTile extends Vue {
   }
 
   get propertiesToAwardThisType(): number {
-    const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
-    if (!properStatBlock) {
+    // The stats for buildings of this building's type
+    const propertyStats = this.BuildingStatsByPropertyType[this.propertyType];
+
+    if (!propertyStats) {
       return 0;
     }
-    const numBuildingsOfType = properStatBlock[this.statKey]?.count;
+
+    const numBuildingsOfType = propertyStats[this.statKey]?.count;
 
     /**
      * The amount of buildings we should give a category specific trophy or alarm to based on the
@@ -402,11 +408,13 @@ export default class StatTile extends Vue {
    * it should be rendered
    */
   get propertyStatRankInverted(): number | null {
-    const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
-    if (!properStatBlock) {
+    const propertyStats = this.BuildingStatsByPropertyType[this.propertyType];
+
+    if (!propertyStats) {
       return null;
     }
-    const numBuildingsOfType: number = properStatBlock[this.statKey]?.count;
+
+    const numBuildingsOfType: number = propertyStats[this.statKey]?.count;
     const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
 
     if (statRank) {
