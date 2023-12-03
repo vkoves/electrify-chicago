@@ -6,7 +6,7 @@ Fixes # (issue)
 
 # Testing Instructions
 
-Please describe the tests/QA that you did to verify your changes. Provide instructions so we can reproduce. 
+Please describe the tests/QA that you did to verify your changes. Provide instructions so we can reproduce.
 Please also list any relevant details for your test configuration
 
 # Checklist:
@@ -14,10 +14,7 @@ Please also list any relevant details for your test configuration
 - [ ] My code follows the style guidelines of this project
 - [ ] I have performed a self-review of my own code
 - [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published in downstream modules
 
 <!-- PR template modified from: https://embeddedartistry.com/blog/2017/08/04/a-github-pull-request-template-for-your-projects/ -->
