@@ -303,8 +303,11 @@ query ($id: ID!) {
         energy bills!
 
         See our
-        <a :href="UtilityCosts.source" target="_blank"
-            rel="noopener">Chicago Gas & Electric Costs Source <NewTabIcon/>
+        <a
+          :href="UtilityCosts.source"
+          target="_blank"
+          rel="noopener"
+        >Chicago Gas & Electric Costs Source <NewTabIcon />
         </a>
         for the original statistics.
       </p>

@@ -32,7 +32,10 @@
         </template>
       </div>
 
-      <div v-if="costEstimate" class="bill-estimate">
+      <div
+        v-if="costEstimate"
+        class="bill-estimate"
+      >
         <strong>Est. {{ statKey === 'NaturalGasUse' ? 'Gas' : 'Electric' }} Bill:</strong>
         ${{ Math.round(costEstimate).toLocaleString() }} for {{ building.DataYear }}**
       </div>
