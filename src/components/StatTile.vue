@@ -113,9 +113,9 @@
         </div>
 
         <div v-if="medianMultiplePropertyType">
-          <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
+          <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
           <span
-            v-if="stats[statKey] > 0"
+            v-if="statValue !== '0'"
             class="val"
           >
             {{ medianMultiplePropertyType }} median {{ propertyType }}
