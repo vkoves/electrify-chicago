@@ -297,9 +297,9 @@ query ($id: ID!) {
       <p class="constrained">
         <strong>** Note on Bill Estimates:</strong>
         Estimates for gas and electric bills are based on average electric and gas <em>retail</em>
-        prices for Chicago in {{ UtilityCosts.year }}. We expect large buildings would
-        negotiate lower rates with utilities, but these estimates serve as an upper bound of cost
-        and help understand the volume of energy a building is used by comparing it to your own
+        prices for Chicago in {{ UtilityCosts.year }} and are rounded. We expect large buildings
+        would negotiate lower rates with utilities, but these estimates serve as an upper bound of
+        cost and help understand the volume of energy a building is used by comparing it to your own
         energy bills!
 
         See our
