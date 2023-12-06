@@ -186,14 +186,14 @@ export function getOverallRankEmoji(
 }
 
 /**
- * A constant for Chicago avg. utility costs in the latest data year, which we use to estimate an
- * upper bound of how much a building would pay for gas and electric
+ * A constant for Chicago avg. utility costs in the latest data year (in dollar per unit of energy),
+ * which we use to estimate an upper bound of how much a building would pay for gas or electric
  */
 export const UtilityCosts = {
   year: 2021,
   source: 'https://www.bls.gov/regions/midwest/news-release/AverageEnergyPrices_Chicago.htm',
-  electricCostPerKWh: 0.147,
-  gasCostPerTherm: 1.101,
+  electricCostPerKWh: 0.143,
+  gasCostPerTherm: 1.192,
 };
 
 /**
