@@ -184,10 +184,7 @@ query ($id: ID!) {
         </div>
       </div>
 
-      <h2>Emissions & Energy Information</h2>
-      <p class="year-note">
-        For {{ dataYear }}
-      </p>
+      <h2>Emissions & Energy Information for {{ dataYear }}</h2>
 
       <dl class="emission-stats">
         <div>
@@ -292,9 +289,27 @@ query ($id: ID!) {
       </dl>
 
       <p class="constrained">
-        <strong>* Important Note:</strong> Rankings and medians are among <em>included</em>
+        <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
         the year {{ LatestDataYear }}, which only applies to buildings over 50,000 square feet.
+      </p>
+
+      <p class="constrained">
+        <strong>** Note on Bill Estimates:</strong>
+        Estimates for gas and electric bills are based on average electric and gas <em>retail</em>
+        prices for Chicago in {{ UtilityCosts.year }} and are rounded. We expect large buildings
+        would negotiate lower rates with utilities, but these estimates serve as an upper bound of
+        cost and help understand the volume of energy a building is used by comparing it to your own
+        energy bills!
+
+        See our
+        <a
+          :href="UtilityCosts.source"
+          target="_blank"
+          rel="noopener"
+        >Chicago Gas & Electric Costs Source <NewTabIcon />
+        </a>
+        for the original statistics.
       </p>
 
       <DataSourceFootnote />
@@ -395,13 +410,11 @@ import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import StatTile from '~/components/StatTile.vue';
 
-import { IBuildingBenchmarkStats } from '~/common-functions.vue';
-
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
-import { IBuilding } from '../common-functions.vue';
+import { IBuilding, UtilityCosts, IBuildingBenchmarkStats } from '../common-functions.vue';
 
 @Component<any>({
   metaInfo() {
@@ -424,8 +437,11 @@ import { IBuilding } from '../common-functions.vue';
   },
 })
 export default class BuildingDetails  extends Vue {
-  /** Expose stats to readme */
+  /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+
+  /** Expose UtilityCosts to template */
+  readonly UtilityCosts: typeof UtilityCosts = UtilityCosts;
 
   /**
    * The year most/the latest buildings data is from - if this building's year is older than this,
@@ -560,11 +576,6 @@ export default class BuildingDetails  extends Vue {
     justify-self: flex-start;
 
     span.emoji { margin-right: 0.5rem; }
-  }
-
-  p.year-note {
-    font-size: 0.825rem;
-    margin-top: 0;
   }
 
   .address {
