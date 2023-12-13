@@ -63,10 +63,10 @@ if __name__ == "__main__":
     building_data.rename(columns=replace_headers,inplace=True)
 
     has_ghg_intensity = building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
-    has_ghg_intensity
 
     all_submitted_data = has_ghg_intensity.loc[(has_ghg_intensity['ReportingStatus'] == "Submitted") | (has_ghg_intensity['ReportingStatus'] == "Submitted Data")].copy()
 
+    # FIlter building data by year, leaving only records with the most recent year
     all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
     all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
 
