@@ -1,4 +1,10 @@
 <script lang="ts">
-    export default {};
-    export const LatestDataYear = 2021;
+/**
+ * Global Constants Used Across Multiple Pages
+ */
+
+export default {};
+
+/** The latest year we have emissions data for, shown in global disclaimers */
+export const LatestDataYear = 2021;
 </script>
