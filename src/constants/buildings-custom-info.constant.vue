@@ -393,7 +393,7 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   251694: { owner: BuildingOwners.cps.key },
   // Hale Elementary, Nathan
   251394: { owner: BuildingOwners.cps.key },
-  // NortHigh School ide College Prep HS
+  // Northside College Prep HS
   251746: { owner: BuildingOwners.cps.key },
   // Andrew Jackson Language Academy - CPS
   251478: { owner: BuildingOwners.cps.key },
@@ -601,7 +601,7 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   251463: { owner: BuildingOwners.cps.key },
   // Schneider
   251858: { owner: BuildingOwners.cps.key },
-  // Payton College Prep HS
+  // Walter Payton College Prep HS
   251721: { owner: BuildingOwners.cps.key },
   // Stone Scholastic Academy
   251691: { owner: BuildingOwners.cps.key },
@@ -1009,7 +1009,7 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   251723: { owner: BuildingOwners.cps.key },
   // Lozano Bilingual Elementary
   251533: { owner: BuildingOwners.cps.key },
-  // Whitney Young
+  // Whitney Young High School
   250056: { owner: BuildingOwners.cps.key },
   // Hay Community Academy, John
   251569: { owner: BuildingOwners.cps.key },
