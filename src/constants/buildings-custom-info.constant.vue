@@ -211,7 +211,8 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
 
   /**
    * CPS
-   * Helpful source: main data set, schools tagged wit '-CPS'. Also manually added selective enrollment schools
+   * Helpful source: main data set, schools tagged wit '-CPS'. 
+   * Also manually added selective enrollment schools
    */
   // Thorp Scholastic Academy, Ole A
 '251757': { owner: BuildingOwners.cps.key },
