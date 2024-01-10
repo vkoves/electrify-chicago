@@ -1172,29 +1172,30 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
    * No helpful resource, but Googling each of these will pull up a Northwestern page
    */
   // Chicago Indoor Sports
-  120015: { owner: BuildingOwners.cps.key },
+  // Chicago Indoor Sports
+  120015: { owner: BuildingOwners.cityofchicago.key },
   // Damen Marketplace
-  254152: { owner: BuildingOwners.cps.key },
+  254152: { owner: BuildingOwners.cityofchicago.key },
   // City Hall
-  250115: { owner: BuildingOwners.cps.key },
+  250115: { owner: BuildingOwners.cityofchicago.key },
   // Harold Washington Library
-  157964: { owner: BuildingOwners.cps.key },
+  157964: { owner: BuildingOwners.cityofchicago.key },
   // Police Training Academy
-  250068: { owner: BuildingOwners.cps.key },
+  250068: { owner: BuildingOwners.cityofchicago.key },
   // Martin Luther King Community Center
-  250058: { owner: BuildingOwners.cps.key },
+  250058: { owner: BuildingOwners.cityofchicago.key },
   // Sulzer Library
-  250065: { owner: BuildingOwners.cps.key },
+  250065: { owner: BuildingOwners.cityofchicago.key },
   // Lake Village East Apartments
-  252070: { owner: BuildingOwners.cps.key },
+  252070: { owner: BuildingOwners.cityofchicago.key },
   // Museum of Science and Industry
-  102460: { owner: BuildingOwners.cps.key },
+  102460: { owner: BuildingOwners.cityofchicago.key },
   // Englewood Health Center
-  250057: { owner: BuildingOwners.cps.key },
+  250057: { owner: BuildingOwners.cityofchicago.key },
   // Gallery 37
-  250063: { owner: BuildingOwners.cps.key },
+  250063: { owner: BuildingOwners.cityofchicago.key },
   // CDOT Central Office
-  250066: { owner: BuildingOwners.cps.key },
+  250066: { owner: BuildingOwners.cityofchicago.key },
 };
 
 export function getBuildingCustomInfo(building: IBuilding): IBuildingCustomInfo | null {
