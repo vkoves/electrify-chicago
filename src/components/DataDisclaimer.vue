@@ -1,6 +1,6 @@
 <template>
   <details class="data-disclaimer">
-    <summary>Note: Data only includes large Chicago buildings from 2020</summary>
+    <summary>Note: Data only includes large Chicago buildings from {{LatestDataYear}}, unless explicitly stated otherwise.</summary>
 
     <p class="constrained">
       <strong>Note:</strong> This data only includes buildings whose emissions are reported
@@ -25,15 +25,21 @@
 
 <script lang="ts">
 import NewTabIcon from './NewTabIcon.vue';
+import { LatestDataYear } from '../constants/globals.vue';
+import { Component, Vue } from 'vue-property-decorator';
 
 /**
  * A  tile that can show the stats for a building, including whether it's
  * doing better or worse than average, it's rank and percentile rank
  */
-export default {
+
+@Component({
   name: 'DataDisclaimer',
   components: {NewTabIcon},
-};
+})
+export default class DataDisclaimer extends Vue {
+  readonly LatestDataYear: number = LatestDataYear
+}
 </script>
 
 <style lang="scss">
