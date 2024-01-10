@@ -59,6 +59,31 @@ export const BuildingOwners: IBuildingOwners = {
     logoLarge: '/building-owners/northwestern/northwestern-large.png',
   },
 
+  cps: {
+    key: 'cps',
+    name: 'Chicago Public Schools',
+    nameShort: 'CPS',
+    logoSmall: '/building-owners/northwestern/northwestern-large.png',
+    logoLarge: '/building-owners/northwestern/northwestern-large.png',
+  },
+
+  cha: {
+    key: 'cha',
+    name: 'Chicago Housing Authority',
+    nameShort: 'CHA',
+    logoSmall: '/building-owners/northwestern/northwestern-large.png',
+    logoLarge: '/building-owners/northwestern/northwestern-large.png',
+  },
+
+  cityofchicago: {
+    key: 'cityofchicago',
+    name: 'City of Chicago',
+    nameShort: 'Chicago',
+    logoSmall: '/building-owners/northwestern/northwestern-large.png',
+    logoLarge: '/building-owners/northwestern/northwestern-large.png',
+  },
+
+
   /**
    * IMPORTANT! If you add a new building owner, make sure to add it to the gridsome.server.js to
    * register the owner page, since it cannot import this file.
@@ -179,6 +204,21 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '101840': { owner: BuildingOwners.northwestern.key },
   // Morton Medical Research Building
   '256409': { owner: BuildingOwners.northwestern.key },
+
+  /**
+   * CPS
+   * No helpful resource, but Googling each of these will pull up a Northwestern page
+   */
+
+   /**
+   * CHA
+   * No helpful resource, but Googling each of these will pull up a Northwestern page
+   */
+
+   /**
+   * City of Chicago
+   * No helpful resource, but Googling each of these will pull up a Northwestern page
+   */
 };
 
 export function getBuildingCustomInfo(building: IBuilding): IBuildingCustomInfo | null {
