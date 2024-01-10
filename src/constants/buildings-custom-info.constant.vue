@@ -59,6 +59,10 @@ export const BuildingOwners: IBuildingOwners = {
     logoLarge: '/building-owners/northwestern/northwestern-large.png',
   },
 
+
+  /**
+   * TODO: Change logoSmall and logoLarge for the following municipalities
+   */
   cps: {
     key: 'cps',
     name: 'Chicago Public Schools',
