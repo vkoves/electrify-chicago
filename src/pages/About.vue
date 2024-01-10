@@ -15,7 +15,7 @@ import { LatestDataYear } from '../constants/globals.vue';
   },
 })
 export default class About extends Vue {
-  readonly LatestDataYear: number = LatestDataYear
+  readonly LatestDataYear: number = LatestDataYear;
 }
 </script>
 <template>
@@ -119,8 +119,9 @@ export default class About extends Vue {
         </a>, which is data collected and published under the
         <a href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html">
           Chicago Energy Benchmarking Ordinance <NewTabIcon />
-        </a>. This site shows data for the year {{ LatestDataYear }} (the latest available of March 2023) and
-        filtered down to buildings with total emissions > 1,000 metric tons CO<sub>2</sub>
+        </a>. This site shows data for the year {{ LatestDataYear }} 
+        (the latest available of March 2023) and filtered down to buildings 
+        with total emissions > 1,000 metric tons CO<sub>2</sub>
         equivalent.
       </p>
 

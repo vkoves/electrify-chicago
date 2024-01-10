@@ -409,6 +409,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import StatTile from '~/components/StatTile.vue';
+import { LatestDataYear } from '../constants/globals.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -447,7 +448,7 @@ export default class BuildingDetails  extends Vue {
    * The year most/the latest buildings data is from - if this building's year is older than this,
    *  we show a warning that the data is old
    */
-  readonly LatestDataYear: number = 2021;
+  readonly LatestDataYear: number = LatestDataYear;
 
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
