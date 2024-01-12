@@ -16,12 +16,11 @@ def find_addresses():
                 for j, whole_file_line in enumerate(whole_file):
                     print(i, j)
                     address = whole_file_line.split(",")[MAIN_FILE_ADDRESS_INDEX]
-                    if line["Address"].lower().strip().replace(" ", "") == address.lower().strip().replace(" ", ""):
+                    if line["Address"].lower().strip().replace(" ", "") == address.lower().strip().replace(" ", "") and line["Managing Organization"] == "AIS":
                         found.append(whole_file_line.split(",")[MAIN_FILE_ID_INDEX])
                         break
                 
                 if i%50 == 49:
-                    print(found)
                     with open("temp.txt", "w") as f:
                         f.write(str(len(found)))
                         f.write("/n")
@@ -36,7 +35,7 @@ def print_tags():
         for line in whole_dict:
             if line["ID"] in found:
                 print("// "+line["Property Name"])
-                print(line["ID"] + ": { owner: BuildingOwners.cityofchicago.key },")
+                print("'" + line["ID"] + "'" + ": { owner: BuildingOwners.cityofchicago.key },")
                 found.remove(line["ID"])
 
 find_addresses()
