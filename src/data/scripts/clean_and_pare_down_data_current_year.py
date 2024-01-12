@@ -1,5 +1,5 @@
 import pandas
-from utils import get_and_clean_csv
+from src.data.scripts.utils import get_and_clean_csv
 
 data_directory = './source/'
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'

@@ -3,8 +3,8 @@ import logging
 import pandas
 
 from typing import List
-from utils import get_and_clean_csv, json_data_builder
-from building_utils import clean_property_name
+from src.data.scripts.utils import get_and_clean_csv, json_data_builder
+from src.data.scripts.building_utils import clean_property_name
 
 # Assume run in /data
 data_directory = './source/'
