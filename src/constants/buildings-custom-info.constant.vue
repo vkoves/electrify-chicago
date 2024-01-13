@@ -67,24 +67,24 @@ export const BuildingOwners: IBuildingOwners = {
     key: 'cps',
     name: 'Chicago Public Schools',
     nameShort: 'CPS',
-    logoSmall: '/building-owners/northwestern/northwestern-large.png',
-    logoLarge: '/building-owners/northwestern/northwestern-large.png',
+    logoSmall: '/building-owners/cps/cps-small.png',
+    logoLarge: '/building-owners/cps/cps-large.png',
   },
 
   cha: {
     key: 'cha',
     name: 'Chicago Housing Authority',
     nameShort: 'CHA',
-    logoSmall: '/building-owners/northwestern/northwestern-large.png',
-    logoLarge: '/building-owners/northwestern/northwestern-large.png',
+    logoSmall: '/building-owners/cha/cha-small.png',
+    logoLarge: '/building-owners/cha/cha-large.png',
   },
 
   cityofchicago: {
     key: 'cityofchicago',
     name: 'City of Chicago',
     nameShort: 'Chicago',
-    logoSmall: '/building-owners/northwestern/northwestern-large.png',
-    logoLarge: '/building-owners/northwestern/northwestern-large.png',
+    logoSmall: '/building-owners/cityofchicago/cityofchicago-small.png',
+    logoLarge: '/building-owners/cityofchicago/cityofchicago-large.png',
   },
 
 
