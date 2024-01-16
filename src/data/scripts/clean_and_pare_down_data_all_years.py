@@ -60,19 +60,27 @@ replace_headers = {"Data Year": "DataYear",
     "Historical Wards 2003-2015": "HistoricalWards2003-2015" }
 
 def get_all_ghg_data(building_data: pd.DataFrame) -> pd.DataFrame:
-    has_ghg_intensity = building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
+    return building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
 
-    is_submitted = (has_ghg_intensity['ReportingStatus'] == "Submitted")
-    is_submitted_data = (has_ghg_intensity['ReportingStatus'] == "Submitted Data")
+def get_sbumitted_data(building_data: pd.DataFrame) -> pd.DataFrame:
+    is_submitted = (building_data['ReportingStatus'] == "Submitted")
+    is_submitted_data = (building_data['ReportingStatus'] == "Submitted Data")
     has_status_submitted = is_submitted | is_submitted_data
 
-    return has_ghg_intensity.loc[has_status_submitted].copy()
+    return building_data.loc[has_status_submitted].copy()
+
+def output_to_csv(building_data: pd.DataFrame) -> None:
+    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
+    building_data[int_cols] = building_data[int_cols].astype('Int64')
+    building_data.to_csv(data_directory+data_out_file, sep=',', encoding='utf-8', index=False)
 
 def main():
     building_data = get_and_clean_csv(data_directory + building_emissions_file)
     building_data.rename(columns=replace_headers,inplace=True)
 
-    all_submitted_data = get_all_ghg_data(building_data)
+    all_ghg_data = get_all_ghg_data(building_data)
+
+    all_submitted_data = get_sbumitted_data(all_ghg_data)
 
     all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
     all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
@@ -81,9 +89,7 @@ def main():
     # up (e.g. zipcode of 60614 or Ward 9)
     all_recent_submitted_data[string_cols] = building_data[string_cols].astype(str)
 
-    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-    all_recent_submitted_data[int_cols] = building_data[int_cols].astype('Int64')
-    all_recent_submitted_data.to_csv(data_directory+data_out_file, sep=',', encoding='utf-8', index=False)
+    output_to_csv(all_recent_submitted_data)
 
 if __name__ == "__main__":
     main()
