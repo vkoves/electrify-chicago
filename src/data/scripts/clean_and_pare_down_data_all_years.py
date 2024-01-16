@@ -66,8 +66,18 @@ def get_sbumitted_data(building_data: pd.DataFrame) -> pd.DataFrame:
     is_submitted = (building_data['ReportingStatus'] == "Submitted")
     is_submitted_data = (building_data['ReportingStatus'] == "Submitted Data")
     has_status_submitted = is_submitted | is_submitted_data
-
     return building_data.loc[has_status_submitted].copy()
+
+def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame():
+    all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
+    all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
+    return all_recent_submitted_data
+
+def fix_str_cols(all_recent_submitted_data: pd.DataFrame, building_data: pd.DataFrame) -> pd.DataFrame:
+    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
+    # up (e.g. zipcode of 60614 or Ward 9)
+    all_recent_submitted_data[string_cols] = building_data[string_cols].astype(str)
+    return all_recent_submitted_data
 
 def output_to_csv(building_data: pd.DataFrame) -> None:
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
@@ -82,12 +92,9 @@ def main():
 
     all_submitted_data = get_sbumitted_data(all_ghg_data)
 
-    all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
-    all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
+    all_recent_submitted_data = get_last_year_data(all_submitted_data)
 
-    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
-    # up (e.g. zipcode of 60614 or Ward 9)
-    all_recent_submitted_data[string_cols] = building_data[string_cols].astype(str)
+    all_recent_submitted_data = fix_str_cols(all_recent_submitted_data, building_data)
 
     output_to_csv(all_recent_submitted_data)
 
