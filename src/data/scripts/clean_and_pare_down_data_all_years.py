@@ -59,6 +59,9 @@ replace_headers = {"Data Year": "DataYear",
     "Census Tracts": "CensusTracts",
     "Historical Wards 2003-2015": "HistoricalWards2003-2015" }
 
+def rename_columns(building_data: pd.DataFrame) -> pd.DataFrame:
+    return building_data.rename(columns=replace_headers,inplace=True)
+
 def get_all_ghg_data(building_data: pd.DataFrame) -> pd.DataFrame:
     return building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
 
@@ -86,7 +89,8 @@ def output_to_csv(building_data: pd.DataFrame) -> None:
 
 def main():
     building_data = get_and_clean_csv(data_directory + building_emissions_file)
-    building_data.rename(columns=replace_headers,inplace=True)
+    
+    building_data = rename_columns(building_data)
 
     all_ghg_data = get_all_ghg_data(building_data)
 
