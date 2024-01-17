@@ -1315,10 +1315,10 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
    * City of Chicago
    * Helpful source: https://www.chicago.gov/city/en/depts/dcd/supp_info/city-owned_land_inventory.html
    */
+  // 400 W Superior St
+  '103812': { owner: BuildingOwners.cityofchicago.key },
   // Chicago Indoor Sports
   '120015': { owner: BuildingOwners.cityofchicago.key },
-  // Damen Marketplace
-  '254152': { owner: BuildingOwners.cityofchicago.key },
   // City Hall
   '250115': { owner: BuildingOwners.cityofchicago.key },
   // Harold Washington Library
@@ -1329,14 +1329,12 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '250058': { owner: BuildingOwners.cityofchicago.key },
   // Sulzer Library
   '250065': { owner: BuildingOwners.cityofchicago.key },
-  // Lake Village East Apartments
-  '252070': { owner: BuildingOwners.cityofchicago.key },
-  // // Museum of Science and Industry
-  // '102460': { owner: BuildingOwners.cityofchicago.key },
+  // 1533 W.Warren Blvd
+  '256759': { owner: BuildingOwners.cityofchicago.key },
   // Englewood Health Center
   '250057': { owner: BuildingOwners.cityofchicago.key },
-  // // Gallery 37
-  // '250063': { owner: BuildingOwners.cityofchicago.key },
+  // Gallery 37
+  '250063': { owner: BuildingOwners.cityofchicago.key },
   // CDOT Central Office
   '250066': { owner: BuildingOwners.cityofchicago.key },
 };
