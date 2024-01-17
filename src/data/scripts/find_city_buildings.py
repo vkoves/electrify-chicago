@@ -9,6 +9,10 @@ found = []
 #
 # This script will then log the correctly formatted data, and you can copy that into
 # buildings-custom-info.constant
+
+def clean_address(address):
+    return address.lower().strip().replace(" ", "").replace(".", "")
+
 def find_addresses():
     with open('src/data/source/City-Owned_Land_Inventory.csv') as source_file:
         city_file = csv.DictReader(source_file)
@@ -27,7 +31,7 @@ def find_addresses():
 
                     # Only include buildings that are owned AND managed by the city. Some buildings
                     # are on land that appears to be owned by the city from their inventory
-                    if line["Address"].lower().strip().replace(" ", "") == address.lower().strip().replace(" ", "") and line["Managing Organization"] == "AIS":
+                    if clean_address(line["Address"]) == clean_address(address) and line["Managing Organization"] == "AIS":
                         found.append(whole_file_line.split(",")[MAIN_FILE_ID_INDEX])
                         break
 
