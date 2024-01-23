@@ -1,5 +1,6 @@
 import pytest
 import shutil, os
+import pandas as pd
 
 from src.data.scripts import clean_and_pare_down_data_all_years as clean
 
@@ -8,20 +9,22 @@ test_src_dir = "..../test/data/source"
 file_to_copy = "ChicagoEnergyBenchmarking.csv"
 
 @pytest.fixture
-def get_dest_file():
-    os.path.join(test_src_dir, file_to_copy)
+def get_src_file_path():
+    return os.path.join(src_dir, file_to_copy)
 
 @pytest.fixture
-def copy_file():
-    src_file_path = os.path.join(src_dir, file_to_copy)
-    dest_file_path = os.path.join(test_src_dir, file_to_copy)
-    if not os.path.exists(src_file_path):
-        shutil.copy(src_file_path, dest_file_path)
-    return file_to_copy
+def get_dest_file_path():
+    return os.path.join(test_src_dir, file_to_copy)
+
+@pytest.fixture
+def copy_file(get_src_file_path, get_dest_file_path):
+    if not os.path.exists(get_src_file_path):
+        shutil.copy(get_src_file_path, get_dest_file_path)
+    return get_dest_file_path
 
 @pytest.fixture
 def building_data(copy_file):
-    pass
+    return pd.read_csv(copy_file)
 
 @pytest.mark.parametrize("test_input", [
     clean.string_cols,
