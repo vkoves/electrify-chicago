@@ -2,6 +2,7 @@ import pytest
 import shutil, os
 import pandas as pd
 
+from src.data.scripts.utils import get_and_clean_csv
 from src.data.scripts import clean_and_pare_down_data_all_years as clean
 
 src_dir = "..../src/data/source"
@@ -24,7 +25,9 @@ def copy_file(get_src_file_path, get_dest_file_path):
 
 @pytest.fixture
 def building_data(copy_file):
-    return pd.read_csv(copy_file)
+    # equivalent
+    # return pd.read_csv(copy_file)
+    return get_and_clean_csv(copy_file)
 
 @pytest.mark.parametrize("test_input", [
     clean.string_cols,
