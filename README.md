@@ -100,3 +100,11 @@ cd src/data
 pip install --no-cache-dir -r requirements.txt
 bash run_all.sh
 ```
+### Run Data Processing Tests
+
+Run the following command for individual unit test suite (where XXX is something like 
+`test_clean_all_years`):
+
+```
+python3 -m pytest test/data/scripts/unit/XXX.py
+```

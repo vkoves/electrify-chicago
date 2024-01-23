@@ -60,7 +60,7 @@ replace_headers = {"Data Year": "DataYear",
     "Historical Wards 2003-2015": "HistoricalWards2003-2015" }
 
 def rename_columns(building_data: pd.DataFrame) -> pd.DataFrame:
-    return building_data.rename(columns=replace_headers,inplace=True)
+    return building_data.rename(columns=replace_headers)
 
 def get_all_ghg_data(building_data: pd.DataFrame) -> pd.DataFrame:
     return building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
