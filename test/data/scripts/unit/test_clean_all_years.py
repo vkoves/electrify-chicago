@@ -1,6 +1,7 @@
 import pytest
 import shutil, os, pathlib
 import pandas as pd
+import numpy as np
 
 from src.data.scripts.utils import get_and_clean_csv
 from src.data.scripts import clean_and_pare_down_data_all_years as clean
@@ -43,12 +44,20 @@ def src_building_data(copy_file):
 def test_is_not_empty(test_input):
     assert len(test_input) > 0
 
-def test_columns_are_renamed(src_building_data):
+def test_src_data_exists(src_building_data):
     assert src_building_data is not None
 
+@pytest.fixture
+def test_columns_are_renamed(src_building_data):
     df = clean.rename_columns(src_building_data)
     assert df is not None
     assert not df.columns.equals(src_building_data.columns)
+    return df
+
+def test_nonzero_ghg_filter(test_columns_are_renamed):
+    df = clean.get_all_ghg_data(test_columns_are_renamed)
+    assert df is not None
+    assert np.any(df['GHGIntensity'] > 0)
 
 def test_main():
     pass
