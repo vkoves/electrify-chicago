@@ -31,7 +31,7 @@ def copy_file(get_src_file_path, get_test_file_path):
     return get_test_file_path
 
 @pytest.fixture
-def src_building_data(copy_file):
+def src_building_data(copy_file) -> pd.DataFrame:
     # currently equivalent to
     # return pd.read_csv(copy_file)
     return get_and_clean_csv(copy_file)
@@ -48,7 +48,7 @@ def test_src_data_exists(src_building_data):
     assert src_building_data is not None
 
 @pytest.fixture
-def test_columns_are_renamed(src_building_data):
+def test_columns_are_renamed(src_building_data) -> pd.DataFrame:
     df = clean.rename_columns(src_building_data)
     assert df is not None
     assert not df.columns.equals(src_building_data.columns)
@@ -63,5 +63,21 @@ def test_filter_submitted_data(test_columns_are_renamed):
     df = clean.get_submitted_data(test_columns_are_renamed)
     assert np.all(df['ReportingStatus'].str.contains('Submitted'))
 
-def test_main():
-    pass
+@pytest.fixture
+def test_has_last_year_of_data(test_columns_are_renamed) -> pd.DataFrame:
+    df = clean.get_last_year_data(test_columns_are_renamed)
+    assert np.all(df['ID'].value_counts() == 1)
+    return df
+
+def test_str_values_remain_the_same(test_has_last_year_of_data, test_columns_are_renamed):
+    df = clean.fix_str_cols(test_has_last_year_of_data, test_columns_are_renamed)
+    assert test_has_last_year_of_data[clean.string_cols].equals(df[clean.string_cols])
+    
+def test_int_values_remain_the_same(test_has_last_year_of_data):
+    df = clean.fix_int_cols(test_has_last_year_of_data)
+    assert np.all(df[clean.int_cols].dtypes == 'Int64')
+
+def test_output_produces_csv(test_has_last_year_of_data):
+    out_file = get_file_path("test", "test_output.csv")
+    clean.output_to_csv(test_has_last_year_of_data, out_file)
+    assert os.path.exists(out_file)

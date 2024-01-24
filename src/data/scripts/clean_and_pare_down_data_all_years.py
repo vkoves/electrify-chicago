@@ -76,16 +76,18 @@ def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame():
     all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
     return all_recent_submitted_data
 
-def fix_str_cols(all_recent_submitted_data: pd.DataFrame, building_data: pd.DataFrame) -> pd.DataFrame:
+def fix_str_cols(all_recent_submitted_data: pd.DataFrame, renamed_building_data: pd.DataFrame) -> pd.DataFrame:
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
-    all_recent_submitted_data[string_cols] = building_data[string_cols].astype(str)
+    all_recent_submitted_data[string_cols] = renamed_building_data[string_cols].astype(str)
     return all_recent_submitted_data
 
-def output_to_csv(building_data: pd.DataFrame) -> None:
+def fix_int_cols(building_data: pd.DataFrame) -> pd.DataFrame:
+    return building_data[int_cols].astype('Int64')
+
+def output_to_csv(building_data: pd.DataFrame, dir: str) -> None:
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-    building_data[int_cols] = building_data[int_cols].astype('Int64')
-    building_data.to_csv(data_directory+data_out_file, sep=',', encoding='utf-8', index=False)
+    building_data.to_csv(dir, sep=',', encoding='utf-8', index=False)
 
 def main():
     building_data = get_and_clean_csv(data_directory + building_emissions_file)
@@ -99,8 +101,10 @@ def main():
     all_recent_submitted_data = get_last_year_data(all_submitted_data)
 
     all_recent_submitted_data = fix_str_cols(all_recent_submitted_data, building_data)
+    
+    all_recent_submitted_data = fix_int_cols(all_recent_submitted_data)
 
-    output_to_csv(all_recent_submitted_data)
+    output_to_csv(all_recent_submitted_data, data_directory+data_out_file)
 
 if __name__ == "__main__":
     main()
