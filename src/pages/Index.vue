@@ -96,7 +96,7 @@ export default class BiggestBuildings extends Vue {
             <!-- TODO: Move to consolidated sources object-->
             According to the
             <a
-              ref="noopener noreferrer"
+              ref="noopener"
               href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
               target="_blank"
             >
@@ -108,7 +108,6 @@ export default class BiggestBuildings extends Vue {
             buildings in the city using publicly available data and manual annotations to add
             building photographs and label multi-building owners like universities.
           </p>
-
           <EmissionsBreakdownGraph class="-mobile" />
 
           <p class="constrained -wide">
@@ -117,6 +116,30 @@ export default class BiggestBuildings extends Vue {
             foot, so big buildings could actually perform much better than very inefficient small
             buildings on this metric.
           </p>
+
+          <div class="announce-panel">
+            <h2>Legislative update! 🎉</h2>
+
+            <p>
+              As of late January 2024, legislation is being introduced to require new buildings use
+              more efficient forms of water and space heating, via the Clean And Affordable
+              Buildings Ordinance (CABO), which will reduce the number of highly polluting and
+              inefficient that end up on this site.
+            </p>
+
+            <p class="bold">
+              If you're in Chicago,
+
+              <a
+                href="https://act.sierraclub.org/actions/illinois?actionid=ar0395755&id=70131000001iOuIAAU"
+                target="_blank"
+                rel="noopener"
+              >
+                write to your alderman to support the CABO! <NewTabIcon />
+              </a>
+            </p>
+          </div>
+
 
           <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 
@@ -168,10 +191,11 @@ export default class BiggestBuildings extends Vue {
 
       <p class="footnote">
         Data Source:
+
         <a
           href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
         >
           Chicago Energy Benchmarking Data <NewTabIcon />
         </a>
@@ -182,6 +206,8 @@ export default class BiggestBuildings extends Vue {
 
 <style lang="scss">
 .homepage {
+  h1 { margin-bottom: 0; }
+
   .row {
     display: flex;
     justify-content: space-between;
