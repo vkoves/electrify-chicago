@@ -59,5 +59,9 @@ def test_nonzero_ghg_filter(test_columns_are_renamed):
     assert df is not None
     assert np.all(df['GHGIntensity'] > 0)
 
+def test_filter_submitted_data(test_columns_are_renamed):
+    df = clean.get_submitted_data(test_columns_are_renamed)
+    assert np.all(df['ReportingStatus'].str.contains('Submitted'))
+
 def test_main():
     pass
