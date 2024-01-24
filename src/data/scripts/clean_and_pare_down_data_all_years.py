@@ -65,7 +65,7 @@ def rename_columns(building_data: pd.DataFrame) -> pd.DataFrame:
 def get_all_ghg_data(building_data: pd.DataFrame) -> pd.DataFrame:
     return building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
 
-def get_sbumitted_data(building_data: pd.DataFrame) -> pd.DataFrame:
+def get_submitted_data(building_data: pd.DataFrame) -> pd.DataFrame:
     is_submitted = (building_data['ReportingStatus'] == "Submitted")
     is_submitted_data = (building_data['ReportingStatus'] == "Submitted Data")
     has_status_submitted = is_submitted | is_submitted_data
@@ -94,7 +94,7 @@ def main():
 
     all_ghg_data = get_all_ghg_data(building_data)
 
-    all_submitted_data = get_sbumitted_data(all_ghg_data)
+    all_submitted_data = get_submitted_data(all_ghg_data)
 
     all_recent_submitted_data = get_last_year_data(all_submitted_data)
 

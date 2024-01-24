@@ -57,7 +57,7 @@ def test_columns_are_renamed(src_building_data):
 def test_nonzero_ghg_filter(test_columns_are_renamed):
     df = clean.get_all_ghg_data(test_columns_are_renamed)
     assert df is not None
-    assert np.any(df['GHGIntensity'] > 0)
+    assert np.all(df['GHGIntensity'] > 0)
 
 def test_main():
     pass
