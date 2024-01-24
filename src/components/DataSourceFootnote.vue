@@ -5,7 +5,7 @@
     <a
       href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
       target="_blank"
-      rel="noopener noreferrer"
+      rel="noopener"
     >
       Chicago Energy Benchmarking Data <NewTabIcon />
     </a>

@@ -71,7 +71,7 @@ export default class About extends Vue {
         <a
           href="https://decarbmystate.com/illinois#power"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
         >
           Illinois Power | Decarb My State <NewTabIcon />
         </a>
@@ -113,14 +113,14 @@ export default class About extends Vue {
         <a
           href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
         >
           Chicago Energy Benchmarking Data <NewTabIcon />
         </a>, which is data collected and published under the
         <a href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html">
           Chicago Energy Benchmarking Ordinance <NewTabIcon />
-        </a>. This site shows data for the year {{ LatestDataYear }} 
-        (the latest available of March 2023) and filtered down to buildings 
+        </a>. This site shows data for the year {{ LatestDataYear }}
+        (the latest available of March 2023) and filtered down to buildings
         with total emissions > 1,000 metric tons CO<sub>2</sub>
         equivalent.
       </p>

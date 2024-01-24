@@ -96,7 +96,7 @@ export default class BiggestBuildings extends Vue {
             <!-- TODO: Move to consolidated sources object-->
             According to the
             <a
-              ref="noopener noreferrer"
+              ref="noopener"
               href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
               target="_blank"
             >
@@ -130,7 +130,11 @@ export default class BiggestBuildings extends Vue {
             <p class="bold">
               If you're in Chicago,
 
-              <a href="https://act.sierraclub.org/actions/illinois?actionid=ar0395755&id=70131000001iOuIAAU">
+              <a
+                href="https://act.sierraclub.org/actions/illinois?actionid=ar0395755&id=70131000001iOuIAAU"
+                target="_blank"
+                rel="noopener"
+              >
                 write to your alderman to support the CABO! <NewTabIcon />
               </a>
             </p>
@@ -187,10 +191,11 @@ export default class BiggestBuildings extends Vue {
 
       <p class="footnote">
         Data Source:
+
         <a
           href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
         >
           Chicago Energy Benchmarking Data <NewTabIcon />
         </a>

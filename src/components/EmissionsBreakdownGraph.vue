@@ -27,7 +27,7 @@ export default class EmissionsBreakdownGraph extends Vue {
 
     <p class="footnote">
       <a
-        ref="noopener noreferrer"
+        ref="noopener"
         href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
         target="_blank"
       >

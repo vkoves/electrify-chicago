@@ -1,7 +1,7 @@
 <template>
   <details class="data-disclaimer">
     <summary>
-      Note: Data only includes large Chicago buildings from {{ LatestDataYear }}, 
+      Note: Data only includes large Chicago buildings from {{ LatestDataYear }},
       unless explicitly stated otherwise.
     </summary>
 
@@ -11,7 +11,7 @@
       <a
         href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener"
       >
         Chicago Energy Benchmarking Ordinance<NewTabIcon />
       </a>. According to the City &ldquo;As of 2016,
@@ -21,7 +21,7 @@
     </p>
 
     <p class="constrained">
-      This data is also from {{ LatestDataYear }}, but when new benchmark data 
+      This data is also from {{ LatestDataYear }}, but when new benchmark data
       is available, we'll update the site.
     </p>
   </details>
