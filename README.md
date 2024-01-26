@@ -102,6 +102,9 @@ bash run_all.sh
 ```
 ### Run Data Processing Tests
 
+To run all tests siomply run `pytest` (with the assumption that pytest has been installed) 
+at the project directory.
+
 Run the following command for individual unit test suite (where XXX is something like 
 `test_clean_all_years`):
 
