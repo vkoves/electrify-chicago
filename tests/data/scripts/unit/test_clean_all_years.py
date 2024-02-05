@@ -5,6 +5,7 @@ import numpy as np
 
 from src.data.scripts.utils import get_and_clean_csv
 from src.data.scripts import clean_and_pare_down_data_all_years as clean
+# from test.data.scripts.unit import save_test_file
 
 file_to_copy = "ChicagoEnergyBenchmarking.csv"
 
@@ -19,7 +20,7 @@ def get_src_file_path():
 
 @pytest.fixture
 def get_test_file_path():
-    return get_file_path("test", file_to_copy)
+    return get_file_path("tests", file_to_copy)
 
 @pytest.fixture
 def copy_file(get_src_file_path, get_test_file_path):
@@ -30,11 +31,11 @@ def copy_file(get_src_file_path, get_test_file_path):
         assert pathlib.Path(get_test_file_path).exists()
     return get_test_file_path
 
-@pytest.fixture
-def src_building_data(copy_file) -> pd.DataFrame:
+@pytest.fixture(scope='module')
+def src_building_data(save_test_src) -> pd.DataFrame:
     # currently equivalent to
     # return pd.read_csv(copy_file)
-    return get_and_clean_csv(copy_file)
+    return get_and_clean_csv(save_test_src)
 
 @pytest.mark.parametrize("test_input", [
     clean.string_cols,
