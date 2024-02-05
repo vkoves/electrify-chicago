@@ -7,7 +7,12 @@ from src.data.scripts.utils import get_and_clean_csv
 from src.data.scripts import clean_and_pare_down_data_all_years as clean
 # from test.data.scripts.unit import save_test_file
 
-file_to_copy = "ChicagoEnergyBenchmarking.csv"
+property_test_cases = ['United Center']
+src_dir = 'src'
+test_dir = 'tests'
+src_input_file = 'ChicagoEnergyBenchmarking.csv'
+test_input_file = 'test_src_data.csv'
+test_output_file = 'test_output.csv'
 
 def get_file_path(dir: str, f: str):
     curr_path = pathlib.Path(".")
@@ -15,26 +20,34 @@ def get_file_path(dir: str, f: str):
     return os.path.join(path, f)
 
 @pytest.fixture
-def get_src_file_path():
-    return get_file_path("src", file_to_copy)
+def src_data():
+    file_path = get_file_path(src_dir, src_input_file)
+    return get_and_clean_csv(file_path)
 
 @pytest.fixture
-def get_test_file_path():
-    return get_file_path("tests", file_to_copy)
+def test_data_has_relevant_sample(src_data):
+    # check that all test cases exist at least once in data set
+    assert len(src_data) > 0
+    contains_test_cases = []
+    for p in property_test_cases:
+        has_related_name = src_data['Property Name'].map(lambda x: True if p in str(x) else False)
+        contains_test_cases.append(np.any(has_related_name))
+    assert np.all(contains_test_cases)
+    test_cases = src_data['Property Name'].str.contains('|'.join(property_test_cases), na=False)
+    return src_data[test_cases]
 
 @pytest.fixture
-def copy_file(get_src_file_path, get_test_file_path):
-    if not os.path.exists(get_test_file_path):
-        print(os.path.dirname(get_src_file_path))
-        os.makedirs(os.path.dirname(get_test_file_path), exist_ok=True)
-        shutil.copy(get_src_file_path, get_test_file_path)
-        assert pathlib.Path(get_test_file_path).exists()
-    return get_test_file_path
+def save_test_src(test_data_has_relevant_sample):
+    file_path = get_file_path(test_dir, test_input_file)
+    assert len(test_data_has_relevant_sample) > 0
+    if not os.path.exists(file_path):
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        test_data_has_relevant_sample.to_csv(file_path, index=False)
+    return file_path
 
-@pytest.fixture(scope='module')
+@pytest.fixture
 def src_building_data(save_test_src) -> pd.DataFrame:
-    # currently equivalent to
-    # return pd.read_csv(copy_file)
+    assert os.path.exists(save_test_src)
     return get_and_clean_csv(save_test_src)
 
 @pytest.mark.parametrize("test_input", [
@@ -79,6 +92,6 @@ def test_int_values_remain_the_same(test_has_last_year_of_data):
     assert np.all(df[clean.int_cols].dtypes == 'Int64')
 
 def test_output_produces_csv(test_has_last_year_of_data):
-    out_file = get_file_path("test", "test_output.csv")
+    out_file = get_file_path(test_dir, test_output_file)
     clean.output_to_csv(test_has_last_year_of_data, out_file)
     assert os.path.exists(out_file)
