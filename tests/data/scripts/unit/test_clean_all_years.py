@@ -7,7 +7,7 @@ from src.data.scripts.utils import get_and_clean_csv
 from src.data.scripts import clean_and_pare_down_data_all_years as clean
 # from test.data.scripts.unit import save_test_file
 
-property_test_cases = ['United Center']
+property_test_cases = ['United Center', 'Crown Hall', 'Art Institute']
 src_dir = 'src'
 test_dir = 'tests'
 src_input_file = 'ChicagoEnergyBenchmarking.csv'
