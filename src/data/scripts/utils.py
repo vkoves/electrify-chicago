@@ -4,8 +4,15 @@
 ###
 import pandas
 import logging
+import pathlib, os
 
 from typing import List
+
+def get_src_file_path(f: str):
+    # get path for source data file to process
+    curr_path = pathlib.Path(".")
+    path = curr_path.parent.absolute() / "src" / "data" / "source" / f
+    return path
 
 # Fetch a CSV and clean it up, keeping the cols_to_keep and converting the
 # number_cols to numbers

@@ -1,7 +1,6 @@
 import pandas as pd
-from src.data.scripts.utils import get_and_clean_csv
+from src.data.scripts.utils import get_and_clean_csv, get_src_file_path
 
-data_directory = './source/'
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
 data_out_file = "ChicagoEnergyBenchmarkingAllNewestInstances.csv"
 
@@ -90,7 +89,7 @@ def output_to_csv(building_data: pd.DataFrame, dir: str) -> None:
     building_data.to_csv(dir, sep=',', encoding='utf-8', index=False)
 
 def main():
-    building_data = get_and_clean_csv(data_directory + building_emissions_file)
+    building_data = get_and_clean_csv(get_src_file_path(building_emissions_file))
     
     building_data = rename_columns(building_data)
 
@@ -104,7 +103,7 @@ def main():
     
     all_recent_submitted_data = fix_int_cols(all_recent_submitted_data)
 
-    output_to_csv(all_recent_submitted_data, data_directory+data_out_file)
+    output_to_csv(all_recent_submitted_data, get_src_file_path(data_out_file))
 
 if __name__ == "__main__":
     main()
