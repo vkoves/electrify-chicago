@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 from src.data.scripts.utils import get_and_clean_csv
-from src.data.scripts import clean_and_pare_down_data_all_years as clean
+from src.data.scripts import clean_and_pare_down_data_all_years as clean, process_data as proc
 # from test.data.scripts.unit import save_test_file
 
 property_test_cases = ['United Center', 'Crown Hall', 'Art Institute']
@@ -95,3 +95,11 @@ def test_output_produces_csv(test_has_last_year_of_data):
     out_file = get_file_path(test_dir, test_output_file)
     clean.output_to_csv(test_has_last_year_of_data, out_file)
     assert os.path.exists(out_file)
+
+@pytest.fixture
+def process():
+    return clean.process(get_file_path(src_dir, src_input_file))
+
+def test_data_has_ranking_columns(process):
+    for col in proc.building_cols_to_rank:
+        assert col in process.columns

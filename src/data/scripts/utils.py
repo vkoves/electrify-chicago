@@ -8,10 +8,10 @@ import pathlib, os
 
 from typing import List
 
-def get_src_file_path(f: str):
+def get_data_file_path(dir: str, f: str) -> str:
     # get path for source data file to process
     curr_path = pathlib.Path(".")
-    path = curr_path.parent.absolute() / "src" / "data" / "source" / f
+    path = curr_path.parent.absolute() / "src" / "data" / dir / f
     return path
 
 # Fetch a CSV and clean it up, keeping the cols_to_keep and converting the

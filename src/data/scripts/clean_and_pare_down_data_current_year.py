@@ -1,9 +1,9 @@
 import pandas
-from src.data.scripts.utils import get_and_clean_csv
+from src.data.scripts.utils import get_and_clean_csv, get_data_file_path
 
-data_directory = './source/'
+data_directory = 'source'
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
-data_out_file = "ChicagoEnergyBenchmarkingThisYear.csv"
+data_out_file = 'ChicagoEnergyBenchmarkingThisYear.csv'
 
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
@@ -24,7 +24,7 @@ int_cols = [
 ]
 
 if __name__ == "__main__":
-    building_data = get_and_clean_csv(data_directory + building_emissions_file)
+    building_data = get_and_clean_csv(get_data_file_path(data_directory, building_emissions_file))
     replace_headers = {"Data Year": "DataYear",
         "ID": "ID",
         "Property Name": "PropertyName",
@@ -74,4 +74,5 @@ if __name__ == "__main__":
 
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
     all_recent_submitted_data[int_cols] = building_data[int_cols].astype('Int64')
-    all_recent_submitted_data.to_csv(data_directory+data_out_file, sep=',', encoding='utf-8', index=False)
+    all_recent_submitted_data.to_csv(get_data_file_path(data_directory, data_out_file), 
+                                     sep=',', encoding='utf-8', index=False)

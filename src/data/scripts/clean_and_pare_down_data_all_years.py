@@ -1,6 +1,7 @@
 import pandas as pd
-from src.data.scripts.utils import get_and_clean_csv, get_src_file_path
+from src.data.scripts.utils import get_and_clean_csv, get_data_file_path
 
+file_dir = 'source'
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
 data_out_file = "ChicagoEnergyBenchmarkingAllNewestInstances.csv"
 
@@ -82,14 +83,15 @@ def fix_str_cols(all_recent_submitted_data: pd.DataFrame, renamed_building_data:
     return all_recent_submitted_data
 
 def fix_int_cols(building_data: pd.DataFrame) -> pd.DataFrame:
-    return building_data[int_cols].astype('Int64')
+    building_data[int_cols] = building_data[int_cols].astype('Int64')
+    return building_data
 
 def output_to_csv(building_data: pd.DataFrame, dir: str) -> None:
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
     building_data.to_csv(dir, sep=',', encoding='utf-8', index=False)
 
-def main():
-    building_data = get_and_clean_csv(get_src_file_path(building_emissions_file))
+def process(file_path: str) -> pd.DataFrame:
+    building_data = get_and_clean_csv(file_path)
     
     building_data = rename_columns(building_data)
 
@@ -103,7 +105,11 @@ def main():
     
     all_recent_submitted_data = fix_int_cols(all_recent_submitted_data)
 
-    output_to_csv(all_recent_submitted_data, get_src_file_path(data_out_file))
+    return all_recent_submitted_data
+
+def main():
+    processed = process(get_data_file_path(file_dir, building_emissions_file))
+    output_to_csv(processed, get_data_file_path(file_dir, data_out_file))
 
 if __name__ == "__main__":
     main()
