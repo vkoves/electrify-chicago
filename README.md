@@ -36,35 +36,35 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [ ] Create ward page that shows data by ward (needs new data source)
 - [ ] Figure out a way to rank buildings by opportunity for improvement (perhaps higher than avg. in category, uses a lot of natural gas?)
 
+
 ## Development
 
-## Setup
+### Front-End Setup
 
 Make sure you have [Yarn](https://yarnpkg.com/) installed, `cd` into the project directory (after cloning it) and run:
 
-```
+```bash
 yarn install
 ```
 
-
-
-## Running
+### Running The Front-End
 
 Run `yarn develop` to start a local dev server at `http://localhost:8080`
 
 Happy coding 🎉🙌
 
-## Run Linting
+### Run Front-End Linting
 
 To run linting with auto-fix, run:
 
-```
+```bash
 yarn lint-fix
 ```
 
 ## Deploys
 
 This site deploys automatically via Netlify by running `gridsome build`.
+
 
 ## Tools
 
@@ -73,6 +73,8 @@ for data processing
 
 Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
 
+
+## Data Processing
 
 ### Python Setup (For Data Processing & tests)
 
@@ -83,7 +85,7 @@ This project's Python data pipeline requires:
 
 To install our Python dependencies, from the root of the project, run:
 
-```
+```bash
 cd src/data
 pip install --no-cache-dir -r requirements.txt
 ```
@@ -94,9 +96,11 @@ If you update the raw data CSVs or the data scripts that post-process them (like
 a new statistical analysis), you need to re-run the data processing. Make sure to follow the "Python
 Setup" steps first.
 
-To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), run:
+To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), from the project
+directory run:
 
-```
+```bash
+cd src/data
 bash run_all.sh
 ```
 
@@ -104,7 +108,7 @@ bash run_all.sh
 
 To run all tests simply in the project directory run:
 
-```
+```bash
 pytest
 ```
 
@@ -113,12 +117,12 @@ This assumes that `pytest` has been installed, see setup.
 Run the following command for individual unit test suite (where XXX is something like
 `test_clean_all_years`):
 
-```
+```bash
 python3 -m pytest test/data/scripts/unit/XXX.py
 ```
 
 
-### Known Issues
+## Known Development Issues
 
 #### macOS libvips Error
 
