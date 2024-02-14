@@ -135,6 +135,19 @@ form.search-form {
   }
 }
 
+.announce-panel {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: solid 0.25rem #ff5454;
+  background: #ffdce8;
+  border-top-width: 3rem;
+  max-width: 40rem;
+
+  h2 { margin-top: 0; }
+
+  .bold { font-size: 1.125rem; }
+}
+
 /**
  * <Pager> styling
  */
