@@ -78,7 +78,7 @@ query ($id: ID!) {
               :href="'https://www.google.com/maps/search/' + encodedAddress"
               class="google-maps-link"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
             >
               Find on Google Maps <NewTabIcon />
             </a>
@@ -149,7 +149,7 @@ query ($id: ID!) {
                 <a
                   href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener"
                 >
                   Chicago Energy Rating
                   <NewTabIcon />
@@ -165,7 +165,7 @@ query ($id: ID!) {
                 <a
                   href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener"
                 >
                   Energy Star Score
                   <NewTabIcon />
@@ -367,7 +367,7 @@ query ($id: ID!) {
               <a
                 href="https://www.chicago.gov/city/en/depts/mayor/supp_info/chicago-energy-benchmarking/Chicago_Energy_Benchmarking_Beyond_Benchmarking.html"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
               >
                 Chicago Energy Benchmarking: Taking Action to Improve Energy Efficiency
                 | City of Chicago <NewTabIcon />
@@ -378,7 +378,7 @@ query ($id: ID!) {
               <a
                 href="https://www.chicagobuilding.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
               >
                 Chicago Average EUIs and ENERGY STAR scores by property type [PDF] <NewTabIcon />
               </a>
@@ -388,7 +388,7 @@ query ($id: ID!) {
               <a
                 href="https://portfoliomanager.energystar.gov/pdf/reference/US%20National%20Median%20Table.pdf"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
               >
                 U.S. Energy Use Intensity by Property Type | ENERGY STAR [PDF] <NewTabIcon />
               </a>
@@ -409,6 +409,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import StatTile from '~/components/StatTile.vue';
+import { LatestDataYear } from '../constants/globals.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -447,7 +448,7 @@ export default class BuildingDetails  extends Vue {
    * The year most/the latest buildings data is from - if this building's year is older than this,
    *  we show a warning that the data is old
    */
-  readonly LatestDataYear: number = 2021;
+  readonly LatestDataYear: number = LatestDataYear;
 
    /** Set by Gridsome to results of GraphQL query */
   $page: any;

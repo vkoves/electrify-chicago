@@ -22,7 +22,10 @@ const BuildingOwnerIds = [
   'depaul',
   'uchicago',
   'iit',
-  'northwestern'
+  'northwestern',
+  'cps',
+  'cha',
+  'cityofchicago'
 ]
 
 module.exports = function(api) {

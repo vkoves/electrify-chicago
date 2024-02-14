@@ -132,6 +132,6 @@ brew install --build-from-source gcc
 xcode-select install
 brew install vips
 ```
-
+=======
 **Important!** When you update the data, make sure to update the `LatestDataYear` in
 `globals.vue`, as well as the filter year in all page queries.

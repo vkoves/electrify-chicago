@@ -14,7 +14,7 @@
       <strong>Attribution:</strong>
       {{ buildingImg.fromGoogleMaps ? '© Google ' + currentYear : '' }}
       <a
-        ref="noopener noreferrer"
+        ref="noopener"
         :href="buildingImg.attributionUrl"
         target="_blank"
       >
