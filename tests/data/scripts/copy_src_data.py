@@ -1,11 +1,11 @@
 import os, pathlib, sys
 import pandas as pd, numpy as np
-
+from typing import List
 from src.data.scripts.utils import get_and_clean_csv
 
 property_test_cases = ['United Center', 'Crown Hall', 'Art Institute']
 
-def get_test_sample(src_data: pd.DataFrame, property_test_cases: list) -> pd.DataFrame:
+def get_test_sample(src_data: pd.DataFrame, property_test_cases: List[str]) -> pd.DataFrame:
     # check that all test cases exist at least once in data set
     assert len(src_data) > 0
     contains_test_cases = []

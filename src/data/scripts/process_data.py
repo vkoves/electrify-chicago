@@ -100,7 +100,8 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
 
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
     benchmark_stats_df.to_json(outputted_path)
-    benchmark_stats_df.to_json(get_data_file_path(data_debug_directory, filename))
+    benchmark_stats_df.to_json(str(get_data_file_path(data_debug_directory, filename)), 
+                               indent=4)
 
     return outputted_path
 
