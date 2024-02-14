@@ -76,3 +76,4 @@ if __name__ == "__main__":
     all_recent_submitted_data[int_cols] = building_data[int_cols].astype('Int64')
     all_recent_submitted_data.to_csv(get_data_file_path(data_directory, data_out_file), 
                                      sep=',', encoding='utf-8', index=False)
+                                     
