@@ -100,7 +100,6 @@ To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.cs
 directory run:
 
 ```bash
-cd src/data
 bash run_all.sh
 ```
 
