@@ -25,17 +25,27 @@ export default class About extends Vue {
         id="main-content"
         tabindex="-1"
       >
-        The City Of Chicago Hasn't Enforced The Benchmarking Ordinance, Didn't Collect $26.7 Million
-        In Fines for 2,905 Non Enforcements
+        City Of Chicago Didn't Collect $26.7 Million In Fines
       </h1>
+      <p class="constrained bold">
+        Hasn't Enforced The Benchmarking Ordinance Fines for 2,905 Non Enforcements In Past 5 Years
+        (2019 - 2023)
+      </p>
+
+      <g-link to="/blog/millions-in-missed-fines">
+        Back to Blog
+      </g-link>
 
       <p class="constrained">
-        Electrify Chicago is an independent open-source project looking to shed light onto one of
-        the biggest sources of Chicago's CO<sub>2</sub> emissions - buildings. By providing more
-        information about some of the city's largest and most polluting buildings, we hope t
-        encourage these buildings to electrify, particularly by mobilizing people related to the
-        building - whether that be students and faculty for a college building or employees and
-        patients at a hospital.
+        Electrify Chicago has analyzed the last five years of city benchmark data, and found
+        2,905 instances of buildings not submitting data. Based on the
+        <a href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/sample_notification_letter.pdf">
+          latest (2024) official notification letter <NewTabIcon/>
+        </a> fines for non-compliance could total up to $9,200.
+      </p>
+
+      <p>
+        <strong>With $9,200 of fines X 2,905 instances of non-compliance, that's a whopping $26.7 million dollars of not-collected fines</strong>
       </p>
       </ul>
     </div>
