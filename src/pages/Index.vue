@@ -124,7 +124,7 @@ export default class BiggestBuildings extends Vue {
               As of late January 2024, legislation is being introduced to require new buildings use
               more efficient forms of water and space heating, via the Clean And Affordable
               Buildings Ordinance (CABO), which will reduce the number of highly polluting and
-              inefficient that end up on this site.
+              inefficient buildings that end up on this site.
             </p>
 
             <p class="bold">
