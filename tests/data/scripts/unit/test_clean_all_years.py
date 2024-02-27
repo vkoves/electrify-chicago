@@ -57,9 +57,17 @@ def test_has_last_year_of_data(test_columns_are_renamed) -> pd.DataFrame:
     assert np.all(df['ID'].value_counts() == 1)
     return df
 
-def test_str_values_remain_the_same_as_origin(test_has_last_year_of_data, test_columns_are_renamed):
-    df = clean.fix_str_cols(test_has_last_year_of_data, test_columns_are_renamed)
-    assert test_has_last_year_of_data[clean.string_cols].equals(df[clean.string_cols])
+@pytest.fixture
+def fixed_strings(test_has_last_year_of_data, test_columns_are_renamed):
+    return clean.fix_str_cols(test_has_last_year_of_data, 
+                              test_columns_are_renamed)
+
+def test_str_values_remain_the_same_as_origin(fixed_strings, test_has_last_year_of_data):
+    assert test_has_last_year_of_data[clean.string_cols].equals(fixed_strings[clean.string_cols])
+
+def test_lat_lon_become_strings(fixed_strings):
+    df = fixed_strings[['Latitude','Longitude']]
+    assert np.all(df.dtypes == 'string')
     
 def test_int_values_remain_the_same_as_origin(test_has_last_year_of_data):
     df = clean.fix_int_cols(test_has_last_year_of_data)

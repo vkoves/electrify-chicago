@@ -8,7 +8,9 @@ data_out_file = "ChicagoEnergyBenchmarkingAllNewestInstances.csv"
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
     'ChicagoEnergyRating',
-    'ZIPCode'
+    'ZIPCode',
+    'Latitude',
+    'Longitude'
 ]
 
 # Int columns that are numbers (and can get averaged) but should be rounded
@@ -71,7 +73,7 @@ def get_submitted_data(building_data: pd.DataFrame) -> pd.DataFrame:
     has_status_submitted = is_submitted | is_submitted_data
     return building_data.loc[has_status_submitted].copy()
 
-def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame():
+def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame:
     all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
     all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
     return all_recent_submitted_data
@@ -79,7 +81,7 @@ def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame():
 def fix_str_cols(all_recent_submitted_data: pd.DataFrame, renamed_building_data: pd.DataFrame) -> pd.DataFrame:
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
-    all_recent_submitted_data[string_cols] = renamed_building_data[string_cols].astype(str)
+    all_recent_submitted_data[string_cols] = renamed_building_data[string_cols].astype("string")
     return all_recent_submitted_data
 
 def fix_int_cols(building_data: pd.DataFrame) -> pd.DataFrame:
