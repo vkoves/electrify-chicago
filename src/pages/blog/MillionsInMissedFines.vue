@@ -80,9 +80,7 @@ export default class MillionsInMissedFine extends Vue {
         means a whopping <strong>$30,590,000 dollars of fines could have been collected</strong>
         by the city's commissioner of business affairs and consumer protection (who is given this
         responsibility in the
-        <a href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/BenchmarkingOrdinance11SEP2013.pdf">
-          original ordinance
-        </a>).
+        <a href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/BenchmarkingOrdinance11SEP2013.pdf">original ordinance</a>).
       </p>
 
       <img
@@ -101,10 +99,11 @@ export default class MillionsInMissedFine extends Vue {
       >
 
       <p class="caption">
-        The full data portal screenshot, and a zoomed in view of the query result count (
-        <a :href="NonReportingBuildingsDataUrl">
-          target="_blank" rel="noopener">source <NewTabIcon /></a>
-        )
+        The full data portal screenshot, and a zoomed in view of the query result count (<a
+          :href="NonReportingBuildingsDataUrl"
+          target="_blank"
+          rel="noopener"
+        >source <NewTabIcon /></a>)
       </p>
 
       <p>
