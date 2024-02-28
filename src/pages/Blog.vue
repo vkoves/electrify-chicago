@@ -11,7 +11,7 @@ import { LatestDataYear } from '../constants/globals.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'About Us' };
+    return { title:  'Blog' };
   },
 })
 export default class About extends Vue {

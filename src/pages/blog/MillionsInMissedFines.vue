@@ -10,7 +10,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'City Missed 27 Million in Fines' };
+    return { title:  '$30 Million in Uncollected Fines' };
   },
 })
 export default class MillionsInMissedFine extends Vue {
