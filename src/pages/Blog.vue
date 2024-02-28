@@ -20,21 +20,44 @@ export default class About extends Vue {
 </script>
 <template>
   <DefaultLayout>
-    <div class="layout-constrained">
+    <div class="layout-constrained blog-page">
       <h1
         id="main-content"
         tabindex="-1"
       >
-        Blog
+        Electrify Chicago Blog
       </h1>
 
       <ul>
         <li>
-          <g-link to="/blog/millions-in-missed-fines">
-            Millions In Missed Fines
-          </g-link>
+          <h2>
+            <g-link to="/blog/millions-in-missed-fines">
+              The City Of Chicago Didn't Enforce The Building Benchmarking Ordinance, Failing to
+              Collect $30 Million In Fines
+            </g-link>
+          </h2>
+
+          <p>
+            The City of Chicago didn't enforce the benchmarking ordinance from at least 2018 - 2022
+            that requires large buildings to report their emissions - and based on the fine amounts
+            laid out in the ordinance, we calculated the city missed out on millions.
+          </p>
         </li>
       </ul>
     </div>
   </DefaultLayout>
 </template>
+<style lang="scss">
+.blog-page {
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  h2 a {
+    text-decoration: none;
+
+    &:hover, &:focus { text-decoration: underline; }
+  }
+}
+</style>

@@ -20,12 +20,27 @@ body {
 
 a { color: $link-blue; }
 
+a.grey-link {
+  background-color: $grey-light;
+  color: $black;
+  border-radius: $brd-rad-small;
+  padding: 0.25rem 1rem;
+  text-decoration: none;
+
+  &:hover, &:focus { background-color: $grey; }
+}
+
 h1, h2, h3, h4, h5, h6 {
    &:focus {
     border-bottom: solid 0.5rem $chicago-blue;
     outline: none;
   }
 }
+
+h1 { margin: 1.5rem 0 0.5rem 0; }
+h2 { margin: 1rem 0 0.5rem 0; }
+
+p.-no-margin, p:first-of-type { margin: 0; }
 
 /**
  * Default Form Styling
@@ -74,8 +89,9 @@ summary:focus { outline-offset: 0; }
 img { max-width: 100%; }
 
 img.-shadowed {
+  margin-top: 1rem;
   border: solid $border-thin $grey;
-  box-shadow: 0.125rem 0.125rem 0.125rem $box-shadow-main;
+  box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
 }
 
 .large-text { font-size: 1.3em; }
@@ -140,7 +156,7 @@ form.search-form {
   border-radius: 1rem;
   border: solid 0.25rem #ff5454;
   background: #ffdce8;
-  border-top-width: 3rem;
+  border-top-width: 2rem;
   max-width: 40rem;
 
   h2 { margin-top: 0; }
