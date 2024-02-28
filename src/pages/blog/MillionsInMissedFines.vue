@@ -34,11 +34,12 @@ export default class MillionsInMissedFine extends Vue {
         id="main-content"
         tabindex="-1"
       >
-        The City Of Chicago Didn't Enforce The Building Benchmarking Ordinance, Failing to
-        Collect $30 Million In Potential Fines
+        City Of Chicago Failed to Collect $30 Million In Potential Fines from Building Benchmarking
+        Ordinance
       </h1>
       <p class="constrained bold">
-        Not Enforcing The Benchmarking Ordinance's Fines From 2018 - 2022 Reduced Accountability
+        Not Enforcing The Benchmarking Ordinance's Fines From 2018 - 2022 Reduced Accountability &
+        Transparency
       </p>
 
       <p class="constrained">
@@ -144,6 +145,14 @@ export default class MillionsInMissedFine extends Vue {
         with the original ordinance. We also believe that larger fines may be necessary to get the
         owners of very large and inefficient buildings to report their emissions, who may want to
         obscure their  pollution from the public.
+      </p>
+
+
+      <h2>Questions?</h2>
+
+      <p>
+        Contact the lead developer on this site, Viktor Köves, by emailing
+        <a href="mailto:contact@viktorkoves.com">contact@viktorkoves.com</a>
       </p>
     </div>
   </DefaultLayout>

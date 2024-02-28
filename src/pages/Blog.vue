@@ -32,8 +32,8 @@ export default class About extends Vue {
         <li>
           <h2>
             <g-link to="/blog/millions-in-missed-fines">
-              The City Of Chicago Didn't Enforce The Building Benchmarking Ordinance, Failing to
-              Collect $30 Million In Potential Fines
+              City Of Chicago Failed to Collect $30 Million In Potential Fines from Building
+              Benchmarking Ordinance
             </g-link>
           </h2>
 

@@ -163,6 +163,16 @@ form.search-form {
   border-top-width: 2rem;
   max-width: 40rem;
 
+  &.-orange {
+    border-color: $orange;
+    background: $off-white;
+  }
+
+  &.-blue {
+    border-color: $chicago-blue;
+    background: $off-white;
+  }
+
   h2 { margin-top: 0; }
 
   .bold { font-size: 1.125rem; }
