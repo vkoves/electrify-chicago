@@ -90,6 +90,10 @@ export default class BiggestBuildings extends Vue {
         Electrify Chicago
       </h1>
 
+      <p class="tagline">
+        An independent tool for viewing City of Chicago building data
+      </p>
+
       <div class="row">
         <div>
           <p class="constrained -wide">
@@ -104,7 +108,7 @@ export default class BiggestBuildings extends Vue {
             </a>,
             a whopping <strong>69% of Chicago's emissions come from buildings</strong>, making it
             our biggest challenge and <em>our biggest opportunity</em> as a city to tackle
-            change. At Electrify Chicago we want to showcase some of the best and worst performing
+            change. At Electrify Chicago, we want to showcase some of the best and worst performing
             buildings in the city using publicly available data and manual annotations to add
             building photographs and label multi-building owners like universities.
           </p>
@@ -208,12 +212,17 @@ export default class BiggestBuildings extends Vue {
 .homepage {
   h1 { margin-bottom: 0; }
 
+  .tagline {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
   .row {
     display: flex;
     justify-content: space-between;
     gap: 2rem;
 
-    p.constrained { font-size: 1.25rem; }
+    p.constrained { font-size: 1.125rem; }
   }
 
   .emissions-breakdown {
