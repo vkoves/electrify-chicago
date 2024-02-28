@@ -16,7 +16,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 export default class MillionsInMissedFine extends Vue {
   readonly NotifLetterUrl = 'https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/sample_notification_letter.pdf';
 
-  /** Buildings from 2018 - 2023 that didn't report */
+  /** Buildings from 2018 - 2022 that didn't report */
   readonly NonReportingBuildingsDataUrl = 'https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/explore/query/SELECT%0A%20%20%60data_year%60%2C%0A%20%20%60id%60%2C%0A%20%20%60property_name%60%2C%0A%20%20%60reporting_status%60%2C%0A%20%20%60address%60%2C%0A%20%20%60zip_code%60%2C%0A%20%20%60chicago_energy_rating%60%2C%0A%20%20%60exempt_from_chicago_energy_rating%60%2C%0A%20%20%60community_area%60%2C%0A%20%20%60primary_property_type%60%2C%0A%20%20%60gross_floor_area_buildings_sq_ft%60%2C%0A%20%20%60year_built%60%2C%0A%20%20%60of_buildings%60%2C%0A%20%20%60water_use_kgal%60%2C%0A%20%20%60energy_star_score%60%2C%0A%20%20%60electricity_use_kbtu%60%2C%0A%20%20%60natural_gas_use_kbtu%60%2C%0A%20%20%60district_steam_use_kbtu%60%2C%0A%20%20%60district_chilled_water_use_kbtu%60%2C%0A%20%20%60all_other_fuel_use_kbtu%60%2C%0A%20%20%60site_eui_kbtu_sq_ft%60%2C%0A%20%20%60source_eui_kbtu_sq_ft%60%2C%0A%20%20%60weather_normalized_site_eui_kbtu_sq_ft%60%2C%0A%20%20%60weather_normalized_source_eui_kbtu_sq_ft%60%2C%0A%20%20%60total_ghg_emissions_metric_tons_co2e%60%2C%0A%20%20%60ghg_intensity_kg_co2e_sq_ft%60%2C%0A%20%20%60latitude%60%2C%0A%20%20%60longitude%60%2C%0A%20%20%60location%60%2C%0A%20%20%60row_id%60%2C%0A%20%20%60%3A%40computed_region_43wa_7qmu%60%2C%0A%20%20%60%3A%40computed_region_vrxf_vc4k%60%2C%0A%20%20%60%3A%40computed_region_6mkv_f3dw%60%2C%0A%20%20%60%3A%40computed_region_bdys_3d7i%60%2C%0A%20%20%60%3A%40computed_region_awaf_s7ux%60%0AWHERE%0A%20%20%28%60data_year%60%20IN%20%28%222019%22%2C%20%222020%22%2C%20%222021%22%2C%20%222022%22%2C%20%222018%22%29%29%0A%20%20AND%20caseless_one_of%28%60reporting_status%60%2C%20%22Not%20Submitted%22%29/page/filter';
 }
 </script>
@@ -24,7 +24,7 @@ export default class MillionsInMissedFine extends Vue {
   <DefaultLayout>
     <div class="layout-constrained millions-in-fines">
       <g-link
-        to="/blog/millions-in-missed-fines"
+        to="/blog"
         class="back-link grey-link"
       >
         Back to Blog
@@ -67,9 +67,7 @@ export default class MillionsInMissedFine extends Vue {
           :href="NotifLetterUrl"
           target="_blank"
           rel="noopener"
-        >
-          source <NewTabIcon />
-        </a>)
+        >source <NewTabIcon /></a>)
       </p>
 
       <p>
@@ -78,9 +76,7 @@ export default class MillionsInMissedFine extends Vue {
           href="NonReportingBuildingsDataUrl"
           target="_blank"
           rel="noopener"
-        >
-          source, City of Chicago data portal <NewTabIcon />
-        </a>), that
+        >source - City of Chicago data portal <NewTabIcon /></a>), that
         means a whopping <strong>$30,590,000 dollars of fines could have been collected</strong>
         by the city's commissioner of business affairs and consumer protection (who is given this
         responsibility in the
@@ -141,14 +137,14 @@ export default class MillionsInMissedFine extends Vue {
           href="https://web.archive.org/web/20221214211117/https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/2020_Sample_Notification_Letter.pdf"
           target="_blank"
           rel="noopener"
-        >
-          source, WayBackMachine <NewTabIcon />
-        </a>)
+        >source - WayBackMachine <NewTabIcon /></a>)
         did not contain any information of potential fines, and just this recent update to make
         sure building owners are aware of the consequences for not reporting should improve
         reporting. However we believe it is crucial the city then follow through and fine any
         buildings who choose to ignore repeated requests to report their energy use, in keeping
-        with the original ordinance.
+        with the original ordinance. We also believe that larger fines may be necessary to get very
+        large and inefficient buildings to report their emissions, who may want to obscure their
+        pollution from the public.
       </p>
     </div>
   </DefaultLayout>

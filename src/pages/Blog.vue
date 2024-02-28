@@ -38,9 +38,10 @@ export default class About extends Vue {
           </h2>
 
           <p>
-            The City of Chicago didn't enforce the benchmarking ordinance from at least 2018 - 2022
-            that requires large buildings to report their emissions - and based on the fine amounts
-            laid out in the ordinance, we calculated the city missed out on millions.
+            The City of Chicago didn't fully enforce the benchmarking ordinance that requires large
+            buildings to report their emissions - and based on the fine amounts laid out in the
+            ordinance, we calculated the city missed out on millions and harmed transparency and
+            accountability for large buildings.
           </p>
         </li>
       </ul>

@@ -35,12 +35,16 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: solid 0.5rem $chicago-blue;
     outline: none;
   }
+
+  // Drop margin for the first paragraph after a heading
+  + p { margin-top: 0; }
 }
 
 h1 { margin: 1.5rem 0 0.5rem 0; }
 h2 { margin: 1rem 0 0.5rem 0; }
 
 p.-no-margin, p:first-of-type { margin: 0; }
+
 
 /**
  * Default Form Styling
