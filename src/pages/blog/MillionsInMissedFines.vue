@@ -10,7 +10,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  '$30 Million in Uncollected Fines' };
+    return { title:  'Chicago Failed to Collect Potentially $30 Million in Fines' };
   },
 })
 export default class MillionsInMissedFine extends Vue {
@@ -35,7 +35,7 @@ export default class MillionsInMissedFine extends Vue {
         tabindex="-1"
       >
         The City Of Chicago Didn't Enforce The Building Benchmarking Ordinance, Failing to
-        Collect $30 Million In Fines
+        Collect $30 Million In Potential Fines
       </h1>
       <p class="constrained bold">
         Not Enforcing The Benchmarking Ordinance's Fines From 2018 - 2022 Reduced Accountability
