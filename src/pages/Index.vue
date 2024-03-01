@@ -123,7 +123,8 @@ export default class BiggestBuildings extends Vue {
           <div class="announcements">
             <div class="announce-panel -orange">
               <h2>
-                📰 New Article - $30 Million In Missed Fines
+                <div class="regular-text-size">New Article</div>
+                📰 $30 Million In Missed Fines
               </h2>
 
               <p>

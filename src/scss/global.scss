@@ -102,6 +102,8 @@ img.-shadowed {
 
 .smaller { font-size: smaller; }
 
+.regular-text-size { font-size: 1rem; ;}
+
 .x-small-text { font-size: 0.75rem; }
 
 .footnote {
@@ -159,19 +161,12 @@ form.search-form {
   padding: 1rem;
   border-radius: 1rem;
   border: solid 0.25rem #ff5454;
-  background: #ffdce8;
+  background: $off-white;
   border-top-width: 2rem;
   max-width: 40rem;
 
-  &.-orange {
-    border-color: $orange;
-    background: $off-white;
-  }
-
-  &.-blue {
-    border-color: $chicago-blue;
-    background: $off-white;
-  }
+  &.-orange { border-color: $orange; }
+  &.-blue { border-color: $chicago-blue; }
 
   h2 { margin-top: 0; }
 
