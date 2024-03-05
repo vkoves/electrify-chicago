@@ -86,8 +86,7 @@ This project's Python data pipeline requires:
 To install our Python dependencies, from the root of the project, run:
 
 ```bash
-cd src/data
-pip install --no-cache-dir -r requirements.txt
+pip install requirements.txt
 ```
 
 ### Run Data Processing
