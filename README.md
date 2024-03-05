@@ -105,7 +105,7 @@ bash run_all.sh
 ### Run Data Processing Tests
 
 Make sure test data is created/replaced before running tests by running the following script from
-the main project directory (it will overwite the existing test data file if it exists):
+the main project directory (it will overwrite the existing test data file if it exists):
 
 ```bash
 bash create_test_data.sh
