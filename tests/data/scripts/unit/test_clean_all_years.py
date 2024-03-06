@@ -5,7 +5,7 @@ import numpy as np
 
 from src.data.scripts.utils import get_and_clean_csv
 from src.data.scripts import clean_and_pare_down_data_all_years as clean, process_data as proc
-from tests.data.scripts.utils import get_file_path
+from tests.data.scripts.utils import get_test_file_path, get_src_file_path
 
 src_dir = 'src'
 test_dir = 'tests'
@@ -15,17 +15,19 @@ test_output_file = 'test_output.csv'
 
 @pytest.fixture
 def src_building_data() -> pd.DataFrame:
-    test_data_path = get_file_path(test_dir, test_input_file)
+    test_data_path = get_test_file_path(test_input_file)
     assert os.path.exists(test_data_path)
     return get_and_clean_csv(test_data_path)
 
 @pytest.fixture
 def csv_file() -> csv.reader:
-    csvfile = open(get_file_path(test_dir, test_input_file))
+    csvfile = open(get_test_file_path(test_input_file))
     return csv.reader(csvfile) 
 
-def test_csv_file_is_readable(csv_file):
-    csv_file
+def test_csv_file_has_some_data(csv_file):
+    first_line = csv_file.__next__()
+    assert first_line
+    assert len(first_line) > 0
 
 @pytest.mark.parametrize("test_input", [
     clean.string_cols,
@@ -77,13 +79,13 @@ def test_int_values_remain_the_same_as_origin(test_has_last_year_of_data):
     assert np.all(df[clean.int_cols].dtypes == 'Int64')
 
 def test_csv_is_produced(test_has_last_year_of_data):
-    out_file = get_file_path(test_dir, test_output_file)
+    out_file = get_test_file_path(test_output_file)
     clean.output_to_csv(test_has_last_year_of_data, out_file)
     assert os.path.exists(out_file)
 
 @pytest.fixture
 def process():
-    return clean.process(get_file_path(src_dir, src_input_file))
+    return clean.process(get_src_file_path(src_input_file))
 
 def test_data_has_ranking_columns(process):
     for col in proc.building_cols_to_rank:

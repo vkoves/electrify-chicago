@@ -2,7 +2,7 @@ import os, pathlib, sys, csv
 import pandas as pd, numpy as np
 from typing import List
 from src.data.scripts.utils import get_and_clean_csv
-from tests.data.scripts.utils import get_file_path
+from tests.data.scripts.utils import get_test_file_path
 
 src_dir = 'src'
 test_dir = 'tests'
@@ -12,7 +12,7 @@ test_input_file = 'test_src_data.csv'
 property_test_cases = ['United Center', 'Crown Hall', 'Art Institute', 'Marie Curie']
 
 def csv_rows() -> csv.reader:
-    csvfile = open(get_file_path(test_dir, test_input_file))
+    csvfile = open(get_test_file_path(test_dir, test_input_file))
     return csv.reader(csvfile) 
 
 def get_test_sample(src_data: csv.reader, property_test_cases: List[str]) -> csv.writer:
