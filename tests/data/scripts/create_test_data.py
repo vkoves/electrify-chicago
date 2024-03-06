@@ -14,7 +14,7 @@ property_test_cases = ['United Center', 'Crown Hall', 'Art Institute', 'Marie Cu
 def write_test_sample(reader: csv.reader, writer: csv.writer, property_test_cases: List[str]) -> csv.writer:
     header_row = next(reader)
     if len(header_row) <= 0:
-        raise Exception('ChicagoEnergyBenchmarking CSV file is empty!') 
+        raise EOFError('ChicagoEnergyBenchmarking CSV file is empty!') 
     else:
         writer.writerow(header_row)
     for row in reader:
