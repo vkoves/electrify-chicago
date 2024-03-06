@@ -51,6 +51,15 @@ export const BuildingOwners: IBuildingOwners = {
     logoLarge: '/building-owners/uchicago/uchicago-large.png',
   },
 
+  uic: {
+    key: 'uic',
+    name: 'University of Illinois Chicago',
+    nameShort: 'UIC',
+    logoSmall: '/building-owners/uic/uic-large.jpg',
+    logoLarge: '/building-owners/uic/uic-large.png',
+  },
+
+
   northwestern: {
     key: 'northwestern',
     name: 'Northwestern University',
@@ -121,6 +130,12 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '251335': {owner: BuildingOwners.depaul.key},
   // Centennial-Hall
   '251326': {owner: BuildingOwners.depaul.key},
+  // Sullivan Athletic Center
+  '138514': {owner: BuildingOwners.depaul.key},
+  // Ray Meyer Fitness and Recreation Center
+  '251332': {owner: BuildingOwners.depaul.key},
+  // Theatre School
+  '251337': {owner: BuildingOwners.depaul.key},
 
   /**
    * IIT buildings
@@ -152,6 +167,10 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '256433': {owner: BuildingOwners.iit.key},
   // Incubator?
   '256435': {owner: BuildingOwners.iit.key},
+  // Perlstein Hall
+  '256423': {owner: BuildingOwners.iit.key},
+  // Main Building (formerly IIT)
+  // '103624': {owner: BuildingOwners.iit.key},
 
   /**
    * UChicago Buildings
@@ -191,6 +210,19 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '252041': {owner: BuildingOwners.uchicago.key},
   // Booth School
   '102455': {owner: BuildingOwners.uchicago.key},
+  // Cobb Hall
+  '252049': {owner: BuildingOwners.uchicago.key},
+
+  /**
+   * UIC Buildings
+   *
+   * See official summary, ignore leased buildings:
+   * https://fimweb.fim.uic.edu/BuildingsData.aspx
+   */
+  // University Hall
+  '251339': { owner: BuildingOwners.uic.key },
+  // UIC College of Law, 304 S State (or 300 S State)
+  '251220': { owner: BuildingOwners.uic.key },
 
   /**
    * Northwestern Buildings
@@ -208,10 +240,16 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '101840': { owner: BuildingOwners.northwestern.key },
   // Morton Medical Research Building
   '256409': { owner: BuildingOwners.northwestern.key },
+  // Pritzker School of Law, 375 E Chicago Ave
+  '256406': { owner: BuildingOwners.northwestern.key },
+  // 345 E. Superior
+  '101890': {owner: BuildingOwners.northwestern.key},
+  // Wieboldt Hall, 340 E. Superior
+  '256407': {owner: BuildingOwners.northwestern.key},
 
   /**
    * CPS
-   * Helpful source: main data set, schools tagged wit '-CPS'. 
+   * Helpful source: main data set, schools tagged wit '-CPS'.
    * Also manually added selective enrollment schools
    */
   // Thorp Scholastic Academy, Ole A

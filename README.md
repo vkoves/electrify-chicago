@@ -103,3 +103,50 @@ bash run_all.sh
 
 **Important!** When you update the data, make sure to update the `LatestDataYear` in
 `globals.vue`, as well as the filter year in all page queries.
+
+## Managing The Data
+
+### Adding a Building Owner
+
+If there's a new large building owner to add, simply:
+
+1. **Add the building owner in the `BuildingOwners` constant** in `buildings-custom-info.constant.vue` -
+this defines metadata about the owner like their name and logo URLs
+
+Example:
+
+```ts
+iit: {
+  key: 'iit',
+  name: 'Illinois Institute of Technology',
+  nameShort: 'Illinois Tech',
+  logoSmall: '/building-owners/iit/logo-small.png',
+  logoLarge: '/building-owners/iit/logo-large.svg',
+}
+```
+
+2. **Tag buildings they own in the `BuildingsCustomInfo` constant** (in the same
+`buildings-custom-info.constant.vue` file) - this associates a given building (by its numeric unique
+ID, found under its address on its details page), with a given owner.
+
+Example:
+
+```ts
+// Keating Hall
+'256434': {owner: BuildingOwners.iit.key},
+```
+
+3. **Setup their route by adding the new owner's ID (key) to `BuildingOwnerIds`** (in
+`gridsome.server.js`) - this tells Gridsome to create a route for this given slug
+
+Example:
+
+```ts
+const BuildingOwnerIds = [
+  'iit',
+  // ...
+]
+```
+
+**Note:** You'll have to restart your `yarn develop` after step 3 to see changes, since
+`gridsome.server.js` just runs once.

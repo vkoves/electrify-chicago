@@ -597,6 +597,7 @@ export default class BuildingDetails  extends Vue {
     background: #ededed;
     border-radius: $brd-rad-medium;
     padding: 1rem 1.5rem;
+    margin-top: 1rem;
 
     h2 { margin-top: 0; }
 
@@ -607,6 +608,7 @@ export default class BuildingDetails  extends Vue {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
+    margin: 0;
   }
 
   .emission-stats {
