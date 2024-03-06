@@ -51,6 +51,15 @@ export const BuildingOwners: IBuildingOwners = {
     logoLarge: '/building-owners/uchicago/uchicago-large.png',
   },
 
+  uic: {
+    key: 'uic',
+    name: 'University of Illinois Chicago',
+    nameShort: 'UIC',
+    logoSmall: '/building-owners/uic/uic-large.jpg',
+    logoLarge: '/building-owners/uic/uic-large.png',
+  },
+
+
   northwestern: {
     key: 'northwestern',
     name: 'Northwestern University',
@@ -193,6 +202,17 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '102455': {owner: BuildingOwners.uchicago.key},
 
   /**
+   * UIC Buildings
+   *
+   * See official summary, ignore leased buildings:
+   * https://fimweb.fim.uic.edu/BuildingsData.aspx
+   */
+  // University Hall
+  '251339': { owner: BuildingOwners.uic.key },
+  // UIC College of Law, 304 S State (or 300 S State)
+  '251220': { owner: BuildingOwners.uic.key },
+
+  /**
    * Northwestern Buildings
    * No helpful resource, but Googling each of these will pull up a Northwestern page
    */
@@ -211,7 +231,7 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
 
   /**
    * CPS
-   * Helpful source: main data set, schools tagged wit '-CPS'. 
+   * Helpful source: main data set, schools tagged wit '-CPS'.
    * Also manually added selective enrollment schools
    */
   // Thorp Scholastic Academy, Ole A

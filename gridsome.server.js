@@ -21,12 +21,13 @@ const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 const BuildingOwnerIds = [
   'depaul',
   'uchicago',
+  'uic',
   'iit',
   'northwestern',
   'cps',
   'cha',
   'cityofchicago'
-]
+];
 
 module.exports = function(api) {
   // Use the Data Store API here: https://gridsome.org/docs/data-store-api/
