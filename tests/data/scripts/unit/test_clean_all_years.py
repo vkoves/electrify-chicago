@@ -1,11 +1,11 @@
 import pytest
-import shutil, os, pathlib
+import shutil, os, pathlib, csv
 import pandas as pd
 import numpy as np
 
 from src.data.scripts.utils import get_and_clean_csv
 from src.data.scripts import clean_and_pare_down_data_all_years as clean, process_data as proc
-# from test.data.scripts.unit import save_test_file
+from tests.data.scripts.utils import get_file_path
 
 src_dir = 'src'
 test_dir = 'tests'
@@ -13,16 +13,19 @@ src_input_file = 'ChicagoEnergyBenchmarking.csv'
 test_input_file = 'test_src_data.csv'
 test_output_file = 'test_output.csv'
 
-def get_file_path(dir: str, f: str):
-    curr_path = pathlib.Path(".")
-    path = curr_path.parent.absolute() / dir / "data" / "source"
-    return os.path.join(path, f)
-
 @pytest.fixture
 def src_building_data() -> pd.DataFrame:
     test_data_path = get_file_path(test_dir, test_input_file)
     assert os.path.exists(test_data_path)
     return get_and_clean_csv(test_data_path)
+
+@pytest.fixture
+def csv_file() -> csv.reader:
+    csvfile = open(get_file_path(test_dir, test_input_file))
+    return csv.reader(csvfile) 
+
+def test_csv_file_is_readable(csv_file):
+    csv_file
 
 @pytest.mark.parametrize("test_input", [
     clean.string_cols,

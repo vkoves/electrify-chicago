@@ -1,9 +1,25 @@
-import os, pathlib, sys
+import os, pathlib, sys, csv
 import pandas as pd, numpy as np
 from typing import List
 from src.data.scripts.utils import get_and_clean_csv
+from tests.data.scripts.utils import get_file_path
 
-property_test_cases = ['United Center', 'Crown Hall', 'Art Institute']
+src_dir = 'src'
+test_dir = 'tests'
+src_input_file = 'ChicagoEnergyBenchmarking.csv'
+test_input_file = 'test_src_data.csv'
+
+property_test_cases = ['United Center', 'Crown Hall', 'Art Institute', 'Marie Curie']
+
+def csv_rows() -> csv.reader:
+    csvfile = open(get_file_path(test_dir, test_input_file))
+    return csv.reader(csvfile) 
+
+def get_test_sample(src_data: csv.reader, property_test_cases: List[str]) -> csv.writer:
+    if len(src_data) <= 0:
+        pass
+    for row in src_data:
+        pass
 
 def get_test_sample(src_data: pd.DataFrame, property_test_cases: List[str]) -> pd.DataFrame:
     # check that all test cases exist at least once in data set
