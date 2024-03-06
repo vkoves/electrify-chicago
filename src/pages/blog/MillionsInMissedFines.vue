@@ -38,8 +38,8 @@ export default class MillionsInMissedFine extends Vue {
         Ordinance
       </h1>
       <p class="constrained bold">
-        Not Enforcing The Benchmarking Ordinance's Fines From 2018 - 2022 Reduced Accountability &
-        Transparency
+        Not Enforcing The Benchmarking Ordinance&apos;s Fines From 2018 - 2022 Reduced
+        Accountability & Transparency
       </p>
 
       <p class="constrained">
@@ -63,7 +63,7 @@ export default class MillionsInMissedFine extends Vue {
       >
 
       <p class="caption">
-        A screenshot of the energy benchmarking notification letter's section on fines, as of
+        A screenshot of the energy benchmarking notification letter&apos;s section on fines, as of
         Feb. 2024 (<a
           :href="NotifLetterUrl"
           target="_blank"
@@ -79,8 +79,8 @@ export default class MillionsInMissedFine extends Vue {
           rel="noopener"
         >source - City of Chicago data portal <NewTabIcon /></a>), that
         means a whopping <strong>$30,590,000 dollars of fines could have been collected</strong>
-        by the city's commissioner of business affairs and consumer protection (who is given this
-        responsibility in the
+        by the city&apos;s commissioner of business affairs and consumer protection (who is given
+        this responsibility in the
         <a href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/BenchmarkingOrdinance11SEP2013.pdf">original ordinance</a>).
       </p>
 
@@ -96,7 +96,7 @@ export default class MillionsInMissedFine extends Vue {
         src="/blog/millions-in-missed-fines/zoomed-non-reporting-count.webp"
         class="blog-img"
         width="400"
-        alt="A screenshot of text that reads 'Showing rows 1-100 of 3325'"
+        alt="A screenshot of text that reads &apos;Showing rows 1-100 of 3325'"
       >
 
       <p class="caption">
@@ -108,9 +108,9 @@ export default class MillionsInMissedFine extends Vue {
       </p>
 
       <p>
-        Through a FOIA request, the city reported that they had no recorded instances of
-        enforcement. We believe it's extremely unlikely the city levied and then collected fines
-        without any record, and thus believe that no fines were levied in this time.
+        A Freedom of Information Act (FOIA) request submitted to the city&apos;s Department of
+        Business Affairs and Consumer Protections, which is charged with enforcing the benchmarking
+        ordinance, returned no recorded instances of the ordinance being enforced.
       </p>
 
       <h2>Why This Matters</h2>
@@ -124,10 +124,23 @@ export default class MillionsInMissedFine extends Vue {
           target="_blank"
           rel="noopener"
         >
-          2023's largest non reporting buildings in the data portal <NewTabIcon />
+          2023&apos;s largest non reporting buildings in the data portal <NewTabIcon />
         </a>. Not having all building owners report means the goals of the ordinance aren't being
         met, and the public loses out on valuable information for buildings that could be emitting
-        the most or be the least efficient.
+        the most or be the least efficient. The city may also believe that it is on track with its
+        climate goals, when there are still large buildings that are emitting but have their
+        emissions not reported or not reported accurately, like if a building reports their
+        electricity use but not their natural gas use.
+      </p>
+
+      <p>
+        To put this $30 million in potential fines into context, zin the 2024 budget, $25.3 million
+        was suggested to be put towards lead line replacement, meaning these potential fines could
+        have fully funded that program in 2024
+        (<a href="https://www.chicago.gov/content/dam/city/sites/committeeonthebudget/2024/FY2024/2024-Budget-Overview.pdf"
+        target="_blank"
+          rel="noopener"
+        >source - City of Chicago 2024 Budget Overview <NewTabIcon /></a>).
       </p>
 
       <h2>Next Steps</h2>
@@ -138,13 +151,23 @@ export default class MillionsInMissedFine extends Vue {
           target="_blank"
           rel="noopener"
         >source - WayBackMachine <NewTabIcon /></a>)
-        did not contain any information of potential fines, and just this recent update to make
-        sure building owners are aware of the consequences for not reporting should improve
-        reporting. However we believe it is crucial the city then follow through and fine any
-        owners who choose to ignore repeated requests to report their energy use, in keeping
-        with the original ordinance. We also believe that larger fines may be necessary to get the
-        owners of very large and inefficient buildings to report their emissions, who may want to
-        obscure their  pollution from the public.
+        did not contain any information about potential fines, and merely by updating the
+        notification letter to make sure that building owners are aware of the consequences for not
+        reporting, the reporting rate is likely to improve. However, we believe it is crucial the
+        city then follow through and fine any owners who choose to ignore repeated requests to
+        report their energy use, in keeping with the original ordinance. We also believe that
+        larger fines may be necessary to get the owners of very large and inefficient buildings
+        to report their emissions, rather than to obscure their pollution from the public.
+      </p>
+
+      <p>
+        Additionally, we recommend the city consider adding more granular data requirements to the
+        data portal to help building emissions data be more clear and helpful. This includes
+        ensuring that all electric buildings are clearly reported, distinct from buildings that
+        reported electric but not gas use, and considering requesting information about a building's
+        HVAC system, since that can be the driving factor in a buildings emissions profile, and a
+        building that uses gas only for cooking should be identifiable from a building using gas for
+        heating and cooling as well.
       </p>
 
 
