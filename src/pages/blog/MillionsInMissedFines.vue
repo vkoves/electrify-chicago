@@ -74,7 +74,7 @@ export default class MillionsInMissedFine extends Vue {
       <p>
         With a maximum of $9,200 of fines multiplied by 3,325 instances of non-compliance
         (<a
-          href="NonReportingBuildingsDataUrl"
+          :href="NonReportingBuildingsDataUrl"
           target="_blank"
           rel="noopener"
         >source - City of Chicago data portal <NewTabIcon /></a>), that
