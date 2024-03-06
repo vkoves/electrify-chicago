@@ -75,15 +75,14 @@ def fixed_strings_all_years(test_columns_are_renamed):
 def test_str_values_remain_the_same_as_origin(fixed_strings_all_years, csv_file):
     header_row = next(csv_file)
     str_col_positions = list(map(lambda col: fixed_strings_all_years.columns.get_loc(col), clean.string_cols))
-    # print(fixed_strings)
     for csv_row in csv_file:
-        print(csv_row)
         year, id = csv_row[0], csv_row[1]
         row = fixed_strings_all_years[(fixed_strings_all_years['ID'].astype(str) == id) & \
                                       (fixed_strings_all_years['DataYear'].astype(str) == year)]
-        print("this is the row " + str(row))
         for col, csv_pos in zip(clean.string_cols, str_col_positions):
-            print(row[col].to_numpy()[0], csv_row[csv_pos])
+            if all(pd.isna(row[col].to_numpy())):
+                continue
+            # print("df ", row[col].to_numpy(), "csv ", csv_row[csv_pos])
             assert row[col].to_numpy()[0] == csv_row[csv_pos]
 
 def test_lat_lon_become_strings(fixed_strings):

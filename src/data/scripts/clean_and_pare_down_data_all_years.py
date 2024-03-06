@@ -93,7 +93,7 @@ def output_to_csv(building_data: pd.DataFrame, dir: str) -> None:
     building_data.to_csv(dir, sep=',', encoding='utf-8', index=False)
 
 def process(file_path: str) -> pd.DataFrame:
-    building_data = get_and_clean_csv(file_path)
+    building_data = pd.read_csv(file_path, dtype='str')
     
     building_data = rename_columns(building_data)
 
