@@ -18,8 +18,9 @@ on:
 
 jobs:
   eslint:
-    name: Run eslint scanning
+    name: Run ESLint scanning
     runs-on: ubuntu-latest
+    runs.using: node16
     permissions:
       contents: read
       security-events: write
