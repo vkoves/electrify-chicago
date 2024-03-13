@@ -3,15 +3,15 @@ import logging
 import pandas
 
 from typing import List
-from utils import get_and_clean_csv, json_data_builder
-from building_utils import clean_property_name
+from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path
+from src.data.scripts.building_utils import clean_property_name
 
 # Assume run in /data
-data_directory = './source/'
-data_out_directory = './dist/'
+data_directory = 'source'
+data_out_directory = 'dist'
 
 # The /debug directory is to have a well formatted JSON for reading
-data_debug_directory = './debug/'
+data_debug_directory = 'debug'
 
 # Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
 building_emissions_file = 'ChicagoEnergyBenchmarkingAllNewestInstances.csv'
@@ -90,7 +90,7 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     # Write out the data
     filename = 'building-benchmark-stats.json'
 
-    outputted_path = data_out_directory + filename
+    outputted_path = get_data_file_path(data_out_directory, filename)
 
     # Get the unique primary property types, so the FE can show it as a filter
     list_of_types = building_data.PrimaryPropertyType.unique()
@@ -100,7 +100,8 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
 
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
     benchmark_stats_df.to_json(outputted_path)
-    benchmark_stats_df.to_json(data_debug_directory + filename, indent=4)
+    benchmark_stats_df.to_json(str(get_data_file_path(data_debug_directory, filename)),
+                               indent=4)
 
     return outputted_path
 
@@ -110,7 +111,7 @@ def processBuildingData() -> List[str]:
     # Store files we write out to
     outputted_paths = []
 
-    building_data = get_and_clean_csv(data_directory + building_emissions_file)
+    building_data = get_and_clean_csv(get_data_file_path(data_directory, building_emissions_file))
 
     # Convert our columns to analyze to numeric data by stripping commas, otherwise the rankings
     # are junk
@@ -146,7 +147,7 @@ def processBuildingData() -> List[str]:
         building_data[col + 'PercentileRank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(pct=True).round(3)
 
     # Export the data
-    output_path = data_out_directory + building_emissions_file_out_name + '.csv'
+    output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')
 
     building_data.to_csv(output_path, sep=',', encoding='utf-8', index=False)
 
@@ -158,7 +159,7 @@ def processBuildingData() -> List[str]:
     # We write out files to a /debug directory that is .gitignored with indentation to
     # make it readable but to not have to store giant files
     with open(
-            data_debug_directory + building_emissions_file_out_name + '.json', 'w', encoding='utf-8') as f:
+            data_debug_directory + '/' + building_emissions_file_out_name + '.json', 'w', encoding='utf-8') as f:
         json.dump(debug_json_data, f, ensure_ascii=True, indent=4)
 
     return outputted_paths
@@ -175,7 +176,8 @@ if __name__ == '__main__':
 
     for path in outputted_paths:
         if path:
-            print('- ' + path)
+            # made sure to convert path:PosixPath to str
+            print('- ' + str(path))
 
     print('\nFor more understandable data, see \'data/debug\' directory')
 

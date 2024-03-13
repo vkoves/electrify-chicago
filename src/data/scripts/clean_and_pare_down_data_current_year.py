@@ -1,9 +1,9 @@
 import pandas
-from utils import get_and_clean_csv
+from src.data.scripts.utils import get_and_clean_csv, get_data_file_path
 
-data_directory = './source/'
+data_directory = 'source'
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
-data_out_file = "ChicagoEnergyBenchmarkingAllNewestInstances.csv"
+data_out_file = 'ChicagoEnergyBenchmarkingThisYear.csv'
 
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
@@ -24,7 +24,7 @@ int_cols = [
 ]
 
 if __name__ == "__main__":
-    building_data = get_and_clean_csv(data_directory + building_emissions_file)
+    building_data = get_and_clean_csv(get_data_file_path(data_directory, building_emissions_file))
     replace_headers = {"Data Year": "DataYear",
         "ID": "ID",
         "Property Name": "PropertyName",
@@ -61,14 +61,12 @@ if __name__ == "__main__":
         "Census Tracts": "CensusTracts",
         "Historical Wards 2003-2015": "HistoricalWards2003-2015" }
     building_data.rename(columns=replace_headers,inplace=True)
+    latest_year = building_data["DataYear"].max()
+    recent_data_set = building_data[building_data["DataYear"]==latest_year]
 
-    has_ghg_intensity = building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
-    has_ghg_intensity
+    has_ghg_intensity = recent_data_set.loc[(recent_data_set['GHGIntensity'] is not None) & (recent_data_set['GHGIntensity'] != 0)].copy()
 
-    all_submitted_data = has_ghg_intensity.loc[(has_ghg_intensity['ReportingStatus'] == "Submitted") | (has_ghg_intensity['ReportingStatus'] == "Submitted Data")].copy()
-
-    all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
-    all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
+    all_recent_submitted_data = has_ghg_intensity.loc[(has_ghg_intensity['ReportingStatus'] == "Submitted") | (has_ghg_intensity['ReportingStatus'] == "Submitted Data")].copy()
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
@@ -76,4 +74,6 @@ if __name__ == "__main__":
 
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
     all_recent_submitted_data[int_cols] = building_data[int_cols].astype('Int64')
-    all_recent_submitted_data.to_csv(data_directory+data_out_file, sep=',', encoding='utf-8', index=False)
+    all_recent_submitted_data.to_csv(get_data_file_path(data_directory, data_out_file), 
+                                     sep=',', encoding='utf-8', index=False)
+                                     

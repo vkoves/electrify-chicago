@@ -1,8 +1,12 @@
 import pandas as pd
 import json
 
-path_to_buildings_csv = "./dist/building-benchmarks.csv"
-property_types_file = "./dist/property-types.json"
+from src.data.scripts.utils import get_data_file_path
+
+out_dir = 'dist'
+path_to_buildings_csv = get_data_file_path(out_dir, 'building-benchmarks.csv')
+property_types_file_path = get_data_file_path(out_dir, 'property-types.json')
+property_stats_file_path = get_data_file_path(out_dir, 'building-statistics-by-property-type.json')
 
 # Columns we want to rank for and append ranks to each building's data
 building_cols_to_rank = [
@@ -51,7 +55,7 @@ property_types = sorted_by_property_type.groups.keys()
 def generate_property_types():
     # output property_types to a json file for use in the frontend
     property_types_json = {"propertyTypes": list(property_types)}
-    with open(property_types_file, 'w', encoding='latin1') as json_file:
+    with open(property_types_file_path, 'w', encoding='latin1') as json_file:
         json.dump(property_types_json, json_file)
 
 def calculateBuildingStatistics():
@@ -85,7 +89,7 @@ def calculateBuildingStatistics():
             
         stats_by_property_type[property] = cur_property_type_stats
 
-    with open("./dist/building-statistics-by-property-type.json", "w") as property_stats_file:
+    with open(property_stats_file_path, "w") as property_stats_file:
         json.dump(stats_by_property_type, property_stats_file)
 
 # Ranks buildings in relation to their property type, then re-exporting the file
