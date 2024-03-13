@@ -18,7 +18,7 @@ on:
 
 jobs:
   eslint:
-    name: Run eslint scanning
+    name: Run ESLint scanning
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -27,6 +27,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v4
+        with:
+          # The Node version to use
+          node-version: 16
 
       - name: Install ESLint
         run: yarn install

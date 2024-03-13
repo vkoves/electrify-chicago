@@ -41,7 +41,8 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 
 ### Front-End Setup
 
-Make sure you have [Yarn](https://yarnpkg.com/) installed, `cd` into the project directory (after cloning it) and run:
+Make sure you **are running Node v16** and have [Yarn](https://yarnpkg.com/) installed, the
+`cd` into the project directory (after cloning it) and run:
 
 ```bash
 yarn install

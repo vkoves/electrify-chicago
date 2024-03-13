@@ -4,6 +4,7 @@
   "main": "index.js",
   "repository": "git@github.com:vkoves/electrify-chicago.git",
   "author": "Viktor Köves <3187531+vkoves@users.noreply.github.com>",
+  "engines" : { "node" : ">=16.00 < 17.0.0" },
   "license": "MIT",
   "scripts": {
     "build": "gridsome build",
