@@ -137,8 +137,9 @@ export default class MillionsInMissedFine extends Vue {
         To put this $30 million in potential fines into context, zin the 2024 budget, $25.3 million
         was suggested to be put towards lead line replacement, meaning these potential fines could
         have fully funded that program in 2024
-        (<a href="https://www.chicago.gov/content/dam/city/sites/committeeonthebudget/2024/FY2024/2024-Budget-Overview.pdf"
-        target="_blank"
+        (<a
+          href="https://www.chicago.gov/content/dam/city/sites/committeeonthebudget/2024/FY2024/2024-Budget-Overview.pdf"
+          target="_blank"
           rel="noopener"
         >source - City of Chicago 2024 Budget Overview <NewTabIcon /></a>).
       </p>
