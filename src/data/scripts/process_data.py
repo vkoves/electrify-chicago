@@ -100,7 +100,7 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
 
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
     benchmark_stats_df.to_json(outputted_path)
-    benchmark_stats_df.to_json(str(get_data_file_path(data_debug_directory, filename)), 
+    benchmark_stats_df.to_json(str(get_data_file_path(data_debug_directory, filename)),
                                indent=4)
 
     return outputted_path
@@ -159,7 +159,7 @@ def processBuildingData() -> List[str]:
     # We write out files to a /debug directory that is .gitignored with indentation to
     # make it readable but to not have to store giant files
     with open(
-            data_debug_directory + building_emissions_file_out_name + '.json', 'w', encoding='utf-8') as f:
+            data_debug_directory + '/' + building_emissions_file_out_name + '.json', 'w', encoding='utf-8') as f:
         json.dump(debug_json_data, f, ensure_ascii=True, indent=4)
 
     return outputted_paths
