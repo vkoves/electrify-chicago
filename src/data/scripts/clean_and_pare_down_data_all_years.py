@@ -64,7 +64,7 @@ replace_headers = {'Data Year': 'DataYear',
 def rename_columns(building_data: pd.DataFrame) -> pd.DataFrame:
     return building_data.rename(columns=replace_headers)
 
-def get_all_ghg_data(building_data: pd.DataFrame) -> pd.DataFrame:
+def get_buildings_with_ghg_intensity(building_data: pd.DataFrame) -> pd.DataFrame:
     return building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
 
 def get_submitted_data(building_data: pd.DataFrame) -> pd.DataFrame:
@@ -94,17 +94,17 @@ def output_to_csv(building_data: pd.DataFrame, dir: str) -> None:
 
 def process(file_path: str) -> pd.DataFrame:
     building_data = get_and_clean_csv(file_path)
-    
+
     building_data = rename_columns(building_data)
 
-    all_ghg_data = get_all_ghg_data(building_data)
+    buildings_with_ghg_intensity = get_buildings_with_ghg_intensity(building_data)
 
-    all_submitted_data = get_submitted_data(all_ghg_data)
+    all_submitted_data = get_submitted_data(buildings_with_ghg_intensity)
 
     all_recent_submitted_data = get_last_year_data(all_submitted_data)
 
     all_recent_submitted_data = fix_str_cols(all_recent_submitted_data, building_data)
-    
+
     all_recent_submitted_data = fix_int_cols(all_recent_submitted_data)
 
     return all_recent_submitted_data
@@ -115,4 +115,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
