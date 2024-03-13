@@ -76,7 +76,7 @@ export default class LargeOwners extends Vue {
       <p class="constrained -wide">
         Notice a problem or have a suggestion?
         <a
-          ref="noopener noreferrer"
+          ref="noopener"
           href="https://github.com/vkoves/electrify-chicago/issues/new"
           target="_blank"
         >File an issue on our GitHub! <NewTabIcon />

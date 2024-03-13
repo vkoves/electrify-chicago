@@ -78,7 +78,7 @@ query ($id: ID!) {
               :href="'https://www.google.com/maps/search/' + encodedAddress"
               class="google-maps-link"
               target="_blank"
-              rel="noopener noreferrer"
+              rel="noopener"
             >
               Find on Google Maps <NewTabIcon />
             </a>
@@ -149,7 +149,7 @@ query ($id: ID!) {
                 <a
                   href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener"
                 >
                   Chicago Energy Rating
                   <NewTabIcon />
@@ -165,7 +165,7 @@ query ($id: ID!) {
                 <a
                   href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener"
                 >
                   Energy Star Score
                   <NewTabIcon />
@@ -184,10 +184,7 @@ query ($id: ID!) {
         </div>
       </div>
 
-      <h2>Emissions & Energy Information</h2>
-      <p class="year-note">
-        For {{ dataYear }}
-      </p>
+      <h2>Emissions & Energy Information for {{ dataYear }}</h2>
 
       <dl class="emission-stats">
         <div>
@@ -292,9 +289,27 @@ query ($id: ID!) {
       </dl>
 
       <p class="constrained">
-        <strong>* Important Note:</strong> Rankings and medians are among <em>included</em>
+        <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
         the year {{ LatestDataYear }}, which only applies to buildings over 50,000 square feet.
+      </p>
+
+      <p class="constrained">
+        <strong>** Note on Bill Estimates:</strong>
+        Estimates for gas and electric bills are based on average electric and gas <em>retail</em>
+        prices for Chicago in {{ UtilityCosts.year }} and are rounded. We expect large buildings
+        would negotiate lower rates with utilities, but these estimates serve as an upper bound of
+        cost and help understand the volume of energy a building is used by comparing it to your own
+        energy bills!
+
+        See our
+        <a
+          :href="UtilityCosts.source"
+          target="_blank"
+          rel="noopener"
+        >Chicago Gas & Electric Costs Source <NewTabIcon />
+        </a>
+        for the original statistics.
       </p>
 
       <DataSourceFootnote />
@@ -352,7 +367,7 @@ query ($id: ID!) {
               <a
                 href="https://www.chicago.gov/city/en/depts/mayor/supp_info/chicago-energy-benchmarking/Chicago_Energy_Benchmarking_Beyond_Benchmarking.html"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
               >
                 Chicago Energy Benchmarking: Taking Action to Improve Energy Efficiency
                 | City of Chicago <NewTabIcon />
@@ -363,7 +378,7 @@ query ($id: ID!) {
               <a
                 href="https://www.chicagobuilding.gov/content/dam/city/progs/env/EnergyBenchmark/2018_Chicago_Energy_Benchmarking_Results_By_Sector.pdf"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
               >
                 Chicago Average EUIs and ENERGY STAR scores by property type [PDF] <NewTabIcon />
               </a>
@@ -373,7 +388,7 @@ query ($id: ID!) {
               <a
                 href="https://portfoliomanager.energystar.gov/pdf/reference/US%20National%20Median%20Table.pdf"
                 target="_blank"
-                rel="noopener noreferrer"
+                rel="noopener"
               >
                 U.S. Energy Use Intensity by Property Type | ENERGY STAR [PDF] <NewTabIcon />
               </a>
@@ -394,14 +409,13 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import StatTile from '~/components/StatTile.vue';
-
-import { IBuildingBenchmarkStats } from '~/common-functions.vue';
+import { LatestDataYear } from '../constants/globals.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
-import { IBuilding } from '../common-functions.vue';
+import { IBuilding, UtilityCosts, IBuildingBenchmarkStats } from '../common-functions.vue';
 
 @Component<any>({
   metaInfo() {
@@ -424,14 +438,17 @@ import { IBuilding } from '../common-functions.vue';
   },
 })
 export default class BuildingDetails  extends Vue {
-  /** Expose stats to readme */
+  /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+
+  /** Expose UtilityCosts to template */
+  readonly UtilityCosts: typeof UtilityCosts = UtilityCosts;
 
   /**
    * The year most/the latest buildings data is from - if this building's year is older than this,
    *  we show a warning that the data is old
    */
-  readonly LatestDataYear: number = 2021;
+  readonly LatestDataYear: number = LatestDataYear;
 
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
@@ -562,11 +579,6 @@ export default class BuildingDetails  extends Vue {
     span.emoji { margin-right: 0.5rem; }
   }
 
-  p.year-note {
-    font-size: 0.825rem;
-    margin-top: 0;
-  }
-
   .address {
     font-size: 1.25rem;
 
@@ -585,6 +597,7 @@ export default class BuildingDetails  extends Vue {
     background: #ededed;
     border-radius: $brd-rad-medium;
     padding: 1rem 1.5rem;
+    margin-top: 1rem;
 
     h2 { margin-top: 0; }
 
@@ -595,6 +608,7 @@ export default class BuildingDetails  extends Vue {
     display: flex;
     flex-wrap: wrap;
     gap: 2rem;
+    margin: 0;
   }
 
   .emission-stats {

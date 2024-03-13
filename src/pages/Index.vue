@@ -90,13 +90,17 @@ export default class BiggestBuildings extends Vue {
         Electrify Chicago
       </h1>
 
+      <p class="tagline">
+        An independent tool for viewing City of Chicago building data
+      </p>
+
       <div class="row">
         <div>
           <p class="constrained -wide">
             <!-- TODO: Move to consolidated sources object-->
             According to the
             <a
-              ref="noopener noreferrer"
+              ref="noopener"
               href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
               target="_blank"
             >
@@ -104,12 +108,10 @@ export default class BiggestBuildings extends Vue {
             </a>,
             a whopping <strong>69% of Chicago's emissions come from buildings</strong>, making it
             our biggest challenge and <em>our biggest opportunity</em> as a city to tackle
-            change. At Electrify Chicago we want to showcase some of the best and worst performing
+            change. At Electrify Chicago, we want to showcase some of the best and worst performing
             buildings in the city using publicly available data and manual annotations to add
             building photographs and label multi-building owners like universities.
           </p>
-
-          <EmissionsBreakdownGraph class="-mobile" />
 
           <p class="constrained -wide">
             You can start by looking at Chicago's buildings with the highest greenhouse gas
@@ -117,6 +119,53 @@ export default class BiggestBuildings extends Vue {
             foot, so big buildings could actually perform much better than very inefficient small
             buildings on this metric.
           </p>
+
+          <div class="announcements">
+            <div class="announce-panel -orange">
+              <h2>
+                <div class="regular-text-size">
+                  New Article
+                </div>
+                📰 $30 Million In Missed Fines
+              </h2>
+
+              <p>
+                The City Of Chicago failed to collect $30 million in potential fines from
+                the building benchmarking ordinance, reducing transparency and accountability.
+              </p>
+
+              <p>
+                <a
+                  href="/blog/millions-in-missed-fines"
+                  class="bold"
+                >Read Our Full Blog Post On Millions in Missed Fines</a>.
+              </p>
+            </div>
+
+            <div class="announce-panel">
+              <h2>Legislative update! 🎉</h2>
+
+              <p>
+                As of late January 2024, legislation is being introduced to require new
+                use more efficient forms of water and space heating, via the Clean And Affordable
+                Buildings Ordinance (CABO), which will reduce the number of highly polluting and
+                inefficient buildings that end up on this site.
+              </p>
+
+              <p class="bold">
+                If you're in Chicago,
+
+                <a
+                  href="https://act.sierraclub.org/actions/illinois?actionid=ar0395755&id=70131000001iOuIAAU"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  write to your alderman to support the CABO! <NewTabIcon />
+                </a>
+              </p>
+            </div>
+          </div>
+
 
           <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 
@@ -168,10 +217,11 @@ export default class BiggestBuildings extends Vue {
 
       <p class="footnote">
         Data Source:
+
         <a
           href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
         >
           Chicago Energy Benchmarking Data <NewTabIcon />
         </a>
@@ -182,12 +232,27 @@ export default class BiggestBuildings extends Vue {
 
 <style lang="scss">
 .homepage {
+  h1 { margin-bottom: 0; }
+
+  .tagline {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+
   .row {
     display: flex;
     justify-content: space-between;
     gap: 2rem;
 
-    p.constrained { font-size: 1.25rem; }
+    p.constrained { font-size: 1.125rem; }
+  }
+
+  .announcements {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+
+    > * { flex-basis: 100%; }
   }
 
   .emissions-breakdown {
@@ -230,13 +295,14 @@ export default class BiggestBuildings extends Vue {
   }
 
   @media (max-width: $mobile-max-width) {
+    .announcements { flex-direction: column; }
+
     .row { display: block; }
 
     .emissions-breakdown {
       width: 100%;
       text-align: center;
 
-      &.-mobile { display: block; }
       &.-desktop { display: none; }
     }
 

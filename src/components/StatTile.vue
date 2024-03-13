@@ -32,6 +32,14 @@
         </template>
       </div>
 
+      <div
+        v-if="costEstimate"
+        class="bill-estimate"
+      >
+        <strong>Est. {{ statKey === 'NaturalGasUse' ? 'Gas' : 'Electric' }} Bill:</strong>
+        ${{ Math.round(costEstimate).toLocaleString() }} for {{ building.DataYear }}**
+      </div>
+
       <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
       <div
         v-if="statRank && statRank <= RankConfig.FlagRankMax && rankLabel"
@@ -87,9 +95,9 @@
         class="median-comparison"
       >
         <div>
-          <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
+          <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
           <span
-            v-if="stats[statKey] > 0"
+            v-if="statValue !== '0'"
             class="val"
           >
             {{ medianMultipleMsgCityWide }} median
@@ -105,9 +113,9 @@
         </div>
 
         <div v-if="medianMultiplePropertyType">
-          <!-- Only show median multiple if value is > 0, otherwise it's 1/infinity -->
+          <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
           <span
-            v-if="stats[statKey] > 0"
+            v-if="statValue !== '0'"
             class="val"
           >
             {{ medianMultiplePropertyType }} median {{ propertyType }}
@@ -178,9 +186,17 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json";
 
 import {
-  RankConfig, getRankLabel, IBuilding, IBuildingBenchmarkStats, getRankLabelByProperty,
-} from '~/common-functions.vue';
+  estimateUtilitySpend,
+  getRankLabel,
+  getRankLabelByProperty,
+  IBuilding,
+  IBuildingBenchmarkStats,
+  RankConfig,
+} from '../common-functions.vue';
 
+/**
+ * A group of all the core stats by property type (e.g. GHG intensity median)
+ */
 export interface PropertyByBuildingStats
 {
   [propertyType: string]: IBuildingBenchmarkStats;
@@ -192,7 +208,7 @@ export interface PropertyByBuildingStats
   */
 @Component
 export default class StatTile extends Vue {
-  readonly BuildingStatsByPropertyType:PropertyByBuildingStats = buildingStatsByPropertyType;
+  readonly BuildingStatsByPropertyType: PropertyByBuildingStats = buildingStatsByPropertyType;
 
   @Prop({required: true}) building!: IBuilding;
   @Prop({required: true}) statKey!: string;
@@ -207,7 +223,6 @@ export default class StatTile extends Vue {
     return this.building["PrimaryPropertyType"];
   }
 
-
   /**
    * Whether a building is _fully_ gas free, meaning no natural gas burned on-site or to heat it
    * through a district heating system.
@@ -215,6 +230,18 @@ export default class StatTile extends Vue {
   get fullyGasFree(): boolean {
     return parseFloat(this.building.NaturalGasUse) === 0
       && parseFloat(this.building.DistrictSteamUse) === 0;
+  }
+
+  /** The estimated cost for the given utility */
+  get costEstimate(): number | null {
+    if (this.statKey === 'ElectricityUse') {
+      return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), true);
+    }
+    else if (this.statKey === 'NaturalGasUse') {
+      return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), false);
+    }
+
+    return null;
   }
 
   get pluralismForPropertyType(): string {
@@ -252,7 +279,7 @@ export default class StatTile extends Vue {
 
   get isAboveMedian(): boolean {
     return this.building[this.statKey] !== null &&
-      this.building[this.statKey] as number > this.stats[this.statKey].median;
+    this.building[this.statKey] as number > this.stats[this.statKey].median;
   }
 
   // Square footage isn't directly climate related, so we show stats but treat it as
@@ -294,6 +321,9 @@ export default class StatTile extends Vue {
   }
 
   get medianMultiplePropertyType(): string | null {
+    if (!this.BuildingStatsByPropertyType[this.propertyType]) {
+      return null;
+    }
     const median = this.BuildingStatsByPropertyType[this.propertyType][this.statKey]?.median;
     const statValueNum = parseFloat(this.building[this.statKey] as string);
 
@@ -329,8 +359,14 @@ export default class StatTile extends Vue {
   }
 
   get propertiesToAwardThisType(): number {
-    const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
-    const numBuildingsOfType = properStatBlock[this.statKey]?.count;
+    // The stats for buildings of this building's type
+    const propertyStats = this.BuildingStatsByPropertyType[this.propertyType];
+
+    if (!propertyStats) {
+      return 0;
+    }
+
+    const numBuildingsOfType = propertyStats[this.statKey]?.count;
 
     /**
      * The amount of buildings we should give a category specific trophy or alarm to based on the
@@ -375,8 +411,13 @@ export default class StatTile extends Vue {
    * it should be rendered
    */
   get propertyStatRankInverted(): number | null {
-    const properStatBlock = this.BuildingStatsByPropertyType[this.propertyType];
-    const numBuildingsOfType: number = properStatBlock[this.statKey]?.count;
+    const propertyStats = this.BuildingStatsByPropertyType[this.propertyType];
+
+    if (!propertyStats) {
+      return null;
+    }
+
+    const numBuildingsOfType: number = propertyStats[this.statKey]?.count;
     const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
 
     if (statRank) {
@@ -497,6 +538,8 @@ export default class StatTile extends Vue {
   .rank { font-weight: 500; }
 
   .property-rank { font-size: small; }
+
+  .bill-estimate { margin-bottom: 0.25rem; }
 
   .median-comparison {
     display: flex;

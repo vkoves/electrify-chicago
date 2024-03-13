@@ -18,6 +18,7 @@ export default class EmissionsBreakdownGraph extends Vue {
       src="/chicago-2017-ghg-emissions.png"
       width="167"
       height="400"
+      class="-shadowed"
       alt="2017 GHG Emissions -
         31M metric tons CO2 equivalent
         69% buildings
@@ -27,7 +28,7 @@ export default class EmissionsBreakdownGraph extends Vue {
 
     <p class="footnote">
       <a
-        ref="noopener noreferrer"
+        ref="noopener"
         href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
         target="_blank"
       >
