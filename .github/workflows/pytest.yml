@@ -13,7 +13,6 @@ jobs:
   pytest:
     name: 'Pytest'
     runs-on: ubuntu-latest
-    description: 'Run Pytest for Data Test'
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
