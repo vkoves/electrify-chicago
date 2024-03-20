@@ -71,6 +71,12 @@ function loadBuildingBenchmarkData(actions) {
     // Make a slugSource that is the property name or the address as a fallback
     building.slugSource = building.PropertyName || building.Address;
 
+    if (!building.slugSource) {
+      throw new Error('No building slug source (name or address)!', building);
+    }
+
+    building.slugSource = '-';
+
     collection.addNode(building);
   }
 }
