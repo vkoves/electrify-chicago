@@ -72,11 +72,11 @@ export default class CleanestBuildings extends Vue {
       The median building in our dataset emits {{ BuildingBenchmarkStats.GHGIntensity.median }}
       CO<sub>2</sub> kg / square foot, but these buildings are Chicago's best in class and emit
       <em>way</em> less! Some, like
-      <g-link to="/building/marina-towers">
+      <g-link to="/building-id/239096">
         Marina Towers
       </g-link>, are
       large residential buildings, but other buildings in this list include offices, hotels, and
-      even schools like <g-link to="/building/king-college-prep-cps/">
+      even schools like <g-link to="/building-id/101572">
         King College Prep
       </g-link>.
       Most buildings in this list have an Energy Star score over 90, which means they are typically
