@@ -30,6 +30,7 @@ export default class LargeOwners extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path

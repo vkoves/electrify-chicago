@@ -73,7 +73,6 @@ function loadBuildingBenchmarkData(actions) {
     building.slugSource = building.PropertyName.length > 1 ? building.PropertyName : building.Address;
 
     if (!building.slugSource || typeof building.slugSource !== 'string') {
-      console.log('slugSource type', typeof building.slugSource);
       throw new Error('No building slug source (name or address)!', building);
     }
 

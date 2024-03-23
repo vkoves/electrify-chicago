@@ -2,8 +2,8 @@
 query ($id: ID!) {
   building(id: $id) {
     slugSource
-    DataYear
     ID
+    DataYear
     Address
     ChicagoEnergyRating
     CommunityArea

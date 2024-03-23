@@ -30,6 +30,7 @@ export default class TopEmitters extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path

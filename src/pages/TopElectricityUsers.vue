@@ -30,6 +30,7 @@ export default class TopElectricityUsers extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path

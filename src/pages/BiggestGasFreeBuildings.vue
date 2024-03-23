@@ -37,6 +37,7 @@ export default class TopGasUsers extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path

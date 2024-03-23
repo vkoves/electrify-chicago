@@ -36,6 +36,7 @@ export default class CleanestBuildings extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path
