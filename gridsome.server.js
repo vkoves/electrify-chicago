@@ -68,14 +68,14 @@ function loadBuildingBenchmarkData(actions) {
   const collection = actions.addCollection({typeName: 'Building'});
 
   for (const building of BuildingsData) {
-    // Make a slugSource that is the property name or the address as a fallback
-    building.slugSource = building.PropertyName || building.Address;
+    // Make a slugSource that is the property name or the address as a fallback (skip one letter
+    // names, e.g. '-)
+    building.slugSource = building.PropertyName.length > 1 ? building.PropertyName : building.Address;
 
-    if (!building.slugSource) {
+    if (!building.slugSource || typeof building.slugSource !== 'string') {
+      console.log('slugSource type', typeof building.slugSource);
       throw new Error('No building slug source (name or address)!', building);
     }
-
-    building.slugSource = '-';
 
     collection.addNode(building);
   }
