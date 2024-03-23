@@ -97,7 +97,7 @@ export default class BiggestBuildings extends Vue {
 
       <div class="row">
         <div>
-          <p class="constrained -wide">
+          <p class="constrained -wide main-paragraph">
             <!-- TODO: Move to consolidated sources object-->
             According to the
             <a
@@ -114,7 +114,7 @@ export default class BiggestBuildings extends Vue {
             building photographs and label multi-building owners like universities.
           </p>
 
-          <p class="constrained -wide">
+          <p class="constrained -wide main-paragraph">
             You can start by looking at Chicago's buildings with the highest greenhouse gas
             intensity - this means that they use the most energy when adjusted per unit of square
             foot, so big buildings could actually perform much better than very inefficient small
@@ -245,7 +245,7 @@ export default class BiggestBuildings extends Vue {
     justify-content: space-between;
     gap: 2rem;
 
-    p.constrained { font-size: 1.125rem; }
+    p.main-paragraph { font-size: 1.125rem; }
   }
 
   .announcements {

@@ -1,7 +1,7 @@
 <template>
   <details class="data-disclaimer">
     <summary>
-      Note: Data only includes large Chicago buildings from {{ LatestDataYear }},
+      Note: Data includes large Chicago buildings with data from {{ LatestDataYear }},
       unless explicitly stated otherwise.
     </summary>
 
@@ -21,8 +21,9 @@
     </p>
 
     <p class="constrained">
-      This data is also from {{ LatestDataYear }}, but when new benchmark data
-      is available, we'll update the site.
+      The latest year of data is from {{ LatestDataYear }}, but we update the site regularly when
+      new data is available, and some buildings may have failed to report that year, and only have
+      older data available.
     </p>
   </details>
 </template>
