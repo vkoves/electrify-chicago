@@ -91,96 +91,98 @@ query ($id: ID!) {
 
         <BuildingImage :building="$page.building" />
 
-        <div
-          v-if="dataYear < LatestDataYear"
-          class="building-banner"
-        >
-          <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }},
-          <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
-        </div>
+        <div class="details-cont">
+          <div
+            v-if="dataYear < LatestDataYear"
+            class="building-banner"
+          >
+            <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }},
+            <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
+          </div>
 
-        <div class="building-details">
-          <h2>Building Info</h2>
+          <div class="building-details">
+            <h2>Building Info</h2>
 
-          <dl>
-            <div>
-              <dt>Square Footage</dt>
-              <dd>
-                <StatTile
-                  :building="$page.building"
-                  :stat-key="'GrossFloorArea'"
-                  :stats="BuildingBenchmarkStats"
-                  :unit="'sqft'"
-                />
-              </dd>
-            </div>
+            <dl>
+              <div>
+                <dt>Square Footage</dt>
+                <dd>
+                  <StatTile
+                    :building="$page.building"
+                    :stat-key="'GrossFloorArea'"
+                    :stats="BuildingBenchmarkStats"
+                    :unit="'sqft'"
+                  />
+                </dd>
+              </div>
 
-            <div>
-              <dt>Built</dt>
-              <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
-            </div>
+              <div>
+                <dt>Built</dt>
+                <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
+              </div>
 
-            <div>
-              <dt>Primary Property Type</dt>
-              <dd>
-                <g-link
-                  class="nav-link"
-                  :to="`/search?type=${propertyTypeEncoded}`"
-                >
-                  {{ $page.building.PrimaryPropertyType }}
-                </g-link>
-              </dd>
-            </div>
+              <div>
+                <dt>Primary Property Type</dt>
+                <dd>
+                  <g-link
+                    class="nav-link"
+                    :to="`/search?type=${propertyTypeEncoded}`"
+                  >
+                    {{ $page.building.PrimaryPropertyType }}
+                  </g-link>
+                </dd>
+              </div>
 
-            <!-- Only show building count if set and > 1, most are 1 -->
-            <div v-if="$page.building.NumberOfBuildings && $page.building.NumberOfBuildings > 1">
-              <dt>Building Count</dt>
-              <dd>{{ $page.building.NumberOfBuildings }}</dd>
-            </div>
+              <!-- Only show building count if set and > 1, most are 1 -->
+              <div v-if="$page.building.NumberOfBuildings && $page.building.NumberOfBuildings > 1">
+                <dt>Building Count</dt>
+                <dd>{{ $page.building.NumberOfBuildings }}</dd>
+              </div>
 
-            <div>
-              <dt>Community Area</dt>
-              <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
-            </div>
+              <div>
+                <dt>Community Area</dt>
+                <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
+              </div>
 
-            <!-- Show energy rating if it's a float value (not blank or NaN) -->
-            <div v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))">
-              <dt>
-                <a
-                  href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  Chicago Energy Rating
-                  <NewTabIcon />
-                </a>
-              </dt>
-              <dd>
-                {{ $page.building.ChicagoEnergyRating }} / 4
-              </dd>
-            </div>
+              <!-- Show energy rating if it's a float value (not blank or NaN) -->
+              <div v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))">
+                <dt>
+                  <a
+                    href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Chicago Energy Rating
+                    <NewTabIcon />
+                  </a>
+                </dt>
+                <dd>
+                  {{ $page.building.ChicagoEnergyRating }} / 4
+                </dd>
+              </div>
 
-            <div v-if="$page.building.ENERGYSTARScore">
-              <dt>
-                <a
-                  href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  Energy Star Score
-                  <NewTabIcon />
-                </a>
-              </dt>
-              <dd>
-                {{ $page.building.ENERGYSTARScore }} / 100
-              </dd>
-            </div>
+              <div v-if="$page.building.ENERGYSTARScore">
+                <dt>
+                  <a
+                    href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    Energy Star Score
+                    <NewTabIcon />
+                  </a>
+                </dt>
+                <dd>
+                  {{ $page.building.ENERGYSTARScore }} / 100
+                </dd>
+              </div>
 
-            <div>
-              <dt>Owner</dt>
-              <OwnerLogo :building="$page.building" />
-            </div>
-          </dl>
+              <div>
+                <dt>Owner</dt>
+                <OwnerLogo :building="$page.building" />
+              </div>
+            </dl>
+          </div>
         </div>
       </div>
 
@@ -513,14 +515,13 @@ export default class BuildingDetails  extends Vue {
       gap: 0 2rem;
       grid-template-areas:
         "title img"
-        "banner img"
         "details img";
 
       .building-header-text {
         grid-area: title;
         align-self: end;
       }
-      .building-details {
+      .details-cont {
         grid-area: details;
         align-self: start;
       }
@@ -532,7 +533,6 @@ export default class BuildingDetails  extends Vue {
       display: grid;
       grid-template-areas:
         "img"
-        "banner"
         "details";
 
       .building-header-text {
@@ -543,7 +543,7 @@ export default class BuildingDetails  extends Vue {
         grid-area: img;
         width: 80%;
       }
-      .building-details {
+      .details-cont {
         grid-area: details;
         align-self: start;
       }
