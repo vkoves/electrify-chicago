@@ -612,6 +612,7 @@ export default class BuildingDetails  extends Vue {
   }
 
   .emission-stats {
+    margin-top: 0.5rem;
     margin-bottom: 1rem;
 
     > div {
