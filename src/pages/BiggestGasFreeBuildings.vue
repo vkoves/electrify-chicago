@@ -27,7 +27,7 @@ export default class TopGasUsers extends Vue {
   query {
     allBuilding(
       filter: {
-        DataYear: { eq: "2021" },
+        DataYear: { eq: "2022" },
         NaturalGasUse: { eq: "0.0" },
         DistrictSteamUse: { eq: "0.0" }
       },

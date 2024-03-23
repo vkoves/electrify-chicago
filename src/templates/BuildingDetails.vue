@@ -573,7 +573,7 @@ export default class BuildingDetails  extends Vue {
     background-color: $warning-background;
     border: dashed 0.125rem $warning-border;
     border-radius: $brd-rad-small;
-    margin-bottom: 1rem;
+    margin: 1rem 0;
     justify-self: flex-start;
 
     span.emoji { margin-right: 0.5rem; }
