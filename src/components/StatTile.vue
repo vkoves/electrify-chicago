@@ -102,7 +102,10 @@
           >
             {{ medianMultipleMsgCityWide }} median
           </span>
-          <span v-else class="median-label">
+          <span
+            v-else
+            class="median-label"
+          >
             Median Chicago Building
           </span>
 
@@ -120,7 +123,10 @@
           >
             {{ medianMultiplePropertyType }} median {{ propertyType }}
           </span>
-          <span v-else class="median-label">
+          <span
+            v-else
+            class="median-label"
+          >
             Median {{ propertyType }}
           </span>
 

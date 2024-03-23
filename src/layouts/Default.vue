@@ -154,7 +154,10 @@ export default class Default extends Vue {
         </div>
 
         <div>
-          <a href="https://github.com/vkoves/electrify-chicago" class="github-link">
+          <a
+            href="https://github.com/vkoves/electrify-chicago"
+            class="github-link"
+          >
             <img
               alt=""
               src="/github-mark.svg"
