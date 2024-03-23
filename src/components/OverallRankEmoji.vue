@@ -19,14 +19,23 @@
     >
       📷
     </span>
+
+    <span
+      v-if="isOldData && !largeView"
+      class="emoji has-img-emoji"
+      title="Outdated data (did not submit in the latest year)"
+    >
+      🕰️
+    </span>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import {getOverallRankEmoji, IBuilding, IBuildingBenchmarkStats} from '~/common-functions.vue';
+import {getOverallRankEmoji, IBuilding, IBuildingBenchmarkStats} from '../common-functions.vue';
 import { getBuildingImage } from '../constants/building-images.constant.vue';
+import { LatestDataYear } from '../constants/globals.vue';
 
 /**
  * A component that shows an emoji to summarize a building, showing the worse of the alarm or flag
@@ -46,6 +55,11 @@ export default class OverallRankEmoji extends Vue {
 
   get hasBuildingImg(): boolean {
     return Boolean(getBuildingImage(this.building));
+  }
+
+  /** Whether this building's latest data is old, not matching the latest data year */
+  get isOldData(): boolean {
+    return parseInt(this.building.DataYear.toString()) < LatestDataYear;
   }
 }
 </script>

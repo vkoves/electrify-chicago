@@ -102,7 +102,10 @@
           >
             {{ medianMultipleMsgCityWide }} median
           </span>
-          <span v-else>
+          <span
+            v-else
+            class="median-label"
+          >
             Median Chicago Building
           </span>
 
@@ -120,7 +123,10 @@
           >
             {{ medianMultiplePropertyType }} median {{ propertyType }}
           </span>
-          <span v-else>
+          <span
+            v-else
+            class="median-label"
+          >
             Median {{ propertyType }}
           </span>
 
@@ -153,7 +159,9 @@
 
           <p class="smaller">
             This building burned no natural gas on-site and isn't connected to a district heating
-            system, meaning it's fully electric!
+            system, meaning it's fully electric! View <g-link to="/biggest-gas-free-buildings">
+              Chicago's Biggest Gas Free Buildings
+            </g-link>.
           </p>
         </div>
         <div v-else>
@@ -552,7 +560,11 @@ export default class StatTile extends Vue {
       font-weight: 500;
     }
 
-    .median-val { font-size: small; }
+    .median-val  { font-size: small; }
+    .median-label {
+      font-size: 0.825rem;
+      font-weight: 600;
+    }
   }
 
   .median, .percentile { font-size: 0.75rem; }

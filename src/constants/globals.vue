@@ -6,5 +6,5 @@
 export default {};
 
 /** The latest year we have emissions data for, shown in global disclaimers */
-export const LatestDataYear = 2021;
+export const LatestDataYear = 2022;
 </script>

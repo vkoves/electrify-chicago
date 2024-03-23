@@ -84,6 +84,27 @@ export default class About extends Vue {
         used.
       </p>
 
+
+      <h2>Other Interesting Pages</h2>
+
+      <p>
+        There are a lot of interesting ways to view this data, here are a few pages that aren't
+        featured in our header but could be useful:
+      </p>
+
+      <ul class="other-pages">
+        <li>
+          <g-link to="/top-electricity-users">
+            Top Electricity Use
+          </g-link>
+        </li>
+        <li>
+          <g-link to="/biggest-gas-free-buildings">
+            Biggest Gas Free Buildings
+          </g-link>
+        </li>
+      </ul>
+
       <h2>Updates</h2>
 
       See our <g-link to="/release-notes">
@@ -95,10 +116,9 @@ export default class About extends Vue {
       <h2>Authors</h2>
 
       <p>
-        Electrify Chicago is a project by <a href="https://viktorkoves.com/">Viktor Köves</a>, a
-        Chicago native and climate developer who was part of the volunteer team behind
-        <a href="https://decarbmystate.com/">DecarbMyState</a> and built
-        <a href="https://carbonchallenge.io/">The Carbon Challenge</a>.
+        Electrify Chicago is a volunteer project led by
+        <a href="https://viktorkoves.com/">Viktor Köves</a>, a Chicago native and climate developer
+        part of the volunteer team behind <a href="https://decarbmystate.com/">DecarbMyState</a>.
       </p>
 
       <p>
@@ -132,26 +152,16 @@ export default class About extends Vue {
         <a href="https://github.com/vkoves/electrify-chicago/issues/new">
           File an issue on the Electrify Chicago GitHub</a>!
       </p>
-
-      <h2>Other Interesting Pages</h2>
-
-      <p>
-        There are a lot of interesting ways to view this data, here are a few pages that aren't
-        featured in our header but could be useful:
-      </p>
-
-      <ul>
-        <li>
-          <g-link to="/top-electricity-users">
-            Top Electricity Use
-          </g-link>
-        </li>
-        <li>
-          <g-link to="/biggest-gas-free-buildings">
-            Biggest Gas Free Buildings
-          </g-link>
-        </li>
-      </ul>
     </div>
   </DefaultLayout>
 </template>
+
+<style lang="scss">
+.other-pages {
+  li {
+    font-size: 1.25rem;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+}
+</style>

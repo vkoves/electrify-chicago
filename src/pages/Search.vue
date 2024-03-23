@@ -2,7 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import { IBuilding, IBuildingBenchmarkStats } from '~/common-functions.vue';
+import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
@@ -151,6 +151,7 @@ export default class Search extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path

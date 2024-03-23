@@ -30,6 +30,7 @@ export default class BiggestBuildings extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path
