@@ -171,6 +171,10 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '256423': {owner: BuildingOwners.iit.key},
   // Main Building (formerly IIT)
   // '103624': {owner: BuildingOwners.iit.key},
+  // IIT Tower
+  '111290': {owner: BuildingOwners.iit.key},
+  // IIT former Main building
+  '103624': {owner: BuildingOwners.iit.key},
 
   /**
    * UChicago Buildings
