@@ -136,6 +136,37 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '251332': {owner: BuildingOwners.depaul.key},
   // Theatre School
   '251337': {owner: BuildingOwners.depaul.key},
+  // College of Computing and Digital Media (CDM)
+  '134779': {owner: BuildingOwners.depaul.key},
+  // Thomas P. Levan Center
+  '251338': {owner: BuildingOwners.depaul.key},
+  // McCabe Hall
+  '251329': {owner: BuildingOwners.depaul.key},
+  // College of Education Building
+  '175365': {owner: BuildingOwners.depaul.key},
+  // Peter V. Byrne Hall
+  '251925': {owner: BuildingOwners.depaul.key},
+  // Munroe Hall
+  '251331': {owner: BuildingOwners.depaul.key},
+  // Seton Hall
+  '251334': {owner: BuildingOwners.depaul.key},
+  // Belden-Racine Hall
+  '251325': {owner: BuildingOwners.depaul.key},
+  // Arts & Letters Hall
+  '251324': {owner: BuildingOwners.depaul.key},
+  // Arthur J. Schmitt Academic Center
+  '173724': {owner: BuildingOwners.depaul.key},
+  // DePaul college of law
+  '103634': {owner: BuildingOwners.depaul.key},
+  // Richard M. and Maggie C. Daley Building
+  '101975': {owner: BuildingOwners.depaul.key},
+  // 990 W Fullerton Building
+  '251322': {owner: BuildingOwners.depaul.key},
+  // John T. Richardson Library
+  '251328': {owner: BuildingOwners.depaul.key},
+  // 1150 W. Fullerton Building
+  '251321': {owner: BuildingOwners.depaul.key},
+
 
   /**
    * IIT buildings
@@ -169,8 +200,6 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '256435': {owner: BuildingOwners.iit.key},
   // Perlstein Hall
   '256423': {owner: BuildingOwners.iit.key},
-  // Main Building (formerly IIT)
-  // '103624': {owner: BuildingOwners.iit.key},
   // IIT Tower
   '111290': {owner: BuildingOwners.iit.key},
   // IIT former Main building
