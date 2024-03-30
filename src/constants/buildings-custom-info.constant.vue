@@ -245,6 +245,15 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '102455': {owner: BuildingOwners.uchicago.key},
   // Cobb Hall
   '252049': {owner: BuildingOwners.uchicago.key},
+  // Laird Bell Law Quadrangle
+  '252044': {owner: BuildingOwners.uchicago.key},
+  // Kersten Physics Teaching Center
+  '252040': {owner: BuildingOwners.uchicago.key},
+  // Gleacher Center
+  '118776': {owner: BuildingOwners.uchicago.key},
+  // Social Science Research Building
+  '252057': {owner: BuildingOwners.uchicago.key},
+
 
   /**
    * UIC Buildings
