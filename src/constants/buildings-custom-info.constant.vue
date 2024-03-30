@@ -279,6 +279,8 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '101890': {owner: BuildingOwners.northwestern.key},
   // Wieboldt Hall, 340 E. Superior
   '256407': {owner: BuildingOwners.northwestern.key},
+  // Feinberg Pavilion
+  '103632': {owner: BuildingOwners.northwestern.key},
 
   /**
    * CPS
