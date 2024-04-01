@@ -30,6 +30,7 @@ RUN apk update && apk add --no-cache \
   libgcc \
   libstdc++ \
   linux-headers \
+  # Is this the best way to install python?
   python3
 
 # Copy requirements.txt to the working directory
