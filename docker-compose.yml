@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  electrify-chicago:
+    image: electrify-chicago:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+
