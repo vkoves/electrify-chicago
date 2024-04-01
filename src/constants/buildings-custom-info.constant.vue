@@ -68,6 +68,14 @@ export const BuildingOwners: IBuildingOwners = {
     logoLarge: '/building-owners/northwestern/northwestern-large.png',
   },
 
+  loyola: {
+    key: 'loyola',
+    name: 'Loyola University Chicago',
+    nameShort: 'Loyola',
+    logoSmall: '/building-owners/loyola/loyola-small.png',
+    logoLarge: '/building-owners/loyola/loyola-large.png',
+  },
+
 
   /**
    * TODO: Change logoSmall and logoLarge for the following municipalities
@@ -109,11 +117,9 @@ export interface IBuildingCustomInfo {
 
 /**
  * An object containing our custom details about buildings. These are hand coded based on the
- * building slug
- *
- * TODO: Move to more stable building ID
+ * building ID, which is stable as the data updates (while names can change YoY)
  */
-export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo } = {
+export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } = {
   /**
    * Depaul Buildings
    * Helpful source: https://www.depaul.edu/campus-maps/Pages/default.aspx
@@ -136,6 +142,37 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '251332': {owner: BuildingOwners.depaul.key},
   // Theatre School
   '251337': {owner: BuildingOwners.depaul.key},
+  // College of Computing and Digital Media (CDM)
+  '134779': {owner: BuildingOwners.depaul.key},
+  // Thomas P. Levan Center
+  '251338': {owner: BuildingOwners.depaul.key},
+  // McCabe Hall
+  '251329': {owner: BuildingOwners.depaul.key},
+  // College of Education Building
+  '175365': {owner: BuildingOwners.depaul.key},
+  // Peter V. Byrne Hall
+  '251925': {owner: BuildingOwners.depaul.key},
+  // Munroe Hall
+  '251331': {owner: BuildingOwners.depaul.key},
+  // Seton Hall
+  '251334': {owner: BuildingOwners.depaul.key},
+  // Belden-Racine Hall
+  '251325': {owner: BuildingOwners.depaul.key},
+  // Arts & Letters Hall
+  '251324': {owner: BuildingOwners.depaul.key},
+  // Arthur J. Schmitt Academic Center
+  '173724': {owner: BuildingOwners.depaul.key},
+  // DePaul college of law
+  '103634': {owner: BuildingOwners.depaul.key},
+  // Richard M. and Maggie C. Daley Building
+  '101975': {owner: BuildingOwners.depaul.key},
+  // 990 W Fullerton Building
+  '251322': {owner: BuildingOwners.depaul.key},
+  // John T. Richardson Library
+  '251328': {owner: BuildingOwners.depaul.key},
+  // 1150 W. Fullerton Building
+  '251321': {owner: BuildingOwners.depaul.key},
+
 
   /**
    * IIT buildings
@@ -169,8 +206,10 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '256435': {owner: BuildingOwners.iit.key},
   // Perlstein Hall
   '256423': {owner: BuildingOwners.iit.key},
-  // Main Building (formerly IIT)
-  // '103624': {owner: BuildingOwners.iit.key},
+  // IIT Tower
+  '111290': {owner: BuildingOwners.iit.key},
+  // IIT former Main building
+  '103624': {owner: BuildingOwners.iit.key},
 
   /**
    * UChicago Buildings
@@ -212,6 +251,15 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '102455': {owner: BuildingOwners.uchicago.key},
   // Cobb Hall
   '252049': {owner: BuildingOwners.uchicago.key},
+  // Laird Bell Law Quadrangle
+  '252044': {owner: BuildingOwners.uchicago.key},
+  // Kersten Physics Teaching Center
+  '252040': {owner: BuildingOwners.uchicago.key},
+  // Gleacher Center
+  '118776': {owner: BuildingOwners.uchicago.key},
+  // Social Science Research Building
+  '252057': {owner: BuildingOwners.uchicago.key},
+
 
   /**
    * UIC Buildings
@@ -246,6 +294,66 @@ export const BuildingsCustomInfo: { [buildingSlug: string]: IBuildingCustomInfo 
   '101890': {owner: BuildingOwners.northwestern.key},
   // Wieboldt Hall, 340 E. Superior
   '256407': {owner: BuildingOwners.northwestern.key},
+  // Feinberg Pavilion
+  '103632': {owner: BuildingOwners.northwestern.key},
+
+  /**
+   * Loyola University
+   *
+   * See campus maps: https://www.luc.edu/welcomeweek/campusmaps/
+   */
+  // Damen Student Cetner
+  '254161': {owner: BuildingOwners.loyola.key},
+  // Corbow Law Center
+  '101971': {owner: BuildingOwners.loyola.key},
+  // Quinlan Life Sciences
+  '254168': {owner: BuildingOwners.loyola.key},
+  // Norville Center
+  '254171': {owner: BuildingOwners.loyola.key},
+  // Mundelein Center
+  '102408': {owner: BuildingOwners.loyola.key},
+  // Halas Recreation Center
+  '254386': {owner: BuildingOwners.loyola.key},
+  // Crown Center
+  '254166': {owner: BuildingOwners.loyola.key},
+  // Flanner Hall
+   '158842': {owner: BuildingOwners.loyola.key},
+  // de Nobili Hall
+  '254169': {owner: BuildingOwners.loyola.key},
+  // Maguire Hall
+  '254163': {owner: BuildingOwners.loyola.key},
+  // Simpson Living Learning Center
+   '254167': {owner: BuildingOwners.loyola.key},
+  // Fordham Hall
+   '103681': {owner: BuildingOwners.loyola.key},
+  // Sullivan Center
+   '173858': {owner: BuildingOwners.loyola.key},
+  // Campion Hall
+   '254165': {owner: BuildingOwners.loyola.key},
+  // Regis Hall
+  '254172': {owner: BuildingOwners.loyola.key},
+  // Cudahy Library
+  '254164': {owner: BuildingOwners.loyola.key},
+  // Lewis Towers
+   '174182': {owner: BuildingOwners.loyola.key},
+  // Santa Clara Hall
+   '161053': {owner: BuildingOwners.loyola.key},
+  // BVM Hall/IES
+  '175895': {owner: BuildingOwners.loyola.key},
+  // San Francisco Hall
+   '254170': {owner: BuildingOwners.loyola.key},
+  // Mertz Hall - CFSU
+   '254162': {owner: BuildingOwners.loyola.key},
+  // Baumhart Hall
+  '160412': {owner: BuildingOwners.loyola.key},
+  // Cuneo Hall
+   '254160': {owner: BuildingOwners.loyola.key},
+  // Bellarmine Hall
+  '173888': {owner: BuildingOwners.loyola.key},
+  // Fairfield Hall
+  '105533': {owner: BuildingOwners.loyola.key},
+  // Schreiber Center
+  '254355': {owner: BuildingOwners.loyola.key},
 
   /**
    * CPS
