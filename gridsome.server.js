@@ -24,6 +24,7 @@ const BuildingOwnerIds = [
   'uic',
   'iit',
   'northwestern',
+  'loyola',
   'cps',
   'cha',
   'cityofchicago'

@@ -107,18 +107,17 @@ export default class BiggestBuildings extends Vue {
             >
               2022 Chicago Climate Action Plan<NewTabIcon />
             </a>,
-            a whopping <strong>69% of Chicago's emissions come from buildings</strong>, making it
-            our biggest challenge and <em>our biggest opportunity</em> as a city to tackle
-            change. At Electrify Chicago, we want to showcase some of the best and worst performing
-            buildings in the city using publicly available data and manual annotations to add
-            building photographs and label multi-building owners like universities.
+            <strong>69% of Chicago's emissions come from buildings</strong>, making
+            building emissions our biggest challenge and <em>our biggest opportunity</em> as a city
+            to tackle climate change. At Electrify Chicago, we showcase building performance using
+            publicly available data supplemented by community-submitted photographs and building
+            owners.
           </p>
 
           <p class="constrained -wide main-paragraph">
-            You can start by looking at Chicago's buildings with the highest greenhouse gas
-            intensity - this means that they use the most energy when adjusted per unit of square
-            foot, so big buildings could actually perform much better than very inefficient small
-            buildings on this metric.
+            Start by looking at Chicago's buildings with the highest greenhouse gas
+            intensity i.e. emissions per square foot. Large, efficient, buildings can perform much
+            better than very inefficient small buildings on this metric.
           </p>
 
           <div class="announcements">
