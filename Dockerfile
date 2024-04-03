@@ -1,8 +1,4 @@
-# Ensures Node.js 16.x is installed, which is required for running Gridsome app
 FROM python:3.9
-
-# Set working directory
-WORKDIR /app
 
 # Add the NodeSource PPA
 RUN echo 'Package: nodejs\nPin: origin deb.nodesource.com\nPin-Priority: 600' > /etc/apt/preferences.d/nodesource \
@@ -15,17 +11,20 @@ RUN apt-get update
 # Install yarn
 RUN npm install -g yarn
 
+# Set working directory
+WORKDIR /app
+
 # Copy requirements.txt to the working directory
 COPY requirements.txt .
-
-# Install Python dependencies
-RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Copy package.json and yarn.lock to the working directory
 COPY package.json yarn.lock ./
 
 # Copy the rest of the application code
 COPY . ./
+
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Install dependencies
 RUN yarn install
