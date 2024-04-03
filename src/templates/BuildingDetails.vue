@@ -497,10 +497,6 @@ export default class BuildingDetails  extends Vue {
   get buildingImg(): IBuildingImage | null {
     return getBuildingImage(this.building);
   }
-
-  mounted() {
-    console.log(this.building);
-  }
 }
 </script>
 
