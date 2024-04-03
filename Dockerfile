@@ -1,7 +1,7 @@
 # Ensures Node.js 16.x is installed, which is required for running Gridsome app
 FROM node:16-alpine
 
-# Install libvips 
+# Install dependencies
 #! Not sure if I really need all of these
 RUN apk update && apk add --no-cache \
   build-base \
@@ -30,7 +30,7 @@ RUN apk update && apk add --no-cache \
   libgcc \
   libstdc++ \
   linux-headers \
-  # Is this the best way to install python?
+  #! Should I install 3.9 specifically?
   python3
 
 # Copy requirements.txt to the working directory
