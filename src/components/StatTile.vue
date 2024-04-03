@@ -199,15 +199,16 @@ import {
   getRankLabelByProperty,
   IBuilding,
   IBuildingBenchmarkStats,
+  IPropertyStats,
   RankConfig,
 } from '../common-functions.vue';
 
 /**
  * A group of all the core stats by property type (e.g. GHG intensity median)
  */
-export interface PropertyByBuildingStats
+export interface IStatsByPropertyType
 {
-  [propertyType: string]: IBuildingBenchmarkStats;
+  [propertyType: string]: IPropertyStats;
 }
 
 /**
@@ -216,7 +217,9 @@ export interface PropertyByBuildingStats
   */
 @Component
 export default class StatTile extends Vue {
-  readonly BuildingStatsByPropertyType: PropertyByBuildingStats = buildingStatsByPropertyType;
+  readonly BuildingStatsByPropertyType: IStatsByPropertyType = buildingStatsByPropertyType;
+
+  readonly ColsToHideComparison = ['DistrictSteamUse', 'DistrictChilledWaterUse'];
 
   @Prop({required: true}) building!: IBuilding;
   @Prop({required: true}) statKey!: string;
@@ -287,7 +290,24 @@ export default class StatTile extends Vue {
 
   get isAboveMedian(): boolean {
     return this.building[this.statKey] !== null &&
-    this.building[this.statKey] as number > this.stats[this.statKey].median;
+      this.building[this.statKey] as number > this.stats[this.statKey].median;
+  }
+
+  /**
+   * Whether this stat is > one standard deviation above the mean value (e.g. if GHG intensity has a
+   * mean of 7.5 kg/sqft CO2e with a std of 5.5, values over 13 kg/sqft return true)
+   */
+  get isOneStdDeviationAboveMean(): boolean {
+    const statStdDeviation = this.stats[this.statKey]?.std;
+    const statMean = this.stats[this.statKey]?.mean;
+
+    console.log({ key: this.statKey, statStdDeviation, statMean });
+
+    if (this.building[this.statKey] === null || !statStdDeviation) {
+      return false;
+    }
+
+    return this.building[this.statKey] as number > statMean + statStdDeviation;
   }
 
   // Square footage isn't directly climate related, so we show stats but treat it as
@@ -461,17 +481,24 @@ export default class StatTile extends Vue {
   // 0 = outstanding performer in category
   // 1 = no concern
   // 2 = medium concern (above median)
-  // 3 = high category (top 30)
+  // 3 = high category (top 30 or > 1 std. deviation above the the mean)
   // 4 = very high concern (top 10 in category)
   get concernLevel(): number | null {
-    // Return null if we have no stats
-    if (!this.statRank) {
+    // Some columns never show comparisons, because there's incomplete data (e.g. district steam and
+    // district chilling)
+    if (this.ColsToHideComparison.includes(this.statKey)) {
       return null;
     }
 
-    if (this.statRank <= 10) {
+    // If an older building with no ranking on this stat, pretend its very low ranking and just run
+    // checks against  the mean and median
+    const statRank = this.statRank ?? 1000;
+
+    // Very high concern if top 10
+    if (statRank <= 10) {
       return 4;
-    } else if (this.statRank <= 30) {
+    // High concern if top 30 or well above mean
+    } else if (statRank <= 30 || this.isOneStdDeviationAboveMean) {
       return 3;
     } else if (this.isAboveMedian) {
       return 2;

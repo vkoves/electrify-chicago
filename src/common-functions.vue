@@ -5,6 +5,8 @@ export interface IBuildingBenchmarkStat {
   count: number;
   min: number;
   max: number;
+  mean: number; // note we should generally lean on the median
+  std: number; // standard deviation
   twentyFifthPercentile: number;
   median: number;
   seventyFifthPercentile: number;
@@ -14,6 +16,22 @@ export interface IBuildingBenchmarkStat {
 export interface IBuildingBenchmarkStats {
   [statKey: string]: IBuildingBenchmarkStat;
 }
+
+/** Property stats do not have a mean or standard deviation */
+export interface IPropertyStat {
+  count: number;
+  min: number;
+  max: number;
+  twentyFifthPercentile: number;
+  median: number;
+  seventyFifthPercentile: number;
+}
+
+/** The type of each property type in building-statistics-by-property-type.json */
+export interface IPropertyStats {
+  [statKey: string]: IPropertyStat;
+}
+
 
 /**
  * An individual building object
