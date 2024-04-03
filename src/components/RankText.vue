@@ -60,7 +60,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import { RankConfig, IBuilding, IBuildingBenchmarkStats } from '~/common-functions';
+import { RankConfig, IBuilding, IBuildingBenchmarkStats } from '../common-functions';
 
 /**
  * A  tile that can show the stats for a building, including whether it's

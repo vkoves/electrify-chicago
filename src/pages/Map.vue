@@ -433,11 +433,12 @@ export default class MapPage extends Vue {
 
 <page-query>
   query {
-    allBuilding(filter: { DataYear: { eq: "2021" } }, sortBy: "GHGIntensity") {
+    allBuilding(sortBy: "GHGIntensity") {
       edges {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           ZIPCode
