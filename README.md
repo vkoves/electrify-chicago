@@ -39,6 +39,47 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 
 ## Development
 
+## Environment setup
+
+### **1. Set up Docker**
+
+Docker is the recommended approach to quickly getting started with local development. Docker helps create a version of the Electrify Chicago website on your computer so you can test out your code before submitting a pull request.
+
+- The recommended installation method for your operating system can be found [here](https://docs.docker.com/install/). 
+- [Get started with Docker](https://docs.docker.com/get-started/)
+
+### **2. Build and serve the website locally**
+
+#### **3. Starting Docker**
+
+**IMPORTANT:** Please make sure the `Docker Desktop` application is **running on your computer** before you run the bash commands below.
+
+- This command starts server locally. The server watches for changes to the source files and rebuilds and refreshes the site automatically in your browser. Navigate to within the `website` directory that you cloned earlier in your terminal then run the below command
+
+```bash
+ docker-compose up
+```
+
+Running the above command will result in the following output in your terminal
+
+<details>
+  <summary><strong>Click here</strong> to see an example terminal output</summary>
+
+
+  ```
+
+</details>
+
+When you see the above output, it means the site is now running and now you can browse to http://localhost:8080
+
+#### **Stopping Docker**
+
+ - To stop and completely remove the server (i.e. the running Docker container), run `docker-compose down`
+- To stop the server, but not destroy it (often sufficient for day-to-day work), run `docker-compose stop`
+- Bring the same server back up later with `docker-compose up`
+
+<!-- 
+
 ### Front-End Setup
 
 Make sure you **are running Node v16** and have [Yarn](https://yarnpkg.com/) installed, the
@@ -61,6 +102,7 @@ To run linting with auto-fix, run:
 ```bash
 yarn lint-fix
 ```
+-->
 
 ## Deploys
 
@@ -75,6 +117,7 @@ for data processing
 Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
 
 
+<!-- 
 ## Data Processing
 
 ### Python Setup (For Data Processing & tests)
@@ -89,6 +132,7 @@ To install our Python dependencies, from the root of the project, run:
 ```bash
 pip install --no-cache-dir -r requirements.txt
 ```
+-->
 
 ### Run Data Processing
 
