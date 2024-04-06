@@ -39,16 +39,16 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 
 ## Development
 
-## Environment setup
+### Environment setup
 
-### **1. Set up Docker**
+#### **1. Set up Docker**
 
 Docker is the recommended approach to quickly getting started with local development. Docker helps create a version of the Electrify Chicago website on your computer so you can test out your code before submitting a pull request.
 
 - The recommended installation method for your operating system can be found [here](https://docs.docker.com/install/). 
 - [Get started with Docker](https://docs.docker.com/get-started/)
 
-### **2. Start Docker**
+#### **2. Start Docker**
 
 > [!IMPORTANT]
 > Please make sure the `Docker Desktop` application is **running on your computer** before you run the bash commands below.
@@ -68,7 +68,7 @@ Running the above command will result in the following output in your terminal
 
 When you see the above output, it means the site is now running and now you can browse to http://localhost:8080
 
-### **3. Stop Docker**
+#### **3. Stop Docker**
 
 - To stop and completely remove the server (i.e. the running Docker container), run `docker-compose down`
 - To stop the server, but not destroy it (often sufficient for day-to-day work), run `docker-compose stop`
