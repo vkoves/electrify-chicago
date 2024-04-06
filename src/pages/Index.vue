@@ -45,7 +45,7 @@ export default class BiggestBuildings extends Vue {
 <page-query>
   query ($page: Int) {
     allBuilding(
-      filter: { DataYear: { eq: "2021" } }, sortBy: "GHGIntensity", perPage: 15, page: $page
+      sortBy: "GHGIntensity", perPage: 15, page: $page
     ) @paginate {
       pageInfo {
         hasNextPage
@@ -58,6 +58,7 @@ export default class BiggestBuildings extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path
@@ -96,7 +97,7 @@ export default class BiggestBuildings extends Vue {
 
       <div class="row">
         <div>
-          <p class="constrained -wide">
+          <p class="constrained -wide main-paragraph">
             <!-- TODO: Move to consolidated sources object-->
             According to the
             <a
@@ -113,7 +114,7 @@ export default class BiggestBuildings extends Vue {
             owners.
           </p>
 
-          <p class="constrained -wide">
+          <p class="constrained -wide main-paragraph">
             Start by looking at Chicago's buildings with the highest greenhouse gas
             intensity i.e. emissions per square foot. Large, efficient, buildings can perform much
             better than very inefficient small buildings on this metric.
@@ -243,7 +244,7 @@ export default class BiggestBuildings extends Vue {
     justify-content: space-between;
     gap: 2rem;
 
-    p.constrained { font-size: 1.125rem; }
+    p.main-paragraph { font-size: 1.125rem; }
   }
 
   .announcements {

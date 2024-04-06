@@ -81,12 +81,18 @@ def calculateBuildingStatistics():
             cur_third_quartile = round(
                 sorted_by_property_type[col].quantile(q=0.75)[i].item(), 3)
 
-            cur_property_type_stats[col] = {"count": cur_count, "min": cur_min, "max": cur_max,
-                                            "twentyFifthPercentile": cur_first_quartile, "median": cur_median, "seventyFifthPercentile": cur_third_quartile}
+            cur_property_type_stats[col] = {
+                "count": cur_count,
+                "min": cur_min,
+                "max": cur_max,
+                "twentyFifthPercentile": cur_first_quartile,
+                "median": cur_median,
+                "seventyFifthPercentile": cur_third_quartile
+            }
 
         if cur_count == 0:
             continue
-            
+
         stats_by_property_type[property] = cur_property_type_stats
 
     with open(property_stats_file_path, "w") as property_stats_file:

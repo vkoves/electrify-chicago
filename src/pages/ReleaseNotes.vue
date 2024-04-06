@@ -26,6 +26,16 @@ export default class About extends Vue {
         Release Notes
       </h1>
 
+      <h2>April 2nd, 2024 - Data Update to 2022</h2>
+
+      <p>
+        Updated the source data to the year 2022, and dropped the filter limiting buildings to the
+        latest year on most pages, so that dirty buildings that didn't report in 2022 still show up
+        on our largest emitter lists.
+
+        <strong>Buildings shown that have old data now use a mantel clock emoji (🕰️)</strong>.
+      </p>
+
       <h2>August 30th, 2023 - Data Update to 2021</h2>
 
       <p>

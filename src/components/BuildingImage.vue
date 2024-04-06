@@ -28,7 +28,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import {IBuilding} from '~/common-functions.vue';
+import {IBuilding} from '../common-functions.vue';
 import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
 import NewTabIcon from './NewTabIcon.vue';
 

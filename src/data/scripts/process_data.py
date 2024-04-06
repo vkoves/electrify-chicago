@@ -70,7 +70,7 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     benchmark_stats_df = pandas.DataFrame()
 
     # The details columns we want to keep. Note that 50% = median
-    detail_cols_to_keep = ['count', 'mean', 'min', 'max', '25%', '50%', '75%']
+    detail_cols_to_keep = ['count', 'mean', 'std', 'min', 'max', '25%', '50%', '75%']
 
     benchmark_stats_df = building_data[building_cols_to_analyze].describe(
     ).loc[detail_cols_to_keep]
