@@ -48,13 +48,12 @@ Docker is the recommended approach to quickly getting started with local develop
 - The recommended installation method for your operating system can be found [here](https://docs.docker.com/install/). 
 - [Get started with Docker](https://docs.docker.com/get-started/)
 
-### **2. Build and serve the website locally**
+### **2. Start Docker**
 
-#### **3. Starting Docker**
+> [!IMPORTANT]
+> Please make sure the `Docker Desktop` application is **running on your computer** before you run the bash commands below.
 
-**IMPORTANT:** Please make sure the `Docker Desktop` application is **running on your computer** before you run the bash commands below.
-
-- This command starts server locally. The server watches for changes to the source files and rebuilds and refreshes the site automatically in your browser. Navigate to within the `website` directory that you cloned earlier in your terminal then run the below command
+This command starts server locally. To start it, `cd` into the project directory in your terminal then run the following command: 
 
 ```bash
  docker-compose up
@@ -64,36 +63,16 @@ Running the above command will result in the following output in your terminal
 
 <details>
   <summary><strong>Click here</strong> to see an example terminal output</summary>
-
-
-  ```
-
+  <img width="662" alt="Screenshot 2024-04-05 at 7 23 04 PM" src="https://github.com/gaylem/electrify-chicago/assets/76500899/ad25d216-d58d-48f1-9f7c-16473db50537">
 </details>
 
 When you see the above output, it means the site is now running and now you can browse to http://localhost:8080
 
-#### **Stopping Docker**
+### **3. Stop Docker**
 
- - To stop and completely remove the server (i.e. the running Docker container), run `docker-compose down`
+- To stop and completely remove the server (i.e. the running Docker container), run `docker-compose down`
 - To stop the server, but not destroy it (often sufficient for day-to-day work), run `docker-compose stop`
 - Bring the same server back up later with `docker-compose up`
-
-<!-- 
-
-### Front-End Setup
-
-Make sure you **are running Node v16** and have [Yarn](https://yarnpkg.com/) installed, the
-`cd` into the project directory (after cloning it) and run:
-
-```bash
-yarn install
-```
-
-### Running The Front-End
-
-Run `yarn develop` to start a local dev server at `http://localhost:8080`
-
-Happy coding 🎉🙌
 
 ### Run Front-End Linting
 
@@ -102,12 +81,10 @@ To run linting with auto-fix, run:
 ```bash
 yarn lint-fix
 ```
--->
 
 ## Deploys
 
 This site deploys automatically via Netlify by running `gridsome build`.
-
 
 ## Tools
 
@@ -115,24 +92,6 @@ This site deploys automatically via Netlify by running `gridsome build`.
 for data processing
 
 Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
-
-
-<!-- 
-## Data Processing
-
-### Python Setup (For Data Processing & tests)
-
-This project's Python data pipeline requires:
-
-- pip
-- python 3.9
-
-To install our Python dependencies, from the root of the project, run:
-
-```bash
-pip install --no-cache-dir -r requirements.txt
-```
--->
 
 ### Run Data Processing
 
