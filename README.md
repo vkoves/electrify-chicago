@@ -81,7 +81,9 @@ When you see the above output, it means the site is now running and now you can 
 ## Open Bash Shell
 
 > [!IMPORTANT]
-> To run any of the commands below, you'll need to (1) `cd` into the project directory after spinning up your Docker container and (2) open up a bash shell inside the Docker container with the following command:
+> To run any of the commands below, you'll need to
+> 1. Open a new terminal and `cd` into the root project directory after spinning up your Docker container
+> 2. Open up a bash shell inside the Docker container with the following command:
 
 ```bash
 docker-compose exec electrify-chicago bash
