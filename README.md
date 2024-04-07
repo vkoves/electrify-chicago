@@ -81,7 +81,7 @@ When you see the above output, it means the site is now running and now you can 
 ## Open Bash Shell
 
 > [!IMPORTANT]
-> To run any of the commands below, you'll need to open up a bash shell inside the Docker container with the following command:
+> To run any of the commands below, you'll need to (1) `cd` into the project directory after spinning up your Docker container and (2) open up a bash shell inside the Docker container with the following command:
 
 ```bash
 docker-compose exec electrify-chicago bash
@@ -89,7 +89,7 @@ docker-compose exec electrify-chicago bash
 
 ### Run Front-End Linting
 
-To run linting with auto-fix, run the following command inside the bash shell:
+To run linting with auto-fix, run the following command inside the Docker bash shell:
 
 ```bash
 yarn lint-fix
@@ -98,11 +98,9 @@ yarn lint-fix
 ### Run Data Processing
 
 If you update the raw data CSVs or the data scripts that post-process them (like if you are adding
-a new statistical analysis), you need to re-run the data processing. Make sure to follow the "Python
-Setup" steps first.
+a new statistical analysis), you need to re-run the data processing. 
 
-To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), from the project
-directory run the following command inside the Docker container bash shell:
+To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command inside the Docker bash shell:
 
 ```bash
 bash run_all.sh
@@ -111,13 +109,13 @@ bash run_all.sh
 ### Run Data Processing Tests
 
 Make sure test data is created/replaced before running tests by running the following script from
-the bash shell in the Docker container (it will overwrite the existing test data file if it exists):
+the Docker bash shell (it will overwrite the existing test data file if it exists):
 
 ```bash
 bash create_test_data.sh
 ```
 
-To run all tests simply in the project directory run the following command inside the bash shell in the Docker container:
+To run all tests simply in the project directory run the following command inside the Docker bash shell:
 
 ```bash
 pytest
@@ -126,7 +124,7 @@ pytest
 This assumes that `pytest` has been installed, see setup.
 
 Run the following command for individual unit test suite (where XXX is something like
-`test_clean_all_years`) in the bash shell in the Docker container:
+`test_clean_all_years`) in the Docker bash shell:
 
 ```bash
 python3 -m pytest test/data/scripts/unit/XXX.py
