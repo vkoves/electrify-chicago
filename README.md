@@ -81,14 +81,13 @@ When you see the above output, it means the site is now running and now you can 
 ## Open Bash Shell
 
 > [!IMPORTANT]
-> To run any of the commands below, you'll need to
+> To run any of the commands below, you'll need to do the following:
 > 1. Open a new terminal and `cd` into the root project directory after spinning up your Docker container
 > 2. Open up a bash shell inside the Docker container with the following command:
 
 ```bash
 docker-compose exec electrify-chicago bash
 ```
-
 ### Run Front-End Linting
 
 To run linting with auto-fix, run the following command inside the Docker bash shell:
