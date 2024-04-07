@@ -120,9 +120,6 @@ To run all tests in the project directory, enter the following command inside th
 ```bash
 pytest
 ```
-
-This assumes that `pytest` has been installed, see setup.
-
 Run the following command for individual unit test suite (where XXX is something like
 `test_clean_all_years`) in the Docker bash shell:
 
