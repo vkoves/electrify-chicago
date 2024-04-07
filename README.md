@@ -16,6 +16,13 @@ Sources:
 
 GraphQL requires data key names to have no spaces or special characters, so there's a raw data file (only filtered by GHG emissions > 1,000 tons and year = 2020) and a cleaned file that just hast he headers renamed for GraphQL.
 
+## Tools
+
+[python](https://www.python.org/) and [pandas](https://pandas.pydata.org/)
+for data processing
+
+Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
+
 ## General To-Do List
 
 - [x] Pick a framework - statically built VueJSS, maybe [VitePress](https://vitepress.dev/guide/getting-started)
@@ -35,14 +42,6 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [ ] Show % of energy use from the four sources (electric, gas, district chilled water, district steam)
 - [ ] Create ward page that shows data by ward (needs new data source)
 - [ ] Figure out a way to rank buildings by opportunity for improvement (perhaps higher than avg. in category, uses a lot of natural gas?)
-
-## Tools
-
-[python](https://www.python.org/) and [pandas](https://pandas.pydata.org/)
-for data processing
-
-Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
-
 
 ## Environment setup
 
