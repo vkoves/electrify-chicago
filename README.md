@@ -115,7 +115,7 @@ the Docker bash shell (it will overwrite the existing test data file if it exist
 bash create_test_data.sh
 ```
 
-To run all tests simply in the project directory run the following command inside the Docker bash shell:
+To run all tests in the project directory, enter the following command inside the Docker bash shell:
 
 ```bash
 pytest
