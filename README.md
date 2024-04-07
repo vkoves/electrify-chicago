@@ -97,10 +97,10 @@ yarn lint-fix
 
 ### Run Data Processing
 
-If you update the raw data CSVs or the data scripts that post-process them (like if you are adding
+1. If you update the raw data CSVs or the data scripts that post-process them (like if you are adding
 a new statistical analysis), you need to re-run the data processing. 
 
-To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command inside the Docker bash shell:
+2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command inside the Docker bash shell:
 
 ```bash
 bash run_all.sh
@@ -108,19 +108,19 @@ bash run_all.sh
 
 ### Run Data Processing Tests
 
-Make sure test data is created/replaced before running tests by running the following script from
+1. Make sure test data is created/replaced before running tests by running the following script from
 the Docker bash shell (it will overwrite the existing test data file if it exists):
 
 ```bash
 bash create_test_data.sh
 ```
 
-To run all tests in the project directory, enter the following command inside the Docker bash shell:
+2. To run all tests in the project directory, enter the following command inside the Docker bash shell:
 
 ```bash
 pytest
 ```
-Run the following command for individual unit test suite (where XXX is something like
+3. Run the following command for individual unit test suite (where XXX is something like
 `test_clean_all_years`) in the Docker bash shell:
 
 ```bash
