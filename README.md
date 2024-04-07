@@ -36,8 +36,13 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 - [ ] Create ward page that shows data by ward (needs new data source)
 - [ ] Figure out a way to rank buildings by opportunity for improvement (perhaps higher than avg. in category, uses a lot of natural gas?)
 
+## Tools
 
-## Development
+[python](https://www.python.org/) and [pandas](https://pandas.pydata.org/)
+for data processing
+
+Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
+
 
 ## Environment setup
 
@@ -74,24 +79,22 @@ When you see the above output, it means the site is now running and now you can 
 - To stop the server, but not destroy it (often sufficient for day-to-day work), run `docker-compose stop`
 - Bring the same server back up later with `docker-compose up`
 
+## Open Bash Shell
+
+> [!IMPORTANT]
+> To run any of the commands below, you'll need to open up a bash shell inside the Docker container with the following command:
+
+```bash
+docker-compose exec electrify-chicago bash
+```
+
 ### Run Front-End Linting
 
-To run linting with auto-fix, run:
+To run linting with auto-fix, run the following command inside the bash shell:
 
 ```bash
 yarn lint-fix
 ```
-
-## Deploys
-
-This site deploys automatically via Netlify by running `gridsome build`.
-
-## Tools
-
-[python](https://www.python.org/) and [pandas](https://pandas.pydata.org/)
-for data processing
-
-Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
 
 ### Run Data Processing
 
@@ -100,7 +103,7 @@ a new statistical analysis), you need to re-run the data processing. Make sure t
 Setup" steps first.
 
 To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), from the project
-directory run:
+directory run the following command inside the Docker container bash shell:
 
 ```bash
 bash run_all.sh
@@ -109,13 +112,13 @@ bash run_all.sh
 ### Run Data Processing Tests
 
 Make sure test data is created/replaced before running tests by running the following script from
-the main project directory (it will overwrite the existing test data file if it exists):
+the bash shell in the Docker container (it will overwrite the existing test data file if it exists):
 
 ```bash
 bash create_test_data.sh
 ```
 
-To run all tests simply in the project directory run:
+To run all tests simply in the project directory run the following command inside the bash shell in the Docker container:
 
 ```bash
 pytest
@@ -124,16 +127,15 @@ pytest
 This assumes that `pytest` has been installed, see setup.
 
 Run the following command for individual unit test suite (where XXX is something like
-`test_clean_all_years`):
+`test_clean_all_years`) in the bash shell in the Docker container:
 
 ```bash
 python3 -m pytest test/data/scripts/unit/XXX.py
 ```
 
-
 ## Known Development Issues
 
-#### macOS libvips Error
+### macOS libvips Error
 
 If you encounter an error on macOS such as `sharp Prebuilt libvips 8.10.5 binaries are not yet available for darwin-arm64v8`, you'll need to install these dependencies separately. Install the [Brew package manager](https://brew.sh/), then run the following commands:
 
@@ -192,3 +194,8 @@ const BuildingOwnerIds = [
 
 **Note:** You'll have to restart your `yarn develop` after step 3 to see changes, since
 `gridsome.server.js` just runs once.
+
+## Deploys
+
+This site deploys automatically via Netlify by running `gridsome build`.
+
