@@ -132,21 +132,6 @@ Run the following command for individual unit test suite (where XXX is something
 python3 -m pytest test/data/scripts/unit/XXX.py
 ```
 
-## Known Development Issues
-
-### macOS libvips Error
-
-If you encounter an error on macOS such as `sharp Prebuilt libvips 8.10.5 binaries are not yet available for darwin-arm64v8`, you'll need to install these dependencies separately. Install the [Brew package manager](https://brew.sh/), then run the following commands:
-
-```
-brew install --build-from-source gcc
-xcode-select install
-brew install vips
-```
-=======
-**Important!** When you update the data, make sure to update the `LatestDataYear` in
-`globals.vue`, as well as the filter year in all page queries.
-
 ## Managing The Data
 
 ### Adding a Building Owner
