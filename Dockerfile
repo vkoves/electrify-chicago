@@ -21,7 +21,7 @@ COPY requirements.txt .
 COPY package.json yarn.lock ./
 
 # Copy the rest of the application code
-COPY . ./
+COPY . /app
 
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -r requirements.txt
