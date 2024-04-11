@@ -121,11 +121,11 @@ bash create_test_data.sh
 ```bash
 python -m pytest
 ```
-3. Run the following command for individual unit test suite (where XXX is something like
+3. Run the following command for individual unit test suite (where YOUR_FILE_NAME is something like
 `test_clean_all_years`) in the Docker bash shell:
 
 ```bash
-python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME_HERE.py
+python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
 ```
 
 ## Managing The Data
