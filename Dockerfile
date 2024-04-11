@@ -18,10 +18,11 @@ WORKDIR /app
 COPY requirements.txt .
 
 # Copy package.json and yarn.lock to the working directory
-COPY package.json yarn.lock ./
+COPY package.json .
+COPY yarn.lock .
 
 # Copy the rest of the application code
-COPY . /app
+COPY . .
 
 # Install Python dependencies
 RUN pip3 install --no-cache-dir -r requirements.txt
