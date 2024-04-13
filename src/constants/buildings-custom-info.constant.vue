@@ -303,10 +303,6 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '103684': {owner: BuildingOwners.northwestern.key},
   // 8792, Feinberg School of Medicine, 303 E Chicago Ave
   '256411': {owner: BuildingOwners.northwestern.key}, 
-  // 645 North Michigan
-  '134533': {owner: BuildingOwners.northwestern.key},
-  // Shirley Ryan AbilityLab, 355 E Erie St
-  '254368': {owner: BuildingOwners.northwestern.key},
 
 
   /**
