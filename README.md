@@ -116,7 +116,7 @@ docker-compose run --rm electrify-chicago python -m pytest
 `test_clean_all_years`):
 
 ```bash
-python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
+docker-compose run --rm electrify-chicago python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
 ```
 
 ## Managing The Data
