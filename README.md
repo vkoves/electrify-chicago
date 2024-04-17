@@ -78,51 +78,42 @@ When you see the above output, it means the site is now running and now you can 
 - To stop the server, but not destroy it (often sufficient for day-to-day work), run `docker-compose stop`
 - Bring the same server back up later with `docker-compose up`
 
-## Open Bash Shell
+## Running Commands & Tests Inside Container
 
-> [!IMPORTANT]
-> To run any of the commands below, you'll need to do the following:
-> 1. Open a new terminal and `cd` into the root project directory after spinning up your Docker container
-> 2. Open up a bash shell inside the Docker container with the following command:
-
-```bash
-docker-compose exec electrify-chicago bash
-```
 ### Run Front-End Linting
 
-To run linting with auto-fix, run the following command inside the Docker bash shell:
+To run linting with auto-fix:
 
 ```bash
-yarn lint-fix
+docker-compose run --rm electrify-chicago yarn lint-fix
 ```
 
 ### Run Data Processing
 
 1. If you update the raw data CSVs or the data scripts that post-process them (like if you are adding
 a new statistical analysis), you need to re-run the data processing. 
-
-2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command inside the Docker bash shell:
+2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
 ```bash
-bash run_all.sh
+docker-compose run --rm electrify-chicago bash run_all.sh
 ```
 
 ### Run Data Processing Tests
 
-1. Make sure test data is created/replaced before running tests by running the following script from
-the Docker bash shell (it will overwrite the existing test data file if it exists):
+1. Make sure test data is created/replaced before running tests by running the following script (it will overwrite the existing test data file if it exists):
 
 ```bash
-bash create_test_data.sh
+docker-compose run --rm electrify-chicago bash create_test_data.sh
 ```
 
-2. To run all tests in the project directory, enter the following command inside the Docker bash shell:
+2. To run all tests in the project directory, enter the following command:
 
 ```bash
-python -m pytest
+docker-compose run --rm electrify-chicago python -m pytest
 ```
-3. Run the following command for individual unit test suite (where YOUR_FILE_NAME is something like
-`test_clean_all_years`) in the Docker bash shell:
+
+3. Run the following command for individual unit test suites (where YOUR_FILE_NAME is something like
+`test_clean_all_years`):
 
 ```bash
 python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
