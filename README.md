@@ -55,7 +55,7 @@ Docker is the recommended approach to quickly getting started with local develop
 ### **2. Start Docker**
 
 > [!IMPORTANT]
-> Please make sure the `Docker Desktop` application is **running on your computer** before you run the bash commands below.
+> Please make sure the `Docker Desktop` application is **running on your computer** before you run the commands below.
 
 This command starts server locally. To start it, `cd` into the project directory in your terminal then run the following command: 
 
