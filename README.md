@@ -54,9 +54,6 @@ Docker is the recommended approach to quickly getting started with local develop
 
 ### **2. Start Docker**
 
-> [!IMPORTANT]
-> Please make sure the `Docker Desktop` application is **running on your computer** before you run the bash commands below.
-
 This command starts server locally. To start it, `cd` into the project directory in your terminal then run the following command: 
 
 ```bash
@@ -78,6 +75,8 @@ When you see the above output, it means the site is now running and now you can 
 - To stop the server, but not destroy it (often sufficient for day-to-day work), run `docker-compose stop`
 - Bring the same server back up later with `docker-compose up`
 
+## Commands
+
 ### Run Front-End Linting
 
 To run linting with auto-fix, run the following command:
@@ -94,7 +93,7 @@ a new statistical analysis), you need to re-run the data processing.
 2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
 ```bash
-docker-compose run --rm electrify-chicago  bash run_all.sh
+docker-compose run --rm electrify-chicago bash run_all.sh
 ```
 
 ### Run Data Processing Tests
