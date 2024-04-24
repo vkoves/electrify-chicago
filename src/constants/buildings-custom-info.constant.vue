@@ -274,7 +274,7 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
 
   /**
    * Northwestern Buildings
-   * No helpful resource, but Googling each of these will pull up a Northwestern page
+   * Helpful source: https://maps.northwestern.edu/chicago 
    */
   // 303 E Superior Street
   '256405': { owner: BuildingOwners.northwestern.key },
@@ -294,8 +294,16 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '101890': {owner: BuildingOwners.northwestern.key},
   // Wieboldt Hall, 340 E. Superior
   '256407': {owner: BuildingOwners.northwestern.key},
-  // Feinberg Pavilion
+ // Chicago Campus 2, Feinberg Pavilion, 251 E Huron St
   '103632': {owner: BuildingOwners.northwestern.key},
+
+  // Prentice Women's Hospital, 250 E Superior St
+  '103615': {owner: BuildingOwners.northwestern.key},
+  // NMH Arkes Family Pavilion, 676 N St Clair St
+  '103684': {owner: BuildingOwners.northwestern.key},
+  // 8792, Feinberg School of Medicine, 303 E Chicago Ave
+  '256411': {owner: BuildingOwners.northwestern.key}, 
+
 
   /**
    * Loyola University
