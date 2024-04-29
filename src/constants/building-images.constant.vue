@@ -52,6 +52,11 @@ export const BuildingImages: IBuildingImages = {
         attributionUrl: 'https://en.wikipedia.org/wiki/File:Shedd_Aquarium_E.jpg',
         imgUrl: BuildingImagesBase + 'shedd-aquarium.jpg',
     },
+    // museum-of-science-and-industry
+    '102460': {
+        attributionUrl: 'https://en.wikipedia.org/wiki/File:Museum_of_Science_and_Industry_(Chicago).jpg',
+        imgUrl: BuildingImagesBase + 'museum-of-science-and-industry.jpg',
+    },
 
     /**
      * General Famous Buildings
