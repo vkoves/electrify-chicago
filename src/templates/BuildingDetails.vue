@@ -1,5 +1,6 @@
+<!-- Note that $id here is the GraphQL node ID, while $ID is the building ID (building.ID) -->
 <page-query>
-query ($id: ID!) {
+query ($id: ID!, $ID: String) {
   building(id: $id) {
     slugSource
     ID
@@ -44,6 +45,22 @@ query ($id: ID!) {
     GrossFloorAreaRankByPropertyType
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
+  }
+  allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
+    edges {
+        node {
+          ID
+          DataYear
+          GrossFloorArea
+          ChicagoEnergyRating
+          ENERGYSTARScore
+          SourceEUI
+          GHGIntensity
+          ElectricityUse
+          NaturalGasUse
+          DistrictSteamUse
+        }
+    }
   }
 }
 </page-query>
@@ -290,6 +307,57 @@ query ($id: ID!) {
         </div>
       </dl>
 
+      <h2>Historical Data</h2>
+
+      <div class="table-cont">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">
+                Year
+              </th>
+              <th scope="col">Floor Area <span class="unit">sqft</span></th>
+              <th scope="col">Chicago Energy<br> Rating</th>
+              <th scope="col">Energy Star<br> Score</th>
+              <th scope="col">
+                GHG Intensity <span class="unit">kg CO<sub>2</sub>e / sqft</span>
+              </th>
+              <th scope="col">
+                Source EUI <span class="unit">kBtu / sqft</span>
+              </th>
+
+              <th scope="col">
+                Electricity Use <span class="unit">kBtu</span>
+              </th>
+              <th scope="col">
+                Natural Gas Use <span class="unit">kBtu</span>
+              </th>
+              <th scope="col">
+                District Steam Use <span class="unit">kBtu</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="benchmark in historicData"
+              :key="benchmark.DataYear"
+            >
+              <td>{{ benchmark.DataYear }}</td>
+              <td>{{ parseInt(benchmark.GrossFloorArea).toLocaleString() }}</td>
+              <td>{{ benchmark.ChicagoEnergyRating || '-' }}</td>
+              <td>{{ benchmark.ENERGYSTARScore || '-' }}</td>
+              <td>{{ benchmark.GHGIntensity }}</td>
+              <td>{{ benchmark.SourceEUI }}</td>
+
+              <!-- Round big numbers -->
+              <td>{{ benchmark.ElectricityUse ? parseInt(benchmark.ElectricityUse).toLocaleString() : '-' }}</td>
+              <td>{{ benchmark.NaturalGasUse ? parseInt(benchmark.NaturalGasUse).toLocaleString() : '-' }}</td>
+              <td>{{ benchmark.DistrictSteamUse ? parseInt(benchmark.DistrictSteamUse).toLocaleString() : '-' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <p class="constrained">
         <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
@@ -417,7 +485,7 @@ import { LatestDataYear } from '../constants/globals.vue';
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
-import { IBuilding, UtilityCosts, IBuildingBenchmarkStats } from '../common-functions.vue';
+import { IBuilding, IHistoricData, UtilityCosts, IBuildingBenchmarkStats } from '../common-functions.vue';
 
 @Component<any>({
   metaInfo() {
@@ -454,6 +522,9 @@ export default class BuildingDetails  extends Vue {
 
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
+
+  /** All benchmarks (reported and not) for this building */
+  historicData!: Array<IHistoricData>;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -496,6 +567,11 @@ export default class BuildingDetails  extends Vue {
 
   get buildingImg(): IBuildingImage | null {
     return getBuildingImage(this.building);
+  }
+
+  created(): void {
+    this.historicData = this.$page.allBenchmark.edges
+      .map((nodeObj: { node: IHistoricData }) => nodeObj.node) || [];
   }
 }
 </script>
@@ -632,7 +708,43 @@ export default class BuildingDetails  extends Vue {
     dd, .stat-tile { height: 100%; }
 
     .stat-tile { min-width: 18rem; }
+  }
 
+  .table-cont {
+    max-width: 100%;
+    overflow-x: auto;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  table {
+    border: solid 0.125rem $grey;
+    border-radius: $brd-rad-small;
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 62.5rem; // 1000px
+
+    .unit {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: normal;
+    }
+
+    th, td {
+      padding: 0.25rem 0.75rem;
+      text-align: left;
+    }
+
+    thead {
+      tr { background-color: $grey; }
+
+      th {
+        line-height: 1.25;
+        font-size: 0.825rem;
+      }
+    }
+
+    tbody tr:nth-of-type(even) { background-color: $grey-light; }
   }
 
   ul {

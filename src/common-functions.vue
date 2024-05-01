@@ -56,6 +56,19 @@ export interface IBuilding {
 /** How GraphQL passes back a building */
 export interface IBuildingNode { node: IBuilding }
 
+export interface IHistoricData {
+  ID: string;
+  DataYear: string;
+  GrossFloorArea: string;
+  ChicagoEnergyRating: string;
+  ENERGYSTARScore: string;
+  SourceEUI: string;
+  ElectricityUse: string;
+  GHGIntensity: string;
+  NaturalGasUse: string;
+  DistrictSteamUse: string;
+}
+
 /**
  * A constant for what we use as min and max values for flagged ranks
  */
