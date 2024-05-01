@@ -33,7 +33,7 @@ export default class BuildingsTable extends Vue {
 </script>
 
 <template>
-  <div class="table-cont">
+  <div class="buildings-table-cont">
     <table :class="{ '-wide': showSquareFootage || showGasUse || showElectricityUse }">
       <thead>
         <tr>
@@ -196,7 +196,7 @@ export default class BuildingsTable extends Vue {
 <style lang="scss">
 // Make the whole table scroll in a constrained container so we can have a sticky header - CSS makes
 // that impossible otherwise
-.table-cont {
+.buildings-table-cont {
   width: 100%;
   max-height: 80vh;
   overflow: auto;

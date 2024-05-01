@@ -309,8 +309,8 @@ query ($id: ID!, $ID: String) {
 
       <h2>Historical Data</h2>
 
-      <div class="table-cont">
-        <table>
+      <div class="historical-table-cont">
+        <table class="historical-data">
           <thead>
             <tr>
               <th scope="col">
@@ -734,14 +734,14 @@ export default class BuildingDetails  extends Vue {
     .stat-tile { min-width: 18rem; }
   }
 
-  .table-cont {
+  .historical-table-cont {
     max-width: 100%;
     overflow-x: auto;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
   }
 
-  table {
+  table.historical-data {
     border: solid 0.125rem $grey;
     border-radius: $brd-rad-small;
     border-collapse: collapse;
@@ -755,7 +755,7 @@ export default class BuildingDetails  extends Vue {
     }
 
     th, td {
-      padding: 0.25rem 0.75rem;
+      padding: 0.5rem 0.75rem;
       text-align: left;
     }
 
