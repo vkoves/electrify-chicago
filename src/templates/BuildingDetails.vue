@@ -316,9 +316,15 @@ query ($id: ID!, $ID: String) {
               <th scope="col">
                 Year
               </th>
-              <th scope="col">Floor Area <span class="unit">sqft</span></th>
-              <th scope="col">Chicago Energy<br> Rating</th>
-              <th scope="col">Energy Star<br> Score</th>
+              <th scope="col">
+                Floor Area <span class="unit">sqft</span>
+              </th>
+              <th scope="col">
+                Chicago Energy<br> Rating
+              </th>
+              <th scope="col">
+                Energy Star<br> Score
+              </th>
               <th scope="col">
                 GHG Intensity <span class="unit">kg CO<sub>2</sub>e / sqft</span>
               </th>
@@ -343,16 +349,16 @@ query ($id: ID!, $ID: String) {
               :key="benchmark.DataYear"
             >
               <td>{{ benchmark.DataYear }}</td>
-              <td>{{ parseInt(benchmark.GrossFloorArea).toLocaleString() }}</td>
+              <td>{{ benchmark.GrossFloorArea | optionalInt }}</td>
               <td>{{ benchmark.ChicagoEnergyRating || '-' }}</td>
               <td>{{ benchmark.ENERGYSTARScore || '-' }}</td>
               <td>{{ benchmark.GHGIntensity }}</td>
               <td>{{ benchmark.SourceEUI }}</td>
 
               <!-- Round big numbers -->
-              <td>{{ benchmark.ElectricityUse ? parseInt(benchmark.ElectricityUse).toLocaleString() : '-' }}</td>
-              <td>{{ benchmark.NaturalGasUse ? parseInt(benchmark.NaturalGasUse).toLocaleString() : '-' }}</td>
-              <td>{{ benchmark.DistrictSteamUse ? parseInt(benchmark.DistrictSteamUse).toLocaleString() : '-' }}</td>
+              <td>{{ benchmark.ElectricityUse | optionalInt }}</td>
+              <td>{{ benchmark.NaturalGasUse | optionalInt }}</td>
+              <td>{{ benchmark.DistrictSteamUse | optionalInt }}</td>
             </tr>
           </tbody>
         </table>
@@ -485,7 +491,12 @@ import { LatestDataYear } from '../constants/globals.vue';
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
-import { IBuilding, IHistoricData, UtilityCosts, IBuildingBenchmarkStats } from '../common-functions.vue';
+import {
+  IBuilding,
+  IHistoricData,
+  UtilityCosts,
+  IBuildingBenchmarkStats,
+} from '../common-functions.vue';
 
 @Component<any>({
   metaInfo() {
@@ -504,6 +515,19 @@ import { IBuilding, IHistoricData, UtilityCosts, IBuildingBenchmarkStats } from 
   filters: {
     titlecase(value: string) {
       return value.toLowerCase().replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+    },
+
+    /**
+     * Round and process an optional float to a locale string
+     *
+     * Ex: null -> '-', '12345.67' -> '12,345'
+     */
+    optionalInt(value: string) {
+      if (!value) {
+        return '-';
+      }
+
+      return parseInt(value).toLocaleString();
     },
   },
 })
