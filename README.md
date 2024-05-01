@@ -8,9 +8,9 @@ It's powered by [VueJS 2](https://v2.vuejs.org/) and [GridSome](https://gridsome
 
 ## Data Import
 
-Sources:
+Our data is only sourced from the city's benchmarking data:
 
-- [Chicago Energy Benchmarking - Covered Buildings Data](https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking-Covered-Buildings/g5i5-yz37)
+- [Chicago Energy Benchmarking Data](https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/about_data)
 
 ### Cleanup
 
@@ -21,27 +21,7 @@ GraphQL requires data key names to have no spaces or special characters, so ther
 [python](https://www.python.org/) and [pandas](https://pandas.pydata.org/)
 for data processing
 
-Leaflet and Leaflet Google mutant https://www.npmjs.com/package/leaflet.gridlayer.googlemutant
-
-## General To-Do List
-
-- [x] Pick a framework - statically built VueJSS, maybe [VitePress](https://vitepress.dev/guide/getting-started)
-- [x] Setup landing page with SCSS working
-- [x] Get CSV data usable and on homepage
-- [x] Setup domain and build process
-- [x] Setup Typescript
-- [ ] Setup linting in CI (ESLint ✅️, Prettier, Stylelint)
-- [ ] Setup unit tests
-
-
-## Feature To-Do List
-
-- [x] Show property owner (manually tagged)
-- [x] Pre-process data to calculate things like averages for each property and rank of each building overall, in their class (TODO), and in their ward (TODO)
-- [x] Add colors/emoji to table view to give more context (e.g. so people know Keating is super bad)
-- [ ] Show % of energy use from the four sources (electric, gas, district chilled water, district steam)
-- [ ] Create ward page that shows data by ward (needs new data source)
-- [ ] Figure out a way to rank buildings by opportunity for improvement (perhaps higher than avg. in category, uses a lot of natural gas?)
+[Leaflet](https://www.npmjs.com/package/leaflet) and [Leaflet Google mutant](https://www.npmjs.com/package/leaflet.gridlayer.googlemutant) for maps (e.g. the map page)
 
 ## Environment setup
 
