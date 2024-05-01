@@ -45,6 +45,7 @@ columns_to_track_over_time = [
     'TotalGHGEmissions',
     'GHGIntensity',
     'NumberOfBuildings',
+    'ChicagoEnergyRating',
     'ENERGYSTARScore',
     'ElectricityUse',
     'NaturalGasUse',
