@@ -39,6 +39,7 @@ int_cols = [
 # 'GHGIntensity', no to 'YearBuilt')
 columns_to_track_over_time = [
     'ID',
+    'DataYear',
     'ReportingStatus',
     'GrossFloorArea',
     'TotalGHGEmissions',
