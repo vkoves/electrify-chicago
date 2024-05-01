@@ -42,6 +42,7 @@ columns_to_track_over_time = [
     'ReportingStatus',
     'GrossFloorArea',
     'TotalGHGEmissions',
+    'GHGIntensity',
     'NumberOfBuildings',
     'ENERGYSTARScore',
     'ElectricityUse',
