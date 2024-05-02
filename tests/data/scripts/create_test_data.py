@@ -9,24 +9,24 @@ test_dir = 'tests'
 src_input_file = 'ChicagoEnergyBenchmarking.csv'
 test_input_file = 'test_src_data.csv'
 
-property_test_cases = ['United Center', 'Crown Hall', 'Art Institute', 'Marie Curie']
+properties_to_include = [
+    '100856',   # United Center
+    '256419',   # Crown Hall
+    '160196',   # The Art Institute of Chicago
+    '138730',   # random property
+    '240068',   # random property w/ submitted data and no GHGIntensity data
+    ]
 
-def write_test_sample(reader: csv.reader, writer: csv.writer, property_test_cases: List[str]) -> csv.writer:
+def write_test_sample(reader: csv.reader, writer: csv.writer, properties_to_include: List[str]) -> csv.writer:
     header_row = next(reader)
     if len(header_row) <= 0:
         raise EOFError('ChicagoEnergyBenchmarking CSV file is empty!') 
     else:
         writer.writerow(header_row)
     for row in reader:
-        for item in row:
-            has_prop = False
-            for case in property_test_cases:
-                if case in item:
-                    has_prop = True
-                    writer.writerow(row)
-                    break
-            if has_prop:
-                break
+        property_id = row[1]
+        if property_id in properties_to_include:
+            writer.writerow(row)
 
 def main():
     # the first console argument is technically the python script so we skip that
@@ -41,7 +41,7 @@ def main():
 
     csvfile = open(get_test_file_path(target_path), 'w')
     test_file = csv.writer(csvfile)
-    write_test_sample(src_csv, test_file, property_test_cases)
+    write_test_sample(src_csv, test_file, properties_to_include)
     print('Copied source data from', src_path)
     print('Copied test data to', target_path)
 
