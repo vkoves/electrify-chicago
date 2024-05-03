@@ -1,4 +1,5 @@
 import pandas
+import numpy
 from src.data.scripts.utils import get_and_clean_csv, get_data_file_path
 
 data_directory = 'source'
@@ -64,7 +65,9 @@ def process(file_path: str) -> pandas.DataFrame:
     latest_year = building_data["DataYear"].max()
     recent_data_set = building_data[building_data["DataYear"]==latest_year]
 
-    has_ghg_intensity = recent_data_set.loc[(recent_data_set['GHGIntensity'] is not None) & (recent_data_set['GHGIntensity'] != 0)].copy()
+
+    has_ghg_intensity = recent_data_set[~recent_data_set['GHGIntensity'].isin([numpy.NaN,None])]
+    has_ghg_intensity = has_ghg_intensity[has_ghg_intensity['GHGIntensity'] != 0]
 
     all_recent_submitted_data = has_ghg_intensity.loc[(has_ghg_intensity['ReportingStatus'] == "Submitted") | (has_ghg_intensity['ReportingStatus'] == "Submitted Data")].copy()
 
