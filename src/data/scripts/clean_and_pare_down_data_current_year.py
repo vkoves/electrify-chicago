@@ -23,8 +23,8 @@ int_cols = [
     'HistoricalWards2003-2015'
 ]
 
-if __name__ == "__main__":
-    building_data = get_and_clean_csv(get_data_file_path(data_directory, building_emissions_file))
+def process(file_path: str) -> pandas.DataFrame:
+    building_data = get_and_clean_csv(file_path)
     replace_headers = {"Data Year": "DataYear",
         "ID": "ID",
         "Property Name": "PropertyName",
@@ -74,6 +74,9 @@ if __name__ == "__main__":
 
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
     all_recent_submitted_data[int_cols] = building_data[int_cols].astype('Int64')
-    all_recent_submitted_data.to_csv(get_data_file_path(data_directory, data_out_file), 
+    return all_recent_submitted_data
+
+if __name__ == "__main__":
+    processed = process(get_data_file_path(data_directory, building_emissions_file))
+    processed.to_csv(get_data_file_path(data_directory, data_out_file),
                                      sep=',', encoding='utf-8', index=False)
-                                     
