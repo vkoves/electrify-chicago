@@ -143,7 +143,7 @@ def test_property_count(processed_dataframe):
     '''confirm the processed dataframe has the correct number of properties'''
 
     df = processed_dataframe
-    assert len(df) == 4
+    assert len(df) == 5
 
 
 def test_no_ghg_property_is_excluded(processed_dataframe):

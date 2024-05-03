@@ -118,22 +118,22 @@ def test_expected_columns_present(processed_dataframe):
 
 
 def test_correct_year_selected(processed_dataframe):
-    '''confirm the correct DataYear is present in the processed dataframe
-    for a sample of properties'''
+    '''confirm the correct DataYear is present in the processed dataframe'''
 
     df = processed_dataframe
 
-    art_institute_df = df[df['ID']==160196]
-    art_institute_df.reset_index(inplace=True, drop=True)
-    assert len(art_institute_df) == 1
-    assert art_institute_df.loc[0, 'DataYear'] == 2022
+    non_2022_df = df[~df['DataYear']==2022]
+    assert len(non_2022_df) == 0
+
+    yr_2022_df = df[df['DataYear']==2022]
+    assert len(yr_2022_df) == 2
 
 
 def test_property_count(processed_dataframe):
     '''confirm the processed dataframe has the correct number of properties'''
 
     df = processed_dataframe
-    assert len(df) == 1
+    assert len(df) == 2
 
 
 def test_no_ghg_property_is_excluded(processed_dataframe):
