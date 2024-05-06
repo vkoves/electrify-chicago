@@ -104,6 +104,45 @@ export const BuildingOwners: IBuildingOwners = {
     logoLarge: '/building-owners/cityofchicago/cityofchicago-large.png',
   },
 
+  columbia: {
+    key: 'columbia',
+    name: 'Columbia College Chicago',
+    nameShort: 'Columbia',
+    logoSmall: '/building-owners/columbia/columbia-large.png',
+    logoLarge: '/building-owners/columbia/columbia-large.png',
+  },
+
+  ccc: {
+    key: 'ccc',
+    name: 'City Colleges of Chicago',
+    nameShort: 'City Colleges',
+    logoSmall: '/building-owners/ccc/ccc-large.png',
+    logoLarge: '/building-owners/ccc/ccc-large.png',
+  },
+
+  moody: {
+    key: 'moody',
+    name: 'Moody Bible Institute',
+    nameShort: 'Moody Bible',
+    logoSmall: '/building-owners/moody/moody-large.png',
+    logoLarge: '/building-owners/moody/moody-large.png',
+  },
+
+  saic: {
+    key: 'saic',
+    name: 'School of the Art Institute of Chicago',
+    nameShort: 'SAIC',
+    logoSmall: '/building-owners/saic/saic-small.png',
+    logoLarge: '/building-owners/saic/saic-large.png',
+  },
+
+  npu: {
+    key: 'npu',
+    name: 'North Park University',
+    nameShort: 'North Park',
+    logoSmall: '/building-owners/npu/npu-large.png',
+    logoLarge: '/building-owners/npu/npu-large.png',
+  },
 
   /**
    * IMPORTANT! If you add a new building owner, make sure to add it to the gridsome.server.js to
@@ -172,6 +211,8 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '251328': {owner: BuildingOwners.depaul.key},
   // 1150 W. Fullerton Building
   '251321': {owner: BuildingOwners.depaul.key},
+  // University Center Chicago
+  '166264': {owner: BuildingOwners.depaul.key},
 
 
   /**
@@ -210,6 +251,12 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '111290': {owner: BuildingOwners.iit.key},
   // IIT former Main building
   '103624': {owner: BuildingOwners.iit.key},
+  // Gunsaulus Hall
+  '256431': {owner: BuildingOwners.iit.key},
+  // Carman Hall
+  '256429': {owner: BuildingOwners.iit.key},
+  // Pritzker Science Center
+  '256421': {owner: BuildingOwners.iit.key},
 
   /**
    * UChicago Buildings
@@ -259,6 +306,14 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '118776': {owner: BuildingOwners.uchicago.key},
   // Social Science Research Building
   '252057': {owner: BuildingOwners.uchicago.key},
+  // Max Palevsky Residential Commons/Bartlett Commons
+  '252036': {owner: BuildingOwners.uchicago.key},
+  // 1156 E 61st St
+  '256812': {owner: BuildingOwners.uchicago.key},
+  // Breckinridge House
+  '256502': {owner: BuildingOwners.uchicago.key},
+  // Chapin Hall
+  '252061': {owner: BuildingOwners.uchicago.key},
 
 
   /**
@@ -1491,6 +1546,90 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '250063': { owner: BuildingOwners.cityofchicago.key },
   // CDOT Central Office
   '250066': { owner: BuildingOwners.cityofchicago.key },
+
+  /**
+   * Columbia College
+   * Helpful source: https://www.colum.edu/columbia-central/on-campus/building-codes
+   */
+  // 600 S Michigan Ave
+  '251929': { owner: BuildingOwners.columbia.key },
+  // 618 S Michigan Ave
+  '161103': { owner: BuildingOwners.columbia.key },
+  // 72 E 11th St
+  '161147': { owner: BuildingOwners.columbia.key },
+  // 916 S Wabash Ave
+  '251945': { owner: BuildingOwners.columbia.key },
+  // 33 E Congress
+  '103617': { owner: BuildingOwners.columbia.key },
+  // 1104 S Wabash Ave
+  '161150': { owner: BuildingOwners.columbia.key },
+  // 623 S Wabash Ave
+  '158429': { owner: BuildingOwners.columbia.key },
+  // 624 S Michigan Ave
+  '161145': { owner: BuildingOwners.columbia.key },
+
+  /**
+   * City Colleges of Chicago
+   * Helpful source: https://www.ccc.edu/COLLEGES/Pages/default.aspx
+   * Helpful source: https://www.ccc.edu/departments/pages/facilities-and-planning.aspx
+   */
+  // Harold Washington College
+  '101980': { owner: BuildingOwners.ccc.key },
+  // Harry S. Truman College
+  '102332': { owner: BuildingOwners.ccc.key },
+  // Kennedy-King College
+  '250004': { owner: BuildingOwners.ccc.key },
+  // Malcolm X College
+  '250009': { owner: BuildingOwners.ccc.key },
+  // Olive-Harvey College
+  '102544': { owner: BuildingOwners.ccc.key },
+  // Richard J. Daley College
+  '100395': { owner: BuildingOwners.ccc.key },
+  // Wilbur J. Wright College
+  '101492': { owner: BuildingOwners.ccc.key },
+  // Malcolm X College & School of Health Sciences
+  '254347': { owner: BuildingOwners.ccc.key },
+  // Dawson Technical Institute
+  '250008': { owner: BuildingOwners.ccc.key },
+  // Arturo Velasquez Institute
+  '250002': { owner: BuildingOwners.ccc.key },
+
+  /**
+   * Moody Bible Institute
+   */
+  // Crowell Hall
+  '161181': { owner: BuildingOwners.moody.key },
+  // Torrey-Gray Doane
+  '251959': { owner: BuildingOwners.moody.key },
+  // Sweeting Center
+  '162325': { owner: BuildingOwners.moody.key },
+  // Solheim Center
+  '165717': { owner: BuildingOwners.moody.key },
+
+  /**
+   * School of the Art Institute of Chicago
+   */
+  // The Chicago Building, 7 W Madison
+  '173632': { owner: BuildingOwners.saic.key },
+  // 162 North State Street
+  '250167': { owner: BuildingOwners.saic.key },
+  // 280 Building, 280 S Columbus Dr
+  '252065': { owner: BuildingOwners.saic.key },
+  // Alice B. Sharp Building, 37 S Wabash Ave
+  '134783': { owner: BuildingOwners.saic.key },
+
+  /**
+   * North Park University
+   */
+  // Johnson Center for Science and Community Life, 5141 N Christiana Ave
+  '254158': { owner: BuildingOwners.npu.key },
+  // 5148 N Kedzie
+  '101507': { owner: BuildingOwners.npu.key },
+  // Helwig Recreation Center, 3205 W Carmen Ave
+  '254159': { owner: BuildingOwners.npu.key },
+  // 5114 N Christiana
+  '254157': { owner: BuildingOwners.npu.key },
+
 };
 
 export function getBuildingCustomInfo(building: IBuilding): IBuildingCustomInfo | null {

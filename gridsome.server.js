@@ -27,7 +27,12 @@ const BuildingOwnerIds = [
   'loyola',
   'cps',
   'cha',
-  'cityofchicago'
+  'cityofchicago',
+  'columbia',
+  'ccc',
+  'moody',
+  'saic',
+  'npu',
 ];
 
 module.exports = function(api) {
