@@ -116,7 +116,7 @@ def test_csv_is_produced(test_has_last_year_of_data):
 
 @pytest.fixture
 def process():
-    return clean.process(get_src_file_path(src_input_file, True))
+    return clean.process(get_src_file_path(src_input_file), True)
 
 def test_data_has_ranking_columns(process):
     for col in proc.building_cols_to_rank:
