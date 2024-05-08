@@ -301,8 +301,6 @@ export default class StatTile extends Vue {
     const statStdDeviation = this.stats[this.statKey]?.std;
     const statMean = this.stats[this.statKey]?.mean;
 
-    console.log({ key: this.statKey, statStdDeviation, statMean });
-
     if (this.building[this.statKey] === null || !statStdDeviation) {
       return false;
     }

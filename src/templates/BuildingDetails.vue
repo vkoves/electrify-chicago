@@ -1,5 +1,6 @@
+<!-- Note that $id here is the GraphQL node ID, while $ID is the building ID (building.ID) -->
 <page-query>
-query ($id: ID!) {
+query ($id: ID!, $ID: String) {
   building(id: $id) {
     slugSource
     ID
@@ -44,6 +45,22 @@ query ($id: ID!) {
     GrossFloorAreaRankByPropertyType
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
+  }
+  allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
+    edges {
+        node {
+          ID
+          DataYear
+          GrossFloorArea
+          ChicagoEnergyRating
+          ENERGYSTARScore
+          SourceEUI
+          GHGIntensity
+          ElectricityUse
+          NaturalGasUse
+          DistrictSteamUse
+        }
+    }
   }
 }
 </page-query>
@@ -290,6 +307,10 @@ query ($id: ID!) {
         </div>
       </dl>
 
+      <h2>Historical Data</h2>
+
+      <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
+
       <p class="constrained">
         <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
@@ -405,19 +426,25 @@ query ($id: ID!) {
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+import { LatestDataYear } from '../constants/globals.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import HistoricalBuildingDataTable from '~/components/HistoricalBuildingDataTable.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import StatTile from '~/components/StatTile.vue';
-import { LatestDataYear } from '../constants/globals.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
-import { IBuilding, UtilityCosts, IBuildingBenchmarkStats } from '../common-functions.vue';
+import {
+  IBuilding,
+  IHistoricData,
+  UtilityCosts,
+  IBuildingBenchmarkStats,
+} from '../common-functions.vue';
 
 @Component<any>({
   metaInfo() {
@@ -432,6 +459,7 @@ import { IBuilding, UtilityCosts, IBuildingBenchmarkStats } from '../common-func
     OverallRankEmoji,
     OwnerLogo,
     StatTile,
+    HistoricalBuildingDataTable,
   },
   filters: {
     titlecase(value: string) {
@@ -454,6 +482,9 @@ export default class BuildingDetails  extends Vue {
 
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
+
+  /** All benchmarks (reported and not) for this building */
+  historicData!: Array<IHistoricData>;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -496,6 +527,11 @@ export default class BuildingDetails  extends Vue {
 
   get buildingImg(): IBuildingImage | null {
     return getBuildingImage(this.building);
+  }
+
+  created(): void {
+    this.historicData = this.$page.allBenchmark.edges
+      .map((nodeObj: { node: IHistoricData }) => nodeObj.node) || [];
   }
 }
 </script>
@@ -632,7 +668,6 @@ export default class BuildingDetails  extends Vue {
     dd, .stat-tile { height: 100%; }
 
     .stat-tile { min-width: 18rem; }
-
   }
 
   ul {

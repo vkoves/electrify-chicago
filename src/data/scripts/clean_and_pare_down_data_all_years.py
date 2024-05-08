@@ -2,8 +2,17 @@ import pandas as pd
 from src.data.scripts.utils import get_and_clean_csv, get_data_file_path
 
 file_dir = 'source'
+out_file_dir = 'dist'
+
+# The source file we read from
 building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
-data_out_file = 'ChicagoEnergyBenchmarkingAllNewestInstances.csv'
+
+# The output file we generate that has all columns, but just for the latest year reported
+newest_instances_out_filename = 'ChicagoEnergyBenchmarkingAllNewestInstances.csv'
+
+# The output file we generate with limited columns but for ALL years (reported and non-reported),
+# allowing us to track metrics (e.g. emissions, GHG intensity) over time, and reporting status
+all_years_out_filename = 'benchmarking-all-years.csv'
 
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
@@ -23,6 +32,30 @@ int_cols = [
     # 'ZIPCode',
     'CommunityAreas',
     'HistoricalWards2003-2015'
+]
+
+# The columns we want to have in our historical data output - we need the ID (to filter by a
+# particular building) and should then have columns of interest that change over time (so yes to
+# 'GHGIntensity', no to 'YearBuilt')
+columns_to_track_over_time = [
+    'ID',
+    'DataYear',
+    'ReportingStatus',
+    'GrossFloorArea',
+    'TotalGHGEmissions',
+    'GHGIntensity',
+    'NumberOfBuildings',
+    'ChicagoEnergyRating',
+    'ENERGYSTARScore',
+    'ElectricityUse',
+    'NaturalGasUse',
+    'DistrictSteamUse',
+    'DistrictChilledWaterUse',
+    'AllOtherFuelUse',
+    'SiteEUI',
+    'SourceEUI',
+    'WeatherNormalizedSiteEUI',
+    'WeatherNormalizedSourceEUI',
 ]
 
 replace_headers = {'Data Year': 'DataYear',
@@ -65,22 +98,35 @@ def rename_columns(building_data: pd.DataFrame) -> pd.DataFrame:
     return building_data.rename(columns=replace_headers)
 
 def get_buildings_with_ghg_intensity(building_data: pd.DataFrame) -> pd.DataFrame:
+    """Filter to buildings with a greenhouse gas intensity present, as otherwise it's likely empty
+       or junk data"""
+
     return building_data.loc[(building_data['GHGIntensity'] > 0)].copy()
 
 def get_submitted_data(building_data: pd.DataFrame) -> pd.DataFrame:
+    """Filter down to building entries with reported data"""
+
     is_submitted = (building_data['ReportingStatus'] == 'Submitted')
     is_submitted_data = (building_data['ReportingStatus'] == 'Submitted Data')
     has_status_submitted = is_submitted | is_submitted_data
+
     return building_data.loc[has_status_submitted].copy()
 
 def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame:
+    """ Filter down data to only the latest submission (reported year) per building"""
     all_submitted_data = all_submitted_data.sort_values(by=['ID', 'DataYear'])
     all_recent_submitted_data = all_submitted_data.drop_duplicates(subset=['ID'], keep='last').copy()
     return all_recent_submitted_data
 
+
+def filter_cols_historic(building_data: pd.DataFrame) -> pd.DataFrame:
+    """Filter down the reporting entries to only columns relevant to our historical data CSV"""
+
+    return building_data[columns_to_track_over_time]
+
 def fix_str_cols(all_recent_submitted_data: pd.DataFrame, renamed_building_data: pd.DataFrame) -> pd.DataFrame:
-    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
-    # up (e.g. zipcode of 60614 or Ward 9)
+    """ Mark columns that look like numbers but should be strings as such to prevent decimals showing
+     up (e.g. zipcode of 60614 or Ward 9) """
     all_recent_submitted_data[string_cols] = renamed_building_data[string_cols].astype('string')
     return all_recent_submitted_data
 
@@ -89,29 +135,41 @@ def fix_int_cols(building_data: pd.DataFrame) -> pd.DataFrame:
     return building_data
 
 def output_to_csv(building_data: pd.DataFrame, dir: str) -> None:
-    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
+    """ Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode """
     building_data.to_csv(dir, sep=',', encoding='utf-8', index=False)
 
-def process(file_path: str) -> pd.DataFrame:
+def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
+    """Process an input file, renaming columns and applying filters based on whether we are getting
+       only the latest year for each building or all historic data"""
     building_data = get_and_clean_csv(file_path)
 
     building_data = rename_columns(building_data)
 
-    buildings_with_ghg_intensity = get_buildings_with_ghg_intensity(building_data)
+    # Used to be fix_str_cols(cleaned_data, building_data) when this was below the filtering
+    cleaned_data = fix_str_cols(building_data, building_data)
+    cleaned_data = fix_int_cols(cleaned_data)
 
-    all_submitted_data = get_submitted_data(buildings_with_ghg_intensity)
+    cleaned_data = get_buildings_with_ghg_intensity(building_data)
 
-    all_recent_submitted_data = get_last_year_data(all_submitted_data)
+    # Only filter to the latest reporting year if that's the file we're generating
+    if (latest_year_only):
+        cleaned_data = get_submitted_data(cleaned_data)
+        cleaned_data = get_last_year_data(cleaned_data)
+    else:
+        cleaned_data = filter_cols_historic(cleaned_data)
 
-    all_recent_submitted_data = fix_str_cols(all_recent_submitted_data, building_data)
 
-    all_recent_submitted_data = fix_int_cols(all_recent_submitted_data)
-
-    return all_recent_submitted_data
+    return cleaned_data
 
 def main():
-    processed = process(get_data_file_path(file_dir, building_emissions_file))
-    output_to_csv(processed, get_data_file_path(file_dir, data_out_file))
+    processed_latest_year = process(get_data_file_path(file_dir, building_emissions_file), True)
+    processed_all_years = process(get_data_file_path(file_dir, building_emissions_file), False)
+
+    # Output the latest year data to source, since other processing steps still get applied
+    output_to_csv(processed_latest_year, get_data_file_path(file_dir, newest_instances_out_filename))
+
+    # The all years data is in it's final form already, we don't do ranks or stats off of it (yet)
+    output_to_csv(processed_all_years, get_data_file_path(out_file_dir, all_years_out_filename))
 
 if __name__ == '__main__':
     main()

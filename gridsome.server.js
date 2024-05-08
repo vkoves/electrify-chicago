@@ -15,6 +15,7 @@ const parse = require('csv-parse/sync').parse;
 const DataDirectory = './src/data/dist/';
 
 const BuildingEmissionsDataFile = 'building-benchmarks.csv';
+const HistoricBenchmarkingDataFile = 'benchmarking-all-years.csv';
 
 // This is an array equivalent of Object.keys(BuildingOwners) but this file can't use Typescript and
 // import that file
@@ -34,6 +35,7 @@ module.exports = function(api) {
   // Use the Data Store API here: https://gridsome.org/docs/data-store-api/
   api.loadSource(async (actions) => {
     loadBuildingBenchmarkData(actions);
+    loadHistoricBenchmarkDat(actions);
   });
 
   // Use the Pages API here: https://gridsome.org/docs/pages-api/
@@ -56,19 +58,19 @@ module.exports = function(api) {
  * @param {unknown} actions The actions class?
  */
 function loadBuildingBenchmarkData(actions) {
-  const input = readFileSync(`${DataDirectory}${BuildingEmissionsDataFile}`, 'utf8');
+  const latestBenchmarksRaw = readFileSync(`${DataDirectory}${BuildingEmissionsDataFile}`, 'utf8');
 
   /**
    * Load in building benchmarks and expose as Buildings collection
    */
-  const BuildingsData = parse(input, {
+  const LatestBenchmarksData = parse(latestBenchmarksRaw, {
     columns: true,
     skip_empty_lines: true,
   });
 
   const collection = actions.addCollection({typeName: 'Building'});
 
-  for (const building of BuildingsData) {
+  for (const building of LatestBenchmarksData) {
     // Make a slugSource that is the property name or the address as a fallback (skip one letter
     // names, e.g. '-)
     building.slugSource = building.PropertyName.length > 1 ? building.PropertyName : building.Address;
@@ -78,5 +80,29 @@ function loadBuildingBenchmarkData(actions) {
     }
 
     collection.addNode(building);
+  }
+}
+
+
+/**
+ * Load in the historic benchmark data
+ *
+ * @param {unknown} actions The actions class?
+ */
+function loadHistoricBenchmarkDat(actions) {
+  const historicBenchmarksRaw = readFileSync(`${DataDirectory}${HistoricBenchmarkingDataFile}`, 'utf8');
+
+  /**
+   * Load in building benchmarks and expose as Buildings collection
+   */
+  const HistoricBenchmarksData = parse(historicBenchmarksRaw, {
+    columns: true,
+    skip_empty_lines: true,
+  });
+
+  const collection = actions.addCollection({ typeName: 'Benchmark' });
+
+  for (const benchmark of HistoricBenchmarksData) {
+    collection.addNode(benchmark);
   }
 }

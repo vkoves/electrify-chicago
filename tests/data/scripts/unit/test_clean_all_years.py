@@ -30,10 +30,9 @@ def processed_dataframe() -> pd.DataFrame:
     and return the resulting dataframe'''
 
     input_filename = get_test_file_path(test_input_file)
-    df = clean_and_pare_down_data_all_years.process(input_filename)
+    df = clean_and_pare_down_data_all_years.process(input_filename, True)
     assert df is not None
     return df
-
 
 def test_data_has_positive_ghg_data(processed_dataframe):
     '''confirm each property in the processed dataframe has non-zero GHGIntensity'''
