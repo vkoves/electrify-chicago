@@ -9,7 +9,7 @@ test_dir = 'tests'
 src_input_file = 'ChicagoEnergyBenchmarking.csv'
 test_input_file = 'test_src_data.csv'
 
-properties_to_include = [
+property_ids_to_include = [
     '100856',   # United Center
     '256419',   # Crown Hall
     '160196',   # The Art Institute of Chicago
@@ -17,7 +17,7 @@ properties_to_include = [
     '240068',   # random property w/ submitted data and no GHGIntensity data
     ]
 
-def write_test_sample(reader: csv.reader, writer: csv.writer, properties_to_include: List[str]) -> csv.writer:
+def write_test_sample(reader: csv.reader, writer: csv.writer, property_ids_to_include: List[str]) -> csv.writer:
     header_row = next(reader)
     if len(header_row) <= 0:
         raise EOFError('ChicagoEnergyBenchmarking CSV file is empty!') 
@@ -25,7 +25,7 @@ def write_test_sample(reader: csv.reader, writer: csv.writer, properties_to_incl
         writer.writerow(header_row)
     for row in reader:
         property_id = row[1]
-        if property_id in properties_to_include:
+        if property_id in property_ids_to_include:
             writer.writerow(row)
 
 def main():
@@ -41,7 +41,7 @@ def main():
 
     csvfile = open(get_test_file_path(target_path), 'w')
     test_file = csv.writer(csvfile)
-    write_test_sample(src_csv, test_file, properties_to_include)
+    write_test_sample(src_csv, test_file, property_ids_to_include)
     print('Copied source data from', src_path)
     print('Copied test data to', target_path)
 
