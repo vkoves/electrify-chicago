@@ -309,60 +309,7 @@ query ($id: ID!, $ID: String) {
 
       <h2>Historical Data</h2>
 
-      <div class="historical-table-cont">
-        <table class="historical-data">
-          <thead>
-            <tr>
-              <th scope="col">
-                Year
-              </th>
-              <th scope="col">
-                Floor Area <span class="unit">sqft</span>
-              </th>
-              <th scope="col">
-                Chicago Energy<br> Rating
-              </th>
-              <th scope="col">
-                Energy Star<br> Score
-              </th>
-              <th scope="col">
-                GHG Intensity <span class="unit">kg CO<sub>2</sub>e / sqft</span>
-              </th>
-              <th scope="col">
-                Source EUI <span class="unit">kBtu / sqft</span>
-              </th>
-
-              <th scope="col">
-                Electricity Use <span class="unit">kBtu</span>
-              </th>
-              <th scope="col">
-                Natural Gas Use <span class="unit">kBtu</span>
-              </th>
-              <th scope="col">
-                District Steam Use <span class="unit">kBtu</span>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="benchmark in historicData"
-              :key="benchmark.DataYear"
-            >
-              <td>{{ benchmark.DataYear }}</td>
-              <td>{{ benchmark.GrossFloorArea | optionalInt }}</td>
-              <td>{{ benchmark.ChicagoEnergyRating || '-' }}</td>
-              <td>{{ benchmark.ENERGYSTARScore || '-' }}</td>
-              <td>{{ benchmark.GHGIntensity }}</td>
-              <td>{{ benchmark.SourceEUI }}</td>
-
-              <!-- Round big numbers -->
-              <td>{{ benchmark.ElectricityUse | optionalInt }}</td>
-              <td>{{ benchmark.NaturalGasUse | optionalInt }}</td>
-              <td>{{ benchmark.DistrictSteamUse | optionalInt }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
 
       <p class="constrained">
         <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
@@ -479,13 +426,14 @@ query ($id: ID!, $ID: String) {
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+import { LatestDataYear } from '../constants/globals.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import HistoricalBuildingDataTable from '~/components/HistoricalBuildingDataTable.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import StatTile from '~/components/StatTile.vue';
-import { LatestDataYear } from '../constants/globals.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -511,23 +459,11 @@ import {
     OverallRankEmoji,
     OwnerLogo,
     StatTile,
+    HistoricalBuildingDataTable,
   },
   filters: {
     titlecase(value: string) {
       return value.toLowerCase().replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
-    },
-
-    /**
-     * Round and process an optional float to a locale string
-     *
-     * Ex: null -> '-', '12345.67' -> '12,345'
-     */
-    optionalInt(value: string) {
-      if (!value) {
-        return '-';
-      }
-
-      return parseInt(value).toLocaleString();
     },
   },
 })
@@ -732,43 +668,6 @@ export default class BuildingDetails  extends Vue {
     dd, .stat-tile { height: 100%; }
 
     .stat-tile { min-width: 18rem; }
-  }
-
-  .historical-table-cont {
-    max-width: 100%;
-    overflow-x: auto;
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  table.historical-data {
-    border: solid 0.125rem $grey;
-    border-radius: $brd-rad-small;
-    border-collapse: collapse;
-    width: 100%;
-    min-width: 62.5rem; // 1000px
-
-    .unit {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: normal;
-    }
-
-    th, td {
-      padding: 0.5rem 0.75rem;
-      text-align: left;
-    }
-
-    thead {
-      tr { background-color: $grey; }
-
-      th {
-        line-height: 1.25;
-        font-size: 0.825rem;
-      }
-    }
-
-    tbody tr:nth-of-type(even) { background-color: $grey-light; }
   }
 
   ul {
