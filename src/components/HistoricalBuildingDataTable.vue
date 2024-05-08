@@ -6,13 +6,22 @@
           <th scope="col">
             Year
           </th>
-          <th v-if="renderedColumns.includes('GrossFloorArea')" scope="col">
+          <th
+            v-if="renderedColumns.includes('GrossFloorArea')"
+            scope="col"
+          >
             Floor Area <span class="unit">sqft</span>
           </th>
-          <th v-if="renderedColumns.includes('ChicagoEnergyRating')" scope="col">
+          <th
+            v-if="renderedColumns.includes('ChicagoEnergyRating')"
+            scope="col"
+          >
             Chicago Energy<br> Rating
           </th>
-          <th v-if="renderedColumns.includes('ENERGYSTARScore')" scope="col">
+          <th
+            v-if="renderedColumns.includes('ENERGYSTARScore')"
+            scope="col"
+          >
             Energy Star<br> Score
           </th>
           <th scope="col">
@@ -28,7 +37,10 @@
           <th scope="col">
             Natural Gas Use <span class="unit">kBtu</span>
           </th>
-          <th v-if="renderedColumns.includes('DistrictSteamUse')" scope="col">
+          <th
+            v-if="renderedColumns.includes('DistrictSteamUse')"
+            scope="col"
+          >
             District Steam Use <span class="unit">kBtu</span>
           </th>
         </tr>
@@ -39,7 +51,7 @@
           :key="benchmark.DataYear"
         >
           <td>{{ benchmark.DataYear }}</td>
-          <td  v-if="renderedColumns.includes('GrossFloorArea')">
+          <td v-if="renderedColumns.includes('GrossFloorArea')">
             {{ benchmark.GrossFloorArea | optionalInt }}
           </td>
           <td v-if="renderedColumns.includes('ChicagoEnergyRating')">
@@ -87,7 +99,7 @@ import {IHistoricData} from '../common-functions.vue';
 
       return parseInt(value).toLocaleString();
     },
-  }
+  },
 })
 export default class BuildingImage extends Vue {
   @Prop({required: true}) historicBenchmarks!: Array<IHistoricData>;
@@ -112,10 +124,7 @@ export default class BuildingImage extends Vue {
   }
 
   created(): void {
-    // const emptyColumns =
-    console.log('historicBenchmarks', this.historicBenchmarks);
     this.renderedColumns = this.getRenderedColumns();
-    console.log('renderedColumns', this.renderedColumns);
   }
 }
 </script>
