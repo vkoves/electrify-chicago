@@ -1,123 +1,166 @@
 import pytest
-import shutil, os, pathlib, csv
+import os
+import csv
 import pandas as pd
-import numpy as np
 
-from src.data.scripts.utils import get_and_clean_csv
-from src.data.scripts import clean_and_pare_down_data_all_years as clean, process_data as proc
-from tests.data.scripts.utils import get_test_file_path, get_src_file_path
+from src.data.scripts import clean_and_pare_down_data_all_years
+from tests.data.scripts.utils import get_test_file_path
 
 src_dir = 'src'
 test_dir = 'tests'
-src_input_file = 'ChicagoEnergyBenchmarking.csv'
 test_input_file = 'test_src_data.csv'
 test_output_file = 'test_output.csv'
 
-@pytest.fixture
-def src_building_data() -> pd.DataFrame:
-    test_data_path = get_test_file_path(test_input_file)
-    assert os.path.exists(test_data_path)
-    return get_and_clean_csv(test_data_path)
 
 @pytest.fixture
-def csv_file() -> csv.reader:
-    csvfile = open(get_test_file_path(test_input_file))
-    return csv.reader(csvfile)
+def csv_reader() -> csv.reader:
+    '''return a csv.DictReader of our test data CSV'''
 
-def test_csv_file_has_some_data(csv_file):
-    first_line = csv_file.__next__()
-    assert first_line
-    assert len(first_line) > 0
+    csv_path = get_test_file_path(test_input_file)
+    with open(csv_path) as filehandle:
+        # yield here so that the context manager (with...)
+        # can cleanup the open filehandle after we're done with
+        # the csv.DictReader
+        yield csv.DictReader(filehandle)
 
-@pytest.mark.parametrize("test_input", [
-    clean.string_cols,
-    clean.int_cols,
-    clean.replace_headers
-])
-def test_is_not_empty(test_input):
-    assert len(test_input) > 0
-
-def test_src_data_exists(src_building_data):
-    assert src_building_data is not None
 
 @pytest.fixture
-def test_columns_are_renamed(src_building_data) -> pd.DataFrame:
-    df = clean.rename_columns(src_building_data)
+def processed_dataframe() -> pd.DataFrame:
+    '''Process our test data as per clean_and_pare_down_data_all_years.py
+    and return the resulting dataframe'''
+
+    input_filename = get_test_file_path(test_input_file)
+    df = clean_and_pare_down_data_all_years.process(input_filename, True)
     assert df is not None
-    assert not df.columns.equals(src_building_data.columns)
     return df
 
-def test_data_has_positive_ghg_data(test_columns_are_renamed):
-    df = clean.get_buildings_with_ghg_intensity(test_columns_are_renamed)
-    assert df is not None
-    assert np.all(df['GHGIntensity'] > 0)
+def test_data_has_positive_ghg_data(processed_dataframe):
+    '''confirm each property in the processed dataframe has non-zero GHGIntensity'''
 
-def test_data_has_submitted_status(test_columns_are_renamed):
-    df = clean.get_submitted_data(test_columns_are_renamed)
-    assert np.all(df['ReportingStatus'].str.contains('Submitted'))
-
-@pytest.fixture
-def test_has_last_year_of_data(test_columns_are_renamed) -> pd.DataFrame:
-    df = clean.get_last_year_data(test_columns_are_renamed)
-    assert np.all(df['ID'].value_counts() == 1)
-    return df
-
-@pytest.fixture
-def fixed_strings(test_has_last_year_of_data, test_columns_are_renamed):
-    return clean.fix_str_cols(test_has_last_year_of_data,
-                              test_columns_are_renamed)
-
-@pytest.fixture
-def fixed_strings_all_years(test_columns_are_renamed):
-    return clean.fix_str_cols(test_columns_are_renamed,
-                              test_columns_are_renamed)
-
-def test_str_values_remain_the_same_as_origin(fixed_strings_all_years, csv_file):
-    header_row = next(csv_file)
-    str_col_positions = list(map(lambda col: fixed_strings_all_years.columns.get_loc(col), clean.string_cols))
-    for csv_row in csv_file:
-        year, id = csv_row[0], csv_row[1]
-        row = fixed_strings_all_years[(fixed_strings_all_years['ID'].astype(str) == id) & \
-                                      (fixed_strings_all_years['DataYear'].astype(str) == year)]
-
-        for col, csv_pos in zip(clean.string_cols, str_col_positions):
-            if all(pd.isna(row[col].to_numpy())):
-                continue
-
-            # The raw GPS in ChicagoEnergyBenchmarking.csv has 41.880451999999998, which gets
-            # truncated, so we round to ignore that, since it's not a significant difference
-            # TODO: Fix GPS inconsistency and drop  rounding
-            csv_value = csv_row[csv_pos]
+    df = processed_dataframe
+    assert all([ghg > 0 for ghg in df['GHGIntensity']])
 
 
-            # If > 10 or < -10, we truncate 0 after rounding to 6 decimals. This means this applies
-            # to GPS coordinates but not energy star ratings (e.g.)
-            if (abs(float(csv_value)) > 10):
-                print("df ", row[col].to_numpy(), "csv ", csv_value)
-                csv_float = float(csv_value)
-                csv_val_parsed = f'{csv_float:.9f}'.rstrip('0').rstrip('.')
-            else:
-                csv_val_parsed = csv_value
+def test_data_has_submitted_status(processed_dataframe):
+    '''confirm each property in the processed dataframe has a submitted status'''
 
-            assert row[col].to_numpy()[0] == csv_val_parsed
+    df = processed_dataframe
+    for status in df['ReportingStatus']:
+        assert status in ('Submitted Data', 'Submitted')
 
-def test_lat_lon_become_strings(fixed_strings):
-    df = fixed_strings[['Latitude','Longitude']]
-    assert np.all(df.dtypes == 'string')
 
-def test_int_values_remain_the_same_as_origin(test_has_last_year_of_data):
-    df = clean.fix_int_cols(test_has_last_year_of_data)
-    assert np.all(df[clean.int_cols].dtypes == 'Int64')
+def test_lat_long_are_unchanged(processed_dataframe, csv_reader):
+    '''confirm lat/long in the processed dataframe is unchanged from origin csv'''
 
-def test_csv_is_produced(test_has_last_year_of_data):
-    out_file = get_test_file_path(test_output_file)
-    clean.output_to_csv(test_has_last_year_of_data, out_file)
-    assert os.path.exists(out_file)
+    df = processed_dataframe
+    df_lattitudes = [x for x in df['Latitude']]
+    df_longitudes = [x for x in df['Longitude']]
+    df_property_ids = [x for x in df['ID']]
 
-@pytest.fixture
-def process():
-    return clean.process(get_src_file_path(src_input_file), True)
+    for row in csv_reader:
+        csv_property_id = row['ID']
+        csv_lat = row['Latitude']
+        csv_long = row['Longitude']
+        if csv_property_id in df_property_ids:
+            i = df_property_ids.index(csv_property_id)
+            assert (csv_lat, csv_long) == (df_lattitudes[i], df_longitudes[i])
 
-def test_data_has_ranking_columns(process):
-    for col in proc.building_cols_to_rank:
-        assert col in process.columns
+
+def test_one_entry_per_property(processed_dataframe):
+    '''confirm each property only has 1 entry in the processed dataframe'''
+
+    df = processed_dataframe
+    assert all([count == 1 for count in df['ID'].value_counts()])
+
+
+def test_expected_columns_present(processed_dataframe):
+    '''confirm all expected columns are present in the processed dataframe'''
+
+    df = processed_dataframe
+    mandatory_columns = (
+        'DataYear',
+        'ID',
+        'PropertyName',
+        'ReportingStatus',
+        'Address',
+        'ZIPCode',
+        'ChicagoEnergyRating',
+        'ExemptFromChicagoEnergyRating',
+        'CommunityArea',
+        'PrimaryPropertyType',
+        'GrossFloorArea',
+        'TotalGHGEmissions',
+        'GHGIntensity',
+        'YearBuilt',
+        'NumberOfBuildings',
+        'WaterUse',
+        'ENERGYSTARScore',
+        'ElectricityUse',
+        'NaturalGasUse',
+        'DistrictSteamUse',
+        'DistrictChilledWaterUse',
+        'AllOtherFuelUse',
+        'SiteEUI',
+        'SourceEUI',
+        'WeatherNormalizedSiteEUI',
+        'WeatherNormalizedSourceEUI',
+        'Latitude',
+        'Longitude',
+        'Location',
+        'Row_ID',
+        'Wards',
+        'CommunityAreas',
+        'ZipCodes',
+        'CensusTracts',
+        'HistoricalWards2003-2015',
+    )
+    assert set(df.columns) == set(mandatory_columns)
+
+
+def test_correct_year_selected(processed_dataframe):
+    '''confirm the correct DataYear is present in the processed dataframe
+    for a sample of properties'''
+
+    df = processed_dataframe
+
+    united_center_df = df[df['PropertyName']=='United Center']
+    united_center_df.reset_index(inplace=True, drop=True)
+    assert len(united_center_df) == 1
+    assert united_center_df.loc[0, 'DataYear'] == 2019
+
+    crown_hall_df = df[df['PropertyName']=='Crown Hall']
+    crown_hall_df.reset_index(inplace=True, drop=True)
+    assert len(crown_hall_df) == 1
+    assert crown_hall_df.loc[0, 'DataYear'] == 2021
+
+    bldg_138730_df = df[df['ID']==138730]
+    bldg_138730_df.reset_index(inplace=True, drop=True)
+    assert len(bldg_138730_df) == 1
+    assert bldg_138730_df.loc[0, 'DataYear'] == 2020
+
+
+def test_property_count(processed_dataframe):
+    '''confirm the processed dataframe has the correct number of properties'''
+
+    df = processed_dataframe
+    assert len(df) == 4
+
+
+def test_no_ghg_property_is_excluded(processed_dataframe):
+    '''confirm property with submitted data but no GHGIntensity data
+    ie excluded from the processed dataframe'''
+
+    df = processed_dataframe
+    # property ID 240068 is present in test source data but
+    # 2016-2022 submitted data has no GHGIntensity data
+    assert len(df[df['ID']=='240068']) == 0
+
+
+def test_csv_is_produced(processed_dataframe):
+    '''confirm clean_and_pare_down_data_all_years.output_to_csv creates
+    a csv on disk'''
+
+    df = processed_dataframe
+    output_file_path = get_test_file_path(test_output_file)
+    clean_and_pare_down_data_all_years.output_to_csv(df, output_file_path)
+    assert os.path.exists(output_file_path)
