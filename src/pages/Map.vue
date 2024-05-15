@@ -268,13 +268,22 @@ export default class MapPage extends Vue {
 
     // Calculate the distance to each building and filter by those within a mile
     const pointsNearInputPoint = buildingNodes.filter((buildingNode: IBuildingNode) => {
-      const buildingPoint = this.Leaflet.latLng(
-        parseFloat(buildingNode.node.Latitude),
-        parseFloat(buildingNode.node.Longitude),
-      );
-      const buildingDistanceToPointMeters = buildingPoint.distanceTo(inputPoint);
+      var withinProximity = false;
+      try {
+        const buildingPoint = this.Leaflet.latLng(
+          parseFloat(buildingNode.node.Latitude),
+          parseFloat(buildingNode.node.Longitude),
+        );
+        const buildingDistanceToPointMeters = buildingPoint.distanceTo(inputPoint);
 
-      return buildingDistanceToPointMeters <= SearchRadiusMeters;
+        console.log(buildingDistanceToPointMeters);
+
+        withinProximity = buildingDistanceToPointMeters <= SearchRadiusMeters;
+      }
+      catch (e) {
+        console.log(e,'\nErrored on this node:\n', buildingNode.node)
+      }
+      return withinProximity;
     });
 
     this.addBuildingsToMap(pointsNearInputPoint);
