@@ -56,6 +56,7 @@ query ($id: ID!, $ID: String) {
           ENERGYSTARScore
           SourceEUI
           GHGIntensity
+          TotalGHGEmissions
           ElectricityUse
           NaturalGasUse
           DistrictSteamUse

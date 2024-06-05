@@ -28,6 +28,9 @@
             GHG Intensity <span class="unit">kg CO<sub>2</sub>e / sqft</span>
           </th>
           <th scope="col">
+            GHG Emissions <span class="unit">metric tons CO<sub>2</sub>e</span>
+          </th>
+          <th scope="col">
             Source EUI <span class="unit">kBtu / sqft</span>
           </th>
 
@@ -61,6 +64,7 @@
             {{ benchmark.ENERGYSTARScore || '-' }}
           </td>
           <td>{{ benchmark.GHGIntensity }}</td>
+          <td>{{ benchmark.TotalGHGEmissions | optionalFloat }}</td>
           <td>{{ benchmark.SourceEUI }}</td>
 
           <!-- Round big numbers -->
@@ -98,6 +102,14 @@ import {IHistoricData} from '../common-functions.vue';
       }
 
       return parseInt(value).toLocaleString();
+    },
+
+    optionalFloat(value: string) {
+      if (!value) {
+        return '-';
+      }
+
+      return parseFloat(value).toLocaleString();
     },
   },
 })
