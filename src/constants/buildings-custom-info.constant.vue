@@ -329,7 +329,7 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
 
   /**
    * Northwestern Buildings
-   * Helpful source: https://maps.northwestern.edu/chicago 
+   * Helpful source: https://maps.northwestern.edu/chicago
    */
   // 303 E Superior Street
   '256405': { owner: BuildingOwners.northwestern.key },
@@ -357,7 +357,7 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   // NMH Arkes Family Pavilion, 676 N St Clair St
   '103684': {owner: BuildingOwners.northwestern.key},
   // 8792, Feinberg School of Medicine, 303 E Chicago Ave
-  '256411': {owner: BuildingOwners.northwestern.key}, 
+  '256411': {owner: BuildingOwners.northwestern.key},
 
 
   /**
@@ -1373,9 +1373,6 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '251562': { owner: BuildingOwners.cps.key },
   // Prodigy Wood
   '251740': { owner: BuildingOwners.cps.key },
-  // CentralOffic
-  '103705': { owner: BuildingOwners.cps.key },
-
 
    /**
    * CHA
