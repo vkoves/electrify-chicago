@@ -3,13 +3,12 @@ import os
 import csv
 import pandas as pd
 
-from src.data.scripts import clean_and_pare_down_data_all_years
+from src.data.scripts import clean_and_pare_down_data_current_year
 from tests.data.scripts.utils import get_test_file_path
 
 src_dir = 'src'
 test_dir = 'tests'
 test_input_file = 'test_src_data.csv'
-test_output_file = 'test_output.csv'
 
 
 @pytest.fixture
@@ -26,13 +25,14 @@ def csv_reader() -> csv.reader:
 
 @pytest.fixture
 def processed_dataframe() -> pd.DataFrame:
-    '''Process our test data as per clean_and_pare_down_data_all_years.py
+    '''Process our test data as per clean_and_pare_down_data_current_year.py
     and return the resulting dataframe'''
 
     input_filename = get_test_file_path(test_input_file)
-    df = clean_and_pare_down_data_all_years.process(input_filename, True)
+    df = clean_and_pare_down_data_current_year.process(input_filename)
     assert df is not None
     return df
+
 
 def test_data_has_positive_ghg_data(processed_dataframe):
     '''confirm each property in the processed dataframe has non-zero GHGIntensity'''
@@ -118,32 +118,22 @@ def test_expected_columns_present(processed_dataframe):
 
 
 def test_correct_year_selected(processed_dataframe):
-    '''confirm the correct DataYear is present in the processed dataframe
-    for a sample of properties'''
+    '''confirm the correct DataYear is present in the processed dataframe'''
 
     df = processed_dataframe
 
-    united_center_df = df[df['PropertyName']=='United Center']
-    united_center_df.reset_index(inplace=True, drop=True)
-    assert len(united_center_df) == 1
-    assert united_center_df.loc[0, 'DataYear'] == 2019
+    non_2022_df = df[~df['DataYear']==2022]
+    assert len(non_2022_df) == 0
 
-    crown_hall_df = df[df['PropertyName']=='Crown Hall']
-    crown_hall_df.reset_index(inplace=True, drop=True)
-    assert len(crown_hall_df) == 1
-    assert crown_hall_df.loc[0, 'DataYear'] == 2021
-
-    bldg_138730_df = df[df['ID']==138730]
-    bldg_138730_df.reset_index(inplace=True, drop=True)
-    assert len(bldg_138730_df) == 1
-    assert bldg_138730_df.loc[0, 'DataYear'] == 2020
+    yr_2022_df = df[df['DataYear']==2022]
+    assert len(yr_2022_df) == 2
 
 
 def test_property_count(processed_dataframe):
     '''confirm the processed dataframe has the correct number of properties'''
 
     df = processed_dataframe
-    assert len(df) == 5
+    assert len(df) == 2
 
 
 def test_no_ghg_property_is_excluded(processed_dataframe):
@@ -154,13 +144,3 @@ def test_no_ghg_property_is_excluded(processed_dataframe):
     # property ID 240068 is present in test source data but
     # 2016-2022 submitted data has no GHGIntensity data
     assert len(df[df['ID']=='240068']) == 0
-
-
-def test_csv_is_produced(processed_dataframe):
-    '''confirm clean_and_pare_down_data_all_years.output_to_csv creates
-    a csv on disk'''
-
-    df = processed_dataframe
-    output_file_path = get_test_file_path(test_output_file)
-    clean_and_pare_down_data_all_years.output_to_csv(df, output_file_path)
-    assert os.path.exists(output_file_path)
