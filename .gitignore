@@ -12,3 +12,5 @@ src/data/debug/*.json
 **/__pycache__/*
 
 .DS_Store
+src/data/dist/.~lock.benchmarking-all-years.csv#
+src/data/dist/.~lock.building-benchmarks.csv#
