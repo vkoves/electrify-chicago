@@ -312,9 +312,33 @@ query ($id: ID!, $ID: String) {
 
       <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
 
+      <form class="graph-controls">
+        <label for="col-to-graph">Column to Graph</label>
+        <select
+          id="col-to-graph"
+          v-model="colToGraph"
+        >
+          <!-- TODO: Make this based on the rendered graph columns -->
+          <option value="TotalGHGEmissions">
+            Total GHG Emissions
+          </option>
+          <option value="GHGIntensity">
+            GHG Intensity
+          </option>
+          <option value="ElectricityUse">
+            Electricity Use
+          </option>
+          <option value="NaturalGasUse">
+            Gas Use
+          </option>
+        </select>
+
+        <button type="submit" @click="updateGraph">Update</button>
+      </form>
+
       <BarGraph
-        :data="currGraphData"
-        graph-title="Total GHG Emissions (metric tons CO<sub>2</sub>e)"
+        :graph-data="currGraphData"
+        :graph-title="currGraphTitle"
       />
 
       <p class="constrained">
@@ -477,6 +501,14 @@ import { IGraphPoint } from '../components/BarGraph.vue';
   },
 })
 export default class BuildingDetails  extends Vue {
+  // TODO: Move to constant
+  graphTitles = {
+    TotalGHGEmissions:  'Total GHG Emissions (metric tons CO<sub>2</sub>e)',
+    GHGIntensity: 'GHG Intensity (metric tons CO<sub>2</sub>e/sqft)',
+    ElectricityUse: 'Electricity Use (kBTU)',
+    NaturalGasUse: 'Natural Gas Use (kBTU)',
+  }
+
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
 
@@ -496,7 +528,11 @@ export default class BuildingDetails  extends Vue {
   historicData!: Array<IHistoricData>;
 
   /** The data we are currently rendering in the historic data graph */
-  currGraphData?: Array<IGraphPoint>;
+  currGraphData?: Array<IGraphPoint> = [];
+  currGraphTitle?: string = '';
+
+  /** The key from the historical data we are graphing */
+  colToGraph = 'TotalGHGEmissions';
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -545,10 +581,18 @@ export default class BuildingDetails  extends Vue {
     this.historicData = this.$page.allBenchmark.edges
       .map((nodeObj: { node: IHistoricData }) => nodeObj.node) || [];
 
+    this.updateGraph();
+  }
+
+  updateGraph(event?: Event): void {
+    event?.preventDefault();
+
     this.currGraphData = this.historicData.map((datum: IHistoricData) => ({
       x: datum.DataYear,
-      y: parseFloat(datum.TotalGHGEmissions),
+      y: parseFloat((datum as any)[this.colToGraph] as string),
     }));
+
+    this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
 }
 </script>
@@ -691,6 +735,11 @@ export default class BuildingDetails  extends Vue {
     margin-top: 0.5rem;
 
     li + li { margin-top: 0.25rem; }
+  }
+
+  .graph-controls {
+    label { display: block; font-weight: bold; }
+    select { margin-right: 1rem; }
   }
 
   @media (max-width: $mobile-max-width) {

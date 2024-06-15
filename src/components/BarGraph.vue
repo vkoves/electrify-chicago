@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import * as d3 from 'd3';
 
 export interface IGraphPoint {
@@ -25,7 +25,12 @@ export interface IGraphPoint {
 export default class BarGraph extends Vue {
   @Prop({required: true}) graphTitle!: string;
 
-  @Prop({required: true}) data!: Array<IGraphPoint>;
+  @Prop({required: true}) graphData!: Array<IGraphPoint>;
+
+  @Watch('graphData')
+  onDataChanged(): void {
+    this.renderGraph();
+  }
 
   readonly width = 800;
   readonly height = 400;
@@ -33,11 +38,13 @@ export default class BarGraph extends Vue {
   readonly graphMargins = { top: 30, right: 30, bottom: 50, left: 50 };
   readonly barMargin = 0.2;
 
+  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+
   mounted(): void {
     const outerWidth = this.width + this.graphMargins.left + this.graphMargins.right;
     const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
 
-    const svg = d3
+    this.svg = d3
       .select("svg")
       .attr("width", outerWidth)
       .attr("height", outerHeight)
@@ -46,11 +53,17 @@ export default class BarGraph extends Vue {
       .append("g")
         .attr("transform", `translate(${this.graphMargins.left},${this.graphMargins.top})`);
 
-    const g = svg.append("g");
+    this.renderGraph();
+  }
 
-    const xVals: Array<string> = this.data.map((d) => d.x.toString());
-    const yVals: Array<number> = this.data.map((d) => d.y);
+  renderGraph(): void {
+    // Empty the SVG
+    this.svg.html(null);
 
+    const g = this.svg.append("g");
+
+    const xVals: Array<string> = this.graphData.map((d) => d.x.toString());
+    const yVals: Array<number> = this.graphData.map((d) => d.y);
 
     const x = d3
       .scaleBand()
@@ -64,7 +77,7 @@ export default class BarGraph extends Vue {
       .rangeRound([this.height, 0]);
 
     // Render X axis
-    svg.append("g")
+    this.svg.append("g")
       .attr("transform", `translate(0, ${this.height})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
@@ -72,11 +85,11 @@ export default class BarGraph extends Vue {
         .style("text-anchor", "end");
 
     // Render Y axis
-    svg.append("g")
+    this.svg.append("g")
       .call(d3.axisLeft(y));
 
-    svg.selectAll("mybar")
-      .data(this.data)
+    this.svg.selectAll("mybar")
+      .data(this.graphData)
       .enter()
       .append("rect")
         .attr("x", (d) => {
