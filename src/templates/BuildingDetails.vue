@@ -312,7 +312,10 @@ query ($id: ID!, $ID: String) {
 
       <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
 
-      <BarGraph />
+      <BarGraph
+        :data="currGraphData"
+        graph-title="Total GHG Emissions (metric tons CO<sub>2</sub>e)"
+      />
 
       <p class="constrained">
         <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
@@ -449,6 +452,7 @@ import {
   UtilityCosts,
   IBuildingBenchmarkStats,
 } from '../common-functions.vue';
+import { IGraphPoint } from '../components/BarGraph.vue';
 
 @Component<any>({
   metaInfo() {
@@ -490,6 +494,9 @@ export default class BuildingDetails  extends Vue {
 
   /** All benchmarks (reported and not) for this building */
   historicData!: Array<IHistoricData>;
+
+  /** The data we are currently rendering in the historic data graph */
+  currGraphData?: Array<IGraphPoint>;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -537,6 +544,11 @@ export default class BuildingDetails  extends Vue {
   created(): void {
     this.historicData = this.$page.allBenchmark.edges
       .map((nodeObj: { node: IHistoricData }) => nodeObj.node) || [];
+
+    this.currGraphData = this.historicData.map((datum: IHistoricData) => ({
+      x: datum.DataYear,
+      y: parseFloat(datum.TotalGHGEmissions),
+    }));
   }
 }
 </script>

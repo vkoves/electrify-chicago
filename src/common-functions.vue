@@ -59,14 +59,16 @@ export interface IBuildingNode { node: IBuilding }
 export interface IHistoricData {
   ID: string;
   DataYear: string;
-  GrossFloorArea: string;
+  // The actual data
   ChicagoEnergyRating: string;
-  ENERGYSTARScore: string;
-  SourceEUI: string;
-  ElectricityUse: string;
-  GHGIntensity: string;
-  NaturalGasUse: string;
   DistrictSteamUse: string;
+  ElectricityUse: string;
+  ENERGYSTARScore: string;
+  GHGIntensity: string;
+  GrossFloorArea: string;
+  NaturalGasUse: string;
+  SourceEUI: string;
+  TotalGHGEmissions: string;
 }
 
 /**

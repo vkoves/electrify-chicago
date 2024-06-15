@@ -1,6 +1,6 @@
 <template>
   <div class="bar-graph-cont">
-    <div class="label"></div>
+    <div class="label" v-html="graphTitle"></div>
 
     <svg><!-- D3 inserts here --></svg>
   </div>
@@ -10,6 +10,11 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import * as d3 from 'd3';
 
+export interface IGraphPoint {
+  x: number | string;
+  y: number;
+}
+
 /**
  * A component that can graph an arbitrary array of numeric data
  */
@@ -18,24 +23,19 @@ import * as d3 from 'd3';
   },
 })
 export default class BarGraph extends Vue {
-  @Prop({required: true}) data/*!*/: Array<{ x: number | string, y: number }> = [
-    { x: 2018, y: 50 },
-    { x: 2019, y: 55 },
-    { x: 2020, y: 40 },
-    { x: 2021, y: 60 },
-    { x: 2022, y: 65 },
-    { x: 2023, y: 68 },
-  ];
+  @Prop({required: true}) graphTitle!: string;
+
+  @Prop({required: true}) data!: Array<IGraphPoint>;
+
+  readonly width = 800;
+  readonly height = 400;
+
+  readonly graphMargins = { top: 30, right: 30, bottom: 50, left: 50 };
+  readonly barMargin = 0.2;
 
   mounted(): void {
-    const width = 800;
-    const height = 500;
-
-    const margin = {top: 30, right: 30, bottom: 70, left: 60};
-    const barMargin = 0.2;
-
-    const outerWidth = width + margin.left + margin.right;
-    const outerHeight = height + margin.top + margin.bottom;
+    const outerWidth = this.width + this.graphMargins.left + this.graphMargins.right;
+    const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     const svg = d3
       .select("svg")
@@ -44,7 +44,7 @@ export default class BarGraph extends Vue {
       .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
+        .attr("transform", `translate(${this.graphMargins.left},${this.graphMargins.top})`);
 
     const g = svg.append("g");
 
@@ -54,18 +54,18 @@ export default class BarGraph extends Vue {
 
     const x = d3
       .scaleBand()
-      .range([0, width])
+      .range([0, this.width])
       .domain(xVals)
-      .padding(barMargin);
+      .padding(this.barMargin);
 
     const y = d3
       .scaleLinear()
       .domain([ 0, d3.max(yVals) as number])
-      .rangeRound([height, 0]);
+      .rangeRound([this.height, 0]);
 
     // Render X axis
     svg.append("g")
-      .attr("transform", `translate(0, ${height})`)
+      .attr("transform", `translate(0, ${this.height})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -84,7 +84,7 @@ export default class BarGraph extends Vue {
         })
         .attr("y", (d) => y(d.y))
         .attr("width", x.bandwidth())
-        .attr("height", (d) => height - y(d.y))
+        .attr("height", (d) => this.height - y(d.y))
         .attr("fill", "#69b3a2");
   }
 }
@@ -92,12 +92,25 @@ export default class BarGraph extends Vue {
 
 <style lang="scss">
 .bar-graph-cont {
+  margin: 1rem 0;
+
+  .label {
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+
   svg {
     width: 100%;
     border: solid $border-thin $grey-light;
-    aspect-ratio: 1.5;
+    aspect-ratio: 2;
     height: auto;
     max-width: 50rem;
+  }
+
+  .tick {
+    font-weight: bold;
+    font-size: 1rem;
   }
 }
 </style>
