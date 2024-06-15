@@ -312,6 +312,8 @@ query ($id: ID!, $ID: String) {
 
       <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
 
+      <BarGraph />
+
       <p class="constrained">
         <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
@@ -428,6 +430,7 @@ query ($id: ID!, $ID: String) {
 import { Component, Vue } from 'vue-property-decorator';
 
 import { LatestDataYear } from '../constants/globals.vue';
+import BarGraph from '~/components/BarGraph.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import HistoricalBuildingDataTable from '~/components/HistoricalBuildingDataTable.vue';
@@ -454,6 +457,7 @@ import {
     };
   },
   components: {
+    BarGraph,
     BuildingImage,
     DataSourceFootnote,
     NewTabIcon,
