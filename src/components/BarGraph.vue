@@ -38,7 +38,7 @@ export default class BarGraph extends Vue {
   readonly width = 800;
   readonly height = 400;
 
-  readonly graphMargins = { top: 30, right: 30, bottom: 50, left: 50 };
+  readonly graphMargins = { top: 30, right: 30, bottom: 50, left: 60 };
   readonly barMargin = 0.2;
 
   svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
