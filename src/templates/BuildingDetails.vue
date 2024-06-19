@@ -333,7 +333,12 @@ query ($id: ID!, $ID: String) {
           </option>
         </select>
 
-        <button type="submit" @click="updateGraph">Update</button>
+        <button
+          type="submit"
+          @click="updateGraph"
+        >
+          Update
+        </button>
       </form>
 
       <BarGraph
@@ -507,7 +512,7 @@ export default class BuildingDetails  extends Vue {
     GHGIntensity: 'GHG Intensity (metric tons CO<sub>2</sub>e/sqft)',
     ElectricityUse: 'Electricity Use (kBTU)',
     NaturalGasUse: 'Natural Gas Use (kBTU)',
-  }
+  };
 
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;

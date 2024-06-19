@@ -1,6 +1,9 @@
 <template>
   <div class="bar-graph-cont">
-    <div class="label" v-html="graphTitle"></div>
+    <div
+      class="label"
+      v-html="graphTitle"
+    />
 
     <svg><!-- D3 inserts here --></svg>
   </div>
