@@ -63,8 +63,6 @@ export default class BarGraph extends Vue {
     // Empty the SVG
     this.svg.html(null);
 
-    const g = this.svg.append("g");
-
     const xVals: Array<string> = this.graphData.map((d) => d.x.toString());
     const yVals: Array<number> = this.graphData.map((d) => d.y);
 
