@@ -29,16 +29,20 @@ for data processing
 
 Docker is the recommended approach to quickly getting started with local development. Docker helps create a version of the Electrify Chicago website on your computer so you can test out your code before submitting a pull request.
 
-- The recommended installation method for your operating system can be found [here](https://docs.docker.com/install/). 
+- The recommended installation method for your operating system can be found [here](https://docs.docker.com/install/).
 - [Get started with Docker](https://docs.docker.com/get-started/)
 
 ### **2. Start Docker**
 
-This command starts server locally. To start it, `cd` into the project directory in your terminal then run the following command: 
+This command starts server locally. To start it, `cd` into the project directory in your terminal then run the following command:
 
 ```bash
  docker-compose up
 ```
+
+**Tip:** Added a new dependency? Once you've updated the `package.json` run
+`docker-compose up --build` to rebuild the image, which will re-run the setup steps in the
+`Dockerfile`.
 
 Running the above command will result in the following output in your terminal
 
@@ -68,7 +72,7 @@ docker-compose run --rm electrify-chicago yarn lint-fix
 ### Run Data Processing
 
 1. If you update the raw data CSVs or the data scripts that post-process them (like if you are adding
-a new statistical analysis), you need to re-run the data processing. 
+a new statistical analysis), you need to re-run the data processing.
 
 2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
@@ -146,4 +150,3 @@ const BuildingOwnerIds = [
 ## Deploys
 
 This site deploys automatically via Netlify by running `gridsome build`.
-

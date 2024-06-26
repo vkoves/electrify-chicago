@@ -31,20 +31,20 @@
             GHG Emissions <span class="unit">metric tons CO<sub>2</sub>e</span>
           </th>
           <th scope="col">
-            Source EUI <span class="unit">kBtu / sqft</span>
+            Source EUI <span class="unit">kBTU / sqft</span>
           </th>
 
           <th scope="col">
-            Electricity Use <span class="unit">kBtu</span>
+            Electricity Use <span class="unit">kBTU</span>
           </th>
           <th scope="col">
-            Natural Gas Use <span class="unit">kBtu</span>
+            Natural Gas Use <span class="unit">kBTU</span>
           </th>
           <th
             v-if="renderedColumns.includes('DistrictSteamUse')"
             scope="col"
           >
-            District Steam Use <span class="unit">kBtu</span>
+            District Steam Use <span class="unit">kBTU</span>
           </th>
         </tr>
       </thead>
