@@ -15,6 +15,7 @@ property_ids_to_include = [
     '160196',   # The Art Institute of Chicago
     '138730',   # random property
     '240068',   # random property w/ submitted data and no GHGIntensity data
+    '251245',   # random property w/ 2022 GHGIntensity data
     ]
 
 def write_test_sample(reader: csv.reader, writer: csv.writer, property_ids_to_include: List[str]) -> csv.writer:
