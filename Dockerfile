@@ -13,7 +13,6 @@ RUN npm install -g yarn
 WORKDIR /app
 
 # Copy requirements and dependency files to the working directory
-COPY requirements.txt .
 COPY package.json .
 COPY yarn.lock .
 
@@ -21,8 +20,10 @@ COPY yarn.lock .
 COPY . .
 
 # Install Python dependencies
+WORKDIR /app/src/data
 RUN pip install --no-cache-dir -r requirements.txt
 
+WORKDIR /app
 # Install dependencies
 RUN yarn install
 
