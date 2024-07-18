@@ -142,7 +142,7 @@ export default class BiggestBuildings extends Vue {
               </p>
             </div>
 
-            <div class="announce-panel">
+            <!-- <div class="announce-panel">
               <h2>Legislative update! 🎉</h2>
 
               <p>
@@ -163,7 +163,7 @@ export default class BiggestBuildings extends Vue {
                   write to your alderman to support the CABO! <NewTabIcon />
                 </a>
               </p>
-            </div>
+            </div> -->
           </div>
 
 
