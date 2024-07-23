@@ -141,29 +141,6 @@ export default class BiggestBuildings extends Vue {
                 >Read Our Full Blog Post On Millions in Missed Fines</a>.
               </p>
             </div>
-
-            <!-- <div class="announce-panel">
-              <h2>Legislative update! 🎉</h2>
-
-              <p>
-                As of late January 2024, legislation is being introduced to require new
-                use more efficient forms of water and space heating, via the Clean And Affordable
-                Buildings Ordinance (CABO), which will reduce the number of highly polluting and
-                inefficient buildings that end up on this site.
-              </p>
-
-              <p class="bold">
-                If you're in Chicago,
-
-                <a
-                  href="https://act.sierraclub.org/actions/illinois?actionid=ar0395755&id=70131000001iOuIAAU"
-                  target="_blank"
-                  rel="noopener"
-                >
-                  write to your alderman to support the CABO! <NewTabIcon />
-                </a>
-              </p>
-            </div> -->
           </div>
 
 
