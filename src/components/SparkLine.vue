@@ -5,7 +5,7 @@
       v-html="graphTitle"
     />
 
-    <svg id="bar-graph"><!-- D3 inserts here --></svg>
+    <svg :id="'spark' + randomId"><!-- D3 inserts here --></svg>
   </div>
 </template>
 
@@ -19,7 +19,8 @@ export interface IGraphPoint {
 }
 
 /**
- * A component that can graph an arbitrary array of numeric data
+ * A component that can graph an arbitrary array of numeric data as a spark line, a simple line
+ * graph (like might be used in a news chevron for a stock)
  */
 @Component({})
 export default class BarGraph extends Vue {
@@ -38,6 +39,8 @@ export default class BarGraph extends Vue {
   readonly graphMargins = { top: 30, right: 30, bottom: 50, left: 60 };
   readonly barMargin = 0.2;
 
+  randomId = Math.round(Math.random() * 1000);
+
   svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 
   mounted(): void {
@@ -45,7 +48,7 @@ export default class BarGraph extends Vue {
     const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     this.svg = d3
-      .select("svg#bar-graph")
+      .select("svg#spark" + this.randomId)
       .attr("width", outerWidth)
       .attr("height", outerHeight)
       .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
@@ -71,7 +74,7 @@ export default class BarGraph extends Vue {
 
     const y = d3
       .scaleLinear()
-      .domain([ 0, d3.max(yVals) as number])
+      .domain([ d3.min(yVals) as number, d3.max(yVals) as number])
       .rangeRound([this.height, 0]);
 
     // Render X axis
@@ -86,17 +89,16 @@ export default class BarGraph extends Vue {
     this.svg.append("g")
       .call(d3.axisLeft(y));
 
-    this.svg.selectAll("mybar")
-      .data(this.graphData)
-      .enter()
-      .append("rect")
-        .attr("x", (d) => {
-          return x(d.x.toString() as string) as number;
-        })
-        .attr("y", (d) => y(d.y))
-        .attr("width", x.bandwidth())
-        .attr("height", (d) => this.height - y(d.y))
-        .attr("fill", "#69b3a2");
+    // Add the line
+    this.svg.append("path")
+      .datum(this.graphData)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 10)
+      .attr("d", (d3.line() as any)
+        .x((d: IGraphPoint) => { return x(d.x.toString()) })
+        .y((d: IGraphPoint) => { return y(d.y) })
+        )
   }
 }
 </script>

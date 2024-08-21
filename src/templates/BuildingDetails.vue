@@ -354,6 +354,11 @@ query ($id: ID!, $ID: String) {
         :graph-title="currGraphTitle"
       />
 
+      <SparkLine
+        :graph-data="currGraphData"
+        :graph-title="currGraphTitle"
+      />
+
       <p class="constrained">
         <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
         buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
@@ -471,6 +476,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import { LatestDataYear } from '../constants/globals.vue';
 import BarGraph from '~/components/BarGraph.vue';
+import SparkLine from '~/components/SparkLine.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import HistoricalBuildingDataTable from '~/components/HistoricalBuildingDataTable.vue';
@@ -499,6 +505,7 @@ import { IGraphPoint } from '../components/BarGraph.vue';
   },
   components: {
     BarGraph,
+    SparkLine,
     BuildingImage,
     DataSourceFootnote,
     NewTabIcon,
