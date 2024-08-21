@@ -232,32 +232,6 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div>
-          <dt>Source Energy Usage Intensity</dt>
-          <dd>
-            <StatTile
-              :building="$page.building"
-              :stat-key="'SourceEUI'"
-              :stats="BuildingBenchmarkStats"
-              :unit="'kBtu / sqft'"
-            />
-          </dd>
-        </div>
-
-        <div>
-          <dt>Site Energy Usage Intensity</dt>
-          <dd>
-            <StatTile
-              :building="$page.building"
-              :stat-key="'SiteEUI'"
-              :stats="BuildingBenchmarkStats"
-              :unit="'kBtu / sqft'"
-            />
-
-            {{ $page.buildingSiteEUIRank }}
-          </dd>
-        </div>
-
-        <div>
           <dt>Natural Gas Use</dt>
           <dd>
             <StatTile
@@ -307,6 +281,40 @@ query ($id: ID!, $ID: String) {
           </dd>
         </div>
       </dl>
+
+      <details>
+        <summary class="bold">
+          View Technical Info
+        </summary>
+
+        <dl class="supp-info">
+          <div>
+            <dt>Source Energy Usage Intensity</dt>
+            <dd>
+              <StatTile
+                :building="$page.building"
+                :stat-key="'SourceEUI'"
+                :stats="BuildingBenchmarkStats"
+                :unit="'kBtu / sqft'"
+              />
+            </dd>
+          </div>
+
+          <div>
+            <dt>Site Energy Usage Intensity</dt>
+            <dd>
+              <StatTile
+                :building="$page.building"
+                :stat-key="'SiteEUI'"
+                :stats="BuildingBenchmarkStats"
+                :unit="'kBtu / sqft'"
+              />
+
+              {{ $page.buildingSiteEUIRank }}
+            </dd>
+          </div>
+        </dl>
+      </details>
 
       <h2>Historical Data</h2>
 
@@ -711,6 +719,8 @@ export default class BuildingDetails  extends Vue {
     flex-wrap: wrap;
     gap: 2rem;
     margin: 0;
+
+    &.supp-info { margin-top: 1rem; }
   }
 
   .emission-stats {
@@ -734,6 +744,11 @@ export default class BuildingDetails  extends Vue {
     dd, .stat-tile { height: 100%; }
 
     .stat-tile { min-width: 18rem; }
+  }
+
+  details {
+    border: solid 0.01625rem $grey-dark;
+    padding: 1rem;
   }
 
   ul {
