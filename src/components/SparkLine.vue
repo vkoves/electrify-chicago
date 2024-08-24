@@ -1,5 +1,5 @@
 <template>
-  <div class="bar-graph-cont">
+  <div class="spark-graph-cont">
     <div
       class="label"
       v-html="graphTitle"
@@ -13,8 +13,8 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import * as d3 from 'd3';
 
-export interface IGraphPoint {
-  x: number | string;
+export interface INumGraphPoint {
+  x: number;
   y: number;
 }
 
@@ -26,17 +26,21 @@ export interface IGraphPoint {
 export default class BarGraph extends Vue {
   @Prop({required: true}) graphTitle!: string;
 
-  @Prop({required: true}) graphData!: Array<IGraphPoint>;
+  @Prop({required: true}) graphData!: Array<INumGraphPoint>;
 
   @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
   }
 
-  readonly width = 800;
-  readonly height = 400;
+  /** Underlying size */
+  readonly width = 400;
+  readonly height = 150;
 
-  readonly graphMargins = { top: 30, right: 30, bottom: 50, left: 60 };
+  // The amount to shift the x-axis down by
+  readonly xAxisOffset = 20;
+
+  readonly graphMargins = { top: 30, right: 0, bottom: 80, left: 60 };
   readonly barMargin = 0.2;
 
   randomId = Math.round(Math.random() * 1000);
@@ -63,14 +67,16 @@ export default class BarGraph extends Vue {
     // Empty the SVG
     this.svg.html(null);
 
-    const xVals: Array<string> = this.graphData.map((d) => d.x.toString());
+    // TODO: Fix passed years being strings and remove this conversion
+    this.graphData.forEach((point: INumGraphPoint) => point.x = parseInt(point.x.toString()));
+
+    const xVals: Array<number> = this.graphData.map((d) => d.x);
     const yVals: Array<number> = this.graphData.map((d) => d.y);
 
     const x = d3
-      .scaleBand()
+      .scaleLinear()
       .range([0, this.width])
-      .domain(xVals)
-      .padding(this.barMargin);
+      .domain(d3.extent(xVals) as [number, number])
 
     const y = d3
       .scaleLinear()
@@ -79,15 +85,25 @@ export default class BarGraph extends Vue {
 
     // Render X axis
     this.svg.append("g")
-      .attr("transform", `translate(0, ${this.height})`)
-      .call(d3.axisBottom(x))
+      .attr('class', 'x-axis')
+      .attr("transform", `translate(0, ${this.height + this.xAxisOffset})`)
+      .call(
+        d3.axisBottom(x)
+          .tickFormat(d3.format('d'))
+          // For spark line, only show first and last year (e.g. 2018 and 2022)
+          .tickValues(d3.extent(xVals) as [number, number])
+      )
       .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
 
     // Render Y axis
     this.svg.append("g")
-      .call(d3.axisLeft(y));
+      .attr('class', 'y-axis')
+      .call(
+        d3.axisLeft(y)
+          .tickValues(d3.extent(yVals) as [number, number])
+    );
 
     // Add the line
     this.svg.append("path")
@@ -96,15 +112,15 @@ export default class BarGraph extends Vue {
       .attr("stroke", "steelblue")
       .attr("stroke-width", 10)
       .attr("d", (d3.line() as any)
-        .x((d: IGraphPoint) => { return x(d.x.toString()) })
-        .y((d: IGraphPoint) => { return y(d.y) })
+        .x((d: INumGraphPoint) => { return x(d.x as number) })
+        .y((d: INumGraphPoint) => { return y(d.y) })
         )
   }
 }
 </script>
 
 <style lang="scss">
-.bar-graph-cont {
+.spark-graph-cont {
   margin: 1rem 0;
 
   .label {
@@ -118,12 +134,18 @@ export default class BarGraph extends Vue {
     border: solid $border-thin $grey-light;
     aspect-ratio: 2;
     height: auto;
-    max-width: 50rem;
+    max-width: 20rem; // 320px
   }
 
   .tick {
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 1.25rem;
   }
+
+  // Hide tick lines on x-axis
+  .tick line { display: none; }
+
+  // Hide main y-axis line
+  .y-axis .domain { display: none; }
 }
 </style>
