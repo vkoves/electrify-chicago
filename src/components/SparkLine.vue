@@ -1,10 +1,5 @@
 <template>
   <div class="spark-graph-cont">
-    <div
-      class="label"
-      v-html="graphTitle"
-    />
-
     <svg :id="'spark' + randomId"><!-- D3 inserts here --></svg>
   </div>
 </template>
@@ -109,8 +104,8 @@ export default class BarGraph extends Vue {
     this.svg.append("path")
       .datum(this.graphData)
       .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 10)
+      .attr("stroke", "black")
+      .attr("stroke-width", 8)
       .attr("d", (d3.line() as any)
         .x((d: INumGraphPoint) => { return x(d.x as number) })
         .y((d: INumGraphPoint) => { return y(d.y) })
@@ -121,8 +116,6 @@ export default class BarGraph extends Vue {
 
 <style lang="scss">
 .spark-graph-cont {
-  margin: 1rem 0;
-
   .label {
     font-weight: bold;
     font-size: 1.25rem;
@@ -131,7 +124,6 @@ export default class BarGraph extends Vue {
 
   svg {
     width: 100%;
-    border: solid $border-thin $grey-light;
     aspect-ratio: 2;
     height: auto;
     max-width: 20rem; // 320px

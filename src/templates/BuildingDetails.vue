@@ -214,6 +214,7 @@ query ($id: ID!, $ID: String) {
               :building="$page.building"
               :stat-key="'GHGIntensity'"
               :stats="BuildingBenchmarkStats"
+              :historic-data="historicData"
               :unit="'kg CO<sub>2</sub>e / sqft'"
             />
           </dd>
@@ -226,6 +227,7 @@ query ($id: ID!, $ID: String) {
               :building="$page.building"
               :stat-key="'TotalGHGEmissions'"
               :stats="BuildingBenchmarkStats"
+              :historic-data="historicData"
               :unit="'metric tons CO<sub>2</sub> eq.'"
             />
           </dd>
@@ -238,6 +240,7 @@ query ($id: ID!, $ID: String) {
               :building="$page.building"
               :stat-key="'NaturalGasUse'"
               :stats="BuildingBenchmarkStats"
+              :historic-data="historicData"
               :unit="'kBtu'"
             />
           </dd>
@@ -250,6 +253,7 @@ query ($id: ID!, $ID: String) {
               :building="$page.building"
               :stat-key="'ElectricityUse'"
               :stats="BuildingBenchmarkStats"
+              :historic-data="historicData"
               :unit="'kBtu'"
             />
           </dd>
@@ -263,6 +267,7 @@ query ($id: ID!, $ID: String) {
               :building="$page.building"
               :stat-key="'DistrictSteamUse'"
               :stats="BuildingBenchmarkStats"
+              :historic-data="historicData"
               :unit="'kBtu'"
             />
           </dd>
@@ -276,6 +281,7 @@ query ($id: ID!, $ID: String) {
               :building="$page.building"
               :stat-key="'DistrictChilledWaterUse'"
               :stats="BuildingBenchmarkStats"
+              :historic-data="historicData"
               :unit="'kBtu'"
             />
           </dd>
@@ -295,6 +301,7 @@ query ($id: ID!, $ID: String) {
                 :building="$page.building"
                 :stat-key="'SourceEUI'"
                 :stats="BuildingBenchmarkStats"
+                :historic-data="historicData"
                 :unit="'kBtu / sqft'"
               />
             </dd>
@@ -316,7 +323,7 @@ query ($id: ID!, $ID: String) {
         </dl>
       </details>
 
-      <h2>Historical Data</h2>
+      <h2>Historical Data Table</h2>
 
       <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
 
@@ -350,11 +357,6 @@ query ($id: ID!, $ID: String) {
       </form>
 
       <BarGraph
-        :graph-data="currGraphData"
-        :graph-title="currGraphTitle"
-      />
-
-      <SparkLine
         :graph-data="currGraphData"
         :graph-title="currGraphTitle"
       />
@@ -476,7 +478,6 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import { LatestDataYear } from '../constants/globals.vue';
 import BarGraph from '~/components/BarGraph.vue';
-import SparkLine from '~/components/SparkLine.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import HistoricalBuildingDataTable from '~/components/HistoricalBuildingDataTable.vue';
@@ -505,7 +506,6 @@ import { IGraphPoint } from '../components/BarGraph.vue';
   },
   components: {
     BarGraph,
-    SparkLine,
     BuildingImage,
     DataSourceFootnote,
     NewTabIcon,
@@ -600,6 +600,8 @@ export default class BuildingDetails  extends Vue {
   created(): void {
     this.historicData = this.$page.allBenchmark.edges
       .map((nodeObj: { node: IHistoricData }) => nodeObj.node) || [];
+
+    console.log('historicData', this.historicData);
 
     this.updateGraph();
   }
@@ -738,9 +740,9 @@ export default class BuildingDetails  extends Vue {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      flex-basis: 30%;
+      flex-basis: 48%;
       flex-grow: 1;
-      max-width: 25rem;
+      max-width: 40rem;
     }
 
     dt {

@@ -11,6 +11,12 @@
     }"
   >
     <template v-if="building[statKey]">
+      <SparkLine
+        v-if="historicStatData.length > 0"
+        :graph-data="historicStatData"
+        :graph-title="statKey"
+      />
+
       <!-- The actual stat value-->
       <div class="stat-value">
         {{ statValue }} <span v-html="unit" />
@@ -199,9 +205,11 @@ import {
   getRankLabelByProperty,
   IBuilding,
   IBuildingBenchmarkStats,
+  IHistoricData,
   IPropertyStats,
   RankConfig,
 } from '../common-functions.vue';
+import SparkLine, { INumGraphPoint } from './SparkLine.vue';
 
 /**
  * A group of all the core stats by property type (e.g. GHG intensity median)
@@ -215,19 +223,25 @@ export interface IStatsByPropertyType
   * A  tile that can show the stats for a building, including whether it's
   * doing better or worse than median, it's rank and percentile rank
   */
-@Component
+@Component({
+  components: {
+    SparkLine,
+  }
+})
 export default class StatTile extends Vue {
-  readonly BuildingStatsByPropertyType: IStatsByPropertyType = buildingStatsByPropertyType;
-
-  readonly ColsToHideComparison = ['DistrictSteamUse', 'DistrictChilledWaterUse'];
-
   @Prop({required: true}) building!: IBuilding;
   @Prop({required: true}) statKey!: string;
   @Prop({required: true}) stats!: IBuildingBenchmarkStats;
   @Prop({required: true}) unit!: string;
+  @Prop() historicData?: Array<IHistoricData>;
 
-  // Expose RankConfig to template
-  RankConfig = RankConfig;
+  readonly BuildingStatsByPropertyType: IStatsByPropertyType = buildingStatsByPropertyType;
+  readonly RankConfig: typeof RankConfig = RankConfig;
+
+  readonly ColsToHideComparison = ['DistrictSteamUse', 'DistrictChilledWaterUse'];
+
+  /** The historical data for this stat, for passing to SparkLine */
+  historicStatData: Array<INumGraphPoint> = [];
 
   /** The primary property type of the current building as it shows in the data */
   get propertyType(): string {
@@ -255,6 +269,7 @@ export default class StatTile extends Vue {
     return null;
   }
 
+  /** TODO: Move this into a generic language helpers file */
   get pluralismForPropertyType(): string {
     let pluralismForProperty;
     let curPropertyType = this.propertyType;
@@ -317,6 +332,8 @@ export default class StatTile extends Vue {
   /**
    * Returns the multiplier for this building's stat compared to the median (e.g. '3' times median
    * '1/5' median)
+   *
+   * TODO: Move into a generic math helper
    */
   medianMultipleMsg(median:number, statValueNum:number): string | null {
     if (median) {
@@ -384,6 +401,7 @@ export default class StatTile extends Vue {
     return null;
   }
 
+  /** TODO: Move somewhere more generic */
   get propertiesToAwardThisType(): number {
     // The stats for buildings of this building's type
     const propertyStats = this.BuildingStatsByPropertyType[this.propertyType];
@@ -518,6 +536,22 @@ export default class StatTile extends Vue {
 
     return Math.round(statRankPercent * 100);
   }
+
+  /** The component load */
+  mounted(): void {
+    if (this.historicData) {
+      this.historicStatData = this.historicData.map((datum: IHistoricData) => ({
+        x: parseInt(datum.DataYear),
+        y: parseFloat((datum as any)[this.statKey] as string),
+      }));
+
+      const zeroOrNanOnly = this.historicStatData.every((datum) => datum.y === 0 || isNaN(datum.y));
+
+      if (zeroOrNanOnly) {
+        this.historicStatData = [];
+      }
+    }
+  }
 }
 </script>
 
@@ -537,27 +571,26 @@ export default class StatTile extends Vue {
     background-color: #ffedf0;
     border-color: red;
   }
-
   // Also be pretty subtle for indicating medium attributes
-  &.-medium {
-    border-color: #935700;
-  }
-
+  &.-medium { border-color: #935700; }
   // Very subtly highlight good attributes
   &.-good { border-color: green; }
-
   // Highlight best in class buildings
   &.-great {
     border-color: green;
     background-color: #e9ffe9;
   }
-
   // Square footage should override and clear anything since that's not really an
   // environmental factor, just an interesting stat
   &.-sq-footage {
     padding: 0;
     background-color: transparent;
     border: none;
+  }
+
+  .spark-graph-cont {
+    width: 50%;
+    float: right;
   }
 
   .stat-value {
