@@ -23,6 +23,19 @@ export default class BarGraph extends Vue {
 
   @Prop({required: true}) graphData!: Array<INumGraphPoint>;
 
+  /** A unit to append to the min and max values (e.g. "tons") */
+  @Prop({required: true}) unit?: string;
+
+  /* Strip HTML from the unit (just <sub> for CO2) and simplify by dropping 'metric' */
+  get unitCleaned(): string {
+    if (!this.unit) { return ''; }
+
+    return this.unit
+      .replace('<sub>', '<tspan class="sub" dy="0.5em">')
+      .replace('</sub>', '</tspan><tspan dy="-0.5rem">')
+      .replace('metric', '');
+  }
+
   @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
@@ -30,12 +43,12 @@ export default class BarGraph extends Vue {
 
   /** Underlying size */
   readonly width = 400;
-  readonly height = 150;
+  readonly height = 80;
 
   // The amount to shift the x-axis down by
-  readonly xAxisOffset = 20;
+  readonly xAxisOffset = 60;
 
-  readonly graphMargins = { top: 30, right: 0, bottom: 80, left: 60 };
+  readonly graphMargins = { top: 50, right: 0, bottom: 110, left: 30 };
   readonly barMargin = 0.2;
 
   randomId = Math.round(Math.random() * 1000);
@@ -71,7 +84,7 @@ export default class BarGraph extends Vue {
     const x = d3
       .scaleLinear()
       .range([0, this.width])
-      .domain(d3.extent(xVals) as [number, number])
+      .domain(d3.extent(xVals) as [number, number]);
 
     const y = d3
       .scaleLinear()
@@ -86,7 +99,7 @@ export default class BarGraph extends Vue {
         d3.axisBottom(x)
           .tickFormat(d3.format('d'))
           // For spark line, only show first and last year (e.g. 2018 and 2022)
-          .tickValues(d3.extent(xVals) as [number, number])
+          .tickValues(d3.extent(xVals) as [number, number]),
       )
       .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -97,7 +110,7 @@ export default class BarGraph extends Vue {
       .attr('class', 'y-axis')
       .call(
         d3.axisLeft(y)
-          .tickValues(d3.extent(yVals) as [number, number])
+          .tickValues(d3.extent(yVals) as [number, number]),
     );
 
     // Add the line
@@ -107,9 +120,101 @@ export default class BarGraph extends Vue {
       .attr("stroke", "black")
       .attr("stroke-width", 8)
       .attr("d", (d3.line() as any)
-        .x((d: INumGraphPoint) => { return x(d.x as number) })
-        .y((d: INumGraphPoint) => { return y(d.y) })
-        )
+        .x((d: INumGraphPoint) => x(d.x))
+        .y((d: INumGraphPoint) => y(d.y)),
+        );
+
+    // We only show points for the min and max values, so we find those
+    const minAndMaxPoints: Array<INumGraphPoint> = [];
+
+    const minPoint = this.graphData.find((datum) => datum.y === d3.min(yVals));
+    const maxPoint = this.graphData.find((datum) => datum.y === d3.max(yVals));
+
+    if (minPoint) {
+      minAndMaxPoints.push(minPoint);
+    }
+
+    if (maxPoint) {
+      minAndMaxPoints.push(maxPoint);
+    }
+
+    const DotRadius = 8;
+    const LabelFontSize = 24;
+
+    // Add the points
+    this.svg
+      .append("g")
+      .selectAll("dot")
+      .data(minAndMaxPoints)
+      .enter()
+      .append("circle")
+        .attr("cx", (d) => x(d.x))
+        .attr("cy", (d) => y(d.y))
+        .attr("r", DotRadius)
+        .attr("fill", "black");
+
+
+    this.svg
+      .append("g")
+      .selectAll("pointLabels")
+      .data(minAndMaxPoints)
+      .enter()
+      .append("text")
+        .attr("cx", (d) => x(d.x))
+        .attr("cy", (d) => y(d.y))
+        // Put the text at the position of the last point
+        .attr("transform", (d) => {
+          let xPos = x(d.x);
+          let yPos = y(d.y);
+
+          // The min point should have its label below
+          if (d.x === minAndMaxPoints[0].x) {
+            xPos += DotRadius;
+            yPos += LabelFontSize * 1.6;
+
+            return `translate(${xPos},${yPos})`;
+          }
+          // The max point has its label above
+          else {
+            xPos -= DotRadius; // place to the left edge of the dot
+            yPos -= LabelFontSize * 0.9;
+
+            return `translate(${xPos},${yPos})`;
+          }
+        })
+        .attr("text-anchor", (d) => {
+          // Points near the right edge of the graph should have text going left from the point,
+          // otherwise go right (e.g. first year)
+          const minYear = d3.min(xVals)!;
+          const maxYear = d3.max(xVals)!;
+          console.log({ maxYear, minYear });
+
+          // e.g. we have data from 2020 to 2024, the 3/4 year is 2023
+          // (2020 + (0.75 * (2024 - 2020))
+          const threeQuartersYear = Math.ceil(minYear + (0.75 * (maxYear - minYear)));
+          const halfwayYear = Math.ceil(minYear + (0.5 * (maxYear - minYear)));
+
+          console.log('-----');
+          console.log('threeQuartersYear', threeQuartersYear);
+          console.log('halfwayYear', halfwayYear);
+          console.log('d.x', d.x);
+
+          // If the min point is more than 3/4 along in the graph, it's near enough to the end
+          // that we align text to the left of the dot, otherwis eto the start
+          if (d.x > threeQuartersYear) {
+            return 'end';
+          }
+          // If it's say 2/3 along the graph, it may still hit the right edge, so center
+          else if (d.x > halfwayYear) {
+            return 'middle';
+          }
+          else {
+            return 'start';
+          }
+        })
+        .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan> ${this.unitCleaned}`)
+        .style("fill", "black")
+        .style("font-size", LabelFontSize);
   }
 }
 </script>
@@ -127,6 +232,9 @@ export default class BarGraph extends Vue {
     aspect-ratio: 2;
     height: auto;
     max-width: 20rem; // 320px
+
+    tspan.bold { font-weight: bold; }
+    tspan.sub { font-size: 0.75em; }
   }
 
   .tick {
@@ -137,7 +245,7 @@ export default class BarGraph extends Vue {
   // Hide tick lines on x-axis
   .tick line { display: none; }
 
-  // Hide main y-axis line
-  .y-axis .domain { display: none; }
+  // Hide y-axis via CSS, we label points instead
+  .y-axis { display: none; }
 }
 </style>

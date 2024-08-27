@@ -729,7 +729,11 @@ export default class BuildingDetails  extends Vue {
     gap: 2rem;
     margin: 0;
 
-    &.supp-info { margin-top: 1rem; }
+    &.supp-info {
+      margin-top: 1rem;
+
+      > * { flex-basis: 40rem; }
+    }
   }
 
   .emission-stats {

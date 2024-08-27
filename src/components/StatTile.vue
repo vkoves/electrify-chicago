@@ -15,6 +15,7 @@
         v-if="historicStatData.length > 0"
         :graph-data="historicStatData"
         :graph-title="statKey"
+        :unit="unit"
       />
 
       <!-- The actual stat value-->
@@ -226,7 +227,7 @@ export interface IStatsByPropertyType
 @Component({
   components: {
     SparkLine,
-  }
+  },
 })
 export default class StatTile extends Vue {
   @Prop({required: true}) building!: IBuilding;
