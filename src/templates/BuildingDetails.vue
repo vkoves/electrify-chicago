@@ -118,7 +118,7 @@ query ($id: ID!, $ID: String) {
             <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
           </div>
 
-          <div class="building-details">
+          <div class="building-top-info">
             <h2>Building Info</h2>
 
             <dl>
@@ -651,7 +651,10 @@ export default class BuildingDetails  extends Vue {
 
   h1 { margin: 0; }
 
-  h2 { margin: 2.5rem 0 0; }
+  h2 {
+    margin: 2.5rem 0 0;
+    font-size: 1.25rem;
+  }
 
   .building-banner {
     padding: 1rem;
@@ -678,7 +681,7 @@ export default class BuildingDetails  extends Vue {
     margin-top: 0;;
   }
 
-  .building-details {
+  .building-top-info {
     background: #ededed;
     border-radius: $brd-rad-medium;
     padding: 1rem 1.5rem;
@@ -686,7 +689,7 @@ export default class BuildingDetails  extends Vue {
 
     h2 { margin-top: 0; }
 
-    dt { font-size: 0.825rem; }
+    dt {font-size: 1.5rem; }
   }
 
   dl {
@@ -710,7 +713,7 @@ export default class BuildingDetails  extends Vue {
     }
 
     dt {
-      font-weight: normal;
+      font-size: 1.5rem;
       margin-bottom: 0.5rem;
     }
 
@@ -774,7 +777,7 @@ export default class BuildingDetails  extends Vue {
       margin-left: 0;
     }
 
-    .building-details {
+    .building-top-info {
       padding: 1rem;
     }
 

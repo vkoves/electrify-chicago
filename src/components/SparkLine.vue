@@ -1,6 +1,9 @@
 <template>
-  <div class="spark-graph-cont">
-    <svg :id="'spark' + randomId"><!-- D3 inserts here --></svg>
+  <div
+    :id="svgContPrefix + randomId"
+    class="spark-graph-cont"
+  >
+    <svg :id="svgIdPrefix + randomId"><!-- D3 inserts here --></svg>
   </div>
 </template>
 
@@ -26,6 +29,9 @@ export default class BarGraph extends Vue {
   /** A unit to append to the min and max values (e.g. "tons") */
   @Prop({required: true}) unit?: string;
 
+  readonly svgIdPrefix = 'spark-svg-';
+  readonly svgContPrefix = 'spark-cont-';
+
   /* Strip HTML from the unit (just <sub> for CO2) and simplify by dropping 'metric' */
   get unitCleaned(): string {
     if (!this.unit) { return ''; }
@@ -50,10 +56,12 @@ export default class BarGraph extends Vue {
   // The amount to shift the x-axis down by
   readonly xAxisOffset = 60;
 
-  readonly graphMargins = { top: 50, right: 0, bottom: 110, left: 0 };
+  readonly graphMargins = { top: 50, right: 15, bottom: 110, left: 15 };
   readonly barMargin = 0.2;
 
   randomId = Math.round(Math.random() * 1000);
+
+  tooltip?: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
 
   svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 
@@ -62,7 +70,7 @@ export default class BarGraph extends Vue {
     const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     this.svg = d3
-      .select("svg#spark" + this.randomId)
+      .select(`svg#${this.svgIdPrefix}${this.randomId}`)
       .attr("width", outerWidth)
       .attr("height", outerHeight)
       .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
@@ -71,6 +79,7 @@ export default class BarGraph extends Vue {
         .attr("transform", `translate(${this.graphMargins.left},${this.graphMargins.top})`);
 
     this.calculateMinAndMaxPoints();
+    this.setupTooltip();
     this.renderGraph();
   }
 
@@ -95,7 +104,6 @@ export default class BarGraph extends Vue {
 
     this.minAndMaxPoints = minAndMaxPoints;
   }
-
 
   renderGraph(): void {
     // Empty the SVG
@@ -156,28 +164,29 @@ export default class BarGraph extends Vue {
     const LabelFontSize = 24;
 
     if (this.minAndMaxPoints) {
-      // Add the min and max points
+      // Add all points, we'll then use CSS to hide all but the min and max unless hovered
       this.svg
         .append("g")
         .selectAll("dot")
-        .data(this.minAndMaxPoints)
+        .data(this.graphData)
         .enter()
         .append("circle")
-          .attr("cx", (d) => {
-            // If the point is the first year, move it right by the radius to align it to the left
-            // edge of the graph, reverse for the last year
-            if (d.x === minYear) {
-              return x(d.x) + DotRadius;
-            }
-            else if (d.x === maxYear) {
-              return x(d.x) - DotRadius;
-            }
+          .attr('class', (d) => {
+            const isMinMax = d.x === this.minAndMaxPoints![0].x
+              || d.x === this.minAndMaxPoints![1].x;
 
-            return x(d.x); // don't adjust any dots in the middle
+            return isMinMax ? 'dot -min-max' : 'dot';
           })
+          .attr("cx", (d) => x(d.x))
           .attr("cy", (d) => y(d.y))
           .attr("r", DotRadius)
-          .attr("fill", "black");
+          .attr("fill", "black")
+          .attr('tabindex', '0')
+          .on("mouseover", this.mouseover.bind(this))
+          .on("focusin", (event: Event, d) => this.focus(event, d))
+          .on("blur", this.mouseleave.bind(this))
+          .on("mousemove", (event: MouseEvent, d) => this.mousemove(event, d))
+          .on("mouseleave", this.mouseleave.bind(this));
 
       // Add the value labels for the min and max points
       this.svg
@@ -232,15 +241,83 @@ export default class BarGraph extends Vue {
           .style("font-size", LabelFontSize);
     }
   }
+
+  /** Create the empty tooltip element we fill later */
+  setupTooltip(): void {
+    // create a tooltip
+    this.tooltip = d3.select(`#${this.svgContPrefix}${this.randomId}`)
+      .append("div")
+        .style("opacity", 0)
+        .attr("class", "tooltip");
+  }
+
+  focus(event: Event, datum: INumGraphPoint): void {
+    this.mouseover();
+    this.mousemove(event as MouseEvent, datum);
+  }
+
+  mouseover(): void {
+    this.tooltip?.style("opacity", 1);
+  }
+
+  mousemove(event: Event, datum: INumGraphPoint): void {
+    // Calculate a scale factor to match the internal SVG space to the rendered HTML space
+    const outerWidth = this.width + this.graphMargins.left + this.graphMargins.right;
+    const svgElem = document.getElementById(`${this.svgIdPrefix}${this.randomId}`);
+    const scaleFactor = svgElem!.clientWidth / outerWidth;
+
+    const tooltipX = d3.pointer(event)[0] * scaleFactor + 20;
+    const tooltipY = d3.pointer(event)[1] * scaleFactor;
+
+    this.tooltip!
+      .html(
+        `<div class="year">${datum.x}</div>` +
+        `<div class="value-cont">` +
+          `<span class="value">${datum.y.toLocaleString()}</span> ` +
+          `<span class="unit">${this.unit}</span>` +
+        `</div>`,
+      )
+      .style("left", `${tooltipX}px`)
+      .style("top", `${tooltipY}px`);
+    }
+
+  mouseleave(datum: INumGraphPoint): void {
+    this.tooltip?.style("opacity", 0);
+  }
 }
 </script>
 
 <style lang="scss">
 .spark-graph-cont {
+  position: relative;
+
   .label {
     font-weight: bold;
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
+  }
+
+  .tooltip {
+    position: absolute;
+    background-color: $off-white;
+    border: solid $border-medium $black;
+    border-radius: $brd-rad-small;
+    padding: 0.5rem 1rem;
+    width: 10rem;
+    pointer-events: none; // prevent interfering with hover
+    transition: opacity 0.3s;
+    font-size: 0.825rem;
+    line-height: 1.25;
+
+    .value {
+      font-weight: bold;
+      font-size: 1rem;
+    }
+    .unit { white-space: nowrap; }
+    .year {
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
   }
 
   svg {
@@ -248,6 +325,21 @@ export default class BarGraph extends Vue {
     height: auto;
     max-width: 20rem; // 320px
 
+    &:hover, &:focus-within {
+      // Show all dots and make them thicker using a stroke
+      circle.dot {
+        opacity: 1;
+        stroke-width: 0.5rem;
+        stroke: $black;
+      }
+    }
+
+    .dot {
+      transition: opacity 0.3s, stroke-width 0.3s;
+
+      // Hide all dots except the min max until hovered to keep the graph simple
+      &:not(.-min-max) { opacity: 0; }
+    }
     tspan.bold { font-weight: bold; }
     tspan.sub { font-size: 0.75em; }
   }
