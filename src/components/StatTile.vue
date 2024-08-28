@@ -24,22 +24,6 @@
           class="unit"
           v-html="unit"
         />
-
-        <!-- Show icons for below or above median if we have a median for this stat -->
-        <template v-if="stats[statKey]">
-          <img
-            v-if="isAboveMedian"
-            :src="isSquareFootage ? '/arrow-up-neutral.svg' : '/arrow-up-bad.svg'"
-            width="20"
-            title="Above median building"
-          >
-          <img
-            v-else
-            :src="isSquareFootage ? '/arrow-down-neutral.svg' : '/arrow-down-good.svg'"
-            width="20"
-            title="Below median building"
-          >
-        </template>
       </div>
 
       <div
@@ -615,7 +599,10 @@ export default class StatTile extends Vue {
 
   .property-rank { font-size: small; }
 
-  .bill-estimate { margin-bottom: 0.25rem; }
+  .bill-estimate {
+    margin-bottom: 0.25rem;
+    font-size: small;
+  }
 
   .median-comparison {
     display: flex;
