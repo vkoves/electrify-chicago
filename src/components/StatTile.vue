@@ -590,8 +590,9 @@ export default class StatTile extends Vue {
   }
 
   .spark-graph-cont {
-    width: 50%;
+    width: 40%;
     float: right;
+    margin-left: 1rem;
   }
 
   .stat-value {
@@ -646,6 +647,15 @@ export default class StatTile extends Vue {
   .no-stat-msg {
     font-size: 0.75rem;
     margin-bottom: 0;
+  }
+
+  /** Mobile styling */
+  @media (max-width: $mobile-max-width) {
+    .spark-graph-cont {
+      width: 75%;
+      float: none;
+      margin-bottom: 1rem;
+    }
   }
 }
 </style>

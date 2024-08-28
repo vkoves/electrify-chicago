@@ -601,8 +601,6 @@ export default class BuildingDetails  extends Vue {
     this.historicData = this.$page.allBenchmark.edges
       .map((nodeObj: { node: IHistoricData }) => nodeObj.node) || [];
 
-    console.log('historicData', this.historicData);
-
     this.updateGraph();
   }
 

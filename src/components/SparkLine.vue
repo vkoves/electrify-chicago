@@ -36,6 +36,8 @@ export default class BarGraph extends Vue {
       .replace('metric', '');
   }
 
+  minAndMaxPoints?: Array<INumGraphPoint>;
+
   @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
@@ -43,12 +45,12 @@ export default class BarGraph extends Vue {
 
   /** Underlying size */
   readonly width = 400;
-  readonly height = 80;
+  readonly height = 60;
 
   // The amount to shift the x-axis down by
   readonly xAxisOffset = 60;
 
-  readonly graphMargins = { top: 50, right: 0, bottom: 110, left: 30 };
+  readonly graphMargins = { top: 50, right: 0, bottom: 110, left: 0 };
   readonly barMargin = 0.2;
 
   randomId = Math.round(Math.random() * 1000);
@@ -68,8 +70,32 @@ export default class BarGraph extends Vue {
       .append("g")
         .attr("transform", `translate(${this.graphMargins.left},${this.graphMargins.top})`);
 
+    this.calculateMinAndMaxPoints();
     this.renderGraph();
   }
+
+  /**
+   * Get the global min and max points, which we show on the graph with their values to act as a
+   * replacement for the y-axis
+   */
+   calculateMinAndMaxPoints(): void {
+    const yVals: Array<number> = this.graphData.map((d) => d.y);
+    const minAndMaxPoints: Array<INumGraphPoint> = [];
+
+    const minPoint = this.graphData.find((datum) => datum.y === d3.min(yVals));
+    const maxPoint = this.graphData.find((datum) => datum.y === d3.max(yVals));
+
+    if (minPoint) {
+      minAndMaxPoints.push(minPoint);
+    }
+
+    if (maxPoint) {
+      minAndMaxPoints.push(maxPoint);
+    }
+
+    this.minAndMaxPoints = minAndMaxPoints;
+  }
+
 
   renderGraph(): void {
     // Empty the SVG
@@ -80,6 +106,9 @@ export default class BarGraph extends Vue {
 
     const xVals: Array<number> = this.graphData.map((d) => d.x);
     const yVals: Array<number> = this.graphData.map((d) => d.y);
+
+    const minYear = d3.min(xVals)!;
+    const maxYear = d3.max(xVals)!;
 
     const x = d3
       .scaleLinear()
@@ -102,8 +131,7 @@ export default class BarGraph extends Vue {
           .tickValues(d3.extent(xVals) as [number, number]),
       )
       .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+        .attr("text-anchor", (d) =>  d === maxYear ? 'end' : 'start');
 
     // Render Y axis
     this.svg.append("g")
@@ -124,97 +152,91 @@ export default class BarGraph extends Vue {
         .y((d: INumGraphPoint) => y(d.y)),
         );
 
-    // We only show points for the min and max values, so we find those
-    const minAndMaxPoints: Array<INumGraphPoint> = [];
-
-    const minPoint = this.graphData.find((datum) => datum.y === d3.min(yVals));
-    const maxPoint = this.graphData.find((datum) => datum.y === d3.max(yVals));
-
-    if (minPoint) {
-      minAndMaxPoints.push(minPoint);
-    }
-
-    if (maxPoint) {
-      minAndMaxPoints.push(maxPoint);
-    }
-
     const DotRadius = 8;
     const LabelFontSize = 24;
 
-    // Add the points
-    this.svg
-      .append("g")
-      .selectAll("dot")
-      .data(minAndMaxPoints)
-      .enter()
-      .append("circle")
-        .attr("cx", (d) => x(d.x))
-        .attr("cy", (d) => y(d.y))
-        .attr("r", DotRadius)
-        .attr("fill", "black");
+    if (this.minAndMaxPoints) {
+      // Add the min and max points
+      this.svg
+        .append("g")
+        .selectAll("dot")
+        .data(this.minAndMaxPoints)
+        .enter()
+        .append("circle")
+          .attr("cx", (d) => {
+            // If the point is the first year, move it right by the radius to align it to the left
+            // edge of the graph, reverse for the last year
+            if (d.x === minYear) {
+              return x(d.x) + DotRadius;
+            }
+            else if (d.x === maxYear) {
+              return x(d.x) - DotRadius;
+            }
 
+            return x(d.x); // don't adjust any dots in the middle
+          })
+          .attr("cy", (d) => y(d.y))
+          .attr("r", DotRadius)
+          .attr("fill", "black");
 
-    this.svg
-      .append("g")
-      .selectAll("pointLabels")
-      .data(minAndMaxPoints)
-      .enter()
-      .append("text")
-        .attr("cx", (d) => x(d.x))
-        .attr("cy", (d) => y(d.y))
-        // Put the text at the position of the last point
-        .attr("transform", (d) => {
-          let xPos = x(d.x);
-          let yPos = y(d.y);
+      // Add the value labels for the min and max points
+      this.svg
+        .append("g")
+        .selectAll("pointLabels")
+        .data(this.minAndMaxPoints)
+        .enter()
+        .append("text")
+          .attr("cx", (d) => x(d.x))
+          .attr("cy", (d) => y(d.y))
+          // Put the text at the position of the last point
+          .attr("transform", (d) => {
+            let xPos = x(d.x);
+            let yPos = y(d.y);
 
-          // The min point should have its label below
-          if (d.x === minAndMaxPoints[0].x) {
-            xPos += DotRadius;
-            yPos += LabelFontSize * 1.6;
+            // The min point should have its label below
+            if (d.x === this.minAndMaxPoints![0].x) {
+              yPos += LabelFontSize * 1.6;
 
-            return `translate(${xPos},${yPos})`;
-          }
-          // The max point has its label above
-          else {
-            xPos -= DotRadius; // place to the left edge of the dot
-            yPos -= LabelFontSize * 0.9;
+              return `translate(${xPos},${yPos})`;
+            }
+            // The max point has its label above
+            else {
+              yPos -= LabelFontSize * 0.9;
 
-            return `translate(${xPos},${yPos})`;
-          }
-        })
-        .attr("text-anchor", (d) => {
-          // Points near the right edge of the graph should have text going left from the point,
-          // otherwise go right (e.g. first year)
-          const minYear = d3.min(xVals)!;
-          const maxYear = d3.max(xVals)!;
-          console.log({ maxYear, minYear });
+              return `translate(${xPos},${yPos})`;
+            }
+          })
+          .attr("text-anchor", (d) => {
+            // Points near the right edge of the graph should have text going left from the point,
+            // otherwise go right (e.g. first year)
+            // e.g. we have data from 2020 to 2024, the 3/4 year is 2023
+            // (2020 + (0.75 * (2024 - 2020))
+            const threeQuartersYear = Math.ceil(minYear + (0.75 * (maxYear - minYear)));
+            const halfwayYear = Math.ceil(minYear + (0.5 * (maxYear - minYear)));
 
-          // e.g. we have data from 2020 to 2024, the 3/4 year is 2023
-          // (2020 + (0.75 * (2024 - 2020))
-          const threeQuartersYear = Math.ceil(minYear + (0.75 * (maxYear - minYear)));
-          const halfwayYear = Math.ceil(minYear + (0.5 * (maxYear - minYear)));
+            console.log({
+              threeQuartersYear,
+              halfwayYear,
+              x: d.x
+            })
 
-          console.log('-----');
-          console.log('threeQuartersYear', threeQuartersYear);
-          console.log('halfwayYear', halfwayYear);
-          console.log('d.x', d.x);
-
-          // If the min point is more than 3/4 along in the graph, it's near enough to the end
-          // that we align text to the left of the dot, otherwis eto the start
-          if (d.x > threeQuartersYear) {
-            return 'end';
-          }
-          // If it's say 2/3 along the graph, it may still hit the right edge, so center
-          else if (d.x > halfwayYear) {
-            return 'middle';
-          }
-          else {
-            return 'start';
-          }
-        })
-        .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan> ${this.unitCleaned}`)
-        .style("fill", "black")
-        .style("font-size", LabelFontSize);
+            // If the min point is more than 3/4 along in the graph, it's near enough to the end
+            // that we align text to the left of the dot, otherwise to the start
+            if (d.x >= threeQuartersYear) {
+              return 'end';
+            }
+            // If it's say 2/3 along the graph, it may still hit the right edge, so center
+            else if (d.x > halfwayYear) {
+              return 'middle';
+            }
+            else {
+              return 'start';
+            }
+          })
+          .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan> ${this.unitCleaned}`)
+          .style("fill", "black")
+          .style("font-size", LabelFontSize);
+    }
   }
 }
 </script>
@@ -229,7 +251,6 @@ export default class BarGraph extends Vue {
 
   svg {
     width: 100%;
-    aspect-ratio: 2;
     height: auto;
     max-width: 20rem; // 320px
 
