@@ -87,7 +87,7 @@ export default class PieChart extends Vue {
     let totalValue = 0;
     this.graphData.forEach((d) => totalValue += d.value);
 
-    // Now add the annotation. Use the centroid method to get the best coordinates
+    /** Add pie chart labels */
     this.svg.selectAll('mySlices')
       .data(dataReady)
       .enter()
@@ -106,13 +106,24 @@ export default class PieChart extends Vue {
 
         const label =
           `<tspan class="percent">${this.calculatePercentage(data.value, totalValue)}%</tspan>` +
-          `<tspan class="label" x="0" dy="1rem">${data.label}</tspan>`;
+          `<tspan class="label" x="0" dy="1.5em">${data.label}</tspan>`;
 
         return label;
       })
-      .attr("transform",
-        (d) => `translate(${labelArcGenerator.centroid(d as unknown as d3.DefaultArcObject)})`)
+      .attr('class', () => this.graphData.length === 1 ? '-only-slice' : '')
+      .attr("transform", (d) => {
+        // If we have only 1 slice (e.g. 100% electric, like Marina Towers), place dead center,
+        // otherwise use secondary arc centroid
+        if (this.graphData.length === 1) {
+          return '';
+        }
+
+        return `translate(${labelArcGenerator.centroid(d as unknown as d3.DefaultArcObject)})`;
+      })
       .style("text-anchor", (d) => {
+        // Center single slice label
+        if (this.graphData.length === 1) { return 'middle'; }
+
         // are we past the center?
         return (d.endAngle + d.startAngle) / 2 > Math.PI ?
             "end" : "start";
@@ -120,13 +131,17 @@ export default class PieChart extends Vue {
   }
 
   calculatePercentage(value: number, total: number): string {
-    const percentage = Math.round(value / total * 100);
+    const percentage = value / total * 100;
 
     if (percentage < 1) {
       return '< 1';
     }
+    // If > 99%, we don't want to round to 100% so we can show there's other slices
+    else if (percentage > 99 && percentage < 100) {
+      return Math.floor(percentage).toString();
+    }
     else {
-      return percentage.toString();
+      return Math.round(percentage).toString();
     }
   }
 }
@@ -143,12 +158,14 @@ export default class PieChart extends Vue {
       stroke: $white;
       stroke-width: 0.25rem;
     }
+
+    text.-only-slice { font-size: 1.5rem; }
   }
 
   tspan.percent {
     font-weight: bold;
-    font-size: 1.3rem;
+    font-size: 1.3em;
   }
-  tspan.label { font-size: 0.65rem; }
+  tspan.label { font-size: 0.65em; }
 }
 </style>

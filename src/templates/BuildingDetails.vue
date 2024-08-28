@@ -770,6 +770,7 @@ export default class BuildingDetails  extends Vue {
     display: flex;
     gap: 2rem;
 
+    .stat-tiles-cont { flex-basis: 70%; }
     .chart-cont {
       flex-basis: 30%;
       flex-shrink: 0;
