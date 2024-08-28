@@ -611,11 +611,13 @@ export default class BuildingDetails  extends Vue {
   calculateEnergyBreakdown(): void {
     const energyBreakdown = [];
 
-    energyBreakdown.push({
-      label: 'Electricity',
-      value: parseFloat(this.building.ElectricityUse.toString()),
-      color: EnergyBreakdownColors.Electricity,
-    });
+    if (this.building.ElectricityUse as unknown as number > 0) {
+      energyBreakdown.push({
+        label: 'Electricity',
+        value: parseFloat(this.building.ElectricityUse.toString()),
+        color: EnergyBreakdownColors.Electricity,
+      });
+    }
 
     if (this.building.NaturalGasUse as unknown as number > 0) {
       energyBreakdown.push({
