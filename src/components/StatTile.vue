@@ -20,7 +20,10 @@
 
       <!-- The actual stat value-->
       <div class="stat-value">
-        {{ statValue }} <span class="unit" v-html="unit" />
+        {{ statValue }} <span
+          class="unit"
+          v-html="unit"
+        />
 
         <!-- Show icons for below or above median if we have a median for this stat -->
         <template v-if="stats[statKey]">

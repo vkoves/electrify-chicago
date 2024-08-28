@@ -168,7 +168,7 @@ export default class BarGraph extends Vue {
       this.svg
         .append("g")
         .selectAll("dot")
-        .data(this.graphData.filter(d => !isNaN(d.y)))
+        .data(this.graphData.filter((d) => !isNaN(d.y)))
         .enter()
         .append("circle")
           .attr('class', (d) => {
