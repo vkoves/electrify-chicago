@@ -164,11 +164,11 @@ export default class BarGraph extends Vue {
     const LabelFontSize = 24;
 
     if (this.minAndMaxPoints) {
-      // Add all points, we'll then use CSS to hide all but the min and max unless hovered
+      // Add all valid points, we'll then use CSS to hide all but the min and max unless hovered
       this.svg
         .append("g")
         .selectAll("dot")
-        .data(this.graphData)
+        .data(this.graphData.filter(d => !isNaN(d.y)))
         .enter()
         .append("circle")
           .attr('class', (d) => {

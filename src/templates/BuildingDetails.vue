@@ -232,7 +232,7 @@ query ($id: ID!, $ID: String) {
                   :stat-key="'TotalGHGEmissions'"
                   :stats="BuildingBenchmarkStats"
                   :historic-data="historicData"
-                  :unit="'metric tons CO<sub>2</sub> eq.'"
+                  :unit="'tons CO<sub>2</sub>e'"
                 />
               </dd>
             </div>

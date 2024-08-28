@@ -600,6 +600,10 @@ export default class StatTile extends Vue {
     font-size: 1.375rem;
     font-weight: bold;
 
+    .unit {
+      font-weight: normal;
+      font-size: 1.125rem;
+    }
     img { vertical-align: -0.25rem; }
   }
 
