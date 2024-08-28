@@ -87,8 +87,22 @@ dl {
   dd + dt { margin-top: 1rem; }
 }
 
-summary { cursor: pointer; }
-summary:focus { outline-offset: 0; }
+/** Style the basic disclosure widget <details> and <summary> */
+details {
+  border: solid 0.01625rem $grey-dark;
+  margin-bottom: 1rem;
+  border-radius: $brd-rad-medium;
+
+  summary {
+    background-color: $grey-light;
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+
+    &:focus { outline-offset: 0; }
+  }
+
+  .details-content { padding: 1.5rem; }
+}
 
 img { max-width: 100%; }
 

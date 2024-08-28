@@ -5,26 +5,28 @@
       unless explicitly stated otherwise.
     </summary>
 
-    <p class="constrained">
-      <strong>Note:</strong> This data only includes buildings whose emissions are reported
-      under the
-      <a
-        href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html"
-        target="_blank"
-        rel="noopener"
-      >
-        Chicago Energy Benchmarking Ordinance<NewTabIcon />
-      </a>. According to the City &ldquo;As of 2016,
-      this list includes all commercial, institutional, and residential buildings larger than
-      50,000 square feet.&rdquo; This dataset is also then filtered to only buildings with
-      reported emissions > 1,000 metric tons CO<sub>2</sub> equivalent.
-    </p>
+    <div class="details-content">
+      <p class="constrained">
+        <strong>Note:</strong> This data only includes buildings whose emissions are reported
+        under the
+        <a
+          href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html"
+          target="_blank"
+          rel="noopener"
+        >
+          Chicago Energy Benchmarking Ordinance<NewTabIcon />
+        </a>. According to the City &ldquo;As of 2016,
+        this list includes all commercial, institutional, and residential buildings larger than
+        50,000 square feet.&rdquo; This dataset is also then filtered to only buildings with
+        reported emissions > 1,000 metric tons CO<sub>2</sub> equivalent.
+      </p>
 
-    <p class="constrained">
-      The latest year of data is from {{ LatestDataYear }}, but we update the site regularly when
-      new data is available, and some buildings may have failed to report that year, and only have
-      older data available.
-    </p>
+      <p class="constrained">
+        The latest year of data is from {{ LatestDataYear }}, but we update the site regularly when
+        new data is available, and some buildings may have failed to report that year, and only have
+        older data available.
+      </p>
+    </div>
   </details>
 </template>
 
@@ -49,19 +51,13 @@ export default class DataDisclaimer extends Vue {
 
 <style lang="scss">
 .data-disclaimer {
-  background: $grey;
-  border-radius: $brd-rad-medium;
   margin-bottom: 1rem;
+  font-size: 0.825rem;
 
-  summary, p { padding: 0.5rem 1rem; }
+  summary, .details-content { padding: 0.5rem 1rem; }
 
-  summary {
-    font-weight: bold;
-    font-size: 0.825rem;
-  }
+  summary { font-weight: bold; }
 
-  p {
-    margin-top: 0.5rem;
-  }
+  p { margin-top: 0.5em; }
 }
 </style>

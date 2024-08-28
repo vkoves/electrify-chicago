@@ -293,73 +293,41 @@ query ($id: ID!, $ID: String) {
           View Technical Info
         </summary>
 
-        <dl class="supp-info">
-          <div>
-            <dt>Source Energy Usage Intensity</dt>
-            <dd>
-              <StatTile
-                :building="$page.building"
-                :stat-key="'SourceEUI'"
-                :stats="BuildingBenchmarkStats"
-                :historic-data="historicData"
-                :unit="'kBtu / sqft'"
-              />
-            </dd>
-          </div>
+        <div class="details-content">
+          <dl class="supp-info">
+            <div>
+              <dt>Source Energy Usage Intensity</dt>
+              <dd>
+                <StatTile
+                  :building="$page.building"
+                  :stat-key="'SourceEUI'"
+                  :stats="BuildingBenchmarkStats"
+                  :historic-data="historicData"
+                  :unit="'kBtu / sqft'"
+                />
+              </dd>
+            </div>
 
-          <div>
-            <dt>Site Energy Usage Intensity</dt>
-            <dd>
-              <StatTile
-                :building="$page.building"
-                :stat-key="'SiteEUI'"
-                :stats="BuildingBenchmarkStats"
-                :unit="'kBtu / sqft'"
-              />
+            <div>
+              <dt>Site Energy Usage Intensity</dt>
+              <dd>
+                <StatTile
+                  :building="$page.building"
+                  :stat-key="'SiteEUI'"
+                  :stats="BuildingBenchmarkStats"
+                  :unit="'kBtu / sqft'"
+                />
 
-              {{ $page.buildingSiteEUIRank }}
-            </dd>
-          </div>
-        </dl>
+                {{ $page.buildingSiteEUIRank }}
+              </dd>
+            </div>
+          </dl>
+
+          <h2>Full Historical Data Table</h2>
+
+          <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
+        </div>
       </details>
-
-      <h2>Historical Data Table</h2>
-
-      <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
-
-      <form class="graph-controls">
-        <label for="col-to-graph">Column to Graph</label>
-        <select
-          id="col-to-graph"
-          v-model="colToGraph"
-        >
-          <!-- TODO: Make this based on the rendered graph columns -->
-          <option value="TotalGHGEmissions">
-            Total GHG Emissions
-          </option>
-          <option value="GHGIntensity">
-            GHG Intensity
-          </option>
-          <option value="ElectricityUse">
-            Electricity Use
-          </option>
-          <option value="NaturalGasUse">
-            Gas Use
-          </option>
-        </select>
-
-        <button
-          type="submit"
-          @click="updateGraph"
-        >
-          Update
-        </button>
-      </form>
-
-      <BarGraph
-        :graph-data="currGraphData"
-        :graph-title="currGraphTitle"
-      />
 
       <p class="constrained">
         <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
@@ -727,11 +695,7 @@ export default class BuildingDetails  extends Vue {
     gap: 2rem;
     margin: 0;
 
-    &.supp-info {
-      margin-top: 1rem;
-
-      > * { flex-basis: 40rem; }
-    }
+    &.supp-info  * { flex-basis: 45%; }
   }
 
   .emission-stats {
@@ -755,11 +719,6 @@ export default class BuildingDetails  extends Vue {
     dd, .stat-tile { height: 100%; }
 
     .stat-tile { min-width: 18rem; }
-  }
-
-  details {
-    border: solid 0.01625rem $grey-dark;
-    padding: 1rem;
   }
 
   ul {

@@ -45,7 +45,7 @@ export default class BarGraph extends Vue {
 
   /** Underlying size */
   readonly width = 400;
-  readonly height = 60;
+  readonly height = 80;
 
   // The amount to shift the x-axis down by
   readonly xAxisOffset = 60;
@@ -213,12 +213,6 @@ export default class BarGraph extends Vue {
             // (2020 + (0.75 * (2024 - 2020))
             const threeQuartersYear = Math.ceil(minYear + (0.75 * (maxYear - minYear)));
             const halfwayYear = Math.ceil(minYear + (0.5 * (maxYear - minYear)));
-
-            console.log({
-              threeQuartersYear,
-              halfwayYear,
-              x: d.x
-            })
 
             // If the min point is more than 3/4 along in the graph, it's near enough to the end
             // that we align text to the left of the dot, otherwise to the start
