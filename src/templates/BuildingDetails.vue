@@ -694,8 +694,6 @@ export default class BuildingDetails  extends Vue {
     flex-wrap: wrap;
     gap: 2rem;
     margin: 0;
-
-    &.supp-info  * { flex-basis: 45%; }
   }
 
   .emission-stats {
@@ -732,6 +730,9 @@ export default class BuildingDetails  extends Vue {
     select { margin-right: 1rem; }
   }
 
+  .supp-info >  * { flex-basis: 45%; }
+
+  /** Mobile styling */
   @media (max-width: $mobile-max-width) {
     .building-header {
       .building-img-cont, .building-header-text { width: 100%; }
@@ -776,6 +777,8 @@ export default class BuildingDetails  extends Vue {
     .building-details {
       padding: 1rem;
     }
+
+    .supp-info > * { flex-basis: 100%; }
   }
 }
 </style>

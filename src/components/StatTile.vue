@@ -655,7 +655,7 @@ export default class StatTile extends Vue {
     .spark-graph-cont {
       width: 75%;
       float: none;
-      margin-bottom: 1rem;
+      margin: 0;
     }
   }
 }
