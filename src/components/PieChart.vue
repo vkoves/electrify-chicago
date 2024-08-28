@@ -1,0 +1,154 @@
+<template>
+  <div class="pie-chart-cont">
+    <svg id="pie-chart"><!-- D3 inserts here --></svg>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import * as d3 from 'd3';
+
+export interface IPieSlice {
+  value: number;
+  label: string;
+  color: string;
+}
+
+/**
+ * A component that can graph an arbitrary array of numeric data as a pie chart
+ *
+ * E.g. Votes for favorite pies:
+ * [ { label: 'Cherry', value: 30 }, { label: 'Chocolate', value: 12 }]
+ */
+@Component({})
+export default class PieChart extends Vue {
+  @Prop({required: true}) graphData!: Array<IPieSlice>;
+
+  @Watch('graphData')
+  onDataChanged(): void {
+    this.renderGraph();
+  }
+
+  readonly width = 400;
+  readonly height = 320;
+
+  readonly graphMargins = { top: 0, right: 0, bottom: 0, left: 0 };
+
+  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+
+  mounted(): void {
+    const outerWidth = this.width + this.graphMargins.left + this.graphMargins.right;
+    const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
+
+    this.svg = d3
+      .select("svg#pie-chart")
+      .attr("width", outerWidth)
+      .attr("height", outerHeight)
+      .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
+      .attr("preserveAspectRatio", "xMidYMid meet")
+      .append("g")
+        .attr("transform", `translate(${this.width / 2},${this.height / 2})`);
+
+    this.renderGraph();
+  }
+
+  renderGraph(): void {
+    // Empty the SVG
+    this.svg.html(null);
+
+    const radius = 100;
+    const labelRadius = 150;
+
+    // Compute the position of each group on the pie:
+    var pie = d3.pie()
+      .value((d: any) => d.value);
+    var dataReady = pie(this.graphData as any);
+
+    // shape helper to build arcs:
+    var arcGenerator = d3.arc()
+      .innerRadius(0)
+      .outerRadius(radius);
+
+    var labelArcGenerator = d3.arc()
+      .innerRadius(radius)
+      .outerRadius(labelRadius);
+
+    // Build the pie chart: Basically, each part of the pie is a path that we build using the
+    // arc function.
+    this.svg.selectAll('mySlices')
+      .data(dataReady)
+      .enter()
+      .append('path')
+          .attr('d', arcGenerator as any)
+          .attr('fill', (d) => (d.data as unknown as IPieSlice).color);
+
+
+    // Calculate total value for % calculation
+    let totalValue = 0;
+    this.graphData.forEach((d) => totalValue += d.value);
+
+    // Now add the annotation. Use the centroid method to get the best coordinates
+    this.svg.selectAll('mySlices')
+      .data(dataReady)
+      .enter()
+      .append('text')
+      .html((d) => {
+        // Convert degrees to rads
+        const thresholdRadians = 5 / 360 * 2 * Math.PI;
+
+        // If we have a lot of small slices, we skip those labels so they don't collide
+        if (this.graphData.length > 2
+          && (d.endAngle - d.startAngle) <  thresholdRadians) {
+          return '';
+        }
+
+        let data = d.data as any as IPieSlice;
+
+        const label =
+          `<tspan class="percent">${this.calculatePercentage(data.value, totalValue)}%</tspan>` +
+          `<tspan class="label" x="0" dy="1rem">${data.label}</tspan>`;
+
+        return label;
+      })
+      .attr("transform",
+        (d) => `translate(${labelArcGenerator.centroid(d as unknown as d3.DefaultArcObject)})`)
+      .style("text-anchor", (d) => {
+        // are we past the center?
+        return (d.endAngle + d.startAngle) / 2 > Math.PI ?
+            "end" : "start";
+      });
+  }
+
+  calculatePercentage(value: number, total: number): string {
+    const percentage = Math.round(value / total * 100);
+
+    if (percentage < 1) {
+      return '< 1';
+    }
+    else {
+      return percentage.toString();
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+.pie-chart-cont {
+  svg {
+    width: 100%;
+    height: auto;
+    max-width: 50rem;
+
+    path {
+      stroke: $white;
+      stroke-width: 0.25rem;
+    }
+  }
+
+  tspan.percent {
+    font-weight: bold;
+    font-size: 1.3rem;
+  }
+  tspan.label { font-size: 0.65rem; }
+}
+</style>

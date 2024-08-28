@@ -55,6 +55,7 @@ query ($id: ID!, $ID: String) {
           ChicagoEnergyRating
           ENERGYSTARScore
           SourceEUI
+          SiteEUI
           GHGIntensity
           TotalGHGEmissions
           ElectricityUse
@@ -73,7 +74,8 @@ query ($id: ID!, $ID: String) {
         class="building-header"
         :class="{
           '-has-img': Boolean(buildingImg),
-          '-img-tall': Boolean(buildingImg?.isTall)
+          // The layout is better for tall images, so keeping it there
+          '-img-tall': Boolean(buildingImg?.isTall || true)
         }"
       >
         <div class="building-header-text">
@@ -204,89 +206,109 @@ query ($id: ID!, $ID: String) {
         </div>
       </div>
 
-      <h2>Emissions & Energy Information for {{ dataYear }}</h2>
+      <div class="main-cols">
+        <div class="stat-tiles-cont">
+          <h2>Emissions & Energy Information for {{ dataYear }}</h2>
 
-      <dl class="emission-stats">
-        <div>
-          <dt>Greenhouse Gas Intensity</dt>
-          <dd>
-            <StatTile
-              :building="$page.building"
-              :stat-key="'GHGIntensity'"
-              :stats="BuildingBenchmarkStats"
-              :historic-data="historicData"
-              :unit="'kg CO<sub>2</sub>e / sqft'"
-            />
-          </dd>
+          <dl class="emission-stats">
+            <div>
+              <dt>Greenhouse Gas Intensity</dt>
+              <dd>
+                <StatTile
+                  :building="$page.building"
+                  :stat-key="'GHGIntensity'"
+                  :stats="BuildingBenchmarkStats"
+                  :historic-data="historicData"
+                  :unit="'kg CO<sub>2</sub>e / sqft'"
+                />
+              </dd>
+            </div>
+
+            <div>
+              <dt>Total Greenhouse Gas Emissions</dt>
+              <dd>
+                <StatTile
+                  :building="$page.building"
+                  :stat-key="'TotalGHGEmissions'"
+                  :stats="BuildingBenchmarkStats"
+                  :historic-data="historicData"
+                  :unit="'metric tons CO<sub>2</sub> eq.'"
+                />
+              </dd>
+            </div>
+          </dl>
+
+          <div class="stat-tiles-cont">
+            <h2>Energy Breakdown</h2>
+
+            <dl class="emission-stats">
+              <div>
+                <dt>Natural Gas Use</dt>
+                <dd>
+                  <StatTile
+                    :building="$page.building"
+                    :stat-key="'NaturalGasUse'"
+                    :stats="BuildingBenchmarkStats"
+                    :historic-data="historicData"
+                    :unit="'kBtu'"
+                  />
+                </dd>
+              </div>
+
+              <div>
+                <dt>Electricity Use</dt>
+                <dd>
+                  <StatTile
+                    :building="$page.building"
+                    :stat-key="'ElectricityUse'"
+                    :stats="BuildingBenchmarkStats"
+                    :historic-data="historicData"
+                    :unit="'kBtu'"
+                  />
+                </dd>
+              </div>
+
+              <!-- Most buildings don't use district steam, so only show if > 0 -->
+              <div v-if="$page.building.DistrictSteamUse > 0">
+                <dt>District Steam Use</dt>
+                <dd>
+                  <StatTile
+                    :building="$page.building"
+                    :stat-key="'DistrictSteamUse'"
+                    :stats="BuildingBenchmarkStats"
+                    :historic-data="historicData"
+                    :unit="'kBtu'"
+                  />
+                </dd>
+              </div>
+
+              <!-- Most buildings don't use district chilling, so only show if > 0 -->
+              <div v-if="$page.building.DistrictChilledWaterUse > 0">
+                <dt>District Chilled Water Use</dt>
+                <dd>
+                  <StatTile
+                    :building="$page.building"
+                    :stat-key="'DistrictChilledWaterUse'"
+                    :stats="BuildingBenchmarkStats"
+                    :historic-data="historicData"
+                    :unit="'kBtu'"
+                  />
+                </dd>
+              </div>
+            </dl>
+          </div>
         </div>
 
-        <div>
-          <dt>Total Greenhouse Gas Emissions</dt>
-          <dd>
-            <StatTile
-              :building="$page.building"
-              :stat-key="'TotalGHGEmissions'"
-              :stats="BuildingBenchmarkStats"
-              :historic-data="historicData"
-              :unit="'metric tons CO<sub>2</sub> eq.'"
-            />
-          </dd>
-        </div>
+        <div class="chart-cont">
+          <h2>Energy Mix</h2>
+          <p>
+            <strong>Total Energy Use:</strong>
+            {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
+          </p>
 
-        <div>
-          <dt>Natural Gas Use</dt>
-          <dd>
-            <StatTile
-              :building="$page.building"
-              :stat-key="'NaturalGasUse'"
-              :stats="BuildingBenchmarkStats"
-              :historic-data="historicData"
-              :unit="'kBtu'"
-            />
-          </dd>
+          <PieChart :graph-data="energyBreakdownData" />
         </div>
-
-        <div>
-          <dt>Electricity Use</dt>
-          <dd>
-            <StatTile
-              :building="$page.building"
-              :stat-key="'ElectricityUse'"
-              :stats="BuildingBenchmarkStats"
-              :historic-data="historicData"
-              :unit="'kBtu'"
-            />
-          </dd>
-        </div>
-
-        <!-- Most buildings don't use district steam, so only show if > 0 -->
-        <div v-if="$page.building.DistrictSteamUse > 0">
-          <dt>District Steam Use</dt>
-          <dd>
-            <StatTile
-              :building="$page.building"
-              :stat-key="'DistrictSteamUse'"
-              :stats="BuildingBenchmarkStats"
-              :historic-data="historicData"
-              :unit="'kBtu'"
-            />
-          </dd>
-        </div>
-
-        <!-- Most buildings don't use district chilling, so only show if > 0 -->
-        <div v-if="$page.building.DistrictChilledWaterUse > 0">
-          <dt>District Chilled Water Use</dt>
-          <dd>
-            <StatTile
-              :building="$page.building"
-              :stat-key="'DistrictChilledWaterUse'"
-              :stats="BuildingBenchmarkStats"
-              :historic-data="historicData"
-              :unit="'kBtu'"
-            />
-          </dd>
-        </div>
-      </dl>
+      </div>
 
       <details>
         <summary class="bold">
@@ -465,6 +487,14 @@ import {
   IBuildingBenchmarkStats,
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/BarGraph.vue';
+import PieChart, { IPieSlice } from '../components/PieChart.vue';
+
+const EnergyBreakdownColors = {
+  DistrictChilling: '#01295F',
+  DistrictSteam: '#ABABAB',
+  Electricity: '#F0E100',
+  NaturalGas: '#993300',
+};
 
 @Component<any>({
   metaInfo() {
@@ -476,11 +506,12 @@ import { IGraphPoint } from '../components/BarGraph.vue';
     BarGraph,
     BuildingImage,
     DataSourceFootnote,
+    HistoricalBuildingDataTable,
     NewTabIcon,
     OverallRankEmoji,
     OwnerLogo,
+    PieChart,
     StatTile,
-    HistoricalBuildingDataTable,
   },
   filters: {
     titlecase(value: string) {
@@ -512,6 +543,8 @@ export default class BuildingDetails  extends Vue {
    /** Set by Gridsome to results of GraphQL query */
   $page: any;
 
+  energyBreakdownData!: Array<IPieSlice>;
+
   /** All benchmarks (reported and not) for this building */
   historicData!: Array<IHistoricData>;
 
@@ -521,6 +554,8 @@ export default class BuildingDetails  extends Vue {
 
   /** The key from the historical data we are graphing */
   colToGraph = 'TotalGHGEmissions';
+
+  totalEnergyUsekBTU!: number;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -569,7 +604,48 @@ export default class BuildingDetails  extends Vue {
     this.historicData = this.$page.allBenchmark.edges
       .map((nodeObj: { node: IHistoricData }) => nodeObj.node) || [];
 
+    this.calculateEnergyBreakdown();
     this.updateGraph();
+  }
+
+  calculateEnergyBreakdown(): void {
+    const energyBreakdown = [];
+
+    energyBreakdown.push({
+      label: 'Electricity',
+      value: parseFloat(this.building.ElectricityUse.toString()),
+      color: EnergyBreakdownColors.Electricity,
+    });
+
+    if (this.building.NaturalGasUse as unknown as number > 0) {
+      energyBreakdown.push({
+        label: 'Natural Gas',
+        value: parseFloat(this.building.NaturalGasUse.toString()),
+        color: EnergyBreakdownColors.NaturalGas,
+      });
+    }
+
+    if (this.building.DistrictSteamUse as unknown as number > 0) {
+      energyBreakdown.push({
+      label: 'District Steam',
+      value: parseFloat(this.building.DistrictSteamUse.toString()),
+      color: EnergyBreakdownColors.DistrictSteam,
+    });
+    }
+
+    if (this.building.DistrictChilledWaterUse as unknown as number > 0) {
+      energyBreakdown.push({
+        label: 'District Chilling',
+        value: parseFloat(this.building.DistrictChilledWaterUse.toString()),
+        color: EnergyBreakdownColors.DistrictChilling,
+      });
+    }
+
+    let totalEnergyUse = 0;
+    energyBreakdown.forEach((datum) => totalEnergyUse += datum.value);
+    this.totalEnergyUsekBTU = totalEnergyUse;
+
+    this.energyBreakdownData = energyBreakdown;
   }
 
   updateGraph(event?: Event): void {
@@ -638,7 +714,7 @@ export default class BuildingDetails  extends Vue {
         z-index: 10;
         backdrop-filter: blur(0.0625rem);
         background: rgb(255 255 255 / 75%);
-        bottom: 4rem;
+        bottom: 2.5rem;
         width: 60%;
         padding: 0.5rem 1rem;
         border-top-right-radius: 0.5rem;
@@ -688,8 +764,23 @@ export default class BuildingDetails  extends Vue {
     margin-top: 1rem;
 
     h2 { margin-top: 0; }
+  }
 
-    dt {font-size: 1.5rem; }
+  .main-cols {
+    display: flex;
+    gap: 2rem;
+
+    .chart-cont {
+      flex-basis: 30%;
+      flex-shrink: 0;
+      margin-top: 1rem;
+
+      .pie-chart-cont {
+        margin-top: 1rem;
+        background-color: $off-white;
+        border-radius: $brd-rad-medium;
+      }
+    }
   }
 
   dl {
@@ -737,6 +828,8 @@ export default class BuildingDetails  extends Vue {
 
   /** Mobile styling */
   @media (max-width: $mobile-max-width) {
+    .main-cols { flex-direction: column; }
+
     .building-header {
       .building-img-cont, .building-header-text { width: 100%; }
 
