@@ -281,7 +281,7 @@ export default class BarGraph extends Vue {
       .style("top", `${tooltipY}px`);
     }
 
-  mouseleave(datum: INumGraphPoint): void {
+  mouseleave(): void {
     this.tooltip?.style("opacity", 0);
   }
 }
