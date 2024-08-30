@@ -802,7 +802,6 @@ export default class BuildingDetails  extends Vue {
       flex-direction: column;
       justify-content: space-between;
       flex-basis: 48%;
-      flex-grow: 1;
       max-width: 40rem;
     }
 

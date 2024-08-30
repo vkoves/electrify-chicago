@@ -49,9 +49,15 @@ export default class BarGraph extends Vue {
     this.renderGraph();
   }
 
-  /** Underlying size */
-  readonly width = 400;
-  readonly height = 80;
+  /** Underlying SVG size */
+  readonly width = 320;
+  readonly height = 60;
+
+  /** The radius, in pixels, of the min and max dots and all the points on focus */
+  readonly DotRadius = 8;
+
+  /** The font-size of the label, in the <svg>'s internal space (so scaled as the SVG is scaled)' */
+  readonly LabelFontSize = 28;
 
   // The amount to shift the x-axis down by
   readonly xAxisOffset = 60;
@@ -136,10 +142,13 @@ export default class BarGraph extends Vue {
         d3.axisBottom(x)
           .tickFormat(d3.format('d'))
           // For spark line, only show first and last year (e.g. 2018 and 2022)
-          .tickValues(d3.extent(xVals) as [number, number]),
+          .tickValues(d3.extent(xVals) as [number, number])
+          .tickSizeOuter(0), // make the x-axis a flat line, with no tick marks at the ends
       )
       .selectAll("text")
-        .attr("text-anchor", (d) =>  d === maxYear ? 'end' : 'start');
+        .attr("text-anchor", (d) =>  d === maxYear ? 'end' : 'start')
+        // shift label a bit further from the axis line
+        .attr("dy", "0.85em");
 
     // Render Y axis
     this.svg.append("g")
@@ -160,9 +169,6 @@ export default class BarGraph extends Vue {
         .y((d: INumGraphPoint) => y(d.y)),
         );
 
-    const DotRadius = 8;
-    const LabelFontSize = 24;
-
     if (this.minAndMaxPoints) {
       // Add all valid points, we'll then use CSS to hide all but the min and max unless hovered
       this.svg
@@ -179,7 +185,7 @@ export default class BarGraph extends Vue {
           })
           .attr("cx", (d) => x(d.x))
           .attr("cy", (d) => y(d.y))
-          .attr("r", DotRadius)
+          .attr("r", this.DotRadius)
           .attr("fill", "black")
           .attr('tabindex', '0')
           .on("mouseover", this.mouseover.bind(this))
@@ -204,13 +210,13 @@ export default class BarGraph extends Vue {
 
             // The min point should have its label below
             if (d.x === this.minAndMaxPoints![0].x) {
-              yPos += LabelFontSize * 1.6;
+              yPos += this.LabelFontSize * 1.5;
 
               return `translate(${xPos},${yPos})`;
             }
             // The max point has its label above
             else {
-              yPos -= LabelFontSize * 0.9;
+              yPos -= this.LabelFontSize * 0.5;
 
               return `translate(${xPos},${yPos})`;
             }
@@ -236,9 +242,9 @@ export default class BarGraph extends Vue {
               return 'start';
             }
           })
-          .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan> ${this.unitCleaned}`)
+          .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan>`)
           .style("fill", "black")
-          .style("font-size", LabelFontSize);
+          .style("font-size", this.LabelFontSize);
     }
   }
 
@@ -344,13 +350,13 @@ export default class BarGraph extends Vue {
     tspan.sub { font-size: 0.75em; }
   }
 
-  .tick {
-    font-weight: bold;
-    font-size: 1.25rem;
-  }
-
   // Hide tick lines on x-axis
   .tick line { display: none; }
+
+  .x-axis .tick {
+    font-size: 1.6rem;
+    font-weight: normal
+  }
 
   // Hide y-axis via CSS, we label points instead
   .y-axis { display: none; }

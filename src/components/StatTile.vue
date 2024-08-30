@@ -530,7 +530,7 @@ export default class StatTile extends Vue {
     if (this.historicData) {
       this.historicStatData = this.historicData.map((datum: IHistoricData) => ({
         x: parseInt(datum.DataYear),
-        y: parseFloat((datum as any)[this.statKey] as string),
+        y: this.parseStatValueForGraph(datum),
       }));
 
       const zeroOrNanOnly = this.historicStatData.every((datum) => datum.y === 0 || isNaN(datum.y));
@@ -538,6 +538,22 @@ export default class StatTile extends Vue {
       if (zeroOrNanOnly) {
         this.historicStatData = [];
       }
+    }
+  }
+
+  /**
+   * Return the related stat value from the historic data, parsed as a float or rounded to an int.
+   * If this is a very large number (> 100, like emissions), return an int, otherwise a float e.g.
+   * GHG intensity)
+   */
+  parseStatValueForGraph(datum: IHistoricData): number {
+    const statValFloat = parseFloat((datum)[this.statKey as keyof IHistoricData] as string);
+
+    if (statValFloat > 1_000) {
+      return Math.round(statValFloat);
+    }
+    else {
+      return statValFloat;
     }
   }
 }
