@@ -207,10 +207,10 @@ query ($id: ID!, $ID: String) {
       </div>
 
       <div class="main-cols">
-        <div class="stat-tiles-cont">
+        <div class="stat-tiles-col">
           <h2>Emissions & Energy Information for {{ dataYear }}</h2>
 
-          <dl class="emission-stats">
+          <dl class="stat-tiles">
             <div>
               <dt>Greenhouse Gas Intensity</dt>
               <dd>
@@ -238,10 +238,10 @@ query ($id: ID!, $ID: String) {
             </div>
           </dl>
 
-          <div class="stat-tiles-cont">
+          <div class="stat-tiles-col">
             <h2>Energy Breakdown</h2>
 
-            <dl class="emission-stats">
+            <dl class="stat-tiles">
               <div>
                 <dt>Natural Gas Use</dt>
                 <dd>
@@ -312,11 +312,11 @@ query ($id: ID!, $ID: String) {
 
       <details>
         <summary class="bold">
-          View Technical Info
+          View Extra Technical Info
         </summary>
 
         <div class="details-content">
-          <dl class="supp-info">
+          <dl class="stat-tiles -supp">
             <div>
               <dt>Source Energy Usage Intensity</dt>
               <dd>
@@ -772,7 +772,7 @@ export default class BuildingDetails  extends Vue {
     display: flex;
     gap: 2rem;
 
-    .stat-tiles-cont { flex-basis: 70%; }
+    .stat-tiles-col { flex-basis: 70%; }
     .chart-cont {
       flex-basis: 30%;
       flex-shrink: 0;
@@ -782,6 +782,7 @@ export default class BuildingDetails  extends Vue {
         margin-top: 1rem;
         background-color: $off-white;
         border-radius: $brd-rad-medium;
+        max-width: 24rem;
       }
     }
   }
@@ -793,7 +794,9 @@ export default class BuildingDetails  extends Vue {
     margin: 0;
   }
 
-  .emission-stats {
+  .stat-tiles {
+    // Layout of [tile 48%] [gap 4%] [tile 48%]
+    gap: 2rem 4%;
     margin-top: 0.5rem;
     margin-bottom: 1rem;
 
@@ -802,7 +805,9 @@ export default class BuildingDetails  extends Vue {
       flex-direction: column;
       justify-content: space-between;
       flex-basis: 48%;
-      max-width: 40rem;
+      // Make sure all stat tiles have some minimum height, even district steam with no medians
+      max-width: 30rem;
+      min-height: 14rem;
     }
 
     dt {
@@ -815,23 +820,25 @@ export default class BuildingDetails  extends Vue {
     .stat-tile { min-width: 18rem; }
   }
 
+  details {
+    margin: 2rem 0;
+
+    .stat-tiles dt { font-size: 1.25rem; }
+  }
+
   ul {
     margin-top: 0.5rem;
 
     li + li { margin-top: 0.25rem; }
   }
 
-  .graph-controls {
-    label { display: block; font-weight: bold; }
-    select { margin-right: 1rem; }
+  /** Small desktop sizing - split to just two columns from three */
+  @media (max-width: 1200px) {
+    .main-cols { flex-direction: column-reverse; }
   }
-
-  .supp-info >  * { flex-basis: 45%; }
 
   /** Mobile styling */
   @media (max-width: $mobile-max-width) {
-    .main-cols { flex-direction: column; }
-
     .building-header {
       .building-img-cont, .building-header-text { width: 100%; }
 
@@ -876,7 +883,11 @@ export default class BuildingDetails  extends Vue {
       padding: 1rem;
     }
 
-    .supp-info > * { flex-basis: 100%; }
+    // Make stat tiles full width
+    .stat-tiles > div {
+      flex-basis: 100%;
+      max-width: none;
+    }
   }
 }
 </style>
