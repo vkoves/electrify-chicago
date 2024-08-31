@@ -110,6 +110,13 @@ export const BuildingImages: IBuildingImages = {
         fromGoogleMaps: true,
         isTall: true,
     },
+    // Chicago Theatre
+    '173598': {
+        attributionUrl: 'https://commons.wikimedia.org/wiki/File:Chicago_Theatre_blend.jpg',
+        imgUrl: BuildingImagesBase + 'chicago-theatre.jpg',
+        fromGoogleMaps: false,
+        isTall: false,
+    },
 
     /**
      * Particularly Low GHG Intensity Buildings
