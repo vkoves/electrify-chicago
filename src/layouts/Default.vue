@@ -175,7 +175,7 @@ export default class Default extends Vue {
 .layout {
   // Make sure footer is always at the bottom
   min-height: calc(100vh - 10rem);
-  max-width: 75rem; // 1200px
+  max-width: 87.5rem; // 1400px
   margin: 0 auto;
   padding-left: 1rem;
   padding-right: 1rem;

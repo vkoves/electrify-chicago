@@ -69,7 +69,7 @@ export default class BuildingImage extends Vue {
 
   img {
     border-radius: $brd-rad-medium;
-    max-height: 30rem;
+    max-height: 25rem;
   }
 
   .attribution {

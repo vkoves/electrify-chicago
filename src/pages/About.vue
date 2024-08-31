@@ -37,44 +37,50 @@ export default class About extends Vue {
         patients at a hospital.
       </p>
 
-      <p class="large-text bold">
-        Our Goal: Get Large Buildings to <u>Electrify</u> & Use Less Energy
+      <p class="our-why large-text bold">
+        Our Goal? Get Large Buildings to <em>Electrify</em> And Use Less Energy
       </p>
 
       <h2>But Why Electrify?</h2>
+
+      <div class="power-chart">
+        <img
+          alt="Pie chart showing that 67% of Illinois power is Carbon-Free, with 58% from Nuclear
+            and 9% from Wind. Then 18% comes from Coal and 14% from Natural Gas."
+          class="-shadowed"
+          src="/il-power-chart.webp"
+          width="350"
+        >
+
+        <p class="footnote -img">
+          Source:
+          <a
+            href="https://decarbmystate.com/illinois#power"
+            target="_blank"
+            rel="noopener"
+          >
+            Illinois Power | Decarb My State <NewTabIcon />
+          </a>
+        </p>
+      </div>
 
       <p class="constrained">
         In simple terms, because we can scalably produce electricity without emitting CO<sub>2</sub>
         and exacerbating the climate crisis. In fact, <em>this decade</em> (the 2020s) is an
         especially crucial one for tackling climate change
-        (<a href="https://www.nytimes.com/2023/03/20/climate/global-warming-ipcc-earth.html">&ldquo;World Has Less Than a Decade to Stop Catastrophic Warming&hellip;&rdquo;
-          | The New York Times</a>), and shifting away from burning fossil fuels to using
+        (<a href="https://www.nytimes.com/2023/03/20/climate/global-warming-ipcc-earth.html">
+          &ldquo;World Has Less Than a Decade to Stop Catastrophic Warming&hellip;&rdquo;
+          | The New York Times
+        </a>), and shifting away from burning fossil fuels to using
         electricity
         <strong>today</strong> is a crucial step in that journey.
       </p>
 
       <p class="constrained">
-        Even better, <strong>Illinois' grid in particular is already powered mostly by carbon-free
-          energy</strong> and is improving every year!
-      </p>
-
-      <img
-        alt="Pie chart showing that 67% of Illinois power is Carbon-Free, with 58% from Nuclear and
-        9% from Wind. Then 18% comes from Coal and 14% from Natural Gas."
-        class="-shadowed"
-        src="/il-power-chart.png"
-        width="500"
-      >
-
-      <p class="footnote -img">
-        Source:
-        <a
-          href="https://decarbmystate.com/illinois#power"
-          target="_blank"
-          rel="noopener"
-        >
-          Illinois Power | Decarb My State <NewTabIcon />
-        </a>
+        Even better, <strong>
+          Illinois' grid in particular is already powered mostly by carbon-free
+          energy
+        </strong> and is improving every year!
       </p>
 
       <p>
@@ -84,6 +90,19 @@ export default class About extends Vue {
         used.
       </p>
 
+
+      <h2>Updates</h2>
+
+      <p>
+        See our <g-link
+          to="/release-notes"
+          class="bold"
+        >Release Notes</g-link> page to see data
+        updates and other changes, or check activity on our
+        <a href="https://github.com/vkoves/electrify-chicago">
+          GitHub repository
+        </a>!
+      </p>
 
       <h2>Other Interesting Pages</h2>
 
@@ -105,20 +124,16 @@ export default class About extends Vue {
         </li>
       </ul>
 
-      <h2>Updates</h2>
-
-      See our <g-link to="/release-notes">
-        Release Notes
-      </g-link> page to see data updates and other
-      information, or check activity on our
-      <a href="https://github.com/vkoves/electrify-chicago">GitHub repo</a>!
-
       <h2>Authors</h2>
 
       <p>
         Electrify Chicago is a volunteer project led by
-        <a href="https://viktorkoves.com/">Viktor Köves</a>, a Chicago native and climate developer
-        part of the volunteer team behind <a href="https://decarbmystate.com/">DecarbMyState</a>.
+        <a href="https://viktorkoves.com/">
+          Viktor Köves
+        </a>, a Chicago native and climate developer
+        part of the volunteer team behind <a href="https://decarbmystate.com/">
+          DecarbMyState
+        </a>.
       </p>
 
       <p>
@@ -150,18 +165,40 @@ export default class About extends Vue {
       <p>
         Found a bug or have a feature request?
         <a href="https://github.com/vkoves/electrify-chicago/issues/new">
-          File an issue on the Electrify Chicago GitHub</a>!
+          File an issue on the Electrify Chicago GitHub
+        </a>!
       </p>
     </div>
   </DefaultLayout>
 </template>
 
 <style lang="scss">
+h2 { margin-top: 1.75rem; }
+
+p.our-why {
+  display: inline-block;
+  line-height: 1.25;
+  border-bottom: solid 0.5rem $chicago-blue;
+}
+
+.power-chart {
+  float: right;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+}
+
 .other-pages {
   li {
     font-size: 1.25rem;
     margin-top: 1rem;
     font-weight: bold;
+  }
+}
+
+@media (max-width: $mobile-max-width) {
+  .power-chart {
+    float: none;
+    margin-left: 0;
   }
 }
 </style>

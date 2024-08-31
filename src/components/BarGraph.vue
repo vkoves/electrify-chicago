@@ -5,7 +5,7 @@
       v-html="graphTitle"
     />
 
-    <svg><!-- D3 inserts here --></svg>
+    <svg id="bar-graph"><!-- D3 inserts here --></svg>
   </div>
 </template>
 
@@ -21,10 +21,7 @@ export interface IGraphPoint {
 /**
  * A component that can graph an arbitrary array of numeric data
  */
-@Component({
-  components: {
-  },
-})
+@Component({})
 export default class BarGraph extends Vue {
   @Prop({required: true}) graphTitle!: string;
 
@@ -48,7 +45,7 @@ export default class BarGraph extends Vue {
     const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     this.svg = d3
-      .select("svg")
+      .select("svg#bar-graph")
       .attr("width", outerWidth)
       .attr("height", outerHeight)
       .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
