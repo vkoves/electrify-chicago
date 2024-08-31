@@ -127,7 +127,8 @@ img.-shadowed {
   &.-img { margin-top: 0; ;}
 }
 
-// Use .constrained for a reasonable max-width for text readability
+// Use .constrained for a reasonable max-width for text readability and .layout-constrained for a
+// centered version
 .layout-constrained, .constrained {
   max-width: 50rem;
 

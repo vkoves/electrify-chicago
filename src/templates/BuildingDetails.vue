@@ -370,7 +370,8 @@ query ($id: ID!, $ID: String) {
           :href="UtilityCosts.source"
           target="_blank"
           rel="noopener"
-        >Chicago Gas & Electric Costs Source <NewTabIcon />
+        >
+          Chicago Gas & Electric Costs Source <NewTabIcon />
         </a>
         for the original statistics.
       </p>
@@ -388,8 +389,10 @@ query ($id: ID!, $ID: String) {
 
         <p class="constrained">
           In other words,
-          <strong>buildings should look to move all on-site uses of fossil fuels (including
-            space heating, water heating, and cooking) to electrically powered systems</strong> like
+          <strong>
+            buildings should look to move all on-site uses of fossil fuels (including
+            space heating, water heating, and cooking) to electrically powered systems
+          </strong> like
           industrial grade heat pumps, heat pump water heaters, and induction stoves. With Illinois'
           current electric supply, just using the same amount of energy from electricity, rather
           than natural gas (aka methane) will dramatically reduce greenhouse gas emissions.
@@ -398,7 +401,9 @@ query ($id: ID!, $ID: String) {
             href="https://decarbmystate.com/illinois#power"
             target="_blank"
             rel="noopener"
-          >Illinois - Power | DecarbMyState <NewTabIcon /></a>).
+          >
+            Illinois - Power | DecarbMyState <NewTabIcon />
+          </a>).
           This has already been done across the country with a variety of buildings, large and
           small, like the
           <a
