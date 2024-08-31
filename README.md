@@ -147,6 +147,30 @@ const BuildingOwnerIds = [
 **Note:** You'll have to restart your `yarn develop` after step 3 to see changes, since
 `gridsome.server.js` just runs once.
 
+### Adding Building Images
+
+1. **Find A Suitable Image* -- Building images can be sourced from Google Maps or a source that allows redistribution, like
+Wikimedia.
+
+2 **Process the Image**
+
+We should reasonably crop images if needed and then scale them to be EITHER:
+
+- 1000px wide if it's a landscape image
+- 600px wide if it's a portrait image
+
+Make sure to export it as a `.jpg` image at a quality level of 70, which should ensure a reasonable
+file size under 200 kB.
+
+**Store the image in `/static/building-imgs/`.
+
+3. **Tell The Site There's a Building Image** - Follow the pattern of other buildings in the
+`building-images.constant.vue`, providing an attribution URL, the image file name, and specify
+whether it's a tall (portrait) image and whether it's from Google Maps.
+
+
+4. **Confirm the image is visible and looks good** - and that's all there is to it!
+
 ## Deploys
 
 This site deploys automatically via Netlify by running `gridsome build`.
