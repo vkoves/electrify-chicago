@@ -38,7 +38,7 @@ export default class BuildingsTable extends Vue {
       <thead>
         <tr>
           <th scope="col">
-            Property Name / address
+            Name / Address
           </th>
           <th
             scope="col"
@@ -69,15 +69,15 @@ export default class BuildingsTable extends Vue {
             scope="col"
             class="numeric wide-col"
           >
-            Greenhouse Gas Intensity<br>
+            GHG Intensity<br>
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
           </th>
           <th
             scope="col"
             class="numeric wide-col"
           >
-            Total Greenhouse Emissions<br>
-            <span class="unit">(metric tons CO<sub>2</sub> eq.)</span>
+            Total GHG Emissions<br>
+            <span class="unit">(tons CO<sub>2</sub> eq.)</span>
           </th>
         </tr>
       </thead>
@@ -267,18 +267,18 @@ export default class BuildingsTable extends Vue {
     // Make table screen full width on mobile
     width: calc(100% + 2rem);
     margin: 0 -1rem;
+    // Disable max-height lots of scrolling is fine on mobile
+    max-height: none;
 
     table {
-      width: 60rem;
+      width: 70rem;
 
+      thead th {
+        font-size: 0.825rem;
+        padding: 0.5rem 0.25rem;
+      }
       td.property-name, td.property-address { width: 10rem; }
     }
-  }
-
-  // On very short screens < 640px, disable vertical scrolling on the table, since it's view
-  // height based and makes it very annoying at high zoom
-  @media (max-height: 40rem) {
-    max-height: none;
   }
 }
 </style>

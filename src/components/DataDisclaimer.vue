@@ -1,8 +1,7 @@
 <template>
   <details class="data-disclaimer">
     <summary>
-      Note: Data includes large Chicago buildings with data from {{ LatestDataYear }},
-      unless explicitly stated otherwise.
+      Note: Data From Large Buildings in {{ LatestDataYear }}
     </summary>
 
     <div class="details-content">
@@ -25,6 +24,10 @@
         The latest year of data is from {{ LatestDataYear }}, but we update the site regularly when
         new data is available, and some buildings may have failed to report that year, and only have
         older data available.
+      </p>
+
+      <p>
+        Additionally, note that all tons specified are <em>metric tons</em>.
       </p>
     </div>
   </details>
@@ -51,6 +54,7 @@ export default class DataDisclaimer extends Vue {
 
 <style lang="scss">
 .data-disclaimer {
+  margin-top: 1rem;
   margin-bottom: 1rem;
   font-size: 0.825rem;
 

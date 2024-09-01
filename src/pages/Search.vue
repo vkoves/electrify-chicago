@@ -181,11 +181,12 @@ export default class Search extends Vue {
         id="main-content"
         tabindex="-1"
       >
-        Search Benchmarked Buildings
+        Search Buildings
       </h1>
 
       <p>
-        Note that results are limited to the first {{ MaxBuildings }} matches.
+        Search all of Chicago's benchmarked buildings by name or type! Note that results are limited
+        to the first {{ MaxBuildings }} matches.
       </p>
 
       <DataDisclaimer />
@@ -193,7 +194,7 @@ export default class Search extends Vue {
       <form>
         <div>
           <label for="page-search">
-            Search Benchmarked Buildings
+            Building Name
           </label>
           <input
             id="page-search"
@@ -205,7 +206,7 @@ export default class Search extends Vue {
         </div>
 
         <div>
-          <label for="property-type">Filter Property Type</label>
+          <label for="property-type">Property Type</label>
           <select
             id="property-type"
             v-model="propertyTypeFilter"
@@ -225,6 +226,12 @@ export default class Search extends Vue {
           class="-grey"
           @click="submitSearch"
         >
+          <img
+            src="/search.svg"
+            alt=""
+            width="15"
+            height="15"
+          >
           Search
         </button>
       </form>
@@ -283,7 +290,12 @@ export default class Search extends Vue {
 
     input[type="text"] { width: 15rem; }
 
-    button { padding: 0.5rem 1rem; }
+    button {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+    }
 
     select { max-width: 12rem; }
 
@@ -300,6 +312,10 @@ export default class Search extends Vue {
     background-color: $grey;
     padding: 1rem;
     text-align: center;
+  }
+
+  @media (max-width: $mobile-max-width) {
+    form { background-color: $off-white; }
   }
 }
 </style>

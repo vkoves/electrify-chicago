@@ -472,7 +472,7 @@ query ($id: ID!, $ID: String) {
 import { Component, Vue } from 'vue-property-decorator';
 
 import { LatestDataYear } from '../constants/globals.vue';
-import BarGraph from '~/components/BarGraph.vue';
+import BarGraph from '~/components/graphs/BarGraph.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import HistoricalBuildingDataTable from '~/components/HistoricalBuildingDataTable.vue';
@@ -491,8 +491,8 @@ import {
   UtilityCosts,
   IBuildingBenchmarkStats,
 } from '../common-functions.vue';
-import { IGraphPoint } from '../components/BarGraph.vue';
-import PieChart, { IPieSlice } from '../components/PieChart.vue';
+import { IGraphPoint } from '../components/graphs/BarGraph.vue';
+import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
@@ -842,7 +842,9 @@ export default class BuildingDetails  extends Vue {
     .main-cols { flex-direction: column-reverse; }
   }
 
-  /** Mobile styling */
+  /**
+   * Mobile styling
+   */
   @media (max-width: $mobile-max-width) {
     .building-header {
       .building-img-cont, .building-header-text { width: 100%; }
@@ -876,7 +878,11 @@ export default class BuildingDetails  extends Vue {
           .building-img-cont { width: 75%; }
         }
       }
+
+      .building-top-info dl { gap: 1rem; }
     }
+
+    .main-cols .chart-cont { margin-top: 0; }
 
     // Break GMaps link to new line
     .address .google-maps-link {

@@ -274,7 +274,11 @@ export default class BiggestBuildings extends Vue {
   @media (max-width: $mobile-max-width) {
     .announcements { flex-direction: column; }
 
-    .row { display: block; }
+    .row {
+      display: block;
+
+      p.main-paragraph { font-size: 0.825rem; }
+    }
 
     .emissions-breakdown {
       width: 100%;

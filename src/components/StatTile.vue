@@ -197,7 +197,7 @@ import {
   IPropertyStats,
   RankConfig,
 } from '../common-functions.vue';
-import SparkLine, { INumGraphPoint } from './SparkLine.vue';
+import SparkLine, { INumGraphPoint } from './graphs/SparkLine.vue';
 
 /**
  * A group of all the core stats by property type (e.g. GHG intensity median)
