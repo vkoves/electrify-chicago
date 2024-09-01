@@ -8,166 +8,30 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import AppFooter from '../components/layout/AppFooter.vue';
+import AppHeader from '../components/layout/AppHeader.vue';
 
-@Component
+@Component({
+  components: {
+    AppFooter,
+    AppHeader,
+  },
+})
 export default class Default extends Vue {
-  searchQuery = '';
 
-  focusMain(): void {
-    const mainHeading = document.getElementById('main-content');
-
-    mainHeading!.focus();
-  }
-
-  submitSearch(event?: Event): void {
-    if (event) {
-      event.preventDefault();
-    }
-
-    document.location.href = `/search?q=${this.searchQuery}`;
-  }
 }
 </script>
 
 <template>
   <div>
     <div class="layout">
-      <!-- TODO: Split to a component-->
-      <header class="header">
-        <a
-          href="#main-content"
-          class="nav-link skip-to-main"
-          @click="focusMain"
-        >
-          Skip to Main Content
-        </a>
-
-        <g-link
-          to="/"
-          class="logo-link"
-        >
-          <img
-            src="/electrify-chicago-logo.svg"
-            alt="Electrify Chicago Homepage"
-            width="334"
-            height="48"
-            class="site-logo"
-          >
-        </g-link>
-
-        <nav class="top-nav">
-          <g-link
-            class="nav-link"
-            to="/"
-          >
-            Home
-          </g-link>
-
-          <g-link
-            class="nav-link"
-            to="/map"
-          >
-            Map
-          </g-link>
-
-          <g-link
-            class="nav-link"
-            to="/top-gas-users"
-          >
-            Top Gas Users
-          </g-link>
-
-          <g-link
-            class="nav-link"
-            to="/top-emitters"
-          >
-            Top Emitters
-          </g-link>
-
-          <g-link
-            class="nav-link"
-            to="/biggest-buildings"
-          >
-            Biggest Buildings
-          </g-link>
-
-          <g-link
-            class="nav-link"
-            to="/large-owners"
-          >
-            Large Owners
-          </g-link>
-
-          <g-link
-            class="nav-link"
-            to="/cleanest-buildings"
-          >
-            Cleanest Buildings
-          </g-link>
-
-          <g-link
-            class="nav-link"
-            to="/about"
-          >
-            About
-          </g-link>
-
-          <g-link
-            class="nav-link"
-            to="/blog"
-          >
-            Blog
-          </g-link>
-
-          <form class="search-form">
-            <div class="input-cont">
-              <input
-                id="search"
-                v-model="searchQuery"
-                type="text"
-                name="search"
-                aria-label="Search benchmarked buildings"
-                placeholder="Search property name/address"
-              >
-              <button
-                type="submit"
-                @click="submitSearch"
-              >
-                Search
-              </button>
-            </div>
-          </form>
-        </nav>
-      </header>
+      <AppHeader />
 
       <!-- The main content -->
       <slot />
     </div>
 
-    <!-- TODO: Split to a component -->
-    <footer>
-      <div class="constrained">
-        <div>
-          Created with <span class="heart">&#x2764;</span> by
-          <a href="https://github.com/vkoves/electrify-chicago/graphs/contributors">volunteers</a>
-          in Chicago
-        </div>
-
-        <div>
-          <a
-            href="https://github.com/vkoves/electrify-chicago"
-            class="github-link"
-          >
-            <img
-              alt=""
-              src="/github-mark.svg"
-              width="16"
-            >
-            Contribute to Electrify Chicago on GitHub
-          </a>
-        </div>
-      </div>
-    </footer>
+    <AppFooter />
   </div>
 </template>
 
@@ -264,52 +128,6 @@ header.header {
     form.search-form { width: 100%; }
 
     nav { margin: 1rem 0; }
-  }
-}
-
-footer {
-  width: 100%;
-  text-align: center;
-  padding: 2rem 0;
-  background-color: $grey;
-
-  > .constrained {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: auto;
-    gap: 2rem;
-  }
-
-  a {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: $text-main;
-    font-weight: 600;
-  }
-
-  a.github-link {
-    text-decoration: none;
-    padding: 0.25rem 0.5rem;
-    border-radius: 1rem;
-    background-color: $off-white;
-    border: none;
-    font-size: 0.825rem;
-
-    &:hover, &:focus { background-color: $white; }
-  }
-
-  .heart {
-    font-size: 1.5rem;
-    vertical-align: -0.1rem;
-    color: $chicago-red;
-    line-height: 0;
-    margin: 0 0.125rem;
-  }
-
-  @media (max-width: $mobile-max-width) {
-    position: static;
   }
 }
 </style>
