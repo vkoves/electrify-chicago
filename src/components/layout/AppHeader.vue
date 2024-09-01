@@ -12,7 +12,7 @@ export default class AppHeader extends Vue {
 
 
 
-  mobileMenuOpen: boolean = false;
+  mobileMenuOpen = false;
 
   focusMain(): void {
     const mainHeading = document.getElementById('main-content');
@@ -59,14 +59,24 @@ export default class AppHeader extends Vue {
         >
       </g-link>
 
-      <button class="mobile-menu-toggle -grey mobile-only"
+      <button
+        class="mobile-menu-toggle -grey mobile-only"
         :aria-expanded="mobileMenuOpen.toString()"
-        @click="toggleMobileMenu">
-        <img src="/menu.svg" alt="Menu" width="30" height="30">
+        @click="toggleMobileMenu"
+      >
+        <img
+          src="/menu.svg"
+          alt="Menu"
+          width="30"
+          height="30"
+        >
       </button>
     </div>
 
-    <nav class="top-nav" :class="{ '-hidden': !mobileMenuOpen }">
+    <nav
+      class="top-nav"
+      :class="{ '-hidden': !mobileMenuOpen }"
+    >
       <g-link
         class="nav-link"
         to="/"
@@ -144,9 +154,12 @@ export default class AppHeader extends Vue {
             type="submit"
             @click="submitSearch"
           >
-            <img src="/search.svg" alt=""
+            <img
+              src="/search.svg"
+              alt=""
               width="18"
-              height="18">
+              height="18"
+            >
             Search
           </button>
         </div>

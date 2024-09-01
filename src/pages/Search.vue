@@ -185,8 +185,8 @@ export default class Search extends Vue {
       </h1>
 
       <p>
-        Search all of Chicago's benchmarked buildings by name or type! Note that results are limited to the first {{ MaxBuildings }}
-        matches.
+        Search all of Chicago's benchmarked buildings by name or type! Note that results are limited
+        to the first {{ MaxBuildings }} matches.
       </p>
 
       <DataDisclaimer />
@@ -226,7 +226,12 @@ export default class Search extends Vue {
           class="-grey"
           @click="submitSearch"
         >
-          <img src="/search.svg" alt="" width="15" height="15">
+          <img
+            src="/search.svg"
+            alt=""
+            width="15"
+            height="15"
+          >
           Search
         </button>
       </form>
@@ -302,8 +307,6 @@ export default class Search extends Vue {
       gap: 1rem;
     }
   }
-
-  .data-disclaimer { margin-top: 1rem; }
 
   .no-results-msg {
     background-color: $grey;

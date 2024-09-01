@@ -14,25 +14,25 @@ export default class AppFooter extends Vue {
 <template>
   <footer>
     <div class="constrained">
-          <div>
-            Created with <span class="heart">&#x2764;</span> by
-            <a href="https://github.com/vkoves/electrify-chicago/graphs/contributors">volunteers</a>
-            in Chicago
-        </div>
+      <div>
+        Created with <span class="heart">&#x2764;</span> by
+        <a href="https://github.com/vkoves/electrify-chicago/graphs/contributors">volunteers</a>
+        in Chicago
+      </div>
 
-        <div>
-            <a
-            href="https://github.com/vkoves/electrify-chicago"
-            class="github-link"
-            >
-            <img
+      <div>
+        <a
+          href="https://github.com/vkoves/electrify-chicago"
+          class="github-link"
+        >
+          <img
             alt=""
             src="/github-mark.svg"
             width="16"
-            >
-            Contribute to Electrify Chicago on GitHub
+          >
+          Contribute to Electrify Chicago on GitHub
         </a>
-    </div>
+      </div>
     </div>
   </footer>
 </template>

@@ -54,6 +54,7 @@ export default class DataDisclaimer extends Vue {
 
 <style lang="scss">
 .data-disclaimer {
+  margin-top: 1rem;
   margin-bottom: 1rem;
   font-size: 0.825rem;
 
