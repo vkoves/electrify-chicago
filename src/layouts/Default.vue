@@ -27,8 +27,10 @@ export default class Default extends Vue {
     <div class="layout">
       <AppHeader />
 
-      <!-- The main content -->
-      <slot />
+      <div class="main-content">
+        <!-- The main content -->
+        <slot />
+      </div>
     </div>
 
     <AppFooter />
@@ -41,9 +43,12 @@ export default class Default extends Vue {
   min-height: calc(100vh - 10rem);
   max-width: 87.5rem; // 1400px
   margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
   // Account for <footer> for mobile
   padding-bottom: 5rem;
+
+  .main-content {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
 </style>

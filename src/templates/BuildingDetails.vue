@@ -842,7 +842,9 @@ export default class BuildingDetails  extends Vue {
     .main-cols { flex-direction: column-reverse; }
   }
 
-  /** Mobile styling */
+  /**
+   * Mobile styling
+   */
   @media (max-width: $mobile-max-width) {
     .building-header {
       .building-img-cont, .building-header-text { width: 100%; }
@@ -876,7 +878,11 @@ export default class BuildingDetails  extends Vue {
           .building-img-cont { width: 75%; }
         }
       }
+
+      .building-top-info dl { gap: 1rem; }
     }
+
+    .main-cols .chart-cont { margin-top: 0; }
 
     // Break GMaps link to new line
     .address .google-maps-link {
