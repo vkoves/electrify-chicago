@@ -237,7 +237,9 @@ query ($id: ID!, $ID: String) {
               </dd>
             </div>
           </dl>
-
+          <div class="reporting-tiles">
+            <ReportingTile :historic-data="historicData" />
+          </div>
           <div class="stat-tiles-col">
             <h2>Energy Breakdown</h2>
 
@@ -480,6 +482,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import OwnerLogo from '~/components/OwnerLogo.vue';
 import StatTile from '~/components/StatTile.vue';
+import ReportingTile from '~/components/ReportingTile.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
@@ -517,6 +520,7 @@ const EnergyBreakdownColors = {
     OwnerLogo,
     PieChart,
     StatTile,
+    ReportingTile
   },
   filters: {
     titlecase(value: string) {
@@ -823,6 +827,11 @@ export default class BuildingDetails  extends Vue {
     dd, .stat-tile { height: 100%; }
 
     .stat-tile { min-width: 18rem; }
+  }
+
+  .reporting-tile {
+    margin-top: 2.5rem;
+    margin-bottom: 3rem;
   }
 
   details {
