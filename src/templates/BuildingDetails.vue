@@ -520,7 +520,7 @@ const EnergyBreakdownColors = {
     OwnerLogo,
     PieChart,
     StatTile,
-    ReportingTile
+    ReportingTile,
   },
   filters: {
     titlecase(value: string) {

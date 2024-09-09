@@ -2,29 +2,30 @@
   <div class="reporting-tile">
     <p class="headline">
       Years Reported
-      <span class="score"
-        >{{ reportedYears }}/{{ reportingHistory.length }}</span
-      >
+      <span class="score">{{ reportedYearsCount }}/{{ reportingHistory.length }}</span>
       <span class="grade">{{ grade }}</span>
     </p>
     <ul>
       <li
-        class="reporting-tile-item"
         v-for="item in reportingHistory"
         :key="item.year"
+        class="reporting-tile-item"
       >
-        <div class="marker" :class="{ '-reported': item.isReported }">
+        <div
+          class="marker"
+          :class="{ '-reported': item.isReported }"
+        >
           <img
             v-if="item.isReported"
             src="/checkmark.svg"
             :alt="`${item.year} data reported`"
             class="reported"
-          />
+          >
           <img
             v-else
             src="/cross.svg"
             :alt="`${item.year} data not reported`"
-          />
+          >
         </div>
         <p>{{ item.year }}</p>
       </li>
@@ -53,11 +54,11 @@ export default class ReportingTile extends Vue {
       { min: 0, grade: "F" },
     ];
 
-    const score = this.reportedYears / this.reportingHistory.length;
+    const score = this.reportedYearsCount / this.reportingHistory.length;
     return gradeRanges.find((range) => score >= range.min)!.grade;
   }
 
-  get reportedYears(): number {
+  get reportedYearsCount(): number {
     return this.reportingHistory.filter((entry) => entry.isReported).length;
   }
 
@@ -66,22 +67,25 @@ export default class ReportingTile extends Vue {
 
     const reportingHistory = [];
     const reportedYears = this.historicData.map((entry) =>
-      parseInt(entry.DataYear)
+      parseInt(entry.DataYear),
     );
 
     let currentYear = reportedYears[0];
     for (let reportedYear of reportedYears) {
-      // adds missing years to reportHistory in between reported years
+      // take care of missing years that lie in between reported years
       while (currentYear !== reportedYear) {
         reportingHistory.push({ year: currentYear, isReported: false });
         currentYear++;
       }
-      // if year is reported
+      // if year is reported (standard case)
       reportingHistory.push({ year: currentYear, isReported: true });
       currentYear++;
     }
 
-    // if a building stopped reporting before the latest year, add missing years to history
+    /**
+     * if a building stopped reporting before the latest year that we have data for,
+     * add the missing years to history and mark them as not reported
+     */
     while (currentYear <= LatestDataYear) {
       reportingHistory.push({ year: currentYear, isReported: false });
       currentYear++;
@@ -101,14 +105,9 @@ export default class ReportingTile extends Vue {
     margin-bottom: 1rem;
 
     .score {
-      font-size: initial;
+      font-size: 1.1rem;
       font-weight: bold;
       margin-right: 1rem;
-    }
-
-    .grade {
-      font-size: 1.5rem;
-      font-weight: bold;
     }
   }
 
