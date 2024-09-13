@@ -143,8 +143,8 @@ export default class ReportingTile extends Vue {
 
   .marker {
     position: relative;
-    width: 40px;
-    height: 40px;
+    width: 2.5rem;
+    height: 2.5rem;
     margin-bottom: 0.25rem;
 
     &::before {
