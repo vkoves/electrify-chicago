@@ -141,6 +141,31 @@ img.-shadowed {
   &.-img { margin-top: 0; ;}
 }
 
+.grade-letter {
+  font-family: 'Caveat', sans-serif;
+  font-weight: 700;
+
+  &.-a {
+    color: #009f49;
+  }
+
+  &.-b {
+    color: #7fa52e;
+  }
+
+  &.-c {
+    color: #b36a15;
+  }
+
+  &.-d {
+    color: #7fa52e;
+  }
+
+  &.-f {
+    color: #972222;
+  }
+}
+
 // Use .constrained for a reasonable max-width for text readability and .layout-constrained for a
 // centered version
 .layout-constrained, .constrained {
