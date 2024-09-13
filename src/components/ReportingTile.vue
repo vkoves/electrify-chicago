@@ -3,7 +3,12 @@
     <p class="headline">
       Years Reported
       <span class="score">{{ reportedYearsCount }}/{{ reportingHistory.length }}</span>
-      <span class="grade">{{ grade }}</span>
+      <span
+        class="grade-letter"
+        :class="`-${grade}` | lowercase"
+      >
+        {{ grade }}
+      </span>
     </p>
     <ul>
       <li
@@ -39,7 +44,13 @@ import { IHistoricData } from "../common-functions.vue";
 
 import { LatestDataYear } from "../constants/globals.vue";
 
-@Component
+@Component<any>({
+  filters: {
+    lowercase(value: string) {
+      return value.toLowerCase();
+    },
+  },
+})
 export default class ReportingTile extends Vue {
   @Prop() historicData?: Array<IHistoricData>;
 
@@ -107,7 +118,12 @@ export default class ReportingTile extends Vue {
     .score {
       font-size: 1.1rem;
       font-weight: bold;
-      margin-right: 1rem;
+      margin-left: 0.25rem;
+    }
+
+    .grade-letter {
+      font-size: 2.5rem;
+      margin-left: 1rem;
     }
   }
 
