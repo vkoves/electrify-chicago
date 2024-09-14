@@ -44,6 +44,21 @@ import { IHistoricData } from "../common-functions.vue";
 
 import { LatestDataYear } from "../constants/globals.vue";
 
+/**
+ * A tile that shows the reporting history of a building. For each year, it shows a 
+ * checkmark if there is data available and a cross if there is no data. It starts 
+ * from the year that the building first reported their data and goes to the last year 
+ * of data that the website shows. It also shows a score and a letter grade depending on
+ * how many years were successfully reported.
+ * 
+ * TODO:
+ * Some examples that can be used for testing:
+ * 1. United Center (reporting stops before the latest year of data -> therefore, adding the 
+ *    missing years)
+ * 2. Digital Printer's Row (missing reports in between years that are reported)
+ * 3. Searle Chemistry Laboratory (all years reported)
+ * 4. Crown Hall (only 3 years reported with the latest one missing)
+ */
 @Component<any>({
   filters: {
     lowercase(value: string) {
