@@ -176,5 +176,24 @@ export default class ReportingTile extends Vue {
       }
     }
   }
+
+  @media (max-width: $mobile-max-width) {
+    .headline {
+      margin-bottom: 0.5rem;
+    }
+
+    ul {
+      column-gap: 1.5rem;
+    }
+    
+    .marker {
+      width: 1.75rem;
+      height: 1.75rem;
+
+      &::before {
+        border-width: 0.175rem;
+      }
+    }
+  }
 }
 </style>
