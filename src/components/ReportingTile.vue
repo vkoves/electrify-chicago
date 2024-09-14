@@ -137,7 +137,7 @@ export default class ReportingTile extends Vue {
     }
 
     .grade-letter {
-      font-size: 2.5rem;
+      font-size: 2.25rem;
       margin-left: 1rem;
     }
   }
