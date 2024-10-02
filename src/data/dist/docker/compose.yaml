@@ -1,0 +1,23 @@
+services:
+  bldg-grade-dev:
+    # Solving jovyan permission issues for host dirs as described in
+    # https://jupyter-docker-stacks.readthedocs.io/en/latest/using/troubleshooting.html#permission-denied-when-mounting-volumes
+    user: root
+    environment: 
+      - NB_UID=${MY_UID}
+      - NB_GID=${MY_GID}
+
+    build:
+      context: ../
+      dockerfile: docker/dev.Dockerfile
+    ports:
+      # Jupyter Server:
+      - 127.0.0.1:8888:8888
+      # Dash App Server:
+      - 127.0.0.1:9002:9000
+
+    volumes:
+      # To persist changes on host:
+      - ../:/home/jovyan/work/
+        
+    
