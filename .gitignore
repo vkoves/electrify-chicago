@@ -2,6 +2,7 @@ node_modules/*
 .cache/*
 src/.temp/*
 
+**/.ipynb_checkpoints/*
 # Ignore root dist directory from `gridsome build`, we need src/data/dist
 dist/*
 
