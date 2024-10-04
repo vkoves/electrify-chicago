@@ -47,9 +47,9 @@ export default class BiggestBuildings extends Vue {
           ElectricityUse
           ElectricityUseRank
           ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+          FossilGasUse
+          FossilGasUseRank
+          FossilGasUsePercentileRank
         }
       }
     }

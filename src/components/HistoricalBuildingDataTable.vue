@@ -38,7 +38,7 @@
             Electricity Use <span class="unit">kBTU</span>
           </th>
           <th scope="col">
-            Natural Gas Use <span class="unit">kBTU</span>
+            Fossil Gas Use <span class="unit">kBTU</span>
           </th>
           <th
             v-if="renderedColumns.includes('DistrictSteamUse')"
@@ -69,7 +69,7 @@
 
           <!-- Round big numbers -->
           <td>{{ benchmark.ElectricityUse | optionalInt }}</td>
-          <td>{{ benchmark.NaturalGasUse | optionalInt }}</td>
+          <td>{{ benchmark.FossilGasUse | optionalInt }}</td>
           <td v-if="renderedColumns.includes('DistrictSteamUse')">
             {{ benchmark.DistrictSteamUse | optionalInt }}
           </td>
@@ -126,7 +126,7 @@ export default class BuildingImage extends Vue {
     const allColKeys: Array<string> = Object.keys(this.historicBenchmarks[0]);
     const emptyColKeys = allColKeys.filter((colKey: string) => {
       // A column is empty if it's all empty string or '0', so skip it if so. Some columns switch
-      // between both, like Natural Gas Use on Merch Mart, which we also want to ignore
+      // between both, like Fossil Gas Use on Merch Mart, which we also want to ignore
       return !this.historicBenchmarks.every((datum) => {
         return (datum as any)[colKey] === '' || (datum as any)[colKey] === '0.0';
       });

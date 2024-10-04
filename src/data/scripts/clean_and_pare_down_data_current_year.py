@@ -44,7 +44,7 @@ def process(file_path: str) -> pandas.DataFrame:
         "Water Use (kGal)": "WaterUse",
         "ENERGY STAR Score": "ENERGYSTARScore",
         "Electricity Use (kBtu)": "ElectricityUse",
-        "Natural Gas Use (kBtu)": "NaturalGasUse",
+        "Natural Gas Use (kBtu)": "FossilGasUse",
         "District Steam Use (kBtu)": "DistrictSteamUse",
         "District Chilled Water Use (kBtu)": "DistrictChilledWaterUse",
         "All Other Fuel Use (kBtu)": "AllOtherFuelUse",

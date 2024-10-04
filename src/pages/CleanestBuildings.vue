@@ -50,9 +50,9 @@ export default class CleanestBuildings extends Vue {
           ElectricityUse
           ElectricityUseRank
           ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+          FossilGasUse
+          FossilGasUseRank
+          FossilGasUsePercentileRank
         }
       }
     }

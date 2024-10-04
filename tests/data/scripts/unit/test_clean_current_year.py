@@ -96,7 +96,7 @@ def test_expected_columns_present(processed_dataframe):
         'WaterUse',
         'ENERGYSTARScore',
         'ElectricityUse',
-        'NaturalGasUse',
+        'FossilGasUse',
         'DistrictSteamUse',
         'DistrictChilledWaterUse',
         'AllOtherFuelUse',

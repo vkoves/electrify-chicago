@@ -13,7 +13,7 @@ building_cols_to_rank = [
     'GHGIntensity',
     'TotalGHGEmissions',
     'ElectricityUse',
-    'NaturalGasUse',
+    'FossilGasUse',
     'GrossFloorArea',
     'SourceEUI',
     'SiteEUI',

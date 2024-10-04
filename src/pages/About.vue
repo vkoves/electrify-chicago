@@ -46,7 +46,7 @@ export default class About extends Vue {
       <div class="power-chart">
         <img
           alt="Pie chart showing that 67% of Illinois power is Carbon-Free, with 58% from Nuclear
-            and 9% from Wind. Then 18% comes from Coal and 14% from Natural Gas."
+            and 9% from Wind. Then 18% comes from Coal and 14% from Fossil Gas."
           class="-shadowed"
           src="/il-power-chart.webp"
           width="350"
