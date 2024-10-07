@@ -62,9 +62,3 @@ def generate_percentile_grade(
     grades[f"{field}LetterGrade"] = letter_grades
 
     return grades
-    # df_current.loc[:, ["GHGIntensityLetterGrade"]] = pd.cut(
-    #     df_current["GHGIntensityPercentileGrade"],
-    #     bins=bins,
-    #     labels=letter_grades,
-    #     right=True
-    # )
