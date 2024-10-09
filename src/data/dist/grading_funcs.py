@@ -72,15 +72,21 @@ def generate_percentile_grade(
 def generate_energy_int_grade(
         df: pd.DataFrame,
         year: int,
+        bins: List[int] = bins,
+        letter_grades: List[str] = letter_grades,
     ):
     """Generate percentile and letter grades for `GHGIntensity` field.
 
     Parameters
     ----------
     df : pd.DataFrame
-            Dataframe containing building records.
+        Dataframe containing building records.
     year : int
-            Year to filter records by.        
+        Year to filter records by.
+    bins : List[int]
+        Integers denoting boundaries between letter grades.
+    letter_grades : List[str]
+        Letter grades corresponding to the bins.
 
     Returns
     -------
@@ -96,7 +102,9 @@ def generate_energy_int_grade(
     
     ghg_grades: pd.DataFrame = generate_percentile_grade(
         vals=ghg_intensity,
-        reverse=True
+        reverse=True,
+        bins=bins,
+        letter_grades=letter_grades,
     )
 
     return ghg_grades
@@ -106,7 +114,29 @@ def generate_energymix_grade(
         df: pd.DataFrame,
         year: int,
         energy_mix_grade_weights: dict = energy_mix_grade_weights,
+        bins: List[int] = bins,
+        letter_grades: List[str] = letter_grades,
     ):
+    """Generate percentile and letter grades for based on energy mix fields.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe containing building records.
+    year : int
+        Year to filter records by. 
+    energy_mix_grade_weights : dict, optional
+        _description_, by default energy_mix_grade_weights
+    bins : List[int]
+        Integers denoting boundaries between letter grades.
+    letter_grades : List[str]
+        Letter grades corresponding to the bins.
+
+    Returns
+    -------
+    _type_
+        _description_
+    """
     
     energy_source_cols = [
         "ElectricityUse",
@@ -138,7 +168,9 @@ def generate_energymix_grade(
 
     energy_mix_grades: pd.DataFrame = generate_percentile_grade(
         weighted_pct_scores,
-        reverse=False
+        reverse=False,
+        bins=bins,
+        letter_grades=letter_grades,
     )
 
     return energy_mix_grades
