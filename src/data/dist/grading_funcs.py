@@ -91,8 +91,8 @@ def generate_energy_int_grade(
     Returns
     -------
     ghg_grades : pd.DataFrame
-        Percentile and letter grades for `GHGIntensity` field. `df` index is
-        preserved.
+        Percentile and letter grades for `GHGIntensity` field. Uses `df`'s 
+        index.
 
     """
     ghg_intensity: pd.Series = df.loc[
@@ -134,8 +134,9 @@ def generate_energymix_grade(
 
     Returns
     -------
-    _type_
-        _description_
+    energy_mix_grades : pd.DataFrame
+        Percentile and letter grades for energy mix. Uses `df`'s index.
+
     """
     
     energy_source_cols = [
