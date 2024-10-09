@@ -165,7 +165,7 @@ def generate_energymix_grade(
     ).sum(1)
     weighted_pct_scores.name = "EnergyMix"
 
-
+    # Generate percentile and letter grades:
     energy_mix_grades: pd.DataFrame = generate_percentile_grade(
         weighted_pct_scores,
         reverse=False,
