@@ -48,6 +48,7 @@ def generate_percentile_grade(
     """
     field = vals.name
     grades = pd.DataFrame(index=vals.index)
+    
 
     # Calculate percentile-based score out 100:
     if reverse:
@@ -72,6 +73,7 @@ def generate_percentile_grade(
 def generate_energy_int_grade(
         df: pd.DataFrame,
         year: int,
+        cols_to_keep: List[str] = ["ID", "DataYear"],
         bins: List[int] = bins,
         letter_grades: List[str] = letter_grades,
     ):
@@ -83,6 +85,8 @@ def generate_energy_int_grade(
         Dataframe containing building records.
     year : int
         Year to filter records by.
+    cols_to_keep : List[str]
+        Columns to keep from `df`.
     bins : List[int]
         Integers denoting boundaries between letter grades.
     letter_grades : List[str]
@@ -90,34 +94,52 @@ def generate_energy_int_grade(
 
     Returns
     -------
-    ghg_grades : pd.DataFrame
+    ghg_intensity_res : pd.DataFrame
         Percentile and letter grades for `GHGIntensity` field. Uses `df`'s 
-        index.
+        index. `cols_to_keep` are also included.
 
     """
+    relevant_cols: pd.DataFrame = df.loc[
+        df["DataYear"] == year,
+        cols_to_keep,
+    ]
+
     ghg_intensity: pd.Series = df.loc[
         df["DataYear"] == year,
-        "GHGIntensity"
+        "GHGIntensity",
     ]
-    
-    ghg_grades: pd.DataFrame = generate_percentile_grade(
+
+    ghg_intensity_grades_df: pd.DataFrame = generate_percentile_grade(
         vals=ghg_intensity,
         reverse=True,
         bins=bins,
         letter_grades=letter_grades,
     )
 
-    return ghg_grades
+    ghg_intensity_res = pd.merge(
+        relevant_cols,
+        ghg_intensity_grades_df,
+        left_index=True,
+        right_index=True,
+    )
+
+    return ghg_intensity_res
 
 
 def generate_energymix_grade(
         df: pd.DataFrame,
         year: int,
+        cols_to_keep: List[str] = ["ID", "DataYear"],
         energy_mix_grade_weights: dict = energy_mix_grade_weights,
         bins: List[int] = bins,
         letter_grades: List[str] = letter_grades,
     ):
-    """Generate percentile and letter grades for based on energy mix fields.
+    """Generate percentile and letter grades for each building 
+    based on energy mix fields. 
+    First, energy use percentage for each building per source is calculated.
+    Second, weights are applied to each energy source percentage to 
+    calculate a weighted sum for percentages for each building. Then these 
+    weighted sums are converted to percentile and letter grades.
 
     Parameters
     ----------
@@ -125,6 +147,8 @@ def generate_energymix_grade(
         Dataframe containing building records.
     year : int
         Year to filter records by. 
+    cols_to_keep : List[str]
+        Columns to keep from `df`.
     energy_mix_grade_weights : dict, optional
         _description_, by default energy_mix_grade_weights
     bins : List[int]
@@ -135,10 +159,15 @@ def generate_energymix_grade(
     Returns
     -------
     energy_mix_grades : pd.DataFrame
-        Percentile and letter grades for energy mix. Uses `df`'s index.
+        Percentile and letter grades for energy mix. Uses `df`'s index. 
+        `cols_to_keep` are also included.
 
     """
-    
+    relevant_cols: pd.DataFrame = df.loc[
+        df["DataYear"] == year,
+        cols_to_keep,
+    ]
+
     energy_source_cols = [
         "ElectricityUse",
         "NaturalGasUse",
@@ -172,6 +201,22 @@ def generate_energymix_grade(
         reverse=False,
         bins=bins,
         letter_grades=letter_grades,
+    )
+
+    # Attach weighted percent scores for reference:
+    energy_mix_grades = pd.merge(
+        weighted_pct_scores, 
+        energy_mix_grades,
+        left_index=True,
+        right_index=True,
+    )
+
+    # Add grades to columns to keep:
+    energy_mix_grades = pd.merge(
+        relevant_cols,
+        energy_mix_grades,
+        left_index=True,
+        right_index=True,
     )
 
     return energy_mix_grades
