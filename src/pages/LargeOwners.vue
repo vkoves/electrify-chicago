@@ -44,9 +44,9 @@ export default class LargeOwners extends Vue {
           ElectricityUse
           ElectricityUseRank
           ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+          FossilGasUse
+          FossilGasUseRank
+          FossilGasUsePercentileRank
         }
       }
     }

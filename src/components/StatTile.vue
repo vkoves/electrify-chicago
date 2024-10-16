@@ -30,7 +30,7 @@
         v-if="costEstimate"
         class="bill-estimate"
       >
-        <strong>Est. {{ statKey === 'NaturalGasUse' ? 'Gas' : 'Electric' }} Bill:</strong>
+        <strong>Est. {{ statKey === 'FossilGasUse' ? 'Gas' : 'Electric' }} Bill:</strong>
         ${{ Math.round(costEstimate).toLocaleString() }} for {{ building.DataYear }}**
       </div>
 
@@ -141,18 +141,18 @@
         so we don't currently have comparison data.
       </p>
 
-      <!-- Natural Gas specific message -->
+      <!-- Fossil Gas specific message -->
       <div
-        v-if="statValue === '0' && statKey === 'NaturalGasUse'"
+        v-if="statValue === '0' && statKey === 'FossilGasUse'"
         class="no-gas-msg"
       >
         <div v-if="fullyGasFree">
           <div class="bold">
-            This Building Didn't Burn Any Natural Gas! 🎉
+            This Building Didn't Burn Any Fossil Gas! 🎉
           </div>
 
           <p class="smaller">
-            This building burned no natural gas on-site and isn't connected to a district heating
+            This building burned no fossil gas on-site and isn't connected to a district heating
             system, meaning it's fully electric! View <g-link to="/biggest-gas-free-buildings">
               Chicago's Biggest Gas Free Buildings
             </g-link>.
@@ -164,10 +164,10 @@
           </div>
 
           <p class="smaller">
-            Although this building didn't burn any natural gas on site, it's connected to a district
+            Although this building didn't burn any fossil gas on site, it's connected to a district
             heating system, a centralized system for heating multiple buildings. District heating
-            systems can be fully electric, but in Chicago most district heating systems are natural
-            gas powered, meaning this building was most likely still heated with natural gas.
+            systems can be fully electric, but in Chicago most district heating systems are fossil
+            gas powered, meaning this building was most likely still heated with fossil gas.
           </p>
         </div>
       </div>
@@ -241,7 +241,7 @@ export default class StatTile extends Vue {
    * through a district heating system.
    */
   get fullyGasFree(): boolean {
-    return parseFloat(this.building.NaturalGasUse) === 0
+    return parseFloat(this.building.FossilGasUse) === 0
       && parseFloat(this.building.DistrictSteamUse) === 0;
   }
 
@@ -250,7 +250,7 @@ export default class StatTile extends Vue {
     if (this.statKey === 'ElectricityUse') {
       return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), true);
     }
-    else if (this.statKey === 'NaturalGasUse') {
+    else if (this.statKey === 'FossilGasUse') {
       return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), false);
     }
 

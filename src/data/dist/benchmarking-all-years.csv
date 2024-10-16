@@ -1,4 +1,4 @@
-ID,DataYear,ReportingStatus,GrossFloorArea,TotalGHGEmissions,GHGIntensity,NumberOfBuildings,ChicagoEnergyRating,ENERGYSTARScore,ElectricityUse,NaturalGasUse,DistrictSteamUse,DistrictChilledWaterUse,AllOtherFuelUse,SiteEUI,SourceEUI,WeatherNormalizedSiteEUI,WeatherNormalizedSourceEUI
+ID,DataYear,ReportingStatus,GrossFloorArea,TotalGHGEmissions,GHGIntensity,NumberOfBuildings,ChicagoEnergyRating,ENERGYSTARScore,ElectricityUse,FossilGasUse,DistrictSteamUse,DistrictChilledWaterUse,AllOtherFuelUse,SiteEUI,SourceEUI,WeatherNormalizedSiteEUI,WeatherNormalizedSourceEUI
 252064,2020,Submitted Data,64028.0,1160.9,18.1,1,2.0,,2384738.9,,7438787.0,5594040.1,,240.8,323.6,246.0,329.9
 232458,2020,Submitted Data,627680.0,4871.7,7.8,1,1.0,22,16397682.8,43537490.6,,,,95.5,146.0,100.3,150.7
 254616,2020,Submitted Data,555524.0,4581.4,8.2,1,2.0,49,28606427.7,2199940.1,,,,55.5,148.3,56.7,151.8

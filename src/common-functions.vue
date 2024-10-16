@@ -47,7 +47,7 @@ export interface IBuilding {
   Longitude: string;
 
 
-  NaturalGasUse: string;
+  FossilGasUse: string;
   DistrictSteamUse: string;
 
   [buildingKey: string]: string | number | boolean;
@@ -66,7 +66,7 @@ export interface IHistoricData {
   ENERGYSTARScore: string;
   GHGIntensity: string;
   GrossFloorArea: string;
-  NaturalGasUse: string;
+  FossilGasUse: string;
   SourceEUI: string;
   TotalGHGEmissions: string;
 }
@@ -131,7 +131,7 @@ export const RankedColumns = [
   'GHGIntensity',
   'TotalGHGEmissions',
   'ElectricityUse',
-  'NaturalGasUse',
+  'FossilGasUse',
   'SourceEUI',
   'SiteEUI',
   // 'GrossFloorArea',
@@ -230,7 +230,7 @@ export const UtilityCosts = {
 };
 
 /**
- * Given an amount of natural gas or electricity used by a building, returns a cost
+ * Given an amount of fossil gas or electricity used by a building, returns a cost
  * estimate of how much a building would have spent at average retail prices for
  * that energy.
  *

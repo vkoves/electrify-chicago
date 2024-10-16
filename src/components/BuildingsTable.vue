@@ -54,7 +54,7 @@ export default class BuildingsTable extends Vue {
             scope="col"
             class="numeric wide-col"
           >
-            Natural Gas Use<br>
+            Fossil Gas Use<br>
             <span class="unit">(kBtu)</span>
           </th>
           <th
@@ -128,13 +128,13 @@ export default class BuildingsTable extends Vue {
             v-if="showGasUse"
             class="numeric"
           >
-            <template v-if="edge.node.NaturalGasUse">
+            <template v-if="edge.node.FossilGasUse">
               <RankText
                 :building="edge.node"
                 :should-round="true"
                 :stats="BuildingBenchmarkStats"
                 :unit="'kBtu'"
-                stat-key="NaturalGasUse"
+                stat-key="FossilGasUse"
               />
             </template>
             <template v-else>

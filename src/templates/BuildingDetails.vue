@@ -14,7 +14,7 @@ query ($id: ID!, $ID: String) {
     ElectricityUse
     GHGIntensity
     GrossFloorArea
-    NaturalGasUse
+    FossilGasUse
     NumberOfBuildings
     PrimaryPropertyType
     PropertyName
@@ -30,8 +30,8 @@ query ($id: ID!, $ID: String) {
     TotalGHGEmissionsPercentileRank
     ElectricityUseRank
     ElectricityUsePercentileRank
-    NaturalGasUseRank
-    NaturalGasUsePercentileRank
+    FossilGasUseRank
+    FossilGasUsePercentileRank
     GrossFloorAreaRank
     GrossFloorAreaPercentileRank
     SourceEUIRank
@@ -41,7 +41,7 @@ query ($id: ID!, $ID: String) {
     GHGIntensityRankByPropertyType
     TotalGHGEmissionsRankByPropertyType
     ElectricityUseRankByPropertyType
-    NaturalGasUseRankByPropertyType
+    FossilGasUseRankByPropertyType
     GrossFloorAreaRankByPropertyType
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
@@ -59,7 +59,7 @@ query ($id: ID!, $ID: String) {
           GHGIntensity
           TotalGHGEmissions
           ElectricityUse
-          NaturalGasUse
+          FossilGasUse
           DistrictSteamUse
         }
     }
@@ -245,11 +245,11 @@ query ($id: ID!, $ID: String) {
 
             <dl class="stat-tiles">
               <div>
-                <dt>Natural Gas Use</dt>
+                <dt>Fossil Gas Use</dt>
                 <dd>
                   <StatTile
                     :building="$page.building"
-                    :stat-key="'NaturalGasUse'"
+                    :stat-key="'FossilGasUse'"
                     :stats="BuildingBenchmarkStats"
                     :historic-data="historicData"
                     :unit="'kBtu'"
@@ -386,7 +386,7 @@ query ($id: ID!, $ID: String) {
         <p class="constrained">
           Practically every building has room to improve with energy efficiency upgrades like
           insulation, switching to ENERGY STAR rated appliances, and more, but for any buildings
-          with large natural gas use, we recommend one thing: <strong>electrify!</strong>
+          with large fossil gas use, we recommend one thing: <strong>electrify!</strong>
         </p>
 
         <p class="constrained">
@@ -397,7 +397,7 @@ query ($id: ID!, $ID: String) {
           </strong> like
           industrial grade heat pumps, heat pump water heaters, and induction stoves. With Illinois'
           current electric supply, just using the same amount of energy from electricity, rather
-          than natural gas (aka methane) will dramatically reduce greenhouse gas emissions.
+          than fossil gas (aka methane) will dramatically reduce greenhouse gas emissions.
           This is because Illinois' grid in 2020 was already 67% carbon-free
           (see <a
             href="https://decarbmystate.com/illinois#power"
@@ -534,7 +534,7 @@ export default class BuildingDetails  extends Vue {
     TotalGHGEmissions:  'Total GHG Emissions (metric tons CO<sub>2</sub>e)',
     GHGIntensity: 'GHG Intensity (metric tons CO<sub>2</sub>e/sqft)',
     ElectricityUse: 'Electricity Use (kBTU)',
-    NaturalGasUse: 'Natural Gas Use (kBTU)',
+    FossilGasUse: 'Natural Gas Use (kBTU)',
   };
 
   /** Expose stats to template */
@@ -628,10 +628,10 @@ export default class BuildingDetails  extends Vue {
       });
     }
 
-    if (this.building.NaturalGasUse as unknown as number > 0) {
+    if (this.building.FossilGasUse as unknown as number > 0) {
       energyBreakdown.push({
         label: 'Natural Gas',
-        value: parseFloat(this.building.NaturalGasUse.toString()),
+        value: parseFloat(this.building.FossilGasUse.toString()),
         color: EnergyBreakdownColors.NaturalGas,
       });
     }

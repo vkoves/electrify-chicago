@@ -463,9 +463,9 @@ export default class MapPage extends Vue {
           ElectricityUse
           ElectricityUseRank
           ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+          FossilGasUse
+          FossilGasUseRank
+          FossilGasUsePercentileRank
         }
       }
     }

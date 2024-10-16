@@ -28,7 +28,7 @@ export default class TopGasUsers extends Vue {
     allBuilding(
       filter: {
         DataYear: { eq: "2022" },
-        NaturalGasUse: { eq: "0.0" },
+        FossilGasUse: { eq: "0.0" },
         DistrictSteamUse: { eq: "0.0" }
       },
       sortBy: "GrossFloorArea", limit: 500
@@ -52,9 +52,9 @@ export default class TopGasUsers extends Vue {
           ElectricityUse
           ElectricityUseRank
           ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+          FossilGasUse
+          FossilGasUseRank
+          FossilGasUsePercentileRank
           DistrictSteamUse
         }
       }
@@ -78,9 +78,9 @@ export default class TopGasUsers extends Vue {
     </p>
 
     <p class="constrained -wide">
-      <strong>Note:</strong> This list is of buildings that use neither natural gas nor a district
+      <strong>Note:</strong> This list is of buildings that use neither fossil gas nor a district
       steam system, since all district steam systems in the city are currently powered by burning
-      natural gas (to the best of our knowledge).
+      fossil gas (to the best of our knowledge).
     </p>
 
     <DataDisclaimer />

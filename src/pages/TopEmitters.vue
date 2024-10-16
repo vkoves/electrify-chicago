@@ -44,9 +44,9 @@ export default class TopEmitters extends Vue {
           ElectricityUse
           ElectricityUseRank
           ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+          FossilGasUse
+          FossilGasUseRank
+          FossilGasUsePercentileRank
         }
       }
     }
@@ -64,7 +64,7 @@ export default class TopEmitters extends Vue {
 
     <p class="constrained -wide">
       These buildings are the biggest emitters of greenhouse gases in Chicago, both directly (like
-      by burning natural gas on site for heating) and indirectly (by using electricity that is
+      by burning fossil gas on site for heating) and indirectly (by using electricity that is
       still produced with some fossil fuels).
     </p>
 

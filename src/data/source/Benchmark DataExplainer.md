@@ -23,7 +23,7 @@ unit information - here's a table of the mapping so you can see the units clearl
 : Water Use (kGal)                              : WaterUse                      :
 : ENERGY STAR Score                             : ENERGYSTARScore               :
 : Electricity Use (kBtu)                        : ElectricityUse                :
-: Natural Gas Use (kBtu)                        : NaturalGasUse                 :
+: Natural Gas Use (kBtu)                        : FossilGasUse                 :
 : District Steam Use (kBtu)                     : DistrictSteamUse              :
 : District Chilled Water Use (kBtu)             : DistrictChilledWaterUse       :
 : All Other Fuel Use (kBtu)                     : AllOtherFuelUse               :
@@ -60,7 +60,7 @@ unit information - here's a table of the mapping so you can see the units clearl
  "Water Use (kGal)"                              : "WaterUse",                      
  "ENERGY STAR Score"                             : "ENERGYSTARScore",               
  "Electricity Use (kBtu)"                        : "ElectricityUse",                
- "Natural Gas Use (kBtu)"                        : "NaturalGasUse",                 
+ "Natural Gas Use (kBtu)"                        : "FossilGasUse",                 
  "District Steam Use (kBtu)"                     : "DistrictSteamUse",              
  "District Chilled Water Use (kBtu)"             : "DistrictChilledWaterUse",       
  "All Other Fuel Use (kBtu)"                     : "AllOtherFuelUse",               
