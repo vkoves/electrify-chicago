@@ -169,7 +169,7 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
    * City Retrofit Data (PDFs)
    */
   // !!! buildings not found in data that have retrofit reports
-  // UIC Science and Engineering Building no buildingID found
+  // UIC Science and Engineering Building no buildingID found, 901 W taylor
   //https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/UIC%20Science%20Campus.pdf
   // 445 N Wells st, Urban Innovations Building no buildingID found
   //https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/445%20N%20Wells%20(1).pdf
