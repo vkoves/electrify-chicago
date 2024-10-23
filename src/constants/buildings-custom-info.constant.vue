@@ -165,6 +165,13 @@ export interface ILink {
  * building ID, which is stable as the data updates (while names can change YoY)
  */
 export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } = {
+  
+  '166134' : {links: [
+    { url : 'https://www.sheddaquarium.org/stories/sustainability-at-shedd',
+      text : 'Sustainability at Shedd Article',
+    },
+  ]},
+  
   /**
    * City Retrofit Data (PDFs)
    */
