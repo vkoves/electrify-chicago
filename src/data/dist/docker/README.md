@@ -1,3 +1,5 @@
+# README
+
 In bash, from this `README.md`'s directory:
 
 ```bash
@@ -16,5 +18,3 @@ docker exec -it docker-bldg-grade-dev-1 bash
 cd ~/work/docker
 poetry add [name_of_package]
 ```
-
-
