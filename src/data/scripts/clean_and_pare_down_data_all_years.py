@@ -149,10 +149,10 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
     cleaned_data = fix_str_cols(building_data, building_data)
     cleaned_data = fix_int_cols(cleaned_data)
 
-    cleaned_data = get_buildings_with_ghg_intensity(building_data)
 
     # Only filter to the latest reporting year if that's the file we're generating
     if (latest_year_only):
+        cleaned_data = get_buildings_with_ghg_intensity(building_data)
         cleaned_data = get_submitted_data(cleaned_data)
         cleaned_data = get_last_year_data(cleaned_data)
     else:
