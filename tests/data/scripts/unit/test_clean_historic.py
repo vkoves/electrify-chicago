@@ -1,6 +1,5 @@
-import pytest
-import os
 import pandas as pd
+import pytest
 
 from src.data.scripts import clean_and_pare_down_data_all_years
 from tests.data.scripts.utils import get_test_file_path
