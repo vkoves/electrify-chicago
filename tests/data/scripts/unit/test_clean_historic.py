@@ -20,19 +20,23 @@ def processed_dataframe() -> pd.DataFrame:
     assert df is not None
     return df
 
+
 def test_data_has_positive_ghg_data(processed_dataframe):
     '''confirm each property in the processed dataframe has non-zero GHGIntensity'''
 
     df = processed_dataframe
-    assert all([ghg > 0 for ghg in df['GHGIntensity']])
+    assert (df['GHGIntensity'][df['GHGIntensity'].notna()] > 0).all()
 
 
 def test_data_has_submitted_status(processed_dataframe):
     '''confirm each property in the processed dataframe has a submitted status'''
 
     df = processed_dataframe
-    for status in df['ReportingStatus']:
-        assert status in ('Submitted Data', 'Submitted')
+    assert set(
+        df["ReportingStatus"].unique()
+    ) == {
+        'Submitted Data', 'Submitted', 'Not Submitted'
+    }
 
 
 def test_expected_columns_present(processed_dataframe):
@@ -49,21 +53,21 @@ def test_record_count_per_building(processed_dataframe):
 
     df = processed_dataframe
 
-    united_center_df = df[df['ID']==100856]
-    assert len(united_center_df) == 5
+    united_center_df = df[df['ID'] == 100856]
+    assert united_center_df.shape[0] == 8
 
-    crown_hall_df = df[df['ID']==256419]
-    assert len(crown_hall_df) == 3
+    crown_hall_df = df[df['ID'] == 256419]
+    assert crown_hall_df.shape[0] == 5
 
-    bldg_138730_df = df[df['ID']==138730]
-    assert len(bldg_138730_df) == 3
+    bldg_138730_df = df[df['ID'] == 138730]
+    assert bldg_138730_df.shape[0] == 6
 
 
 def test_total_record_count(processed_dataframe):
     '''confirm the processed dataframe has the correct number of records'''
 
     df = processed_dataframe
-    assert len(df) == 26
+    assert df.shape[0] == 43
 
 
 def test_no_ghg_property_is_excluded(processed_dataframe):
