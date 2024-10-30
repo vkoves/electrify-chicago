@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 from scipy.stats import percentileofscore
 from typing import List
@@ -15,6 +16,10 @@ energy_mix_grade_weights = {
     "DistrictChilledWaterUse": 1,
     "AllOtherFuelUse": 0,
 }
+
+# Grading schema for Not Submitted records:
+bins_missing_records = [0, 1, 2, 3, 4, np.inf]
+labels_missing_records = ['A', 'B', 'C', 'D', 'F']
 
 
 def generate_percentile_grade(
@@ -220,3 +225,56 @@ def generate_energymix_grade(
     )
 
     return energy_mix_grades
+
+
+def generate_missing_data_grade(
+        df: pd.DataFrame,
+        bins: List[int] = bins_missing_records,
+        labels: List[str] = labels_missing_records,
+    ):
+    """
+    Generate grades based on how many records are missing for each building.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame containing historical building records.
+    bins : List[int]
+        Integers denoting boundaries between letter grades. Right threshold is 
+        included.
+    labels : List[str]
+        Letter grades corresponding to the bins.
+
+    Returns
+    -------
+    not_submitted_count_df : pd.DataFrame
+        Number of missing records and corresponding letter grades for each 
+        building ID.
+
+    """
+    df = df.copy()
+
+    # Relevant columns:
+    df = df.loc[:, ["ID", "DataYear", "ReportingStatus", "not_submitted"]]
+
+    # Calculate number of missing records for each building:
+    df["not_submitted"] = (df["ReportingStatus"] == 'Not Submitted').astype(int)
+    not_submitted_count_df = df.groupby("ID").agg(
+        not_submitted_count=("not_submitted", "sum")
+    )
+
+    # Calculate grades based on how many records are missing for each building:
+    not_submitted_count_df['grade'] = pd.cut(
+        not_submitted_count_df['not_submitted_count'],
+        bins=bins,
+        labels=labels,
+        include_lowest=True,
+        right=False,
+    )
+
+    not_submitted_count_df.reset_index(inplace=True)
+
+    return not_submitted_count_df
+
+
+
