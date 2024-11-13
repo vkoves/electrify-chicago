@@ -112,14 +112,19 @@ export default class BarGraph extends Vue {
   }
 
   renderGraph(): void {
+    console.log(this.graphData);
+
     // Empty the SVG
     this.svg.html(null);
 
-    // TODO: Fix passed years being strings and remove this conversion
-    this.graphData.forEach((point: INumGraphPoint) => point.x = parseInt(point.x.toString()));
+    // Clean up the data to remove NaN values, which we should just ignore
+    const cleanedData = this.graphData.filter((d) => !isNaN(d.y));
 
-    const xVals: Array<number> = this.graphData.map((d) => d.x);
-    const yVals: Array<number> = this.graphData.map((d) => d.y);
+    // TODO: Fix passed years being strings and remove this conversion
+    cleanedData.forEach((point: INumGraphPoint) => point.x = parseInt(point.x.toString()));
+
+    const xVals: Array<number> = cleanedData.map((d) => d.x);
+    const yVals: Array<number> = cleanedData.map((d) => d.y);
 
     const minYear = d3.min(xVals)!;
     const maxYear = d3.max(xVals)!;
@@ -160,7 +165,7 @@ export default class BarGraph extends Vue {
 
     // Add the line
     this.svg.append("path")
-      .datum(this.graphData)
+      .datum(cleanedData)
       .attr("fill", "none")
       .attr("stroke", "black")
       .attr("stroke-width", 8)
@@ -174,7 +179,7 @@ export default class BarGraph extends Vue {
       this.svg
         .append("g")
         .selectAll("dot")
-        .data(this.graphData.filter((d) => !isNaN(d.y)))
+        .data(cleanedData.filter((d) => !isNaN(d.y)))
         .enter()
         .append("circle")
           .attr('class', (d) => {
