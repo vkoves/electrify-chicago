@@ -382,9 +382,9 @@ query ($id: ID!, $ID: String) {
 
       <section class="takeaways">
         <h2>What Should We Do About This?</h2>
-        <g-link to="/take-action-tips">
-          <button>Own this Building? Take Action.</button>
-        </g-link>
+        <a href="/take-action-tips">
+          Own this Building? Take Action.
+        </a>
       </section>
     </div>
   </DefaultLayout>
