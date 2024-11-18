@@ -14,7 +14,7 @@ def load_carbon_intensity_factors() -> Dict[int, float]:
     Returns:
         Dictionary mapping years to carbon intensity values (g CO2/kWh)
     """
-    config_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'emissions.yml')
+    config_path = os.path.join(os.path.dirname(__file__), '..', 'source', 'emissions.yml')
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     return config['carbon_intensity_factors']
@@ -38,7 +38,7 @@ def update_carbon_intensity(year: int, intensity: float) -> None:
     CARBON_INTENSITY_FACTORS[year] = intensity
     
     # Update config file
-    config_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'emissions.yml')
+    config_path = os.path.join(os.path.dirname(__file__), '..', 'source', 'emissions.yml')
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     

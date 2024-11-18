@@ -1,5 +1,3 @@
-# Carbon intensity factors in grams CO2 per kWh for each year
-# Based on PJM Illinois reporting
 carbon_intensity_factors:
   2014: 137
   2015: 137
