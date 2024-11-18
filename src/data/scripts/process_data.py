@@ -5,6 +5,7 @@ import pandas
 from typing import List
 from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path
 from src.data.scripts.building_utils import clean_property_name
+from src.data.scripts.emissions_utils import calculate_building_emissions
 
 # Assume run in /data
 data_directory = 'source'
@@ -126,6 +127,13 @@ def processBuildingData() -> List[str]:
     building_data[int_cols] = building_data[int_cols].astype('Int64')
 
     building_data['PropertyName'] = building_data['PropertyName'].map(clean_property_name)
+
+    # Calculate electricity emissions using custom carbon intensity factors
+    building_data = calculate_building_emissions(building_data)
+
+    # Add ElectricityEmissions to columns to analyze and rank after it's been calculated
+    building_cols_to_analyze.append('ElectricityEmissions')
+    building_cols_to_rank.append('ElectricityEmissions')
 
     # find the latest year in the data
     latest_year = building_data['DataYear'].max()
