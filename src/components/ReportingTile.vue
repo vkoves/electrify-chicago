@@ -45,15 +45,15 @@ import { IHistoricData } from "../common-functions.vue";
 import { LatestDataYear } from "../constants/globals.vue";
 
 /**
- * A tile that shows the reporting history of a building. For each year, it shows a 
- * checkmark if there is data available and a cross if there is no data. It starts 
- * from the year that the building first reported their data and goes to the last year 
+ * A tile that shows the reporting history of a building. For each year, it shows a
+ * checkmark if there is data available and a cross if there is no data. It starts
+ * from the year that the building first reported their data and goes to the last year
  * of data that the website shows. It also shows a score and a letter grade depending on
  * how many years were successfully reported.
- * 
+ *
  * TODO:
  * Some examples that can be used for testing:
- * 1. United Center (reporting stops before the latest year of data -> therefore, adding the 
+ * 1. United Center (reporting stops before the latest year of data -> therefore, adding the
  *    missing years)
  * 2. Digital Printer's Row (missing reports in between years that are reported)
  * 3. Searle Chemistry Laboratory (all years reported)
@@ -80,6 +80,8 @@ export default class ReportingTile extends Vue {
       { min: 0, grade: "F" },
     ];
 
+    console.log('reportingHistory', this.reportingHistory);
+
     const score = this.reportedYearsCount / this.reportingHistory.length;
     return gradeRanges.find((range) => score >= range.min)!.grade;
   }
@@ -88,36 +90,18 @@ export default class ReportingTile extends Vue {
     return this.reportingHistory.filter((entry) => entry.isReported).length;
   }
 
+  /**
+   * Based on the historic data, create a simplified mapping of whether data was reported
+   */
   get reportingHistory(): { year: number; isReported: boolean }[] {
     if (!this.historicData || this.historicData.length === 0) return [];
 
-    const reportingHistory = [];
-    const reportedYears = this.historicData.map((entry) =>
-      parseInt(entry.DataYear),
-    );
-
-    let currentYear = reportedYears[0];
-    for (let reportedYear of reportedYears) {
-      // take care of missing years that lie in between reported years
-      while (currentYear !== reportedYear) {
-        reportingHistory.push({ year: currentYear, isReported: false });
-        currentYear++;
-      }
-      // if year is reported (standard case)
-      reportingHistory.push({ year: currentYear, isReported: true });
-      currentYear++;
-    }
-
-    /**
-     * if a building stopped reporting before the latest year that we have data for,
-     * add the missing years to history and mark them as not reported
-     */
-    while (currentYear <= LatestDataYear) {
-      reportingHistory.push({ year: currentYear, isReported: false });
-      currentYear++;
-    }
-
-    return reportingHistory;
+    return this.historicData.map((datum: IHistoricData) => {
+      return {
+        year: parseInt(datum.DataYear),
+        isReported: !isNaN(parseInt(datum.GHGIntensity)),
+      };
+    });
   }
 }
 </script>
@@ -200,7 +184,7 @@ export default class ReportingTile extends Vue {
     ul {
       column-gap: 1.5rem;
     }
-    
+
     .marker {
       width: 1.75rem;
       height: 1.75rem;
