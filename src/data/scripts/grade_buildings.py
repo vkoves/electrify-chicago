@@ -3,12 +3,25 @@ import pandas as pd
 from scipy.stats import percentileofscore
 from typing import List
 
+from src.data.scripts.utils import get_data_file_path
+
+
+data_directory = 'dist'
+data_in_file = 'building-benchmarks.csv'
+data_out_file = "building-benchmarks-graded.csv"
+data_in_file_path = get_data_file_path(
+    data_directory, data_in_file
+)
+data_out_file_path = get_data_file_path(
+    data_directory, data_out_file
+)
+
 
 # Default bins and letter grades for percentile grading:
 bins = [0, 20, 40, 60, 80, 100]
 letter_grades = ["F", "D", "C", "B", "A"]
 
-# Default weights for each energy source in the energy mix grade: 
+# Default weights for each energy source in the energy mix grade:
 energy_mix_grade_weights = {
     "ElectricityUse": 2,
     "NaturalGasUse": 0.5,
@@ -23,15 +36,15 @@ labels_missing_records = ['A', 'B', 'C', 'D', 'F']
 
 
 def generate_percentile_grade(
-        vals: pd.Series,
-        reverse: bool = False,
-        bins: List[int] = bins,
-        letter_grades: List[str] = letter_grades,
-    ) -> pd.DataFrame:
-    """For each building record from `vals`, translate numerical 
-    values into a percentile grade and it's letter grade 
-    equivalent. E.g. percentile 
-    grade of 56.37 means this building is better than 56.37% of records in 
+    vals: pd.Series,
+    reverse: bool = False,
+    bins: List[int] = bins,
+    letter_grades: List[str] = letter_grades,
+) -> pd.DataFrame:
+    """For each building record from `vals`, translate numerical
+    values into a percentile grade and it's letter grade
+    equivalent. E.g. percentile
+    grade of 56.37 means this building is better than 56.37% of records in
     `vals`.
 
     Parameters
@@ -47,13 +60,12 @@ def generate_percentile_grade(
     Returns
     -------
     grades : pd.DataFrame
-        Percentile and letter grades, with ID and year columns for reference. 
+        Percentile and letter grades, with ID and year columns for reference.
         Original Index is also preserved.
 
     """
     field = vals.name
     grades = pd.DataFrame(index=vals.index)
-    
 
     # Calculate percentile-based score out 100:
     if reverse:
@@ -62,7 +74,7 @@ def generate_percentile_grade(
         calc_func = lambda x: percentileofscore(vals, x, kind="weak")
     percent_scores: pd.Series = vals.apply(calc_func)
     grades[f"{field}PercentileGrade"] = percent_scores
-    
+
     # Calculate letter grades (right threshold is included):
     letter_grades = pd.cut(
         percent_scores,
@@ -76,12 +88,12 @@ def generate_percentile_grade(
 
 
 def generate_energy_int_grade(
-        df: pd.DataFrame,
-        year: int,
-        cols_to_keep: List[str] = ["ID", "DataYear"],
-        bins: List[int] = bins,
-        letter_grades: List[str] = letter_grades,
-    ):
+    df: pd.DataFrame,
+    year: int,
+    cols_to_keep: List[str] = ["ID", "DataYear"],
+    bins: List[int] = bins,
+    letter_grades: List[str] = letter_grades,
+):
     """Generate percentile and letter grades for `GHGIntensity` field.
 
     Parameters
@@ -131,19 +143,49 @@ def generate_energy_int_grade(
     return ghg_intensity_res
 
 
+def apply_grade_func_all_years(df, func):
+    """Generate grades for all years in the `df` dataset using a given `func`
+    to grade each year.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataframe containing building records.
+
+    Returns
+    -------
+    grades_all_years_df : pd.DataFrame
+        Grades for all years in the `df` dataset.
+        ["ID", "DataYear", "GHGIntensity"] are also included for reference.
+
+    """
+    all_years = df["DataYear"].unique()
+    grades_all_years = []
+    for year in all_years:
+        grades_df = func(
+            df=df, year=year
+        )
+        grades_all_years.append(grades_df)
+
+    grades_all_years_df = pd.concat(
+        grades_all_years
+    )
+    return grades_all_years_df
+
+
 def generate_energymix_grade(
-        df: pd.DataFrame,
-        year: int,
-        cols_to_keep: List[str] = ["ID", "DataYear"],
-        energy_mix_grade_weights: dict = energy_mix_grade_weights,
-        bins: List[int] = bins,
-        letter_grades: List[str] = letter_grades,
-    ):
-    """Generate percentile and letter grades for each building 
-    based on energy mix fields. 
+    df: pd.DataFrame,
+    year: int,
+    cols_to_keep: List[str] = ["ID", "DataYear"],
+    energy_mix_grade_weights: dict = energy_mix_grade_weights,
+    bins: List[int] = bins,
+    letter_grades: List[str] = letter_grades,
+):
+    """Generate percentile and letter grades for each building
+    based on energy mix fields.
     First, energy use percentage for each building per source is calculated.
-    Second, weights are applied to each energy source percentage to 
-    calculate a weighted sum for percentages for each building. Then these 
+    Second, weights are applied to each energy source percentage to
+    calculate a weighted sum for percentages for each building. Then these
     weighted sums are converted to percentile and letter grades.
 
     Parameters
@@ -151,11 +193,11 @@ def generate_energymix_grade(
     df : pd.DataFrame
         Dataframe containing building records.
     year : int
-        Year to filter records by. 
+        Year to filter records by.
     cols_to_keep : List[str]
         Columns to keep from `df`.
     energy_mix_grade_weights : dict, optional
-        _description_, by default energy_mix_grade_weights
+        Weights to use, by default energy_mix_grade_weights
     bins : List[int]
         Integers denoting boundaries between letter grades.
     letter_grades : List[str]
@@ -164,7 +206,7 @@ def generate_energymix_grade(
     Returns
     -------
     energy_mix_grades : pd.DataFrame
-        Percentile and letter grades for energy mix. Uses `df`'s index. 
+        Percentile and letter grades for energy mix. Uses `df`'s index.
         `cols_to_keep` are also included.
 
     """
@@ -184,7 +226,7 @@ def generate_energymix_grade(
         df["DataYear"] == year,
         energy_source_cols,
     ]
-    
+
     total_energy_use_per_bldg: pd.Series = energy_use_df.sum(1)
 
     # Energy use kBtu percentage within each building for this year:
@@ -193,12 +235,11 @@ def generate_energymix_grade(
         axis="index"
     ) * 100
 
-
     # Calculate weighted energy mix grade:
     weighted_pct_scores: pd.Series = energy_use_pct_df.mul(
         energy_mix_grade_weights
     ).sum(1)
-    weighted_pct_scores.name = "EnergyMix"
+    weighted_pct_scores.name = "EnergyMixWeightedPctSum"
 
     # Generate percentile and letter grades:
     energy_mix_grades: pd.DataFrame = generate_percentile_grade(
@@ -210,7 +251,7 @@ def generate_energymix_grade(
 
     # Attach weighted percent scores for reference:
     energy_mix_grades = pd.merge(
-        weighted_pct_scores, 
+        weighted_pct_scores,
         energy_mix_grades,
         left_index=True,
         right_index=True,
@@ -228,10 +269,10 @@ def generate_energymix_grade(
 
 
 def generate_missing_data_grade(
-        df: pd.DataFrame,
-        bins: List[int] = bins_missing_records,
-        labels: List[str] = labels_missing_records,
-    ):
+    df: pd.DataFrame,
+    bins: List[int] = bins_missing_records,
+    labels: List[str] = labels_missing_records,
+):
     """
     Generate grades based on how many records are missing for each building.
 
@@ -240,7 +281,7 @@ def generate_missing_data_grade(
     df : pd.DataFrame
         DataFrame containing historical building records.
     bins : List[int]
-        Integers denoting boundaries between letter grades. Right threshold is 
+        Integers denoting boundaries between letter grades. Right threshold is
         included.
     labels : List[str]
         Letter grades corresponding to the bins.
@@ -248,14 +289,14 @@ def generate_missing_data_grade(
     Returns
     -------
     not_submitted_count_df : pd.DataFrame
-        Number of missing records and corresponding letter grades for each 
+        Number of missing records and corresponding letter grades for each
         building ID.
 
     """
     df = df.copy()
 
     # Relevant columns:
-    df = df.loc[:, ["ID", "DataYear", "ReportingStatus", "not_submitted"]]
+    df = df.loc[:, ["ID", "DataYear", "ReportingStatus"]]
 
     # Calculate number of missing records for each building:
     df["not_submitted"] = (df["ReportingStatus"] == 'Not Submitted').astype(int)
@@ -264,7 +305,7 @@ def generate_missing_data_grade(
     )
 
     # Calculate grades based on how many records are missing for each building:
-    not_submitted_count_df['grade'] = pd.cut(
+    not_submitted_count_df['SubmittedRecordsGrade'] = pd.cut(
         not_submitted_count_df['not_submitted_count'],
         bins=bins,
         labels=labels,
@@ -272,9 +313,74 @@ def generate_missing_data_grade(
         right=False,
     )
 
+    # Rename for consistent format:
+    not_submitted_count_df.rename(
+        columns={'not_submitted_count': 'MissingRecordsCount'}, inplace=True
+    )
+
     not_submitted_count_df.reset_index(inplace=True)
 
     return not_submitted_count_df
 
 
+def grade_ghg_intensity_energy_mix_all_years(
+    csv_path : str = "building-benchmarks.csv",
+):
+    """Generate grades for all years in the dataset based on GHG intensity and
+    energy mix.
 
+    Parameters
+    ----------
+    csv_path : str, optional
+        Path to the buildings records dataset,
+        by default "building-benchmarks.csv"
+
+    Returns
+    -------
+    df : pd.DataFrame
+        Grades for all years in the dataset based on GHG intensity and energy
+        mix, merged with the original dataset.
+
+    """
+    # Load data:
+    df = pd.read_csv(csv_path)
+
+    # Generate grades for GHG intensity:
+    ghg_intensity_grades_all_years = apply_grade_func_all_years(
+        df=df,
+        func=generate_energy_int_grade,
+    )
+
+    # Generate grades for energy mix:
+    energy_mix_grades_all_years = apply_grade_func_all_years(
+        df=df,
+        func=generate_energymix_grade,
+    )
+
+    # Merge grades:
+    grades_all_years_df = pd.merge(
+        ghg_intensity_grades_all_years,
+        energy_mix_grades_all_years,
+        on=["ID", "DataYear"],
+    )
+
+    # Add to the orignal dataset:
+    df = pd.merge(
+        df,
+        grades_all_years_df,
+        on=["ID", "DataYear"],
+    )
+
+    return df
+
+
+if __name__ == "__main__":
+    graded_df = grade_ghg_intensity_energy_mix_all_years(
+        csv_path=data_in_file_path
+    )
+    graded_df.to_csv(
+        data_out_file_path,
+        sep=",",
+        encoding='utf-8',
+        index=False
+    )
