@@ -10,6 +10,7 @@
         {{ grade }}
       </span>
     </p>
+
     <ul>
       <li
         v-for="item in reportingHistory"
@@ -35,6 +36,12 @@
         <p>{{ item.year }}</p>
       </li>
     </ul>
+
+    <p class="footnote">
+      <strong>Note:</strong> Buildings are marked as reporting when we have greenhouse gas intensity
+      values for them, but some buildings are missing GHG intensity values but have reported the
+      underlying energy use data, but we're unsure why this is the case.
+    </p>
   </div>
 </template>
 
@@ -79,8 +86,6 @@ export default class ReportingTile extends Vue {
       { min: 0.6, grade: "D" },
       { min: 0, grade: "F" },
     ];
-
-    console.log('reportingHistory', this.reportingHistory);
 
     const score = this.reportedYearsCount / this.reportingHistory.length;
     return gradeRanges.find((range) => score >= range.min)!.grade;
