@@ -1,6 +1,0 @@
-.idea
-.ipynb_checkpoints
-
-# Not needed for building; will mount from host post-building:
-*.csv
-*.json
