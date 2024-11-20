@@ -1,3 +1,21 @@
+<script lang="ts">
+import { Component, Vue } from 'vue-property-decorator';
+import NewTabIcon from '~/components/NewTabIcon.vue';
+
+// TODO: Figure out a way to get metaInfo working without any
+// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+@Component<any>({
+  components: {
+    NewTabIcon,
+  },
+  metaInfo() {
+    return { title:  'Take Action' };
+  },
+})
+export default class TakeActionTips extends Vue {
+}
+</script>
+
 <template>
     <DefaultLayout>
       <div class="layout-constrained">
@@ -90,9 +108,3 @@
       </div>
     </DefaultLayout>
   </template>
-
-<script>
-export default {
-  name: 'TakeActionTips',
-};
-</script>
