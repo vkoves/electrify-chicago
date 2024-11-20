@@ -381,7 +381,7 @@ query ($id: ID!, $ID: String) {
       <DataSourceFootnote />
 
       <section class="takeaways">
-        <h2>What Should We Do About This?</h2>
+        <h1 id="main-content" tabindex="-1">What Should We Do About This?</h1>
         <a href="/take-action-tips">
           Own this Building? Take Action.
         </a>
