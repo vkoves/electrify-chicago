@@ -20,7 +20,7 @@ export default class TakeActionTips extends Vue {
     <DefaultLayout>
       <div class="layout-constrained">
         <section class="takeaways">
-        <h2>What Should We Do About This?</h2>
+        <h1 id="main-content" and tabindex="-1">What Should We Do About This?</h1>
 
         <p class="constrained">
           Practically every building has room to improve with energy efficiency upgrades like
