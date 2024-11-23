@@ -122,6 +122,11 @@ export default class About extends Vue {
             Biggest Gas Free Buildings
           </g-link>
         </li>
+        <li>
+          <g-link to="/retrofit-chicago-participants">
+            Retrofit Chicago Case Studies
+          </g-link>
+        </li>
       </ul>
 
       <h2>Authors</h2>

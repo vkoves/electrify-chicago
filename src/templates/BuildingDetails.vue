@@ -203,15 +203,20 @@ query ($id: ID!, $ID: String) {
               </div>
 
               <div v-if="customLinks">
-                <a
-                  v-for="link in customLinks" 
-                  :key="link.url"
-                  :href="link.url"
-                  target="_blank"
-                  rel="noopener">
-                  {{ link.text }}
-                  <NewTabIcon />
-                </a>
+                <dt>Extra Resources</dt>
+
+                <dd>
+                  <a
+                    v-for="link in customLinks"
+                    :key="link.url"
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    {{ link.text }}
+                    <NewTabIcon />
+                  </a>
+                </dd>
               </div>
             </dl>
           </div>
@@ -508,7 +513,7 @@ import {
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
-import { BuildingsCustomInfo, getBuildingCustomInfo, ILink } from '../constants/buildings-custom-info.constant.vue';
+import { getBuildingCustomInfo, ILink } from '../constants/buildings-custom-info.constant.vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
