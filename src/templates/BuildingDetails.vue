@@ -380,12 +380,11 @@ query ($id: ID!, $ID: String) {
 
       <DataSourceFootnote />
 
-      <section class="takeaways">
-        <h2>What Should We Do About This?</h2>
-        <a href="/take-action-tips">
-          Own this Building? Take Action.
-        </a>
-      </section>
+      <h2>What Should We Do About This?</h2>
+
+      <a href="/take-action-tips">
+        Own this Building? Take Action.
+      </a>
     </div>
   </DefaultLayout>
 </template>
