@@ -62,11 +62,9 @@ export default class BiggestBuildings extends Vue {
   filterBuildings(ownerId: string): void {
     // Loop through BuildingsCustomInfo to get the IDs of buildings we are looking for
     const ownerBuildingsSlugs: Array<string> = Object.entries(BuildingsCustomInfo)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .filter(([ buildingID, buildingInfo ]: [string, IBuildingCustomInfo]) => {
+      .filter(([ , buildingInfo ]: [string, IBuildingCustomInfo]) => {
         return buildingInfo.owner === ownerId;
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      }).map(([ buildingID, buildingInfo ]: [string, IBuildingCustomInfo]) => buildingID);
+      }).map(([ buildingID ]: [string, IBuildingCustomInfo]) => buildingID);
 
     this.buildingsFiltered =
       this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {

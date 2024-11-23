@@ -201,6 +201,23 @@ query ($id: ID!, $ID: String) {
                 <dt>Owner</dt>
                 <OwnerLogo :building="$page.building" />
               </div>
+
+              <div v-if="customLinks">
+                <dt>Extra Resources</dt>
+
+                <dd>
+                  <a
+                    v-for="link in customLinks"
+                    :key="link.url"
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener"
+                  >
+                    {{ link.text }}
+                    <NewTabIcon />
+                  </a>
+                </dd>
+              </div>
             </dl>
           </div>
         </div>
@@ -415,6 +432,7 @@ import {
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
+import { getBuildingCustomInfo, ILink } from '../constants/buildings-custom-info.constant.vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
@@ -526,6 +544,16 @@ export default class BuildingDetails  extends Vue {
 
   get buildingImg(): IBuildingImage | null {
     return getBuildingImage(this.building);
+  }
+
+  get customLinks(): Array<ILink> | null {
+    const buildingCustomInfo = getBuildingCustomInfo(this.building);
+
+    if (buildingCustomInfo?.links) {
+      return buildingCustomInfo.links;
+    }
+
+    return null;
   }
 
   created(): void {
