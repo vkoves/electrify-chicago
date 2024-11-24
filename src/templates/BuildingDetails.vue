@@ -466,6 +466,34 @@ query ($id: ID!, $ID: String) {
           </ul>
         </p>
       </section>
+
+      <Popup class="email-this-building" v-if="true">
+        <header>
+          <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069714-7a3fd7ad-b3d6-43cd-a493-b9fc9f4c1c44.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001013Z&X-Amz-Expires=300&X-Amz-Signature=efd6c8ad30840b0e26edbce3d9aa56b0ee456ab97c786352d2ab3f0ee4ed0e73&X-Amz-SignedHeaders=host" alt="">
+          <h3>Email This Building</h3>
+        </header>
+        <div class="email-prompt-wrapper">
+          <p class="prompt">Do you know this building's owner?</p>
+          <p class="description">Send them an email asking about their electrification plan!</p>
+          <div class="email-this-building-subheader">
+            <h4>Subject</h4>
+            <button>Copy Subject <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069715-45a174db-db63-4a15-855f-f46be85ebb52.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001100Z&X-Amz-Expires=300&X-Amz-Signature=49427fdb58d833d9667ccbc838c9b0c140abd68a514a98a35a9e24b550b9756d&X-Amz-SignedHeaders=host" alt=""></button>
+          </div>
+          <p class="email-box" ref="emailSubject">What's Our Building's Plan For Reducing Emissions?</p>
+          <div class="email-this-building-subheader">
+            <h4>Body</h4>
+            <button>Copy Body <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069715-45a174db-db63-4a15-855f-f46be85ebb52.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001100Z&X-Amz-Expires=300&X-Amz-Signature=49427fdb58d833d9667ccbc838c9b0c140abd68a514a98a35a9e24b550b9756d&X-Amz-SignedHeaders=host" alt=""></button>
+          </div>
+            <p class="email-box" ref="emailBody">Dear sir or madam,
+            I've been reading about <span>BUILDING NAME's</span> emissions and energy use, and I wanted to learn
+            more about your plans to improve our energy efficiency, electrify the building, and reduce our emissions. Well
+            insulated all-electric buildings have lower energy bills, cleaner air, and are more comfortable for their occupants,
+            and I want to make sure there is a concrete plan to make <span>BUILDING NAME</span> one of those buildings!
+
+            You can see more at <span>https://electrifychicago.net/building/building-id</span>
+          </p>
+        </div>
+      </Popup>
     </div>
   </DefaultLayout>
 </template>
@@ -496,6 +524,8 @@ import {
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
+import Popup from '../components/layout/Popup.vue';
+import { ref } from 'vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
@@ -521,6 +551,7 @@ const EnergyBreakdownColors = {
     PieChart,
     StatTile,
     ReportingTile,
+    Popup,
   },
   filters: {
     titlecase(value: string) {
@@ -844,6 +875,72 @@ export default class BuildingDetails  extends Vue {
     margin-top: 0.5rem;
 
     li + li { margin-top: 0.25rem; }
+  }
+
+  .email-this-building {
+    .popup-inner {
+      width: 24rem;
+      margin: auto auto;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      background-color: #0066ff;
+      color: #fff;
+      padding: 0.75rem;
+
+      img {
+        height: 1.25rem;
+      }
+    }
+
+    .email-prompt-wrapper {
+      padding: 1rem;
+
+      .prompt {
+        font-size: 1.25rem;
+        font-weight: 700;
+      }
+
+      .description {
+        font-size: 0.75rem;
+      }
+
+      .email-this-building-subheader {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+        margin-bottom: 0.25rem;
+
+        button {
+          background-color: #0066ff;
+          color: #fff;
+          line-height: 0.75rem;
+          font-size: 0.75rem;
+          font-weight: 300;
+          border: none;
+          padding: 0 0.25rem 0 0.25rem;
+
+          img {
+            height: 0.75rem;
+          }
+        }
+      }
+    }
+
+    .email-box {
+      border: 1px solid #555555;
+      padding: 0.25rem;
+      font-size: 0.75rem;
+    }
   }
 
   /** Small desktop sizing - split to just two columns from three */
