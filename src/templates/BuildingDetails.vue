@@ -665,10 +665,10 @@ export default class BuildingDetails  extends Vue {
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
 
-  async copyElementTextToClipboard(id: string) {
+  copyElementTextToClipboard(id: string) {
     try {
       const content = document.getElementById(id)!.innerText;
-      await navigator.clipboard.writeText(content);
+      navigator.clipboard.writeText(content);
     } 
     catch (error) {
       console.error(error);
