@@ -467,7 +467,9 @@ query ($id: ID!, $ID: String) {
         </p>
       </section>
 
-      <Popup class="email-this-building" v-if="true">
+      <button @click="isModalOpen=true">Open Modal</button>
+
+      <Popup class="email-this-building" v-if="isModalOpen" @close="isModalOpen=false">
         <header>
           <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069714-7a3fd7ad-b3d6-43cd-a493-b9fc9f4c1c44.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001013Z&X-Amz-Expires=300&X-Amz-Signature=efd6c8ad30840b0e26edbce3d9aa56b0ee456ab97c786352d2ab3f0ee4ed0e73&X-Amz-SignedHeaders=host" alt="">
           <h3>Email This Building</h3>
@@ -596,6 +598,8 @@ export default class BuildingDetails  extends Vue {
   colToGraph = 'TotalGHGEmissions';
 
   totalEnergyUsekBTU!: number;
+
+  isModalOpen: boolean = false;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {

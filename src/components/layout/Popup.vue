@@ -2,14 +2,20 @@
     <div class="popup">
         <div class="popup-inner">
             <slot />
-            <button class="popup-close">Close</button>
+            <button @click="close" class="popup-close">Close</button>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-export default {
+import { Component, Vue, Emit } from 'vue-property-decorator';
 
+@Component
+export default class Popup extends Vue {
+    @Emit()
+    close() {
+        return true;
+    }
 }
 </script>
 
