@@ -443,9 +443,6 @@ query ($id: ID!, $ID: String) {
         </div>
       </Popup>
       
-      <a href="/take-action-tips">
-        Own this Building? Take Action.
-      </a>
     </div>
   </DefaultLayout>
 </template>
