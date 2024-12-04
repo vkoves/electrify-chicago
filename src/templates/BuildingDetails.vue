@@ -109,7 +109,16 @@ query ($id: ID!, $ID: String) {
           </p>
         </div>
 
-        <BuildingImage :building="$page.building" />
+        <div class="building-img-cont">
+          <BuildingImage :building="$page.building" />
+
+          <!-- Button opens Popup for "Email This Building" -->
+          <button @click="isModalOpen=true" class="email-this-building-open">
+            <img src="/email.svg" alt="Email icon">
+            Email This Building
+          </button>
+
+        </div>
 
         <div class="details-cont">
           <div
@@ -467,8 +476,6 @@ query ($id: ID!, $ID: String) {
         </p>
       </section>
 
-      <button @click="isModalOpen=true">Open Modal</button>
-
       <Popup class="email-this-building" v-if="isModalOpen" @close="isModalOpen=false">
         <header>
           <img src="/email.svg" alt="">
@@ -499,6 +506,7 @@ query ($id: ID!, $ID: String) {
             </div>
         </div>
       </Popup>
+      
     </div>
   </DefaultLayout>
 </template>
@@ -530,7 +538,6 @@ import {
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
 import Popup from '../components/layout/Popup.vue';
-import { ref } from 'vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
@@ -753,7 +760,12 @@ export default class BuildingDetails  extends Vue {
         grid-area: details;
         align-self: start;
       }
-      .building-img-cont { grid-area: img; }
+      .building-img-cont {
+        grid-area: img;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
       .building-banner { grid-area: banner; }
     }
 
@@ -831,6 +843,23 @@ export default class BuildingDetails  extends Vue {
     margin-top: 1rem;
 
     h2 { margin-top: 0; }
+  }
+
+  .email-this-building-open {
+    background-color: #0066ff;
+    color: #fff;
+    font-weight: 300;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    align-self: flex-end;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    img {
+      border-radius: 0;
+      height: 1.1rem;
+    }
   }
 
   .main-cols {
@@ -988,6 +1017,9 @@ export default class BuildingDetails  extends Vue {
   @media (max-width: $mobile-max-width) {
     .building-header {
       .building-img-cont, .building-header-text { width: 100%; }
+      .email-this-building-open {
+        align-self: flex-start;
+      }
 
       .building-header-text { position: relative; }
 

@@ -1,7 +1,6 @@
 <template>
   <div
     v-if="buildingImg"
-    class="building-img-cont"
     :class="{ '-tall': Boolean(buildingImg.isTall) }"
   >
     <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
