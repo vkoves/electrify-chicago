@@ -471,7 +471,7 @@ query ($id: ID!, $ID: String) {
 
       <Popup class="email-this-building" v-if="isModalOpen" @close="isModalOpen=false">
         <header>
-          <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069714-7a3fd7ad-b3d6-43cd-a493-b9fc9f4c1c44.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001013Z&X-Amz-Expires=300&X-Amz-Signature=efd6c8ad30840b0e26edbce3d9aa56b0ee456ab97c786352d2ab3f0ee4ed0e73&X-Amz-SignedHeaders=host" alt="">
+          <img src="/email.svg" alt="">
           <h3>Email This Building</h3>
         </header>
         <div class="email-prompt-wrapper">
@@ -479,12 +479,12 @@ query ($id: ID!, $ID: String) {
           <p class="description">Send them an email asking about their electrification plan!</p>
           <div class="email-this-building-subheader">
             <h4>Subject</h4>
-            <button>Copy Subject <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069715-45a174db-db63-4a15-855f-f46be85ebb52.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001100Z&X-Amz-Expires=300&X-Amz-Signature=49427fdb58d833d9667ccbc838c9b0c140abd68a514a98a35a9e24b550b9756d&X-Amz-SignedHeaders=host" alt=""></button>
+            <button>Copy Subject <img src="/copy.svg" alt=""></button>
           </div>
           <p class="email-box" ref="emailSubject">What's Our Building's Plan For Reducing Emissions?</p>
           <div class="email-this-building-subheader">
             <h4>Body</h4>
-            <button @click="copyBody">Copy Body <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069715-45a174db-db63-4a15-855f-f46be85ebb52.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001100Z&X-Amz-Expires=300&X-Amz-Signature=49427fdb58d833d9667ccbc838c9b0c140abd68a514a98a35a9e24b550b9756d&X-Amz-SignedHeaders=host" alt=""></button>
+            <button @click="copyBody">Copy Body <img src="/copy.svg" alt=""></button>
           </div>
             <p class="email-box" ref="emailBody" id="emailBody">Dear sir or madam,
               <br />
