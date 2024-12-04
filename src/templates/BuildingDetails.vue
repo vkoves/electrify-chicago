@@ -479,27 +479,24 @@ query ($id: ID!, $ID: String) {
           <p class="description">Send them an email asking about their electrification plan!</p>
           <div class="email-this-building-subheader">
             <h4>Subject</h4>
-            <button>Copy Subject <img src="/copy.svg" alt=""></button>
+            <button @click="copySubject">Copy Subject <img src="/copy.svg" alt=""></button>
           </div>
-          <p class="email-box" ref="emailSubject">What's Our Building's Plan For Reducing Emissions?</p>
+          <p class="email-box" id="email-subj">What's Our Building's Plan For Reducing Emissions?</p>
           <div class="email-this-building-subheader">
             <h4>Body</h4>
             <button @click="copyBody">Copy Body <img src="/copy.svg" alt=""></button>
           </div>
-            <p class="email-box" ref="emailBody" id="emailBody">Dear sir or madam,
-              <br />
-              <br />
-            My name is _NAME_, and I am an _owner/occupant/other_ of {{ $page.building.PropertyName }}.
-              <br />
-              <br />
-            I've been reading about <span>BUILDING NAME's</span> emissions and energy use, and I wanted to learn
-            more about your plans to improve our energy efficiency, electrify the building, and reduce our emissions. Well
-            insulated all-electric buildings have lower energy bills, cleaner air, and are more comfortable for their occupants,
-            and I want to make sure there is a concrete plan to make <span>BUILDING NAME</span> one of those buildings!
-              <br />
-              <br />
-            You can see more at <span>https://electrifychicago.net/building/building-id</span>
-          </p>
+            <div class="email-box" id="email-body">
+              <p>Dear sir or madam,</p>
+              <p>My name is <span class="to-replace">_NAME_</span>, and I am an <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of {{ $page.building.PropertyName }}.</p>
+              <p>
+                I've been reading about {{ $page.building.PropertyName }}'s emissions and energy use, and I wanted to learn
+                more about your plans to improve our energy efficiency, electrify the building, and reduce our emissions. Well
+                insulated all-electric buildings have lower energy bills, cleaner air, and are more comfortable for their occupants,
+                and I want to make sure there is a concrete plan to make {{ $page.building.PropertyName }} one of those buildings!
+              </p>
+              <p>You can see more at <span>https://electrifychicago.net/building/{{ $page.building.ID }}</span></p>
+            </div>
         </div>
       </Popup>
     </div>
@@ -711,28 +708,25 @@ export default class BuildingDetails  extends Vue {
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
 
-  async copyBody() {
-
+  async copyElementTextToClipboard(id: string) {
     try {
-      const content = document.getElementById("emailBody")?.innerHTML || "";
-      const blob = new Blob([content], {type: 'text/html'});
-      const clipboardItem = new window.ClipboardItem({ 'text/html': blob });
-      await navigator.clipboard.write([clipboardItem]);
-      console.log(content);
-      console.log("test");
+      const content = document.getElementById(id)!.innerText;
+      await navigator.clipboard.writeText(content);
     } 
     catch (error) {
       console.error(error);
     }
+  }
 
-    // const content = '<a href="http://google.com/">test</a>';
-    // const blob = new Blob([content], {type: 'text/html'});
-    // const clipboardItem = new window.ClipboardItem({ 'text/html': blob });
-    // navigator.clipboard.write([clipboardItem]);
+  copyBody(): void {
+    this.copyElementTextToClipboard('email-body');
+  }
+
+  copySubject(): void {
+    this.copyElementTextToClipboard('email-subj');
   }
 }
 </script>
-
 
 <style lang="scss">
 .building-details-page {
@@ -910,7 +904,7 @@ export default class BuildingDetails  extends Vue {
 
   .email-this-building {
     .popup-inner {
-      width: 24rem;
+      width: 25rem;
       margin: auto auto;
     }
 
@@ -971,6 +965,15 @@ export default class BuildingDetails  extends Vue {
       border: 1px solid #555555;
       padding: 0.25rem;
       font-size: 0.75rem;
+    }
+
+    .email-box p + p {
+      margin-top: 1em; 
+    }
+
+    .email-box .to-replace {
+      font-weight: 700;
+      font-style: italic;
     }
   }
 
