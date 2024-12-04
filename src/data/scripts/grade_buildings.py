@@ -69,9 +69,11 @@ def generate_percentile_grade(
 
     # Calculate percentile-based score out 100:
     if reverse:
-        calc_func = lambda x: 100 - percentileofscore(vals, x, kind="weak")
+        def calc_func(x):
+            return 100 - percentileofscore(vals, x, kind="weak")
     else:
-        calc_func = lambda x: percentileofscore(vals, x, kind="weak")
+        def calc_func(x):
+            return percentileofscore(vals, x, kind="weak")
     percent_scores: pd.Series = vals.apply(calc_func)
     grades[f"{field}PercentileGrade"] = percent_scores
 
