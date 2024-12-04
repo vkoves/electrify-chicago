@@ -484,14 +484,20 @@ query ($id: ID!, $ID: String) {
           <p class="email-box" ref="emailSubject">What's Our Building's Plan For Reducing Emissions?</p>
           <div class="email-this-building-subheader">
             <h4>Body</h4>
-            <button>Copy Body <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069715-45a174db-db63-4a15-855f-f46be85ebb52.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001100Z&X-Amz-Expires=300&X-Amz-Signature=49427fdb58d833d9667ccbc838c9b0c140abd68a514a98a35a9e24b550b9756d&X-Amz-SignedHeaders=host" alt=""></button>
+            <button @click="copyBody">Copy Body <img src="https://github-production-user-asset-6210df.s3.amazonaws.com/3187531/379069715-45a174db-db63-4a15-855f-f46be85ebb52.svg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20241204%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241204T001100Z&X-Amz-Expires=300&X-Amz-Signature=49427fdb58d833d9667ccbc838c9b0c140abd68a514a98a35a9e24b550b9756d&X-Amz-SignedHeaders=host" alt=""></button>
           </div>
-            <p class="email-box" ref="emailBody">Dear sir or madam,
+            <p class="email-box" ref="emailBody" id="emailBody">Dear sir or madam,
+              <br />
+              <br />
+            My name is _NAME_, and I am an _owner/occupant/other_ of {{ $page.building.PropertyName }}.
+              <br />
+              <br />
             I've been reading about <span>BUILDING NAME's</span> emissions and energy use, and I wanted to learn
             more about your plans to improve our energy efficiency, electrify the building, and reduce our emissions. Well
             insulated all-electric buildings have lower energy bills, cleaner air, and are more comfortable for their occupants,
             and I want to make sure there is a concrete plan to make <span>BUILDING NAME</span> one of those buildings!
-
+              <br />
+              <br />
             You can see more at <span>https://electrifychicago.net/building/building-id</span>
           </p>
         </div>
@@ -704,8 +710,29 @@ export default class BuildingDetails  extends Vue {
 
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
+
+  async copyBody() {
+
+    try {
+      const content = document.getElementById("emailBody")?.innerHTML || "";
+      const blob = new Blob([content], {type: 'text/html'});
+      const clipboardItem = new window.ClipboardItem({ 'text/html': blob });
+      await navigator.clipboard.write([clipboardItem]);
+      console.log(content);
+      console.log("test");
+    } 
+    catch (error) {
+      console.error(error);
+    }
+
+    // const content = '<a href="http://google.com/">test</a>';
+    // const blob = new Blob([content], {type: 'text/html'});
+    // const clipboardItem = new window.ClipboardItem({ 'text/html': blob });
+    // navigator.clipboard.write([clipboardItem]);
+  }
 }
 </script>
+
 
 <style lang="scss">
 .building-details-page {
