@@ -3,6 +3,7 @@
 query ($id: ID!, $ID: String) {
   building(id: $id) {
     slugSource
+    path
     ID
     DataYear
     Address
@@ -484,7 +485,7 @@ query ($id: ID!, $ID: String) {
             </p>
             <p>
               You can see more at
-              <span>https://electrifychicago.net/building/{{ $page.building.ID }}</span>
+              <span>https://electrifychicago.net{{ $page.building.path }}</span>
             </p>
           </div>
         </div>
