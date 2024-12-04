@@ -2,7 +2,8 @@
   <div class="popup">
     <div class="popup-inner">
       <slot />
-      <button class="popup-close"
+      <button
+        class="popup-close"
         @click="close"
       >
         Close

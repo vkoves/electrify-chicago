@@ -113,10 +113,12 @@ query ($id: ID!, $ID: String) {
           <BuildingImage :building="$page.building" />
 
           <!-- Button opens Popup for "Email This Building" -->
-          <button class="email-this-building-open"
+          <button
+            class="email-this-building-open"
             @click="isModalOpen=true"
           >
-            <img src="/email.svg"
+            <img
+              src="/email.svg"
               alt="Email icon"
             >
             Email This Building
@@ -415,12 +417,14 @@ query ($id: ID!, $ID: String) {
         Own this Building? Take Action.
       </a>
 
-      <Popup v-if="isModalOpen"
+      <Popup
+        v-if="isModalOpen"
         class="email-this-building"
         @close="isModalOpen=false"
       >
         <header>
-          <img src="/email.svg"
+          <img
+            src="/email.svg"
             alt="Email icon"
           >
           <h3>Email This Building</h3>
@@ -436,12 +440,14 @@ query ($id: ID!, $ID: String) {
             <h4>Subject</h4>
             <button @click="copySubject">
               Copy Subject
-              <img src="/copy.svg"
+              <img
+                src="/copy.svg"
                 alt="Copy icon"
               >
             </button>
           </div>
-          <p id="email-subj"
+          <p
+            id="email-subj"
             class="email-box"
           >
             What's Our Building's Plan For Reducing Emissions?
@@ -450,12 +456,14 @@ query ($id: ID!, $ID: String) {
             <h4>Body</h4>
             <button @click="copyBody">
               Copy Body
-              <img src="/copy.svg"
+              <img
+                src="/copy.svg"
                 alt="Copy icon"
               >
             </button>
           </div>
-          <div id="email-body"
+          <div
+            id="email-body"
             class="email-box"
           >
             <p>
