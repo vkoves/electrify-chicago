@@ -113,11 +113,14 @@ query ($id: ID!, $ID: String) {
           <BuildingImage :building="$page.building" />
 
           <!-- Button opens Popup for "Email This Building" -->
-          <button @click="isModalOpen=true" class="email-this-building-open">
-            <img src="/email.svg" alt="Email icon">
+          <button class="email-this-building-open"
+            @click="isModalOpen=true"
+          >
+            <img src="/email.svg"
+              alt="Email icon"
+            >
             Email This Building
           </button>
-
         </div>
 
         <div class="details-cont">
@@ -412,37 +415,72 @@ query ($id: ID!, $ID: String) {
         Own this Building? Take Action.
       </a>
 
-      <Popup class="email-this-building" v-if="isModalOpen" @close="isModalOpen=false">
+      <Popup v-if="isModalOpen"
+        class="email-this-building"
+        @close="isModalOpen=false"
+      >
         <header>
-          <img src="/email.svg" alt="">
+          <img src="/email.svg"
+            alt="Email icon"
+          >
           <h3>Email This Building</h3>
         </header>
         <div class="email-prompt-wrapper">
-          <p class="prompt">Do you know this building's owner?</p>
-          <p class="description">Send them an email asking about their electrification plan!</p>
+          <p class="prompt">
+            Do you know this building's owner?
+          </p>
+          <p class="description">
+            Send them an email asking about their electrification plan!
+          </p>
           <div class="email-this-building-subheader">
             <h4>Subject</h4>
-            <button @click="copySubject">Copy Subject <img src="/copy.svg" alt=""></button>
+            <button @click="copySubject">
+              Copy Subject
+              <img src="/copy.svg"
+                alt="Copy icon"
+              >
+            </button>
           </div>
-          <p class="email-box" id="email-subj">What's Our Building's Plan For Reducing Emissions?</p>
+          <p id="email-subj"
+            class="email-box"
+          >
+            What's Our Building's Plan For Reducing Emissions?
+          </p>
           <div class="email-this-building-subheader">
             <h4>Body</h4>
-            <button @click="copyBody">Copy Body <img src="/copy.svg" alt=""></button>
+            <button @click="copyBody">
+              Copy Body
+              <img src="/copy.svg"
+                alt="Copy icon"
+              >
+            </button>
           </div>
-            <div class="email-box" id="email-body">
-              <p>Dear sir or madam,</p>
-              <p>My name is <span class="to-replace">_NAME_</span>, and I am an <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of {{ $page.building.PropertyName }}.</p>
-              <p>
-                I've been reading about {{ $page.building.PropertyName }}'s emissions and energy use, and I wanted to learn
-                more about your plans to improve our energy efficiency, electrify the building, and reduce our emissions. Well
-                insulated all-electric buildings have lower energy bills, cleaner air, and are more comfortable for their occupants,
-                and I want to make sure there is a concrete plan to make {{ $page.building.PropertyName }} one of those buildings!
-              </p>
-              <p>You can see more at <span>https://electrifychicago.net/building/{{ $page.building.ID }}</span></p>
-            </div>
+          <div id="email-body"
+            class="email-box"
+          >
+            <p>
+              Dear sir or madam,
+            </p>
+            <p>
+              My name is <span class="to-replace">_NAME_</span>, and I am an 
+              <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of 
+              {{ $page.building.PropertyName }}.
+            </p>
+            <p>
+              I've been reading about {{ $page.building.PropertyName }}'s emissions and energy use,
+              and I wanted to learn more about your plans to improve our energy efficiency,
+              electrify the building, and reduce our emissions. Well insulated all-electric
+              buildings have lower energy bills, cleaner air, and are more comfortable for their
+              occupants, and I want to make sure there is a concrete plan to make
+              {{ $page.building.PropertyName }} one of those buildings!
+            </p>
+            <p>
+              You can see more at
+              <span>https://electrifychicago.net/building/{{ $page.building.ID }}</span>
+            </p>
+          </div>
         </div>
       </Popup>
-      
     </div>
   </DefaultLayout>
 </template>
@@ -546,7 +584,7 @@ export default class BuildingDetails  extends Vue {
 
   totalEnergyUsekBTU!: number;
 
-  isModalOpen: boolean = false;
+  isModalOpen = false;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -662,7 +700,7 @@ export default class BuildingDetails  extends Vue {
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
 
-  copyElementTextToClipboard(id: string) {
+  copyElementTextToClipboard(id: string): void {
     try {
       const content = document.getElementById(id)!.innerText;
       navigator.clipboard.writeText(content);
