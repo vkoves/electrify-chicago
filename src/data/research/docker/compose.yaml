@@ -8,8 +8,8 @@ services:
       - NB_GID=${MY_GID}
 
     build:
-      context: ../../
-      dockerfile: research/docker/dev.Dockerfile
+      context: ../../../../
+      dockerfile: src/data/research/docker/dev.Dockerfile
     ports:
       # Jupyter Server:
       - 127.0.0.1:8888:8888
@@ -18,6 +18,6 @@ services:
 
     volumes:
       # To persist changes on host:
-      - ../../:/home/jovyan/work/
+      - ../../../../:/home/jovyan/work/
         
     
