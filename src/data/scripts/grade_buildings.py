@@ -6,11 +6,15 @@ from typing import List
 from src.data.scripts.utils import get_data_file_path
 
 
-data_directory = 'dist'
-data_in_file = 'building-benchmarks.csv'
+data_directory = "dist"
+data_in_file_submitted = "building-benchmarks.csv"
 data_out_file = "building-benchmarks-graded.csv"
-data_in_file_path = get_data_file_path(
-    data_directory, data_in_file
+data_in_file_historical = "benchmarking-all-years.csv"
+data_in_file_submitted_path = get_data_file_path(
+    data_directory, data_in_file_submitted
+)
+data_in_file_historical_path = get_data_file_path(
+    data_directory, data_in_file_historical
 )
 data_out_file_path = get_data_file_path(
     data_directory, data_out_file
@@ -322,6 +326,16 @@ def generate_missing_data_grade(
 
     not_submitted_count_df.reset_index(inplace=True)
 
+    # Capture percentiles:
+    percentiles = generate_percentile_grade(
+        vals=not_submitted_count_df["MissingRecordsCount"],
+        reverse=True,
+    )["MissingRecordsCountPercentileGrade"]
+
+    not_submitted_count_df.insert(
+        2, "MissingRecordsCountPercentileGrade", percentiles
+    )
+
     return not_submitted_count_df
 
 
@@ -376,13 +390,46 @@ def grade_ghg_intensity_energy_mix_all_years(
     return df
 
 
-if __name__ == "__main__":
+def main():
+    # Generate grades for all years for GHG Intensity and Energy Mix:
     graded_df = grade_ghg_intensity_energy_mix_all_years(
-        csv_path=data_in_file_path
+        csv_path=data_in_file_submitted_path
     )
+
+    # Generate grades for missing records:
+    df_historical = pd.read_csv(data_in_file_historical_path)
+    not_submitted_grades = generate_missing_data_grade(df_historical)
+    graded_df = pd.merge(
+        left=graded_df,
+        right=not_submitted_grades,
+        how="left",
+        on="ID",
+    )
+
+    # Overall numerical grade, average of all percentile grades:
+    graded_df["AvgPercentileGrade"] = graded_df[
+        [
+            "GHGIntensityPercentileGrade",
+            "EnergyMixWeightedPctSumPercentileGrade",
+            "MissingRecordsCountPercentileGrade"
+        ]
+    ].mean(axis=1)
+
+    # Overall letter grade:
+    graded_df["AvgPercentileLetterGrade"] = pd.cut(
+        graded_df["AvgPercentileGrade"],
+        bins=bins,
+        labels=letter_grades,
+        right=True
+    )
+
     graded_df.to_csv(
         data_out_file_path,
         sep=",",
         encoding='utf-8',
         index=False
     )
+
+
+if __name__ == "__main__":
+    main()
