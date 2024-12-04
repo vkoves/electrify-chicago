@@ -19,7 +19,7 @@
   "dependencies": {
     "csv-parse": "^5.3.6",
     "d3": "^7.9.0",
-    "gridsome": "^0.7.0",
+    "gridsome": "^0.7.23",
     "leaflet": "~1.7.0",
     "leaflet.gridlayer.googlemutant": "^0.14.0",
     "vue-class-component": "^7.2.6",
