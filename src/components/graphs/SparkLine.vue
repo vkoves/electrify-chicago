@@ -112,8 +112,6 @@ export default class BarGraph extends Vue {
   }
 
   renderGraph(): void {
-    console.log(this.graphData);
-
     // Empty the SVG
     this.svg.html(null);
 

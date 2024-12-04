@@ -152,6 +152,21 @@ export const BuildingOwners: IBuildingOwners = {
 
 export interface IBuildingCustomInfo {
   owner?: string; // key from BuildingOwners
+  links?: Array <ILink>;
+  tags?: Array<BuildingTags>;
+}
+
+export interface ILink {
+  url: string;
+  text: string;
+}
+
+/**
+ * Custom Tags for associating groups of buildings for later retrieval, like those that participated
+ * in city programs
+ * */
+export enum BuildingTags {
+  hasRetrofitCaseStudy = 'has-retrofit-case-study'
 }
 
 /**
@@ -159,8 +174,58 @@ export interface IBuildingCustomInfo {
  * building ID, which is stable as the data updates (while names can change YoY)
  */
 export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } = {
+  '166134' : {
+    links: [
+      {
+        url : 'https://www.sheddaquarium.org/stories/sustainability-at-shedd',
+        text : 'Sustainability at Shedd | Shedd Aquarium',
+      },
+  ]},
+
   /**
-   * Depaul Buildings
+   * City Retrofit Data (PDFs)
+   */
+  // Rookery Building Retrofit
+  '103721': {
+    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    links: [
+      {
+        url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/The%20Rookery.pdf',
+        text: 'Rookery Building Retrofit Report',
+      },
+  ]},
+  // Wrigley Building
+  '101920': {
+    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    links: [
+      {
+        url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/Wrigley.pdf',
+        text: 'Wrigley Building Retrofit Report',
+      },
+  ]},
+  // Institute of Cultural Affairs
+  '102336' : {
+    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    links: [
+      {
+        url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/ICAGreenRise.pdf',
+        text: 'Institute of Cultural Affairs Retrofit Report',
+      },
+  ]},
+
+  // Sheraton Chicago Hotel & Towers
+  // Listed as Sheraton Grand(Retrofit) or Sheraton Grand Chicago Riverwalk (google maps)
+  '101852': {
+    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    links: [
+      {
+        url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/TheSheraton.pdf',
+        text: 'Sheraton Grand Chicago Hotel Retrofit Report',
+      },
+  ]},
+
+  /**
+   * DePaul Buildings
    * Helpful source: https://www.depaul.edu/campus-maps/Pages/default.aspx
    */
   // Mc-Gowan-North
@@ -208,7 +273,14 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   // 990 W Fullerton Building
   '251322': {owner: BuildingOwners.depaul.key},
   // John T. Richardson Library
-  '251328': {owner: BuildingOwners.depaul.key},
+  '251328': {owner: BuildingOwners.depaul.key,
+    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    links: [
+        {
+          url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/Richardson%20Library.pdf',
+          text: 'Richardson Library Retrofit Report',
+        },
+  ]},
   // 1150 W. Fullerton Building
   '251321': {owner: BuildingOwners.depaul.key},
   // University Center Chicago
@@ -262,6 +334,15 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
    * UChicago Buildings
    * Helpful source: https://registrar.uchicago.edu/faculty-staff/classroom-scheduling/buildings-directory-2/
    */
+  //Mansueto Library at UChicago
+  '252064' : {owner: BuildingOwners.uchicago.key,
+    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    links: [
+      {
+        url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/UChicagoMansueto.pdf',
+        text: 'Mansueto Library Retrofit Report',
+      },
+  ]},
   // 1155 E 60th St
   '136212': {owner: BuildingOwners.uchicago.key},
   // 5841 S Maryland Ave M C0985
@@ -331,8 +412,15 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
    * Northwestern Buildings
    * Helpful source: https://maps.northwestern.edu/chicago
    */
-  // 303 E Superior Street
-  '256405': { owner: BuildingOwners.northwestern.key },
+  // 303 E Superior Street (Lurie Medical Research Center)
+  '256405': { owner: BuildingOwners.northwestern.key ,
+    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    links: [
+      {
+        url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/Northwestern%20Lurie.pdf',
+        text: 'Lurie Medical Research Center - 303 E Superior St Retrofit Report',
+      },
+  ]},
   // 320 E Superior Street
   '256408': { owner: BuildingOwners.northwestern.key },
   // 300 E Superior Street
@@ -1611,7 +1699,12 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   // 162 North State Street
   '250167': { owner: BuildingOwners.saic.key },
   // 280 Building, 280 S Columbus Dr
-  '252065': { owner: BuildingOwners.saic.key },
+  '2tags: [ BuildingTags.hasRetrofitCaseStudy],52065': { owner: BuildingOwners.saic.key ,
+    links: [
+      {
+        url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/SAIC.pdf',
+        text: 'SAIC 280 S Columbus Building Retrofit Report',
+      } ]},
   // Alice B. Sharp Building, 37 S Wabash Ave
   '134783': { owner: BuildingOwners.saic.key },
 

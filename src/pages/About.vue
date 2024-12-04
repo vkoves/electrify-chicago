@@ -20,7 +20,7 @@ export default class About extends Vue {
 </script>
 <template>
   <DefaultLayout>
-    <div class="layout-constrained">
+    <div class="about-page layout-constrained">
       <h1
         id="main-content"
         tabindex="-1"
@@ -122,6 +122,11 @@ export default class About extends Vue {
             Biggest Gas Free Buildings
           </g-link>
         </li>
+        <li>
+          <g-link to="/retrofit-chicago-participants">
+            Retrofit Chicago Case Studies
+          </g-link>
+        </li>
       </ul>
 
       <h2>Authors</h2>
@@ -173,32 +178,34 @@ export default class About extends Vue {
 </template>
 
 <style lang="scss">
-h2 { margin-top: 1.75rem; }
+.about-page {
+  h2 { margin-top: 1.75rem; }
 
-p.our-why {
-  display: inline-block;
-  line-height: 1.25;
-  border-bottom: solid 0.5rem $chicago-blue;
-}
-
-.power-chart {
-  float: right;
-  margin-left: 1rem;
-  margin-bottom: 1rem;
-}
-
-.other-pages {
-  li {
-    font-size: 1.25rem;
-    margin-top: 1rem;
-    font-weight: bold;
+  p.our-why {
+    display: inline-block;
+    line-height: 1.25;
+    border-bottom: solid 0.5rem $chicago-blue;
   }
-}
 
-@media (max-width: $mobile-max-width) {
   .power-chart {
-    float: none;
-    margin-left: 0;
+    float: right;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .other-pages {
+    li {
+      font-size: 1.25rem;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    .power-chart {
+      float: none;
+      margin-left: 0;
+    }
   }
 }
 </style>
