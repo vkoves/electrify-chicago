@@ -1,5 +1,5 @@
 <template>
-  <div class="popup">
+  <dialog id="dialog">
     <div class="popup-inner">
       <slot />
       <button
@@ -9,7 +9,7 @@
         Close
       </button>
     </div>
-  </div>
+  </dialog>
 </template>
 
 <script lang="ts">
@@ -17,28 +17,42 @@ import { Component, Vue, Emit } from 'vue-property-decorator';
 
 @Component
 export default class Popup extends Vue {
+  dialog!: HTMLDialogElement;
+
   @Emit()
   close(): boolean {
+    this.dialog.close();
     return true;
+  }
+
+  /** Open the dialog on load */
+  mounted(): void {
+    this.dialog = document.getElementById('dialog') as HTMLDialogElement;
+
+    this.dialog.showModal();
+
+    // The native <dialog> handles Esc to close, so we then emit
+    this.dialog.addEventListener("close", () => {
+      this.close();
+    });
   }
 }
 </script>
 
 <style lang="scss">
-.popup {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 99;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+dialog {
+  margin: auto;
+  padding: 0;
+  border: none;
+  border-radius: $brd-rad-medium;
+
+  &::backdrop {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(0.25rem);
+  }
 
   .popup-inner {
-    background-color: #fff;
+    background-color: $white;
     display: flex;
     flex-direction: column;
     border-radius: 0.25rem;
@@ -47,11 +61,12 @@ export default class Popup extends Vue {
       align-self: center;
       border: none;
       border-radius: 0.25rem;
-      background-color: #eeeeee;
-      padding: 0.25rem 1rem;
+      padding: 0.5rem 2rem;
       margin-bottom: 1rem;
-      font-size: 0.75rem;
-      font-weight: 300;
+      background-color: $grey-light;
+      font-size: 1.25rem;
+
+      &:hover, &:focus { background-color: $grey; }
     }
   }
 }

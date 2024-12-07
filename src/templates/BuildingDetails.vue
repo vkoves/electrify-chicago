@@ -115,12 +115,12 @@ query ($id: ID!, $ID: String) {
 
           <!-- Button opens Popup for "Email This Building" -->
           <button
-            class="email-this-building-open"
+            class="email-btn"
             @click="isModalOpen=true"
           >
             <img
               src="/email.svg"
-              alt="Email icon"
+              alt=""
             >
             Email This Building
           </button>
@@ -423,27 +423,31 @@ query ($id: ID!, $ID: String) {
         class="email-this-building"
         @close="isModalOpen=false"
       >
-        <header>
+        <div class="header">
           <img
             src="/email.svg"
-            alt="Email icon"
+            alt=""
           >
-          <h3>Email This Building</h3>
-        </header>
+          <h1 autofocus>
+            Email This Building
+          </h1>
+        </div>
+
         <div class="email-prompt-wrapper">
-          <p class="prompt">
+          <h1 class="prompt">
             Do you know this building's owner?
-          </p>
+          </h1>
           <p class="description">
             Send them an email asking about their electrification plan!
           </p>
           <div class="email-this-building-subheader">
-            <h4>Subject</h4>
-            <button @click="copySubject">
+            <h2>Subject</h2>
+
+            <button class="copy-btn" @click="copySubject">
               Copy Subject
               <img
                 src="/copy.svg"
-                alt="Copy icon"
+                alt=""
               >
             </button>
           </div>
@@ -454,25 +458,26 @@ query ($id: ID!, $ID: String) {
             What's Our Building's Plan For Reducing Emissions?
           </p>
           <div class="email-this-building-subheader">
-            <h4>Body</h4>
-            <button @click="copyBody">
+            <h2>Body</h2>
+
+            <button class="copy-btn" @click="copyBody">
               Copy Body
               <img
                 src="/copy.svg"
-                alt="Copy icon"
+                alt=""
               >
             </button>
           </div>
           <div
             id="email-body"
-            class="email-box"
+            class="email-box -body"
           >
             <p>
               Dear sir or madam,
             </p>
             <p>
-              My name is <span class="to-replace">_NAME_</span>, and I am an 
-              <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of 
+              My name is <span class="to-replace">_NAME_</span>, and I am an
+              <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of
               {{ $page.building.PropertyName }}.
             </p>
             <p>
@@ -485,7 +490,7 @@ query ($id: ID!, $ID: String) {
             </p>
             <p>
               You can see more at
-              <span>https://electrifychicago.net{{ $page.building.path }}</span>
+              <strong>https://electrifychicago.net{{ $page.building.path }}</strong>
             </p>
           </div>
         </div>
@@ -713,7 +718,7 @@ export default class BuildingDetails  extends Vue {
     try {
       const content = document.getElementById(id)!.innerText;
       navigator.clipboard.writeText(content);
-    } 
+    }
     catch (error) {
       console.error(error);
     }
@@ -839,20 +844,27 @@ export default class BuildingDetails  extends Vue {
     h2 { margin-top: 0; }
   }
 
-  .email-this-building-open {
-    background-color: #0066ff;
-    color: #fff;
-    font-weight: 300;
-    border: none;
-    padding: 0.5rem 0.75rem;
-    align-self: flex-end;
+  .email-btn {
     display: flex;
-    gap: 1rem;
-    align-items: center;
+    align-self: flex-end;
+    justify-content: space-around;
+    padding: 0.8rem 1.5rem;
+    min-width: 18.75rem;
+    margin-top: 1rem;
+    background-color: $blue-dark;
+    border: none;
+    color: $white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: $brd-rad-medium;
+
+    &:hover, &:focus {
+      background-color: $blue-very-dark;
+    }
 
     img {
       border-radius: 0;
-      height: 1.1rem;
+      height: 1.5rem;
     }
   }
 
@@ -927,7 +939,7 @@ export default class BuildingDetails  extends Vue {
 
   .email-this-building {
     .popup-inner {
-      width: 25rem;
+      max-width: 37.5rem; // 600px
       margin: auto auto;
     }
 
@@ -936,68 +948,67 @@ export default class BuildingDetails  extends Vue {
       padding: 0;
     }
 
-    header {
+    .header {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 1rem;
+      gap: 2rem;
       background-color: #0066ff;
-      color: #fff;
-      padding: 0.75rem;
+      color: $white;
+      padding: 1.5rem;
 
-      img {
-        height: 1.25rem;
-      }
+      img { height: 2rem; }
     }
 
+    h2 { margin-top: 1rem; }
+
     .email-prompt-wrapper {
-      padding: 1rem;
+      padding: 2rem;
 
       .prompt {
-        font-size: 1.25rem;
+        font-size: 1.75rem;
         font-weight: 700;
-      }
-
-      .description {
-        font-size: 0.75rem;
       }
 
       .email-this-building-subheader {
         display: flex;
         gap: 0.5rem;
         margin-top: 0.75rem;
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.2rem;
+        align-items: flex-end;
 
         button {
-          background-color: #0066ff;
-          color: #fff;
-          line-height: 0.75rem;
-          font-size: 0.75rem;
-          font-weight: 300;
+          background-color: $blue-dark;
+          color: $white;
+          font-weight: bold;
           border: none;
-          padding: 0 0.25rem 0 0.25rem;
+          padding: 0.25rem 0.5rem;
+          margin-left: 0.5rem;
+          margin-bottom: 0.2rem;
 
-          img {
-            height: 0.75rem;
-          }
+          img { height: 0.75rem; }
+          &:hover, &:focus { background-color: $blue-very-dark; }
+        }
+      }
+
+      .copy-btn img { margin-left: 0.4rem; }
+
+      .email-box {
+        border: solid $border-thin $black;
+        padding: 0.75rem;
+        border-radius: $brd-rad-small;
+
+        &.-body { padding: 1rem 0.75rem}
+
+        p + p { margin-top: 1em; }
+
+        .to-replace {
+          font-weight: 700;
+          font-style: italic;
         }
       }
     }
 
-    .email-box {
-      border: 1px solid #555555;
-      padding: 0.25rem;
-      font-size: 0.75rem;
-    }
-
-    .email-box p + p {
-      margin-top: 1em; 
-    }
-
-    .email-box .to-replace {
-      font-weight: 700;
-      font-style: italic;
-    }
   }
 
   /** Small desktop sizing - split to just two columns from three */
@@ -1011,7 +1022,7 @@ export default class BuildingDetails  extends Vue {
   @media (max-width: $mobile-max-width) {
     .building-header {
       .building-img-cont, .building-header-text { width: 100%; }
-      .email-this-building-open {
+      .email-btn {
         align-self: flex-start;
       }
 
