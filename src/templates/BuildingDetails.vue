@@ -443,13 +443,23 @@ query ($id: ID!, $ID: String) {
           <div class="email-this-building-subheader">
             <h2>Subject</h2>
 
-            <button class="copy-btn" @click="copySubject">
+            <button
+              class="copy-btn"
+              @click="copySubject"
+            >
               Copy Subject
               <img
                 src="/copy.svg"
                 alt=""
               >
             </button>
+
+            <!-- Will say 'Copied' after copying -->
+            <div
+              ref="subj-copied"
+              aria-live="polite"
+              class="copy-notice"
+            />
           </div>
           <p
             id="email-subj"
@@ -460,13 +470,23 @@ query ($id: ID!, $ID: String) {
           <div class="email-this-building-subheader">
             <h2>Body</h2>
 
-            <button class="copy-btn" @click="copyBody">
+            <button
+              class="copy-btn"
+              @click="copyBody"
+            >
               Copy Body
               <img
                 src="/copy.svg"
                 alt=""
               >
             </button>
+
+            <!-- Will say 'Copied' after copying -->
+            <div
+              ref="body-copied"
+              aria-live="polite"
+              class="copy-notice"
+            />
           </div>
           <div
             id="email-body"
@@ -714,10 +734,21 @@ export default class BuildingDetails  extends Vue {
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
 
-  copyElementTextToClipboard(id: string): void {
+  copyElementTextToClipboard(id: string, noticeRef: HTMLElement): void {
     try {
       const content = document.getElementById(id)!.innerText;
       navigator.clipboard.writeText(content);
+
+      // Show a "Copied" message
+      noticeRef.innerText = 'Copied!';
+      noticeRef.classList.add('-visible');
+
+      setTimeout(() => {
+        noticeRef.classList.remove('-visible');
+
+        // Wait till after the animation to remove the text
+        setTimeout(() => noticeRef.innerText = '', 300);
+      }, 1500);
     }
     catch (error) {
       console.error(error);
@@ -725,11 +756,11 @@ export default class BuildingDetails  extends Vue {
   }
 
   copyBody(): void {
-    this.copyElementTextToClipboard('email-body');
+    this.copyElementTextToClipboard('email-body', this.$refs['body-copied'] as HTMLElement);
   }
 
   copySubject(): void {
-    this.copyElementTextToClipboard('email-subj');
+    this.copyElementTextToClipboard('email-subj', this.$refs['subj-copied'] as HTMLElement);
   }
 }
 </script>
@@ -977,7 +1008,7 @@ export default class BuildingDetails  extends Vue {
         margin-bottom: 0.2rem;
         align-items: flex-end;
 
-        button {
+        button.copy-btn {
           background-color: $blue-dark;
           color: $white;
           font-weight: bold;
@@ -986,12 +1017,23 @@ export default class BuildingDetails  extends Vue {
           margin-left: 0.5rem;
           margin-bottom: 0.2rem;
 
-          img { height: 0.75rem; }
           &:hover, &:focus { background-color: $blue-very-dark; }
+
+          img {
+            height: 0.75rem;
+            margin-left: 0.4rem;
+          }
         }
       }
 
-      .copy-btn img { margin-left: 0.4rem; }
+      .copy-notice {
+        margin-left: 0.25rem;
+        margin-bottom: 0.4rem;
+        opacity: 0;
+        transition: opacity 0.3s; // fade in text
+
+        &.-visible { opacity: 1; }
+      }
 
       .email-box {
         border: solid $border-thin $black;
