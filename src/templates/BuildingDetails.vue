@@ -418,103 +418,11 @@ query ($id: ID!, $ID: String) {
         Own this Building? Take Action.
       </a>
 
-      <Popup
+      <email-building-modal
         v-if="isModalOpen"
-        class="email-this-building"
+        :building="$page.building"
         @close="isModalOpen=false"
-      >
-        <div class="header">
-          <img
-            src="/email.svg"
-            alt=""
-          >
-          <h1 autofocus>
-            Email This Building
-          </h1>
-        </div>
-
-        <div class="email-prompt-wrapper">
-          <h1 class="prompt">
-            Do you know this building's owner?
-          </h1>
-          <p class="description">
-            Send them an email asking about their electrification plan!
-          </p>
-          <div class="email-this-building-subheader">
-            <h2>Subject</h2>
-
-            <button
-              class="copy-btn"
-              @click="copySubject"
-            >
-              Copy Subject
-              <img
-                src="/copy.svg"
-                alt=""
-              >
-            </button>
-
-            <!-- Will say 'Copied' after copying -->
-            <div
-              ref="subj-copied"
-              aria-live="polite"
-              class="copy-notice"
-            />
-          </div>
-          <p
-            id="email-subj"
-            class="email-box"
-          >
-            What's Our Building's Plan For Reducing Emissions?
-          </p>
-          <div class="email-this-building-subheader">
-            <h2>Body</h2>
-
-            <button
-              class="copy-btn"
-              @click="copyBody"
-            >
-              Copy Body
-              <img
-                src="/copy.svg"
-                alt=""
-              >
-            </button>
-
-            <!-- Will say 'Copied' after copying -->
-            <div
-              ref="body-copied"
-              aria-live="polite"
-              class="copy-notice"
-            />
-          </div>
-          <div
-            id="email-body"
-            class="email-box -body"
-          >
-            <p>
-              Dear sir or madam,
-            </p>
-            <p>
-              My name is <span class="to-replace">_NAME_</span>, and I am an
-              <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of
-              {{ $page.building.PropertyName }}.
-            </p>
-            <p>
-              I've been reading about {{ $page.building.PropertyName }}'s emissions and energy use,
-              and I wanted to learn more about your plans to improve our energy efficiency,
-              electrify the building, and reduce our emissions. Well insulated all-electric
-              buildings have lower energy bills, cleaner air, and are more comfortable for their
-              occupants, and I want to make sure there is a concrete plan to make
-              {{ $page.building.PropertyName }} one of those buildings!
-            </p>
-            <p>
-              You can see more at
-              <strong>https://electrifychicago.net{{ $page.building.path }}</strong>
-            </p>
-          </div>
-        </div>
-      </Popup>
+      />
     </div>
   </DefaultLayout>
 </template>
@@ -545,8 +453,8 @@ import {
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
-import Popup from '../components/layout/Popup.vue';
 import { getBuildingCustomInfo, ILink } from '../constants/buildings-custom-info.constant.vue';
+import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
@@ -572,7 +480,7 @@ const EnergyBreakdownColors = {
     PieChart,
     StatTile,
     ReportingTile,
-    Popup,
+    EmailBuildingModal,
   },
   filters: {
     titlecase(value: string) {
@@ -732,35 +640,6 @@ export default class BuildingDetails  extends Vue {
     }));
 
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
-  }
-
-  copyElementTextToClipboard(id: string, noticeRef: HTMLElement): void {
-    try {
-      const content = document.getElementById(id)!.innerText;
-      navigator.clipboard.writeText(content);
-
-      // Show a "Copied" message
-      noticeRef.innerText = 'Copied!';
-      noticeRef.classList.add('-visible');
-
-      setTimeout(() => {
-        noticeRef.classList.remove('-visible');
-
-        // Wait till after the animation to remove the text
-        setTimeout(() => noticeRef.innerText = '', 300);
-      }, 1500);
-    }
-    catch (error) {
-      console.error(error);
-    }
-  }
-
-  copyBody(): void {
-    this.copyElementTextToClipboard('email-body', this.$refs['body-copied'] as HTMLElement);
-  }
-
-  copySubject(): void {
-    this.copyElementTextToClipboard('email-subj', this.$refs['subj-copied'] as HTMLElement);
   }
 }
 </script>
