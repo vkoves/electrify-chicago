@@ -14,10 +14,14 @@ body {
     font-family: 'Roboto', sans-serif;
     box-sizing: border-box;
   }
+
+  // Disable page scroll when we have an open modal
+  &:has(dialog[open]) { overflow: hidden; }
 }
 
-*:focus {
-  outline: dashed $chicago-red;
+// Default focus styles
+*:focus-visible {
+  outline: 0.25rem dashed $blue-very-dark;
   outline-offset: 0.125rem;
 }
 

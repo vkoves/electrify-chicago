@@ -3,6 +3,7 @@
 query ($id: ID!, $ID: String) {
   building(id: $id) {
     slugSource
+    path
     ID
     DataYear
     Address
@@ -109,7 +110,21 @@ query ($id: ID!, $ID: String) {
           </p>
         </div>
 
-        <BuildingImage :building="$page.building" />
+        <div class="building-img-cont">
+          <BuildingImage :building="$page.building" />
+
+          <!-- Button opens Popup for "Email This Building" -->
+          <button
+            class="email-btn"
+            @click="isModalOpen=true"
+          >
+            <img
+              src="/email.svg"
+              alt=""
+            >
+            Email This Building
+          </button>
+        </div>
 
         <div class="details-cont">
           <div
@@ -402,6 +417,12 @@ query ($id: ID!, $ID: String) {
       <a href="/take-action-tips">
         Own this Building? Take Action.
       </a>
+
+      <email-building-modal
+        v-if="isModalOpen"
+        :building="$page.building"
+        @close="isModalOpen=false"
+      />
     </div>
   </DefaultLayout>
 </template>
@@ -433,6 +454,7 @@ import {
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
 import { getBuildingCustomInfo, ILink } from '../constants/buildings-custom-info.constant.vue';
+import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
@@ -458,6 +480,7 @@ const EnergyBreakdownColors = {
     PieChart,
     StatTile,
     ReportingTile,
+    EmailBuildingModal,
   },
   filters: {
     titlecase(value: string) {
@@ -502,6 +525,8 @@ export default class BuildingDetails  extends Vue {
   colToGraph = 'TotalGHGEmissions';
 
   totalEnergyUsekBTU!: number;
+
+  isModalOpen = false;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -644,7 +669,12 @@ export default class BuildingDetails  extends Vue {
         grid-area: details;
         align-self: start;
       }
-      .building-img-cont { grid-area: img; }
+      .building-img-cont {
+        grid-area: img;
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
       .building-banner { grid-area: banner; }
     }
 
@@ -722,6 +752,30 @@ export default class BuildingDetails  extends Vue {
     margin-top: 1rem;
 
     h2 { margin-top: 0; }
+  }
+
+  .email-btn {
+    display: flex;
+    align-self: flex-end;
+    justify-content: space-around;
+    padding: 0.8rem 1.5rem;
+    min-width: 18.75rem;
+    margin-top: 1rem;
+    background-color: $blue-dark;
+    border: none;
+    color: $white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-radius: $brd-rad-medium;
+
+    &:hover, &:focus {
+      background-color: $blue-very-dark;
+    }
+
+    img {
+      border-radius: 0;
+      height: 1.5rem;
+    }
   }
 
   .main-cols {
@@ -804,6 +858,9 @@ export default class BuildingDetails  extends Vue {
   @media (max-width: $mobile-max-width) {
     .building-header {
       .building-img-cont, .building-header-text { width: 100%; }
+      .email-btn {
+        align-self: flex-start;
+      }
 
       .building-header-text { position: relative; }
 
