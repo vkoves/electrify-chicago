@@ -45,7 +45,7 @@
         ref="email-subj"
         class="email-box"
       >
-        What Is Our Building's Plan For Reducing Emissions?
+        What Is Our Building's Plan For Saving Energy & Reducing Emissions?
       </p>
       <div class="email-this-building-subheader">
         <h2>Body</h2>
