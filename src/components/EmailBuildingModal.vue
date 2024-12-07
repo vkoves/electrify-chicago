@@ -42,7 +42,7 @@
         />
       </div>
       <p
-        id="email-subj"
+        ref="email-subj"
         class="email-box"
       >
         What's Our Building's Plan For Reducing Emissions?
@@ -69,7 +69,7 @@
         />
       </div>
       <div
-        id="email-body"
+        ref="email-body"
         class="email-box -body"
       >
         <p>
@@ -106,11 +106,13 @@ import Popup from '../components/layout/Popup.vue';
  * A modal to email a given building
  */
  @Component({
-    components: {
-        Popup,
-    },
+  components: {
+    Popup,
+  },
  })
 export default class EmailBuildingModal extends Vue {
+  readonly CopyNoticeDurMs: number = 1500;
+
   @Prop({required: true}) building!: IBuilding;
 
   /** Emit on modal close */
@@ -119,33 +121,45 @@ export default class EmailBuildingModal extends Vue {
     return true;
   }
 
-  copyElementTextToClipboard(id: string, noticeRef: HTMLElement): void {
+  copyElementTextToClipboard(contentRef: HTMLElement, noticeRef: HTMLElement): void {
     try {
-      const content = document.getElementById(id)!.innerText;
+      const content = contentRef.innerText;
       navigator.clipboard.writeText(content);
-
-      // Show a "Copied" message
-      noticeRef.innerText = 'Copied!';
-      noticeRef.classList.add('-visible');
-
-      setTimeout(() => {
-        noticeRef.classList.remove('-visible');
-
-        // Wait till after the animation to remove the text
-        setTimeout(() => noticeRef.innerText = '', 300);
-      }, 1500);
+      this.showCopiedNotice(noticeRef);
     }
     catch (error) {
       console.error(error);
     }
   }
 
+  /**
+   * Fade in and out a copy notice
+   */
+  showCopiedNotice(noticeElem: HTMLElement): void {
+    // Show a "Copied" message
+    noticeElem.innerText = 'Copied!';
+    noticeElem.classList.add('-visible');
+
+    setTimeout(() => {
+      noticeElem.classList.remove('-visible');
+
+      // Wait till after the animation to remove the text
+      setTimeout(() => noticeElem.innerText = '', 300);
+    }, this.CopyNoticeDurMs);
+  }
+
   copyBody(): void {
-    this.copyElementTextToClipboard('email-body', this.$refs['body-copied'] as HTMLElement);
+    this.copyElementTextToClipboard(
+        this.$refs['email-body'] as HTMLElement,
+        this.$refs['body-copied'] as HTMLElement,
+    );
   }
 
   copySubject(): void {
-    this.copyElementTextToClipboard('email-subj', this.$refs['subj-copied'] as HTMLElement);
+    this.copyElementTextToClipboard(
+        this.$refs['email-subj'] as HTMLElement,
+        this.$refs['subj-copied'] as HTMLElement,
+    );
   }
 }
 </script>
