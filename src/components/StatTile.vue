@@ -141,18 +141,18 @@
         so we don't currently have comparison data.
       </p>
 
-      <!-- Natural Gas specific message -->
+      <!-- Fossil Gas specific message -->
       <div
         v-if="statValue === '0' && statKey === 'NaturalGasUse'"
         class="no-gas-msg"
       >
         <div v-if="fullyGasFree">
           <div class="bold">
-            This Building Didn't Burn Any Natural Gas! 🎉
+            This Building Didn't Burn Any Fossil Gas! 🎉
           </div>
 
           <p class="smaller">
-            This building burned no natural gas on-site and isn't connected to a district heating
+            This building burned no fossil gas on-site and isn't connected to a district heating
             system, meaning it's fully electric! View <g-link to="/biggest-gas-free-buildings">
               Chicago's Biggest Gas Free Buildings
             </g-link>.
@@ -164,10 +164,10 @@
           </div>
 
           <p class="smaller">
-            Although this building didn't burn any natural gas on site, it's connected to a district
+            Although this building didn't burn any fossil gas on site, it's connected to a district
             heating system, a centralized system for heating multiple buildings. District heating
-            systems can be fully electric, but in Chicago most district heating systems are natural
-            gas powered, meaning this building was most likely still heated with natural gas.
+            systems can be fully electric, but in Chicago most district heating systems are fossil
+            gas powered, meaning this building was most likely still heated with fossil gas.
           </p>
         </div>
       </div>
@@ -237,7 +237,7 @@ export default class StatTile extends Vue {
   }
 
   /**
-   * Whether a building is _fully_ gas free, meaning no natural gas burned on-site or to heat it
+   * Whether a building is _fully_ gas free, meaning no f gas burned on-site or to heat it
    * through a district heating system.
    */
   get fullyGasFree(): boolean {
