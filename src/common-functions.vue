@@ -163,7 +163,7 @@ export function getStatRankInverted(
  *
  * Examples:
  * - Keating Hall should return '🚨' because it has the #1 worst GHG intensity
- * - McGowan North should return '🚩 because it has the #14 worst GHG intensity
+ * - McGowan North should return '🚩' because it has the #14 worst GHG intensity
  * - Marina towers should return '🏆' because it has #1 lowest SEIU
  *
  * @param {Object} building
