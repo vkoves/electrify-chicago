@@ -45,10 +45,9 @@ export interface IBuilding {
   PrimaryPropertyType: string;
   Latitude: string;
   Longitude: string;
-
-
   NaturalGasUse: string;
   DistrictSteamUse: string;
+  FossilGasUse: string;
 
   [buildingKey: string]: string | number | boolean;
 }
@@ -164,7 +163,7 @@ export function getStatRankInverted(
  *
  * Examples:
  * - Keating Hall should return '🚨' because it has the #1 worst GHG intensity
- * - McGowan North should return '🚩' because it has the #14 worst GHG intensity
+ * - McGowan North should return '🚩 because it has the #14 worst GHG intensity
  * - Marina towers should return '🏆' because it has #1 lowest SEIU
  *
  * @param {Object} building
@@ -264,4 +263,12 @@ export function estimateUtilitySpend(energyUseKbtu: number, isElectric: boolean)
     return Math.round(estimateRaw / 10) * 10;
   }
 }
-</script>
+
+export function transformBuildingData(building: IBuilding): IBuilding {
+  return {
+    ...building,
+    FossilGasUse: building.NaturalGasUse,
+  };
+}
+
+</script>e
