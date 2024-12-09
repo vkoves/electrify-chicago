@@ -16,7 +16,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Biggest Natural Gas Users' };
+    return { title:  'Biggest Fossil Gas Users' };
   },
 })
 export default class TopGasUsers extends Vue {
@@ -59,11 +59,11 @@ export default class TopGasUsers extends Vue {
       id="main-content"
       tabindex="-1"
     >
-      Top {{ $static.allBuilding.edges.length }} Buildings by Natural Gas Use
+      Top {{ $static.allBuilding.edges.length }} Buildings by Fossil Gas Use
     </h1>
 
     <p class="constrained -wide">
-      These buildings are the largest consumers of natural gas (methane) in the city. Natural gas
+      These buildings are the largest consumers of fossil gas (methane) in the city. Fossil gas
       in these buildings is typically used for heating gas and water, and since electrifying the
       grid won't clean up these emissions it's an important set of buildings to focus on!
     </p>

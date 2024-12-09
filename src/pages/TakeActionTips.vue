@@ -33,7 +33,7 @@ export default class TakeActionTips extends Vue {
       <p class="constrained">
         Practically every building has room to improve with energy efficiency upgrades like
         insulation, switching to ENERGY STAR rated appliances, and more, but for any buildings
-        with large natural gas use, we recommend one thing: <strong>electrify!</strong>
+        with large fossil gas use, we recommend one thing: <strong>electrify!</strong>
       </p>
 
       <p class="constrained">
@@ -44,7 +44,7 @@ export default class TakeActionTips extends Vue {
         </strong> like
         industrial grade heat pumps, heat pump water heaters, and induction stoves. With Illinois'
         current electric supply, just using the same amount of energy from electricity, rather
-        than natural gas (aka methane) will dramatically reduce greenhouse gas emissions.
+        than fossil gas (aka methane) will dramatically reduce greenhouse gas emissions.
         This is because Illinois' grid in 2020 was already 67% carbon-free
         (see <a
           href="https://decarbmystate.com/illinois#power"
