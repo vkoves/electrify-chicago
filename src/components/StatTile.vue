@@ -237,7 +237,7 @@ export default class StatTile extends Vue {
   }
 
   /**
-   * Whether a building is _fully_ gas free, meaning no f gas burned on-site or to heat it
+   * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
    * through a district heating system.
    */
   get fullyGasFree(): boolean {
