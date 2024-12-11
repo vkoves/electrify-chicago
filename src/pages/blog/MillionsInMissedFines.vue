@@ -130,7 +130,7 @@ export default class MillionsInMissedFine extends Vue {
         the most or be the least efficient. The city may also believe that it is on track with its
         climate goals, when there are still large buildings that are emitting but have their
         emissions not reported or not reported accurately, like if a building reports their
-        electricity use but not their natural gas use.
+        electricity use but not their fossil gas use.
       </p>
 
       <p>

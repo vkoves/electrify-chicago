@@ -54,7 +54,7 @@ export default class BuildingsTable extends Vue {
             scope="col"
             class="numeric wide-col"
           >
-            Natural Gas Use<br>
+            Fossil Gas Use<br>
             <span class="unit">(kBtu)</span>
           </th>
           <th
