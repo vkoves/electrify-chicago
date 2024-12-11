@@ -281,7 +281,7 @@ query ($id: ID!, $ID: String) {
                 <dd>
                   <StatTile
                     :building="$page.building"
-                    :stat-key="'FossilGasUse'"
+                    :stat-key="'NaturalGasUse'"
                     :stats="BuildingBenchmarkStats"
                     :historic-data="historicData"
                     :unit="'kBtu'"
