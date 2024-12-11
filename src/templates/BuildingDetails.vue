@@ -277,11 +277,11 @@ query ($id: ID!, $ID: String) {
 
             <dl class="stat-tiles">
               <div>
-                <dt>Natural Gas Use</dt>
+                <dt>Fossil Gas Use</dt>
                 <dd>
                   <StatTile
                     :building="$page.building"
-                    :stat-key="'NaturalGasUse'"
+                    :stat-key="'FossilGasUse'"
                     :stats="BuildingBenchmarkStats"
                     :historic-data="historicData"
                     :unit="'kBtu'"
@@ -494,7 +494,7 @@ export default class BuildingDetails  extends Vue {
     TotalGHGEmissions:  'Total GHG Emissions (metric tons CO<sub>2</sub>e)',
     GHGIntensity: 'GHG Intensity (metric tons CO<sub>2</sub>e/sqft)',
     ElectricityUse: 'Electricity Use (kBTU)',
-    NaturalGasUse: 'Natural Gas Use (kBTU)',
+    NaturalGasUse: 'Fossil Gas Use (kBTU)',
   };
 
   /** Expose stats to template */
@@ -602,7 +602,7 @@ export default class BuildingDetails  extends Vue {
 
     if (this.building.NaturalGasUse as unknown as number > 0) {
       energyBreakdown.push({
-        label: 'Natural Gas',
+        label: 'Fossil Gas',
         value: parseFloat(this.building.NaturalGasUse.toString()),
         color: EnergyBreakdownColors.NaturalGas,
       });
