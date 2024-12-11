@@ -277,7 +277,7 @@ query ($id: ID!, $ID: String) {
 
             <dl class="stat-tiles">
               <div>
-                <dt>Natural Gas Use</dt>
+                <dt>Fossil Gas Use (aka Natural Gas)</dt>
                 <dd>
                   <StatTile
                     :building="$page.building"
