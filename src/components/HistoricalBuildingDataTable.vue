@@ -38,7 +38,7 @@
             Electricity Use <span class="unit">kBTU</span>
           </th>
           <th scope="col">
-            Natural Gas Use <span class="unit">kBTU</span>
+            Fossil Gas Use <span class="unit">kBTU</span>
           </th>
           <th
             v-if="renderedColumns.includes('DistrictSteamUse')"

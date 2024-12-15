@@ -33,7 +33,7 @@ export default class About extends Vue {
           We added new graphs to help visualize how buildings have changed in their emissions,
           emissions intensity, and energy use over time, and a new pie chart that shows the mix of
           types of energy a building consumes, making it easy to see at a glance if a building is
-          mostly using electricity, natural gas, or something else!
+          mostly using electricity, fossil gas, or something else!
         </p>
       </section>
 
@@ -64,7 +64,7 @@ export default class About extends Vue {
               src="/release-notes/merch-mart-post-graphs.webp"
               alt="Electrify Chicago Merchandise Mart Page showing just stat tiles with graphs
               showing greenhouse gas intensity and total emissions have improved over time, and
-              that Merch Mart's energy use is 44% electricity, 40% natural gas, and 16% district
+              that Merch Mart's energy use is 44% electricity, 40% fossil gas, and 16% district
               chilling"
             >
           </a>
