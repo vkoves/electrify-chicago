@@ -1,0 +1,37 @@
+{
+    "dependent_variable": "Non-Reporting",
+    "number_of_observations": 10588,
+    "r_squared": 0.0006814442215383743,
+    "adj_r_squared": 0.00039819066264434877,
+    "coefficients": {
+        "const": 0.12735628464907744,
+        "GHG Intensity (Last Year)": -6.42240400826807e-08,
+        "Change in GHG Intensity Last Two Years": 0.00020244263665042202,
+        "Gross Floor Area (Millions)": -0.017037109384991228
+    },
+    "p_values": {
+        "const": 8.632077178330187e-174,
+        "GHG Intensity (Last Year)": 0.9997894807085226,
+        "Change in GHG Intensity Last Two Years": 0.4398536725259733,
+        "Gross Floor Area (Millions)": 0.010176545692003403
+    },
+    "confidence_intervals": {
+        "const": [
+            0.11863904983380956,
+            0.13607351946434532
+        ],
+        "GHG Intensity (Last Year)": [
+            -0.0004771904393046634,
+            0.000477061991224498
+        ],
+        "Change in GHG Intensity Last Two Years": [
+            -0.0003112678381680631,
+            0.0007161531114689071
+        ],
+        "Gross Floor Area (Millions)": [
+            -0.030030457208608786,
+            -0.004043761561373668
+        ]
+    },
+    "covariance_type": "nonrobust"
+}

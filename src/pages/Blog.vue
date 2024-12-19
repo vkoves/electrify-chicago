@@ -45,6 +45,25 @@ export default class About extends Vue {
           </p>
         </li>
       </ul>
+
+      <ul>
+        <li>
+          <h2>
+            <g-link to="/blog/GHG-Intensity-Predict-Compliance">
+              Do High Emitting Buildings Report Emissions Less Often?
+            </g-link>
+          </h2>
+
+          <p>
+            Qualitatively, some readers have reported that buildings who report high levels of emissions
+            seem to stop reporting. This blog post looks at the data to determine if there is a pattern in the data
+            that links high emitting buildings to non-reporting. We find that despite anecdotal observations, 
+            there seems to be no pattern for buildings that have higher GHG intensities in the prior year or 
+            upwardly trending GHG intensities to stop reporting the following year. 
+          </p>
+        </li>
+      </ul>
+
     </div>
   </DefaultLayout>
 </template>
