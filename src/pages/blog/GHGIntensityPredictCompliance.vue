@@ -239,11 +239,13 @@ For both of these values, we were curious to know:
         It doesn't seem like the level of GHG intensity or the trend of GHG intensity help predict compliance at all. 
 Building size does help predict compliance a tiny bit though. For every million additional square feet, the building is roughly 1.5% less likely to be NON compliant
       </p>
-      
+
     <h2>Explore the Data</h2>
 
     <p>
-      Interested in diving deeper into the analysis? You can view the code and interactive data exploration in the linked Jupyter Notebook:
+      Interested in diving deeper into the analysis? You can view the code and interactive data exploration 
+      <a href="https://nbviewer.org/github/vkoves/electrify-chicago/blob/compliance-analysis/src/data/analysis/GHG_intensity_compliance_correlation.ipynb" target="_blank" rel="noopener noreferrer">in the linked Jupyter Notebook.</a>
+      
     </p>
   </div>
 
