@@ -107,7 +107,7 @@ export default class MillionsInMissedFine extends Vue {
   <p> Several things can be seen from the time series analysis above. 
     
     <ul>
-    <li>The pool of covered buildings grow from a <b>few hundred</b> to a <b>few thousand</b> during the ramp
+    <li>The pool of covered buildings grew from a <b>few hundred</b> to a <b>few thousand</b> buildings during the ramp
        up period of the program from 2014 to 2016</li>
     <li>There was a sharp <b>drop in emissions</b> reporting during the <b>COVID-19 pandemic</b>. Buildings report emissions for the 
       previous year in the Spring, so emissions for 2019 were not reported in the spring of 2020. 
@@ -131,7 +131,7 @@ export default class MillionsInMissedFine extends Vue {
 
 
   <p class="constrained bold">
-    What are normal emissions levels?
+    What are normal emissions intensities?
   </p>
 
   <iframe
@@ -143,17 +143,17 @@ export default class MillionsInMissedFine extends Vue {
   ></iframe>
 
   <p>
-    As can be seen above, most buildings have <b>GHG intensities between 0 and 20</b>, but some outliers have GHG intensities <b>above 800</b>.
+    As can be seen above, most buildings have <b>GHG intensities between 0 and 20</b>, but some outliers have GHG intensities <b>well above 200</b>.
   </p>
 
-  <h2>Analysis: Does levels/trends in emissions predict reporting compliance?</h2>
+  <h2>Analysis: Do levels/trends in emissions predict reporting compliance?</h2>
 
 <p>
   To understand whether or not emissions patterns were related to reporting compliance, we looked at two different emissions characteristics:
 
   <ol>
-    <li>The GHG Intensity level a year prior</li>
-    <li>The change in GHG intensity levels between last year and two years ago</li>
+    <li>The <b>GHG Intensity</b> level <b>a year prior</b></li>
+    <li>The <b>change in GHG intensity</b> levels between <b>last year</b> and <b> two years ago</b></li>
 </ol>
 
 For both of these values, we were curious to know:
@@ -188,15 +188,63 @@ For both of these values, we were curious to know:
   style="border: 2px solid #333; border-radius: 8px;"
 ></iframe>
 
+<h2>Results: No noticeable difference between groups</h2>
 
+<p>As can be seen from both of the graphs above, it seems that there is no real pattern between
+  emission intensities or emission trends when it comes to compliance. Instead, it seems that whether
+  or not buildings report their emissions data seems pretty unrelated to a buildings emissions profile. 
+</p>
+
+
+
+<h2>Investigating Further</h2>
+
+<p>Although the graphs above suggest that the average values between compliant and non-compliant buildings are similar, 
+  several factors could be driving this (lack of a) finding. These considerations are grouped into three key areas:</p>
+
+<section style="margin-left: 20px;">
+  <h3 style="font-size: 1em; font-weight: bold;">1. Impact of COVID-19 on Reporting Rates</h3>
+  <p>Most of the buildings that did not report data coincided with the COVID-19 drop in reporting rates.</p>
+  <p><strong>Question:</strong> If we omit the year of data from COVID-19, do the results change?</p>
+</section>
+
+<section style="margin-left: 20px;">
+  <h3 style="font-size: 1em; font-weight: bold;">2. Influence of Outliers</h3>
+  <p>While most buildings have low emissions intensities and minimal changes, several outliers are present. 
+    Outliers in GHG intensitity values distort mean values for groups (although median values should not be as affected).
+  </p>
+  <p><strong>Question:</strong> If we omitted the outliers, do the results change?</p>
+</section>
+
+<section style="margin-left: 20px;">
+  <h3 style="font-size: 1em; font-weight: bold;">3. Omitted Predictive Characteristics</h3>
+  <p>Emissions intensity and trends are not the only factors that might predict compliance with reporting laws. The building type,
+    for example, likely matters a great deal when it comes to GHG intensity (i.e. data centers, gyms and aquariums have different energy needs and operating hours). 
+    Some of these characteristics might also correlate with reporting compliance in a way that could be obscuring underlying trends.
+  </p>
+  <p><strong>Question:</strong> What other characteristics might be predictive of GHG intensity, and if we control for them, will the results change?</p>
+</section>
+
+<h2>Investigating Further: Analysis</h2>
+
+<p> To address questions #1 and #2 (COVID-19 and/or outliers) driving our results, we ran further analysyis
+  where we excluded both of these sets of data points and recalculated our mean and median values across groups. 
+  Ultimately, we found that <b>the results still showed no meaningful difference between groups.</b> This 
+  leads us to believe that these factors were not driving our results. </p>
+
+  <p>What about other predictive factors that might be masking a relationship? To try to address this question, 
+    we ran a regression analysis and included square footage as a control variable. Linear regression 
+    is a tool that can try to control for external factors to understand what a variables isolated effect is 
+    on our outcome of interest. A limitation in our regression model is that we have very few variables to 
+    add as control variables. In this model, the only control we added was square footage. The results were below:
+  </p>
 
 
 
 <!-- Regression Results Section -->
 <div>
 
-      <h2>Regression Results</h2>
-      <p>We ran a regression</p>
+      <h2>Regression Results: Linear Probability Model</h2>
 
       <!-- Check if results exist -->
       <div id="regression-container">
@@ -235,15 +283,17 @@ For both of these values, we were curious to know:
         <p v-else>Error loading regression results. Please try again later.</p>
       </div>
 
-      <p>
+      <p> <br>
         It doesn't seem like the level of GHG intensity or the trend of GHG intensity help predict compliance at all. 
-Building size does help predict compliance a tiny bit though. For every million additional square feet, the building is roughly 1.5% less likely to be NON compliant
+Building size does help predict compliance a tiny bit though. For every million additional square feet, the building is roughly 1.5% less likely to be NON compliant. In general, this is a very weak finding
+and the variables we currently do have don't seem to predict reporting compliance much at all. We ran these regressions with the dataset of no outliers and no covid data 
+as well and found similar results - details can be seen in the linked Jupyter notebook.
       </p>
 
-    <h2>Explore the Data</h2>
+    <h2>Explore our Analysis</h2>
 
     <p>
-      Interested in diving deeper into the analysis? You can view the code and interactive data exploration 
+      Interested in diving deeper into our analysis? You can view the code and interactive data exploration 
       <a href="https://nbviewer.org/github/vkoves/electrify-chicago/blob/compliance-analysis/src/data/analysis/GHG_intensity_compliance_correlation.ipynb" target="_blank" rel="noopener noreferrer">in the linked Jupyter Notebook.</a>
       
     </p>
