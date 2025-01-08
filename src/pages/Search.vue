@@ -1,15 +1,15 @@
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
-import BuildingsTable from "~/components/BuildingsTable.vue";
-import { IBuilding, IBuildingBenchmarkStats } from "../common-functions.vue";
-import DataDisclaimer from "~/components/DataDisclaimer.vue";
-import NewTabIcon from "~/components/NewTabIcon.vue";
+import BuildingsTable from '~/components/BuildingsTable.vue';
+import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-import BuildingBenchmarkStats from "../data/dist/building-benchmark-stats.json";
-import PropertyTypesConstant from "../data/dist/property-types.json";
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import PropertyTypesConstant from '../data/dist/property-types.json';
 
 interface IBuildingEdge {
   node: IBuilding;
@@ -22,7 +22,7 @@ interface IBuildingEdge {
     NewTabIcon,
   },
   metaInfo: {
-    title: "Search",
+    title: 'Search',
   },
 })
 export default class Search extends Vue {
@@ -31,21 +31,21 @@ export default class Search extends Vue {
   readonly MaxBuildings = 100;
 
   readonly QueryParamKeys = {
-    search: "q",
-    propertyType: "type",
+    search: 'q',
+    propertyType: 'type',
   };
 
   /** Set by Gridsome to results of GraphQL query */
   readonly $static: any;
 
   /** The search query */
-  searchFilter = "";
+  searchFilter = '';
 
   /** The selected property type filter */
-  propertyTypeFilter = "";
+  propertyTypeFilter = '';
 
   propertyTypeOptions: Array<{ label: string; value: string } | string> = [
-    { label: "Select Property Type", value: "" },
+    { label: 'Select Property Type', value: '' },
   ].concat(PropertyTypesConstant.propertyTypes as any);
 
   searchResults: Array<IBuildingEdge> = [];
@@ -106,7 +106,7 @@ export default class Search extends Vue {
       newUrl += `&${this.QueryParamKeys.propertyType}=${propertyFilterEncoded}`;
     }
 
-    window.history.pushState(null, "", newUrl);
+    window.history.pushState(null, '', newUrl);
 
     let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
 
@@ -286,7 +286,7 @@ export default class Search extends Vue {
       padding: 0.5rem;
     }
 
-    input[type="text"] {
+    input[type='text'] {
       width: 15rem;
     }
 

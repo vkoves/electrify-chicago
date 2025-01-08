@@ -77,17 +77,17 @@ export interface IHistoricData {
 export const RankConfig = {
   /** Buildings above this rank for a stat are marked very bad and get a 🚨 */
   AlarmRankMax: 10,
-  AlarmEmoji: "🚨",
+  AlarmEmoji: '🚨',
   AlarmMsg: `Top 10 worst in at least one category`,
 
   /** Buildings above this rank for a stat are marked bad and get a 🚩 */
   FlagRankMax: 50,
-  FlagEmoji: "🚩",
+  FlagEmoji: '🚩',
   FlagMsg: `Top 50 worst in at least one category`,
 
   /** Buildings with an _inverted rank_ at or under this get a 🏆 */
   TrophyRankInvertedMax: 30,
-  TrophyEmoji: "🏆",
+  TrophyEmoji: '🏆',
   TrophyMsg: `Top 30 best in at least one category`,
 };
 
@@ -100,7 +100,7 @@ export function getRankLabel(
   isSquareFootage: boolean,
 ): string | null {
   if (isSquareFootage) {
-    return "Largest";
+    return 'Largest';
   } else if (statRank <= RankConfig.AlarmRankMax) {
     return `Highest in Chicago* ${RankConfig.AlarmEmoji}`;
   } else if (statRank <= RankConfig.FlagRankMax) {
@@ -134,12 +134,12 @@ export function getRankLabelByProperty(
  * Columns that have rankings (format of _Rank and _PercentileRank)
  */
 export const RankedColumns = [
-  "GHGIntensity",
-  "TotalGHGEmissions",
-  "ElectricityUse",
-  "NaturalGasUse",
-  "SourceEUI",
-  "SiteEUI",
+  'GHGIntensity',
+  'TotalGHGEmissions',
+  'ElectricityUse',
+  'NaturalGasUse',
+  'SourceEUI',
+  'SiteEUI',
   // 'GrossFloorArea',
 ];
 
@@ -190,8 +190,8 @@ export function getOverallRankEmoji(
   // Loop through all ranked columns to get the worst emoji and whether any stats earn the building
   // a trophy
   RankedColumns.forEach((columnKey) => {
-    const val = building[columnKey + "Rank"];
-    const statRank = parseFloat((val ?? "").toString());
+    const val = building[columnKey + 'Rank'];
+    const statRank = parseFloat((val ?? '').toString());
     const statRankInverted = getStatRankInverted(
       columnKey,
       statRank,
@@ -199,7 +199,7 @@ export function getOverallRankEmoji(
     );
 
     // Ignore the column if rank is NaN
-    if (typeof statRank !== "number" || isNaN(statRank)) {
+    if (typeof statRank !== 'number' || isNaN(statRank)) {
       return;
     }
 
@@ -246,7 +246,7 @@ export function getOverallRankEmoji(
 export const UtilityCosts = {
   year: 2021,
   source:
-    "https://www.bls.gov/regions/midwest/news-release/AverageEnergyPrices_Chicago.htm",
+    'https://www.bls.gov/regions/midwest/news-release/AverageEnergyPrices_Chicago.htm',
   electricCostPerKWh: 0.143,
   gasCostPerTherm: 1.192,
 };

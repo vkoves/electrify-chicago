@@ -40,10 +40,10 @@
             {{ benchmark.GrossFloorArea | optionalInt }}
           </td>
           <td v-if="renderedColumns.includes('ChicagoEnergyRating')">
-            {{ benchmark.ChicagoEnergyRating || "-" }}
+            {{ benchmark.ChicagoEnergyRating || '-' }}
           </td>
           <td v-if="renderedColumns.includes('ENERGYSTARScore')">
-            {{ benchmark.ENERGYSTARScore || "-" }}
+            {{ benchmark.ENERGYSTARScore || '-' }}
           </td>
           <td>{{ benchmark.GHGIntensity }}</td>
           <td>{{ benchmark.TotalGHGEmissions | optionalFloat }}</td>
@@ -62,9 +62,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import { IHistoricData } from "../common-functions.vue";
+import { IHistoricData } from '../common-functions.vue';
 
 /**
  * A component that given an array of a building's benchmarking renders
@@ -80,7 +80,7 @@ import { IHistoricData } from "../common-functions.vue";
      */
     optionalInt(value: string) {
       if (!value) {
-        return "-";
+        return '-';
       }
 
       return parseInt(value).toLocaleString();
@@ -88,7 +88,7 @@ import { IHistoricData } from "../common-functions.vue";
 
     optionalFloat(value: string) {
       if (!value) {
-        return "-";
+        return '-';
       }
 
       return parseFloat(value).toLocaleString();
@@ -111,7 +111,7 @@ export default class BuildingImage extends Vue {
       // between both, like Natural Gas Use on Merch Mart, which we also want to ignore
       return !this.historicBenchmarks.every((datum) => {
         return (
-          (datum as any)[colKey] === "" || (datum as any)[colKey] === "0.0"
+          (datum as any)[colKey] === '' || (datum as any)[colKey] === '0.0'
         );
       });
     });

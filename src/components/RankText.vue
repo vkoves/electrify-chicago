@@ -54,13 +54,13 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {
   RankConfig,
   IBuilding,
   IBuildingBenchmarkStats,
-} from "../common-functions";
+} from '../common-functions';
 
 /**
  * A  tile that can show the stats for a building, including whether it's
@@ -89,7 +89,7 @@ export default class RankText extends Vue {
   }
 
   get isSquareFootage(): boolean {
-    return this.statKey === "GrossFloorArea";
+    return this.statKey === 'GrossFloorArea';
   }
 
   get statValue(): number {
@@ -98,7 +98,7 @@ export default class RankText extends Vue {
 
   // Returns a rounded number or null if no rank
   get statRank(): number | null {
-    const statRank = this.building[this.statKey + "Rank"] as string;
+    const statRank = this.building[this.statKey + 'Rank'] as string;
 
     if (statRank) {
       return Math.round(parseFloat(statRank));
@@ -126,7 +126,7 @@ export default class RankText extends Vue {
 
   get statRankPercent(): number | null {
     const statRankPercent = this.building[
-      this.statKey + "PercentileRank"
+      this.statKey + 'PercentileRank'
     ] as number;
 
     if (!statRankPercent) {

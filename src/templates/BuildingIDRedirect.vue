@@ -9,13 +9,13 @@ export default {
       title: `Redirecting to ${this.$page.building.path}`,
       meta: [
         {
-          "http-equiv": "refresh",
+          'http-equiv': 'refresh',
           content: `0; URL=${this.$page.building.path}`,
         },
       ],
       link: [
         {
-          rel: "canonical",
+          rel: 'canonical',
           href: `https://electrifychicago.net/${this.$page.building.path}`,
         },
       ],

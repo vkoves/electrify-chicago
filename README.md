@@ -140,7 +140,7 @@ Example:
 
 ```ts
 const BuildingOwnerIds = [
-  "iit",
+  'iit',
   // ...
 ];
 ```

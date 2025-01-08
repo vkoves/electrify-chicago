@@ -7,8 +7,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import * as d3 from "d3";
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import * as d3 from 'd3';
 
 export interface IGraphPoint {
   x: number | string;
@@ -24,7 +24,7 @@ export default class BarGraph extends Vue {
 
   @Prop({ required: true }) graphData!: Array<IGraphPoint>;
 
-  @Watch("graphData")
+  @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
   }
@@ -44,14 +44,14 @@ export default class BarGraph extends Vue {
       this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     this.svg = d3
-      .select("svg#bar-graph")
-      .attr("width", outerWidth)
-      .attr("height", outerHeight)
-      .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
-      .attr("preserveAspectRatio", "xMidYMid meet")
-      .append("g")
+      .select('svg#bar-graph')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+      .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .append('g')
       .attr(
-        "transform",
+        'transform',
         `translate(${this.graphMargins.left},${this.graphMargins.top})`,
       );
 
@@ -78,28 +78,28 @@ export default class BarGraph extends Vue {
 
     // Render X axis
     this.svg
-      .append("g")
-      .attr("transform", `translate(0, ${this.height})`)
+      .append('g')
+      .attr('transform', `translate(0, ${this.height})`)
       .call(d3.axisBottom(x))
-      .selectAll("text")
-      .attr("transform", "translate(-10,0)rotate(-45)")
-      .style("text-anchor", "end");
+      .selectAll('text')
+      .attr('transform', 'translate(-10,0)rotate(-45)')
+      .style('text-anchor', 'end');
 
     // Render Y axis
-    this.svg.append("g").call(d3.axisLeft(y));
+    this.svg.append('g').call(d3.axisLeft(y));
 
     this.svg
-      .selectAll("mybar")
+      .selectAll('mybar')
       .data(this.graphData)
       .enter()
-      .append("rect")
-      .attr("x", (d) => {
+      .append('rect')
+      .attr('x', (d) => {
         return x(d.x.toString() as string) as number;
       })
-      .attr("y", (d) => y(d.y))
-      .attr("width", x.bandwidth())
-      .attr("height", (d) => this.height - y(d.y))
-      .attr("fill", "#69b3a2");
+      .attr('y', (d) => y(d.y))
+      .attr('width', x.bandwidth())
+      .attr('height', (d) => this.height - y(d.y))
+      .attr('fill', '#69b3a2');
   }
 }
 </script>

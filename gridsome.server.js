@@ -9,31 +9,31 @@
  * From fetching CSV data:
  * https://gridsome.org/docs/fetching-data/#csv
  */
-const { readFileSync } = require("fs");
-const parse = require("csv-parse/sync").parse;
+const { readFileSync } = require('fs');
+const parse = require('csv-parse/sync').parse;
 
-const DataDirectory = "./src/data/dist/";
+const DataDirectory = './src/data/dist/';
 
-const BuildingEmissionsDataFile = "building-benchmarks.csv";
-const HistoricBenchmarkingDataFile = "benchmarking-all-years.csv";
+const BuildingEmissionsDataFile = 'building-benchmarks.csv';
+const HistoricBenchmarkingDataFile = 'benchmarking-all-years.csv';
 
 // This is an array equivalent of Object.keys(BuildingOwners) but this file can't use Typescript and
 // import that file
 const BuildingOwnerIds = [
-  "depaul",
-  "uchicago",
-  "uic",
-  "iit",
-  "northwestern",
-  "loyola",
-  "cps",
-  "cha",
-  "cityofchicago",
-  "columbia",
-  "ccc",
-  "moody",
-  "saic",
-  "npu",
+  'depaul',
+  'uchicago',
+  'uic',
+  'iit',
+  'northwestern',
+  'loyola',
+  'cps',
+  'cha',
+  'cityofchicago',
+  'columbia',
+  'ccc',
+  'moody',
+  'saic',
+  'npu',
 ];
 
 module.exports = function (api) {
@@ -50,7 +50,7 @@ module.exports = function (api) {
     BuildingOwnerIds.forEach((ownerId) => {
       createPage({
         path: `/owner/${ownerId}`,
-        component: "./src/templates/BuildingOwner.vue",
+        component: './src/templates/BuildingOwner.vue',
         context: { ownerId },
       });
     });
@@ -65,7 +65,7 @@ module.exports = function (api) {
 function loadBuildingBenchmarkData(actions) {
   const latestBenchmarksRaw = readFileSync(
     `${DataDirectory}${BuildingEmissionsDataFile}`,
-    "utf8",
+    'utf8',
   );
 
   /**
@@ -76,7 +76,7 @@ function loadBuildingBenchmarkData(actions) {
     skip_empty_lines: true,
   });
 
-  const collection = actions.addCollection({ typeName: "Building" });
+  const collection = actions.addCollection({ typeName: 'Building' });
 
   for (const building of LatestBenchmarksData) {
     // Make a slugSource that is the property name or the address as a fallback (skip one letter
@@ -86,8 +86,8 @@ function loadBuildingBenchmarkData(actions) {
         ? building.PropertyName
         : building.Address;
 
-    if (!building.slugSource || typeof building.slugSource !== "string") {
-      throw new Error("No building slug source (name or address)!", building);
+    if (!building.slugSource || typeof building.slugSource !== 'string') {
+      throw new Error('No building slug source (name or address)!', building);
     }
 
     collection.addNode(building);
@@ -102,7 +102,7 @@ function loadBuildingBenchmarkData(actions) {
 function loadHistoricBenchmarkDat(actions) {
   const historicBenchmarksRaw = readFileSync(
     `${DataDirectory}${HistoricBenchmarkingDataFile}`,
-    "utf8",
+    'utf8',
   );
 
   /**
@@ -113,7 +113,7 @@ function loadHistoricBenchmarkDat(actions) {
     skip_empty_lines: true,
   });
 
-  const collection = actions.addCollection({ typeName: "Benchmark" });
+  const collection = actions.addCollection({ typeName: 'Benchmark' });
 
   for (const benchmark of HistoricBenchmarksData) {
     collection.addNode(benchmark);

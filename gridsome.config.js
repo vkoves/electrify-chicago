@@ -4,7 +4,7 @@
 // Changes here require a server restart.
 // To restart press CTRL + C in terminal and run `gridsome develop`
 
-const path = require("path");
+const path = require('path');
 
 /**
  * A function that loads in all our global SCSS files
@@ -13,18 +13,18 @@ const path = require("path");
  */
 function addStyleResource(rule) {
   rule
-    .use("style-resource")
-    .loader("style-resources-loader")
+    .use('style-resource')
+    .loader('style-resources-loader')
     .options({
-      patterns: [path.resolve(__dirname, "./src/scss/*.scss")],
+      patterns: [path.resolve(__dirname, './src/scss/*.scss')],
     });
 }
 
 module.exports = {
-  siteName: "Electrify Chicago",
+  siteName: 'Electrify Chicago',
   plugins: [
     {
-      use: "gridsome-plugin-typescript",
+      use: 'gridsome-plugin-typescript',
     },
   ],
 
@@ -32,14 +32,14 @@ module.exports = {
     // Register building details path
     Building: [
       {
-        path: "/building/:slugSource",
-        component: "./src/templates/BuildingDetails.vue",
+        path: '/building/:slugSource',
+        component: './src/templates/BuildingDetails.vue',
       },
       {
         // A path that redirects from a building ID to the canonical slug URL
-        name: "building-id-redirect",
-        path: "/building-id/:ID",
-        component: "./src/templates/BuildingIDRedirect.vue",
+        name: 'building-id-redirect',
+        path: '/building-id/:ID',
+        component: './src/templates/BuildingIDRedirect.vue',
       },
     ],
   },
@@ -47,11 +47,11 @@ module.exports = {
   // Ensure /scss folder is globally available
   chainWebpack(config) {
     // Load variables for all vue-files
-    const types = ["vue-modules", "vue", "normal-modules", "normal"];
+    const types = ['vue-modules', 'vue', 'normal-modules', 'normal'];
 
     // or if you use scss
     types.forEach((type) => {
-      addStyleResource(config.module.rule("scss").oneOf(type));
+      addStyleResource(config.module.rule('scss').oneOf(type));
     });
   },
 };

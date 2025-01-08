@@ -26,7 +26,7 @@
       <div v-if="costEstimate" class="bill-estimate">
         <strong
           >Est.
-          {{ statKey === "NaturalGasUse" ? "Gas" : "Electric" }} Bill:</strong
+          {{ statKey === 'NaturalGasUse' ? 'Gas' : 'Electric' }} Bill:</strong
         >
         ${{ Math.round(costEstimate).toLocaleString() }} for
         {{ building.DataYear }}**
@@ -177,8 +177,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import buildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
 
 import {
   estimateUtilitySpend,
@@ -189,8 +189,8 @@ import {
   IHistoricData,
   IPropertyStats,
   RankConfig,
-} from "../common-functions.vue";
-import SparkLine, { INumGraphPoint } from "./graphs/SparkLine.vue";
+} from '../common-functions.vue';
+import SparkLine, { INumGraphPoint } from './graphs/SparkLine.vue';
 
 /**
  * A group of all the core stats by property type (e.g. GHG intensity median)
@@ -220,8 +220,8 @@ export default class StatTile extends Vue {
   readonly RankConfig: typeof RankConfig = RankConfig;
 
   readonly ColsToHideComparison = [
-    "DistrictSteamUse",
-    "DistrictChilledWaterUse",
+    'DistrictSteamUse',
+    'DistrictChilledWaterUse',
   ];
 
   /** The historical data for this stat, for passing to SparkLine */
@@ -229,7 +229,7 @@ export default class StatTile extends Vue {
 
   /** The primary property type of the current building as it shows in the data */
   get propertyType(): string {
-    return this.building["PrimaryPropertyType"];
+    return this.building['PrimaryPropertyType'];
   }
 
   /**
@@ -245,12 +245,12 @@ export default class StatTile extends Vue {
 
   /** The estimated cost for the given utility */
   get costEstimate(): number | null {
-    if (this.statKey === "ElectricityUse") {
+    if (this.statKey === 'ElectricityUse') {
       return estimateUtilitySpend(
         parseFloat(this.building[this.statKey] as string),
         true,
       );
-    } else if (this.statKey === "NaturalGasUse") {
+    } else if (this.statKey === 'NaturalGasUse') {
       return estimateUtilitySpend(
         parseFloat(this.building[this.statKey] as string),
         false,
@@ -267,42 +267,42 @@ export default class StatTile extends Vue {
 
     if (
       [
-        "Adult Education",
-        "Outpatient Rehabilitation/Physical Therapy",
-        "Performing Arts",
-        "Multifamily Housing",
+        'Adult Education',
+        'Outpatient Rehabilitation/Physical Therapy',
+        'Performing Arts',
+        'Multifamily Housing',
       ].includes(curPropertyType)
     ) {
-      pluralismForProperty = curPropertyType + " Buildings";
+      pluralismForProperty = curPropertyType + ' Buildings';
     } else if (
       [
-        "College/University",
-        "Laboratory",
-        "Mixed Use Property",
-        "Residence Hall/Dormitory",
-        "Residential Care Facility",
-        "Senior Care Community",
-        "Senior Living Community",
-        "Worship Facility",
+        'College/University',
+        'Laboratory',
+        'Mixed Use Property',
+        'Residence Hall/Dormitory',
+        'Residential Care Facility',
+        'Senior Care Community',
+        'Senior Living Community',
+        'Worship Facility',
       ].includes(curPropertyType)
     ) {
-      pluralismForProperty = curPropertyType.slice(0, -1) + "ies";
-    } else if (curPropertyType == "Hospital (General Medical & Surgical)") {
-      pluralismForProperty = "Hospitals (General Medical & Surgical)";
+      pluralismForProperty = curPropertyType.slice(0, -1) + 'ies';
+    } else if (curPropertyType == 'Hospital (General Medical & Surgical)') {
+      pluralismForProperty = 'Hospitals (General Medical & Surgical)';
     } else if (
       [
-        "Other",
-        "Other - Education",
-        "Other - Entertainment/Public Assembly",
-        "Other - Mall",
-        "Other - Public Services",
-        "Other - Recreation",
-        "Other - Specialty Hospital",
+        'Other',
+        'Other - Education',
+        'Other - Entertainment/Public Assembly',
+        'Other - Mall',
+        'Other - Public Services',
+        'Other - Recreation',
+        'Other - Specialty Hospital',
       ].includes(curPropertyType)
     ) {
       pluralismForProperty = curPropertyType;
     } else {
-      pluralismForProperty = curPropertyType + "s";
+      pluralismForProperty = curPropertyType + 's';
     }
 
     return pluralismForProperty;
@@ -335,7 +335,7 @@ export default class StatTile extends Vue {
   // Square footage isn't directly climate related, so we show stats but treat it as
   // value-neutral - a building isn't worse _just_ because it's bigger
   get isSquareFootage(): boolean {
-    return this.unit === "sqft";
+    return this.unit === 'sqft';
   }
 
   /**
@@ -350,14 +350,14 @@ export default class StatTile extends Vue {
 
       // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
       if (medianMult > 5) {
-        return Math.round(medianMult) + "x";
+        return Math.round(medianMult) + 'x';
       } else if (medianMult > 1) {
-        return medianMult.toFixed(1) + "x";
+        return medianMult.toFixed(1) + 'x';
       } else if (medianMult < 0.5) {
         // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
         return `1/${Math.round(1 / medianMult)}`;
       } else {
-        return medianMult.toFixed(1) + "x";
+        return medianMult.toFixed(1) + 'x';
       }
     }
 
@@ -389,7 +389,7 @@ export default class StatTile extends Vue {
 
   // Returns a rounded number or undefined if no rank
   get statRank(): number | null {
-    const statRank = this.building[this.statKey + "Rank"] as string;
+    const statRank = this.building[this.statKey + 'Rank'] as string;
 
     if (statRank) {
       return Math.round(parseFloat(statRank));
@@ -454,7 +454,7 @@ export default class StatTile extends Vue {
    */
   get propertyStatRank(): number | null {
     const statRank = this.building[
-      this.statKey + "RankByPropertyType"
+      this.statKey + 'RankByPropertyType'
     ] as string;
 
     if (statRank && parseFloat(statRank) <= this.propertiesToAwardThisType) {
@@ -477,7 +477,7 @@ export default class StatTile extends Vue {
 
     const numBuildingsOfType: number = propertyStats[this.statKey]?.count;
     const statRank = this.building[
-      this.statKey + "RankByPropertyType"
+      this.statKey + 'RankByPropertyType'
     ] as string;
 
     if (statRank) {
@@ -550,7 +550,7 @@ export default class StatTile extends Vue {
 
   get statRankPercent(): number | null {
     const statRankPercent = this.building[
-      this.statKey + "PercentileRank"
+      this.statKey + 'PercentileRank'
     ] as number;
 
     if (!statRankPercent) {

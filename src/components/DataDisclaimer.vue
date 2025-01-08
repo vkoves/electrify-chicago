@@ -32,9 +32,9 @@
 </template>
 
 <script lang="ts">
-import NewTabIcon from "./NewTabIcon.vue";
-import { LatestDataYear } from "../constants/globals.vue";
-import { Component, Vue } from "vue-property-decorator";
+import NewTabIcon from './NewTabIcon.vue';
+import { LatestDataYear } from '../constants/globals.vue';
+import { Component, Vue } from 'vue-property-decorator';
 
 /**
  * A  tile that can show the stats for a building, including whether it's
@@ -42,7 +42,7 @@ import { Component, Vue } from "vue-property-decorator";
  */
 
 @Component({
-  name: "DataDisclaimer",
+  name: 'DataDisclaimer',
   components: { NewTabIcon },
 })
 export default class DataDisclaimer extends Vue {

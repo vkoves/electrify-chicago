@@ -1,19 +1,19 @@
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
-import BuildingsTable from "~/components/BuildingsTable.vue";
-import DataDisclaimer from "~/components/DataDisclaimer.vue";
-import DataSourceFootnote from "~/components/DataSourceFootnote.vue";
-import NewTabIcon from "~/components/NewTabIcon.vue";
-import { IBuildingBenchmarkStats, IBuilding } from "../common-functions.vue";
+import BuildingsTable from '~/components/BuildingsTable.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
+import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
 import {
   BuildingOwners,
   IBuildingOwner,
   BuildingsCustomInfo,
   IBuildingCustomInfo,
-} from "../constants/buildings-custom-info.constant.vue";
+} from '../constants/buildings-custom-info.constant.vue';
 
-import BuildingBenchmarkStats from "../data/dist/building-benchmark-stats.json";
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 interface IBuildingEdge {
   node: IBuilding;
@@ -30,7 +30,7 @@ interface IBuildingEdge {
   },
   metaInfo() {
     return {
-      title: this.currOwner?.nameShort + " Buildings" || "Building Owner",
+      title: this.currOwner?.nameShort + ' Buildings' || 'Building Owner',
     };
   },
 })

@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import * as d3 from "d3";
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import * as d3 from 'd3';
 
 export interface INumGraphPoint {
   x: number;
@@ -26,24 +26,24 @@ export default class BarGraph extends Vue {
   /** A unit to append to the min and max values (e.g. "tons") */
   @Prop({ required: true }) unit?: string;
 
-  readonly svgIdPrefix = "spark-svg-";
-  readonly svgContPrefix = "spark-cont-";
+  readonly svgIdPrefix = 'spark-svg-';
+  readonly svgContPrefix = 'spark-cont-';
 
   /* Strip HTML from the unit (just <sub> for CO2) and simplify by dropping 'metric' */
   get unitCleaned(): string {
     if (!this.unit) {
-      return "";
+      return '';
     }
 
     return this.unit
-      .replace("<sub>", '<tspan class="sub" dy="0.5em">')
-      .replace("</sub>", '</tspan><tspan dy="-0.5rem">')
-      .replace("metric", "");
+      .replace('<sub>', '<tspan class="sub" dy="0.5em">')
+      .replace('</sub>', '</tspan><tspan dy="-0.5rem">')
+      .replace('metric', '');
   }
 
   minAndMaxPoints?: Array<INumGraphPoint>;
 
-  @Watch("graphData")
+  @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
   }
@@ -78,13 +78,13 @@ export default class BarGraph extends Vue {
 
     this.svg = d3
       .select(`svg#${this.svgIdPrefix}${this.randomId}`)
-      .attr("width", outerWidth)
-      .attr("height", outerHeight)
-      .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
-      .attr("preserveAspectRatio", "xMidYMid meet")
-      .append("g")
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+      .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .append('g')
       .attr(
-        "transform",
+        'transform',
         `translate(${this.graphMargins.left},${this.graphMargins.top})`,
       );
 
@@ -145,37 +145,37 @@ export default class BarGraph extends Vue {
 
     // Render X axis
     this.svg
-      .append("g")
-      .attr("class", "x-axis")
-      .attr("transform", `translate(0, ${this.height + this.xAxisOffset})`)
+      .append('g')
+      .attr('class', 'x-axis')
+      .attr('transform', `translate(0, ${this.height + this.xAxisOffset})`)
       .call(
         d3
           .axisBottom(x)
-          .tickFormat(d3.format("d"))
+          .tickFormat(d3.format('d'))
           // For spark line, only show first and last year (e.g. 2018 and 2022)
           .tickValues(d3.extent(xVals) as [number, number])
           .tickSizeOuter(0), // make the x-axis a flat line, with no tick marks at the ends
       )
-      .selectAll("text")
-      .attr("text-anchor", (d) => (d === maxYear ? "end" : "start"))
+      .selectAll('text')
+      .attr('text-anchor', (d) => (d === maxYear ? 'end' : 'start'))
       // shift label a bit further from the axis line
-      .attr("dy", "0.85em");
+      .attr('dy', '0.85em');
 
     // Render Y axis
     this.svg
-      .append("g")
-      .attr("class", "y-axis")
+      .append('g')
+      .attr('class', 'y-axis')
       .call(d3.axisLeft(y).tickValues(d3.extent(yVals) as [number, number]));
 
     // Add the line
     this.svg
-      .append("path")
+      .append('path')
       .datum(cleanedData)
-      .attr("fill", "none")
-      .attr("stroke", "black")
-      .attr("stroke-width", 8)
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .attr('stroke-width', 8)
       .attr(
-        "d",
+        'd',
         (d3.line() as any)
           .x((d: INumGraphPoint) => x(d.x))
           .y((d: INumGraphPoint) => y(d.y)),
@@ -184,40 +184,40 @@ export default class BarGraph extends Vue {
     if (this.minAndMaxPoints) {
       // Add all valid points, we'll then use CSS to hide all but the min and max unless hovered
       this.svg
-        .append("g")
-        .selectAll("dot")
+        .append('g')
+        .selectAll('dot')
         .data(cleanedData.filter((d) => !isNaN(d.y)))
         .enter()
-        .append("circle")
-        .attr("class", (d) => {
+        .append('circle')
+        .attr('class', (d) => {
           const isMinMax =
             d.x === this.minAndMaxPoints![0].x ||
             d.x === this.minAndMaxPoints![1].x;
 
-          return isMinMax ? "dot -min-max" : "dot";
+          return isMinMax ? 'dot -min-max' : 'dot';
         })
-        .attr("cx", (d) => x(d.x))
-        .attr("cy", (d) => y(d.y))
-        .attr("r", this.DotRadius)
-        .attr("fill", "black")
-        .attr("tabindex", "0")
-        .on("mouseover", this.mouseover.bind(this))
-        .on("focusin", (event: Event, d) => this.focus(event, d))
-        .on("blur", this.mouseleave.bind(this))
-        .on("mousemove", (event: MouseEvent, d) => this.mousemove(event, d))
-        .on("mouseleave", this.mouseleave.bind(this));
+        .attr('cx', (d) => x(d.x))
+        .attr('cy', (d) => y(d.y))
+        .attr('r', this.DotRadius)
+        .attr('fill', 'black')
+        .attr('tabindex', '0')
+        .on('mouseover', this.mouseover.bind(this))
+        .on('focusin', (event: Event, d) => this.focus(event, d))
+        .on('blur', this.mouseleave.bind(this))
+        .on('mousemove', (event: MouseEvent, d) => this.mousemove(event, d))
+        .on('mouseleave', this.mouseleave.bind(this));
 
       // Add the value labels for the min and max points
       this.svg
-        .append("g")
-        .selectAll("pointLabels")
+        .append('g')
+        .selectAll('pointLabels')
         .data(this.minAndMaxPoints)
         .enter()
-        .append("text")
-        .attr("cx", (d) => x(d.x))
-        .attr("cy", (d) => y(d.y))
+        .append('text')
+        .attr('cx', (d) => x(d.x))
+        .attr('cy', (d) => y(d.y))
         // Put the text at the position of the last point
-        .attr("transform", (d) => {
+        .attr('transform', (d) => {
           let xPos = x(d.x);
           let yPos = y(d.y);
 
@@ -234,7 +234,7 @@ export default class BarGraph extends Vue {
             return `translate(${xPos},${yPos})`;
           }
         })
-        .attr("text-anchor", (d) => {
+        .attr('text-anchor', (d) => {
           // Points near the right edge of the graph should have text going left from the point,
           // otherwise go right (e.g. first year)
           // e.g. we have data from 2020 to 2024, the 3/4 year is 2023
@@ -247,18 +247,18 @@ export default class BarGraph extends Vue {
           // If the min point is more than 3/4 along in the graph, it's near enough to the end
           // that we align text to the left of the dot, otherwise to the start
           if (d.x >= threeQuartersYear) {
-            return "end";
+            return 'end';
           }
           // If it's say 2/3 along the graph, it may still hit the right edge, so center
           else if (d.x > halfwayYear) {
-            return "middle";
+            return 'middle';
           } else {
-            return "start";
+            return 'start';
           }
         })
         .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan>`)
-        .style("fill", "black")
-        .style("font-size", this.LabelFontSize);
+        .style('fill', 'black')
+        .style('font-size', this.LabelFontSize);
     }
   }
 
@@ -267,9 +267,9 @@ export default class BarGraph extends Vue {
     // create a tooltip
     this.tooltip = d3
       .select(`#${this.svgContPrefix}${this.randomId}`)
-      .append("div")
-      .style("opacity", 0)
-      .attr("class", "tooltip");
+      .append('div')
+      .style('opacity', 0)
+      .attr('class', 'tooltip');
   }
 
   focus(event: Event, datum: INumGraphPoint): void {
@@ -278,7 +278,7 @@ export default class BarGraph extends Vue {
   }
 
   mouseover(): void {
-    this.tooltip?.style("opacity", 1);
+    this.tooltip?.style('opacity', 1);
   }
 
   mousemove(event: Event, datum: INumGraphPoint): void {
@@ -300,12 +300,12 @@ export default class BarGraph extends Vue {
         `<span class="unit">${this.unit}</span>` +
         `</div>`,
     )
-      .style("left", `${tooltipX}px`)
-      .style("top", `${tooltipY}px`);
+      .style('left', `${tooltipX}px`)
+      .style('top', `${tooltipY}px`);
   }
 
   mouseleave(): void {
-    this.tooltip?.style("opacity", 0);
+    this.tooltip?.style('opacity', 0);
   }
 }
 </script>

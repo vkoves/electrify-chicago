@@ -1,19 +1,19 @@
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
 /**
  * Site Wide Header
  */
 @Component({
-  name: "AppHeader",
+  name: 'AppHeader',
 })
 export default class AppHeader extends Vue {
-  searchQuery = "";
+  searchQuery = '';
 
   mobileMenuOpen = false;
 
   focusMain(): void {
-    const mainHeading = document.getElementById("main-content");
+    const mainHeading = document.getElementById('main-content');
 
     mainHeading!.focus();
   }

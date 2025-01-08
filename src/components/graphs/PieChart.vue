@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import * as d3 from "d3";
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import * as d3 from 'd3';
 
 export interface IPieSlice {
   value: number;
@@ -24,7 +24,7 @@ export interface IPieSlice {
 export default class PieChart extends Vue {
   @Prop({ required: true }) graphData!: Array<IPieSlice>;
 
-  @Watch("graphData")
+  @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
   }
@@ -43,13 +43,13 @@ export default class PieChart extends Vue {
       this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     this.svg = d3
-      .select("svg#pie-chart")
-      .attr("width", outerWidth)
-      .attr("height", outerHeight)
-      .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
-      .attr("preserveAspectRatio", "xMidYMid meet")
-      .append("g")
-      .attr("transform", `translate(${this.width / 2},${this.height / 2})`);
+      .select('svg#pie-chart')
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+      .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .append('g')
+      .attr('transform', `translate(${this.width / 2},${this.height / 2})`);
 
     this.renderGraph();
   }
@@ -76,12 +76,12 @@ export default class PieChart extends Vue {
     // Build the pie chart: Basically, each part of the pie is a path that we build using the
     // arc function.
     this.svg
-      .selectAll("mySlices")
+      .selectAll('mySlices')
       .data(dataReady)
       .enter()
-      .append("path")
-      .attr("d", arcGenerator as any)
-      .attr("fill", (d) => (d.data as unknown as IPieSlice).color);
+      .append('path')
+      .attr('d', arcGenerator as any)
+      .attr('fill', (d) => (d.data as unknown as IPieSlice).color);
 
     // Calculate total value for % calculation
     let totalValue = 0;
@@ -89,10 +89,10 @@ export default class PieChart extends Vue {
 
     /** Add pie chart labels */
     this.svg
-      .selectAll("mySlices")
+      .selectAll('mySlices')
       .data(dataReady)
       .enter()
-      .append("text")
+      .append('text')
       .html((d) => {
         // Convert degrees to rads
         const thresholdRadians = (5 / 360) * 2 * Math.PI;
@@ -102,7 +102,7 @@ export default class PieChart extends Vue {
           this.graphData.length > 2 &&
           d.endAngle - d.startAngle < thresholdRadians
         ) {
-          return "";
+          return '';
         }
 
         let data = d.data as any as IPieSlice;
@@ -113,24 +113,24 @@ export default class PieChart extends Vue {
 
         return label;
       })
-      .attr("class", () => (this.graphData.length === 1 ? "-only-slice" : ""))
-      .attr("transform", (d) => {
+      .attr('class', () => (this.graphData.length === 1 ? '-only-slice' : ''))
+      .attr('transform', (d) => {
         // If we have only 1 slice (e.g. 100% electric, like Marina Towers), place dead center,
         // otherwise use secondary arc centroid
         if (this.graphData.length === 1) {
-          return "";
+          return '';
         }
 
         return `translate(${labelArcGenerator.centroid(d as unknown as d3.DefaultArcObject)})`;
       })
-      .style("text-anchor", (d) => {
+      .style('text-anchor', (d) => {
         // Center single slice label
         if (this.graphData.length === 1) {
-          return "middle";
+          return 'middle';
         }
 
         // are we past the center?
-        return (d.endAngle + d.startAngle) / 2 > Math.PI ? "end" : "start";
+        return (d.endAngle + d.startAngle) / 2 > Math.PI ? 'end' : 'start';
       });
   }
 
@@ -138,7 +138,7 @@ export default class PieChart extends Vue {
     const percentage = (value / total) * 100;
 
     if (percentage < 1) {
-      return "< 1";
+      return '< 1';
     }
     // If > 99%, we don't want to round to 100% so we can show there's other slices
     else if (percentage > 99 && percentage < 100) {

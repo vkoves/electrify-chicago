@@ -28,15 +28,15 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {
   getOverallRankEmoji,
   IBuilding,
   IBuildingBenchmarkStats,
-} from "../common-functions.vue";
-import { getBuildingImage } from "../constants/building-images.constant.vue";
-import { LatestDataYear } from "../constants/globals.vue";
+} from '../common-functions.vue';
+import { getBuildingImage } from '../constants/building-images.constant.vue';
+import { LatestDataYear } from '../constants/globals.vue';
 
 /**
  * A component that shows an emoji to summarize a building, showing the worse of the alarm or flag

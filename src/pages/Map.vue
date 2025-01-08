@@ -1,14 +1,14 @@
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
 // For types, we actually set window.Leaflet for runtime
-import type * as Leaflet from "leaflet";
+import type * as Leaflet from 'leaflet';
 
-import RankText from "~/components/RankText.vue";
-import OverallRankEmoji from "~/components/OverallRankEmoji.vue";
-import DataDisclaimer from "~/components/DataDisclaimer.vue";
-import NewTabIcon from "~/components/NewTabIcon.vue";
-import DataSourceFootnote from "~/components/DataSourceFootnote.vue";
+import RankText from '~/components/RankText.vue';
+import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 
 import {
   IBuildingBenchmarkStats,
@@ -16,13 +16,13 @@ import {
   IBuildingNode,
   getOverallRankEmoji,
   RankConfig,
-} from "../common-functions.vue";
+} from '../common-functions.vue';
 
-import BuildingBenchmarkStats from "../data/dist/building-benchmark-stats.json";
-import BuildingImage from "../components/BuildingImage.vue";
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import BuildingImage from '../components/BuildingImage.vue';
 
 /** The ID of the google maps <script> tag, so we can tack on an onload */
-const GoogleMapsScriptId = "google-maps-script";
+const GoogleMapsScriptId = 'google-maps-script';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -37,12 +37,12 @@ const GoogleMapsScriptId = "google-maps-script";
   },
   metaInfo() {
     return {
-      title: "Map",
+      title: 'Map',
       link: [
         {
           // Leaflet CSS
-          href: "https://unpkg.com/leaflet@1.9.3/dist/leaflet.css",
-          rel: "stylesheet",
+          href: 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css',
+          rel: 'stylesheet',
         },
       ],
     };
@@ -86,7 +86,7 @@ export default class MapPage extends Vue {
 
   icons: { [iconName: string]: Leaflet.Icon } = {};
 
-  formZip: number | string = "";
+  formZip: number | string = '';
   /** The coordinates of the place the user searched in the Google Maps box */
   formPointCoords: [number, number] | null = null;
   formSearchDistanceMiles = 1;
@@ -94,7 +94,7 @@ export default class MapPage extends Vue {
   map?: Leaflet.Map;
 
   /** A message indicating what is being shown on the map */
-  mapStatus = "";
+  mapStatus = '';
 
   mainFeatureGroup?: Leaflet.FeatureGroup;
 
@@ -110,8 +110,8 @@ export default class MapPage extends Vue {
     // Gridsome gets cranky importing Leaflet
     if ((process as any).isClient) {
       // Runtime Leaflet imports
-      this.Leaflet = require("leaflet");
-      require("leaflet.gridlayer.googlemutant");
+      this.Leaflet = require('leaflet');
+      require('leaflet.gridlayer.googlemutant');
 
       this.setupMap();
       this.setupZipCodes();
@@ -126,7 +126,7 @@ export default class MapPage extends Vue {
   setupMap(): void {
     this.setupMapIcons();
 
-    this.map = this.Leaflet.map("buildings-map", {
+    this.map = this.Leaflet.map('buildings-map', {
       zoomDelta: this.MapConfig.ZoomDelta,
       wheelPxPerZoomLevel: this.MapConfig.WheelPxPerZoomLevel,
       zoomSnap: this.MapConfig.ZoomSnap,
@@ -137,7 +137,7 @@ export default class MapPage extends Vue {
     if (UsingGoogle) {
       this.setupGoogleMutant();
     } else {
-      this.Leaflet.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      this.Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution:
           '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
@@ -154,47 +154,47 @@ export default class MapPage extends Vue {
     delete (this.Leaflet.Icon.Default.prototype as any)._getIconUrl;
 
     this.Leaflet.Icon.Default.mergeOptions({
-      iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-      iconUrl: require("leaflet/dist/images/marker-icon.png"),
-      shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+      iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+      iconUrl: require('leaflet/dist/images/marker-icon.png'),
+      shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
     });
 
     const CustomMarkerIcon = this.Leaflet.Icon.extend({
       options: {
         iconSize: [25, 41],
         iconAnchor: [13, 10],
-        shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+        shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
       },
     });
 
     this.icons.red = new (CustomMarkerIcon as any)({
-      iconUrl: "/map-markers/marker-red.png",
+      iconUrl: '/map-markers/marker-red.png',
     }) as Leaflet.Icon;
 
     this.icons.green = new (CustomMarkerIcon as any)({
-      iconUrl: "/map-markers/marker-green.png",
+      iconUrl: '/map-markers/marker-green.png',
     }) as Leaflet.Icon;
 
     this.icons.orange = new (CustomMarkerIcon as any)({
-      iconUrl: "/map-markers/marker-orange.png",
+      iconUrl: '/map-markers/marker-orange.png',
     }) as Leaflet.Icon;
 
     this.icons.grey = new (CustomMarkerIcon as any)({
-      iconUrl: "/map-markers/marker-grey.png",
+      iconUrl: '/map-markers/marker-grey.png',
     }) as Leaflet.Icon;
 
     this.icons.blue = new (CustomMarkerIcon as any)({
-      iconUrl: "/map-markers/marker-blue.png",
+      iconUrl: '/map-markers/marker-blue.png',
     }) as Leaflet.Icon;
   }
 
   setupGoogleMutant(): void {
     (this.Leaflet.gridLayer as any)
       .googleMutant({
-        type: "roadmap", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+        type: 'roadmap', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
         styles: [
           // Disable icons for other points of interest, but keep neighborhood & street labels
-          { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+          { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
         ],
       })
       .addTo(this.map);
@@ -203,9 +203,9 @@ export default class MapPage extends Vue {
   /** Setup the Google Maps search box */
   setupGoogleMapsSearch(): void {
     // Create a <script> element to import Google Maps, then hook into it for the autocomplete input
-    const googleMapsScriptElem = document.createElement("script");
+    const googleMapsScriptElem = document.createElement('script');
     googleMapsScriptElem.src =
-      "https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places";
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places';
     document.body.appendChild(googleMapsScriptElem);
 
     googleMapsScriptElem.onload = () => {
@@ -233,7 +233,7 @@ export default class MapPage extends Vue {
       );
 
       // Hook into places being selected
-      searchBox.addListener("places_changed", () => {
+      searchBox.addListener('places_changed', () => {
         const places = searchBox.getPlaces();
 
         if (places.length === 0) {
@@ -241,7 +241,7 @@ export default class MapPage extends Vue {
         }
 
         // Clear form zip and store the coordinates
-        this.formZip = "";
+        this.formZip = '';
 
         this.formPointCoords = [
           places[0].geometry.location.lat(),
@@ -334,9 +334,9 @@ export default class MapPage extends Vue {
 
   reset(): void {
     this.clearSearch();
-    this.formZip = "";
+    this.formZip = '';
     this.formSearchDistanceMiles = 1;
-    this.errorMessage = "";
+    this.errorMessage = '';
 
     this.clearMarkers();
     this.mapDefaultBuildings();
@@ -352,12 +352,12 @@ export default class MapPage extends Vue {
 
     // Exit if neither zipcode or address specified and show error
     if (!this.formZip && !this.formPointCoords) {
-      this.errorMessage = "Pick an address to filter around or a zipcode!";
+      this.errorMessage = 'Pick an address to filter around or a zipcode!';
       return;
     }
 
     this.clearMarkers();
-    this.errorMessage = "";
+    this.errorMessage = '';
 
     // Prioritize zipcode, since clicking a place in search will clear zip
     if (this.formZip) {
@@ -408,7 +408,7 @@ export default class MapPage extends Vue {
         },
         {
           // Fix popup max-width
-          maxWidth: "auto",
+          maxWidth: 'auto',
         } as any,
       );
     });
@@ -440,7 +440,7 @@ export default class MapPage extends Vue {
   }
 
   private clearSearch(): void {
-    this.$refs.googleMapsSearchInput.value = "";
+    this.$refs.googleMapsSearchInput.value = '';
     this.formPointCoords = null;
   }
 
@@ -563,7 +563,7 @@ export default class MapPage extends Vue {
               />
             </h1>
 
-            {{ currBuilding.PropertyName ? currBuilding.Address : "" }}
+            {{ currBuilding.PropertyName ? currBuilding.Address : '' }}
 
             <div class="popup-main">
               <BuildingImage :building="currBuilding" />
@@ -661,7 +661,7 @@ export default class MapPage extends Vue {
       font-weight: bold;
     }
 
-    input[type="text"] {
+    input[type='text'] {
       width: 100%;
       padding: 0.5rem 1rem;
       box-sizing: border-box;

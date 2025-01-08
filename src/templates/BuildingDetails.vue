@@ -416,45 +416,45 @@ query ($id: ID!, $ID: String) {
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
-import { LatestDataYear } from "../constants/globals.vue";
-import BarGraph from "~/components/graphs/BarGraph.vue";
-import BuildingImage from "~/components/BuildingImage.vue";
-import DataSourceFootnote from "~/components/DataSourceFootnote.vue";
-import HistoricalBuildingDataTable from "~/components/HistoricalBuildingDataTable.vue";
-import NewTabIcon from "~/components/NewTabIcon.vue";
-import OverallRankEmoji from "~/components/OverallRankEmoji.vue";
-import OwnerLogo from "~/components/OwnerLogo.vue";
-import StatTile from "~/components/StatTile.vue";
-import ReportingTile from "~/components/ReportingTile.vue";
+import { LatestDataYear } from '../constants/globals.vue';
+import BarGraph from '~/components/graphs/BarGraph.vue';
+import BuildingImage from '~/components/BuildingImage.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import HistoricalBuildingDataTable from '~/components/HistoricalBuildingDataTable.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
+import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
+import OwnerLogo from '~/components/OwnerLogo.vue';
+import StatTile from '~/components/StatTile.vue';
+import ReportingTile from '~/components/ReportingTile.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-import BuildingBenchmarkStats from "../data/dist/building-benchmark-stats.json";
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import {
   getBuildingImage,
   IBuildingImage,
-} from "../constants/building-images.constant.vue";
+} from '../constants/building-images.constant.vue';
 import {
   IBuilding,
   IHistoricData,
   UtilityCosts,
   IBuildingBenchmarkStats,
-} from "../common-functions.vue";
-import { IGraphPoint } from "../components/graphs/BarGraph.vue";
-import PieChart, { IPieSlice } from "../components/graphs/PieChart.vue";
+} from '../common-functions.vue';
+import { IGraphPoint } from '../components/graphs/BarGraph.vue';
+import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
 import {
   getBuildingCustomInfo,
   ILink,
-} from "../constants/buildings-custom-info.constant.vue";
-import EmailBuildingModal from "../components/EmailBuildingModal.vue";
+} from '../constants/buildings-custom-info.constant.vue';
+import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 
 const EnergyBreakdownColors = {
-  DistrictChilling: "#01295F",
-  DistrictSteam: "#ABABAB",
-  Electricity: "#F0E100",
-  NaturalGas: "#993300",
+  DistrictChilling: '#01295F',
+  DistrictSteam: '#ABABAB',
+  Electricity: '#F0E100',
+  NaturalGas: '#993300',
 };
 
 @Component<any>({
@@ -487,10 +487,10 @@ const EnergyBreakdownColors = {
 export default class BuildingDetails extends Vue {
   // TODO: Move to constant
   graphTitles = {
-    TotalGHGEmissions: "Total GHG Emissions (metric tons CO<sub>2</sub>e)",
-    GHGIntensity: "GHG Intensity (metric tons CO<sub>2</sub>e/sqft)",
-    ElectricityUse: "Electricity Use (kBTU)",
-    NaturalGasUse: "Fossil Gas Use (kBTU)",
+    TotalGHGEmissions: 'Total GHG Emissions (metric tons CO<sub>2</sub>e)',
+    GHGIntensity: 'GHG Intensity (metric tons CO<sub>2</sub>e/sqft)',
+    ElectricityUse: 'Electricity Use (kBTU)',
+    NaturalGasUse: 'Fossil Gas Use (kBTU)',
   };
 
   /** Expose stats to template */
@@ -516,10 +516,10 @@ export default class BuildingDetails extends Vue {
 
   /** The data we are currently rendering in the historic data graph */
   currGraphData?: Array<IGraphPoint> = [];
-  currGraphTitle?: string = "";
+  currGraphTitle?: string = '';
 
   /** The key from the historical data we are graphing */
-  colToGraph = "TotalGHGEmissions";
+  colToGraph = 'TotalGHGEmissions';
 
   totalEnergyUsekBTU!: number;
 
@@ -551,12 +551,12 @@ export default class BuildingDetails extends Vue {
    */
   get encodedAddress(): string {
     const propertyName = this.building.PropertyName;
-    const propertyAddr = this.building.Address + " , Chicago IL";
+    const propertyAddr = this.building.Address + ' , Chicago IL';
 
     // If we know the property name, providing it in our Google Maps search may improve accuracy
     if (propertyName) {
       // Slashes break the URL, so just swap them for spaces
-      const propertyNameCleaned = propertyName.replace(/\//g, " ");
+      const propertyNameCleaned = propertyName.replace(/\//g, ' ');
 
       return encodeURI(`${propertyNameCleaned} ${propertyAddr}`);
     } else {
@@ -593,7 +593,7 @@ export default class BuildingDetails extends Vue {
 
     if ((this.building.ElectricityUse as unknown as number) > 0) {
       energyBreakdown.push({
-        label: "Electricity",
+        label: 'Electricity',
         value: parseFloat(this.building.ElectricityUse.toString()),
         color: EnergyBreakdownColors.Electricity,
       });
@@ -601,7 +601,7 @@ export default class BuildingDetails extends Vue {
 
     if ((this.building.NaturalGasUse as unknown as number) > 0) {
       energyBreakdown.push({
-        label: "Fossil Gas",
+        label: 'Fossil Gas',
         value: parseFloat(this.building.NaturalGasUse.toString()),
         color: EnergyBreakdownColors.NaturalGas,
       });
@@ -609,7 +609,7 @@ export default class BuildingDetails extends Vue {
 
     if ((this.building.DistrictSteamUse as unknown as number) > 0) {
       energyBreakdown.push({
-        label: "District Steam",
+        label: 'District Steam',
         value: parseFloat(this.building.DistrictSteamUse.toString()),
         color: EnergyBreakdownColors.DistrictSteam,
       });
@@ -617,7 +617,7 @@ export default class BuildingDetails extends Vue {
 
     if ((this.building.DistrictChilledWaterUse as unknown as number) > 0) {
       energyBreakdown.push({
-        label: "District Chilling",
+        label: 'District Chilling',
         value: parseFloat(this.building.DistrictChilledWaterUse.toString()),
         color: EnergyBreakdownColors.DistrictChilling,
       });
@@ -657,8 +657,8 @@ export default class BuildingDetails extends Vue {
       justify-content: space-between;
       gap: 0 2rem;
       grid-template-areas:
-        "title img"
-        "details img";
+        'title img'
+        'details img';
 
       .building-header-text {
         grid-area: title;
@@ -682,8 +682,8 @@ export default class BuildingDetails extends Vue {
     &:not(.-img-tall) {
       display: grid;
       grid-template-areas:
-        "img"
-        "details";
+        'img'
+        'details';
 
       .building-header-text {
         grid-area: img;
@@ -899,9 +899,9 @@ export default class BuildingDetails extends Vue {
         &:not(.-img-tall),
         &.-img-tall {
           grid-template-areas:
-            "title"
-            "img"
-            "details";
+            'title'
+            'img'
+            'details';
         }
 
         &:not(.-img-tall) {

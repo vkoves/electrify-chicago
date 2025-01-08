@@ -43,10 +43,10 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { IHistoricData } from "../common-functions.vue";
+import { Component, Prop, Vue } from 'vue-property-decorator';
+import { IHistoricData } from '../common-functions.vue';
 
-import { LatestDataYear } from "../constants/globals.vue";
+import { LatestDataYear } from '../constants/globals.vue';
 
 /**
  * A tile that shows the reporting history of a building. For each year, it shows a
@@ -77,11 +77,11 @@ export default class ReportingTile extends Vue {
 
   get grade(): string {
     const gradeRanges = [
-      { min: 0.9, grade: "A" },
-      { min: 0.8, grade: "B" },
-      { min: 0.7, grade: "C" },
-      { min: 0.6, grade: "D" },
-      { min: 0, grade: "F" },
+      { min: 0.9, grade: 'A' },
+      { min: 0.8, grade: 'B' },
+      { min: 0.7, grade: 'C' },
+      { min: 0.6, grade: 'D' },
+      { min: 0, grade: 'F' },
     ];
 
     const score = this.reportedYearsCount / this.reportingHistory.length;
@@ -149,7 +149,7 @@ export default class ReportingTile extends Vue {
     margin-bottom: 0.25rem;
 
     &::before {
-      content: "";
+      content: '';
       position: absolute;
       top: 50%;
       left: 50%;

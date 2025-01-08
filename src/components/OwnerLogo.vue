@@ -29,14 +29,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import { IBuilding } from "../common-functions.vue";
+import { IBuilding } from '../common-functions.vue';
 import {
   IBuildingOwner,
   BuildingOwners,
-} from "../constants/buildings-custom-info.constant.vue";
-import { getBuildingCustomInfo } from "../constants/buildings-custom-info.constant.vue";
+} from '../constants/buildings-custom-info.constant.vue';
+import { getBuildingCustomInfo } from '../constants/buildings-custom-info.constant.vue';
 
 /**
  * A component that given a building shows the logo of its owner if one is set in

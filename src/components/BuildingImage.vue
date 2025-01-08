@@ -9,7 +9,7 @@
 
     <p class="attribution">
       <strong>Attribution:</strong>
-      {{ buildingImg.fromGoogleMaps ? "© Google " + currentYear : "" }}
+      {{ buildingImg.fromGoogleMaps ? '© Google ' + currentYear : '' }}
       <a ref="noopener" :href="buildingImg.attributionUrl" target="_blank">
         Image Source
         <NewTabIcon /> </a
@@ -19,14 +19,14 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import { IBuilding } from "../common-functions.vue";
+import { IBuilding } from '../common-functions.vue';
 import {
   getBuildingImage,
   IBuildingImage,
-} from "../constants/building-images.constant.vue";
-import NewTabIcon from "./NewTabIcon.vue";
+} from '../constants/building-images.constant.vue';
+import NewTabIcon from './NewTabIcon.vue';
 
 /**
  * A component that given a building shows the logo of its owner if one is set in

@@ -1,14 +1,14 @@
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import RankText from "~/components/RankText.vue";
-import OverallRankEmoji from "./OverallRankEmoji.vue";
-import OwnerLogo from "./OwnerLogo.vue";
-import { IBuilding, IBuildingBenchmarkStats } from "../common-functions.vue";
+import RankText from '~/components/RankText.vue';
+import OverallRankEmoji from './OverallRankEmoji.vue';
+import OwnerLogo from './OwnerLogo.vue';
+import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
 
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
-import BuildingBenchmarkStats from "../data/dist/building-benchmark-stats.json";
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 @Component({
   components: {

@@ -61,9 +61,9 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from "vue-property-decorator";
-import { IBuilding } from "../common-functions.vue";
-import Popup from "../components/layout/Popup.vue";
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
+import { IBuilding } from '../common-functions.vue';
+import Popup from '../components/layout/Popup.vue';
 
 /**
  * A modal to email a given building
@@ -102,28 +102,28 @@ export default class EmailBuildingModal extends Vue {
    */
   showCopiedNotice(noticeElem: HTMLElement): void {
     // Show a "Copied" message
-    noticeElem.innerText = "Copied!";
-    noticeElem.classList.add("-visible");
+    noticeElem.innerText = 'Copied!';
+    noticeElem.classList.add('-visible');
 
     setTimeout(() => {
-      noticeElem.classList.remove("-visible");
+      noticeElem.classList.remove('-visible');
 
       // Wait till after the animation to remove the text
-      setTimeout(() => (noticeElem.innerText = ""), 300);
+      setTimeout(() => (noticeElem.innerText = ''), 300);
     }, this.CopyNoticeDurMs);
   }
 
   copyBody(): void {
     this.copyElementTextToClipboard(
-      this.$refs["email-body"] as HTMLElement,
-      this.$refs["body-copied"] as HTMLElement,
+      this.$refs['email-body'] as HTMLElement,
+      this.$refs['body-copied'] as HTMLElement,
     );
   }
 
   copySubject(): void {
     this.copyElementTextToClipboard(
-      this.$refs["email-subj"] as HTMLElement,
-      this.$refs["subj-copied"] as HTMLElement,
+      this.$refs['email-subj'] as HTMLElement,
+      this.$refs['subj-copied'] as HTMLElement,
     );
   }
 }

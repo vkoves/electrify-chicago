@@ -1,16 +1,16 @@
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
-import BuildingsTable from "~/components/BuildingsTable.vue";
-import DataDisclaimer from "~/components/DataDisclaimer.vue";
-import DataSourceFootnote from "~/components/DataSourceFootnote.vue";
-import NewTabIcon from "~/components/NewTabIcon.vue";
-import { IBuilding } from "../common-functions.vue";
+import BuildingsTable from '~/components/BuildingsTable.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
+import { IBuilding } from '../common-functions.vue';
 import {
   BuildingsCustomInfo,
   IBuildingCustomInfo,
   BuildingTags,
-} from "../constants/buildings-custom-info.constant.vue";
+} from '../constants/buildings-custom-info.constant.vue';
 
 interface IBuildingEdge {
   node: IBuilding;
@@ -26,7 +26,7 @@ interface IBuildingEdge {
     NewTabIcon,
   },
   metaInfo() {
-    return { title: "Retrofit Chicago Participant Case Studies" };
+    return { title: 'Retrofit Chicago Participant Case Studies' };
   },
 })
 export default class ChicagoRetrofitParticipants extends Vue {

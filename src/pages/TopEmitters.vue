@@ -1,10 +1,10 @@
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
-import BuildingsTable from "~/components/BuildingsTable.vue";
-import DataDisclaimer from "~/components/DataDisclaimer.vue";
-import DataSourceFootnote from "~/components/DataSourceFootnote.vue";
-import NewTabIcon from "~/components/NewTabIcon.vue";
+import BuildingsTable from '~/components/BuildingsTable.vue';
+import DataDisclaimer from '~/components/DataDisclaimer.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -16,7 +16,7 @@ import NewTabIcon from "~/components/NewTabIcon.vue";
     NewTabIcon,
   },
   metaInfo() {
-    return { title: "Top Emitters" };
+    return { title: 'Top Emitters' };
   },
 })
 export default class TopEmitters extends Vue {}

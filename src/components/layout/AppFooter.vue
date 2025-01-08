@@ -1,11 +1,11 @@
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
 /**
  * Site Wide Footer
  */
 @Component({
-  name: "AppFooter",
+  name: 'AppFooter',
 })
 export default class AppFooter extends Vue {}
 </script>

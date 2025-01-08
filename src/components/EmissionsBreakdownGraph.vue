@@ -1,7 +1,7 @@
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue } from 'vue-property-decorator';
 
-import NewTabIcon from "~/components/NewTabIcon.vue";
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 @Component<any>({
   components: {

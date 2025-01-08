@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Emit } from "vue-property-decorator";
+import { Component, Vue, Emit } from 'vue-property-decorator';
 
 @Component
 export default class Popup extends Vue {
@@ -22,12 +22,12 @@ export default class Popup extends Vue {
 
   /** Open the dialog on load */
   mounted(): void {
-    this.dialog = document.getElementById("dialog") as HTMLDialogElement;
+    this.dialog = document.getElementById('dialog') as HTMLDialogElement;
 
     this.dialog.showModal();
 
     // The native <dialog> handles Esc to close, so we then emit
-    this.dialog.addEventListener("close", () => {
+    this.dialog.addEventListener('close', () => {
       this.close();
     });
   }

@@ -7,7 +7,7 @@
  * A new tab icon for links
  */
 export default {
-  name: "NewTabIcon",
+  name: 'NewTabIcon',
 };
 </script>
 
