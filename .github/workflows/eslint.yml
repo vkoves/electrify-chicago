@@ -3,7 +3,7 @@
 # More details at https://github.com/eslint/eslint
 # and https://eslint.org
 
-name: ESLint
+name: ESLint & Prettier
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
 
 jobs:
   eslint:
-    name: Run ESLint scanning
+    name: Run ESLint & Prettier
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,6 +35,9 @@ jobs:
       - name: Run ESLint
         run: yarn lint-ci
         continue-on-error: true
+
+      - name: Run Prettier
+        run: yarn prettier . --check
 
       - name: Upload analysis results to GitHub
         uses: github/codeql-action/upload-sarif@v2
