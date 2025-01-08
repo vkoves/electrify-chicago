@@ -84,12 +84,6 @@ module.exports = {
         ],
       },
     ],
-    "vue/singleline-html-element-content-newline": [
-      "error",
-      {
-        externalIgnores: ["g-link"],
-      },
-    ],
 
     "@typescript-eslint/indent": ["error", 2],
     semi: ["error", "always"],
