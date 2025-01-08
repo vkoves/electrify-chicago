@@ -33,7 +33,7 @@ jobs:
         run: yarn install
 
       - name: Run ESLint
-        run: yarn lint-ci
+        run: yarn eslint-ci
         continue-on-error: true
 
       - name: Run Prettier

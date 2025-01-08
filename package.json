@@ -12,9 +12,10 @@
     "build": "gridsome build",
     "develop": "gridsome develop",
     "explore": "gridsome explore",
-    "lint": "yarn eslint --ext .ts,.vue ./src",
-    "lint-ci": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
-    "lint-fix": "yarn lint --fix"
+    "eslint-ci": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
+    "eslint-base": "yarn eslint --ext .ts,.vue ./src",
+    "lint": "yarn eslint-base && npx prettier . --check",
+    "lint-fix": "yarn eslint-base --fix && npx prettier . --write"
   },
   "dependencies": {
     "csv-parse": "^5.3.6",

@@ -63,7 +63,7 @@ When you see the above output, it means the site is now running and now you can 
 
 ### Run Front-End Linting
 
-To run linting with auto-fix, run the following command:
+To run linting with auto-fixing (ESLint + Prettier), run the following command:
 
 ```bash
 docker-compose run --rm electrify-chicago yarn lint-fix
