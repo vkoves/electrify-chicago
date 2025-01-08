@@ -77,7 +77,7 @@ export default class MillionsInMissedFine extends Vue {
     data <a href="https://electrifychicago.net/blog/millions-in-missed-fines" target="_blank" rel="noopener noreferrer">don't report emissions data.</a>
     Is there a pattern to which buildings fail to report? Anecdotally, it's been observed that certain buildings stopped reporting 
     data after negative press coverage of high historical emissions. In this blog, we investigate if there is a 
-    broader pattern at play - are buildings emission levels linked to a  buildng's reporting compliance? 
+    broader pattern at play - are buildings emission levels linked to a  building's reporting compliance? 
   </p>
 
 
@@ -110,7 +110,7 @@ export default class MillionsInMissedFine extends Vue {
     <li>The pool of covered buildings grew from a <b>few hundred</b> to a <b>few thousand</b> buildings during the ramp
        up period of the program from 2014 to 2016</li>
     <li>There was a sharp <b>drop in emissions</b> reporting during the <b>COVID-19 pandemic</b>. Buildings report emissions for the 
-      previous year in the Spring, so emissions for 2019 were not reported in the spring of 2020. 
+      previous year in the spring, so emissions for 2019 were not reported in the spring of 2020. 
     </li>
     <li>Outside of the disruption from COVID-19, between <b>a third</b> to <b>a fourth</b> of covered buildings 
       <b>fail to report every year</b> (starting in 2018)
@@ -236,7 +236,9 @@ For both of these values, we were curious to know:
     we ran a regression analysis and included square footage as a control variable. Linear regression 
     is a tool that can try to control for external factors to understand what a variables isolated effect is 
     on our outcome of interest. A limitation in our regression model is that we have very few variables to 
-    add as control variables. In this model, the only control we added was square footage. The results were below:
+    add as control variables. An area of future work could be to merge other data sources into our
+    buildings dataset to try to control for a broader array of building characteristics.
+    In this model, the only control we added was square footage. The results are below:
   </p>
 
 
@@ -287,7 +289,7 @@ For both of these values, we were curious to know:
         It doesn't seem like the level of GHG intensity or the trend of GHG intensity help predict compliance at all. 
 Building size does help predict compliance a tiny bit though. For every million additional square feet, the building is roughly 1.5% less likely to be NON compliant. In general, this is a very weak finding
 and the variables we currently do have don't seem to predict reporting compliance much at all. We ran these regressions with the dataset of no outliers and no covid data 
-as well and found similar results - details can be seen in the linked Jupyter notebook.
+as well and found similar results - details can be seen in the linked Jupyter notebook below.
       </p>
 
     <h2>Explore our Analysis</h2>
