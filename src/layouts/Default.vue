@@ -7,9 +7,9 @@
 </static-query>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
-import AppFooter from '../components/layout/AppFooter.vue';
-import AppHeader from '../components/layout/AppHeader.vue';
+import { Component, Vue } from "vue-property-decorator";
+import AppFooter from "../components/layout/AppFooter.vue";
+import AppHeader from "../components/layout/AppHeader.vue";
 
 @Component({
   components: {
@@ -17,9 +17,7 @@ import AppHeader from '../components/layout/AppHeader.vue';
     AppHeader,
   },
 })
-export default class Default extends Vue {
-
-}
+export default class Default extends Vue {}
 </script>
 
 <template>

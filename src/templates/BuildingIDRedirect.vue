@@ -6,13 +6,19 @@
 export default {
   metaInfo() {
     return {
-        title: `Redirecting to ${this.$page.building.path}`,
-        meta: [
-            { 'http-equiv': 'refresh', content: `0; URL=${this.$page.building.path}`},
-        ],
-        link: [
-            { rel: 'canonical', href: `https://electrifychicago.net/${this.$page.building.path}` },
-        ],
+      title: `Redirecting to ${this.$page.building.path}`,
+      meta: [
+        {
+          "http-equiv": "refresh",
+          content: `0; URL=${this.$page.building.path}`,
+        },
+      ],
+      link: [
+        {
+          rel: "canonical",
+          href: `https://electrifychicago.net/${this.$page.building.path}`,
+        },
+      ],
     };
   },
 };

@@ -1,10 +1,10 @@
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 
-import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
+import BuildingsTable from "~/components/BuildingsTable.vue";
+import DataDisclaimer from "~/components/DataDisclaimer.vue";
+import DataSourceFootnote from "~/components/DataSourceFootnote.vue";
+import NewTabIcon from "~/components/NewTabIcon.vue";
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -16,11 +16,10 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Top Electricity Users' };
+    return { title: "Top Electricity Users" };
   },
 })
-export default class TopElectricityUsers extends Vue {
-}
+export default class TopElectricityUsers extends Vue {}
 </script>
 
 <static-query>
@@ -55,10 +54,7 @@ export default class TopElectricityUsers extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1
-      id="main-content"
-      tabindex="-1"
-    >
+    <h1 id="main-content" tabindex="-1">
       Top {{ $static.allBuilding.edges.length }} Electricity Users
     </h1>
 
@@ -73,5 +69,4 @@ export default class TopElectricityUsers extends Vue {
   </DefaultLayout>
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

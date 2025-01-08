@@ -1,17 +1,20 @@
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 
-import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuilding } from '../common-functions.vue';
+import BuildingsTable from "~/components/BuildingsTable.vue";
+import DataDisclaimer from "~/components/DataDisclaimer.vue";
+import DataSourceFootnote from "~/components/DataSourceFootnote.vue";
+import NewTabIcon from "~/components/NewTabIcon.vue";
+import { IBuilding } from "../common-functions.vue";
 import {
-  BuildingsCustomInfo, IBuildingCustomInfo,
+  BuildingsCustomInfo,
+  IBuildingCustomInfo,
   BuildingTags,
-} from '../constants/buildings-custom-info.constant.vue';
+} from "../constants/buildings-custom-info.constant.vue";
 
-interface IBuildingEdge { node: IBuilding; }
+interface IBuildingEdge {
+  node: IBuilding;
+}
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -23,7 +26,7 @@ interface IBuildingEdge { node: IBuilding; }
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Retrofit Chicago Participant Case Studies' };
+    return { title: "Retrofit Chicago Participant Case Studies" };
   },
 })
 export default class ChicagoRetrofitParticipants extends Vue {
@@ -39,16 +42,21 @@ export default class ChicagoRetrofitParticipants extends Vue {
 
   filterBuildings(): void {
     // Loop through BuildingsCustomInfo to get the IDs of buildings we are looking for
-    const retrofitBuildingSlugs: Array<string> = Object.entries(BuildingsCustomInfo)
-      .filter(([ , buildingInfo ]: [string, IBuildingCustomInfo]) => {
+    const retrofitBuildingSlugs: Array<string> = Object.entries(
+      BuildingsCustomInfo,
+    )
+      .filter(([, buildingInfo]: [string, IBuildingCustomInfo]) => {
         return buildingInfo.tags?.includes(BuildingTags.hasRetrofitCaseStudy);
-      }).map(([ buildingID ]: [string, IBuildingCustomInfo]) => buildingID);
+      })
+      .map(([buildingID]: [string, IBuildingCustomInfo]) => buildingID);
 
-    this.buildingsFiltered =
-      this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
-        return retrofitBuildingSlugs.some((ownedBuildingID) =>
-          buildingEdge.node.ID  === ownedBuildingID);
-      });
+    this.buildingsFiltered = this.$static.allBuilding.edges.filter(
+      (buildingEdge: IBuildingEdge) => {
+        return retrofitBuildingSlugs.some(
+          (ownedBuildingID) => buildingEdge.node.ID === ownedBuildingID,
+        );
+      },
+    );
   }
 }
 </script>
@@ -90,30 +98,28 @@ export default class ChicagoRetrofitParticipants extends Vue {
 <template>
   <DefaultLayout>
     <div class="retrofit-page">
-      <h1
-        id="main-content"
-        tabindex="-1"
-      >
+      <h1 id="main-content" tabindex="-1">
         Retrofit Chicago Participant Case Studies
       </h1>
 
       <p class="constrained -wide">
-        These buildings participated in the Retrofit Chicago program and have published case
-        studies, so you can learn more about how they became more efficient!
+        These buildings participated in the Retrofit Chicago program and have
+        published case studies, so you can learn more about how they became more
+        efficient!
       </p>
 
       <p>
         Buildings sourced from
-        <a href="https://www.chicago.gov/city/en/sites/retrofit-chicago2/home/participant-achievments/past-participants.html#case-studies">
-          City of Chicago - Retrofit Chicago
-        </a>.
+        <a
+          href="https://www.chicago.gov/city/en/sites/retrofit-chicago2/home/participant-achievments/past-participants.html#case-studies"
+        >
+          City of Chicago - Retrofit Chicago </a
+        >.
       </p>
 
       <DataDisclaimer />
 
-      <BuildingsTable
-        :buildings="buildingsFiltered"
-      />
+      <BuildingsTable :buildings="buildingsFiltered" />
 
       <DataSourceFootnote />
     </div>
@@ -122,6 +128,5 @@ export default class ChicagoRetrofitParticipants extends Vue {
 
 <style lang="scss">
 .retrofit-page {
-
 }
 </style>

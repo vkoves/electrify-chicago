@@ -5,8 +5,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import * as d3 from 'd3';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import * as d3 from "d3";
 
 export interface IPieSlice {
   value: number;
@@ -22,9 +22,9 @@ export interface IPieSlice {
  */
 @Component({})
 export default class PieChart extends Vue {
-  @Prop({required: true}) graphData!: Array<IPieSlice>;
+  @Prop({ required: true }) graphData!: Array<IPieSlice>;
 
-  @Watch('graphData')
+  @Watch("graphData")
   onDataChanged(): void {
     this.renderGraph();
   }
@@ -37,8 +37,10 @@ export default class PieChart extends Vue {
   svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 
   mounted(): void {
-    const outerWidth = this.width + this.graphMargins.left + this.graphMargins.right;
-    const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
+    const outerWidth =
+      this.width + this.graphMargins.left + this.graphMargins.right;
+    const outerHeight =
+      this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     this.svg = d3
       .select("svg#pie-chart")
@@ -47,7 +49,7 @@ export default class PieChart extends Vue {
       .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .append("g")
-        .attr("transform", `translate(${this.width / 2},${this.height / 2})`);
+      .attr("transform", `translate(${this.width / 2},${this.height / 2})`);
 
     this.renderGraph();
   }
@@ -60,46 +62,47 @@ export default class PieChart extends Vue {
     const labelRadius = 150;
 
     // Compute the position of each group on the pie:
-    var pie = d3.pie()
-      .value((d: any) => d.value);
+    var pie = d3.pie().value((d: any) => d.value);
     var dataReady = pie(this.graphData as any);
 
     // shape helper to build arcs:
-    var arcGenerator = d3.arc()
-      .innerRadius(0)
-      .outerRadius(radius);
+    var arcGenerator = d3.arc().innerRadius(0).outerRadius(radius);
 
-    var labelArcGenerator = d3.arc()
+    var labelArcGenerator = d3
+      .arc()
       .innerRadius(radius)
       .outerRadius(labelRadius);
 
     // Build the pie chart: Basically, each part of the pie is a path that we build using the
     // arc function.
-    this.svg.selectAll('mySlices')
+    this.svg
+      .selectAll("mySlices")
       .data(dataReady)
       .enter()
-      .append('path')
-          .attr('d', arcGenerator as any)
-          .attr('fill', (d) => (d.data as unknown as IPieSlice).color);
-
+      .append("path")
+      .attr("d", arcGenerator as any)
+      .attr("fill", (d) => (d.data as unknown as IPieSlice).color);
 
     // Calculate total value for % calculation
     let totalValue = 0;
-    this.graphData.forEach((d) => totalValue += d.value);
+    this.graphData.forEach((d) => (totalValue += d.value));
 
     /** Add pie chart labels */
-    this.svg.selectAll('mySlices')
+    this.svg
+      .selectAll("mySlices")
       .data(dataReady)
       .enter()
-      .append('text')
+      .append("text")
       .html((d) => {
         // Convert degrees to rads
-        const thresholdRadians = 5 / 360 * 2 * Math.PI;
+        const thresholdRadians = (5 / 360) * 2 * Math.PI;
 
         // If we have a lot of small slices, we skip those labels so they don't collide
-        if (this.graphData.length > 2
-          && (d.endAngle - d.startAngle) <  thresholdRadians) {
-          return '';
+        if (
+          this.graphData.length > 2 &&
+          d.endAngle - d.startAngle < thresholdRadians
+        ) {
+          return "";
         }
 
         let data = d.data as any as IPieSlice;
@@ -110,37 +113,37 @@ export default class PieChart extends Vue {
 
         return label;
       })
-      .attr('class', () => this.graphData.length === 1 ? '-only-slice' : '')
+      .attr("class", () => (this.graphData.length === 1 ? "-only-slice" : ""))
       .attr("transform", (d) => {
         // If we have only 1 slice (e.g. 100% electric, like Marina Towers), place dead center,
         // otherwise use secondary arc centroid
         if (this.graphData.length === 1) {
-          return '';
+          return "";
         }
 
         return `translate(${labelArcGenerator.centroid(d as unknown as d3.DefaultArcObject)})`;
       })
       .style("text-anchor", (d) => {
         // Center single slice label
-        if (this.graphData.length === 1) { return 'middle'; }
+        if (this.graphData.length === 1) {
+          return "middle";
+        }
 
         // are we past the center?
-        return (d.endAngle + d.startAngle) / 2 > Math.PI ?
-            "end" : "start";
+        return (d.endAngle + d.startAngle) / 2 > Math.PI ? "end" : "start";
       });
   }
 
   calculatePercentage(value: number, total: number): string {
-    const percentage = value / total * 100;
+    const percentage = (value / total) * 100;
 
     if (percentage < 1) {
-      return '< 1';
+      return "< 1";
     }
     // If > 99%, we don't want to round to 100% so we can show there's other slices
     else if (percentage > 99 && percentage < 100) {
       return Math.floor(percentage).toString();
-    }
-    else {
+    } else {
       return Math.round(percentage).toString();
     }
   }
@@ -159,13 +162,17 @@ export default class PieChart extends Vue {
       stroke-width: 0.25rem;
     }
 
-    text.-only-slice { font-size: 1.5rem; }
+    text.-only-slice {
+      font-size: 1.5rem;
+    }
   }
 
   tspan.percent {
     font-weight: bold;
     font-size: 1.3em;
   }
-  tspan.label { font-size: 0.65em; }
+  tspan.label {
+    font-size: 0.65em;
+  }
 }
 </style>

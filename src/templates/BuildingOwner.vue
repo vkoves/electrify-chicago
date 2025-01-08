@@ -1,18 +1,23 @@
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 
-import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
+import BuildingsTable from "~/components/BuildingsTable.vue";
+import DataDisclaimer from "~/components/DataDisclaimer.vue";
+import DataSourceFootnote from "~/components/DataSourceFootnote.vue";
+import NewTabIcon from "~/components/NewTabIcon.vue";
+import { IBuildingBenchmarkStats, IBuilding } from "../common-functions.vue";
 import {
-  BuildingOwners, IBuildingOwner, BuildingsCustomInfo, IBuildingCustomInfo,
-} from '../constants/buildings-custom-info.constant.vue';
+  BuildingOwners,
+  IBuildingOwner,
+  BuildingsCustomInfo,
+  IBuildingCustomInfo,
+} from "../constants/buildings-custom-info.constant.vue";
 
-import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import BuildingBenchmarkStats from "../data/dist/building-benchmark-stats.json";
 
-interface IBuildingEdge { node: IBuilding; }
+interface IBuildingEdge {
+  node: IBuilding;
+}
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -24,14 +29,17 @@ interface IBuildingEdge { node: IBuilding; }
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  (this.currOwner?.nameShort + ' Buildings') || 'Building Owner' };
+    return {
+      title: this.currOwner?.nameShort + " Buildings" || "Building Owner",
+    };
   },
 })
 export default class BiggestBuildings extends Vue {
   readonly BuildingOwners = BuildingOwners;
 
   /** Expose stats to template */
-  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
+    BuildingBenchmarkStats;
 
   /** Set by Gridsome to results of GraphQL query */
   readonly $static: any;
@@ -61,16 +69,21 @@ export default class BiggestBuildings extends Vue {
 
   filterBuildings(ownerId: string): void {
     // Loop through BuildingsCustomInfo to get the IDs of buildings we are looking for
-    const ownerBuildingsSlugs: Array<string> = Object.entries(BuildingsCustomInfo)
-      .filter(([ , buildingInfo ]: [string, IBuildingCustomInfo]) => {
+    const ownerBuildingsSlugs: Array<string> = Object.entries(
+      BuildingsCustomInfo,
+    )
+      .filter(([, buildingInfo]: [string, IBuildingCustomInfo]) => {
         return buildingInfo.owner === ownerId;
-      }).map(([ buildingID ]: [string, IBuildingCustomInfo]) => buildingID);
+      })
+      .map(([buildingID]: [string, IBuildingCustomInfo]) => buildingID);
 
-    this.buildingsFiltered =
-      this.$static.allBuilding.edges.filter((buildingEdge: IBuildingEdge) => {
-        return ownerBuildingsSlugs.some((ownedBuildingID) =>
-          buildingEdge.node.ID  === ownedBuildingID);
-      });
+    this.buildingsFiltered = this.$static.allBuilding.edges.filter(
+      (buildingEdge: IBuildingEdge) => {
+        return ownerBuildingsSlugs.some(
+          (ownedBuildingID) => buildingEdge.node.ID === ownedBuildingID,
+        );
+      },
+    );
   }
 
   calculateOwnedBuildingStats(): void {
@@ -85,13 +98,16 @@ export default class BiggestBuildings extends Vue {
     });
 
     this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
-    const avgGHGIntensity: number = totalGHGIntensity / this.buildingsFiltered.length;
+    const avgGHGIntensity: number =
+      totalGHGIntensity / this.buildingsFiltered.length;
     this.avgGHGIntensity = avgGHGIntensity.toFixed(1);
 
-    this.medianGHGIntensityMultiple =
-      (avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median).toFixed(0);
-    this.medianGHGEmissionsMultiple =
-      (totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median).toFixed(0);
+    this.medianGHGIntensityMultiple = (
+      avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median
+    ).toFixed(0);
+    this.medianGHGEmissionsMultiple = (
+      totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
+    ).toFixed(0);
   }
 }
 </script>
@@ -133,33 +149,23 @@ export default class BiggestBuildings extends Vue {
 <template>
   <DefaultLayout>
     <div class="building-owner-page">
-      <h1
-        id="main-content"
-        tabindex="-1"
-      >
-        <div class="top-title">
-          Buildings Owned By
-        </div>
+      <h1 id="main-content" tabindex="-1">
+        <div class="top-title">Buildings Owned By</div>
 
-        <img
-          :src="currOwner.logoLarge"
-          alt=""
-        >
+        <img :src="currOwner.logoLarge" alt="" />
 
         {{ currOwner.name }}
       </h1>
 
       <p class="constrained -wide">
-        These are buildings that we have manually tagged as being owned by {{ currOwner.name }},
-        so this may not be a definitive list.
+        These are buildings that we have manually tagged as being owned by
+        {{ currOwner.name }}, so this may not be a definitive list.
       </p>
 
       <h2>Building Stats</h2>
 
       <ul class="stats">
-        <li class="bold">
-          {{ buildingsFiltered.length }} Tagged Buildings
-        </li>
+        <li class="bold">{{ buildingsFiltered.length }} Tagged Buildings</li>
 
         <li>
           <strong>
@@ -169,10 +175,12 @@ export default class BiggestBuildings extends Vue {
 
           <p class="footnote">
             <strong>
-              Equivalent to {{ medianGHGEmissionsMultiple }} of the median benchmarked
-              building
+              Equivalent to {{ medianGHGEmissionsMultiple }} of the median
+              benchmarked building
             </strong>
-            ({{ BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString() }}
+            ({{
+              BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
+            }}
             tons CO<sub>2</sub>e)
           </p>
         </li>
@@ -184,17 +192,19 @@ export default class BiggestBuildings extends Vue {
           </strong>
 
           <p class="footnote">
-            <strong>{{ medianGHGIntensityMultiple }}x the median benchmarked building</strong>
-            ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg CO<sub>2</sub>/sqft)
+            <strong
+              >{{ medianGHGIntensityMultiple }}x the median benchmarked
+              building</strong
+            >
+            ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg
+            CO<sub>2</sub>/sqft)
           </p>
         </li>
       </ul>
 
       <DataDisclaimer />
 
-      <BuildingsTable
-        :buildings="buildingsFiltered"
-      />
+      <BuildingsTable :buildings="buildingsFiltered" />
 
       <DataSourceFootnote />
     </div>
@@ -218,15 +228,21 @@ export default class BiggestBuildings extends Vue {
     }
   }
 
-  h2 { margin-bottom: 0.5rem; }
+  h2 {
+    margin-bottom: 0.5rem;
+  }
 
   .stats {
     margin-top: 0;
     padding-left: 1.25rem;
 
-    li + li { margin-top: 0.5rem; }
+    li + li {
+      margin-top: 0.5rem;
+    }
 
-    .footnote { margin: 0rem; }
+    .footnote {
+      margin: 0rem;
+    }
   }
 }
 </style>

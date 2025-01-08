@@ -2,18 +2,13 @@
   <dialog id="dialog">
     <div class="popup-inner">
       <slot />
-      <button
-        class="popup-close"
-        @click="close"
-      >
-        Close
-      </button>
+      <button class="popup-close" @click="close">Close</button>
     </div>
   </dialog>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Emit } from 'vue-property-decorator';
+import { Component, Vue, Emit } from "vue-property-decorator";
 
 @Component
 export default class Popup extends Vue {
@@ -27,7 +22,7 @@ export default class Popup extends Vue {
 
   /** Open the dialog on load */
   mounted(): void {
-    this.dialog = document.getElementById('dialog') as HTMLDialogElement;
+    this.dialog = document.getElementById("dialog") as HTMLDialogElement;
 
     this.dialog.showModal();
 
@@ -66,7 +61,10 @@ dialog {
       background-color: $grey-light;
       font-size: 1.25rem;
 
-      &:hover, &:focus { background-color: $grey; }
+      &:hover,
+      &:focus {
+        background-color: $grey;
+      }
     }
   }
 }

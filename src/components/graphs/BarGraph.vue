@@ -1,17 +1,14 @@
 <template>
   <div class="bar-graph-cont">
-    <div
-      class="label"
-      v-html="graphTitle"
-    />
+    <div class="label" v-html="graphTitle" />
 
     <svg id="bar-graph"><!-- D3 inserts here --></svg>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
-import * as d3 from 'd3';
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import * as d3 from "d3";
 
 export interface IGraphPoint {
   x: number | string;
@@ -23,11 +20,11 @@ export interface IGraphPoint {
  */
 @Component({})
 export default class BarGraph extends Vue {
-  @Prop({required: true}) graphTitle!: string;
+  @Prop({ required: true }) graphTitle!: string;
 
-  @Prop({required: true}) graphData!: Array<IGraphPoint>;
+  @Prop({ required: true }) graphData!: Array<IGraphPoint>;
 
-  @Watch('graphData')
+  @Watch("graphData")
   onDataChanged(): void {
     this.renderGraph();
   }
@@ -41,8 +38,10 @@ export default class BarGraph extends Vue {
   svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
 
   mounted(): void {
-    const outerWidth = this.width + this.graphMargins.left + this.graphMargins.right;
-    const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
+    const outerWidth =
+      this.width + this.graphMargins.left + this.graphMargins.right;
+    const outerHeight =
+      this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     this.svg = d3
       .select("svg#bar-graph")
@@ -51,7 +50,10 @@ export default class BarGraph extends Vue {
       .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
       .attr("preserveAspectRatio", "xMidYMid meet")
       .append("g")
-        .attr("transform", `translate(${this.graphMargins.left},${this.graphMargins.top})`);
+      .attr(
+        "transform",
+        `translate(${this.graphMargins.left},${this.graphMargins.top})`,
+      );
 
     this.renderGraph();
   }
@@ -71,32 +73,33 @@ export default class BarGraph extends Vue {
 
     const y = d3
       .scaleLinear()
-      .domain([ 0, d3.max(yVals) as number])
+      .domain([0, d3.max(yVals) as number])
       .rangeRound([this.height, 0]);
 
     // Render X axis
-    this.svg.append("g")
+    this.svg
+      .append("g")
       .attr("transform", `translate(0, ${this.height})`)
       .call(d3.axisBottom(x))
       .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
-        .style("text-anchor", "end");
+      .attr("transform", "translate(-10,0)rotate(-45)")
+      .style("text-anchor", "end");
 
     // Render Y axis
-    this.svg.append("g")
-      .call(d3.axisLeft(y));
+    this.svg.append("g").call(d3.axisLeft(y));
 
-    this.svg.selectAll("mybar")
+    this.svg
+      .selectAll("mybar")
       .data(this.graphData)
       .enter()
       .append("rect")
-        .attr("x", (d) => {
-          return x(d.x.toString() as string) as number;
-        })
-        .attr("y", (d) => y(d.y))
-        .attr("width", x.bandwidth())
-        .attr("height", (d) => this.height - y(d.y))
-        .attr("fill", "#69b3a2");
+      .attr("x", (d) => {
+        return x(d.x.toString() as string) as number;
+      })
+      .attr("y", (d) => y(d.y))
+      .attr("width", x.bandwidth())
+      .attr("height", (d) => this.height - y(d.y))
+      .attr("fill", "#69b3a2");
   }
 }
 </script>

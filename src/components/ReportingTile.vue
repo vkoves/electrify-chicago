@@ -2,11 +2,10 @@
   <div class="reporting-tile">
     <p class="headline">
       Years Reported
-      <span class="score">{{ reportedYearsCount }}/{{ reportingHistory.length }}</span>
-      <span
-        class="grade-letter"
-        :class="`-${grade}` | lowercase"
+      <span class="score"
+        >{{ reportedYearsCount }}/{{ reportingHistory.length }}</span
       >
+      <span class="grade-letter" :class="`-${grade}` | lowercase">
         {{ grade }}
       </span>
     </p>
@@ -17,30 +16,28 @@
         :key="item.year"
         class="reporting-tile-item"
       >
-        <div
-          class="marker"
-          :class="{ '-reported': item.isReported }"
-        >
+        <div class="marker" :class="{ '-reported': item.isReported }">
           <img
             v-if="item.isReported"
             src="/checkmark.svg"
             :alt="`${item.year} data reported`"
             class="reported"
-          >
+          />
           <img
             v-else
             src="/cross.svg"
             :alt="`${item.year} data not reported`"
-          >
+          />
         </div>
         <p>{{ item.year }}</p>
       </li>
     </ul>
 
     <p class="footnote">
-      <strong>Note:</strong> Buildings are marked as reporting when we have greenhouse gas intensity
-      values for them, but some buildings are missing GHG intensity values but have reported the
-      underlying energy use data, but we're unsure why this is the case.
+      <strong>Note:</strong> Buildings are marked as reporting when we have
+      greenhouse gas intensity values for them, but some buildings are missing
+      GHG intensity values but have reported the underlying energy use data, but
+      we're unsure why this is the case.
     </p>
   </div>
 </template>

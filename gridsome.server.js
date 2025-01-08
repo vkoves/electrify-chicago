@@ -9,34 +9,34 @@
  * From fetching CSV data:
  * https://gridsome.org/docs/fetching-data/#csv
  */
-const {readFileSync} = require('fs');
-const parse = require('csv-parse/sync').parse;
+const { readFileSync } = require("fs");
+const parse = require("csv-parse/sync").parse;
 
-const DataDirectory = './src/data/dist/';
+const DataDirectory = "./src/data/dist/";
 
-const BuildingEmissionsDataFile = 'building-benchmarks.csv';
-const HistoricBenchmarkingDataFile = 'benchmarking-all-years.csv';
+const BuildingEmissionsDataFile = "building-benchmarks.csv";
+const HistoricBenchmarkingDataFile = "benchmarking-all-years.csv";
 
 // This is an array equivalent of Object.keys(BuildingOwners) but this file can't use Typescript and
 // import that file
 const BuildingOwnerIds = [
-  'depaul',
-  'uchicago',
-  'uic',
-  'iit',
-  'northwestern',
-  'loyola',
-  'cps',
-  'cha',
-  'cityofchicago',
-  'columbia',
-  'ccc',
-  'moody',
-  'saic',
-  'npu',
+  "depaul",
+  "uchicago",
+  "uic",
+  "iit",
+  "northwestern",
+  "loyola",
+  "cps",
+  "cha",
+  "cityofchicago",
+  "columbia",
+  "ccc",
+  "moody",
+  "saic",
+  "npu",
 ];
 
-module.exports = function(api) {
+module.exports = function (api) {
   // Use the Data Store API here: https://gridsome.org/docs/data-store-api/
   api.loadSource(async (actions) => {
     loadBuildingBenchmarkData(actions);
@@ -47,13 +47,13 @@ module.exports = function(api) {
   api.createPages(({ createPage }) => {
     // Create pages for building owners. This could be a dynamic route, but making it this way
     // should let them get statically built as expected
-    BuildingOwnerIds.forEach(ownerId => {
+    BuildingOwnerIds.forEach((ownerId) => {
       createPage({
         path: `/owner/${ownerId}`,
-        component: './src/templates/BuildingOwner.vue',
+        component: "./src/templates/BuildingOwner.vue",
         context: { ownerId },
-      })
-    })
+      });
+    });
   });
 };
 
@@ -63,7 +63,10 @@ module.exports = function(api) {
  * @param {unknown} actions The actions class?
  */
 function loadBuildingBenchmarkData(actions) {
-  const latestBenchmarksRaw = readFileSync(`${DataDirectory}${BuildingEmissionsDataFile}`, 'utf8');
+  const latestBenchmarksRaw = readFileSync(
+    `${DataDirectory}${BuildingEmissionsDataFile}`,
+    "utf8",
+  );
 
   /**
    * Load in building benchmarks and expose as Buildings collection
@@ -73,21 +76,23 @@ function loadBuildingBenchmarkData(actions) {
     skip_empty_lines: true,
   });
 
-  const collection = actions.addCollection({typeName: 'Building'});
+  const collection = actions.addCollection({ typeName: "Building" });
 
   for (const building of LatestBenchmarksData) {
     // Make a slugSource that is the property name or the address as a fallback (skip one letter
     // names, e.g. '-)
-    building.slugSource = building.PropertyName.length > 1 ? building.PropertyName : building.Address;
+    building.slugSource =
+      building.PropertyName.length > 1
+        ? building.PropertyName
+        : building.Address;
 
-    if (!building.slugSource || typeof building.slugSource !== 'string') {
-      throw new Error('No building slug source (name or address)!', building);
+    if (!building.slugSource || typeof building.slugSource !== "string") {
+      throw new Error("No building slug source (name or address)!", building);
     }
 
     collection.addNode(building);
   }
 }
-
 
 /**
  * Load in the historic benchmark data
@@ -95,7 +100,10 @@ function loadBuildingBenchmarkData(actions) {
  * @param {unknown} actions The actions class?
  */
 function loadHistoricBenchmarkDat(actions) {
-  const historicBenchmarksRaw = readFileSync(`${DataDirectory}${HistoricBenchmarkingDataFile}`, 'utf8');
+  const historicBenchmarksRaw = readFileSync(
+    `${DataDirectory}${HistoricBenchmarkingDataFile}`,
+    "utf8",
+  );
 
   /**
    * Load in building benchmarks and expose as Buildings collection
@@ -105,7 +113,7 @@ function loadHistoricBenchmarkDat(actions) {
     skip_empty_lines: true,
   });
 
-  const collection = actions.addCollection({ typeName: 'Benchmark' });
+  const collection = actions.addCollection({ typeName: "Benchmark" });
 
   for (const benchmark of HistoricBenchmarksData) {
     collection.addNode(benchmark);

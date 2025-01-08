@@ -1,14 +1,14 @@
 <script lang="ts">
 // Gridsome doesn't have types, so can't import it properly
 // eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
-const Pager = require('gridsome').Pager;
+const Pager = require("gridsome").Pager;
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue } from "vue-property-decorator";
 
-import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import EmissionsBreakdownGraph from '~/components/EmissionsBreakdownGraph.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
+import BuildingsTable from "~/components/BuildingsTable.vue";
+import DataDisclaimer from "~/components/DataDisclaimer.vue";
+import EmissionsBreakdownGraph from "~/components/EmissionsBreakdownGraph.vue";
+import NewTabIcon from "~/components/NewTabIcon.vue";
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -21,7 +21,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     Pager,
   },
   metaInfo() {
-    return { title:  'Home' };
+    return { title: "Home" };
   },
 })
 export default class BiggestBuildings extends Vue {
@@ -84,12 +84,7 @@ export default class BiggestBuildings extends Vue {
 <template>
   <DefaultLayout>
     <div class="homepage">
-      <h1
-        id="main-content"
-        tabindex="-1"
-      >
-        Electrify Chicago
-      </h1>
+      <h1 id="main-content" tabindex="-1">Electrify Chicago</h1>
 
       <p class="tagline">
         An independent tool for viewing City of Chicago building data
@@ -105,44 +100,42 @@ export default class BiggestBuildings extends Vue {
               href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
               target="_blank"
             >
-              2022 Chicago Climate Action Plan<NewTabIcon />
-            </a>,
-            <strong>69% of Chicago's emissions come from buildings</strong>, making
-            building emissions our biggest challenge and <em>our biggest opportunity</em> as a city
-            to tackle climate change. At Electrify Chicago, we showcase building performance using
-            publicly available data supplemented by community-submitted photographs and building
-            owners.
+              2022 Chicago Climate Action Plan<NewTabIcon /> </a
+            >, <strong>69% of Chicago's emissions come from buildings</strong>,
+            making building emissions our biggest challenge and
+            <em>our biggest opportunity</em> as a city to tackle climate change.
+            At Electrify Chicago, we showcase building performance using
+            publicly available data supplemented by community-submitted
+            photographs and building owners.
           </p>
 
           <p class="constrained -wide main-paragraph">
-            Start by looking at Chicago's buildings with the highest greenhouse gas
-            intensity i.e. emissions per square foot. Large, efficient, buildings can perform much
-            better than very inefficient small buildings on this metric.
+            Start by looking at Chicago's buildings with the highest greenhouse
+            gas intensity i.e. emissions per square foot. Large, efficient,
+            buildings can perform much better than very inefficient small
+            buildings on this metric.
           </p>
 
           <div class="announcements">
             <div class="announce-panel -orange">
               <h2>
-                <div class="regular-text-size">
-                  New Article
-                </div>
+                <div class="regular-text-size">New Article</div>
                 📰 $30 Million In Missed Fines
               </h2>
 
               <p>
-                The City Of Chicago failed to collect $30 million in potential fines from
-                the building benchmarking ordinance, reducing transparency and accountability.
+                The City Of Chicago failed to collect $30 million in potential
+                fines from the building benchmarking ordinance, reducing
+                transparency and accountability.
               </p>
 
               <p>
-                <a
-                  href="/blog/millions-in-missed-fines"
-                  class="bold"
-                >Read Our Full Blog Post On Millions in Missed Fines</a>.
+                <a href="/blog/millions-in-missed-fines" class="bold"
+                  >Read Our Full Blog Post On Millions in Missed Fines</a
+                >.
               </p>
             </div>
           </div>
-
 
           <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 
@@ -160,34 +153,27 @@ export default class BiggestBuildings extends Vue {
             Page {{ $page.allBuilding.pageInfo.currentPage }} of
             {{ $page.allBuilding.pageInfo.totalPages }}
 
-            (Building
-            #{{ 1 + ($page.allBuilding.pageInfo.currentPage - 1)
-              * $page.allBuilding.pageInfo.perPage }}
-            to #{{ ($page.allBuilding.pageInfo.currentPage - 1)
-              * $page.allBuilding.pageInfo.perPage + $page.allBuilding.edges.length }})
+            (Building #{{
+              1 +
+              ($page.allBuilding.pageInfo.currentPage - 1) *
+                $page.allBuilding.pageInfo.perPage
+            }}
+            to #{{
+              ($page.allBuilding.pageInfo.currentPage - 1) *
+                $page.allBuilding.pageInfo.perPage +
+              $page.allBuilding.edges.length
+            }})
           </div>
 
-          <Pager
-            class="pager"
-            :info="$page.allBuilding.pageInfo"
-          />
+          <Pager class="pager" :info="$page.allBuilding.pageInfo" />
         </div>
 
         <form class="page-form search-form">
           <label for="page-num">Go to Page</label>
 
           <div class="input-cont">
-            <input
-              id="page-num"
-              v-model="pageInput"
-              type="number"
-            >
-            <button
-              type="submit"
-              @click="jumpToPage"
-            >
-              Jump
-            </button>
+            <input id="page-num" v-model="pageInput" type="number" />
+            <button type="submit" @click="jumpToPage">Jump</button>
           </div>
         </form>
       </div>
@@ -209,7 +195,9 @@ export default class BiggestBuildings extends Vue {
 
 <style lang="scss">
 .homepage {
-  h1 { margin-bottom: 0; }
+  h1 {
+    margin-bottom: 0;
+  }
 
   .tagline {
     font-weight: bold;
@@ -221,7 +209,9 @@ export default class BiggestBuildings extends Vue {
     justify-content: space-between;
     gap: 2rem;
 
-    p.main-paragraph { font-size: 1.125rem; }
+    p.main-paragraph {
+      font-size: 1.125rem;
+    }
   }
 
   .announcements {
@@ -229,7 +219,9 @@ export default class BiggestBuildings extends Vue {
     gap: 1rem;
     align-items: flex-start;
 
-    > * { flex-basis: 100%; }
+    > * {
+      flex-basis: 100%;
+    }
   }
 
   .emissions-breakdown {
@@ -237,13 +229,22 @@ export default class BiggestBuildings extends Vue {
     margin-bottom: 1rem;
     flex-shrink: 0;
 
-    &.-mobile { display: none; }
-    > img { height: 25rem; }
-    p { margin: 0; }
+    &.-mobile {
+      display: none;
+    }
+    > img {
+      height: 25rem;
+    }
+    p {
+      margin: 0;
+    }
   }
 
   .page-form {
-    input, button { height: 2rem; }
+    input,
+    button {
+      height: 2rem;
+    }
 
     label {
       display: block;
@@ -252,7 +253,9 @@ export default class BiggestBuildings extends Vue {
       font-weight: bold;
     }
 
-    input { width: 3.5rem;}
+    input {
+      width: 3.5rem;
+    }
   }
 
   .pager-cont {
@@ -262,7 +265,9 @@ export default class BiggestBuildings extends Vue {
     margin-top: 1rem;
     gap: 1rem;
 
-    .pager { margin-top: 0; }
+    .pager {
+      margin-top: 0;
+    }
 
     .page-number {
       font-weight: bold;
@@ -272,19 +277,25 @@ export default class BiggestBuildings extends Vue {
   }
 
   @media (max-width: $mobile-max-width) {
-    .announcements { flex-direction: column; }
+    .announcements {
+      flex-direction: column;
+    }
 
     .row {
       display: block;
 
-      p.main-paragraph { font-size: 0.825rem; }
+      p.main-paragraph {
+        font-size: 0.825rem;
+      }
     }
 
     .emissions-breakdown {
       width: 100%;
       text-align: center;
 
-      &.-desktop { display: none; }
+      &.-desktop {
+        display: none;
+      }
     }
 
     .pager-cont {

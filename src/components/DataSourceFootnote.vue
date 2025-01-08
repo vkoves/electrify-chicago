@@ -13,16 +13,15 @@
 </template>
 
 <script lang="ts">
-import NewTabIcon from './NewTabIcon.vue';
+import NewTabIcon from "./NewTabIcon.vue";
 
 /**
  * A common footnote paragraph
  */
 export default {
-  name: 'DataSourceFootnote',
-  components: {NewTabIcon},
+  name: "DataSourceFootnote",
+  components: { NewTabIcon },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

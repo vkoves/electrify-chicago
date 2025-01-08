@@ -5,32 +5,28 @@
     :class="{ '-tall': Boolean(buildingImg.isTall) }"
   >
     <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
-    <img
-      :src="buildingImg.imgUrl"
-      alt=""
-    >
+    <img :src="buildingImg.imgUrl" alt="" />
 
     <p class="attribution">
       <strong>Attribution:</strong>
-      {{ buildingImg.fromGoogleMaps ? '© Google ' + currentYear : '' }}
-      <a
-        ref="noopener"
-        :href="buildingImg.attributionUrl"
-        target="_blank"
-      >
+      {{ buildingImg.fromGoogleMaps ? "© Google " + currentYear : "" }}
+      <a ref="noopener" :href="buildingImg.attributionUrl" target="_blank">
         Image Source
-        <NewTabIcon />
-      </a>. Cropped from original.
+        <NewTabIcon /> </a
+      >. Cropped from original.
     </p>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from "vue-property-decorator";
 
-import {IBuilding} from '../common-functions.vue';
-import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
-import NewTabIcon from './NewTabIcon.vue';
+import { IBuilding } from "../common-functions.vue";
+import {
+  getBuildingImage,
+  IBuildingImage,
+} from "../constants/building-images.constant.vue";
+import NewTabIcon from "./NewTabIcon.vue";
 
 /**
  * A component that given a building shows the logo of its owner if one is set in
@@ -42,7 +38,7 @@ import NewTabIcon from './NewTabIcon.vue';
   },
 })
 export default class BuildingImage extends Vue {
-  @Prop({required: true}) building!: IBuilding;
+  @Prop({ required: true }) building!: IBuilding;
 
   /**
    * Returns the image object associated with this image
@@ -52,19 +48,22 @@ export default class BuildingImage extends Vue {
   }
 
   get currentYear(): number {
-    return (new Date()).getFullYear();
+    return new Date().getFullYear();
   }
 }
 </script>
 
 <style lang="scss">
 .building-img-cont {
-
   &.-tall {
     text-align: right;
 
-    img { max-height: 35rem; }
-    p { text-align: left; }
+    img {
+      max-height: 35rem;
+    }
+    p {
+      text-align: left;
+    }
   }
 
   img {
@@ -78,7 +77,9 @@ export default class BuildingImage extends Vue {
   }
 
   @media (max-width: $mobile-max-width) {
-    &.-tall { text-align: left; }
+    &.-tall {
+      text-align: left;
+    }
   }
 }
 </style>
