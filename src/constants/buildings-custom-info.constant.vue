@@ -1707,7 +1707,8 @@ export const BuildingsCustomInfo: {
   // 162 North State Street
   '250167': { owner: BuildingOwners.saic.key },
   // 280 Building, 280 S Columbus Dr
-  '2tags: [ BuildingTags.hasRetrofitCaseStudy],52065': {
+  '252065': {
+    tags: [ BuildingTags.hasRetrofitCaseStudy],
     owner: BuildingOwners.saic.key,
     links: [
       {
