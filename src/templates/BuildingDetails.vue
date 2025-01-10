@@ -76,16 +76,15 @@ query ($id: ID!, $ID: String) {
         :class="{
           '-has-img': Boolean(buildingImg),
           // The layout is better for tall images, so keeping it there
-          '-img-tall': Boolean(buildingImg?.isTall || true)
+          '-img-tall': Boolean(buildingImg?.isTall || true),
         }"
       >
         <div class="building-header-text">
           <div>
-            <h1
-              id="main-content"
-              tabindex="-1"
-            >
-              {{ $page.building.PropertyName || $page.building.Address }}&nbsp;<OverallRankEmoji
+            <h1 id="main-content" tabindex="-1">
+              {{
+                $page.building.PropertyName || $page.building.Address
+              }}&nbsp;<OverallRankEmoji
                 :building="$page.building"
                 :stats="BuildingBenchmarkStats"
                 :large-view="true"
@@ -94,7 +93,8 @@ query ($id: ID!, $ID: String) {
           </div>
 
           <div class="address">
-            {{ $page.building.Address }}, Chicago IL, {{ $page.building.ZIPCode }}
+            {{ $page.building.Address }}, Chicago IL,
+            {{ $page.building.ZIPCode }}
             <a
               :href="'https://www.google.com/maps/search/' + encodedAddress"
               class="google-maps-link"
@@ -114,25 +114,18 @@ query ($id: ID!, $ID: String) {
           <BuildingImage :building="$page.building" />
 
           <!-- Button opens Popup for "Email This Building" -->
-          <button
-            class="email-btn"
-            @click="isModalOpen=true"
-          >
-            <img
-              src="/email.svg"
-              alt=""
-            >
+          <button class="email-btn" @click="isModalOpen = true">
+            <img src="/email.svg" alt="" />
             Email This Building
           </button>
         </div>
 
         <div class="details-cont">
-          <div
-            v-if="dataYear < LatestDataYear"
-            class="building-banner"
-          >
-            <span class="emoji">⚠️</span> This building did not report data in {{ LatestDataYear }},
-            <span class="bold">this data is from {{ dataYear }}</span>, the latest year reported
+          <div v-if="dataYear < LatestDataYear" class="building-banner">
+            <span class="emoji">⚠️</span> This building did not report data in
+            {{ LatestDataYear }},
+            <span class="bold">this data is from {{ dataYear }}</span
+            >, the latest year reported
           </div>
 
           <div class="building-top-info">
@@ -169,7 +162,12 @@ query ($id: ID!, $ID: String) {
               </div>
 
               <!-- Only show building count if set and > 1, most are 1 -->
-              <div v-if="$page.building.NumberOfBuildings && $page.building.NumberOfBuildings > 1">
+              <div
+                v-if="
+                  $page.building.NumberOfBuildings &&
+                  $page.building.NumberOfBuildings > 1
+                "
+              >
                 <dt>Building Count</dt>
                 <dd>{{ $page.building.NumberOfBuildings }}</dd>
               </div>
@@ -180,7 +178,9 @@ query ($id: ID!, $ID: String) {
               </div>
 
               <!-- Show energy rating if it's a float value (not blank or NaN) -->
-              <div v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))">
+              <div
+                v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))"
+              >
                 <dt>
                   <a
                     href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
@@ -191,9 +191,7 @@ query ($id: ID!, $ID: String) {
                     <NewTabIcon />
                   </a>
                 </dt>
-                <dd>
-                  {{ $page.building.ChicagoEnergyRating }} / 4
-                </dd>
+                <dd>{{ $page.building.ChicagoEnergyRating }} / 4</dd>
               </div>
 
               <div v-if="$page.building.ENERGYSTARScore">
@@ -207,9 +205,7 @@ query ($id: ID!, $ID: String) {
                     <NewTabIcon />
                   </a>
                 </dt>
-                <dd>
-                  {{ $page.building.ENERGYSTARScore }} / 100
-                </dd>
+                <dd>{{ $page.building.ENERGYSTARScore }} / 100</dd>
               </div>
 
               <div>
@@ -345,9 +341,7 @@ query ($id: ID!, $ID: String) {
       </div>
 
       <details>
-        <summary class="bold">
-          View Extra Technical Info
-        </summary>
+        <summary class="bold">View Extra Technical Info</summary>
 
         <div class="details-content">
           <dl class="stat-tiles -supp">
@@ -386,25 +380,21 @@ query ($id: ID!, $ID: String) {
       </details>
 
       <p class="constrained">
-        <strong>* Note on Rankings:</strong> Rankings and medians are among <em>included</em>
-        buildings, which are those who reported under the Chicago Energy Benchmarking Ordinance for
-        the year {{ LatestDataYear }}, which only applies to buildings over 50,000 square feet.
+        <strong>* Note on Rankings:</strong> Rankings and medians are among
+        <em>included</em> buildings, which are those who reported under the
+        Chicago Energy Benchmarking Ordinance for the year {{ LatestDataYear }},
+        which only applies to buildings over 50,000 square feet.
       </p>
 
       <p class="constrained">
         <strong>** Note on Bill Estimates:</strong>
-        Estimates for gas and electric bills are based on average electric and gas <em>retail</em>
-        prices for Chicago in {{ UtilityCosts.year }} and are rounded. We expect large buildings
-        would negotiate lower rates with utilities, but these estimates serve as an upper bound of
-        cost and help understand the volume of energy a building is used by comparing it to your own
-        energy bills!
-
-        See our
-        <a
-          :href="UtilityCosts.source"
-          target="_blank"
-          rel="noopener"
-        >
+        Estimates for gas and electric bills are based on average electric and
+        gas <em>retail</em> prices for Chicago in {{ UtilityCosts.year }} and
+        are rounded. We expect large buildings would negotiate lower rates with
+        utilities, but these estimates serve as an upper bound of cost and help
+        understand the volume of energy a building is used by comparing it to
+        your own energy bills! See our
+        <a :href="UtilityCosts.source" target="_blank" rel="noopener">
           Chicago Gas & Electric Costs Source <NewTabIcon />
         </a>
         for the original statistics.
@@ -414,14 +404,12 @@ query ($id: ID!, $ID: String) {
 
       <h2>What Should We Do About This?</h2>
 
-      <a href="/take-action-tips">
-        Own this Building? Take Action.
-      </a>
+      <a href="/take-action-tips"> Own this Building? Take Action. </a>
 
       <email-building-modal
         v-if="isModalOpen"
         :building="$page.building"
-        @close="isModalOpen=false"
+        @close="isModalOpen = false"
       />
     </div>
   </DefaultLayout>
@@ -444,7 +432,10 @@ import ReportingTile from '~/components/ReportingTile.vue';
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
-import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
+import {
+  getBuildingImage,
+  IBuildingImage,
+} from '../constants/building-images.constant.vue';
 import {
   IBuilding,
   IHistoricData,
@@ -453,7 +444,10 @@ import {
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
-import { getBuildingCustomInfo, ILink } from '../constants/buildings-custom-info.constant.vue';
+import {
+  getBuildingCustomInfo,
+  ILink,
+} from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 
 const EnergyBreakdownColors = {
@@ -484,21 +478,24 @@ const EnergyBreakdownColors = {
   },
   filters: {
     titlecase(value: string) {
-      return value.toLowerCase().replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+      return value
+        .toLowerCase()
+        .replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
     },
   },
 })
-export default class BuildingDetails  extends Vue {
+export default class BuildingDetails extends Vue {
   // TODO: Move to constant
   graphTitles = {
-    TotalGHGEmissions:  'Total GHG Emissions (metric tons CO<sub>2</sub>e)',
+    TotalGHGEmissions: 'Total GHG Emissions (metric tons CO<sub>2</sub>e)',
     GHGIntensity: 'GHG Intensity (metric tons CO<sub>2</sub>e/sqft)',
     ElectricityUse: 'Electricity Use (kBTU)',
     NaturalGasUse: 'Fossil Gas Use (kBTU)',
   };
 
   /** Expose stats to template */
-  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
+    BuildingBenchmarkStats;
 
   /** Expose UtilityCosts to template */
   readonly UtilityCosts: typeof UtilityCosts = UtilityCosts;
@@ -509,7 +506,7 @@ export default class BuildingDetails  extends Vue {
    */
   readonly LatestDataYear: number = LatestDataYear;
 
-   /** Set by Gridsome to results of GraphQL query */
+  /** Set by Gridsome to results of GraphQL query */
   $page: any;
 
   energyBreakdownData!: Array<IPieSlice>;
@@ -582,8 +579,10 @@ export default class BuildingDetails  extends Vue {
   }
 
   created(): void {
-    this.historicData = this.$page.allBenchmark.edges
-      .map((nodeObj: { node: IHistoricData }) => nodeObj.node) || [];
+    this.historicData =
+      this.$page.allBenchmark.edges.map(
+        (nodeObj: { node: IHistoricData }) => nodeObj.node,
+      ) || [];
 
     this.calculateEnergyBreakdown();
     this.updateGraph();
@@ -592,7 +591,7 @@ export default class BuildingDetails  extends Vue {
   calculateEnergyBreakdown(): void {
     const energyBreakdown = [];
 
-    if (this.building.ElectricityUse as unknown as number > 0) {
+    if ((this.building.ElectricityUse as unknown as number) > 0) {
       energyBreakdown.push({
         label: 'Electricity',
         value: parseFloat(this.building.ElectricityUse.toString()),
@@ -600,7 +599,7 @@ export default class BuildingDetails  extends Vue {
       });
     }
 
-    if (this.building.NaturalGasUse as unknown as number > 0) {
+    if ((this.building.NaturalGasUse as unknown as number) > 0) {
       energyBreakdown.push({
         label: 'Fossil Gas',
         value: parseFloat(this.building.NaturalGasUse.toString()),
@@ -608,15 +607,15 @@ export default class BuildingDetails  extends Vue {
       });
     }
 
-    if (this.building.DistrictSteamUse as unknown as number > 0) {
+    if ((this.building.DistrictSteamUse as unknown as number) > 0) {
       energyBreakdown.push({
-      label: 'District Steam',
-      value: parseFloat(this.building.DistrictSteamUse.toString()),
-      color: EnergyBreakdownColors.DistrictSteam,
-    });
+        label: 'District Steam',
+        value: parseFloat(this.building.DistrictSteamUse.toString()),
+        color: EnergyBreakdownColors.DistrictSteam,
+      });
     }
 
-    if (this.building.DistrictChilledWaterUse as unknown as number > 0) {
+    if ((this.building.DistrictChilledWaterUse as unknown as number) > 0) {
       energyBreakdown.push({
         label: 'District Chilling',
         value: parseFloat(this.building.DistrictChilledWaterUse.toString()),
@@ -625,7 +624,7 @@ export default class BuildingDetails  extends Vue {
     }
 
     let totalEnergyUse = 0;
-    energyBreakdown.forEach((datum) => totalEnergyUse += datum.value);
+    energyBreakdown.forEach((datum) => (totalEnergyUse += datum.value));
     this.totalEnergyUsekBTU = totalEnergyUse;
 
     this.energyBreakdownData = energyBreakdown;
@@ -658,8 +657,8 @@ export default class BuildingDetails  extends Vue {
       justify-content: space-between;
       gap: 0 2rem;
       grid-template-areas:
-        "title img"
-        "details img";
+        'title img'
+        'details img';
 
       .building-header-text {
         grid-area: title;
@@ -675,19 +674,23 @@ export default class BuildingDetails  extends Vue {
         flex-direction: column;
         gap: 0.25rem;
       }
-      .building-banner { grid-area: banner; }
+      .building-banner {
+        grid-area: banner;
+      }
     }
 
     &:not(.-img-tall) {
       display: grid;
       grid-template-areas:
-        "img"
-        "details";
+        'img'
+        'details';
 
       .building-header-text {
         grid-area: img;
       }
-      .building-banner { grid-area: banner; }
+      .building-banner {
+        grid-area: banner;
+      }
       .building-img-cont {
         grid-area: img;
         width: 80%;
@@ -708,12 +711,17 @@ export default class BuildingDetails  extends Vue {
         border-top-right-radius: 0.5rem;
         border-bottom-right-radius: 0.5rem;
 
-        h1, .address { margin: 0; }
+        h1,
+        .address {
+          margin: 0;
+        }
       }
     }
   }
 
-  h1 { margin: 0; }
+  h1 {
+    margin: 0;
+  }
 
   h2 {
     margin: 2.5rem 0 0;
@@ -728,7 +736,9 @@ export default class BuildingDetails  extends Vue {
     margin: 1rem 0;
     justify-self: flex-start;
 
-    span.emoji { margin-right: 0.5rem; }
+    span.emoji {
+      margin-right: 0.5rem;
+    }
   }
 
   .address {
@@ -742,7 +752,7 @@ export default class BuildingDetails  extends Vue {
 
   .building-id {
     font-size: 0.75rem;
-    margin-top: 0;;
+    margin-top: 0;
   }
 
   .building-top-info {
@@ -751,7 +761,9 @@ export default class BuildingDetails  extends Vue {
     padding: 1rem 1.5rem;
     margin-top: 1rem;
 
-    h2 { margin-top: 0; }
+    h2 {
+      margin-top: 0;
+    }
   }
 
   .email-btn {
@@ -768,7 +780,8 @@ export default class BuildingDetails  extends Vue {
     font-weight: bold;
     border-radius: $brd-rad-medium;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: $blue-very-dark;
     }
 
@@ -782,7 +795,9 @@ export default class BuildingDetails  extends Vue {
     display: flex;
     gap: 2rem;
 
-    .stat-tiles-col { flex-basis: 70%; }
+    .stat-tiles-col {
+      flex-basis: 70%;
+    }
     .chart-cont {
       flex-basis: 30%;
       flex-shrink: 0;
@@ -825,9 +840,14 @@ export default class BuildingDetails  extends Vue {
       margin-bottom: 0.5rem;
     }
 
-    dd, .stat-tile { height: 100%; }
+    dd,
+    .stat-tile {
+      height: 100%;
+    }
 
-    .stat-tile { min-width: 18rem; }
+    .stat-tile {
+      min-width: 18rem;
+    }
   }
 
   .reporting-tile {
@@ -838,18 +858,24 @@ export default class BuildingDetails  extends Vue {
   details {
     margin: 2rem 0;
 
-    .stat-tiles dt { font-size: 1.25rem; }
+    .stat-tiles dt {
+      font-size: 1.25rem;
+    }
   }
 
   ul {
     margin-top: 0.5rem;
 
-    li + li { margin-top: 0.25rem; }
+    li + li {
+      margin-top: 0.25rem;
+    }
   }
 
   /** Small desktop sizing - split to just two columns from three */
   @media (max-width: 1200px) {
-    .main-cols { flex-direction: column-reverse; }
+    .main-cols {
+      flex-direction: column-reverse;
+    }
   }
 
   /**
@@ -857,19 +883,25 @@ export default class BuildingDetails  extends Vue {
    */
   @media (max-width: $mobile-max-width) {
     .building-header {
-      .building-img-cont, .building-header-text { width: 100%; }
+      .building-img-cont,
+      .building-header-text {
+        width: 100%;
+      }
       .email-btn {
         align-self: flex-start;
       }
 
-      .building-header-text { position: relative; }
+      .building-header-text {
+        position: relative;
+      }
 
       &.-has-img {
-        &:not(.-img-tall), &.-img-tall {
+        &:not(.-img-tall),
+        &.-img-tall {
           grid-template-areas:
-            "title"
-            "img"
-            "details";
+            'title'
+            'img'
+            'details';
         }
 
         &:not(.-img-tall) {
@@ -883,19 +915,27 @@ export default class BuildingDetails  extends Vue {
           }
 
           // On mobile wide images can go full width
-          .building-img-cont { width: 100%; }
+          .building-img-cont {
+            width: 100%;
+          }
         }
 
         &.-img-tall {
           // Constrain tall images on mobile so they don't take up the whole view height
-          .building-img-cont { width: 75%; }
+          .building-img-cont {
+            width: 75%;
+          }
         }
       }
 
-      .building-top-info dl { gap: 1rem; }
+      .building-top-info dl {
+        gap: 1rem;
+      }
     }
 
-    .main-cols .chart-cont { margin-top: 0; }
+    .main-cols .chart-cont {
+      margin-top: 0;
+    }
 
     // Break GMaps link to new line
     .address .google-maps-link {

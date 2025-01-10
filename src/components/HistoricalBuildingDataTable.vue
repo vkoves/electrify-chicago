@@ -3,26 +3,20 @@
     <table class="historical-data">
       <thead>
         <tr>
-          <th scope="col">
-            Year
-          </th>
-          <th
-            v-if="renderedColumns.includes('GrossFloorArea')"
-            scope="col"
-          >
+          <th scope="col">Year</th>
+          <th v-if="renderedColumns.includes('GrossFloorArea')" scope="col">
             Floor Area <span class="unit">sqft</span>
           </th>
           <th
             v-if="renderedColumns.includes('ChicagoEnergyRating')"
             scope="col"
           >
-            Chicago Energy<br> Rating
+            Chicago Energy<br />
+            Rating
           </th>
-          <th
-            v-if="renderedColumns.includes('ENERGYSTARScore')"
-            scope="col"
-          >
-            Energy Star<br> Score
+          <th v-if="renderedColumns.includes('ENERGYSTARScore')" scope="col">
+            Energy Star<br />
+            Score
           </th>
           <th scope="col">
             GHG Intensity <span class="unit">kg CO<sub>2</sub>e / sqft</span>
@@ -30,29 +24,17 @@
           <th scope="col">
             GHG Emissions <span class="unit">metric tons CO<sub>2</sub>e</span>
           </th>
-          <th scope="col">
-            Source EUI <span class="unit">kBTU / sqft</span>
-          </th>
+          <th scope="col">Source EUI <span class="unit">kBTU / sqft</span></th>
 
-          <th scope="col">
-            Electricity Use <span class="unit">kBTU</span>
-          </th>
-          <th scope="col">
-            Fossil Gas Use <span class="unit">kBTU</span>
-          </th>
-          <th
-            v-if="renderedColumns.includes('DistrictSteamUse')"
-            scope="col"
-          >
+          <th scope="col">Electricity Use <span class="unit">kBTU</span></th>
+          <th scope="col">Fossil Gas Use <span class="unit">kBTU</span></th>
+          <th v-if="renderedColumns.includes('DistrictSteamUse')" scope="col">
             District Steam Use <span class="unit">kBTU</span>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="benchmark in historicBenchmarks"
-          :key="benchmark.DataYear"
-        >
+        <tr v-for="benchmark in historicBenchmarks" :key="benchmark.DataYear">
           <td>{{ benchmark.DataYear }}</td>
           <td v-if="renderedColumns.includes('GrossFloorArea')">
             {{ benchmark.GrossFloorArea | optionalInt }}
@@ -82,7 +64,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import {IHistoricData} from '../common-functions.vue';
+import { IHistoricData } from '../common-functions.vue';
 
 /**
  * A component that given an array of a building's benchmarking renders
@@ -96,7 +78,7 @@ import {IHistoricData} from '../common-functions.vue';
      *
      * Ex: null -> '-', '12345.67' -> '12,345'
      */
-     optionalInt(value: string) {
+    optionalInt(value: string) {
       if (!value) {
         return '-';
       }
@@ -114,7 +96,7 @@ import {IHistoricData} from '../common-functions.vue';
   },
 })
 export default class BuildingImage extends Vue {
-  @Prop({required: true}) historicBenchmarks!: Array<IHistoricData>;
+  @Prop({ required: true }) historicBenchmarks!: Array<IHistoricData>;
 
   renderedColumns: Array<string> = [];
 
@@ -128,7 +110,9 @@ export default class BuildingImage extends Vue {
       // A column is empty if it's all empty string or '0', so skip it if so. Some columns switch
       // between both, like Natural Gas Use on Merch Mart, which we also want to ignore
       return !this.historicBenchmarks.every((datum) => {
-        return (datum as any)[colKey] === '' || (datum as any)[colKey] === '0.0';
+        return (
+          (datum as any)[colKey] === '' || (datum as any)[colKey] === '0.0'
+        );
       });
     });
 
@@ -162,13 +146,16 @@ table.historical-data {
     font-weight: normal;
   }
 
-  th, td {
+  th,
+  td {
     padding: 0.5rem 0.75rem;
     text-align: left;
   }
 
   thead {
-    tr { background-color: $grey; }
+    tr {
+      background-color: $grey;
+    }
 
     th {
       line-height: 1.25;
@@ -176,6 +163,8 @@ table.historical-data {
     }
   }
 
-  tbody tr:nth-of-type(even) { background-color: $grey-light; }
+  tbody tr:nth-of-type(even) {
+    background-color: $grey-light;
+  }
 }
 </style>

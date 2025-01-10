@@ -17,9 +17,7 @@ import AppHeader from '../components/layout/AppHeader.vue';
     AppHeader,
   },
 })
-export default class Default extends Vue {
-
-}
+export default class Default extends Vue {}
 </script>
 
 <template>

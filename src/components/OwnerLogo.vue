@@ -5,23 +5,13 @@
     class="owner-cont"
     :class="{
       '-small': isSmall,
-      '-unknown': !owner
+      '-unknown': !owner,
     }"
   >
     <div v-if="owner && !isSmall">
-      <g-link
-        v-if="owner"
-        :to="'/owner/' + owner.key"
-      >
-        <img
-          v-if="!isSmall"
-          :src="ownerLogoSrc"
-          :alt="owner.name"
-        >
-        <div
-          v-if="!isSmall"
-          class="owner-label"
-        />
+      <g-link v-if="owner" :to="'/owner/' + owner.key">
+        <img v-if="!isSmall" :src="ownerLogoSrc" :alt="owner.name" />
+        <div v-if="!isSmall" class="owner-label" />
 
         View All Tagged {{ owner.nameShort }} Buildings
       </g-link>
@@ -34,16 +24,14 @@
     <!-- If small view should short building name -->
     <span v-if="owner && isSmall">({{ owner.nameShort }})</span>
 
-    <div v-if="!owner && !isSmall">
-      Not Tagged
-    </div>
+    <div v-if="!owner && !isSmall">Not Tagged</div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import {IBuilding} from '../common-functions.vue';
+import { IBuilding } from '../common-functions.vue';
 import {
   IBuildingOwner,
   BuildingOwners,
@@ -56,7 +44,7 @@ import { getBuildingCustomInfo } from '../constants/buildings-custom-info.consta
  */
 @Component
 export default class OwnerLogo extends Vue {
-  @Prop({required: true}) building!: IBuilding;
+  @Prop({ required: true }) building!: IBuilding;
   @Prop({ default: false }) isSmall!: boolean;
 
   /**
@@ -89,7 +77,10 @@ export default class OwnerLogo extends Vue {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 
-  &.-small, &.-unknown { margin: 0; }
+  &.-small,
+  &.-unknown {
+    margin: 0;
+  }
 
   &.-small {
     display: inline-block;
@@ -103,6 +94,8 @@ export default class OwnerLogo extends Vue {
     font-size: 0.75rem;
   }
 
-  img { width: 20rem; }
+  img {
+    width: 20rem;
+  }
 }
 </style>
