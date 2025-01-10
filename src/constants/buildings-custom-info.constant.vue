@@ -1708,7 +1708,7 @@ export const BuildingsCustomInfo: {
   '250167': { owner: BuildingOwners.saic.key },
   // 280 Building, 280 S Columbus Dr
   '252065': {
-    tags: [ BuildingTags.hasRetrofitCaseStudy],
+    tags: [BuildingTags.hasRetrofitCaseStudy],
     owner: BuildingOwners.saic.key,
     links: [
       {
