@@ -48,6 +48,9 @@ export default class Search extends Vue {
   searchResults: Array<IBuildingEdge> = [];
   totalResultsCount = 0;
 
+  /** Dropdown information on database details */
+  dataDisclaimer!: HTMLDetailsElement;
+
   created(): void {
     // Make sure on load we have some data
     this.setSearchResults(this.$static.allBuilding.edges);
@@ -141,6 +144,14 @@ export default class Search extends Vue {
     this.totalResultsCount = allResults.length;
     this.searchResults = allResults.slice(0, this.MaxBuildings);
   }
+
+  /**
+   * Toggles DataDisclaimer open from the no-results message
+   */
+  openDataDisclaimer(): void {
+    this.dataDisclaimer = document.getElementById('data-disclaimer') as HTMLDetailsElement;
+    this.dataDisclaimer.open = true;
+  }
 }
 </script>
 
@@ -189,7 +200,7 @@ export default class Search extends Vue {
         to the first {{ MaxBuildings }} matches.
       </p>
 
-      <DataDisclaimer />
+      <DataDisclaimer id="data-disclaimer"/>
 
       <form>
         <div>
@@ -246,8 +257,12 @@ export default class Search extends Vue {
 
         <p>
           There may be a typo in your query or in the underlying data, or the building you are
-          looking for may not be in our dataset.
+          looking for may not be in our dataset (Buildings in Chicago over 50,000 square feet).
         </p>
+
+        <p>Addresses generally follow the format: 123 W Main St</p>
+
+        <p>See <a href="#data-disclaimer" @click="openDataDisclaimer">note on dataset</a>.</p>
       </div>
 
       <p>
