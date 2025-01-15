@@ -165,7 +165,9 @@ export default class Search extends Vue {
    * Toggles DataDisclaimer open from the no-results message
    */
   openDataDisclaimer(): void {
-    this.dataDisclaimer = document.getElementById('data-disclaimer') as HTMLDetailsElement;
+    this.dataDisclaimer = document.getElementById(
+      'data-disclaimer',
+    ) as HTMLDetailsElement;
     this.dataDisclaimer.open = true;
   }
 }
@@ -211,7 +213,7 @@ export default class Search extends Vue {
         results are limited to the first {{ MaxBuildings }} matches.
       </p>
 
-      <DataDisclaimer id="data-disclaimer"/>
+      <DataDisclaimer id="data-disclaimer" />
 
       <form>
         <div>
@@ -250,13 +252,19 @@ export default class Search extends Vue {
         <h2>No results found!</h2>
 
         <p>
-          There may be a typo in your query or in the underlying data, or the building you are
-          looking for may not be in our dataset (Limited to buildings in Chicago over 50,000 square feet).
+          There may be a typo in your query or in the underlying data, or the
+          building you are looking for may not be in our dataset (Limited to
+          buildings in Chicago over 50,000 square feet).
         </p>
 
         <p>Addresses generally follow the format: 123 W Main St</p>
 
-        <p>See <a href="#data-disclaimer" @click="openDataDisclaimer">note on dataset</a>.</p>
+        <p>
+          See
+          <a href="#data-disclaimer" @click="openDataDisclaimer"
+            >note on dataset</a
+          >.
+        </p>
       </div>
 
       <p>

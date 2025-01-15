@@ -108,7 +108,10 @@ export default class PieChart extends Vue {
         let data = d.data as any as IPieSlice;
 
         const label =
-          `<tspan class="percent">${this.calculatePercentage(data.value, totalValue)}%</tspan>` +
+          `<tspan class="percent">${this.calculatePercentage(
+            data.value,
+            totalValue,
+          )}%</tspan>` +
           `<tspan class="label" x="0" dy="1.5em">${data.label}</tspan>`;
 
         return label;
@@ -121,7 +124,9 @@ export default class PieChart extends Vue {
           return '';
         }
 
-        return `translate(${labelArcGenerator.centroid(d as unknown as d3.DefaultArcObject)})`;
+        return `translate(${labelArcGenerator.centroid(
+          d as unknown as d3.DefaultArcObject,
+        )})`;
       })
       .style('text-anchor', (d) => {
         // Center single slice label
