@@ -2,12 +2,7 @@
   <dialog id="dialog">
     <div class="popup-inner">
       <slot />
-      <button
-        class="popup-close"
-        @click="close"
-      >
-        Close
-      </button>
+      <button class="popup-close" @click="close">Close</button>
     </div>
   </dialog>
 </template>
@@ -32,7 +27,7 @@ export default class Popup extends Vue {
     this.dialog.showModal();
 
     // The native <dialog> handles Esc to close, so we then emit
-    this.dialog.addEventListener("close", () => {
+    this.dialog.addEventListener('close', () => {
       this.close();
     });
   }
@@ -66,7 +61,10 @@ dialog {
       background-color: $grey-light;
       font-size: 1.25rem;
 
-      &:hover, &:focus { background-color: $grey; }
+      &:hover,
+      &:focus {
+        background-color: $grey;
+      }
     }
   }
 }

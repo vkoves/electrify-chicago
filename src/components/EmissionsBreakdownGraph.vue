@@ -8,8 +8,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
 })
-export default class EmissionsBreakdownGraph extends Vue {
-}
+export default class EmissionsBreakdownGraph extends Vue {}
 </script>
 
 <template>
@@ -24,7 +23,7 @@ export default class EmissionsBreakdownGraph extends Vue {
         69% buildings
         24% transportation
         7% waste"
-    >
+    />
 
     <p class="footnote">
       <a
@@ -38,5 +37,4 @@ export default class EmissionsBreakdownGraph extends Vue {
   </div>
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

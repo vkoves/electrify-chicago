@@ -16,11 +16,10 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Biggest Gas Free Buildings' };
+    return { title: 'Biggest Gas Free Buildings' };
   },
 })
-export default class TopGasUsers extends Vue {
-}
+export default class TopGasUsers extends Vue {}
 </script>
 
 <static-query>
@@ -64,23 +63,21 @@ export default class TopGasUsers extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1
-      id="main-content"
-      tabindex="-1"
-    >
+    <h1 id="main-content" tabindex="-1">
       Chicago's {{ $static.allBuilding.edges.length }} Fully Gas Free Buildings
     </h1>
 
     <p class="constrained -wide">
-      These buildings are already all-electric, and feature some of the most famous buildings in
-      the city! If even the John Hancock center or Marina Towers can run off of only electricity,
-      your building can too.
+      These buildings are already all-electric, and feature some of the most
+      famous buildings in the city! If even the John Hancock center or Marina
+      Towers can run off of only electricity, your building can too.
     </p>
 
     <p class="constrained -wide">
-      <strong>Note:</strong> This list is of buildings that use neither fossil gas nor a district
-      steam system, since all district steam systems in the city are currently powered by burning
-      fossil gas (to the best of our knowledge).
+      <strong>Note:</strong> This list is of buildings that use neither fossil
+      gas nor a district steam system, since all district steam systems in the
+      city are currently powered by burning fossil gas (to the best of our
+      knowledge).
     </p>
 
     <DataDisclaimer />
@@ -94,5 +91,4 @@ export default class TopGasUsers extends Vue {
   </DefaultLayout>
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

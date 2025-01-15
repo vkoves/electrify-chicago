@@ -7,8 +7,7 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   name: 'AppFooter',
 })
-export default class AppFooter extends Vue {
-}
+export default class AppFooter extends Vue {}
 </script>
 
 <template>
@@ -16,7 +15,10 @@ export default class AppFooter extends Vue {
     <div class="constrained">
       <div>
         Created with <span class="heart">&#x2764;</span> by
-        <a href="https://github.com/vkoves/electrify-chicago/graphs/contributors">volunteers</a>
+        <a
+          href="https://github.com/vkoves/electrify-chicago/graphs/contributors"
+          >volunteers</a
+        >
         in Chicago
       </div>
 
@@ -25,11 +27,7 @@ export default class AppFooter extends Vue {
           href="https://github.com/vkoves/electrify-chicago"
           class="github-link"
         >
-          <img
-            alt=""
-            src="/github-mark.svg"
-            width="16"
-          >
+          <img alt="" src="/github-mark.svg" width="16" />
           Contribute to Electrify Chicago on GitHub
         </a>
       </div>
@@ -68,7 +66,10 @@ footer {
     border: none;
     font-size: 0.825rem;
 
-    &:hover, &:focus { background-color: $white; }
+    &:hover,
+    &:focus {
+      background-color: $white;
+    }
   }
 
   .heart {

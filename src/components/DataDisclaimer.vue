@@ -1,28 +1,26 @@
 <template>
   <details class="data-disclaimer">
-    <summary>
-      Note: Data From Large Buildings in {{ LatestDataYear }}
-    </summary>
+    <summary>Note: Data From Large Buildings in {{ LatestDataYear }}</summary>
 
     <div class="details-content">
       <p class="constrained">
-        <strong>Note:</strong> This data only includes buildings whose emissions are reported
-        under the
+        <strong>Note:</strong> This data only includes buildings whose emissions
+        are reported under the
         <a
           href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html"
           target="_blank"
           rel="noopener"
         >
           Chicago Energy Benchmarking Ordinance<NewTabIcon />
-        </a>. According to the City &ldquo;As of 2016,
-        this list includes all commercial, institutional, and residential buildings larger than
-        50,000 square feet.&rdquo;
+        </a>. According to the City &ldquo;As of 2016, this list includes all
+        commercial, institutional, and residential buildings larger than 50,000
+        square feet.&rdquo;
       </p>
 
       <p class="constrained">
-        The latest year of data is from {{ LatestDataYear }}, but we update the site regularly when
-        new data is available, and some buildings may have failed to report that year, and only have
-        older data available.
+        The latest year of data is from {{ LatestDataYear }}, but we update the
+        site regularly when new data is available, and some buildings may have
+        failed to report that year, and only have older data available.
       </p>
 
       <p>
@@ -44,7 +42,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component({
   name: 'DataDisclaimer',
-  components: {NewTabIcon},
+  components: { NewTabIcon },
 })
 export default class DataDisclaimer extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
@@ -57,10 +55,17 @@ export default class DataDisclaimer extends Vue {
   margin-bottom: 1rem;
   font-size: 0.825rem;
 
-  summary, .details-content { padding: 0.5rem 1rem; }
+  summary,
+  .details-content {
+    padding: 0.5rem 1rem;
+  }
 
-  summary { font-weight: bold; }
+  summary {
+    font-weight: bold;
+  }
 
-  p { margin-top: 0.5em; }
+  p {
+    margin-top: 0.5em;
+  }
 }
 </style>

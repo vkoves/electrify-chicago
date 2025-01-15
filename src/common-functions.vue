@@ -1,5 +1,5 @@
 <script lang="ts">
-export default { };
+export default {};
 
 export interface IBuildingBenchmarkStat {
   count: number;
@@ -32,7 +32,6 @@ export interface IPropertyStats {
   [statKey: string]: IPropertyStat;
 }
 
-
 /**
  * An individual building object
  *
@@ -46,7 +45,6 @@ export interface IBuilding {
   Latitude: string;
   Longitude: string;
 
-
   NaturalGasUse: string;
   DistrictSteamUse: string;
 
@@ -54,7 +52,9 @@ export interface IBuilding {
 }
 
 /** How GraphQL passes back a building */
-export interface IBuildingNode { node: IBuilding }
+export interface IBuildingNode {
+  node: IBuilding;
+}
 
 export interface IHistoricData {
   ID: string;
@@ -95,7 +95,10 @@ export const RankConfig = {
  * Returns a string rank for very bad buildings, or null if not in top 50
  * worst
  */
-export function getRankLabel(statRank: number, isSquareFootage: boolean): string | null {
+export function getRankLabel(
+  statRank: number,
+  isSquareFootage: boolean,
+): string | null {
   if (isSquareFootage) {
     return 'Largest';
   } else if (statRank <= RankConfig.AlarmRankMax) {
@@ -111,8 +114,11 @@ export function getRankLabel(statRank: number, isSquareFootage: boolean): string
  * Returns a string rank for very bad buildings per primary property
  * type, or null if not in top 50 worst
  */
-export function getRankLabelByProperty(statRank: number, isSquareFootage: boolean,
-  propertyTag: string): string | null {
+export function getRankLabelByProperty(
+  statRank: number,
+  isSquareFootage: boolean,
+  propertyTag: string,
+): string | null {
   if (isSquareFootage) {
     return `Largest of ${propertyTag}`;
   } else if (statRank <= RankConfig.AlarmRankMax) {
@@ -146,7 +152,9 @@ export const RankedColumns = [
  * @return {number|null}
  */
 export function getStatRankInverted(
-  statKey: string, statRank: number, buildingStats: IBuildingBenchmarkStats,
+  statKey: string,
+  statRank: number,
+  buildingStats: IBuildingBenchmarkStats,
 ): number | null {
   if (statRank) {
     const countForStat = buildingStats[statKey].count;
@@ -175,7 +183,7 @@ export function getStatRankInverted(
 export function getOverallRankEmoji(
   building: IBuilding,
   buildingStats: IBuildingBenchmarkStats,
-): { msg: string, emoji: string } | null {
+): { msg: string; emoji: string } | null {
   let worstEmoji: string | null = null;
   let hasTrophyCategory = false;
 
@@ -184,7 +192,11 @@ export function getOverallRankEmoji(
   RankedColumns.forEach((columnKey) => {
     const val = building[columnKey + 'Rank'];
     const statRank = parseFloat((val ?? '').toString());
-    const statRankInverted = getStatRankInverted(columnKey, statRank, buildingStats);
+    const statRankInverted = getStatRankInverted(
+      columnKey,
+      statRank,
+      buildingStats,
+    );
 
     // Ignore the column if rank is NaN
     if (typeof statRank !== 'number' || isNaN(statRank)) {
@@ -194,10 +206,16 @@ export function getOverallRankEmoji(
     if (statRank <= RankConfig.AlarmRankMax) {
       // Alarm is always the worst, so we override
       worstEmoji = RankConfig.AlarmEmoji;
-    } else if (statRank <= RankConfig.FlagRankMax && worstEmoji !== RankConfig.AlarmEmoji) {
+    } else if (
+      statRank <= RankConfig.FlagRankMax &&
+      worstEmoji !== RankConfig.AlarmEmoji
+    ) {
       // If the worstEmoji isn't the alarm and we meet the flag rank, set to flag
       worstEmoji = RankConfig.FlagEmoji;
-    } else if (statRankInverted && statRankInverted <= RankConfig.TrophyRankInvertedMax) {
+    } else if (
+      statRankInverted &&
+      statRankInverted <= RankConfig.TrophyRankInvertedMax
+    ) {
       hasTrophyCategory = true;
     }
   });
@@ -211,7 +229,10 @@ export function getOverallRankEmoji(
   } else if (worstEmoji) {
     return {
       emoji: worstEmoji,
-      msg: worstEmoji === RankConfig.AlarmEmoji ? RankConfig.AlarmMsg : RankConfig.FlagMsg,
+      msg:
+        worstEmoji === RankConfig.AlarmEmoji
+          ? RankConfig.AlarmMsg
+          : RankConfig.FlagMsg,
     };
   }
 
@@ -224,7 +245,8 @@ export function getOverallRankEmoji(
  */
 export const UtilityCosts = {
   year: 2021,
-  source: 'https://www.bls.gov/regions/midwest/news-release/AverageEnergyPrices_Chicago.htm',
+  source:
+    'https://www.bls.gov/regions/midwest/news-release/AverageEnergyPrices_Chicago.htm',
   electricCostPerKWh: 0.143,
   gasCostPerTherm: 1.192,
 };
@@ -239,7 +261,10 @@ export const UtilityCosts = {
  * Keating nat gas cost: $708,860.13
  * Keating electric cost: $82,898.53
  */
-export function estimateUtilitySpend(energyUseKbtu: number, isElectric: boolean): number {
+export function estimateUtilitySpend(
+  energyUseKbtu: number,
+  isElectric: boolean,
+): number {
   const kwhToKbtuMult = 3.412; // 1kWh = 3.412 kBtu
   const thermToKbtuMult = 99.976; // 1th = 99.976 kBtu
 
@@ -249,7 +274,6 @@ export function estimateUtilitySpend(energyUseKbtu: number, isElectric: boolean)
   const costPerKbtu = isElectric ? costPerKbtuElectric : costPerKbtuNatGas;
 
   const estimateRaw = costPerKbtu * energyUseKbtu;
-
 
   // If > $1,000 round to the nearest 100 (e.g. $12,345 -> $12,000)
   if (estimateRaw > 1_000) {

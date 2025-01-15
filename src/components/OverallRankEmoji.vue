@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="overall-rank-emoji-cont"
-    :class="{ '-large': largeView }"
-  >
+  <div class="overall-rank-emoji-cont" :class="{ '-large': largeView }">
     <span
       v-if="overallRank"
       class="emoji overall-rank-emoji"
@@ -33,7 +30,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import {getOverallRankEmoji, IBuilding, IBuildingBenchmarkStats} from '../common-functions.vue';
+import {
+  getOverallRankEmoji,
+  IBuilding,
+  IBuildingBenchmarkStats,
+} from '../common-functions.vue';
 import { getBuildingImage } from '../constants/building-images.constant.vue';
 import { LatestDataYear } from '../constants/globals.vue';
 
@@ -43,13 +44,13 @@ import { LatestDataYear } from '../constants/globals.vue';
  */
 @Component
 export default class OverallRankEmoji extends Vue {
-  @Prop({required: true}) building!: IBuilding;
-  @Prop({required: true}) stats!: IBuildingBenchmarkStats;
+  @Prop({ required: true }) building!: IBuilding;
+  @Prop({ required: true }) stats!: IBuildingBenchmarkStats;
 
   /** Whether this is a large view of the emoji (e.g. in the title of the details page) */
-  @Prop({default: false}) largeView!: boolean;
+  @Prop({ default: false }) largeView!: boolean;
 
-  get overallRank(): { msg: string, emoji: string } | null {
+  get overallRank(): { msg: string; emoji: string } | null {
     return getOverallRankEmoji(this.building, this.stats);
   }
 
@@ -74,10 +75,14 @@ export default class OverallRankEmoji extends Vue {
     cursor: help;
   }
 
-  .overall-rank-emoji { font-size: 0.925em; }
+  .overall-rank-emoji {
+    font-size: 0.925em;
+  }
 
   &.-large {
-    .overall-rank-emoji { font-size: 0.8em; }
+    .overall-rank-emoji {
+      font-size: 0.8em;
+    }
   }
 }
 </style>

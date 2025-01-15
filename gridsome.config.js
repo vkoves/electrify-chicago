@@ -12,15 +12,13 @@ const path = require('path');
  * @param {string} rule A rule?
  */
 function addStyleResource(rule) {
-  rule.use('style-resource')
-      .loader('style-resources-loader')
-      .options({
-        patterns: [
-          path.resolve(__dirname, './src/scss/*.scss'),
-        ],
-      });
+  rule
+    .use('style-resource')
+    .loader('style-resources-loader')
+    .options({
+      patterns: [path.resolve(__dirname, './src/scss/*.scss')],
+    });
 }
-
 
 module.exports = {
   siteName: 'Electrify Chicago',
