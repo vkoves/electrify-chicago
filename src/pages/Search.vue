@@ -11,7 +11,9 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import PropertyTypesConstant from '../data/dist/property-types.json';
 
-interface IBuildingEdge { node: IBuilding; }
+interface IBuildingEdge {
+  node: IBuilding;
+}
 
 @Component<any>({
   components: {
@@ -24,7 +26,8 @@ interface IBuildingEdge { node: IBuilding; }
   },
 })
 export default class Search extends Vue {
-  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
+    BuildingBenchmarkStats;
   readonly MaxBuildings = 100;
 
   readonly QueryParamKeys = {
@@ -41,7 +44,7 @@ export default class Search extends Vue {
   /** The selected property type filter */
   propertyTypeFilter = '';
 
-  propertyTypeOptions: Array<{ label: string, value: string} | string> = [
+  propertyTypeOptions: Array<{ label: string; value: string } | string> = [
     { label: 'Select Property Type', value: '' },
   ].concat(PropertyTypesConstant.propertyTypes as any);
 
@@ -56,7 +59,9 @@ export default class Search extends Vue {
   mounted(): void {
     const urlParams = new URLSearchParams(window.location.search);
     const urlSearchParam = urlParams.get(this.QueryParamKeys.search);
-    const urlPropertyTypeParam = urlParams.get(this.QueryParamKeys.propertyType);
+    const urlPropertyTypeParam = urlParams.get(
+      this.QueryParamKeys.propertyType,
+    );
 
     if (urlSearchParam) {
       this.searchFilter = urlSearchParam;
@@ -76,7 +81,9 @@ export default class Search extends Vue {
       matchScore += 3;
     } else if (buildingEdge.node.Address.toLowerCase().includes(query)) {
       matchScore += 2;
-    } else if (buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)) {
+    } else if (
+      buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
+    ) {
       matchScore += 1;
     }
 
@@ -109,28 +116,37 @@ export default class Search extends Vue {
       return;
     }
 
-    buildingsResults = buildingsResults.filter((buildingEdge: IBuildingEdge) => {
-      return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
-        buildingEdge.node.Address.toLowerCase().includes(query) ||
-        buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
-    });
+    buildingsResults = buildingsResults.filter(
+      (buildingEdge: IBuildingEdge) => {
+        return (
+          buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
+          buildingEdge.node.Address.toLowerCase().includes(query) ||
+          buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
+        );
+      },
+    );
 
     // Sort by name matches, then address, then property type
-    buildingsResults = buildingsResults
-    .sort((buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
-      this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query));
+    buildingsResults = buildingsResults.sort(
+      (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
+        this.searchRank(buildingEdgeB, query) -
+        this.searchRank(buildingEdgeA, query),
+    );
 
     // If property type filter is specified, filter down by that
     if (this.propertyTypeFilter) {
-      buildingsResults = buildingsResults.filter((buildingEdge: IBuildingEdge) => {
-        return buildingEdge.node.PrimaryPropertyType.toLowerCase()
-          === this.propertyTypeFilter.toLowerCase();
-      });
+      buildingsResults = buildingsResults.filter(
+        (buildingEdge: IBuildingEdge) => {
+          return (
+            buildingEdge.node.PrimaryPropertyType.toLowerCase() ===
+            this.propertyTypeFilter.toLowerCase()
+          );
+        },
+      );
 
       this.setSearchResults(buildingsResults);
-    }
-    else {
-     this.setSearchResults(buildingsResults);
+    } else {
+      this.setSearchResults(buildingsResults);
     }
   }
 
@@ -177,40 +193,30 @@ export default class Search extends Vue {
 <template>
   <DefaultLayout>
     <div class="search-page">
-      <h1
-        id="main-content"
-        tabindex="-1"
-      >
-        Search Buildings
-      </h1>
+      <h1 id="main-content" tabindex="-1">Search Buildings</h1>
 
       <p>
-        Search all of Chicago's benchmarked buildings by name or type! Note that results are limited
-        to the first {{ MaxBuildings }} matches.
+        Search all of Chicago's benchmarked buildings by name or type! Note that
+        results are limited to the first {{ MaxBuildings }} matches.
       </p>
 
       <DataDisclaimer />
 
       <form>
         <div>
-          <label for="page-search">
-            Building Name
-          </label>
+          <label for="page-search"> Building Name </label>
           <input
             id="page-search"
             v-model="searchFilter"
             type="text"
             name="search"
             placeholder="Search property name, type, or address"
-          >
+          />
         </div>
 
         <div>
           <label for="property-type">Property Type</label>
-          <select
-            id="property-type"
-            v-model="propertyTypeFilter"
-          >
+          <select id="property-type" v-model="propertyTypeFilter">
             <option
               v-for="propertyType in propertyTypeOptions"
               :key="propertyType.value ?? propertyType"
@@ -221,37 +227,26 @@ export default class Search extends Vue {
           </select>
         </div>
 
-        <button
-          type="submit"
-          class="-grey"
-          @click="submitSearch"
-        >
-          <img
-            src="/search.svg"
-            alt=""
-            width="15"
-            height="15"
-          >
+        <button type="submit" class="-grey" @click="submitSearch">
+          <img src="/search.svg" alt="" width="15" height="15" />
           Search
         </button>
       </form>
 
       <BuildingsTable :buildings="searchResults" />
 
-      <div
-        v-if="searchResults.length === 0"
-        class="no-results-msg"
-      >
+      <div v-if="searchResults.length === 0" class="no-results-msg">
         <h2>No results found!</h2>
 
         <p>
-          There may be a typo in your query or in the underlying data, or the building you are
-          looking for may not be in our dataset.
+          There may be a typo in your query or in the underlying data, or the
+          building you are looking for may not be in our dataset.
         </p>
       </div>
 
       <p>
-        Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total {{ totalResultsCount }}
+        Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total
+        {{ totalResultsCount }}
         matching buildings
       </p>
 
@@ -286,9 +281,14 @@ export default class Search extends Vue {
       font-weight: 500;
     }
 
-    input, select { padding: 0.5rem; }
+    input,
+    select {
+      padding: 0.5rem;
+    }
 
-    input[type="text"] { width: 15rem; }
+    input[type='text'] {
+      width: 15rem;
+    }
 
     button {
       display: flex;
@@ -297,7 +297,9 @@ export default class Search extends Vue {
       padding: 0.5rem 1rem;
     }
 
-    select { max-width: 12rem; }
+    select {
+      max-width: 12rem;
+    }
 
     /** Mobile Styling */
     @media (max-width: $mobile-max-width) {
@@ -315,7 +317,9 @@ export default class Search extends Vue {
   }
 
   @media (max-width: $mobile-max-width) {
-    form { background-color: $off-white; }
+    form {
+      background-color: $off-white;
+    }
   }
 }
 </style>
