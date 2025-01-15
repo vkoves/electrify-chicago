@@ -251,7 +251,7 @@ export default class Search extends Vue {
 
         <p>
           There may be a typo in your query or in the underlying data, or the building you are
-          looking for may not be in our dataset (Buildings in Chicago over 50,000 square feet).
+          looking for may not be in our dataset (Limited to buildings in Chicago over 50,000 square feet).
         </p>
 
         <p>Addresses generally follow the format: 123 W Main St</p>
