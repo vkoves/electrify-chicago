@@ -101,7 +101,6 @@ export default class MillionsInMissedFine extends Vue {
         frameborder="1"
         width="100%"
         height="500px"
-        style="border: 2px solid #333; border-radius: 8px"
       ></iframe>
 
       <p>Several things can be seen from the time series analysis above.</p>
@@ -145,7 +144,6 @@ export default class MillionsInMissedFine extends Vue {
         frameborder="0"
         width="100%"
         height="450px"
-        style="border: 2px solid #333; border-radius: 8px"
       ></iframe>
 
       <p>
@@ -197,7 +195,6 @@ export default class MillionsInMissedFine extends Vue {
         frameborder="0"
         width="100%"
         height="400px"
-        style="border: 2px solid #333; border-radius: 8px"
       ></iframe>
 
       <iframe
@@ -205,7 +202,6 @@ export default class MillionsInMissedFine extends Vue {
         frameborder="1"
         width="100%"
         height="400px"
-        style="border: 2px solid #333; border-radius: 8px"
       ></iframe>
 
       <h2>Results: No noticeable difference between groups</h2>
@@ -227,8 +223,8 @@ export default class MillionsInMissedFine extends Vue {
         into three key areas:
       </p>
 
-      <section style="margin-left: 20px">
-        <h3 style="font-size: 1em; font-weight: bold">
+      <section class="-indented">
+        <h3>
           1. Impact of COVID-19 on Reporting Rates
         </h3>
         <p>
@@ -241,8 +237,8 @@ export default class MillionsInMissedFine extends Vue {
         </p>
       </section>
 
-      <section style="margin-left: 20px">
-        <h3 style="font-size: 1em; font-weight: bold">
+      <section class="-indented">
+        <h3>
           2. Influence of Outliers
         </h3>
         <p>
@@ -257,8 +253,8 @@ export default class MillionsInMissedFine extends Vue {
         </p>
       </section>
 
-      <section style="margin-left: 20px">
-        <h3 style="font-size: 1em; font-weight: bold">
+      <section class="-indented">
+        <h3>
           3. Omitted Predictive Characteristics
         </h3>
         <p>
@@ -309,19 +305,13 @@ export default class MillionsInMissedFine extends Vue {
         <!-- Check if results exist -->
         <div id="regression-container">
           <template v-if="results">
-            <table
-              style="
-                border-collapse: collapse;
-                width: 100%;
-                border: 1px solid black;
-              "
-            >
+            <table>
               <thead>
                 <tr>
-                  <th style="border: 1px solid black">Variable</th>
-                  <th style="border: 1px solid black">Coefficient</th>
-                  <th style="border: 1px solid black">P-Value</th>
-                  <th style="border: 1px solid black">
+                  <th class="cell-bordered">Variable</th>
+                  <th class="cell-bordered">Coefficient</th>
+                  <th class="cell-bordered">P-Value</th>
+                  <th class="cell-bordered">
                     Confidence Interval (0.025, 0.975)
                   </th>
                 </tr>
@@ -331,12 +321,12 @@ export default class MillionsInMissedFine extends Vue {
                   v-for="(coef, variable) in results.coefficients"
                   :key="variable"
                 >
-                  <td style="border: 1px solid black">{{ variable }}</td>
-                  <td style="border: 1px solid black">{{ coef.toFixed(3) }}</td>
-                  <td style="border: 1px solid black">
+                  <td class="cell-bordered">{{ variable }}</td>
+                  <td class="cell-bordered">{{ coef.toFixed(3) }}</td>
+                  <td class="cell-bordered">
                     {{ results.p_values[variable].toFixed(3) }}
                   </td>
-                  <td style="border: 1px solid black">
+                  <td class="cell-bordered">
                     [{{ results.confidence_intervals[variable][0].toFixed(3) }},
                     {{ results.confidence_intervals[variable][1].toFixed(3) }}]
                   </td>
@@ -409,10 +399,34 @@ export default class MillionsInMissedFine extends Vue {
     }
   }
 
+  h3 {
+    font-size: 1em;
+    font-weight: bold;
+  }
+
   a.back-link {
     margin: 1rem 0 0 0;
     display: inline-block;
     font-weight: 600;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    border: $border-thin solid $black;
+  }
+
+  iframe {
+    border: $border-medium solid $black;
+    border-radius: 0.5rem;
+  }
+
+  .cell-bordered {
+    border: solid $border-thin $black;
+  }
+
+  section.-indented {
+    margin-left: 1rem;
   }
 }
 </style>
