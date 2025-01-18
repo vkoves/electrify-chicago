@@ -8,7 +8,7 @@ import { LatestDataYear } from '../constants/globals.vue';
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
-    NewTabIcon,
+    NewTabIcon
   },
   metaInfo() {
     return { title: 'About Us' };
@@ -24,10 +24,11 @@ export default class About extends Vue {
       <h1 id="main-content" tabindex="-1">About Us</h1>
 
       <p class="constrained">
-        Electrify Chicago is an independent open-source project looking to shed
-        light onto one of the biggest sources of Chicago's CO<sub>2</sub>
+        Electrify Chicago is an independent open-source project based out of
+        <a href="https://chihacknight.org" target="_blank">Chi Hack Night <NewTabIcon /></a>
+        looking to shed light onto one of the biggest sources of Chicago's CO<sub>2</sub>
         emissions - buildings. By providing more information about some of the
-        city's largest and most polluting buildings, we hope t encourage these
+        city's largest and most polluting buildings, we hope to encourage these
         buildings to electrify, particularly by mobilizing people related to the
         building - whether that be students and faculty for a college building
         or employees and patients at a hospital.
