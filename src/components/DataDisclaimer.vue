@@ -14,8 +14,7 @@
           Chicago Energy Benchmarking Ordinance<NewTabIcon /> </a
         >. According to the City &ldquo;As of 2016, this list includes all
         commercial, institutional, and residential buildings larger than 50,000
-        square feet.&rdquo; This dataset is also then filtered to only buildings
-        with reported emissions > 1,000 metric tons CO<sub>2</sub> equivalent.
+        square feet.&rdquo;
       </p>
 
       <p class="constrained">
