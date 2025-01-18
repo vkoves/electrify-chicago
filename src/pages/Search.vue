@@ -251,19 +251,18 @@ export default class Search extends Vue {
       <div v-if="searchResults.length === 0" class="no-results-msg">
         <h2>No results found!</h2>
 
-        <p>
-          There may be a typo in your query or in the underlying data, or the
-          building you are looking for may not be in our dataset (Limited to
-          buildings in Chicago over 50,000 square feet).
+        <p class="layout-constrained">
+          There may be a typo in your search, the building name may be different
+          in the underlying data, or the building you are looking for may not be
+          in our dataset (buildings in Chicago over 50,000 square feet - see
+          <a href="#data-disclaimer" @click="openDataDisclaimer"
+            >dataset disclaimer</a
+          >).
         </p>
 
-        <p>Addresses generally follow the format: 123 W Main St</p>
-
         <p>
-          See
-          <a href="#data-disclaimer" @click="openDataDisclaimer"
-            >note on dataset</a
-          >.
+          <strong>Note:</strong> Addresses generally follow the format
+          <em>123 W Main St</em>
         </p>
       </div>
 
@@ -310,7 +309,7 @@ export default class Search extends Vue {
     }
 
     input[type='text'] {
-      width: 15rem;
+      width: 16rem;
     }
 
     button {
@@ -335,7 +334,7 @@ export default class Search extends Vue {
 
   .no-results-msg {
     background-color: $grey;
-    padding: 1rem;
+    padding: 1rem 0 2rem 0;
     text-align: center;
   }
 
