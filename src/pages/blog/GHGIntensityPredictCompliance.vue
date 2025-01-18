@@ -55,14 +55,18 @@ export default class MillionsInMissedFine extends Vue {
 
 <template>
   <DefaultLayout>
-    <div class="layout-constrained compliance-analysis">
+    <article class="layout-constrained compliance-analysis blog-post">
       <g-link to="/blog" class="back-link grey-link"> Back to Blog </g-link>
 
       <h1 id="main-content" tabindex="-1">
         Do High Emitters Stop Reporting Emissions Data in the Future?
       </h1>
-      <p class="constrained bold">
+      <p class="sub-title constrained">
         Analyzing Patterns in Greenhouse Gas Emissions Reporting
+      </p>
+      <p class="publish-time">
+        <!-- TODO: Update publish time when PR is about to get merged -->
+        Published <time datetime="2025-02-02">Feb. 1st, 2025</time>
       </p>
 
       <p class="constrained">
@@ -224,9 +228,7 @@ export default class MillionsInMissedFine extends Vue {
       </p>
 
       <section class="-indented">
-        <h3>
-          1. Impact of COVID-19 on Reporting Rates
-        </h3>
+        <h3>1. Impact of COVID-19 on Reporting Rates</h3>
         <p>
           Most of the buildings that did not report data coincided with the
           COVID-19 drop in reporting rates.
@@ -238,9 +240,7 @@ export default class MillionsInMissedFine extends Vue {
       </section>
 
       <section class="-indented">
-        <h3>
-          2. Influence of Outliers
-        </h3>
+        <h3>2. Influence of Outliers</h3>
         <p>
           While most buildings have low emissions intensities and minimal
           changes, several outliers are present. Outliers in GHG intensitity
@@ -254,9 +254,7 @@ export default class MillionsInMissedFine extends Vue {
       </section>
 
       <section class="-indented">
-        <h3>
-          3. Omitted Predictive Characteristics
-        </h3>
+        <h3>3. Omitted Predictive Characteristics</h3>
         <p>
           Emissions intensity and trends are not the only factors that might
           predict compliance with reporting laws. The building type, for
@@ -378,14 +376,14 @@ export default class MillionsInMissedFine extends Vue {
           >
         </p>
       </div>
-    </div>
 
-    <h2>Questions?</h2>
+      <h2>Questions?</h2>
 
-    <p>
-      Contact the lead developer on this site, Viktor Köves, by emailing
-      <a href="mailto:contact@viktorkoves.com">contact@viktorkoves.com</a>
-    </p>
+      <p>
+        Contact the lead developer on this site, Viktor Köves, by emailing
+        <a href="mailto:contact@viktorkoves.com">contact@viktorkoves.com</a>
+      </p>
+    </article>
   </DefaultLayout>
 </template>
 <style lang="scss">

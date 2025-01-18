@@ -347,3 +347,16 @@ nav.pager {
     }
   }
 }
+
+article.blog-post {
+  .sub-title {
+    margin: 0;
+    font-weight: bold;
+  }
+}
+
+// Blog article publish time
+.publish-time {
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
