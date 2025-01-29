@@ -1,14 +1,12 @@
 <template>
   <div id="app" class="pie-chart-cont">
     <svg id="pie-chart"><!-- D3 inserts here --></svg>
-    <button v-tooltip="'Hello GFG'">
-      My Button!
-      <!-- <img
-        class="tooltip"
-        src="/help.svg"
-        alt="Help icon. Hover to reveal additional text."
-      > -->
-    </button>
+    <img
+      v-tooltip="tooltipMessage"
+      class="tooltip"
+      src="/help.svg"
+      alt="Help icon. Hover to reveal additional text."
+    >
   </div>
 </template>
 
@@ -44,6 +42,14 @@ export default class PieChart extends Vue {
   readonly graphMargins = { top: 0, right: 0, bottom: 0, left: 0 };
 
   svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+  tooltipMessage = `
+    <h6>Why does this matter?</h6>
+    <p>
+      Although reducing energy use overall is important, not all energy is created equal -
+      electricity can be created without emissions (via solar, wind, nuclear, etc.) but burning
+      natural gas always creates emissions.
+    </p>
+  `;
 
   mounted(): void {
     const outerWidth =
@@ -61,7 +67,7 @@ export default class PieChart extends Vue {
       .attr('transform', `translate(${this.width / 2},${this.height / 2})`);
 
     this.renderGraph();
-    this.mountTooltips();
+    Vue.use(vToolTip); // Mounts v-tooltips library
   }
 
   renderGraph(): void {
@@ -162,10 +168,6 @@ export default class PieChart extends Vue {
       return Math.round(percentage).toString();
     }
   }
-
-  mountTooltips(): void {
-    Vue.use(vToolTip);
-  }
 }
 </script>
 
@@ -198,12 +200,115 @@ export default class PieChart extends Vue {
   }
 
   .tooltip {
-    position: absolute;
-    background-color: black;
-    color: white;
-    padding: 5px;
-    border-radius: 3px;
-    z-index: 999;
+    align-self: flex-end;
+    z-index: 10000;
+    margin: 0rem 2rem 1rem 0rem;
+
+    .tooltip-inner {
+      background: black;
+      color: white;
+      border-radius: 16px;
+      padding: 5px 10px 4px;
+      width: 5rem;
+    }
+
+    .tooltip-arrow {
+      width: 0;
+      height: 0;
+      border-style: solid;
+      position: absolute;
+      margin: 5px;
+      border-color: black;
+      z-index: 1;
+    }
+
+    &[x-placement^="top"] {
+      margin-bottom: 5px;
+
+      .tooltip-arrow {
+        border-width: 5px 5px 0 5px;
+        border-left-color: transparent !important;
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
+        bottom: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    &[x-placement^="bottom"] {
+      margin-top: 5px;
+
+      .tooltip-arrow {
+        border-width: 0 5px 5px 5px;
+        border-left-color: transparent !important;
+        border-right-color: transparent !important;
+        border-top-color: transparent !important;
+        top: -5px;
+        left: calc(50% - 5px);
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+    }
+
+    &[x-placement^="right"] {
+      margin-left: 5px;
+
+      .tooltip-arrow {
+        border-width: 5px 5px 5px 0;
+        border-left-color: transparent !important;
+        border-top-color: transparent !important;
+        border-bottom-color: transparent !important;
+        left: -5px;
+        top: calc(50% - 5px);
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
+    &[x-placement^="left"] {
+      margin-right: 5px;
+
+      .tooltip-arrow {
+        border-width: 5px 0 5px 5px;
+        border-top-color: transparent !important;
+        border-right-color: transparent !important;
+        border-bottom-color: transparent !important;
+        right: -5px;
+        top: calc(50% - 5px);
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
+    &.popover {
+      $color: #f9f9f9;
+
+      .popover-inner {
+        background: $color;
+        color: black;
+        padding: 24px;
+        border-radius: 5px;
+        box-shadow: 0 5px 30px rgba(black, .1);
+      }
+
+      .popover-arrow {
+        border-color: $color;
+      }
+    }
+
+    &[aria-hidden='true'] {
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity .15s, visibility .15s;
+    }
+
+    &[aria-hidden='false'] {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity .15s;
+    }
   }
 }
 </style>
