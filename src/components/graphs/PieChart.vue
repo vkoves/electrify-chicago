@@ -1,12 +1,21 @@
 <template>
-  <div class="pie-chart-cont">
+  <div id="app" class="pie-chart-cont">
     <svg id="pie-chart"><!-- D3 inserts here --></svg>
+    <button v-tooltip="'Hello GFG'">
+      My Button!
+      <!-- <img
+        class="tooltip"
+        src="/help.svg"
+        alt="Help icon. Hover to reveal additional text."
+      > -->
+    </button>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import * as d3 from 'd3';
+import vToolTip from 'v-tooltip';
 
 export interface IPieSlice {
   value: number;
@@ -52,6 +61,7 @@ export default class PieChart extends Vue {
       .attr('transform', `translate(${this.width / 2},${this.height / 2})`);
 
     this.renderGraph();
+    this.mountTooltips();
   }
 
   renderGraph(): void {
@@ -152,11 +162,18 @@ export default class PieChart extends Vue {
       return Math.round(percentage).toString();
     }
   }
+
+  mountTooltips(): void {
+    Vue.use(vToolTip);
+  }
 }
 </script>
 
 <style lang="scss">
 .pie-chart-cont {
+  display: flex;
+  flex-direction: column;
+
   svg {
     width: 100%;
     height: auto;
@@ -178,6 +195,15 @@ export default class PieChart extends Vue {
   }
   tspan.label {
     font-size: 0.65em;
+  }
+
+  .tooltip {
+    position: absolute;
+    background-color: black;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+    z-index: 999;
   }
 }
 </style>
