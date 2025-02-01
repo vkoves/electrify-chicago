@@ -1,6 +1,8 @@
 """
-Our main data processing script, ranking all buildings in the latest year and generating overall
-city-wide statistics into `building-benchmark-stats.json`
+Our main data processing script (Step 2/3 in the data pipeline)
+
+Ranks all buildings in the latest year and generates overall city-wide statistics into
+`building-benchmark-stats.json`
 """
 
 import json
@@ -18,8 +20,11 @@ data_out_directory = 'dist'
 # The /debug directory is to have a well formatted JSON for reading
 data_debug_directory = 'debug'
 
-# Gatsby doesn't like spaces so we use a CSV with renamed headers with no units
-building_emissions_file = 'ChicagoEnergyBenchmarkingAllNewestInstances.csv'
+# The input file from the previous step. Gatsby doesn't like spaces so we use a CSV with renamed
+# headers with no units
+building_emissions_file = 'benchmarking-all-newest-temp.csv'
+
+# The final output file name
 building_emissions_file_out_name = 'building-benchmarks'
 
 # Columns we want to run statistical analysis and ranking on - order matters here
@@ -116,7 +121,8 @@ def processBuildingData() -> List[str]:
     # Store files we write out to
     outputted_paths = []
 
-    building_data = get_and_clean_csv(get_data_file_path(data_directory, building_emissions_file))
+    # Read in the newest buildings data CSV from the previous pipeline step
+    building_data = get_and_clean_csv(get_data_file_path(data_debug_directory, building_emissions_file))
 
     # Convert our columns to analyze to numeric data by stripping commas, otherwise the rankings
     # are junk
@@ -163,8 +169,7 @@ def processBuildingData() -> List[str]:
 
     # We write out files to a /debug directory that is .gitignored with indentation to
     # make it readable but to not have to store giant files
-    with open(
-            data_debug_directory + '/' + building_emissions_file_out_name + '.json', 'w', encoding='utf-8') as f:
+    with open(get_data_file_path(data_debug_directory, building_emissions_file_out_name + '.json'), 'w', encoding='utf-8') as f:
         json.dump(debug_json_data, f, ensure_ascii=True, indent=4)
 
     return outputted_paths
@@ -177,13 +182,9 @@ if __name__ == '__main__':
 
     outputted_paths = outputted_paths + processBuildingData()
 
-    print("\nData processing done! Files exported: ")
+    print("\nStep 2 data processing done! Files exported: ")
 
     for path in outputted_paths:
         if path:
             # made sure to convert path:PosixPath to str
-            print('- ' + str(path))
-
-    print('\nFor more understandable data, see \'data/debug\' directory')
-
-    print('\nNote: You must restart `gridsome develop` for data changes to take effect.')
+            print(' - ' + str(path))

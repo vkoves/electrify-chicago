@@ -1,5 +1,5 @@
 """
-The initial processing file for the Electrify Chicago Data pipeline
+The initial processing file for the Electrify Chicago Data pipeline (Step 1 of 3 in data pipeline)
 
 Ingests the initial city data CSV and renames its column headers for GraphQL compatibility in
 Gridsome, and outputs two files into the dist/ directory, one with a limited number of columns
@@ -14,14 +14,14 @@ from src.data.scripts.utils import get_and_clean_csv, get_data_file_path
 
 file_dir = 'source'
 out_file_dir = 'dist'
+debug_file_dir = 'debug'
 
 # The source file we read from - this is the raw data from the city
 src_emissions_filename = 'ChicagoEnergyBenchmarking.csv'
 
-# The output file we generate that has all columns, but just for the latest year reported
-# TODO: Rename to -temp and put in a /temp directory to make clear this isn't being used by the final
-# app, and is generated
-newest_instances_out_filename = 'ChicagoEnergyBenchmarkingAllNewestInstances.csv'
+# The output file we generate that has all columns, but just for the latest year reported, which
+# goes into the next step of the data pipeline
+newest_instances_out_filename = 'benchmarking-all-newest-temp.csv'
 
 # The output file we generate with limited columns but for ALL years (reported and non-reported),
 # allowing us to track metrics (e.g. emissions, GHG intensity) over time, and reporting status
@@ -177,10 +177,14 @@ def main():
     processed_all_years = process(get_data_file_path(file_dir, src_emissions_filename), False)
 
     # Output the latest year data to source, since other processing steps still get applied
-    output_to_csv(processed_latest_year, get_data_file_path(file_dir, newest_instances_out_filename))
+    output_to_csv(processed_latest_year, get_data_file_path(debug_file_dir, newest_instances_out_filename))
 
     # The all years data is in it's final form already, we don't do ranks or stats off of it (yet)
     output_to_csv(processed_all_years, get_data_file_path(out_file_dir, all_years_out_filename))
+
+    print('\nStep 1 data processing done! Files exported:')
+    print(' - ' + str(get_data_file_path(debug_file_dir, newest_instances_out_filename)))
+    print(' - ' + str(get_data_file_path(debug_file_dir, all_years_out_filename)))
 
 if __name__ == '__main__':
     main()
