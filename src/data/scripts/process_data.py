@@ -2,7 +2,8 @@
 Our main data processing script (Step 2/3 in the data pipeline)
 
 Ranks all buildings in the latest year and generates overall city-wide statistics into
-`building-benchmark-stats.json`
+`building-benchmark-stats.json`. This only processes the latest submitted year of each building,
+which is what shows up on the page for each building.
 """
 
 import json

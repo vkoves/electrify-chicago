@@ -77,7 +77,7 @@ docker-compose run --rm electrify-chicago yarn lint-fix
 2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
 ```bash
-docker-compose run --rm electrify-chicago bash process_data.sh
+docker-compose run --rm electrify-chicago bash run_all.sh
 ```
 
 ### Run Data Processing Tests
