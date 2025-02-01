@@ -1,6 +1,7 @@
-###
-### Building Utils - Common utilities for processing building data
-###
+"""
+Building Utils - Common utilities for processing building data
+"""
+
 import re
 import logging
 

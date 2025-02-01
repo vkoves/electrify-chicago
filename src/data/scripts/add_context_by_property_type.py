@@ -1,3 +1,8 @@
+"""
+A script that adds rankings to buildings by property type (e.g. #1 highest emissions of Office
+buildings)
+"""
+
 import pandas as pd
 import json
 

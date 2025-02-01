@@ -1,3 +1,8 @@
+"""
+Our main data processing script, ranking all buildings in the latest year and generating overall
+city-wide statistics into `building-benchmark-stats.json`
+"""
+
 import json
 import logging
 import pandas

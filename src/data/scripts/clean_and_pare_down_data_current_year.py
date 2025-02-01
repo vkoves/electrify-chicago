@@ -1,3 +1,8 @@
+"""
+TODO: Investigate if this file is still needed, seems duplicated by
+`clean_and_pare_down_data_all_years`
+"""
+
 import pandas
 import numpy
 from src.data.scripts.utils import get_and_clean_csv, get_data_file_path

@@ -1,13 +1,26 @@
+"""
+The initial processing file for the Electrify Chicago Data pipeline
+
+Ingests the initial city data CSV and renames its column headers for GraphQL compatibility in
+Gridsome, and outputs two files into the dist/ directory, one with a limited number of columns
+across all years (our historic data) and one with all columns for the latest year.
+
+This is done because we only show historic data on individual building pages, and loading the
+historic data on pages like search and the homepage would get quite heavy.
+"""
+
 import pandas as pd
 from src.data.scripts.utils import get_and_clean_csv, get_data_file_path
 
 file_dir = 'source'
 out_file_dir = 'dist'
 
-# The source file we read from
-building_emissions_file = 'ChicagoEnergyBenchmarking.csv'
+# The source file we read from - this is the raw data from the city
+src_emissions_filename = 'ChicagoEnergyBenchmarking.csv'
 
 # The output file we generate that has all columns, but just for the latest year reported
+# TODO: Rename to -temp and put in a /temp directory to make clear this isn't being used by the final
+# app, and is generated
 newest_instances_out_filename = 'ChicagoEnergyBenchmarkingAllNewestInstances.csv'
 
 # The output file we generate with limited columns but for ALL years (reported and non-reported),
@@ -149,7 +162,6 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
     cleaned_data = fix_str_cols(building_data, building_data)
     cleaned_data = fix_int_cols(cleaned_data)
 
-
     # Only filter to the latest reporting year if that's the file we're generating
     if (latest_year_only):
         cleaned_data = get_buildings_with_ghg_intensity(building_data)
@@ -158,12 +170,11 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
     else:
         cleaned_data = filter_cols_historic(cleaned_data)
 
-
     return cleaned_data
 
 def main():
-    processed_latest_year = process(get_data_file_path(file_dir, building_emissions_file), True)
-    processed_all_years = process(get_data_file_path(file_dir, building_emissions_file), False)
+    processed_latest_year = process(get_data_file_path(file_dir, src_emissions_filename), True)
+    processed_all_years = process(get_data_file_path(file_dir, src_emissions_filename), False)
 
     # Output the latest year data to source, since other processing steps still get applied
     output_to_csv(processed_latest_year, get_data_file_path(file_dir, newest_instances_out_filename))
