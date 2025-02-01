@@ -37,18 +37,21 @@ echo -e "Will be running from raw file at 'source/data/ChicagoEnergyBenchmarking
 
 # Step 1: clean_and_split_data
 print_step_header 1 "clean_and_split_data"
+
 if ! python3 -m src.data.scripts.clean_and_split_data; then
   handle_error "Step 1 / 3 failed! See logs above for info."
 fi
 
 # Step 2: process_data
 print_step_header 2 "process_data"
+
 if ! python3 -m src.data.scripts.process_data; then
   handle_error "Step 2 / 3 failed! See logs above for info."
 fi
 
 # Step 3: add_context_by_property_type
 print_step_header 3 "add_context_by_property_type"
+
 if ! python3 -m src.data.scripts.add_context_by_property_type; then
   handle_error "Step 3 / 3 failed! See logs above for info."
 fi
