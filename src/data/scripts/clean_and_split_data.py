@@ -10,7 +10,7 @@ historic data on pages like search and the homepage would get quite heavy.
 """
 
 import pandas as pd
-from src.data.scripts.utils import get_and_clean_csv, get_data_file_path
+from src.data.scripts.utils import get_and_clean_csv, get_data_file_path, log_step_completion
 
 file_dir = 'source'
 out_file_dir = 'dist'
@@ -176,15 +176,17 @@ def main():
     processed_latest_year = process(get_data_file_path(file_dir, src_emissions_filename), True)
     processed_all_years = process(get_data_file_path(file_dir, src_emissions_filename), False)
 
+    newest_out_path = get_data_file_path(debug_file_dir, newest_instances_out_filename)
+    all_years_out_path = get_data_file_path(out_file_dir, all_years_out_filename)
+
     # Output the latest year data to source, since other processing steps still get applied
-    output_to_csv(processed_latest_year, get_data_file_path(debug_file_dir, newest_instances_out_filename))
+    output_to_csv(processed_latest_year, newest_out_path)
 
     # The all years data is in it's final form already, we don't do ranks or stats off of it (yet)
-    output_to_csv(processed_all_years, get_data_file_path(out_file_dir, all_years_out_filename))
+    output_to_csv(processed_all_years, all_years_out_path)
 
-    print('\nStep 1 data processing done! Files exported:')
-    print(' - ' + str(get_data_file_path(debug_file_dir, newest_instances_out_filename)))
-    print(' - ' + str(get_data_file_path(debug_file_dir, all_years_out_filename)))
+    log_step_completion(1, [ newest_out_path, all_years_out_path ])
+
 
 if __name__ == '__main__':
     main()

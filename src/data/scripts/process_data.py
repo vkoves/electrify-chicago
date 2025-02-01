@@ -10,7 +10,7 @@ import logging
 import pandas
 
 from typing import List
-from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path
+from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion
 from src.data.scripts.building_utils import clean_property_name
 
 # Assume run in /data
@@ -70,10 +70,14 @@ int_cols = [
     'HistoricalWards2003-2015'
 ]
 
-# Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
-# median values for fields
-# Returns the output file if succeeds
 def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
+    """
+    Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
+    median values for fields
+
+    Returns an array of files written to
+    """
+
     # Clone the input data to prevent manipulating it on accident
     building_data = building_data_in.copy()
 
@@ -100,17 +104,17 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     # Write out the data
     filename = 'building-benchmark-stats.json'
 
-    outputted_path = get_data_file_path(data_out_directory, filename)
+    stats_dist_output_path = get_data_file_path(data_out_directory, filename)
+    stats_debug_output_path = str(get_data_file_path(data_debug_directory, filename))
 
     # Get the unique primary property types, so the FE can show it as a filter
     list_of_types = building_data.PrimaryPropertyType.unique()
 
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
-    benchmark_stats_df.to_json(outputted_path)
-    benchmark_stats_df.to_json(str(get_data_file_path(data_debug_directory, filename)),
-                               indent=4)
+    benchmark_stats_df.to_json(stats_dist_output_path)
+    benchmark_stats_df.to_json(stats_debug_output_path, indent=4)
 
-    return outputted_path
+    return [ stats_dist_output_path, stats_debug_output_path ]
 
 
 # Returns the output file path if it succeeds
@@ -141,7 +145,7 @@ def processBuildingData() -> List[str]:
     # filter out all buildings that aren't the latest year
     latest_building_data = building_data[building_data['DataYear'] == latest_year]
 
-    outputted_paths.append(calculateBuildingStats(latest_building_data))
+    outputted_paths += calculateBuildingStats(latest_building_data)
 
     # Loop through building_cols_to_rank and calculate both a numeric rank (e.g. #1 highest GHG
     # Intensity) and a percentage (e.g. top 95% of total GHG emissions)
@@ -161,27 +165,26 @@ def processBuildingData() -> List[str]:
 
     outputted_paths.append(output_path)
 
+    # Convert the building benchmarks CSV to a JSON for debugging
     debug_json_data = json_data_builder(
         building_data, 'building_benchmarks', is_array=True, array_key="building_benchmarks")
 
+    debug_benchmarks_path = get_data_file_path(data_debug_directory, building_emissions_file_out_name + '.json')
+
     # We write out files to a /debug directory that is .gitignored with indentation to
     # make it readable but to not have to store giant files
-    with open(get_data_file_path(data_debug_directory, building_emissions_file_out_name + '.json'), 'w', encoding='utf-8') as f:
+    with open(debug_benchmarks_path, 'w', encoding='utf-8') as f:
         json.dump(debug_json_data, f, ensure_ascii=True, indent=4)
+
+    outputted_paths.append(debug_benchmarks_path)
 
     return outputted_paths
 
 
+def main():
+    outputted_paths = processBuildingData()
+
+    log_step_completion(2, outputted_paths)
+
 if __name__ == '__main__':
-    print("Starting data processing, this may take a few seconds...")
-
-    outputted_paths = []
-
-    outputted_paths = outputted_paths + processBuildingData()
-
-    print("\nStep 2 data processing done! Files exported: ")
-
-    for path in outputted_paths:
-        if path:
-            # made sure to convert path:PosixPath to str
-            print(' - ' + str(path))
+    main()
