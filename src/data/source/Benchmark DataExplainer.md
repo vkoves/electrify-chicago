@@ -1,6 +1,6 @@
 # Benchmark Data Explainer
 
-To make the CSV data compatible with GraphQL, our Python data scripts (`clean_and_pare_down_data`)
+To make the CSV data compatible with GraphQL, our Python data scripts (`clean_and_split_data`)
 make the column titles camel case and strip unit information - here's a table of the mapping so you
 can see the units clearly:
 
