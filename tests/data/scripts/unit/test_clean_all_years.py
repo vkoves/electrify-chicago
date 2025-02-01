@@ -3,7 +3,7 @@ import os
 import csv
 import pandas as pd
 
-from src.data.scripts import clean_and_pare_down_data_all_years
+from src.data.scripts import clean_and_split_data
 from tests.data.scripts.utils import get_test_file_path
 
 src_dir = 'src'
@@ -26,11 +26,11 @@ def csv_reader() -> csv.reader:
 
 @pytest.fixture
 def processed_dataframe() -> pd.DataFrame:
-    '''Process our test data as per clean_and_pare_down_data_all_years.py
+    '''Process our test data as per clean_and_split_data.py
     and return the resulting dataframe'''
 
     input_filename = get_test_file_path(test_input_file)
-    df = clean_and_pare_down_data_all_years.process(input_filename, True)
+    df = clean_and_split_data.process(input_filename, True)
     assert df is not None
     return df
 
@@ -157,10 +157,10 @@ def test_no_ghg_property_is_excluded(processed_dataframe):
 
 
 def test_csv_is_produced(processed_dataframe):
-    '''confirm clean_and_pare_down_data_all_years.output_to_csv creates
+    '''confirm clean_and_split_data.output_to_csv creates
     a csv on disk'''
 
     df = processed_dataframe
     output_file_path = get_test_file_path(test_output_file)
-    clean_and_pare_down_data_all_years.output_to_csv(df, output_file_path)
+    clean_and_split_data.output_to_csv(df, output_file_path)
     assert os.path.exists(output_file_path)

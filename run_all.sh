@@ -27,9 +27,16 @@ handle_error() {
   exit 1
 }
 
-# Step 1: clean_and_pare_down_data_all_years
-print_step_header 1 "clean_and_pare_down_data_all_years"
-if ! python3 -m src.data.scripts.clean_and_pare_down_data_all_years; then
+##
+##
+## Init/Main Code
+##
+echo -e "${GREEN}Initializing data pipeline!${NC}"
+echo -e "${GREEN}Will be running from raw file at 'source/data/ChicagoEnergyBenchmarking.csv'.${NC}"
+
+# Step 1: clean_and_split_data
+print_step_header 1 "clean_and_split_data"
+if ! python3 -m src.data.scripts.clean_and_split_data; then
   handle_error "Step 1 / 3 failed! See logs above for info."
 fi
 

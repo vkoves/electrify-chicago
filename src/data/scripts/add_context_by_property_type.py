@@ -56,10 +56,10 @@ sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
 # get a list of all unique property types
 property_types = sorted_by_property_type.groups.keys()
 
-# TODO: output property_types to a json file for use in the frontend
 def generate_property_types():
-    # output property_types to a json file for use in the frontend
+    """Output property_types to a json file for use in the frontend (like the type filter)"""
     property_types_json = {"propertyTypes": list(property_types)}
+
     with open(property_types_file_path, 'w', encoding='latin1') as json_file:
         json.dump(property_types_json, json_file)
 
@@ -68,11 +68,9 @@ def calculateBuildingStatistics():
 
     # looping through both all the property types and all the columns we want to get data on
     for i, property in enumerate(property_types):
-        print("property", property)
-
         cur_property_type_stats = {}
-        for col in building_cols_to_rank:
 
+        for col in building_cols_to_rank:
             # finding the mean, count, min, max, and quartiles of each category for each building type
             cur_count = sorted_by_property_type[col].count()[i].item()
 
@@ -103,8 +101,9 @@ def calculateBuildingStatistics():
     with open(property_stats_file_path, "w") as property_stats_file:
         json.dump(stats_by_property_type, property_stats_file)
 
-# Ranks buildings in relation to their property type, then re-exporting the file
 def rankBuildingsByPropertyType():
+    """Ranks buildings in relation to their property type, then re-exporting the file"""
+
     # calculates the statistics for building property types (e.g. average GHG intensity for Hotels)
     calculateBuildingStatistics()
 

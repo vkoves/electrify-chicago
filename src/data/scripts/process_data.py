@@ -105,9 +105,6 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     # Get the unique primary property types, so the FE can show it as a filter
     list_of_types = building_data.PrimaryPropertyType.unique()
 
-    print('Available Primary Types: (copy to data/property-types.json)')
-    print(list_of_types.tolist())
-
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
     benchmark_stats_df.to_json(outputted_path)
     benchmark_stats_df.to_json(str(get_data_file_path(data_debug_directory, filename)),
