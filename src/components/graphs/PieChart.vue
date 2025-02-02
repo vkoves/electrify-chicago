@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="pie-chart-cont">
+  <div class="pie-chart-cont">
     <svg id="pie-chart"><!-- D3 inserts here --></svg>
     <img
       v-tooltip.bottom="tooltipMessage"
@@ -291,22 +291,6 @@ export default class PieChart extends Vue {
       top: calc(50% - 5px);
       margin-left: 0;
       margin-right: 0;
-    }
-  }
-
-  &.popover {
-    $color: #f9f9f9;
-
-    .popover-inner {
-      background: $color;
-      color: black;
-      padding: 24px;
-      border-radius: 5px;
-      box-shadow: 0 5px 30px rgba(black, .1);
-    }
-
-    .popover-arrow {
-      border-color: $color;
     }
   }
 
