@@ -15,6 +15,8 @@ import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import * as d3 from 'd3';
 import vToolTip from 'v-tooltip';
 
+Vue.use(vToolTip);
+
 export interface IPieSlice {
   value: number;
   label: string;
@@ -67,7 +69,6 @@ export default class PieChart extends Vue {
       .attr('transform', `translate(${this.width / 2},${this.height / 2})`);
 
     this.renderGraph();
-    this.renderTooltips();
   }
 
   renderGraph(): void {
@@ -153,10 +154,6 @@ export default class PieChart extends Vue {
         // are we past the center?
         return (d.endAngle + d.startAngle) / 2 > Math.PI ? 'end' : 'start';
       });
-  }
-
-  renderTooltips(): void {
-    Vue.use(vToolTip); // Mounts v-tooltips library
   }
 
   calculatePercentage(value: number, total: number): string {

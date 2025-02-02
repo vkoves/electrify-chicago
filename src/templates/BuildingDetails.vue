@@ -449,6 +449,7 @@ import {
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
+import { VTooltip } from 'v-tooltip';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
