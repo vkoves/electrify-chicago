@@ -29,6 +29,7 @@ all_years_out_filename = 'benchmarking-all-years.csv'
 
 # Columns that should be strings because they are immutable identifiers
 string_cols = [
+    'PropertyName',
     'ChicagoEnergyRating',
     'ZIPCode',
     'Latitude',
