@@ -32,8 +32,13 @@ export interface IPropertyStats {
   [statKey: string]: IPropertyStat;
 }
 
+/** All the available data anomaly codes from detect_anomalous_buildings.py:anomaly_values */
+export enum DataAnomalies {
+  gasZeroWithPreviousUse = 'gas:zero-with-prev-use'
+}
+
 /**
- * An individual building object
+ * An individual building object, with full details
  *
  * TODO: Type this more strictly, maybe with Python generating a types file with
  * all of the parameter types
@@ -47,6 +52,7 @@ export interface IBuilding {
 
   NaturalGasUse: string;
   DistrictSteamUse: string;
+  DataAnomalies: string;
 
   [buildingKey: string]: string | number | boolean;
 }
@@ -287,5 +293,16 @@ export function estimateUtilitySpend(
   else {
     return Math.round(estimateRaw / 10) * 10;
   }
+}
+
+/**
+ * Split data anomaly tokens into an array
+ */
+export function parseAnomalies(dataAnomalies: string): Array<DataAnomalies> {
+  if (dataAnomalies.length === 0) {
+    return [];
+  }
+
+  return dataAnomalies.split(',') as Array<DataAnomalies>;
 }
 </script>

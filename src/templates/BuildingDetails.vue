@@ -46,6 +46,7 @@ query ($id: ID!, $ID: String) {
     GrossFloorAreaRankByPropertyType
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
+    DataAnomalies
   }
   allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
     edges {
@@ -121,11 +122,29 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="details-cont">
+          <div v-for="anomaly in buildingAnomalies" :key="anomaly" class="building-banner">
+            <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
+              <h2>
+                <span class="emoji">⚠️</span> Anomaly Detected - Gas Use
+              </h2>
+
+              <p>
+                This building reported zero fossil gas use for one or more years, but has used
+                in the past. That indicates this is likely a reporting error.
+              </p>
+            </div>
+          </div>
+
           <div v-if="dataYear < LatestDataYear" class="building-banner">
-            <span class="emoji">⚠️</span> This building did not report data in
-            {{ LatestDataYear }},
-            <span class="bold">this data is from {{ dataYear }}</span
-            >, the latest year reported
+            <h2>
+              <span class="emoji">🕰️</span> Out Of Date Data
+            </h2>
+
+            <p>
+              This building did not report full data in {{ LatestDataYear }}, so
+             <span class="bold">top-level stats are from {{ dataYear }}</span
+             >, the latest full year reported.
+            </p>
           </div>
 
           <div class="building-top-info">
@@ -437,10 +456,12 @@ import {
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
 import {
+  DataAnomalies,
   IBuilding,
-  IHistoricData,
-  UtilityCosts,
   IBuildingBenchmarkStats,
+  IHistoricData,
+  parseAnomalies,
+  UtilityCosts,
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
@@ -496,6 +517,8 @@ export default class BuildingDetails extends Vue {
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
     BuildingBenchmarkStats;
+
+  readonly DataAnomalies = DataAnomalies;
 
   /** Expose UtilityCosts to template */
   readonly UtilityCosts: typeof UtilityCosts = UtilityCosts;
@@ -576,6 +599,10 @@ export default class BuildingDetails extends Vue {
     }
 
     return null;
+  }
+
+  get buildingAnomalies(): Array<DataAnomalies> {
+    return parseAnomalies(this.building.DataAnomalies);
   }
 
   created(): void {
@@ -674,9 +701,7 @@ export default class BuildingDetails extends Vue {
         flex-direction: column;
         gap: 0.25rem;
       }
-      .building-banner {
-        grid-area: banner;
-      }
+      .building-banner { grid-area: banner; }
     }
 
     &:not(.-img-tall) {
@@ -685,12 +710,8 @@ export default class BuildingDetails extends Vue {
         'img'
         'details';
 
-      .building-header-text {
-        grid-area: img;
-      }
-      .building-banner {
-        grid-area: banner;
-      }
+      .building-header-text { grid-area: img; }
+      .building-banner { grid-area: banner;}
       .building-img-cont {
         grid-area: img;
         width: 80%;
@@ -729,16 +750,20 @@ export default class BuildingDetails extends Vue {
   }
 
   .building-banner {
-    padding: 1rem;
+    padding: 0.5rem 0.75rem;
     background-color: $warning-background;
     border: dashed 0.125rem $warning-border;
     border-radius: $brd-rad-small;
     margin: 1rem 0;
     justify-self: flex-start;
+    max-width: 36rem;
 
-    span.emoji {
-      margin-right: 0.5rem;
+    h2 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
     }
+    span.emoji { margin-right: 0.5rem; }
+    p { font-size: 0.75rem; }
   }
 
   .address {

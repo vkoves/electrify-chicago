@@ -1,7 +1,8 @@
 <template>
   <div class="overall-rank-emoji-cont" :class="{ '-large': largeView }">
+    <!-- Don't show rankings if we think the data is wrong -->
     <span
-      v-if="overallRank"
+      v-if="overallRank && !hasAnomalousData"
       class="emoji overall-rank-emoji"
       :title="overallRank.msg"
     >
@@ -24,6 +25,14 @@
     >
       🕰️
     </span>
+
+    <span
+      v-if="hasAnomalousData && !largeView"
+      class="emoji"
+      title="Has anomalous data, likely indicating reporting errors"
+    >
+      ⚠️
+    </span>
   </div>
 </template>
 
@@ -41,6 +50,10 @@ import { LatestDataYear } from '../constants/globals.vue';
 /**
  * A component that shows an emoji to summarize a building, showing the worse of the alarm or flag
  * emoji if those apply, or the trophy emoji if there's no flags and the building gets a trophy
+ *
+ * Requires columns
+ *
+ * - DataAnomalies
  */
 @Component
 export default class OverallRankEmoji extends Vue {
@@ -61,6 +74,10 @@ export default class OverallRankEmoji extends Vue {
   /** Whether this building's latest data is old, not matching the latest data year */
   get isOldData(): boolean {
     return parseInt(this.building.DataYear.toString()) < LatestDataYear;
+  }
+
+  get hasAnomalousData(): boolean {
+    return this.building.DataAnomalies.length > 0;
   }
 }
 </script>
