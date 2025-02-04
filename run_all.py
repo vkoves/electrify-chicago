@@ -9,8 +9,8 @@ YELLOW = '\033[0;33m'
 LIGHT_BLUE = '\033[0;34m'
 NC = '\033[0m'  # No Color
 
-def print_step_header(step_number, description):
-    print(f"{LIGHT_BLUE}\nRunning Step {step_number} / 3 - {description}{NC}")
+def print_step_header(step_number, total_steps, description):
+    print(f"{LIGHT_BLUE}\nRunning Step {step_number} / {total_steps} - {description}{NC}")
     print(f"{LIGHT_BLUE}=================================================={NC}")
 
 def handle_error(message):
@@ -50,11 +50,15 @@ def main():
             "module": "src.data.scripts.add_context_by_property_type",
             "description": "add_context_by_property_type"
         },
+        {
+            "module": "src.data.scripts.detect_anomalous_buildings",
+            "description": "detect_anomalous_buildings"
+        },
     ]
 
     for index, step in enumerate(pipeline_steps):
         step_num = index + 1
-        print_step_header(step_num, step["description"])
+        print_step_header(step_num, len(pipeline_steps), step["description"])
 
         if not run_python_script(step["module"]):
             handle_error(f"Step {step_num} / {len(pipeline_steps)} failed! See logs above for info.")
