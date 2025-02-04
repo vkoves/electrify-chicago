@@ -11,6 +11,7 @@ historic data on pages like search and the homepage would get quite heavy.
 
 import pandas as pd
 from src.data.scripts.utils import get_and_clean_csv, get_data_file_path, log_step_completion
+from src.data.scripts.building_utils import benchmarking_string_cols, benchmarking_int_cols
 
 file_dir = 'source'
 out_file_dir = 'dist'
@@ -26,27 +27,6 @@ newest_instances_out_filename = 'benchmarking-all-newest-temp.csv'
 # The output file we generate with limited columns but for ALL years (reported and non-reported),
 # allowing us to track metrics (e.g. emissions, GHG intensity) over time, and reporting status
 all_years_out_filename = 'benchmarking-all-years.csv'
-
-# Columns that should be strings because they are immutable identifiers
-string_cols = [
-    'PropertyName',
-    'ChicagoEnergyRating',
-    'ZIPCode',
-    'Latitude',
-    'Longitude'
-]
-
-# Int columns that are numbers (and can get averaged) but should be rounded
-int_cols = [
-    'NumberOfBuildings',
-    'ENERGYSTARScore',
-    # TODO: Move to string after figuring out why the X.0 is showing up
-    'Wards',
-    'CensusTracts',
-    # 'ZIPCode',
-    'CommunityAreas',
-    'HistoricalWards2003-2015'
-]
 
 # The columns we want to have in our historical data output - we need the ID (to filter by a
 # particular building) and should then have columns of interest that change over time (so yes to
@@ -72,7 +52,8 @@ columns_to_track_over_time = [
     'WeatherNormalizedSourceEUI',
 ]
 
-replace_headers = {'Data Year': 'DataYear',
+replace_headers = {
+    'Data Year': 'DataYear',
     'ID': 'ID',
     'Property Name': 'PropertyName',
     'Reporting Status': 'ReportingStatus',
@@ -106,7 +87,8 @@ replace_headers = {'Data Year': 'DataYear',
     'Community Areas': 'CommunityAreas',
     'Zip Codes': 'ZipCodes',
     'Census Tracts': 'CensusTracts',
-    'Historical Wards 2003-2015': 'HistoricalWards2003-2015' }
+    'Historical Wards 2003-2015': 'HistoricalWards2003-2015'
+}
 
 def rename_columns(building_data: pd.DataFrame) -> pd.DataFrame:
     return building_data.rename(columns=replace_headers)
@@ -141,11 +123,11 @@ def filter_cols_historic(building_data: pd.DataFrame) -> pd.DataFrame:
 def fix_str_cols(all_recent_submitted_data: pd.DataFrame, renamed_building_data: pd.DataFrame) -> pd.DataFrame:
     """ Mark columns that look like numbers but should be strings as such to prevent decimals showing
      up (e.g. zipcode of 60614 or Ward 9) """
-    all_recent_submitted_data[string_cols] = renamed_building_data[string_cols].astype('string')
+    all_recent_submitted_data[benchmarking_string_cols] = renamed_building_data[benchmarking_string_cols].astype('string')
     return all_recent_submitted_data
 
 def fix_int_cols(building_data: pd.DataFrame) -> pd.DataFrame:
-    building_data[int_cols] = building_data[int_cols].astype('Int64')
+    building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
     return building_data
 
 def output_to_csv(building_data: pd.DataFrame, dir: str) -> None:

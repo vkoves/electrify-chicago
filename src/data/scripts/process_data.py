@@ -12,7 +12,7 @@ import pandas
 
 from typing import List
 from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion
-from src.data.scripts.building_utils import clean_property_name
+from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
 
 # Assume run in /data
 data_directory = 'source'
@@ -51,24 +51,6 @@ building_cols_to_rank = [
     'GrossFloorArea',
     'SourceEUI',
     'SiteEUI',
-]
-
-# Columns that should be strings because they are immutable identifiers
-string_cols = [
-    'PropertyName',
-    'ChicagoEnergyRating',
-    'ZIPCode',
-]
-
-# Int columns that are numbers (and can get averaged) but should be rounded
-int_cols = [
-    'NumberOfBuildings',
-    'ENERGYSTARScore',
-    # TODO: Move to string after figuring out why the X.0 is showing up
-    'Wards',
-    'CensusTracts',
-    'CommunityAreas',
-    'HistoricalWards2003-2015'
 ]
 
 def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
@@ -133,12 +115,12 @@ def processBuildingData() -> List[str]:
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
-    building_data[string_cols] = building_data[string_cols].astype(str)
+    building_data[benchmarking_string_cols] = building_data[benchmarking_string_cols].astype(str)
 
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-    building_data[int_cols] = building_data[int_cols].astype('Int64')
+    building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
 
-    building_data['PropertyName'] = building_data['PropertyName'].map(clean_property_name)
+    building_data['PropertyName'] = building_data['PropertyName'].fillna('').map(clean_property_name)
 
     # find the latest year in the data
     latest_year = building_data['DataYear'].max()

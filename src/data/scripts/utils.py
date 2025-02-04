@@ -19,7 +19,8 @@ def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pandas.DataFrame:
 
     # Create a dictionary mapping column names (or indices) to dtypes:
     data_types = {
-        # Specify that "Exempt From Chicago Energy Rating" column is a string
+        # Specify that "Exempt From Chicago Energy Rating" column is a string, preventing default
+        # boolean parsing and warning of mixed types
         7: 'string',
     }
 

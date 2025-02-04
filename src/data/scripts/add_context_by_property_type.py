@@ -7,6 +7,7 @@ import pandas as pd
 import json
 
 from src.data.scripts.utils import get_data_file_path, log_step_completion
+from src.data.scripts.building_utils import benchmarking_string_cols, benchmarking_int_cols
 
 out_dir = 'dist'
 
@@ -26,23 +27,6 @@ building_cols_to_rank = [
     'GrossFloorArea',
     'SourceEUI',
     'SiteEUI',
-]
-
-# Columns that should be strings because they are immutable identifiers
-string_cols = [
-    'ChicagoEnergyRating',
-    'ZIPCode',
-]
-
-# Int columns that are numbers (and can get averaged) but should be rounded
-int_cols = [
-    'NumberOfBuildings',
-    'ENERGYSTARScore',
-    # TODO: Move to string after figuring out why the X.0 is showing up
-    'Wards',
-    'CensusTracts',
-    'CommunityAreas',
-    'HistoricalWards2003-2015'
 ]
 
 # raw building data
@@ -131,17 +115,18 @@ def rank_buildings_by_property_type():
     # inputted data
     building_data = pd.read_csv(input_benchmark_data_csv_path)
 
+    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
+    # up (e.g. zipcode of 60614 or Ward 9) and make sure missing data is output as a string
+    building_data[benchmarking_string_cols] = building_data[benchmarking_string_cols].fillna('').astype(str)
+
+    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
+    building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
+
     # use pandas to rank each value for each property and store as category+"RankByProperty"
     for col in building_cols_to_rank:
         building_data[col +
                       'RankByPropertyType'] = sorted_by_property_type[col].rank(ascending=False)
 
-    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
-    # up (e.g. zipcode of 60614 or Ward 9)
-    building_data[string_cols] = building_data[string_cols].astype(str)
-
-    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-    building_data[int_cols] = building_data[int_cols].astype('Int64')
 
     building_data.to_csv(input_benchmark_data_csv_path, sep=',', encoding='utf-8', index=False)
 
