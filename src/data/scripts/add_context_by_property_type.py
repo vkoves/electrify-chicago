@@ -6,7 +6,7 @@ buildings)
 import pandas as pd
 import json
 
-from src.data.scripts.utils import get_data_file_path, log_step_completion
+from src.data.scripts.utils import get_data_file_path, log_step_completion, output_to_csv
 from src.data.scripts.building_utils import benchmarking_string_cols, benchmarking_int_cols
 
 out_dir = 'dist'
@@ -29,22 +29,7 @@ building_cols_to_rank = [
     'SiteEUI',
 ]
 
-# raw building data
-building_data = pd.read_csv(input_benchmark_data_csv_path)
-
-# find the latest year
-latest_year = building_data["DataYear"].max()
-
-# filter just data for the max year
-building_data = building_data[building_data["DataYear"] == latest_year]
-
-# sorted data based on each property type: the order is alphabetical
-sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
-
-# get a list of all unique property types
-property_types = sorted_by_property_type.groups.keys()
-
-def generate_property_types():
+def generate_property_types(property_types):
     """
         Output property_types to a json file for use in the frontend (like the type filter).
         Returns the file written to as an array
@@ -56,7 +41,7 @@ def generate_property_types():
 
     return [ property_types_file_path ]
 
-def calculate_building_stats():
+def calculate_building_stats(property_types, sorted_by_property_type):
     """
     Calculates stats by property type (e.g. median GHG emissions) and writes them to JSON file
 
@@ -102,7 +87,7 @@ def calculate_building_stats():
 
     return property_stats_file_path
 
-def rank_buildings_by_property_type():
+def rank_buildings_by_property_type(property_types, sorted_by_property_type):
     """
     Ranks buildings in relation to their property type, then re-exporting the file
 
@@ -110,7 +95,7 @@ def rank_buildings_by_property_type():
     """
 
     # calculates the statistics for building property types (e.g. average GHG intensity for Hotels)
-    building_stats_path = calculate_building_stats()
+    building_stats_path = calculate_building_stats(property_types, sorted_by_property_type)
 
     # inputted data
     building_data = pd.read_csv(input_benchmark_data_csv_path)
@@ -124,11 +109,9 @@ def rank_buildings_by_property_type():
 
     # use pandas to rank each value for each property and store as category+"RankByProperty"
     for col in building_cols_to_rank:
-        building_data[col +
-                      'RankByPropertyType'] = sorted_by_property_type[col].rank(ascending=False)
+        building_data[col + 'RankByPropertyType'] = sorted_by_property_type[col].rank(ascending=False)
 
-
-    building_data.to_csv(input_benchmark_data_csv_path, sep=',', encoding='utf-8', index=False)
+    output_to_csv(building_data, input_benchmark_data_csv_path)
 
     return [ building_stats_path, input_benchmark_data_csv_path ]
 
@@ -137,9 +120,24 @@ def rank_buildings_by_property_type():
 ### Main
 ###
 def main():
+    # raw building data
+    building_data = pd.read_csv(input_benchmark_data_csv_path)
+
+    # find the latest year
+    latest_year = building_data["DataYear"].max()
+
+    # filter just data for the max year
+    building_data = building_data[building_data["DataYear"] == latest_year]
+
+    # sorted data based on each property type: the order is alphabetical
+    sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
+
+    # get a list of all unique property types
+    property_types = sorted_by_property_type.groups.keys()
+
     outputted_paths = []
-    outputted_paths += rank_buildings_by_property_type()
-    outputted_paths += generate_property_types()
+    outputted_paths += rank_buildings_by_property_type(property_types, sorted_by_property_type)
+    outputted_paths += generate_property_types(property_types)
 
     log_step_completion(3, outputted_paths)
 

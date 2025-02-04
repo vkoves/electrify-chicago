@@ -10,7 +10,7 @@ historic data on pages like search and the homepage would get quite heavy.
 """
 
 import pandas as pd
-from src.data.scripts.utils import get_and_clean_csv, get_data_file_path, log_step_completion
+from src.data.scripts.utils import get_and_clean_csv, get_data_file_path, log_step_completion, output_to_csv
 from src.data.scripts.building_utils import benchmarking_string_cols, benchmarking_int_cols
 
 file_dir = 'source'
@@ -129,10 +129,6 @@ def fix_str_cols(all_recent_submitted_data: pd.DataFrame, renamed_building_data:
 def fix_int_cols(building_data: pd.DataFrame) -> pd.DataFrame:
     building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
     return building_data
-
-def output_to_csv(building_data: pd.DataFrame, dir: str) -> None:
-    """ Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode """
-    building_data.to_csv(dir, sep=',', encoding='utf-8', index=False)
 
 def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
     """Process an input file, renaming columns and applying filters based on whether we are getting

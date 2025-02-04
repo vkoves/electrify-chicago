@@ -7,11 +7,10 @@ which is what shows up on the page for each building.
 """
 
 import json
-import logging
 import pandas
 
 from typing import List
-from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion
+from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion, output_to_csv
 from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
 
 # Assume run in /data
@@ -144,7 +143,7 @@ def processBuildingData() -> List[str]:
     # Export the data
     output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')
 
-    building_data.to_csv(output_path, sep=',', encoding='utf-8', index=False)
+    output_to_csv(building_data, output_path)
 
     outputted_paths.append(output_path)
 
