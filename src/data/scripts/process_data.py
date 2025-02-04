@@ -163,7 +163,7 @@ def processBuildingData() -> List[str]:
     return outputted_paths
 
 
-def main():
+def main() -> None:
     outputted_paths = processBuildingData()
 
     log_step_completion(2, outputted_paths)

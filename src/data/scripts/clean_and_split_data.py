@@ -151,7 +151,7 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
 
     return cleaned_data
 
-def main():
+def main() -> None:
     processed_latest_year = process(get_data_file_path(file_dir, src_emissions_filename), True)
     processed_all_years = process(get_data_file_path(file_dir, src_emissions_filename), False)
 
