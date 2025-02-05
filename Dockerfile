@@ -4,7 +4,7 @@ FROM python:3.9
 RUN echo 'Package: nodejs\nPin: origin deb.nodesource.com\nPin-Priority: 600' > /etc/apt/preferences.d/nodesource \
     && curl -fsSL https://deb.nodesource.com/setup_16.x | bash - \
     && apt-get update \
-    && apt-get install -y nodejs
+    && apt-get install -y nodejs npm
 
 # Install yarn
 RUN npm install -g yarn
