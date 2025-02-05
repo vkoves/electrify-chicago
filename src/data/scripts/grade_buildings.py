@@ -7,17 +7,9 @@ from src.data.scripts.utils import get_data_file_path
 
 
 data_directory = "dist"
-data_in_file_submitted = "building-benchmarks.csv"
-data_out_file = "building-benchmarks-graded.csv"
 data_in_file_historical = "benchmarking-all-years.csv"
-data_in_file_submitted_path = get_data_file_path(
-    data_directory, data_in_file_submitted
-)
 data_in_file_historical_path = get_data_file_path(
     data_directory, data_in_file_historical
-)
-data_out_file_path = get_data_file_path(
-    data_directory, data_out_file
 )
 
 
@@ -340,16 +332,16 @@ def generate_missing_data_grade(
 
 
 def grade_ghg_intensity_energy_mix_all_years(
-    csv_path : str = "building-benchmarks.csv",
+    # csv_path : str = "building-benchmarks.csv",
+    building_data : pd.DataFrame,
 ):
     """Generate grades for all years in the dataset based on GHG intensity and
     energy mix.
 
     Parameters
     ----------
-    csv_path : str, optional
-        Path to the buildings records dataset,
-        by default "building-benchmarks.csv"
+    building_data : pd.DataFrame
+        The buildings records dataset
 
     Returns
     -------
@@ -358,18 +350,15 @@ def grade_ghg_intensity_energy_mix_all_years(
         mix, merged with the original dataset.
 
     """
-    # Load data:
-    df = pd.read_csv(csv_path)
-
     # Generate grades for GHG intensity:
     ghg_intensity_grades_all_years = apply_grade_func_all_years(
-        df=df,
+        df=building_data,
         func=generate_energy_int_grade,
     )
 
     # Generate grades for energy mix:
     energy_mix_grades_all_years = apply_grade_func_all_years(
-        df=df,
+        df=building_data,
         func=generate_energymix_grade,
     )
 
@@ -382,7 +371,7 @@ def grade_ghg_intensity_energy_mix_all_years(
 
     # Add to the orignal dataset:
     df = pd.merge(
-        df,
+        building_data,
         grades_all_years_df,
         on=["ID", "DataYear"],
     )
@@ -390,10 +379,10 @@ def grade_ghg_intensity_energy_mix_all_years(
     return df
 
 
-def main():
+def grade_buildings(building_data):
     # Generate grades for all years for GHG Intensity and Energy Mix:
     graded_df = grade_ghg_intensity_energy_mix_all_years(
-        csv_path=data_in_file_submitted_path
+        building_data=building_data,
     )
 
     # Generate grades for missing records:
@@ -423,13 +412,4 @@ def main():
         right=True
     )
 
-    graded_df.to_csv(
-        data_out_file_path,
-        sep=",",
-        encoding='utf-8',
-        index=False
-    )
-
-
-if __name__ == "__main__":
-    main()
+    return graded_df

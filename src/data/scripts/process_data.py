@@ -3,6 +3,7 @@ import logging
 import pandas
 
 from typing import List
+from src.data.scripts.grade_buildings import grade_buildings
 from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path
 from src.data.scripts.building_utils import clean_property_name
 
@@ -146,6 +147,9 @@ def processBuildingData() -> List[str]:
         # The percentile rank can be ascending, we want to say this building is worse than X% of buildings
         building_data[col + 'PercentileRank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(pct=True).round(3)
 
+    # Add building grades:
+    building_data = grade_buildings(building_data)
+    
     # Export the data
     output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')
 
