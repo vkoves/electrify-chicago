@@ -44,10 +44,11 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {IBuilding} from '../common-functions.vue';
-import {
-  IBuildingOwner,
-  BuildingOwners,
-} from '../constants/buildings-custom-info.constant.vue';
+// import {
+//   IBuildingOwner,
+//   BuildingOwners,
+// } from '../constants/buildings-owners.constant.vue';
+import { IBuildingOwner, BuildingOwners } from '../constants/building-owners.constant.vue';
 import { getBuildingCustomInfo } from '../constants/buildings-custom-info.constant.vue';
 
 /**

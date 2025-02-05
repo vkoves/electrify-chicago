@@ -433,6 +433,7 @@ import {
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
 import { getBuildingCustomInfo, ILink } from '../constants/buildings-custom-info.constant.vue';
+// import { BuildingOwners} from '../constants/buildings-owners.constant.vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',

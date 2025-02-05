@@ -4,7 +4,18 @@ import { IBuildingOwners} from './buildings-custom-info.constant.vue';
 
 export default { };
 
-  
+  // export interface IBuildingOwner {
+  //   key: string;
+  //   name: string;
+  //   nameShort: string; // Name for table view
+  //   logoSmall?: string; // A square logo for table view
+  //   logoLarge?: string; // Any size logo for building details
+  //   links?: Array <ILink>; // Extra links for supplementary info
+  // }
+
+  // export interface IBuildingOwners {
+  //   [ownerKey: string]: IBuildingOwner;
+  // }
   /**
    * An object containing the name and logos of custom flagged building owners
    */
@@ -145,3 +156,5 @@ export default { };
      * register the owner page, since it cannot import this file.
      */
   };
+
+  </script>

@@ -2,7 +2,7 @@
 // The function Gridsome uses to make slugs, so it should match
 import slugify from '@sindresorhus/slugify';
 import { IBuilding } from '../common-functions.vue';
-import { BuildingOwners} from './building-owners.constant.vue';
+import {BuildingOwners} from './building-owners.constant.vue';
 
 export default { };
 
