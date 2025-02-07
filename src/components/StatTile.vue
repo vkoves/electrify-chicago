@@ -151,6 +151,14 @@
             >.
           </p>
         </div>
+        <div v-else-if="building.DataAnomalies" class="panel -warning">
+          <div class="bold"><span class="emoji">⚠️</span> Likely Reporting Error</div>
+
+          <p class="smaller">
+            This building has burned gas in the past, so this latest year having 0 gas use is
+            likely a reporting error.
+          </p>
+        </div>
         <div v-else>
           <div class="bold">This Building Uses District Heating ❗</div>
 
@@ -181,6 +189,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import buildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
 
 import {
+  DataAnomalies,
   estimateUtilitySpend,
   getRankLabel,
   getRankLabelByProperty,
@@ -235,9 +244,12 @@ export default class StatTile extends Vue {
   /**
    * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
    * through a district heating system.
+   *
+   * We do not mark this as true if we have detected gas use in the past
    */
   get fullyGasFree(): boolean {
     return (
+      !this.building.DataAnomalies.includes(DataAnomalies.gasZeroWithPreviousUse) &&
       parseFloat(this.building.NaturalGasUse) === 0 &&
       parseFloat(this.building.DistrictSteamUse) === 0
     );

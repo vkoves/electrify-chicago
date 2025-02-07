@@ -308,6 +308,21 @@ form.search-form {
 }
 
 /**
+ * A simple panel, for smaller warnings and such
+ */
+.panel {
+  border: solid $border-thin $grey-dark;
+  border-radius: $brd-rad-small;
+  padding: 1rem;
+  background: $grey-light;
+
+  &.-warning {
+    background: $warning-background;
+    border-color: $warning-border;
+  }
+}
+
+/**
  * <Pager> styling
  */
 nav.pager {

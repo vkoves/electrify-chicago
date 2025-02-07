@@ -125,12 +125,12 @@ query ($id: ID!, $ID: String) {
           <div v-for="anomaly in buildingAnomalies" :key="anomaly" class="building-banner">
             <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
               <h2>
-                <span class="emoji">⚠️</span> Anomaly Detected - Gas Use
+                <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas Free
               </h2>
 
               <p>
-                This building reported zero fossil gas use for one or more years, but has used
-                in the past. That indicates this is likely a reporting error.
+                This building reported zero fossil gas use in the most recent year, but has used
+                gas in the past. That is likely a reporting error.
               </p>
             </div>
             <div v-if="anomaly === DataAnomalies.largeGasSwing">
