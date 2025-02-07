@@ -61,7 +61,7 @@ export default class BarGraph extends Vue {
   // The amount to shift the x-axis down by
   readonly xAxisOffset = 0;
 
-  readonly graphMargins = { top: 50, right: 50, bottom: 50, left: 20 };
+  readonly graphMargins = { top: 40, right: 50, bottom: 50, left: 20 };
   readonly barMargin = 0.2;
 
   randomId = Math.round(Math.random() * 1000);
@@ -226,7 +226,20 @@ export default class BarGraph extends Vue {
 
           // The min point should have its label below
           if (d.x === this.minAndMaxPoints![0].x) {
-            yPos += this.LabelFontSize * 1.5;
+            console.log(yPos, d.y);
+
+            // If the min is right at the bottom right or bottom left, render it above
+            // to prevent colliding with x-axis labels (e.g. Digital Lakeside > District Steam)
+            if (yPos > this.height * 0.9 && (xPos < 10 || xPos > this.width * 0.9)) {
+              yPos -= this.LabelFontSize * 2;
+            }
+            // If the min would intersect with the x-axis, draw it above instead
+            // (e.g. Herman Hall > Fossil Gas)
+            else if (yPos >= this.height * 0.6 && yPos <= this.height * 0.8) {
+              yPos -= this.LabelFontSize * 2;
+            }
+
+            yPos += this.LabelFontSize * 1.25;
 
             return `translate(${xPos},${yPos})`;
           }
@@ -387,10 +400,6 @@ export default class BarGraph extends Vue {
   }
 
   .x-axis {
-    .domain {
-      stroke-dasharray: 10px;
-    }
-
     .tick {
       font-size: 1.6rem;
       font-weight: normal;
