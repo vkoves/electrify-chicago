@@ -86,7 +86,7 @@ def detect_anomalous_buildings():
     # Load in full building data from previous step, where we store the anomaly data
     building_data = pd.read_csv(input_benchmark_data_csv_path)
 
-    building_data = find_and_note_anomalies(historic_data, building_data)
+    building_data = find_and_note_anomalies(building_data, historic_data)
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9) and make sure missing data is output as a string
