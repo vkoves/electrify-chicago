@@ -4,24 +4,42 @@ from pandas.testing import assert_series_equal
 from unittest.mock import patch
 from src.data.scripts.detect_anomalous_buildings import (
     detect_anomalous_zero_gas_buildings,
+    detect_large_gas_swing_buildings,
     find_and_note_anomalies,
     anomaly_values,
 )
 
+def test_detect_large_gas_swing_buildings():
+    # Building Id 1 has a huge swing (> 100%), 2 and 3 are normal
+    mock_data = pd.DataFrame({
+        'ID':            [1, 1, 1,     2, 2, 2,        3, 3, 3],
+        'NaturalGasUse': [10, 12, 28,  100, 110, 105,  5, 6, 7]
+    })
+
+    expected_ids = [1]  # Building 1 has a large swing
+    anom_ids = detect_large_gas_swing_buildings(mock_data)
+
+    assert sorted(anom_ids) == sorted(expected_ids)
+
 def test_detect_anomalous_zero_gas_buildings():
-    # Create sample historic data, with IDs 1 & 2 being anomalous, and 3 being fine
-    data = {'ID': [1, 1, 1, 2, 2, 2, 3, 3, 3],
-            'DataYear': [2020, 2021, 2022, 2020, 2021, 2022, 2020, 2021, 2022],
-            'NaturalGasUse': [100, 110, 0, 50, 0, 55, 200, 180, 190]}
+    # Create sample historic data, with IDs 1 & 2 being anomalous, and 3 being fine, with a COVID
+    # 0 blip
+    data = {
+        'ID':            [1, 1, 1,           2, 2, 2,            3, 3, 3],
+        'DataYear':      [2020, 2021, 2022,  2020,  2021, 2022,  2020, 2021, 2022],
+        'NaturalGasUse': [100, 110, 0,       50, 100, 0,         200, 0, 190]
+    }
     historic_data = pd.DataFrame(data)
 
     anomalous_ids = detect_anomalous_zero_gas_buildings(historic_data)
     assert set(anomalous_ids) == {1, 2}  # Check that IDs 1 and 2 are flagged
 
     # Test with no anomalies
-    data2 = {'ID': [1, 1, 1, 2, 2, 2, 3, 3, 3],
-            'DataYear': [2020, 2021, 2022, 2020, 2021, 2022, 2020, 2021, 2022],
-            'NaturalGasUse': [100, 110, 120, 50, 60, 55, 200, 180, 190]}
+    data2 = {
+        'ID':            [1, 1, 1,           2, 2, 2,           3, 3, 3],
+        'DataYear':      [2020, 2021, 2022,  2020, 2021, 2022,  2020, 2021, 2022],
+        'NaturalGasUse': [100, 110, 120,     50, 60, 55,        200, 180, 190]
+    }
     historic_data2 = pd.DataFrame(data2)
 
     anomalous_ids2 = detect_anomalous_zero_gas_buildings(historic_data2)

@@ -133,6 +133,16 @@ query ($id: ID!, $ID: String) {
                 in the past. That indicates this is likely a reporting error.
               </p>
             </div>
+            <div v-if="anomaly === DataAnomalies.largeGasSwing">
+              <h2>
+                <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent Gas Use
+              </h2>
+
+              <p>
+                This building has had extremely large changes in gas use, which is likely to
+                indicate errors in reporting.
+              </p>
+            </div>
           </div>
 
           <div v-if="dataYear < LatestDataYear" class="building-banner">

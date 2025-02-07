@@ -34,7 +34,8 @@ export interface IPropertyStats {
 
 /** All the available data anomaly codes from detect_anomalous_buildings.py:anomaly_values */
 export enum DataAnomalies {
-  gasZeroWithPreviousUse = 'gas:zero-with-prev-use'
+  gasZeroWithPreviousUse = 'gas:zero-with-prev-use',
+  largeGasSwing = 'gas:large-swings'
 }
 
 /**

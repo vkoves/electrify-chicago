@@ -20,7 +20,8 @@ from src.data.scripts.building_utils import benchmarking_string_cols, benchmarki
 # Valid data anomaly values, which can be combined with commas in a string
 # (e.g. "anomaly1,anomaly2") to be future proofed
 anomaly_values = {
-    'zero_gas_but_prev_use': 'gas:zero-with-prev-use'
+    'zero_gas_but_prev_use': 'gas:zero-with-prev-use',
+    'large_gas_swing': 'gas:large-swings'
 }
 
 out_dir = 'dist'
@@ -31,24 +32,70 @@ input_historic_data_csv_path = get_data_file_path(out_dir, 'benchmarking-all-yea
 # Output main benchmark path
 input_benchmark_data_csv_path = get_data_file_path(out_dir, 'building-benchmarks.csv')
 
+def determine_abs_delta(x):
+    """
+    Calculates the maximum absolute percentage change between consecutive values in a Pandas Series.
+    """
+    shifted_x =  x.shift(1).fillna(x.iloc[0]) + 1
+
+    return abs( (x - shifted_x) / shifted_x).dropna().max()
+
+def detect_large_gas_swing_buildings(historic_data: pd.DataFrame, threshold: float=1.0) -> List[int]:
+    """
+    Finds buildings in the given historic data DataFrame that sees reported gas use change greater
+    than 100% in a given year in the past, as this is highly likely to be incorrect.
+    The results are sorted from high to low.
+
+    args:
+        historic_data: the dataframe to analyze
+        threshold: the percent threshold to detect buildings at (1 = 100%)
+
+    returns:
+        a list of building IDs that have anomalous gas use
+    """
+
+    anom_gas_usage = (
+        historic_data.groupby('ID')
+        .agg({'NaturalGasUse': determine_abs_delta})
+        .sort_values('NaturalGasUse', ascending=False)
+        .dropna()
+        .rename(columns={'NaturalGasUse': 'NaturalGasChange'})
+        .reset_index()
+    )
+
+    anom_ids = (
+        anom_gas_usage[anom_gas_usage.NaturalGasChange > threshold]['ID']
+        .unique().tolist()
+    )
+
+    thresh_prcnt = round(threshold * 100)
+    print(f"- {len(anom_ids)} buildings with large (> {thresh_prcnt}%) swings in gas use.")
+
+    return anom_ids
+
 def detect_anomalous_zero_gas_buildings(historic_data: pd.DataFrame) -> List[int]:
     """
-    Finds buildings in the given historic data DataFrame that reported 0 gas use in any year, but
-    reported gas use in the past, as this is highly likely to be incorrect.
+    Finds buildings in the given historic data DataFrame that reported 0 gas use in the latest year,
+    (which we'd mark as gas free) but reported gas use in the past, as this is highly likely to be
+    incorrect. Buildings that dip to 0 but come back are caught by our large swing detector.
     """
 
     latest_year = historic_data['DataYear'].max()
 
-    no_gas_use = historic_data[historic_data['NaturalGasUse'] == 0]
+    no_gas_use_ids = (
+        historic_data[historic_data['NaturalGasUse'] == 0]
+        .loc[historic_data['DataYear'] == latest_year]
+    )['ID']
 
-    no_gas_use_ids = no_gas_use['ID']
-    used_gas_before = historic_data.loc[historic_data['DataYear'] < latest_year].loc[historic_data['NaturalGasUse'] > 0]
-
+    used_gas_before = (
+        historic_data.loc[historic_data['DataYear'] < latest_year]
+        .loc[historic_data['NaturalGasUse'] > 0]
+    )
     gas_anomalies = used_gas_before.loc[historic_data['ID'].isin(no_gas_use_ids)]
 
     gas_anomaly_ids = gas_anomalies['ID'].unique().tolist()
 
-    print(f"Found {len(gas_anomaly_ids)} buildings with anomalous zero gas use.\n");
+    print(f"- {len(gas_anomaly_ids)} buildings with anomalous zero gas use in {latest_year}.")
 
     return gas_anomaly_ids
 
@@ -61,14 +108,22 @@ def find_and_note_anomalies(building_data: pd.DataFrame, historic_data: pd.DataF
 
     Return a DataFrame with our new column
     """
+
+    print("Found Anomalies:\n")
+
     zero_gas_anomaly_ids = detect_anomalous_zero_gas_buildings(historic_data)
+    gas_swing_ids = detect_large_gas_swing_buildings(historic_data)
+
+    print("")
 
     # Create the 'DataAnomalies' column and make it empty by default
     building_data['DataAnomalies'] = ''
 
-    zero_gas_anomaly_val = anomaly_values['zero_gas_but_prev_use']
+    building_data.loc[building_data['ID'].isin(gas_swing_ids), 'DataAnomalies'] = anomaly_values['large_gas_swing']
 
-    building_data.loc[building_data['ID'].isin(zero_gas_anomaly_ids), 'DataAnomalies'] = zero_gas_anomaly_val
+    # Buildings that have reported 0 use and then a value will be a subset of the gas swing
+    # buildings, but it's a more specific issue, so we mark it separately
+    building_data.loc[building_data['ID'].isin(zero_gas_anomaly_ids), 'DataAnomalies'] = anomaly_values['zero_gas_but_prev_use']
 
     return building_data
 
