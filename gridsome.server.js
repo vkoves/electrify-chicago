@@ -86,6 +86,21 @@ function loadBuildingBenchmarkData(actions) {
         ? building.PropertyName
         : building.Address;
 
+    // The csv parse returns everything as strings, so explicitly parse float columns so GraphQL
+    // loads them properly and can apply filters (like `TotalGHGEmissions: { gt: 1000.0 }`)
+    // TODO: Parse all our float and int columns so GraphQL can then filter them
+    const floatCols = [
+      'GrossFloorArea',
+      'TotalGHGEmissions',
+      'GHGIntensity',
+      'ElectricityUse',
+      'NaturalGasUse',
+    ]
+
+    floatCols.forEach(col => {
+      build[col] = parseFloat(col);
+    });
+
     if (!building.slugSource || typeof building.slugSource !== 'string') {
       throw new Error('No building slug source (name or address)!', building);
     }
