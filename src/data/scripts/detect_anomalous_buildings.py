@@ -48,7 +48,7 @@ def determine_abs_delta(x: pd.Series) -> Optional[float]:
 
     return delta.max()
 
-def detect_large_gas_swing_buildings(historic_data: pd.DataFrame, threshold: float=1.0) -> List[int]:
+def detect_large_gas_swing_buildings(historic_data: pd.DataFrame, threshold: float=0.7) -> List[int]:
     """
     Finds buildings in the given historic data DataFrame that sees reported gas use change greater
     than 100% in a given year in the past, as this is highly likely to be incorrect.
