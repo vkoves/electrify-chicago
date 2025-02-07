@@ -50,7 +50,7 @@ export default class BarGraph extends Vue {
 
   /** Underlying SVG size */
   readonly width = 320;
-  readonly height = 60;
+  readonly height = 100;
 
   /** The radius, in pixels, of the min and max dots and all the points on focus */
   readonly DotRadius = 8;
@@ -59,9 +59,9 @@ export default class BarGraph extends Vue {
   readonly LabelFontSize = 28;
 
   // The amount to shift the x-axis down by
-  readonly xAxisOffset = 60;
+  readonly xAxisOffset = 0;
 
-  readonly graphMargins = { top: 50, right: 15, bottom: 110, left: 15 };
+  readonly graphMargins = { top: 50, right: 50, bottom: 50, left: 20 };
   readonly barMargin = 0.2;
 
   randomId = Math.round(Math.random() * 1000);
@@ -140,7 +140,7 @@ export default class BarGraph extends Vue {
 
     const y = d3
       .scaleLinear()
-      .domain([d3.min(yVals) as number, d3.max(yVals) as number])
+      .domain([0, d3.max(yVals) as number])
       .rangeRound([this.height, 0]);
 
     // Render X axis
@@ -157,9 +157,12 @@ export default class BarGraph extends Vue {
           .tickSizeOuter(0), // make the x-axis a flat line, with no tick marks at the ends
       )
       .selectAll('text')
-      .attr('text-anchor', (d) => (d === maxYear ? 'end' : 'start'))
-      // shift label a bit further from the axis line
-      .attr('dy', '0.85em');
+      .attr('text-anchor', (d) => (d === maxYear ? 'start' : 'start'))
+      .attr('style', 'transform: rotate(15deg)')
+      // shift x-axis labels below the axis line
+      // .attr('dx', (d) => d === maxYear ? '-1em' : '-0.5em')
+      // shift x-axis labels below the axis line
+      .attr('dy', '1em');
 
     // Render Y axis
     this.svg
@@ -383,9 +386,15 @@ export default class BarGraph extends Vue {
     display: none;
   }
 
-  .x-axis .tick {
-    font-size: 1.6rem;
-    font-weight: normal;
+  .x-axis {
+    .domain {
+      stroke-dasharray: 10px;
+    }
+
+    .tick {
+      font-size: 1.6rem;
+      font-weight: normal;
+    }
   }
 
   // Hide y-axis via CSS, we label points instead
