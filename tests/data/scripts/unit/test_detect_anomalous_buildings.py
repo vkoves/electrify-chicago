@@ -9,17 +9,42 @@ from src.data.scripts.detect_anomalous_buildings import (
     anomaly_values,
 )
 
-def test_detect_large_gas_swing_buildings():
-    # Building Id 1 has a huge swing (> 100%), 2 and 3 are normal
+def test_detect_large_gas_swing_buildings_threshold_100Prcnt():
+    # Building ID 1 has a huge swing (> 100%), 2 and 3 are "normal"
+    # NOTE: We may want to tweak this, as doubling is a 100% increase, but cutting in half is just
+    # a 50% decrease, so a 100% threshold can never be met going down
     mock_data = pd.DataFrame({
         'ID':            [1, 1, 1,     2, 2, 2,        3, 3, 3],
-        'NaturalGasUse': [10, 12, 28,  100, 110, 105,  5, 6, 7]
+        'NaturalGasUse': [10, 12, 28,  100, 110, 105,  8, 2, 1]
     })
 
-    expected_ids = [1]  # Building 1 has a large swing
-    anom_ids = detect_large_gas_swing_buildings(mock_data)
+    expected_ids = [1]
+    anom_ids = detect_large_gas_swing_buildings(mock_data, threshold=1)
 
     assert sorted(anom_ids) == sorted(expected_ids)
+
+def test_detect_large_gas_swing_buildings_with_threshold_70Prcnt():
+    # Building ID 1 & 3 have large swings (> 80%)
+    mock_data = pd.DataFrame({
+        'ID':            [1, 1, 1,     2, 2, 2,        3, 3, 3],
+        'NaturalGasUse': [10, 12, 28,  100, 110, 105,  8, 2, 1]
+    })
+
+    expected_ids = [1, 3]
+    anom_ids = detect_large_gas_swing_buildings(mock_data, threshold=0.7)
+    assert sorted(anom_ids) == sorted(expected_ids)
+
+def test_detect_large_gas_swing_buildings_with_empty_data():
+    # 0 and none are basically the same thing in our data, so make sure we don't flag that
+    mock_data = pd.DataFrame({
+        'ID':            [1, 1, 1,        2, 2, 2,        3, 3, 3],
+        'NaturalGasUse': [0, None, None,  0, None, 0,     30, 32, 33]
+    })
+
+    expected_ids = []
+    anom_ids = detect_large_gas_swing_buildings(mock_data)
+    assert sorted(anom_ids) == sorted(expected_ids)
+
 
 def test_detect_anomalous_zero_gas_buildings():
     # Create sample historic data, with IDs 1 & 2 being anomalous, and 3 being fine, with a COVID
@@ -46,13 +71,18 @@ def test_detect_anomalous_zero_gas_buildings():
     assert len(anomalous_ids2) == 0
 
 
-# Mock detect_anomalous_zero_gas_buildings to control the returned IDs
+# Mock detect_anomalous_zero_gas_buildings and detect_large_gas_swing_buildings to control the returned IDs
 @pytest.fixture
 def mock_detect_anomalous_zero_gas_buildings(mocker):
     mock = mocker.patch("src.data.scripts.detect_anomalous_buildings.detect_anomalous_zero_gas_buildings")
     return mock
 
-def test_find_and_note_anomalies(mock_detect_anomalous_zero_gas_buildings):
+@pytest.fixture
+def mock_detect_large_gas_swing_buildings(mocker):
+    mock = mocker.patch("src.data.scripts.detect_anomalous_buildings.detect_large_gas_swing_buildings")
+    return mock
+
+def test_find_and_note_anomalies(mock_detect_anomalous_zero_gas_buildings, mock_detect_large_gas_swing_buildings):
     # Sample building and historic data
     building_data = pd.DataFrame({
         'ID': [1, 2, 3, 4],
@@ -69,6 +99,7 @@ def test_find_and_note_anomalies(mock_detect_anomalous_zero_gas_buildings):
 
     # Mock that buildings 2 and 4 are anomalous
     mock_detect_anomalous_zero_gas_buildings.return_value = [2, 4]
+    mock_detect_large_gas_swing_buildings.return_value = []
 
     # ensure we copy the input data to prevent mutation
     updated_building_data = find_and_note_anomalies(building_data.copy(), historic_data)

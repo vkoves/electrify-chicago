@@ -10,7 +10,7 @@ This includes:
   These buildings score
 """
 
-from typing import List
+from typing import List, Optional
 import pandas as pd
 
 from src.data.scripts.utils import get_data_file_path, log_step_completion, output_to_csv
@@ -32,13 +32,21 @@ input_historic_data_csv_path = get_data_file_path(out_dir, 'benchmarking-all-yea
 # Output main benchmark path
 input_benchmark_data_csv_path = get_data_file_path(out_dir, 'building-benchmarks.csv')
 
-def determine_abs_delta(x):
+def determine_abs_delta(x: pd.Series) -> Optional[float]:
     """
-    Calculates the maximum absolute percentage change between consecutive values in a Pandas Series.
+    Calculates the maximum absolute percentage change between consecutive values in a Pandas Series,
+    ignoring series of just 0 and None.
     """
-    shifted_x =  x.shift(1).fillna(x.iloc[0]) + 1
 
-    return abs( (x - shifted_x) / shifted_x).dropna().max()
+    # Check for empty or all-zero and NaN, as that means no change in our data (some buildings
+    # report no Natural Gas, then 0)
+    if x.empty or (x.dropna() == 0).all():
+        return 0.0
+
+    shifted_x =  x.shift(1).fillna(x.iloc[0]) + 1
+    delta = abs((x - shifted_x) / shifted_x).dropna()
+
+    return delta.max()
 
 def detect_large_gas_swing_buildings(historic_data: pd.DataFrame, threshold: float=1.0) -> List[int]:
     """
