@@ -3,8 +3,8 @@
 ### data being processed
 ###
 import pandas
-import logging
-import pathlib, os
+import pathlib
+from pathlib import Path
 
 from typing import List
 
@@ -14,14 +14,16 @@ def get_data_file_path(dir: str, f: str) -> str:
     path = curr_path.parent.absolute() / "src" / "data" / dir / f
     return path
 
-# Fetch a CSV and clean it up, keeping the cols_to_keep and converting the
-# number_cols to numbers
 def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pandas.DataFrame:
-    df = pandas.read_csv(path_to_csv)
+    """Fetch a building benchmarking CSV in Pandas, keeping the cols_to_keep (if specified)"""
 
-    # logging.warning(df);
+    # Create a dictionary mapping column names (or indices) to dtypes:
+    data_types = {
+        # Specify that "Exempt From Chicago Energy Rating" column is a string
+        7: 'string',
+    }
 
-    # TODO: Take in raw city CSV and rename columns per a mapping
+    df = pandas.read_csv(path_to_csv, dtype=data_types)
 
     if cols_to_keep is None:
         return df
@@ -29,17 +31,15 @@ def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pandas.DataFrame:
         return df[cols_to_keep]
 
 
-# this function takes in a dataframe object, and reformats it to match our needs as a json object
 def json_data_builder(
     dataframe, outer_tag="default", is_array=True, array_key="emissionsByYear"
 ) -> List[str]:
-    '''
-    Process the a CSV dataframe into a JSON object
-    '''
+    """Process the a CSV dataframe into a JSON object"""
 
     uniqueColKey = 'ID'
 
-    dataframe=dataframe.applymap(lambda x: "" if pandas.isnull(x) else x)
+    dataframe = dataframe.map(lambda x: "" if pandas.isnull(x) else x)
+
     # initiate empty json object to iterate with
     json_object = []
 
@@ -59,3 +59,42 @@ def json_data_builder(
 
     # Return outer tag output object
     return json_object
+
+def log_step_completion(step_num, outputted_paths):
+    """Logs the completion of a data processing step and the paths of exported files.
+
+    This function prints a message indicating the completion of a specific step
+    in our data processing pipeline, along with a list of the files that were
+    exported during that step. Debug files (in /debug) are printed first with a
+    "(debug)" note for clarity.
+
+    Args:
+        step_num (int): The number of the completed step (e.g., 1, 2, 3).
+        outputted_paths (list): A list of file paths (strings or Path objects)
+            that were outputted by the step.  May contain None values which are ignored.
+
+    Returns:
+        None
+    """
+
+    debug_paths = []
+    other_paths = []
+
+    for path in outputted_paths:
+        if path:
+            path_str = str(path)  # Convert to string for easier manipulation
+            if "/debug" in path_str:
+                debug_paths.append(path_str)
+            else:
+                other_paths.append(path_str)
+
+    YELLOW = "\033[0;35m"  # ANSI escape code for yellow text
+    NC = "\033[0m"        # ANSI escape code to reset color
+
+    print(f"Step {step_num} data processing done! Files exported/updated:\n")
+
+    for path in debug_paths:
+        print(f" - {YELLOW}{path} (debug){NC}")  # Yellow text for debug paths
+
+    for path in other_paths:
+        print(f" - {path}")
