@@ -26,6 +26,10 @@ handle_error() {
   exit 1
 }
 
+clean_dist_directory() {
+  echo "Deleting data /dist directory contents..."
+  rm -rf src/data/dist/*
+}
 
 ##
 ## Init/Main Code
@@ -34,6 +38,9 @@ start_time=$(date +%s%N)  # Get the starting time in seconds since the Epoch
 
 echo -e "${GREEN}Initializing data pipeline!${NC}"
 echo -e "Will be running from raw file at 'source/data/ChicagoEnergyBenchmarking.csv'."
+
+# Step 0: Delete existing dist files
+clean_dist_directory
 
 # Step 1: clean_and_split_data
 print_step_header 1 "clean_and_split_data"
