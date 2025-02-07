@@ -1,4 +1,14 @@
-# Data Dist Folder
+# Data Folder
+
+This folder is for all of our data processing, including:
+
+- `/analysis` - Jupyter research notebooks
+- `/debug` - more readable debug data from running the data pipeline
+- `/dist` - the files generated from our data pipeline, used by the actual site
+- `/scripts` - all our data processing scripts
+- `/source` - input files to our data pipeline, typically the latest benchmarking data
+
+## Data Dist Folder
 
 This directory contains files used for the actual built site. These are committed, since the city
 data (and our data pipeline) changes infrequently.

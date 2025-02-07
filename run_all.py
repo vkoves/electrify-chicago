@@ -1,6 +1,7 @@
 import subprocess
 import time
-
+import glob
+import os
 
 # Color codes for output
 RED = '\033[0;31m'
@@ -16,6 +17,15 @@ def print_step_header(step_number, total_steps, description):
 def handle_error(message):
     print(f"{RED}\nError: {message}{NC}")
     exit(1)
+
+def clean_dist_directory():
+    """Clean out the data dist directory, to ensure a clean slate before processing"""
+
+    print("\nDeleting data /dist directory contents...")
+    files = glob.glob('src/data/dist/*')
+
+    for f in files:
+        os.remove(f)
 
 def run_python_script(module):
     try:
@@ -35,6 +45,9 @@ def main():
 
     print(f"{GREEN}Initializing data pipeline!{NC}")
     print(f"Will be running from raw file at 'source/data/ChicagoEnergyBenchmarking.csv'.")
+
+    # Step 0, clean the /dist directory
+    clean_dist_directory()
 
     # Each step of our data pipeline, in order
     pipeline_steps = [
