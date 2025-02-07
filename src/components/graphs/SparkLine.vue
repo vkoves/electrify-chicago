@@ -58,7 +58,7 @@ export default class BarGraph extends Vue {
   /** The font-size of the label, in the <svg>'s internal space (so scaled as the SVG is scaled)' */
   readonly LabelFontSize = 28;
 
-  // The amount to shift the x-axis down by
+  // The amount to shift the x-axis down by - ideally 0, so it's accurate
   readonly xAxisOffset = 0;
 
   readonly graphMargins = { top: 40, right: 50, bottom: 50, left: 20 };
@@ -224,7 +224,7 @@ export default class BarGraph extends Vue {
           let xPos = x(d.x);
           let yPos = y(d.y);
 
-          // The min point should have its label below
+          // Min Point - The min point should have its label below
           if (d.x === this.minAndMaxPoints![0].x) {
             console.log(yPos, d.y);
 
@@ -233,17 +233,14 @@ export default class BarGraph extends Vue {
             if (yPos > this.height * 0.9 && (xPos < 10 || xPos > this.width * 0.9)) {
               yPos -= this.LabelFontSize * 2;
             }
-            // If the min would intersect with the x-axis, draw it above instead
-            // (e.g. Herman Hall > Fossil Gas)
-            else if (yPos >= this.height * 0.6 && yPos <= this.height * 0.8) {
-              yPos -= this.LabelFontSize * 2;
+            else {
+              // Otherwise if no special case, just draw it below
+              yPos += this.LabelFontSize * 1.25;
             }
-
-            yPos += this.LabelFontSize * 1.25;
 
             return `translate(${xPos},${yPos})`;
           }
-          // The max point has its label above
+          // Max Point -The max point has its label above
           else {
             yPos -= this.LabelFontSize * 0.5;
 
@@ -400,6 +397,12 @@ export default class BarGraph extends Vue {
   }
 
   .x-axis {
+    // Fade out the x-axis line a bit, so text rendered on top of it isn't so harsh
+    .domain {
+      opacity: 0.3;
+      stroke-width: 2px;
+    }
+
     .tick {
       font-size: 1.6rem;
       font-weight: normal;
