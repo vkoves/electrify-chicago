@@ -61,8 +61,15 @@ export default class Index extends Vue {
       }
     }
     featuredBuildings: allBuilding(
-      # Marina Towers, Willis, Shedd Aquarium, Monadnock Building, and Art Institute of Chicago
-      filter: { ID: { in: [ "103606", "239096", "166134", "101567", "160196" ] } }
+      filter: {
+        ID: {
+          in: [
+            # Marina Towers, Willis, Shedd Aquarium, Monadnock Building, Art Institute of Chicago,
+            # Merch Mart, The John Hancock, and Aqua
+            "103606", "239096", "166134", "101567", "160196", "103656", "100429", "231019"
+          ]
+        }
+      }
       sortBy: "ID"
       order: DESC
       limit: 10

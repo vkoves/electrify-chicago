@@ -52,14 +52,24 @@ export default class BuildingTile extends Vue {
           <div>
             <dt>GHG Intensity</dt>
             <dd>
-              <div class="value">{{ building.GHGIntensity }}</div>
+              <div class="value">
+                {{
+                  parseFloat(building.GHGIntensity.toString()).toLocaleString()
+                }}
+              </div>
               <div class="unit">kg CO<sub>2</sub> / sqft</div>
             </dd>
           </div>
           <div>
             <dt>Total Emissions</dt>
             <dd>
-              <div class="value">{{ building.TotalGHGEmissions }}</div>
+              <div class="value">
+                {{
+                  parseInt(
+                    building.TotalGHGEmissions.toString(),
+                  ).toLocaleString()
+                }}
+              </div>
               <div class="unit">tons CO<sub>2</sub>e</div>
             </dd>
           </div>
