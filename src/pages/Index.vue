@@ -1,8 +1,4 @@
 <script lang="ts">
-// Gridsome doesn't have types, so can't import it properly
-// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
-const Pager = require('gridsome').Pager;
-
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
@@ -20,29 +16,13 @@ import BuildingTile from '../components/BuildingTile.vue';
     DataDisclaimer,
     NewTabIcon,
     DataSourceFootnote,
-    Pager,
   },
   metaInfo() {
     return { title: 'Home' };
   },
 })
 export default class Index extends Vue {
-  /** Set by Gridsome to results of GraphQL query */
-  $page: any;
-
-  pageInput = 0;
-
   searchQuery = '';
-
-  created(): void {
-    this.pageInput = this.$page.allBuilding.pageInfo.currentPage;
-  }
-
-  jumpToPage(event: Event): void {
-    event.preventDefault();
-
-    window.location.href = `/${this.pageInput}`;
-  }
 
   submitSearch(event?: Event): void {
     event?.preventDefault();
@@ -136,6 +116,7 @@ export default class Index extends Vue {
 
       <div class="page-constrained">
         <h2 class="list-title">Chicago&apos;s Most Emissions Intense Buildings</h2>
+        <g-link class="bold" to="/highest-emissions-intensity">View More</g-link>
         <p class="list-desc">
           The buildings that reported the highest greenhouse gas emissions per
           square foot
@@ -281,14 +262,17 @@ export default class Index extends Vue {
     }
   }
 
-  h2.list-title { margin: 2rem 0 0 0; }
-  .list-desc { margin-top: 0; }
+  h2.list-title {
+    display: inline-block;
+    margin: 2rem 1rem 0 0;
+  }
+  .list-desc { margin: 0; }
 
   .buildings-scroll-cont {
     position: relative;
     $card-padding: 0.75rem;
     // Grow to account for inner padding
-    margin: 0.5rem (-$card-padding) 2rem (-$card-padding);
+    margin: 1rem (-$card-padding) 2rem (-$card-padding);
     overflow: scroll hidden;
 
     // Create a fake partial right border to make clear it's scrollable
@@ -364,24 +348,6 @@ export default class Index extends Vue {
 
     input {
       width: 3.5rem;
-    }
-  }
-
-  .pager-cont {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 1rem;
-    gap: 1rem;
-
-    .pager {
-      margin-top: 0;
-    }
-
-    .page-number {
-      font-weight: bold;
-      font-size: smaller;
-      margin-bottom: 0.25rem;
     }
   }
 
