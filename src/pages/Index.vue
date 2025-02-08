@@ -115,8 +115,12 @@ export default class Index extends Vue {
       </div>
 
       <div class="page-constrained">
-        <h2 class="list-title">Chicago&apos;s Most Emissions Intense Buildings</h2>
-        <g-link class="bold" to="/highest-emissions-intensity">View More</g-link>
+        <h2 class="list-title">
+          Chicago&apos;s Most Emissions Intense Buildings
+        </h2>
+        <g-link class="bold" to="/highest-emissions-intensity"
+          >View More</g-link
+        >
         <p class="list-desc">
           The buildings that reported the highest greenhouse gas emissions per
           square foot
@@ -128,7 +132,10 @@ export default class Index extends Vue {
               v-for="building in $page.allBuilding.edges"
               :key="building.node.ID"
             >
-              <BuildingTile :building="building.node" :path="building.node.path" />
+              <BuildingTile
+                :building="building.node"
+                :path="building.node.path"
+              />
             </li>
           </ul>
         </div>
@@ -145,7 +152,10 @@ export default class Index extends Vue {
               v-for="building in $page.featuredBuildings.edges"
               :key="building.node.ID"
             >
-              <BuildingTile :building="building.node" :path="building.node.path" />
+              <BuildingTile
+                :building="building.node"
+                :path="building.node.path"
+              />
             </li>
           </ul>
         </div>
@@ -266,7 +276,9 @@ export default class Index extends Vue {
     display: inline-block;
     margin: 2rem 1rem 0 0;
   }
-  .list-desc { margin: 0; }
+  .list-desc {
+    margin: 0;
+  }
 
   .buildings-scroll-cont {
     position: relative;
@@ -286,7 +298,9 @@ export default class Index extends Vue {
     }
 
     /* width */
-    &::-webkit-scrollbar { width: 0.75rem; }
+    &::-webkit-scrollbar {
+      width: 0.75rem;
+    }
     /* Track */
     &::-webkit-scrollbar-track {
       background: #f1f1f1;
@@ -300,7 +314,9 @@ export default class Index extends Vue {
       cursor: pointer;
     }
     /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover { background: #555; }
+    &::-webkit-scrollbar-thumb:hover {
+      background: #555;
+    }
 
     ul.building-tiles {
       list-style: none;
@@ -309,7 +325,9 @@ export default class Index extends Vue {
       margin: 0;
       padding: 0;
 
-      li { padding: 0.5rem $card-padding 1.5rem $card-padding; }
+      li {
+        padding: 0.5rem $card-padding 1.5rem $card-padding;
+      }
     }
   }
 
@@ -388,7 +406,9 @@ export default class Index extends Vue {
     .buildings-scroll-cont {
       margin: 0 -1rem;
 
-      ul { padding: 0 1rem; }
+      ul {
+        padding: 0 1rem;
+      }
     }
 
     .announcements {

@@ -19,7 +19,7 @@ import DataSourceFootnote from '../components/DataSourceFootnote.vue';
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
-    Pager
+    Pager,
   },
   metaInfo() {
     return { title: 'Highest Emissions Intensity Buildings' };
@@ -42,7 +42,6 @@ export default class HighestEmissionsIntensity extends Vue {
 
     window.location.href = `/${this.pageInput}`;
   }
-
 }
 </script>
 
@@ -95,66 +94,65 @@ export default class HighestEmissionsIntensity extends Vue {
     </h1>
 
     <p class="constrained -wide">
-      These are the Chicago's benchmarked buildings that reported the highest greenhouse
-      gas intensity i.e. emissions per square foot. Large, efficient, buildings can perform much
-      better than very inefficient small buildings on this metric.
+      These are the Chicago's benchmarked buildings that reported the highest
+      greenhouse gas intensity i.e. emissions per square foot. Large, efficient,
+      buildings can perform much better than very inefficient small buildings on
+      this metric.
     </p>
 
     <DataDisclaimer />
 
-    <BuildingsTable
-      :buildings="$page.allBuilding.edges"
-    />
+    <BuildingsTable :buildings="$page.allBuilding.edges" />
 
     <div class="pager-cont">
-        <div>
-          <div class="page-number">
-            Page {{ $page.allBuilding.pageInfo.currentPage }} of
-            {{ $page.allBuilding.pageInfo.totalPages }}
+      <div>
+        <div class="page-number">
+          Page {{ $page.allBuilding.pageInfo.currentPage }} of
+          {{ $page.allBuilding.pageInfo.totalPages }}
 
-            (Building #{{
-              1 +
-              ($page.allBuilding.pageInfo.currentPage - 1) *
-                $page.allBuilding.pageInfo.perPage
-            }}
-            to #{{
-              ($page.allBuilding.pageInfo.currentPage - 1) *
-                $page.allBuilding.pageInfo.perPage +
-              $page.allBuilding.edges.length
-            }})
-          </div>
+          (Building #{{
+            1 +
+            ($page.allBuilding.pageInfo.currentPage - 1) *
+              $page.allBuilding.pageInfo.perPage
+          }}
+          to #{{
+            ($page.allBuilding.pageInfo.currentPage - 1) *
+              $page.allBuilding.pageInfo.perPage +
+            $page.allBuilding.edges.length
+          }})
+        </div>
 
-          <Pager class="pager" :info="$page.allBuilding.pageInfo" />
-        </div>
-        </div>
+        <Pager class="pager" :info="$page.allBuilding.pageInfo" />
+      </div>
+    </div>
 
     <DataSourceFootnote />
   </DefaultLayout>
 </template>
 
 <style lang="scss">
+.pager-cont {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1rem;
+  gap: 1rem;
+
+  .pager {
+    margin-top: 0;
+  }
+
+  .page-number {
+    font-weight: bold;
+    font-size: smaller;
+    margin-bottom: 0.25rem;
+  }
+}
+
+@media (max-width: $mobile-max-width) {
   .pager-cont {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 1rem;
-    gap: 1rem;
-
-    .pager {
-      margin-top: 0;
-    }
-
-    .page-number {
-      font-weight: bold;
-      font-size: smaller;
-      margin-bottom: 0.25rem;
-    }
+    flex-direction: column;
+    align-items: flex-start;
   }
-
-  @media (max-width: $mobile-max-width) {
-    .pager-cont {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  }
+}
 </style>

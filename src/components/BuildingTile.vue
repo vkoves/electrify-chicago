@@ -35,10 +35,10 @@ export default class BuildingTile extends Vue {
 <template>
   <g-link :to="path" class="tile-link" tabindex="-1">
     <div class="building-tile">
-        <div class="img-cont">
-          <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
-          <img v-if="buildingImg" :src="buildingImg.imgUrl" alt="" />
-        </div>
+      <div class="img-cont">
+        <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
+        <img v-if="buildingImg" :src="buildingImg.imgUrl" alt="" />
+      </div>
 
       <div class="text">
         <div class="title">
@@ -84,10 +84,17 @@ export default class BuildingTile extends Vue {
   text-decoration: none;
   color: $text-main;
 
-  &:hover, &:focus-within { outline: solid $border-v-thick $chicago-blue; }
+  &:hover,
+  &:focus-within {
+    outline: solid $border-v-thick $chicago-blue;
+  }
 
   .img-cont {
-    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);;
+    background: radial-gradient(
+      circle,
+      rgba(238, 174, 202, 1) 0%,
+      rgba(148, 187, 233, 1) 100%
+    );
     height: 15rem; // 240px
 
     img {
@@ -115,13 +122,15 @@ export default class BuildingTile extends Vue {
         color: inherit;
         text-decoration: none;
 
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           text-decoration: underline;
         }
       }
     }
 
-    .prop-type, .unit {
+    .prop-type,
+    .unit {
       font-size: 0.75rem;
       color: $text-light;
       font-weight: bold;
@@ -132,11 +141,15 @@ export default class BuildingTile extends Vue {
       gap: 2rem;
       margin-bottom: 0;
 
-      dt { font-size: 0.75rem; }
+      dt {
+        font-size: 0.75rem;
+      }
       .value {
         font-weight: bold;
       }
-      .unit { line-height: 1; }
+      .unit {
+        line-height: 1;
+      }
     }
   }
 }

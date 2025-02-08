@@ -299,7 +299,7 @@ export const BuildingImages: IBuildingImages = {
     attributionUrl: 'https://goo.gl/maps/DRpUvwYquHtWFaT58',
     imgUrl: BuildingImagesBase + 'hyde-park-west-apartments.jpg',
     fromGoogleMaps: true,
-    isTall: true
+    isTall: true,
   },
   // salem-baptist-church-of-chicago
   '163223': {
