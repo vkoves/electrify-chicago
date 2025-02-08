@@ -122,7 +122,8 @@ export default class BuildingTile extends Vue {
     padding: 0.75rem 1rem;
 
     a {
-      display: inline-block;
+      display: block;
+      width: fit-content;
       color: inherit;
       text-decoration: none;
 
