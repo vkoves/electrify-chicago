@@ -7,7 +7,6 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import EmissionsBreakdownGraph from '~/components/EmissionsBreakdownGraph.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 
@@ -15,7 +14,6 @@ import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
-    EmissionsBreakdownGraph,
     BuildingsTable,
     DataDisclaimer,
     NewTabIcon,
@@ -26,11 +24,13 @@ import DataSourceFootnote from '../components/DataSourceFootnote.vue';
     return { title: 'Home' };
   },
 })
-export default class BiggestBuildings extends Vue {
+export default class Index extends Vue {
   /** Set by Gridsome to results of GraphQL query */
   $page: any;
 
   pageInput = 0;
+
+  searchQuery = '';
 
   created(): void {
     this.pageInput = this.$page.allBuilding.pageInfo.currentPage;
@@ -40,6 +40,12 @@ export default class BiggestBuildings extends Vue {
     event.preventDefault();
 
     window.location.href = `/${this.pageInput}`;
+  }
+
+  submitSearch(event?: Event): void {
+    event?.preventDefault();
+
+    document.location.href = `/search?q=${this.searchQuery}`;
   }
 }
 </script>
@@ -84,46 +90,43 @@ export default class BiggestBuildings extends Vue {
 </page-query>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout main-class="layout -full-width">
     <div class="homepage">
-      <h1 id="main-content" tabindex="-1">Electrify Chicago</h1>
+      <div class="skyline-hero">
+        <div class="background"></div>
+        <div class="page-constrained">
+          <h1 id="main-content" tabindex="-1">
+            Find Out How Much Chicago Buildings Pollute
+          </h1>
 
-      <p class="tagline">
-        An independent tool for viewing City of Chicago building data
-      </p>
+          <form class="search-form">
+            <div class="input-cont">
+              <input
+                id="search"
+                v-model="searchQuery"
+                type="text"
+                name="search"
+                aria-label="Search benchmarked buildings"
+                placeholder="Search property name/address"
+              />
+              <button type="submit" @click="submitSearch">
+                <img src="/search.svg" alt="" width="32" height="32" />
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
 
-      <div class="row">
-        <div>
-          <p class="constrained -wide main-paragraph">
-            <!-- TODO: Move to consolidated sources object-->
-            According to the
-            <a
-              ref="noopener"
-              href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
-              target="_blank"
-            >
-              2022 Chicago Climate Action Plan<NewTabIcon /> </a
-            >, <strong>69% of Chicago's emissions come from buildings</strong>,
-            making building emissions our biggest challenge and
-            <em>our biggest opportunity</em> as a city to tackle climate change.
-            At Electrify Chicago, we showcase building performance using
-            publicly available data supplemented by community-submitted
-            photographs and building owners.
-          </p>
+      <div class="page-constrained">
+        <h2>Our Research</h2>
 
-          <p class="constrained -wide main-paragraph">
-            Start by looking at Chicago's buildings with the highest greenhouse
-            gas intensity i.e. emissions per square foot. Large, efficient,
-            buildings can perform much better than very inefficient small
-            buildings on this metric.
-          </p>
-
+        <div class="row">
           <div class="announcements">
             <div class="announce-panel -orange">
-              <h2>
+              <h3>
                 <div class="regular-text-size">New Article</div>
                 📰 $30 Million In Missed Fines
-              </h2>
+              </h3>
 
               <p>
                 The City Of Chicago failed to collect $30 million in potential
@@ -138,62 +141,115 @@ export default class BiggestBuildings extends Vue {
               </p>
             </div>
           </div>
-
-          <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
-
-          <DataDisclaimer />
         </div>
 
-        <EmissionsBreakdownGraph class="-desktop" />
-      </div>
+        <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
 
-      <BuildingsTable :buildings="$page.allBuilding.edges" />
+        <DataDisclaimer />
 
-      <div class="pager-cont">
-        <div>
-          <div class="page-number">
-            Page {{ $page.allBuilding.pageInfo.currentPage }} of
-            {{ $page.allBuilding.pageInfo.totalPages }}
+        <BuildingsTable :buildings="$page.allBuilding.edges" />
 
-            (Building #{{
-              1 +
-              ($page.allBuilding.pageInfo.currentPage - 1) *
-                $page.allBuilding.pageInfo.perPage
-            }}
-            to #{{
-              ($page.allBuilding.pageInfo.currentPage - 1) *
-                $page.allBuilding.pageInfo.perPage +
-              $page.allBuilding.edges.length
-            }})
+        <div class="pager-cont">
+          <div>
+            <div class="page-number">
+              Page {{ $page.allBuilding.pageInfo.currentPage }} of
+              {{ $page.allBuilding.pageInfo.totalPages }}
+
+              (Building #{ 1 + ($page.allBuilding.pageInfo.currentPage - 1) *
+              $page.allBuilding.pageInfo.perPage }} to #{{
+                ($page.allBuilding.pageInfo.currentPage - 1) *
+                  $page.allBuilding.pageInfo.perPage +
+                $page.allBuilding.edges.length
+              }})
+            </div>
+
+            <Pager class="pager" :info="$page.allBuilding.pageInfo" />
           </div>
 
-          <Pager class="pager" :info="$page.allBuilding.pageInfo" />
+          <form class="page-form search-form">
+            <label for="page-num">Go to Page</label>
+
+            <div class="input-cont">
+              <input id="page-num" v-model="pageInput" type="number" />
+              <button type="submit" @click="jumpToPage">Jump</button>
+            </div>
+          </form>
         </div>
 
-        <form class="page-form search-form">
-          <label for="page-num">Go to Page</label>
-
-          <div class="input-cont">
-            <input id="page-num" v-model="pageInput" type="number" />
-            <button type="submit" @click="jumpToPage">Jump</button>
-          </div>
-        </form>
+        <DataSourceFootnote />
       </div>
-
-      <DataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>
 
 <style lang="scss">
 .homepage {
-  h1 {
-    margin-bottom: 0;
-  }
+  .skyline-hero {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    min-height: 28rem;
+    padding: 5rem 1rem;
+    color: $white;
+    position: relative;
 
-  .tagline {
-    font-weight: bold;
-    margin-bottom: 1rem;
+    // Apply the background on a separate element so we can apply filters to it
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      background-image: url('/home/skyline-1920.webp');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      filter: brightness(60%);
+    }
+
+    h1 {
+      display: inline-block;
+      font-size: 2.5rem;
+      margin-top: 0;
+      margin-bottom: 2rem;
+    }
+
+    form {
+      margin: 0 auto 2rem auto;
+      width: 80%;
+      max-width: 50rem; // 800px
+
+      .input-cont {
+        height: 4rem;
+        border-radius: 3rem;
+        background: $white;
+
+        &:focus-within {
+          outline: solid $border-v-thick $blue-dark;
+
+          input, button { outline: none; }
+        }
+
+        input, button { height: 100%; border: none; }
+
+        input {
+          padding: 1rem 0 1rem 2rem;
+          font-size: 1.25rem;
+        }
+
+        button {
+          padding: 0 1.5rem 0 1rem;
+          background-color: $white;
+
+          &:focus {
+            background-color: $blue-dark;
+
+            img { filter: invert(1); }
+          }
+        }
+      }
+    }
   }
 
   .row {
@@ -213,22 +269,6 @@ export default class BiggestBuildings extends Vue {
 
     > * {
       flex-basis: 100%;
-    }
-  }
-
-  .emissions-breakdown {
-    text-align: right;
-    margin-bottom: 1rem;
-    flex-shrink: 0;
-
-    &.-mobile {
-      display: none;
-    }
-    > img {
-      height: 25rem;
-    }
-    p {
-      margin: 0;
     }
   }
 
@@ -269,24 +309,41 @@ export default class BiggestBuildings extends Vue {
   }
 
   @media (max-width: $mobile-max-width) {
-    .announcements {
-      flex-direction: column;
+    .skyline-hero {
+      // Switch to smaller size but taller skyline crop
+      .background { background-image: url('/home/skyline-mobile.webp'); }
+
+      h1 {
+        line-height: 1.25;
+        font-size: 1.8rem;
+      }
+
+      form {
+        width: 100%;
+
+        .input-cont {
+          height: 3.5rem;
+
+          input { font-size: 1rem; }
+          button {
+            padding-right: 1rem;
+
+            img {
+              width: 28px;
+              height: 28px;
+            }
+          }
+        }
+      }
     }
+
+    .announcements { flex-direction: column; }
 
     .row {
       display: block;
 
       p.main-paragraph {
         font-size: 0.825rem;
-      }
-    }
-
-    .emissions-breakdown {
-      width: 100%;
-      text-align: center;
-
-      &.-desktop {
-        display: none;
       }
     }
 
