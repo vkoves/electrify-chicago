@@ -41,9 +41,11 @@ export default class BuildingTile extends Vue {
       </div>
 
       <div class="text">
-        <div class="title">
-          <g-link :to="path">{{ building.PropertyName }}</g-link>
-        </div>
+        <g-link :to="path">
+          <div class="title">
+            {{ building.PropertyName }}
+          </div>
+        </g-link>
         <div class="prop-type">{{ building.PrimaryPropertyType }}</div>
 
         <dl>
@@ -109,6 +111,16 @@ export default class BuildingTile extends Vue {
   .text {
     padding: 0.75rem 1rem;
 
+    a {
+      display: inline-block;
+      color: inherit;
+      text-decoration: none;
+
+      &:focus {
+        text-decoration: underline;
+      }
+    }
+
     .title {
       font-weight: bold;
       font-size: 1.125rem;
@@ -117,15 +129,6 @@ export default class BuildingTile extends Vue {
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
-
-      a {
-        color: inherit;
-        text-decoration: none;
-
-        &:focus {
-          text-decoration: underline;
-        }
-      }
     }
 
     .prop-type,
