@@ -122,7 +122,6 @@ export default class BuildingTile extends Vue {
         color: inherit;
         text-decoration: none;
 
-        &:hover,
         &:focus {
           text-decoration: underline;
         }
