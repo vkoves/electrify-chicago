@@ -169,10 +169,6 @@ export default class Index extends Vue {
           </ul>
         </div>
 
-        <DataDisclaimer />
-
-        <DataSourceFootnote />
-
         <h2>Our Research</h2>
 
         <div class="row">
@@ -197,6 +193,10 @@ export default class Index extends Vue {
             </div>
           </div>
         </div>
+
+        <DataDisclaimer />
+
+        <DataSourceFootnote />
       </div>
     </div>
   </DefaultLayout>
@@ -286,7 +286,9 @@ export default class Index extends Vue {
 
   .buildings-scroll-cont {
     position: relative;
-    margin-top: 0.5rem;
+    $card-padding: 0.75rem;
+    // Grow to account for inner padding
+    margin: 0.5rem (-$card-padding) 2rem (-$card-padding);
     overflow: scroll hidden;
 
     // Create a fake partial right border to make clear it's scrollable
@@ -300,22 +302,30 @@ export default class Index extends Vue {
     }
 
     /* width */
-    &::-webkit-scrollbar { width: 10px; }
+    &::-webkit-scrollbar { width: 0.75rem; }
     /* Track */
-    &::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+    &::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: $brd-rad-medium;
+      margin: $card-padding;
+    }
     /* Handle */
-    &::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; cursor: pointer; }
+    &::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: $brd-rad-medium;
+      cursor: pointer;
+    }
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover { background: #555; }
 
     ul.building-tiles {
       list-style: none;
       display: flex;
-      gap: 2rem;
-      padding: 1rem 0.25rem 2rem 0.25rem;
+      gap: 1rem;
       margin: 0;
+      padding: 0;
 
-      li { padding: 0 0.5rem; }
+      li { padding: 0.5rem $card-padding 1.5rem $card-padding; }
     }
   }
 

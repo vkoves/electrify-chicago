@@ -33,14 +33,12 @@ export default class BuildingTile extends Vue {
 </script>
 
 <template>
-  <g-link :to="path" class="tile-link">
+  <g-link :to="path" class="tile-link" tabindex="-1">
     <div class="building-tile">
-      <g-link :to="path">
         <div class="img-cont">
           <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
           <img v-if="buildingImg" :src="buildingImg.imgUrl" alt="" />
         </div>
-      </g-link>
 
       <div class="text">
         <div class="title">
@@ -75,23 +73,22 @@ export default class BuildingTile extends Vue {
 }
 
 .building-tile {
-  width: 21.875rem; // 350px
+  width: 20rem; // 320px
   background-color: $grey-light;
   border-radius: $brd-rad-medium;
   overflow: hidden;
-  box-shadow: 0 0 0.625rem 0.1875rem $box-shadow-main;
+  box-shadow: 0 0 0.75rem $box-shadow-main;
   height: 100%;
   transition: outline 0.3s;
   outline: solid $border-v-thick transparent;
   text-decoration: none;
   color: $text-main;
-  margin: 0 0.25rem; // add margin for outline
 
   &:hover, &:focus-within { outline: solid $border-v-thick $chicago-blue; }
 
   .img-cont {
     background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);;
-    height: 16.875rem; // 270px
+    height: 15rem; // 240px
 
     img {
       height: 100%;
@@ -107,8 +104,12 @@ export default class BuildingTile extends Vue {
 
     .title {
       font-weight: bold;
-      font-size: 1.25rem;
+      font-size: 1.125rem;
       line-height: 1.25;
+      // Truncate with ellipsis, don't wrap
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
 
       a {
         color: inherit;

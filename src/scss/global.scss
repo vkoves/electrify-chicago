@@ -142,18 +142,19 @@ dl {
 
 /** Style the basic disclosure widget <details> and <summary> */
 details {
-  border: solid 0.01625rem $grey-dark;
   margin-bottom: 1rem;
   border-radius: $brd-rad-medium;
+  overflow: hidden;
+  border: solid $border-thin transparent;
+  background-color: $off-white;
 
   summary {
     background-color: $grey-light;
     padding: 1rem 1.5rem;
     cursor: pointer;
 
-    &:focus {
-      outline-offset: 0;
-    }
+    &:focus { outline-offset: 0; }
+    > span { margin-left: 0.5rem; }
   }
 
   .details-content {
