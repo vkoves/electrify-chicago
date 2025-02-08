@@ -9,6 +9,7 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import EmissionsBreakdownGraph from '~/components/EmissionsBreakdownGraph.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -18,6 +19,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     BuildingsTable,
     DataDisclaimer,
     NewTabIcon,
+    DataSourceFootnote,
     Pager,
   },
   metaInfo() {
@@ -178,17 +180,7 @@ export default class BiggestBuildings extends Vue {
         </form>
       </div>
 
-      <p class="footnote">
-        Data Source:
-
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener"
-        >
-          Chicago Energy Benchmarking Data <NewTabIcon />
-        </a>
-      </p>
+      <DataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>
