@@ -9,12 +9,14 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
+import BuildingTile from '../components/BuildingTile.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingTile,
     DataDisclaimer,
     NewTabIcon,
     DataSourceFootnote,
@@ -52,8 +54,8 @@ export default class Index extends Vue {
 
 <page-query>
   query ($page: Int) {
-    allBuilding(
-      sortBy: "GHGIntensity", perPage: 15, page: $page
+    allBuilding: allBuilding(
+      sortBy: "GHGIntensity", perPage: 10, page: $page
     ) @paginate {
       pageInfo {
         hasNextPage
@@ -72,17 +74,32 @@ export default class Index extends Vue {
           path
           PrimaryPropertyType
           GHGIntensity
-          GHGIntensityRank
-          GHGIntensityPercentileRank
           TotalGHGEmissions
-          TotalGHGEmissionsRank
-          TotalGHGEmissionsPercentileRank
           ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
           NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+        }
+      }
+    }
+    featuredBuildings: allBuilding(
+      # Marina Towers, Willis, Shedd Aquarium, Monadnock Building, and Art Institute of Chicago
+      filter: { ID: { in: [ "103606", "239096", "166134", "101567", "160196" ] } }
+      sortBy: "ID"
+      order: DESC
+      limit: 10
+    ) {
+      edges {
+        node {
+          slugSource
+          ID
+          DataYear
+          PropertyName
+          Address
+          path
+          PrimaryPropertyType
+          GHGIntensity
+          TotalGHGEmissions
+          ElectricityUse
+          NaturalGasUse
         }
       }
     }
@@ -118,6 +135,44 @@ export default class Index extends Vue {
       </div>
 
       <div class="page-constrained">
+        <h2 class="list-title">Chicago&apos;s Most Emissions Intense Buildings</h2>
+        <p class="list-desc">
+          The buildings that reported the highest greenhouse gas emissions per
+          square foot
+        </p>
+
+        <div class="buildings-scroll-cont">
+          <ul class="building-tiles">
+            <li
+              v-for="building in $page.allBuilding.edges"
+              :key="building.node.ID"
+            >
+              <BuildingTile :building="building.node" :path="building.node.path" />
+            </li>
+          </ul>
+        </div>
+
+        <h2 class="list-title">Featured Chicago Buildings</h2>
+        <p class="list-desc">
+          Check out some of Chicago’s most famous buildings, and learn how they
+          use energy
+        </p>
+
+        <div class="buildings-scroll-cont">
+          <ul class="building-tiles">
+            <li
+              v-for="building in $page.featuredBuildings.edges"
+              :key="building.node.ID"
+            >
+              <BuildingTile :building="building.node" :path="building.node.path" />
+            </li>
+          </ul>
+        </div>
+
+        <DataDisclaimer />
+
+        <DataSourceFootnote />
+
         <h2>Our Research</h2>
 
         <div class="row">
@@ -142,41 +197,6 @@ export default class Index extends Vue {
             </div>
           </div>
         </div>
-
-        <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
-
-        <DataDisclaimer />
-
-        <BuildingsTable :buildings="$page.allBuilding.edges" />
-
-        <div class="pager-cont">
-          <div>
-            <div class="page-number">
-              Page {{ $page.allBuilding.pageInfo.currentPage }} of
-              {{ $page.allBuilding.pageInfo.totalPages }}
-
-              (Building #{ 1 + ($page.allBuilding.pageInfo.currentPage - 1) *
-              $page.allBuilding.pageInfo.perPage }} to #{{
-                ($page.allBuilding.pageInfo.currentPage - 1) *
-                  $page.allBuilding.pageInfo.perPage +
-                $page.allBuilding.edges.length
-              }})
-            </div>
-
-            <Pager class="pager" :info="$page.allBuilding.pageInfo" />
-          </div>
-
-          <form class="page-form search-form">
-            <label for="page-num">Go to Page</label>
-
-            <div class="input-cont">
-              <input id="page-num" v-model="pageInput" type="number" />
-              <button type="submit" @click="jumpToPage">Jump</button>
-            </div>
-          </form>
-        </div>
-
-        <DataSourceFootnote />
       </div>
     </div>
   </DefaultLayout>
@@ -228,10 +248,17 @@ export default class Index extends Vue {
         &:focus-within {
           outline: solid $border-v-thick $blue-dark;
 
-          input, button { outline: none; }
+          input,
+          button {
+            outline: none;
+          }
         }
 
-        input, button { height: 100%; border: none; }
+        input,
+        button {
+          height: 100%;
+          border: none;
+        }
 
         input {
           padding: 1rem 0 1rem 2rem;
@@ -245,10 +272,50 @@ export default class Index extends Vue {
           &:focus {
             background-color: $blue-dark;
 
-            img { filter: invert(1); }
+            img {
+              filter: invert(1);
+            }
           }
         }
       }
+    }
+  }
+
+  h2.list-title { margin: 2rem 0 0 0; }
+  .list-desc { margin-top: 0; }
+
+  .buildings-scroll-cont {
+    position: relative;
+    margin-top: 0.5rem;
+    overflow: scroll hidden;
+
+    // Create a fake partial right border to make clear it's scrollable
+    &::after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      background: gray;
+      position: absolute;
+      bottom: -4px;
+    }
+
+    /* width */
+    &::-webkit-scrollbar { width: 10px; }
+    /* Track */
+    &::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+    /* Handle */
+    &::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; cursor: pointer; }
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover { background: #555; }
+
+    ul.building-tiles {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      padding: 1rem 0.25rem 2rem 0.25rem;
+      margin: 0;
+
+      li { padding: 0 0.5rem; }
     }
   }
 
@@ -311,7 +378,9 @@ export default class Index extends Vue {
   @media (max-width: $mobile-max-width) {
     .skyline-hero {
       // Switch to smaller size but taller skyline crop
-      .background { background-image: url('/home/skyline-mobile.webp'); }
+      .background {
+        background-image: url('/home/skyline-mobile.webp');
+      }
 
       h1 {
         line-height: 1.25;
@@ -324,7 +393,9 @@ export default class Index extends Vue {
         .input-cont {
           height: 3.5rem;
 
-          input { font-size: 1rem; }
+          input {
+            font-size: 1rem;
+          }
           button {
             padding-right: 1rem;
 
@@ -337,7 +408,16 @@ export default class Index extends Vue {
       }
     }
 
-    .announcements { flex-direction: column; }
+    // Undo padding on mobile to make scroll full width
+    .buildings-scroll-cont {
+      margin: 0 -1rem;
+
+      ul { padding: 0 1rem; }
+    }
+
+    .announcements {
+      flex-direction: column;
+    }
 
     .row {
       display: block;

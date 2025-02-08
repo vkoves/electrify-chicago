@@ -203,7 +203,6 @@ header.header {
       margin: 0;
       background-color: $off-white;
 
-
       // Hide until nav is opened on mobile
       &.-hidden {
         display: none;
