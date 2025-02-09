@@ -1,36 +1,36 @@
 {
     "dependent_variable": "Non-Reporting",
     "number_of_observations": 10588,
-    "r_squared": 0.0006814442215383743,
-    "adj_r_squared": 0.00039819066264434877,
+    "r_squared": 0.0006814442215381522,
+    "adj_r_squared": 0.0003981906626441267,
     "coefficients": {
-        "const": 0.12735628464907744,
-        "GHG Intensity (Last Year)": -6.42240400826807e-08,
-        "Change in GHG Intensity Last Two Years": 0.00020244263665042202,
-        "Gross Floor Area (Millions)": -0.017037109384991228
+        "const": 0.12735628464907747,
+        "GHG Intensity (Last Year)": -6.422404008107473e-08,
+        "Change in GHG Intensity Last Two Years": 0.00020244263665041885,
+        "Gross Floor Area (Millions)": -0.01703710938499124
     },
     "p_values": {
-        "const": 8.632077178330187e-174,
-        "GHG Intensity (Last Year)": 0.9997894807085226,
-        "Change in GHG Intensity Last Two Years": 0.4398536725259733,
-        "Gross Floor Area (Millions)": 0.010176545692003403
+        "const": 8.632077178342468e-174,
+        "GHG Intensity (Last Year)": 0.9997894807085278,
+        "Change in GHG Intensity Last Two Years": 0.43985367252598107,
+        "Gross Floor Area (Millions)": 0.010176545692003372
     },
     "confidence_intervals": {
         "const": [
-            0.11863904983380956,
-            0.13607351946434532
+            0.11863904983380957,
+            0.13607351946434537
         ],
         "GHG Intensity (Last Year)": [
-            -0.0004771904393046634,
-            0.000477061991224498
+            -0.0004771904393046659,
+            0.00047706199122450377
         ],
         "Change in GHG Intensity Last Two Years": [
-            -0.0003112678381680631,
-            0.0007161531114689071
+            -0.0003112678381680666,
+            0.0007161531114689043
         ],
         "Gross Floor Area (Millions)": [
-            -0.030030457208608786,
-            -0.004043761561373668
+            -0.0300304572086088,
+            -0.004043761561373678
         ]
     },
     "covariance_type": "nonrobust"
