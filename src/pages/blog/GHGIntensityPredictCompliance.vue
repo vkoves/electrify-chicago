@@ -50,7 +50,7 @@ export default class MillionsInMissedFine extends Vue {
     this.isMobile = window.innerWidth <= 768;
   }
 
-  metaInfo(): Record<string, unknown>  {
+  metaInfo(): Record<string, unknown> {
     return {
       title: 'Do High Emitting Buildings Fail to Report?',
     };
@@ -120,25 +120,24 @@ export default class MillionsInMissedFine extends Vue {
         report emissions data each year.
       </p>
 
-        <div>
-          <div v-if="isMobile">
-            <img
-              src="/blog/GHGIntensityPredictCompliance/reporting_counts_over_time.png"
-              alt="Reporting Counts Over Time"
-              style="width: 100%; height: auto"
-            />
-          </div>
-
-          <div v-else>
-            <iframe
-              src="/blog/GHGIntensityPredictCompliance/reporting_counts_over_time.html"
-              frameborder="1"
-              width="100%"
-              height="500px"
-            ></iframe>
-          </div>
+      <div>
+        <div v-if="isMobile">
+          <img
+            src="/blog/GHGIntensityPredictCompliance/reporting_counts_over_time.png"
+            alt="Reporting Counts Over Time"
+            style="width: 100%; height: auto"
+          />
         </div>
 
+        <div v-else>
+          <iframe
+            src="/blog/GHGIntensityPredictCompliance/reporting_counts_over_time.html"
+            frameborder="1"
+            width="100%"
+            height="500px"
+          ></iframe>
+        </div>
+      </div>
 
       <p>Several things can be seen from the time series analysis above.</p>
 
@@ -176,26 +175,24 @@ export default class MillionsInMissedFine extends Vue {
 
       <p class="constrained bold">What are normal emissions intensities?</p>
 
-
-        <div>
-          <div v-if="isMobile">
-            <img
-              src="/blog/GHGIntensityPredictCompliance/distribution_of_GHG_intensity.png"
-              alt="Distribution of GHG Intensity Values"
-              style="width: 100%; height: auto"
-            />
-          </div>
-
-          <div v-else>
-            <iframe
-              src="/blog/GHGIntensityPredictCompliance/distribution_of_GHG_intensity.html"
-              frameborder="0"
-              width="100%"
-              height="450px"
-            ></iframe>
-          </div>
+      <div>
+        <div v-if="isMobile">
+          <img
+            src="/blog/GHGIntensityPredictCompliance/distribution_of_GHG_intensity.png"
+            alt="Distribution of GHG Intensity Values"
+            style="width: 100%; height: auto"
+          />
         </div>
 
+        <div v-else>
+          <iframe
+            src="/blog/GHGIntensityPredictCompliance/distribution_of_GHG_intensity.html"
+            frameborder="0"
+            width="100%"
+            height="450px"
+          ></iframe>
+        </div>
+      </div>
 
       <p>
         As can be seen above, most buildings have
@@ -241,39 +238,37 @@ export default class MillionsInMissedFine extends Vue {
         values:
       </p>
 
+      <div>
+        <div v-if="isMobile">
+          <img
+            src="/blog/GHGIntensityPredictCompliance/GHG_last_year_by_compliance_recent_data_only.png"
+            alt="GHG Last Year Compliance"
+            style="width: 100%; height: auto"
+          />
 
-        <div>
-          <div v-if="isMobile">
-            <img
-              src="/blog/GHGIntensityPredictCompliance/GHG_last_year_by_compliance_recent_data_only.png"
-              alt="GHG Last Year Compliance"
-              style="width: 100%; height: auto"
-            />
-
-            <img
-              src="/blog/GHGIntensityPredictCompliance/change_GHG_trend_by_compliance_recent_data_only.png"
-              alt="Change GHG Trend Compliance"
-              style="width: 100%; height: auto"
-            />
-          </div>
-
-          <div v-else>
-            <iframe
-              src="/blog/GHGIntensityPredictCompliance/GHG_last_year_by_compliance_recent_data_only.html"
-              frameborder="0"
-              width="100%"
-              height="400px"
-            ></iframe>
-
-            <iframe
-              src="/blog/GHGIntensityPredictCompliance/change_GHG_trend_by_compliance_recent_data_only.html"
-              frameborder="1"
-              width="100%"
-              height="400px"
-            ></iframe>
-          </div>
+          <img
+            src="/blog/GHGIntensityPredictCompliance/change_GHG_trend_by_compliance_recent_data_only.png"
+            alt="Change GHG Trend Compliance"
+            style="width: 100%; height: auto"
+          />
         </div>
 
+        <div v-else>
+          <iframe
+            src="/blog/GHGIntensityPredictCompliance/GHG_last_year_by_compliance_recent_data_only.html"
+            frameborder="0"
+            width="100%"
+            height="400px"
+          ></iframe>
+
+          <iframe
+            src="/blog/GHGIntensityPredictCompliance/change_GHG_trend_by_compliance_recent_data_only.html"
+            frameborder="1"
+            width="100%"
+            height="400px"
+          ></iframe>
+        </div>
+      </div>
 
       <h2>Results: No meaningful difference between groups</h2>
 
