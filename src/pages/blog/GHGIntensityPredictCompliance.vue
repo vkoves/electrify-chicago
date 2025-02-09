@@ -1,7 +1,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { ComponentOptions } from 'vue';
 
 // Extend Vue options with metaInfo
 @Component({
@@ -16,7 +15,7 @@ export default class MillionsInMissedFine extends Vue {
   readonly NonReportingBuildingsDataUrl =
     'https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/explore/query/...';
 
-  results: any = null;
+  results: Record<string, unknown> | unknown[] | null = null;
   loading = true;
   isMobile = false; // Add mobile detection flag
 
@@ -51,7 +50,7 @@ export default class MillionsInMissedFine extends Vue {
     this.isMobile = window.innerWidth <= 768;
   }
 
-  metaInfo(): any {
+  metaInfo(): Record<string, unknown>  {
     return {
       title: 'Do High Emitting Buildings Fail to Report?',
     };
@@ -74,7 +73,7 @@ export default class MillionsInMissedFine extends Vue {
         Analysis by
         <a href="https://github.com/colton-lapp" class="author-link"
           >Colton Lapp</a
-        >, with assistance and Review by Viktor Koves
+        >, with assistance and review by Viktor Koves
       </p>
 
       <p class="publish-time">
@@ -121,7 +120,6 @@ export default class MillionsInMissedFine extends Vue {
         report emissions data each year.
       </p>
 
-      <template>
         <div>
           <div v-if="isMobile">
             <img
@@ -140,7 +138,7 @@ export default class MillionsInMissedFine extends Vue {
             ></iframe>
           </div>
         </div>
-      </template>
+
 
       <p>Several things can be seen from the time series analysis above.</p>
 
@@ -178,7 +176,7 @@ export default class MillionsInMissedFine extends Vue {
 
       <p class="constrained bold">What are normal emissions intensities?</p>
 
-      <template>
+
         <div>
           <div v-if="isMobile">
             <img
@@ -197,7 +195,7 @@ export default class MillionsInMissedFine extends Vue {
             ></iframe>
           </div>
         </div>
-      </template>
+
 
       <p>
         As can be seen above, most buildings have
@@ -243,7 +241,7 @@ export default class MillionsInMissedFine extends Vue {
         values:
       </p>
 
-      <template>
+
         <div>
           <div v-if="isMobile">
             <img
@@ -275,7 +273,7 @@ export default class MillionsInMissedFine extends Vue {
             ></iframe>
           </div>
         </div>
-      </template>
+
 
       <h2>Results: No meaningful difference between groups</h2>
 
