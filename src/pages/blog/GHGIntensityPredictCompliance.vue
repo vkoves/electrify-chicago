@@ -13,16 +13,17 @@ export default class MillionsInMissedFine extends Vue {
   readonly NotifLetterUrl =
     'https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/sample_notification_letter.pdf';
 
-  /** Buildings from 2018 - 2022 that didn't report */
   readonly NonReportingBuildingsDataUrl =
-    'https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/explore/query/SELECT%0A%20%20%60data_year%60%2C%0A%20%20%60id%60%2C%0A%20%20%60property_name%60%2C%0A%20%20%60reporting_status%60%2C%0A%20%20%60address%60%2C%0A%20%20%60zip_code%60%2C%0A%20%20%60chicago_energy_rating%60%2C%0A%20%20%60exempt_from_chicago_energy_rating%60%2C%0A%20%20%60community_area%60%2C%0A%20%20%60primary_property_type%60%2C%0A%20%20%60gross_floor_area_buildings_sq_ft%60%2C%0A%20%20%60year_built%60%2C%0A%20%20%60of_buildings%60%2C%0A%20%20%60water_use_kgal%60%2C%0A%20%20%60energy_star_score%60%2C%0A%20%20%60electricity_use_kbtu%60%2C%0A%20%20%60natural_gas_use_kbtu%60%2C%0A%20%20%60district_steam_use_kbtu%60%2C%0A%20%20%60district_chilled_water_use_kbtu%60%2C%0A%20%20%60all_other_fuel_use_kbtu%60%2C%0A%20%20%60site_eui_kbtu_sq_ft%60%2C%0A%20%20%60source_eui_kbtu_sq_ft%60%2C%0A%20%20%60weather_normalized_site_eui_kbtu_sq_ft%60%2C%0A%20%20%60weather_normalized_source_eui_kbtu_sq_ft%60%2C%0A%20%20%60total_ghg_emissions_metric_tons_co2e%60%2C%0A%20%20%60ghg_intensity_kg_co2e_sq_ft%60%2C%0A%20%20%60latitude%60%2C%0A%20%20%60longitude%60%2C%0A%20%20%60location%60%2C%0A%20%20%60row_id%60%2C%0A%20%20%60%3A%40computed_region_43wa_7qmu%60%2C%0A%20%20%60%3A%40computed_region_vrxf_vc4k%60%2C%0A%20%20%60%3A%40computed_region_6mkv_f3dw%60%2C%0A%20%20%60%3A%40computed_region_bdys_3d7i%60%2C%0A%20%20%60%3A%40computed_region_awaf_s7ux%60%0AWHERE%0A%20%20%28%60data_year%60%20IN%20%28%222019%22%2C%20%222020%22%2C%20%222021%22%2C%20%222022%22%2C%20%222018%22%29%29%0A%20%20AND%20caseless_one_of%28%60reporting_status%60%2C%20%22Not%20Submitted%22%29/page/filter';
+    'https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/explore/query/...';
 
-  // New properties
-  results: any = null; // Holds fetched JSON data
-  loading = true; // Controls loading state
+  results: any = null;
+  loading = true;
+  isMobile = false; // Add mobile detection flag
 
-  // Lifecycle hook to fetch regression results
   async mounted(): Promise<void> {
+    this.checkScreenSize();
+    window.addEventListener('resize', this.checkScreenSize);
+
     const jsonFilePath =
       '/blog/GHGIntensityPredictCompliance/regression_results_w_covid.json';
 
@@ -30,11 +31,9 @@ export default class MillionsInMissedFine extends Vue {
 
     try {
       const response = await fetch(jsonFilePath);
-
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
       this.results = await response.json();
       console.log('Loaded regression results:', this.results);
     } catch (error) {
@@ -44,7 +43,14 @@ export default class MillionsInMissedFine extends Vue {
     }
   }
 
-  // Meta information for the page
+  beforeDestroy(): void {
+    window.removeEventListener('resize', this.checkScreenSize);
+  }
+
+  checkScreenSize(): void {
+    this.isMobile = window.innerWidth <= 768;
+  }
+
   metaInfo(): any {
     return {
       title: 'Do High Emitting Buildings Fail to Report?',
@@ -64,48 +70,77 @@ export default class MillionsInMissedFine extends Vue {
       <p class="sub-title constrained">
         Analyzing Patterns in Greenhouse Gas Emissions Reporting
       </p>
+      <p class="author">
+        Analysis by
+        <a href="https://github.com/colton-lapp" class="author-link"
+          >Colton Lapp</a
+        >, with assistance and Review by Viktor Koves
+      </p>
+
       <p class="publish-time">
         <!-- TODO: Update publish time when PR is about to get merged -->
-        Published <time datetime="2025-02-02">Feb. 1st, 2025</time>
+        Published <time datetime="2025-02-10">Feb. 10th, 2025</time>
       </p>
 
       <p class="constrained">
-        Many buildings in the publicly available data
+        Many buildings in the
+        <a
+          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/about_data"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Chicago building benchmarking</a
+        >
+        data
         <a
           href="https://electrifychicago.net/blog/millions-in-missed-fines"
           target="_blank"
           rel="noopener noreferrer"
-          >don't report emissions data.</a
+          >don't report their emissions.</a
         >
-        Is there a pattern to which buildings fail to report? Anecdotally, it's
-        been observed that certain buildings stopped reporting data after
-        negative press coverage of high historical emissions. In this blog, we
-        investigate if there is a broader pattern at play - are buildings
-        emission levels linked to a building's reporting compliance?
+        Is there a pattern to which buildings fail to report? Our team has
+        noticed that some high emissions buildings stop reporting, while more
+        efficient buildings tend to keep reporting year after year. In this
+        blog, we investigate if there is a broader pattern at play - are
+        buildings emission levels linked to a building's reporting compliance?
       </p>
 
       <h2>Analyzing the Emissions Data</h2>
 
       <p>
         To understand if there was a link between reporting compliance and
-        emissions, we analyzed the publicly available data. As a first step, we
-        wanted to investigate the overall landscape of emissions reporting. We
-        started by computing some general statistics about emissions reporting.
+        emissions, we analyzed Chicago's building benchmarking data. As a first
+        step, we wanted to investigate the overall landscape of emissions
+        reporting. We started by computing some general statistics about
+        emissions reporting.
       </p>
 
       <p class="constrained bold">Historical Patterns of Non-Reporting</p>
 
       <p>
         The graph below depicts the count of buildings that did and did not
-        report emissions data every year.
+        report emissions data each year.
       </p>
 
-      <iframe
-        src="/blog/GHGIntensityPredictCompliance/reporting_counts_over_time.html"
-        frameborder="1"
-        width="100%"
-        height="500px"
-      ></iframe>
+      <template>
+        <div>
+          <div v-if="isMobile">
+            <img
+              src="/blog/GHGIntensityPredictCompliance/reporting_counts_over_time.png"
+              alt="Reporting Counts Over Time"
+              style="width: 100%; height: auto"
+            />
+          </div>
+
+          <div v-else>
+            <iframe
+              src="/blog/GHGIntensityPredictCompliance/reporting_counts_over_time.html"
+              frameborder="1"
+              width="100%"
+              height="500px"
+            ></iframe>
+          </div>
+        </div>
+      </template>
 
       <p>Several things can be seen from the time series analysis above.</p>
 
@@ -143,12 +178,26 @@ export default class MillionsInMissedFine extends Vue {
 
       <p class="constrained bold">What are normal emissions intensities?</p>
 
-      <iframe
-        src="/blog/GHGIntensityPredictCompliance/distribution_of_GHG_intensity.html"
-        frameborder="0"
-        width="100%"
-        height="450px"
-      ></iframe>
+      <template>
+        <div>
+          <div v-if="isMobile">
+            <img
+              src="/blog/GHGIntensityPredictCompliance/distribution_of_GHG_intensity.png"
+              alt="Distribution of GHG Intensity Values"
+              style="width: 100%; height: auto"
+            />
+          </div>
+
+          <div v-else>
+            <iframe
+              src="/blog/GHGIntensityPredictCompliance/distribution_of_GHG_intensity.html"
+              frameborder="0"
+              width="100%"
+              height="450px"
+            ></iframe>
+          </div>
+        </div>
+      </template>
 
       <p>
         As can be seen above, most buildings have
@@ -194,21 +243,41 @@ export default class MillionsInMissedFine extends Vue {
         values:
       </p>
 
-      <iframe
-        src="/blog/GHGIntensityPredictCompliance/GHG_last_year_by_compliance.html"
-        frameborder="0"
-        width="100%"
-        height="400px"
-      ></iframe>
+      <template>
+        <div>
+          <div v-if="isMobile">
+            <img
+              src="/blog/GHGIntensityPredictCompliance/GHG_last_year_by_compliance_recent_data_only.png"
+              alt="GHG Last Year Compliance"
+              style="width: 100%; height: auto"
+            />
 
-      <iframe
-        src="/blog/GHGIntensityPredictCompliance/change_GHG_trend_by_compliance.html"
-        frameborder="1"
-        width="100%"
-        height="400px"
-      ></iframe>
+            <img
+              src="/blog/GHGIntensityPredictCompliance/change_GHG_trend_by_compliance_recent_data_only.png"
+              alt="Change GHG Trend Compliance"
+              style="width: 100%; height: auto"
+            />
+          </div>
 
-      <h2>Results: No noticeable difference between groups</h2>
+          <div v-else>
+            <iframe
+              src="/blog/GHGIntensityPredictCompliance/GHG_last_year_by_compliance_recent_data_only.html"
+              frameborder="0"
+              width="100%"
+              height="400px"
+            ></iframe>
+
+            <iframe
+              src="/blog/GHGIntensityPredictCompliance/change_GHG_trend_by_compliance_recent_data_only.html"
+              frameborder="1"
+              width="100%"
+              height="400px"
+            ></iframe>
+          </div>
+        </div>
+      </template>
+
+      <h2>Results: No meaningful difference between groups</h2>
 
       <p>
         As can be seen from both of the graphs above, it seems that there is no
@@ -395,6 +464,14 @@ export default class MillionsInMissedFine extends Vue {
     + p {
       margin: 0.25rem 0 0.5rem 0;
     }
+  }
+  .author {
+    font-size: 0.9em; /* Slightly smaller */
+    font-style: italic; /* Makes text italic */
+    font-weight: normal;
+    margin-top: 0.2rem;
+    margin-bottom: 0.2rem;
+    line-height: 1.2;
   }
 
   h3 {
