@@ -233,9 +233,11 @@ export default class MillionsInMissedFine extends Vue {
 
       <p>
         We computed the mean and median of the level and trend of GHG intensity
-        for both groups of buildings: Reporting and Non-Reporting. As can be
-        seen in the graphs below, there are no real group differences for these
-        values:
+        for both groups of buildings: Reporting and Non-Reporting. In the graphs
+        below, we show these statistics only for the most recent year of data.
+        When we expand the analysis for all years of data, the findings do not
+        meaningfully change. As can be seen, there are no real group differences
+        in emission characteristics between the two groups:
       </p>
 
       <div>
