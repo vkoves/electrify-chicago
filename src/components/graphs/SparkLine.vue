@@ -50,13 +50,13 @@ export default class BarGraph extends Vue {
 
   /** Underlying SVG size */
   readonly width = 320;
-  readonly height = 100;
+  readonly height = 140;
 
   /** The radius, in pixels, of the min and max dots and all the points on focus */
   readonly DotRadius = 8;
 
   /** The font-size of the label, in the <svg>'s internal space (so scaled as the SVG is scaled)' */
-  readonly LabelFontSize = 28;
+  readonly LabelFontSize = 30;
 
   // The amount to shift the x-axis down by - ideally 0, so it's accurate
   readonly xAxisOffset = 0;
