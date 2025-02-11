@@ -72,10 +72,6 @@ h6 {
   h2 {
     font-size: 1.25rem;
   }
-
-  p {
-    font-size: 0.75rem;
-  }
 }
 
 h1 {
@@ -143,10 +139,12 @@ dl {
 /** Style the basic disclosure widget <details> and <summary> */
 details {
   margin-bottom: 1rem;
-  border-radius: $brd-rad-medium;
-  overflow: hidden;
   border: solid $border-thin transparent;
   background-color: $off-white;
+
+  &, summary {
+    border-radius: $brd-rad-medium;
+  }
 
   summary {
     background-color: $grey-light;
@@ -302,7 +300,7 @@ form.search-form {
     border-color: $chicago-blue;
   }
 
-  h2 {
+  h2, h3 {
     margin-top: 0;
   }
 

@@ -89,7 +89,7 @@ export default class BuildingTile extends Vue {
   background-color: $grey-light;
   border-radius: $brd-rad-medium;
   overflow: hidden;
-  box-shadow: 0 0 0.75rem $box-shadow-main;
+  box-shadow: 0.125rem 0.125rem 0.75rem $box-shadow-main;
   height: 100%;
   transition: outline 0.3s;
   outline: solid $border-v-thick transparent;
@@ -123,7 +123,6 @@ export default class BuildingTile extends Vue {
 
     a {
       display: block;
-      width: fit-content;
       color: inherit;
       text-decoration: none;
 
@@ -144,10 +143,13 @@ export default class BuildingTile extends Vue {
 
     .prop-type,
     .unit {
-      font-size: 0.75rem;
-      color: $text-light;
+      color: $text-mid-light;
       font-weight: bold;
     }
+
+    .prop-type { font-size: 0.875rem; }
+
+    .unit { font-size: 0.75rem; }
 
     dl {
       display: flex;

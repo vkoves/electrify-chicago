@@ -114,7 +114,7 @@ export default class Index extends Vue {
                 placeholder="Search property name/address"
               />
               <button type="submit" @click="submitSearch">
-                <img src="/search.svg" alt="" width="32" height="32" />
+                <img src="/search.svg" alt="Search" width="32" height="32" />
               </button>
             </div>
           </form>
@@ -122,12 +122,14 @@ export default class Index extends Vue {
       </div>
 
       <div class="page-constrained">
-        <h2 class="list-title">
-          Chicago&apos;s Most Emissions Intense Buildings
-        </h2>
-        <g-link class="bold" to="/highest-emissions-intensity"
-          >View More</g-link
-        >
+        <div class="list-title">
+          <h2>
+            Chicago&apos;s Most Emissions Intense Buildings
+          </h2>
+          <g-link class="bold" to="/highest-emissions-intensity"
+            >View More</g-link
+          >
+        </div>
         <p class="list-desc">
           The buildings that reported the highest greenhouse gas emissions per
           square foot
@@ -147,7 +149,7 @@ export default class Index extends Vue {
           </ul>
         </div>
 
-        <h2 class="list-title">Featured Chicago Buildings</h2>
+        <div class="list-title"><h2>Featured Chicago Buildings</h2></div>
         <p class="list-desc">
           Check out some of Chicago’s most famous buildings, and learn how they
           use energy
@@ -279,9 +281,14 @@ export default class Index extends Vue {
     }
   }
 
-  h2.list-title {
-    display: inline-block;
+  .list-title {
+    display: block;
     margin: 2rem 1rem 0 0;
+
+    h2 {
+      display: inline;
+      margin: 0;
+    }
   }
   .list-desc {
     margin: 0;
@@ -378,6 +385,8 @@ export default class Index extends Vue {
 
   @media (max-width: $mobile-max-width) {
     .skyline-hero {
+      min-height: unset;
+
       // Switch to smaller size but taller skyline crop
       .background {
         background-image: url('/home/skyline-mobile.webp');
@@ -411,10 +420,14 @@ export default class Index extends Vue {
 
     // Undo padding on mobile to make scroll full width
     .buildings-scroll-cont {
-      margin: 0 -1rem;
+      margin-left: -1rem;
+      margin-right: -1rem;
 
-      ul {
-        padding: 0 1rem;
+      ul.building-tiles {
+        li {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
       }
     }
 
