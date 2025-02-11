@@ -6,12 +6,15 @@ import {
   getBuildingImage,
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
+import OwnerLogo from './OwnerLogo.vue';
 
 /**
  * A component that renders a tile for a building
  */
 @Component({
-  components: {},
+  components: {
+    OwnerLogo
+  },
 })
 export default class BuildingTile extends Vue {
   @Prop({ required: true }) building!: IBuilding;
@@ -26,8 +29,17 @@ export default class BuildingTile extends Vue {
     return getBuildingImage(this.building);
   }
 
-  get currentYear(): number {
-    return new Date().getFullYear();
+  /**
+   * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
+   * through a district heating system.
+   */
+   get fullyGasFree(): boolean {
+    console.log(this.building);
+
+    return (
+      parseFloat(this.building.NaturalGasUse) === 0 &&
+      parseFloat(this.building.DistrictSteamUse) === 0
+    );
   }
 }
 </script>
@@ -36,6 +48,12 @@ export default class BuildingTile extends Vue {
   <g-link :to="path" class="tile-link" tabindex="-1">
     <div class="building-tile">
       <div class="img-cont">
+        <div class="pills-cont">
+          <div v-if="fullyGasFree" class="pill -all-electric"><span>⚡</span> All Electric</div>
+        </div>
+
+        <OwnerLogo :building="building" :is-small="true" />
+
         <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
         <img v-if="buildingImg" :src="buildingImg.imgUrl" alt="" />
       </div>
@@ -102,12 +120,51 @@ export default class BuildingTile extends Vue {
   }
 
   .img-cont {
+    position: relative;
     background: radial-gradient(
       circle,
       rgba(238, 174, 202, 1) 0%,
       rgba(148, 187, 233, 1) 100%
     );
     height: 15rem; // 240px
+
+    .owner-cont {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background: $white;
+      padding: 0.5rem 1rem;
+      top: 0;
+      margin: 0;
+      border-bottom-right-radius: $brd-rad-medium;
+
+      img {
+        display: block;
+        height: 1.5rem;
+        width: auto;
+      }
+    }
+
+    .pills-cont {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+
+      .pill {
+        font-weight: bold;
+        padding: 0.125rem 1rem;
+        border-radius: 1rem;
+        font-size: 0.875rem;
+        box-shadow: 0.125rem 0.125rem 0.125rem $box-shadow-main;
+
+        &.-all-electric {
+          background: #fff6aa;
+          color: #9e5e00;
+        }
+
+        span { text-shadow: 0.0625rem 0 0.0625rem $black; }
+      }
+    }
 
     img {
       height: 100%;

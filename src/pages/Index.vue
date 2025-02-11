@@ -34,7 +34,7 @@ export default class Index extends Vue {
 
 <page-query>
   query ($page: Int) {
-    allBuilding: allBuilding(
+    worstBuildings: allBuilding(
       sortBy: "GHGIntensity", perPage: 10, page: $page
     ) @paginate {
       pageInfo {
@@ -57,6 +57,7 @@ export default class Index extends Vue {
           TotalGHGEmissions
           ElectricityUse
           NaturalGasUse
+          DistrictSteamUse
         }
       }
     }
@@ -87,6 +88,7 @@ export default class Index extends Vue {
           TotalGHGEmissions
           ElectricityUse
           NaturalGasUse
+          DistrictSteamUse
         }
       }
     }
@@ -138,7 +140,7 @@ export default class Index extends Vue {
         <div class="buildings-scroll-cont">
           <ul class="building-tiles">
             <li
-              v-for="building in $page.allBuilding.edges"
+              v-for="building in $page.worstBuildings.edges"
               :key="building.node.ID"
             >
               <BuildingTile
@@ -311,25 +313,27 @@ export default class Index extends Vue {
       bottom: -4px;
     }
 
-    /* width */
+    // Set scrollbar width
     &::-webkit-scrollbar {
       width: 0.75rem;
     }
-    /* Track */
+    // Scrollbar track
     &::-webkit-scrollbar-track {
       background: #f1f1f1;
       border-radius: $brd-rad-medium;
       margin: $card-padding;
     }
-    /* Handle */
+
+    // Scrollbar Handle
     &::-webkit-scrollbar-thumb {
       background: #888;
       border-radius: $brd-rad-medium;
       cursor: pointer;
-    }
-    /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover {
-      background: #555;
+
+      // Scroll handle on hover
+      &:hover {
+        background: #555;
+      }
     }
 
     ul.building-tiles {

@@ -72,7 +72,7 @@ export default class BuildingsTable extends Vue {
               :building="edge.node"
               :stats="BuildingBenchmarkStats"
             />
-            <OwnerLogo :building="edge.node" :is-small="true" />
+            <OwnerLogo :building="edge.node" :is-text="true" />
 
             <div class="prop-address">
               {{ edge.node.Address }}

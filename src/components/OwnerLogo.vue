@@ -1,30 +1,31 @@
 <template>
   <!-- On large views we'll say the owner is unknown, in a table we output nothing -->
   <div
-    v-if="owner || !isSmall"
+    v-if="owner || isLarge"
     class="owner-cont"
     :class="{
       '-small': isSmall,
+      '-text': isText,
       '-unknown': !owner,
     }"
   >
-    <div v-if="owner && !isSmall">
+    <div v-if="owner && !isText">
       <g-link v-if="owner" :to="'/owner/' + owner.key">
-        <img v-if="!isSmall" :src="ownerLogoSrc" :alt="owner.name" />
-        <div v-if="!isSmall" class="owner-label" />
+        <img :src="ownerLogoSrc" :alt="owner.name" />
+        <div v-if="isLarge" class="owner-label" />
 
-        View All Tagged {{ owner.nameShort }} Buildings
+        <div v-if="isLarge">View All Tagged {{ owner.nameShort }} Buildings</div>
       </g-link>
 
-      <p class="footnote">
+      <p v-if="isLarge" class="footnote">
         <strong>Note:</strong> Owner manually tagged. Logo used under fair use.
       </p>
     </div>
 
-    <!-- If small view should short building name -->
-    <span v-if="owner && isSmall">({{ owner.nameShort }})</span>
+    <!-- If text view should short building name -->
+    <span v-if="owner && isText">({{ owner.nameShort }})</span>
 
-    <div v-if="!owner && !isSmall">Not Tagged</div>
+    <div v-if="!owner && isLarge">Not Tagged</div>
   </div>
 </template>
 
@@ -45,7 +46,12 @@ import { getBuildingCustomInfo } from '../constants/buildings-custom-info.consta
 @Component
 export default class OwnerLogo extends Vue {
   @Prop({ required: true }) building!: IBuilding;
+
+  /** Whether to show a small logo */
   @Prop({ default: false }) isSmall!: boolean;
+
+  /** Whether just show text for the owner */
+  @Prop({ default: false }) isText!: boolean;
 
   /**
    * Returns the BuildingOwners object associated with the passed building so we can get the logo
@@ -65,9 +71,13 @@ export default class OwnerLogo extends Vue {
    * Returns a path to the owner logo, if the owner is known
    */
   get ownerLogoSrc(): string | null {
-    const logo = this.isSmall ? this.owner?.logoSmall : this.owner?.logoLarge;
+    const logo = this.isSmall ? this.owner?.logoLarge : this.owner?.logoLarge;
 
     return logo ?? null;
+  }
+
+  get isLarge(): boolean {
+    return !this.isSmall && !this.isText;
   }
 }
 </script>
@@ -77,12 +87,12 @@ export default class OwnerLogo extends Vue {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
 
-  &.-small,
+  &.-text,
   &.-unknown {
     margin: 0;
   }
 
-  &.-small {
+  &.-text {
     display: inline-block;
     font-size: small;
     margin: 0;
