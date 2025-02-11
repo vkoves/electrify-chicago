@@ -43,58 +43,60 @@ export default class BuildingTile extends Vue {
 </script>
 
 <template>
-  <g-link :to="path" class="tile-link" tabindex="-1">
-    <div class="building-tile">
-      <div class="img-cont">
-        <div class="pills-cont">
-          <div v-if="fullyGasFree" class="pill -all-electric">
-            <span>⚡</span> All Electric
+  <div>
+    <g-link :to="path" class="tile-link" tabindex="-1">
+      <div class="building-tile">
+        <div class="img-cont">
+          <div class="pills-cont">
+            <div v-if="fullyGasFree" class="pill -all-electric">
+              <span>⚡</span> All Electric
+            </div>
           </div>
+
+          <OwnerLogo :building="building" :is-small="true" />
+
+          <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
+          <img v-if="buildingImg" :src="buildingImg.imgUrl" alt="" />
         </div>
 
-        <OwnerLogo :building="building" :is-small="true" />
+        <div class="text">
+          <g-link :to="path">
+            <div class="title">
+              {{ building.PropertyName }}
+            </div>
+          </g-link>
+          <div class="prop-type">{{ building.PrimaryPropertyType }}</div>
 
-        <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
-        <img v-if="buildingImg" :src="buildingImg.imgUrl" alt="" />
+          <dl>
+            <div>
+              <dt>GHG Intensity</dt>
+              <dd>
+                <div class="value">
+                  {{
+                    parseFloat(building.GHGIntensity.toString()).toLocaleString()
+                  }}
+                </div>
+                <div class="unit">kg CO<sub>2</sub> / sqft</div>
+              </dd>
+            </div>
+            <div>
+              <dt>Total Emissions</dt>
+              <dd>
+                <div class="value">
+                  {{
+                    parseInt(
+                      building.TotalGHGEmissions.toString(),
+                    ).toLocaleString()
+                  }}
+                </div>
+                <div class="unit">tons CO<sub>2</sub>e</div>
+              </dd>
+            </div>
+          </dl>
+        </div>
       </div>
-
-      <div class="text">
-        <g-link :to="path">
-          <div class="title">
-            {{ building.PropertyName }}
-          </div>
-        </g-link>
-        <div class="prop-type">{{ building.PrimaryPropertyType }}</div>
-
-        <dl>
-          <div>
-            <dt>GHG Intensity</dt>
-            <dd>
-              <div class="value">
-                {{
-                  parseFloat(building.GHGIntensity.toString()).toLocaleString()
-                }}
-              </div>
-              <div class="unit">kg CO<sub>2</sub> / sqft</div>
-            </dd>
-          </div>
-          <div>
-            <dt>Total Emissions</dt>
-            <dd>
-              <div class="value">
-                {{
-                  parseInt(
-                    building.TotalGHGEmissions.toString(),
-                  ).toLocaleString()
-                }}
-              </div>
-              <div class="unit">tons CO<sub>2</sub>e</div>
-            </dd>
-          </div>
-        </dl>
-      </div>
-    </div>
-  </g-link>
+    </g-link>
+  </div>
 </template>
 
 <style lang="scss">

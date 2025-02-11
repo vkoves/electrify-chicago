@@ -33,17 +33,10 @@ export default class Index extends Vue {
 </script>
 
 <page-query>
-  query ($page: Int) {
+  query {
     worstBuildings: allBuilding(
-      sortBy: "GHGIntensity", perPage: 10, page: $page
+      sortBy: "GHGIntensity", limit: 10
     ) @paginate {
-      pageInfo {
-        hasNextPage
-        totalPages
-        currentPage
-        perPage
-        hasPreviousPage
-      }
       edges {
         node {
           slugSource

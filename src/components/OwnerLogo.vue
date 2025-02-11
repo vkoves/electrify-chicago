@@ -10,7 +10,7 @@
     }"
   >
     <div v-if="owner && !isText">
-      <g-link v-if="owner" :to="'/owner/' + owner.key">
+      <g-link v-if="owner" :to="'/owner/' + owner.key + '/'">
         <img :src="ownerLogoSrc" :alt="owner.name" />
         <div v-if="isLarge" class="owner-label" />
 
@@ -99,6 +99,8 @@ export default class OwnerLogo extends Vue {
     font-size: small;
     margin: 0;
   }
+
+  a { display: block; }
 
   .owner-label {
     margin-top: 0.25rem;
