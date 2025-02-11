@@ -122,38 +122,43 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="details-cont">
-          <div v-for="anomaly in buildingAnomalies" :key="anomaly" class="building-banner">
+          <div
+            v-for="anomaly in buildingAnomalies"
+            :key="anomaly"
+            class="building-banner"
+          >
             <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
               <h2>
-                <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas Free
+                <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas
+                Free
               </h2>
 
               <p>
-                This building reported zero fossil gas use in the most recent year, but has used
-                gas in the past. That is likely a reporting error.
+                This building reported zero fossil gas use in the most recent
+                year, but has used gas in the past. That is likely a reporting
+                error.
               </p>
             </div>
             <div v-if="anomaly === DataAnomalies.largeGasSwing">
               <h2>
-                <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent Gas Use
+                <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent
+                Gas Use
               </h2>
 
               <p>
-                This building has had extremely large changes in gas use, which is likely to
-                indicate errors in reporting.
+                This building has had extremely large changes in gas use, which
+                is likely to indicate errors in reporting.
               </p>
             </div>
           </div>
 
           <div v-if="dataYear < LatestDataYear" class="building-banner">
-            <h2>
-              <span class="emoji">🕰️</span> Out Of Date Data
-            </h2>
+            <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
 
             <p>
               This building did not report full data in {{ LatestDataYear }}, so
-             <span class="bold">top-level stats are from {{ dataYear }}</span
-             >, the latest full year reported.
+              <span class="bold">top-level stats are from {{ dataYear }}</span
+              >, the latest full year reported.
             </p>
           </div>
 
@@ -711,7 +716,9 @@ export default class BuildingDetails extends Vue {
         flex-direction: column;
         gap: 0.25rem;
       }
-      .building-banner { grid-area: banner; }
+      .building-banner {
+        grid-area: banner;
+      }
     }
 
     &:not(.-img-tall) {
@@ -720,8 +727,12 @@ export default class BuildingDetails extends Vue {
         'img'
         'details';
 
-      .building-header-text { grid-area: img; }
-      .building-banner { grid-area: banner;}
+      .building-header-text {
+        grid-area: img;
+      }
+      .building-banner {
+        grid-area: banner;
+      }
       .building-img-cont {
         grid-area: img;
         width: 80%;
@@ -772,8 +783,12 @@ export default class BuildingDetails extends Vue {
       margin: 0 0 0.25rem 0;
       font-size: 1rem;
     }
-    span.emoji { margin-right: 0.5rem; }
-    p { font-size: 0.75rem; }
+    span.emoji {
+      margin-right: 0.5rem;
+    }
+    p {
+      font-size: 0.75rem;
+    }
   }
 
   .address {

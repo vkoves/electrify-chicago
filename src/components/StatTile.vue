@@ -152,11 +152,13 @@
           </p>
         </div>
         <div v-else-if="building.DataAnomalies" class="panel -warning">
-          <div class="bold"><span class="emoji">⚠️</span> Likely Reporting Error</div>
+          <div class="bold">
+            <span class="emoji">⚠️</span> Likely Reporting Error
+          </div>
 
           <p class="smaller">
-            This building has burned gas in the past, so this latest year having 0 gas use is
-            likely a reporting error.
+            This building has burned gas in the past, so this latest year having
+            0 gas use is likely a reporting error.
           </p>
         </div>
         <div v-else>
@@ -249,7 +251,9 @@ export default class StatTile extends Vue {
    */
   get fullyGasFree(): boolean {
     return (
-      !this.building.DataAnomalies.includes(DataAnomalies.gasZeroWithPreviousUse) &&
+      !this.building.DataAnomalies.includes(
+        DataAnomalies.gasZeroWithPreviousUse,
+      ) &&
       parseFloat(this.building.NaturalGasUse) === 0 &&
       parseFloat(this.building.DistrictSteamUse) === 0
     );

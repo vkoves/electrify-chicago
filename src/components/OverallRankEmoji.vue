@@ -78,7 +78,9 @@ export default class OverallRankEmoji extends Vue {
 
   get hasAnomalousData(): boolean {
     if (typeof this.building.DataAnomalies === 'undefined') {
-      throw new Error('Building does not have DataAnomalies! Make sure to add it to GraphQL query');
+      throw new Error(
+        'Building does not have DataAnomalies! Make sure to add it to GraphQL query',
+      );
     }
 
     return this.building.DataAnomalies.length > 0;
