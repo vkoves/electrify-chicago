@@ -125,9 +125,7 @@ export default class Index extends Vue {
 
       <div class="page-constrained">
         <div class="list-title">
-          <h2>
-            Chicago&apos;s Most Emissions Intense Buildings
-          </h2>
+          <h2>Chicago&apos;s Most Emissions Intense Buildings</h2>
           <g-link class="bold" to="/highest-emissions-intensity"
             >View More</g-link
           >

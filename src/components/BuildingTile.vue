@@ -13,7 +13,7 @@ import OwnerLogo from './OwnerLogo.vue';
  */
 @Component({
   components: {
-    OwnerLogo
+    OwnerLogo,
   },
 })
 export default class BuildingTile extends Vue {
@@ -33,7 +33,7 @@ export default class BuildingTile extends Vue {
    * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
    * through a district heating system.
    */
-   get fullyGasFree(): boolean {
+  get fullyGasFree(): boolean {
     return (
       parseFloat(this.building.NaturalGasUse) === 0 &&
       parseFloat(this.building.DistrictSteamUse) === 0
@@ -47,7 +47,9 @@ export default class BuildingTile extends Vue {
     <div class="building-tile">
       <div class="img-cont">
         <div class="pills-cont">
-          <div v-if="fullyGasFree" class="pill -all-electric"><span>⚡</span> All Electric</div>
+          <div v-if="fullyGasFree" class="pill -all-electric">
+            <span>⚡</span> All Electric
+          </div>
         </div>
 
         <OwnerLogo :building="building" :is-small="true" />
@@ -160,7 +162,9 @@ export default class BuildingTile extends Vue {
           color: #9e5e00;
         }
 
-        span { text-shadow: 0.0625rem 0 0.0625rem $black; }
+        span {
+          text-shadow: 0.0625rem 0 0.0625rem $black;
+        }
       }
     }
 
@@ -202,9 +206,13 @@ export default class BuildingTile extends Vue {
       font-weight: bold;
     }
 
-    .prop-type { font-size: 0.875rem; }
+    .prop-type {
+      font-size: 0.875rem;
+    }
 
-    .unit { font-size: 0.75rem; }
+    .unit {
+      font-size: 0.75rem;
+    }
 
     dl {
       display: flex;
