@@ -7,3 +7,6 @@ src/data/analysis/output
 # Ignore static blog HTML and JSON files from data analysis
 static/blog/**/*.json
 static/blog/**/*.html
+
+# Ignore Python virtual env
+.venv/
