@@ -1,5 +1,4 @@
 import json
-import logging
 import pandas
 
 from typing import List
@@ -60,6 +59,7 @@ int_cols = [
     'CommunityAreas',
     'HistoricalWards2003-2015'
 ]
+
 
 # Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
 # median values for fields
@@ -149,7 +149,7 @@ def processBuildingData() -> List[str]:
 
     # Add building grades:
     building_data = grade_buildings(building_data)
-    
+
     # Export the data
     output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')
 
