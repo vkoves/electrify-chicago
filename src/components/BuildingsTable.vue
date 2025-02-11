@@ -6,7 +6,6 @@ import OverallRankEmoji from './OverallRankEmoji.vue';
 import OwnerLogo from './OwnerLogo.vue';
 import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
 
-
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
@@ -20,72 +19,51 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 })
 export default class BuildingsTable extends Vue {
   /** Expose stats to template */
-  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
+    BuildingBenchmarkStats;
 
-  @Prop({required:true}) buildings!: Array<{ node: IBuilding }>;
+  @Prop({ required: true }) buildings!: Array<{ node: IBuilding }>;
 
-  @Prop({default: false}) showSquareFootage!: boolean;
+  @Prop({ default: false }) showSquareFootage!: boolean;
 
-  @Prop({default: false}) showGasUse!: boolean;
+  @Prop({ default: false }) showGasUse!: boolean;
 
-  @Prop({default: false}) showElectricityUse!: boolean;
+  @Prop({ default: false }) showElectricityUse!: boolean;
 }
 </script>
 
 <template>
   <div class="buildings-table-cont">
-    <table :class="{ '-wide': showSquareFootage || showGasUse || showElectricityUse }">
+    <table
+      :class="{
+        '-wide': showSquareFootage || showGasUse || showElectricityUse,
+      }"
+    >
       <thead>
         <tr>
-          <th scope="col">
-            Name / Address
-          </th>
-          <th
-            scope="col"
-            class="prop-type"
-          >
-            Primary Property Type
-          </th>
-          <th v-if="showSquareFootage">
-            Square Footage
-          </th>
-          <th
-            v-if="showGasUse"
-            scope="col"
-            class="numeric wide-col"
-          >
-            Natural Gas Use<br>
+          <th scope="col">Name / Address</th>
+          <th scope="col" class="prop-type">Primary Property Type</th>
+          <th v-if="showSquareFootage">Square Footage</th>
+          <th v-if="showGasUse" scope="col" class="numeric wide-col">
+            Fossil Gas Use<br />
             <span class="unit">(kBtu)</span>
           </th>
-          <th
-            v-if="showElectricityUse"
-            scope="col"
-            class="numeric wide-col"
-          >
-            Electricity Use<br>
+          <th v-if="showElectricityUse" scope="col" class="numeric wide-col">
+            Electricity Use<br />
             <span class="unit">(kBtu)</span>
           </th>
-          <th
-            scope="col"
-            class="numeric wide-col"
-          >
-            GHG Intensity<br>
+          <th scope="col" class="numeric wide-col">
+            GHG Intensity<br />
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
           </th>
-          <th
-            scope="col"
-            class="numeric wide-col"
-          >
-            Total GHG Emissions<br>
+          <th scope="col" class="numeric wide-col">
+            Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="edge in buildings"
-          :key="edge.node.id"
-        >
+        <tr v-for="edge in buildings" :key="edge.node.id">
           <td class="property-name">
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
@@ -94,10 +72,7 @@ export default class BuildingsTable extends Vue {
               :building="edge.node"
               :stats="BuildingBenchmarkStats"
             />
-            <OwnerLogo
-              :building="edge.node"
-              :is-small="true"
-            />
+            <OwnerLogo :building="edge.node" :is-small="true" />
 
             <div class="prop-address">
               {{ edge.node.Address }}
@@ -106,10 +81,7 @@ export default class BuildingsTable extends Vue {
           <td>{{ edge.node.PrimaryPropertyType }}</td>
 
           <!-- Square footage is optional, only shown on BiggestBuildings -->
-          <td
-            v-if="showSquareFootage"
-            class="numeric"
-          >
+          <td v-if="showSquareFootage" class="numeric">
             <template v-if="edge.node.GrossFloorArea">
               <RankText
                 :building="edge.node"
@@ -119,15 +91,10 @@ export default class BuildingsTable extends Vue {
                 stat-key="GrossFloorArea"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
 
-          <td
-            v-if="showGasUse"
-            class="numeric"
-          >
+          <td v-if="showGasUse" class="numeric">
             <template v-if="edge.node.NaturalGasUse">
               <RankText
                 :building="edge.node"
@@ -137,14 +104,9 @@ export default class BuildingsTable extends Vue {
                 stat-key="NaturalGasUse"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
-          <td
-            v-if="showElectricityUse"
-            class="numeric"
-          >
+          <td v-if="showElectricityUse" class="numeric">
             <template v-if="edge.node.ElectricityUse">
               <RankText
                 :building="edge.node"
@@ -154,9 +116,7 @@ export default class BuildingsTable extends Vue {
                 stat-key="ElectricityUse"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
 
           <!-- GHG Intensity is shown on all tables -->
@@ -169,9 +129,7 @@ export default class BuildingsTable extends Vue {
                 :unit="'kg/sqft'"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
           <td class="numeric">
             <template v-if="edge.node.TotalGHGEmissions">
@@ -183,9 +141,7 @@ export default class BuildingsTable extends Vue {
                 :unit="'tons'"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
         </tr>
       </tbody>
@@ -214,7 +170,9 @@ export default class BuildingsTable extends Vue {
       min-width: 88rem;
 
       // Wide columns shouldn't be as wide if we have more of them
-      .wide-col { width: 17%; }
+      .wide-col {
+        width: 17%;
+      }
     }
 
     a {
@@ -228,7 +186,9 @@ export default class BuildingsTable extends Vue {
       position: sticky;
       top: 0;
 
-      tr { background-color: $grey-dark; }
+      tr {
+        background-color: $grey-dark;
+      }
 
       th {
         text-align: left;
@@ -244,18 +204,31 @@ export default class BuildingsTable extends Vue {
       }
     }
 
-    th, td {
+    th,
+    td {
       padding: 0.75rem;
       line-height: 1.25;
 
-      &:first-of-type { padding-left: 1rem; }
-      &:last-of-type { padding-right: 1rem; }
-      &.numeric { text-align: right; }
-      &.wide-col { width: 20%; }
-      &.prop-type { width: 12rem; }
+      &:first-of-type {
+        padding-left: 1rem;
+      }
+      &:last-of-type {
+        padding-right: 1rem;
+      }
+      &.numeric {
+        text-align: right;
+      }
+      &.wide-col {
+        width: 20%;
+      }
+      &.prop-type {
+        width: 12rem;
+      }
     }
 
-    tr:nth-of-type(2n + 2) { background-color: $grey; }
+    tr:nth-of-type(2n + 2) {
+      background-color: $grey;
+    }
 
     .prop-address {
       font-size: 0.75em;
@@ -277,7 +250,10 @@ export default class BuildingsTable extends Vue {
         font-size: 0.825rem;
         padding: 0.5rem 0.25rem;
       }
-      td.property-name, td.property-address { width: 10rem; }
+      td.property-name,
+      td.property-address {
+        width: 10rem;
+      }
     }
   }
 }

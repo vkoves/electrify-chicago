@@ -20,9 +20,8 @@ import NewTabIcon from './NewTabIcon.vue';
  */
 export default {
   name: 'DataSourceFootnote',
-  components: {NewTabIcon},
+  components: { NewTabIcon },
 };
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

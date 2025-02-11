@@ -3,7 +3,7 @@
 import slugify from '@sindresorhus/slugify';
 import { IBuilding } from '../common-functions.vue';
 
-export default { };
+export default {};
 
 /**
  * A file containing supplementary building info based on their slug. This can be used
@@ -59,7 +59,6 @@ export const BuildingOwners: IBuildingOwners = {
     logoLarge: '/building-owners/uic/uic-large.png',
   },
 
-
   northwestern: {
     key: 'northwestern',
     name: 'Northwestern University',
@@ -75,7 +74,6 @@ export const BuildingOwners: IBuildingOwners = {
     logoSmall: '/building-owners/loyola/loyola-small.png',
     logoLarge: '/building-owners/loyola/loyola-large.png',
   },
-
 
   /**
    * TODO: Change logoSmall and logoLarge for the following municipalities
@@ -152,7 +150,7 @@ export const BuildingOwners: IBuildingOwners = {
 
 export interface IBuildingCustomInfo {
   owner?: string; // key from BuildingOwners
-  links?: Array <ILink>;
+  links?: Array<ILink>;
   tags?: Array<BuildingTags>;
 }
 
@@ -166,236 +164,245 @@ export interface ILink {
  * in city programs
  * */
 export enum BuildingTags {
-  hasRetrofitCaseStudy = 'has-retrofit-case-study'
+  hasRetrofitCaseStudy = 'has-retrofit-case-study',
 }
 
 /**
  * An object containing our custom details about buildings. These are hand coded based on the
  * building ID, which is stable as the data updates (while names can change YoY)
  */
-export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } = {
-  '166134' : {
+export const BuildingsCustomInfo: {
+  [buildingId: string]: IBuildingCustomInfo;
+} = {
+  '166134': {
     links: [
       {
-        url : 'https://www.sheddaquarium.org/stories/sustainability-at-shedd',
-        text : 'Sustainability at Shedd | Shedd Aquarium',
+        url: 'https://www.sheddaquarium.org/stories/sustainability-at-shedd',
+        text: 'Sustainability at Shedd | Shedd Aquarium',
       },
-  ]},
+    ],
+  },
 
   /**
    * City Retrofit Data (PDFs)
    */
   // Rookery Building Retrofit
   '103721': {
-    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    tags: [BuildingTags.hasRetrofitCaseStudy],
     links: [
       {
         url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/The%20Rookery.pdf',
         text: 'Rookery Building Retrofit Report',
       },
-  ]},
+    ],
+  },
   // Wrigley Building
   '101920': {
-    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    tags: [BuildingTags.hasRetrofitCaseStudy],
     links: [
       {
         url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/Wrigley.pdf',
         text: 'Wrigley Building Retrofit Report',
       },
-  ]},
+    ],
+  },
   // Institute of Cultural Affairs
-  '102336' : {
-    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+  '102336': {
+    tags: [BuildingTags.hasRetrofitCaseStudy],
     links: [
       {
         url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/ICAGreenRise.pdf',
         text: 'Institute of Cultural Affairs Retrofit Report',
       },
-  ]},
+    ],
+  },
 
   // Sheraton Chicago Hotel & Towers
   // Listed as Sheraton Grand(Retrofit) or Sheraton Grand Chicago Riverwalk (google maps)
   '101852': {
-    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+    tags: [BuildingTags.hasRetrofitCaseStudy],
     links: [
       {
         url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/TheSheraton.pdf',
         text: 'Sheraton Grand Chicago Hotel Retrofit Report',
       },
-  ]},
+    ],
+  },
 
   /**
    * DePaul Buildings
    * Helpful source: https://www.depaul.edu/campus-maps/Pages/default.aspx
    */
   // Mc-Gowan-North
-  '251330': {owner: BuildingOwners.depaul.key},
+  '251330': { owner: BuildingOwners.depaul.key },
   // Mc-Gowan-South
-  '119808': {owner: BuildingOwners.depaul.key},
+  '119808': { owner: BuildingOwners.depaul.key },
   // De-Paul-Center
-  '101562': {owner: BuildingOwners.depaul.key},
+  '101562': { owner: BuildingOwners.depaul.key },
   // Holtschneider-Performance-Center
-  '254989': {owner: BuildingOwners.depaul.key},
+  '254989': { owner: BuildingOwners.depaul.key },
   // Student-Center
-  '251335': {owner: BuildingOwners.depaul.key},
+  '251335': { owner: BuildingOwners.depaul.key },
   // Centennial-Hall
-  '251326': {owner: BuildingOwners.depaul.key},
+  '251326': { owner: BuildingOwners.depaul.key },
   // Sullivan Athletic Center
-  '138514': {owner: BuildingOwners.depaul.key},
+  '138514': { owner: BuildingOwners.depaul.key },
   // Ray Meyer Fitness and Recreation Center
-  '251332': {owner: BuildingOwners.depaul.key},
+  '251332': { owner: BuildingOwners.depaul.key },
   // Theatre School
-  '251337': {owner: BuildingOwners.depaul.key},
+  '251337': { owner: BuildingOwners.depaul.key },
   // College of Computing and Digital Media (CDM)
-  '134779': {owner: BuildingOwners.depaul.key},
+  '134779': { owner: BuildingOwners.depaul.key },
   // Thomas P. Levan Center
-  '251338': {owner: BuildingOwners.depaul.key},
+  '251338': { owner: BuildingOwners.depaul.key },
   // McCabe Hall
-  '251329': {owner: BuildingOwners.depaul.key},
+  '251329': { owner: BuildingOwners.depaul.key },
   // College of Education Building
-  '175365': {owner: BuildingOwners.depaul.key},
+  '175365': { owner: BuildingOwners.depaul.key },
   // Peter V. Byrne Hall
-  '251925': {owner: BuildingOwners.depaul.key},
+  '251925': { owner: BuildingOwners.depaul.key },
   // Munroe Hall
-  '251331': {owner: BuildingOwners.depaul.key},
+  '251331': { owner: BuildingOwners.depaul.key },
   // Seton Hall
-  '251334': {owner: BuildingOwners.depaul.key},
+  '251334': { owner: BuildingOwners.depaul.key },
   // Belden-Racine Hall
-  '251325': {owner: BuildingOwners.depaul.key},
+  '251325': { owner: BuildingOwners.depaul.key },
   // Arts & Letters Hall
-  '251324': {owner: BuildingOwners.depaul.key},
+  '251324': { owner: BuildingOwners.depaul.key },
   // Arthur J. Schmitt Academic Center
-  '173724': {owner: BuildingOwners.depaul.key},
+  '173724': { owner: BuildingOwners.depaul.key },
   // DePaul college of law
-  '103634': {owner: BuildingOwners.depaul.key},
+  '103634': { owner: BuildingOwners.depaul.key },
   // Richard M. and Maggie C. Daley Building
-  '101975': {owner: BuildingOwners.depaul.key},
+  '101975': { owner: BuildingOwners.depaul.key },
   // 990 W Fullerton Building
-  '251322': {owner: BuildingOwners.depaul.key},
+  '251322': { owner: BuildingOwners.depaul.key },
   // John T. Richardson Library
-  '251328': {owner: BuildingOwners.depaul.key,
-    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+  '251328': {
+    owner: BuildingOwners.depaul.key,
+    tags: [BuildingTags.hasRetrofitCaseStudy],
     links: [
-        {
-          url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/Richardson%20Library.pdf',
-          text: 'Richardson Library Retrofit Report',
-        },
-  ]},
+      {
+        url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/Richardson%20Library.pdf',
+        text: 'Richardson Library Retrofit Report',
+      },
+    ],
+  },
   // 1150 W. Fullerton Building
-  '251321': {owner: BuildingOwners.depaul.key},
+  '251321': { owner: BuildingOwners.depaul.key },
   // University Center Chicago
-  '166264': {owner: BuildingOwners.depaul.key},
-
+  '166264': { owner: BuildingOwners.depaul.key },
 
   /**
    * IIT buildings
    * Helpful source: https://en.wikipedia.org/wiki/List_of_Illinois_Institute_of_Technology_buildings
    */
   // Crown Hall
-  '256419': {owner: BuildingOwners.iit.key},
+  '256419': { owner: BuildingOwners.iit.key },
   // Keating Hall
-  '256434': {owner: BuildingOwners.iit.key},
+  '256434': { owner: BuildingOwners.iit.key },
   // Life Science Research Building
-  '256439': {owner: BuildingOwners.iit.key},
+  '256439': { owner: BuildingOwners.iit.key },
   // Tech Business Center
-  '256438': {owner: BuildingOwners.iit.key},
+  '256438': { owner: BuildingOwners.iit.key },
   // Herman Hall
-  '256427': {owner: BuildingOwners.iit.key},
+  '256427': { owner: BuildingOwners.iit.key },
   // IIT Tower
-  '256440': {owner: BuildingOwners.iit.key},
+  '256440': { owner: BuildingOwners.iit.key },
   // IIT Stuart School Of Business
-  '158403': {owner: BuildingOwners.iit.key},
+  '158403': { owner: BuildingOwners.iit.key },
   // John T Rettaliata Engineering Center
-  '256420': {owner: BuildingOwners.iit.key},
+  '256420': { owner: BuildingOwners.iit.key },
   // McCormick Tribune Campus Center
-  '256428': {owner: BuildingOwners.iit.key},
+  '256428': { owner: BuildingOwners.iit.key },
   // Stuart Building
-  '256424': {owner: BuildingOwners.iit.key},
+  '256424': { owner: BuildingOwners.iit.key },
   // Wishnick Hall
-  '256425': {owner: BuildingOwners.iit.key},
+  '256425': { owner: BuildingOwners.iit.key },
   // Siegal Hall
-  '256433': {owner: BuildingOwners.iit.key},
+  '256433': { owner: BuildingOwners.iit.key },
   // Incubator?
-  '256435': {owner: BuildingOwners.iit.key},
+  '256435': { owner: BuildingOwners.iit.key },
   // Perlstein Hall
-  '256423': {owner: BuildingOwners.iit.key},
+  '256423': { owner: BuildingOwners.iit.key },
   // IIT Tower
-  '111290': {owner: BuildingOwners.iit.key},
+  '111290': { owner: BuildingOwners.iit.key },
   // IIT former Main building
-  '103624': {owner: BuildingOwners.iit.key},
+  '103624': { owner: BuildingOwners.iit.key },
   // Gunsaulus Hall
-  '256431': {owner: BuildingOwners.iit.key},
+  '256431': { owner: BuildingOwners.iit.key },
   // Carman Hall
-  '256429': {owner: BuildingOwners.iit.key},
+  '256429': { owner: BuildingOwners.iit.key },
   // Pritzker Science Center
-  '256421': {owner: BuildingOwners.iit.key},
+  '256421': { owner: BuildingOwners.iit.key },
 
   /**
    * UChicago Buildings
    * Helpful source: https://registrar.uchicago.edu/faculty-staff/classroom-scheduling/buildings-directory-2/
    */
   //Mansueto Library at UChicago
-  '252064' : {owner: BuildingOwners.uchicago.key,
-    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+  '252064': {
+    owner: BuildingOwners.uchicago.key,
+    tags: [BuildingTags.hasRetrofitCaseStudy],
     links: [
       {
         url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/UChicagoMansueto.pdf',
         text: 'Mansueto Library Retrofit Report',
       },
-  ]},
+    ],
+  },
   // 1155 E 60th St
-  '136212': {owner: BuildingOwners.uchicago.key},
+  '136212': { owner: BuildingOwners.uchicago.key },
   // 5841 S Maryland Ave M C0985
-  '256838': {owner: BuildingOwners.uchicago.key},
+  '256838': { owner: BuildingOwners.uchicago.key },
   // 6045 Kenwood Building
-  '172151': {owner: BuildingOwners.uchicago.key},
+  '172151': { owner: BuildingOwners.uchicago.key },
   // Accelerator High Energy Physics
-  '252039': {owner: BuildingOwners.uchicago.key},
+  '252039': { owner: BuildingOwners.uchicago.key },
   // Gordon Center For Integrative Science Gcis
-  '110848': {owner: BuildingOwners.uchicago.key},
+  '110848': { owner: BuildingOwners.uchicago.key },
   // Hinds Laboratory
-  '173925': {owner: BuildingOwners.uchicago.key},
+  '173925': { owner: BuildingOwners.uchicago.key },
   // Jones Laboratory
-  '252050': {owner: BuildingOwners.uchicago.key},
+  '252050': { owner: BuildingOwners.uchicago.key },
   // Searle Chemistry Laboratory
-  '134735': {owner: BuildingOwners.uchicago.key},
+  '134735': { owner: BuildingOwners.uchicago.key },
   // William Eckhardt Research Center
-  '254382': {owner: BuildingOwners.uchicago.key},
+  '254382': { owner: BuildingOwners.uchicago.key },
   // Ratner Athletics Center
-  '252037': {owner: BuildingOwners.uchicago.key},
+  '252037': { owner: BuildingOwners.uchicago.key },
   // Crerar Library
-  '252038': {owner: BuildingOwners.uchicago.key},
+  '252038': { owner: BuildingOwners.uchicago.key },
   // Renee Granville Grossman Residential Commons
-  '252043': {owner: BuildingOwners.uchicago.key},
+  '252043': { owner: BuildingOwners.uchicago.key },
   // Campus Residential North Commons
-  '254381': {owner: BuildingOwners.uchicago.key},
+  '254381': { owner: BuildingOwners.uchicago.key },
   // Burton Judson Courts
-  '156942': {owner: BuildingOwners.uchicago.key},
-  '254181':  {owner: BuildingOwners.uchicago.key},
-  '252047':  {owner: BuildingOwners.uchicago.key},
+  '156942': { owner: BuildingOwners.uchicago.key },
+  '254181': { owner: BuildingOwners.uchicago.key },
+  '252047': { owner: BuildingOwners.uchicago.key },
   // Bookstore!
-  '252041': {owner: BuildingOwners.uchicago.key},
+  '252041': { owner: BuildingOwners.uchicago.key },
   // Booth School
-  '102455': {owner: BuildingOwners.uchicago.key},
+  '102455': { owner: BuildingOwners.uchicago.key },
   // Cobb Hall
-  '252049': {owner: BuildingOwners.uchicago.key},
+  '252049': { owner: BuildingOwners.uchicago.key },
   // Laird Bell Law Quadrangle
-  '252044': {owner: BuildingOwners.uchicago.key},
+  '252044': { owner: BuildingOwners.uchicago.key },
   // Kersten Physics Teaching Center
-  '252040': {owner: BuildingOwners.uchicago.key},
+  '252040': { owner: BuildingOwners.uchicago.key },
   // Gleacher Center
-  '118776': {owner: BuildingOwners.uchicago.key},
+  '118776': { owner: BuildingOwners.uchicago.key },
   // Social Science Research Building
-  '252057': {owner: BuildingOwners.uchicago.key},
+  '252057': { owner: BuildingOwners.uchicago.key },
   // Max Palevsky Residential Commons/Bartlett Commons
-  '252036': {owner: BuildingOwners.uchicago.key},
+  '252036': { owner: BuildingOwners.uchicago.key },
   // 1156 E 61st St
-  '256812': {owner: BuildingOwners.uchicago.key},
+  '256812': { owner: BuildingOwners.uchicago.key },
   // Breckinridge House
-  '256502': {owner: BuildingOwners.uchicago.key},
+  '256502': { owner: BuildingOwners.uchicago.key },
   // Chapin Hall
-  '252061': {owner: BuildingOwners.uchicago.key},
-
+  '252061': { owner: BuildingOwners.uchicago.key },
 
   /**
    * UIC Buildings
@@ -413,14 +420,16 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
    * Helpful source: https://maps.northwestern.edu/chicago
    */
   // 303 E Superior Street (Lurie Medical Research Center)
-  '256405': { owner: BuildingOwners.northwestern.key ,
-    tags: [ BuildingTags.hasRetrofitCaseStudy ],
+  '256405': {
+    owner: BuildingOwners.northwestern.key,
+    tags: [BuildingTags.hasRetrofitCaseStudy],
     links: [
       {
         url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/Northwestern%20Lurie.pdf',
         text: 'Lurie Medical Research Center - 303 E Superior St Retrofit Report',
       },
-  ]},
+    ],
+  },
   // 320 E Superior Street
   '256408': { owner: BuildingOwners.northwestern.key },
   // 300 E Superior Street
@@ -434,19 +443,18 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   // Pritzker School of Law, 375 E Chicago Ave
   '256406': { owner: BuildingOwners.northwestern.key },
   // 345 E. Superior
-  '101890': {owner: BuildingOwners.northwestern.key},
+  '101890': { owner: BuildingOwners.northwestern.key },
   // Wieboldt Hall, 340 E. Superior
-  '256407': {owner: BuildingOwners.northwestern.key},
- // Chicago Campus 2, Feinberg Pavilion, 251 E Huron St
-  '103632': {owner: BuildingOwners.northwestern.key},
+  '256407': { owner: BuildingOwners.northwestern.key },
+  // Chicago Campus 2, Feinberg Pavilion, 251 E Huron St
+  '103632': { owner: BuildingOwners.northwestern.key },
 
   // Prentice Women's Hospital, 250 E Superior St
-  '103615': {owner: BuildingOwners.northwestern.key},
+  '103615': { owner: BuildingOwners.northwestern.key },
   // NMH Arkes Family Pavilion, 676 N St Clair St
-  '103684': {owner: BuildingOwners.northwestern.key},
+  '103684': { owner: BuildingOwners.northwestern.key },
   // 8792, Feinberg School of Medicine, 303 E Chicago Ave
-  '256411': {owner: BuildingOwners.northwestern.key},
-
+  '256411': { owner: BuildingOwners.northwestern.key },
 
   /**
    * Loyola University
@@ -454,57 +462,57 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
    * See campus maps: https://www.luc.edu/welcomeweek/campusmaps/
    */
   // Damen Student Cetner
-  '254161': {owner: BuildingOwners.loyola.key},
+  '254161': { owner: BuildingOwners.loyola.key },
   // Corbow Law Center
-  '101971': {owner: BuildingOwners.loyola.key},
+  '101971': { owner: BuildingOwners.loyola.key },
   // Quinlan Life Sciences
-  '254168': {owner: BuildingOwners.loyola.key},
+  '254168': { owner: BuildingOwners.loyola.key },
   // Norville Center
-  '254171': {owner: BuildingOwners.loyola.key},
+  '254171': { owner: BuildingOwners.loyola.key },
   // Mundelein Center
-  '102408': {owner: BuildingOwners.loyola.key},
+  '102408': { owner: BuildingOwners.loyola.key },
   // Halas Recreation Center
-  '254386': {owner: BuildingOwners.loyola.key},
+  '254386': { owner: BuildingOwners.loyola.key },
   // Crown Center
-  '254166': {owner: BuildingOwners.loyola.key},
+  '254166': { owner: BuildingOwners.loyola.key },
   // Flanner Hall
-   '158842': {owner: BuildingOwners.loyola.key},
+  '158842': { owner: BuildingOwners.loyola.key },
   // de Nobili Hall
-  '254169': {owner: BuildingOwners.loyola.key},
+  '254169': { owner: BuildingOwners.loyola.key },
   // Maguire Hall
-  '254163': {owner: BuildingOwners.loyola.key},
+  '254163': { owner: BuildingOwners.loyola.key },
   // Simpson Living Learning Center
-   '254167': {owner: BuildingOwners.loyola.key},
+  '254167': { owner: BuildingOwners.loyola.key },
   // Fordham Hall
-   '103681': {owner: BuildingOwners.loyola.key},
+  '103681': { owner: BuildingOwners.loyola.key },
   // Sullivan Center
-   '173858': {owner: BuildingOwners.loyola.key},
+  '173858': { owner: BuildingOwners.loyola.key },
   // Campion Hall
-   '254165': {owner: BuildingOwners.loyola.key},
+  '254165': { owner: BuildingOwners.loyola.key },
   // Regis Hall
-  '254172': {owner: BuildingOwners.loyola.key},
+  '254172': { owner: BuildingOwners.loyola.key },
   // Cudahy Library
-  '254164': {owner: BuildingOwners.loyola.key},
+  '254164': { owner: BuildingOwners.loyola.key },
   // Lewis Towers
-   '174182': {owner: BuildingOwners.loyola.key},
+  '174182': { owner: BuildingOwners.loyola.key },
   // Santa Clara Hall
-   '161053': {owner: BuildingOwners.loyola.key},
+  '161053': { owner: BuildingOwners.loyola.key },
   // BVM Hall/IES
-  '175895': {owner: BuildingOwners.loyola.key},
+  '175895': { owner: BuildingOwners.loyola.key },
   // San Francisco Hall
-   '254170': {owner: BuildingOwners.loyola.key},
+  '254170': { owner: BuildingOwners.loyola.key },
   // Mertz Hall - CFSU
-   '254162': {owner: BuildingOwners.loyola.key},
+  '254162': { owner: BuildingOwners.loyola.key },
   // Baumhart Hall
-  '160412': {owner: BuildingOwners.loyola.key},
+  '160412': { owner: BuildingOwners.loyola.key },
   // Cuneo Hall
-   '254160': {owner: BuildingOwners.loyola.key},
+  '254160': { owner: BuildingOwners.loyola.key },
   // Bellarmine Hall
-  '173888': {owner: BuildingOwners.loyola.key},
+  '173888': { owner: BuildingOwners.loyola.key },
   // Fairfield Hall
-  '105533': {owner: BuildingOwners.loyola.key},
+  '105533': { owner: BuildingOwners.loyola.key },
   // Schreiber Center
-  '254355': {owner: BuildingOwners.loyola.key},
+  '254355': { owner: BuildingOwners.loyola.key },
 
   /**
    * CPS
@@ -1462,7 +1470,7 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   // Prodigy Wood
   '251740': { owner: BuildingOwners.cps.key },
 
-   /**
+  /**
    * CHA
    * Helpful source: https://www.thecha.org/residents/public-housing/find-public-housing
    */
@@ -1470,7 +1478,7 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '160397': { owner: BuildingOwners.cha.key },
   // 1 South Leavitt
   '256670': { owner: BuildingOwners.cha.key },
-   // Ada S. Dennison-McKinley Apartments
+  // Ada S. Dennison-McKinley Apartments
   '250079': { owner: BuildingOwners.cha.key },
   // Albany Terrace Apts
   '250080': { owner: BuildingOwners.cha.key },
@@ -1605,7 +1613,7 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   // Zelda Ormes Apartments
   '250114': { owner: BuildingOwners.cha.key },
 
-   /**
+  /**
    * City of Chicago
    * Helpful source: https://www.chicago.gov/city/en/depts/dcd/supp_info/city-owned_land_inventory.html
    */
@@ -1699,12 +1707,16 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   // 162 North State Street
   '250167': { owner: BuildingOwners.saic.key },
   // 280 Building, 280 S Columbus Dr
-  '2tags: [ BuildingTags.hasRetrofitCaseStudy],52065': { owner: BuildingOwners.saic.key ,
+  '252065': {
+    tags: [BuildingTags.hasRetrofitCaseStudy],
+    owner: BuildingOwners.saic.key,
     links: [
       {
         url: 'https://www.chicago.gov/content/dam/city/sites/retrofit-chicago-2/pastparticipants/SAIC.pdf',
         text: 'SAIC 280 S Columbus Building Retrofit Report',
-      } ]},
+      },
+    ],
+  },
   // Alice B. Sharp Building, 37 S Wabash Ave
   '134783': { owner: BuildingOwners.saic.key },
 
@@ -1719,10 +1731,11 @@ export const BuildingsCustomInfo: { [buildingId: string]: IBuildingCustomInfo } 
   '254159': { owner: BuildingOwners.npu.key },
   // 5114 N Christiana
   '254157': { owner: BuildingOwners.npu.key },
-
 };
 
-export function getBuildingCustomInfo(building: IBuilding): IBuildingCustomInfo | null {
+export function getBuildingCustomInfo(
+  building: IBuilding,
+): IBuildingCustomInfo | null {
   const buildingSlug = slugify(building.ID as string);
 
   return BuildingsCustomInfo[buildingSlug] ?? null;

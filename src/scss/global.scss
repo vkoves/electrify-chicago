@@ -10,18 +10,27 @@ body {
   padding: 0;
   line-height: 1.5;
 
-  &, * {
+  &,
+  * {
     font-family: 'Roboto', sans-serif;
     box-sizing: border-box;
   }
+
+  // Disable page scroll when we have an open modal
+  &:has(dialog[open]) {
+    overflow: hidden;
+  }
 }
 
-*:focus {
-  outline: dashed $chicago-red;
+// Default focus styles
+*:focus-visible {
+  outline: 0.25rem dashed $blue-very-dark;
   outline-offset: 0.125rem;
 }
 
-a { color: $link-blue; }
+a {
+  color: $link-blue;
+}
 
 a.grey-link {
   background-color: $grey-light;
@@ -30,35 +39,56 @@ a.grey-link {
   padding: 0.25rem 1rem;
   text-decoration: none;
 
-  &:hover, &:focus { background-color: $grey; }
+  &:hover,
+  &:focus {
+    background-color: $grey;
+  }
 }
 
-h1, h2, h3, h4, h5, h6 {
-   &:focus {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  &:focus {
     border-bottom: solid 0.5rem $chicago-blue;
     outline: none;
   }
 
   // Drop margin for the first paragraph after a heading
-  + p { margin-top: 0; }
-
+  + p {
+    margin-top: 0;
+  }
 }
 
 /**
  * Mobile Font Size Overrides
  */
 @media (max-width: $mobile-max-width) {
-  h1 { font-size: 1.75rem; }
-  h2 { font-size: 1.25rem; }
+  h1 {
+    font-size: 1.75rem;
+  }
+  h2 {
+    font-size: 1.25rem;
+  }
 
-  p { font-size: 0.75rem; }
+  p {
+    font-size: 0.75rem;
+  }
 }
 
-h1 { margin: 1.5rem 0 0.5rem 0; }
-h2 { margin: 1rem 0 0.5rem 0; }
+h1 {
+  margin: 1.5rem 0 0.5rem 0;
+}
+h2 {
+  margin: 1rem 0 0.5rem 0;
+}
 
-p.-no-margin, p:first-of-type { margin: 0; }
-
+p.-no-margin,
+p:first-of-type {
+  margin: 0;
+}
 
 /**
  * Default Form Styling
@@ -83,7 +113,8 @@ button {
     background-color: $grey;
     border-bottom: none;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: $grey-dark;
     }
   }
@@ -92,13 +123,21 @@ button {
 /**
  * Text helpers
  */
-.bold { font-weight: bold; }
+.bold {
+  font-weight: bold;
+}
 
 dl {
-  dt { font-weight: bold; }
-  dd { margin-left: 0; }
+  dt {
+    font-weight: bold;
+  }
+  dd {
+    margin-left: 0;
+  }
 
-  dd + dt { margin-top: 1rem; }
+  dd + dt {
+    margin-top: 1rem;
+  }
 }
 
 /** Style the basic disclosure widget <details> and <summary> */
@@ -112,13 +151,19 @@ details {
     padding: 1rem 1.5rem;
     cursor: pointer;
 
-    &:focus { outline-offset: 0; }
+    &:focus {
+      outline-offset: 0;
+    }
   }
 
-  .details-content { padding: 1.5rem; }
+  .details-content {
+    padding: 1.5rem;
+  }
 }
 
-img { max-width: 100%; }
+img {
+  max-width: 100%;
+}
 
 img.-shadowed {
   margin-top: 1rem;
@@ -126,19 +171,29 @@ img.-shadowed {
   box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
 }
 
-.large-text { font-size: 1.3em; }
+.large-text {
+  font-size: 1.3em;
+}
 
-.smaller { font-size: smaller; }
+.smaller {
+  font-size: smaller;
+}
 
-.regular-text-size { font-size: 1rem; ;}
+.regular-text-size {
+  font-size: 1rem;
+}
 
-.x-small-text { font-size: 0.75rem; }
+.x-small-text {
+  font-size: 0.75rem;
+}
 
 .footnote {
   font-size: 0.75rem;
   margin-top: 1rem;
 
-  &.-img { margin-top: 0; ;}
+  &.-img {
+    margin-top: 0;
+  }
 }
 
 .grade-letter {
@@ -168,11 +223,16 @@ img.-shadowed {
 
 // Use .constrained for a reasonable max-width for text readability and .layout-constrained for a
 // centered version
-.layout-constrained, .constrained {
+.layout-constrained,
+.constrained {
   max-width: 50rem;
 
-  &.-wide { max-width: 60rem; }
-  &.layout-constrained { margin: auto; }
+  &.-wide {
+    max-width: 60rem;
+  }
+  &.layout-constrained {
+    margin: auto;
+  }
 }
 
 /** Search Form styling */
@@ -182,7 +242,8 @@ form.search-form {
     white-space: nowrap;
   }
 
-  input, button {
+  input,
+  button {
     height: 2.5rem;
     box-sizing: border-box;
     border: solid $border-thin $grey;
@@ -209,7 +270,8 @@ form.search-form {
     font-weight: bold;
     background-color: $grey;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: $grey-dark;
     }
   }
@@ -223,15 +285,25 @@ form.search-form {
   border-top-width: 2rem;
   max-width: 40rem;
 
-  &.-orange { border-color: $orange; }
-  &.-blue { border-color: $chicago-blue; }
+  &.-orange {
+    border-color: $orange;
+  }
+  &.-blue {
+    border-color: $chicago-blue;
+  }
 
-  h2 { margin-top: 0; }
+  h2 {
+    margin-top: 0;
+  }
 
-  .bold { font-size: 1.125rem; }
+  .bold {
+    font-size: 1.125rem;
+  }
 
   @media (max-width: $mobile-max-width) {
-    .bold { font-size: 1rem; }
+    .bold {
+      font-size: 1rem;
+    }
   }
 }
 
@@ -239,36 +311,39 @@ form.search-form {
  * <Pager> styling
  */
 nav.pager {
-    display: inline-flex;
-    gap: 1rem;
-    margin-top: 1rem;
+  display: inline-flex;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-main;
+    background-color: $grey;
+    width: 2.5rem;
+    aspect-ratio: 1;
+    text-align: center;
+    border-radius: $brd-rad-small;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover,
+    &:focus {
+      background-color: $grey-dark;
+    }
+
+    &.active {
+      background-color: $orange;
+      cursor: default;
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    gap: 0.25rem;
 
     a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: $text-main;
-      background-color: $grey;
-      width: 2.5rem;
-      aspect-ratio: 1;
-      text-align: center;
-      border-radius: $brd-rad-small;
-      text-decoration: none;
-      font-weight: bold;
-
-      &:hover, &:focus {
-        background-color: $grey-dark;
-      }
-
-      &.active {
-        background-color: $orange;
-        cursor: default;
-      }
+      width: 2rem;
     }
-
-    @media (max-width: $mobile-max-width) {
-      gap: 0.25rem;
-
-      a { width: 2rem; }
-    }
+  }
 }

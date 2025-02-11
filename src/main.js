@@ -4,11 +4,11 @@
 import DefaultLayout from '~/layouts/Default.vue';
 
 // eslint-disable-next-line require-jsdoc
-export default function(Vue, {router, head, isClient}) {
+export default function (Vue, { router, head, isClient }) {
   // Set default layout as a global component
   Vue.component('DefaultLayout', DefaultLayout);
 
-  Vue.config.errorHandler = function(err, vm, info) {
+  Vue.config.errorHandler = function (err, vm, info) {
     // handle error
     // `info` is a Vue-specific error info, e.g. which lifecycle hook
     // the error was found in. Only available in 2.2.0+
@@ -30,7 +30,8 @@ export default function(Vue, {router, head, isClient}) {
   // Add meta description
   head.meta.push({
     name: 'description',
-    content: 'Learn about Chicago\'s most polluting buildings, and why we need to electrify!',
+    content:
+      "Learn about Chicago's most polluting buildings, and why we need to electrify!",
   });
 
   // Add social images
@@ -52,7 +53,9 @@ export default function(Vue, {router, head, isClient}) {
   // Google analytics code
   if (isClient) {
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() {
+      dataLayer.push(arguments);
+    }
     gtag('js', new Date());
 
     gtag('config', 'G-D4F03H5C02');

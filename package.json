@@ -5,16 +5,19 @@
   "repository": "git@github.com:vkoves/electrify-chicago.git",
   "author": "Viktor Köves <3187531+vkoves@users.noreply.github.com>",
   "engines": {
-    "node": ">=16.00 < 17.0.0"
+    "node": ">=16.00 <= 23.0.0"
   },
   "license": "MIT",
   "scripts": {
     "build": "gridsome build",
     "develop": "gridsome develop",
     "explore": "gridsome explore",
-    "lint": "yarn eslint --ext .ts,.vue ./src",
-    "lint-ci": "yarn lint --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
-    "lint-fix": "yarn lint --fix"
+    "eslint-ci": "yarn eslint-base --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
+    "eslint-base": "yarn eslint --ext .ts,.vue ./src",
+    "prettier-base": "npx prettier ./**/*{.ts,.vue}",
+    "prettier-fix": "yarn prettier-base --write",
+    "lint": "yarn eslint-base && yarn prettier-base --check",
+    "lint-fix": "yarn eslint-base --fix && yarn prettier-base --write"
   },
   "dependencies": {
     "csv-parse": "^5.3.6",
@@ -39,6 +42,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-vue": "^9.9.0",
     "gridsome-plugin-typescript": "^0.4.0",
+    "prettier": "3.4.2",
     "sass": "^1.59.3",
     "sass-loader": "^10.1.1",
     "style-resources-loader": "^1.5.0",

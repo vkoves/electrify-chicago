@@ -11,7 +11,11 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 
 import {
-  IBuildingBenchmarkStats, IBuilding, IBuildingNode, getOverallRankEmoji, RankConfig,
+  IBuildingBenchmarkStats,
+  IBuilding,
+  IBuildingNode,
+  getOverallRankEmoji,
+  RankConfig,
 } from '../common-functions.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
@@ -33,7 +37,7 @@ const GoogleMapsScriptId = 'google-maps-script';
   },
   metaInfo() {
     return {
-      title:  'Map',
+      title: 'Map',
       link: [
         {
           // Leaflet CSS
@@ -50,12 +54,13 @@ export default class MapPage extends Vue {
   static readonly OneMileInMeters = 1609.344 /* eq. to 1mi */;
 
   /** Expose stats to template */
-  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
+    BuildingBenchmarkStats;
 
   readonly MapConfig = {
     DefaultZoom: 11,
     // Center of Chicago at Madison & State
-    Center: [41.86, -87.627831] as [ number, number ],
+    Center: [41.86, -87.627831] as [number, number],
     // How many px of scroll equals one zoom level - default is 60, we go higher since the whole
     // dataset is just Chicago
     WheelPxPerZoomLevel: 480,
@@ -69,8 +74,8 @@ export default class MapPage extends Vue {
 
   /** VueJS template refs */
   $refs!: {
-    mapPopup: any,
-    googleMapsSearchInput: any,
+    mapPopup: any;
+    googleMapsSearchInput: any;
   };
 
   Leaflet!: typeof Leaflet;
@@ -83,7 +88,7 @@ export default class MapPage extends Vue {
 
   formZip: number | string = '';
   /** The coordinates of the place the user searched in the Google Maps box */
-  formPointCoords: [ number, number ] | null = null;
+  formPointCoords: [number, number] | null = null;
   formSearchDistanceMiles = 1;
 
   map?: Leaflet.Map;
@@ -122,21 +127,20 @@ export default class MapPage extends Vue {
     this.setupMapIcons();
 
     this.map = this.Leaflet.map('buildings-map', {
-        zoomDelta: this.MapConfig.ZoomDelta,
-        wheelPxPerZoomLevel: this.MapConfig.WheelPxPerZoomLevel,
-        zoomSnap: this.MapConfig.ZoomSnap,
-      })
-      .setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
+      zoomDelta: this.MapConfig.ZoomDelta,
+      wheelPxPerZoomLevel: this.MapConfig.WheelPxPerZoomLevel,
+      zoomSnap: this.MapConfig.ZoomSnap,
+    }).setView(this.MapConfig.Center, this.MapConfig.DefaultZoom);
 
     const UsingGoogle = true;
 
     if (UsingGoogle) {
       this.setupGoogleMutant();
-    }
-    else {
+    } else {
       this.Leaflet.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        attribution:
+          '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       }).addTo(this.map!);
     }
 
@@ -156,11 +160,11 @@ export default class MapPage extends Vue {
     });
 
     const CustomMarkerIcon = this.Leaflet.Icon.extend({
-        options: {
-            iconSize:     [25, 41],
-            iconAnchor:   [13, 10],
-            shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
-        },
+      options: {
+        iconSize: [25, 41],
+        iconAnchor: [13, 10],
+        shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+      },
     });
 
     this.icons.red = new (CustomMarkerIcon as any)({
@@ -187,10 +191,10 @@ export default class MapPage extends Vue {
   setupGoogleMutant(): void {
     (this.Leaflet.gridLayer as any)
       .googleMutant({
-        type: "roadmap", // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
+        type: 'roadmap', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
         styles: [
           // Disable icons for other points of interest, but keep neighborhood & street labels
-          { elementType: "labels.icon", stylers: [{ visibility: "off" }] },
+          { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
         ],
       })
       .addTo(this.map);
@@ -200,7 +204,8 @@ export default class MapPage extends Vue {
   setupGoogleMapsSearch(): void {
     // Create a <script> element to import Google Maps, then hook into it for the autocomplete input
     const googleMapsScriptElem = document.createElement('script');
-    googleMapsScriptElem.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places';
+    googleMapsScriptElem.src =
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places';
     document.body.appendChild(googleMapsScriptElem);
 
     googleMapsScriptElem.onload = () => {
@@ -208,9 +213,9 @@ export default class MapPage extends Vue {
       const google = (window as any).google;
 
       // NW edge of O'Hare down to long of South edge
-      const southwest = { lat: 41.644624, lng: -87.939760 };
+      const southwest = { lat: 41.644624, lng: -87.93976 };
       // SE edge of Chicago but up at Northern edge of O'hare
-      const northeast = { lat: 42.007430, lng: -87.524611 };
+      const northeast = { lat: 42.00743, lng: -87.524611 };
       const chicagoBounds = new google.maps.LatLngBounds(southwest, northeast);
 
       // Limit search to Chicago strictly, if we can't find an address in Chicago we should show
@@ -222,10 +227,13 @@ export default class MapPage extends Vue {
 
       // Setup places searchbox, learn more here:
       // https://developers.google.com/maps/documentation/javascript/examples/places-searchbox
-      const searchBox = new google.maps.places.SearchBox(searchInput, searchOptions);
+      const searchBox = new google.maps.places.SearchBox(
+        searchInput,
+        searchOptions,
+      );
 
       // Hook into places being selected
-      searchBox.addListener("places_changed", () => {
+      searchBox.addListener('places_changed', () => {
         const places = searchBox.getPlaces();
 
         if (places.length === 0) {
@@ -247,7 +255,7 @@ export default class MapPage extends Vue {
    * Show buildings around a given point, so users can put in an address and see what properties are
    * in the dataset nearby
    */
-  showBuildingsAroundPoint(coordinates: [ number, number ]): void {
+  showBuildingsAroundPoint(coordinates: [number, number]): void {
     this.clearMarkers();
 
     const MarkerOptions: Leaflet.MarkerOptions = {
@@ -257,30 +265,36 @@ export default class MapPage extends Vue {
     };
 
     // Create a default marker for the search location
-    this.Leaflet.marker(coordinates, MarkerOptions)
-      .addTo(this.mainFeatureGroup!);
+    this.Leaflet.marker(coordinates, MarkerOptions).addTo(
+      this.mainFeatureGroup!,
+    );
 
-    const SearchRadiusMeters = MapPage.OneMileInMeters * this.formSearchDistanceMiles;
-    this.Leaflet.circle(coordinates, { radius: SearchRadiusMeters }).addTo(this.mainFeatureGroup!);
+    const SearchRadiusMeters =
+      MapPage.OneMileInMeters * this.formSearchDistanceMiles;
+    this.Leaflet.circle(coordinates, { radius: SearchRadiusMeters }).addTo(
+      this.mainFeatureGroup!,
+    );
 
     const inputPoint = this.Leaflet.latLng(coordinates);
     const buildingNodes = this.$page.allBuilding.edges;
 
     // Calculate the distance to each building and filter by those within a mile
-    const pointsNearInputPoint = buildingNodes.filter((buildingNode: IBuildingNode) => {
-      // Make sure we actually have coordinates before we do calculations on them
-      const latFloat = parseFloat(buildingNode.node.Latitude);
-      const lonFloat = parseFloat(buildingNode.node.Longitude);
-      if (!isNaN(latFloat) && !isNaN(lonFloat)) {
-        const buildingPoint = this.Leaflet.latLng(latFloat, lonFloat);
-        const buildingDistanceToPointMeters = buildingPoint.distanceTo(inputPoint);
+    const pointsNearInputPoint = buildingNodes.filter(
+      (buildingNode: IBuildingNode) => {
+        // Make sure we actually have coordinates before we do calculations on them
+        const latFloat = parseFloat(buildingNode.node.Latitude);
+        const lonFloat = parseFloat(buildingNode.node.Longitude);
+        if (!isNaN(latFloat) && !isNaN(lonFloat)) {
+          const buildingPoint = this.Leaflet.latLng(latFloat, lonFloat);
+          const buildingDistanceToPointMeters =
+            buildingPoint.distanceTo(inputPoint);
 
-        return buildingDistanceToPointMeters <= SearchRadiusMeters;
-      } 
-      else {
-        return false;
-      }
-    });
+          return buildingDistanceToPointMeters <= SearchRadiusMeters;
+        } else {
+          return false;
+        }
+      },
+    );
 
     this.addBuildingsToMap(pointsNearInputPoint);
     this.autofitMap();
@@ -299,15 +313,21 @@ export default class MapPage extends Vue {
 
     this.addBuildingsToMap(topBuildings);
 
-    this.mapStatus = `Top ${MapPage.MaxBuildingsCount} highest GHG intensity buildings of `
-      + `${buildingNodes.length.toLocaleString()} total`;
+    this.mapStatus =
+      `Top ${MapPage.MaxBuildingsCount} highest GHG intensity buildings of ` +
+      `${buildingNodes.length.toLocaleString()} total`;
   }
 
   setupZipCodes(): void {
     const buildingNodes = this.$page.allBuilding.edges;
     const allZipCodes: Array<number> = buildingNodes
-      .filter((buildingNode: IBuildingNode) => (buildingNode.node.ZIPCode as string).trim().length)
-      .map((buildingNode: IBuildingNode) => parseInt(buildingNode.node.ZIPCode as string));
+      .filter(
+        (buildingNode: IBuildingNode) =>
+          (buildingNode.node.ZIPCode as string).trim().length,
+      )
+      .map((buildingNode: IBuildingNode) =>
+        parseInt(buildingNode.node.ZIPCode as string),
+      );
 
     this.zipCodes = this.unique(allZipCodes).sort();
   }
@@ -344,14 +364,14 @@ export default class MapPage extends Vue {
       this.clearSearch();
 
       const buildingNodes = this.$page.allBuilding.edges;
-      const filteredBuildings = buildingNodes
-        .filter((buildingNode: IBuildingNode) =>
-          buildingNode.node.ZIPCode === this.formZip.toString());
+      const filteredBuildings = buildingNodes.filter(
+        (buildingNode: IBuildingNode) =>
+          buildingNode.node.ZIPCode === this.formZip.toString(),
+      );
 
       this.addBuildingsToMap(filteredBuildings);
       this.mapStatus = `Buildings in Zipcode ${this.formZip} (according to dataset)`;
-    }
-    else {
+    } else {
       this.showBuildingsAroundPoint(this.formPointCoords!);
       this.mapStatus = `Buildings within ${this.formSearchDistanceMiles} mile of point`;
     }
@@ -364,31 +384,34 @@ export default class MapPage extends Vue {
    * existing markers
    */
   addBuildingsToMap(buildingNodes: Array<IBuildingNode>): void {
-    buildingNodes
-      .forEach((buildingNode: IBuildingNode) => {
-        const currBuilding: IBuilding = buildingNode.node;
+    buildingNodes.forEach((buildingNode: IBuildingNode) => {
+      const currBuilding: IBuilding = buildingNode.node;
 
-        const buildingCoords: [ number, number ] = [
-          parseFloat(currBuilding.Latitude),
-          parseFloat(currBuilding.Longitude),
-        ];
+      const buildingCoords: [number, number] = [
+        parseFloat(currBuilding.Latitude),
+        parseFloat(currBuilding.Longitude),
+      ];
 
-        const MarkerOptions: Leaflet.MarkerOptions = {
-          riseOnHover: true,
-          icon: this.getBuildingIcon(currBuilding),
-        };
+      const MarkerOptions: Leaflet.MarkerOptions = {
+        riseOnHover: true,
+        icon: this.getBuildingIcon(currBuilding),
+      };
 
-        const marker = this.Leaflet.marker(buildingCoords, MarkerOptions)
-          .addTo(this.mainFeatureGroup!);
+      const marker = this.Leaflet.marker(buildingCoords, MarkerOptions).addTo(
+        this.mainFeatureGroup!,
+      );
 
-        marker.bindPopup(() => {
+      marker.bindPopup(
+        () => {
           this.currBuilding = currBuilding;
           return this.$refs.mapPopup;
-        }, {
+        },
+        {
           // Fix popup max-width
-          maxWidth: "auto",
-        } as any);
-      });
+          maxWidth: 'auto',
+        } as any,
+      );
+    });
   }
 
   /**
@@ -396,19 +419,18 @@ export default class MapPage extends Vue {
    * while an alarm is red)
    */
   getBuildingIcon(building: IBuilding): Leaflet.Icon {
-    const rankEmoji: string | undefined
-      = getOverallRankEmoji(building, this.BuildingBenchmarkStats)?.emoji;
+    const rankEmoji: string | undefined = getOverallRankEmoji(
+      building,
+      this.BuildingBenchmarkStats,
+    )?.emoji;
 
     if (rankEmoji === RankConfig.AlarmEmoji) {
       return this.icons.red;
-    }
-    else if (rankEmoji === RankConfig.FlagEmoji) {
+    } else if (rankEmoji === RankConfig.FlagEmoji) {
       return this.icons.orange;
-    }
-    else if (rankEmoji === RankConfig.TrophyEmoji) {
+    } else if (rankEmoji === RankConfig.TrophyEmoji) {
       return this.icons.green;
-    }
-    else {
+    } else {
       return this.icons.blue;
     }
   }
@@ -475,12 +497,7 @@ export default class MapPage extends Vue {
 <template>
   <DefaultLayout>
     <div class="map-page">
-      <h1
-        id="main-content"
-        tabindex="-1"
-      >
-        Buildings Map
-      </h1>
+      <h1 id="main-content" tabindex="-1">Buildings Map</h1>
 
       <DataDisclaimer />
 
@@ -489,10 +506,7 @@ export default class MapPage extends Vue {
         <form>
           <h2>Filter Buildings</h2>
 
-          <p
-            v-if="errorMessage"
-            class="error-message"
-          >
+          <p v-if="errorMessage" class="error-message">
             {{ errorMessage }}
           </p>
 
@@ -503,82 +517,47 @@ export default class MapPage extends Vue {
             type="text"
             placeholder="Type address or place"
             @keydown.enter="cancelEvent"
-          >
+          />
 
           <label for="search-dist">Search Distance</label>
-          <select
-            id="search-dist"
-            v-model="formSearchDistanceMiles"
-          >
-            <option :value="0.25">
-              1/4 mile
-            </option>
-            <option :value="0.5">
-              1/2 mile
-            </option>
-            <option :value="1">
-              1 mile
-            </option>
-            <option :value="2">
-              2 miles
-            </option>
+          <select id="search-dist" v-model="formSearchDistanceMiles">
+            <option :value="0.25">1/4 mile</option>
+            <option :value="0.5">1/2 mile</option>
+            <option :value="1">1 mile</option>
+            <option :value="2">2 miles</option>
           </select>
 
-          <hr>
+          <hr />
 
           <label for="zipcode">Or Filter Zip Code</label>
-          <select
-            id="zipcode"
-            v-model="formZip"
-          >
-            <option
-              disabled
-              :value="''"
-            >
-              Choose Zipcode
-            </option>
-            <option
-              v-for="zipcode in zipCodes"
-              :key="zipcode"
-              :value="zipcode"
-            >
+          <select id="zipcode" v-model="formZip">
+            <option disabled :value="''">Choose Zipcode</option>
+            <option v-for="zipcode in zipCodes" :key="zipcode" :value="zipcode">
               {{ zipcode }}
-            </option>"
+            </option>
+            "
           </select>
 
           <div class="button-row">
-            <button
-              type="button"
-              @click="reset"
-            >
-              Reset
-            </button>
+            <button type="button" @click="reset">Reset</button>
 
-            <button
-              type="submit"
-              @click="applyFilters"
-            >
-              Submit
-            </button>
+            <button type="submit" @click="applyFilters">Submit</button>
           </div>
         </form>
       </details>
 
-      <p class="map-status">
-        <strong>Filtering By:</strong> {{ mapStatus }}
-      </p>
+      <p class="map-status"><strong>Filtering By:</strong> {{ mapStatus }}</p>
 
       <div id="buildings-map" />
 
       <div v-show="false">
         <!-- The map popup used by Leaflet, so we can do Vue things -->
-        <div
-          ref="mapPopup"
-          class="map-popup"
-        >
+        <div ref="mapPopup" class="map-popup">
           <div v-if="currBuilding">
             <h1>
-              {{ currBuilding.PropertyName || currBuilding.Address }}&nbsp;<OverallRankEmoji
+              {{
+                currBuilding.PropertyName || currBuilding.Address
+              }}&nbsp;<OverallRankEmoji
                 :building="currBuilding"
                 :stats="BuildingBenchmarkStats"
               />
@@ -627,10 +606,9 @@ export default class MapPage extends Vue {
               </div>
             </div>
 
-            <a
-              :href="currBuilding.path"
-              class="details-link"
-            >View More Details</a>
+            <a :href="currBuilding.path" class="details-link"
+              >View More Details</a
+            >
           </div>
         </div>
       </div>
@@ -683,13 +661,16 @@ export default class MapPage extends Vue {
       font-weight: bold;
     }
 
-    input[type="text"] {
+    input[type='text'] {
       width: 100%;
       padding: 0.5rem 1rem;
       box-sizing: border-box;
     }
 
-    label, select { display: block; }
+    label,
+    select {
+      display: block;
+    }
 
     label {
       font-size: 0.825rem;
@@ -739,7 +720,8 @@ export default class MapPage extends Vue {
     .building-img-cont {
       text-align: left;
 
-      &, img {
+      &,
+      img {
         max-width: 10rem;
       }
 

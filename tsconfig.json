@@ -1,21 +1,19 @@
 {
-    "compilerOptions": {
-        "target": "es5",
-        "module": "es6",
-        "moduleResolution": "node",
-        "noImplicitReturns": true,
-        "experimentalDecorators": true,
-        "outDir": "./built/",
-        "sourceMap": true,
-        "strict": true,
-        "resolveJsonModule": true,
-        "esModuleInterop": true,
-    },
-    "paths": {
-      "~/*": ["./src/*"],
-      "@/*": ["./src/*"]
-    },
-    "include": [
-        "./src/**/*"
-    ]
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es6",
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "experimentalDecorators": true,
+    "outDir": "./built/",
+    "sourceMap": true,
+    "strict": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "paths": {
+    "~/*": ["./src/*"],
+    "@/*": ["./src/*"]
+  },
+  "include": ["./src/**/*"]
 }
