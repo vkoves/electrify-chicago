@@ -506,5 +506,13 @@ export default class MillionsInMissedFine extends Vue {
 
     + p { margin-top: 0.25rem; }
   }
+
+  /**
+   * Mobile Styling
+   */
+  @media (max-width: $mobile-max-width) {
+    // Shrink table font size so it's more visible
+    table { font-size: 0.75rem; }
+  }
 }
 </style>
