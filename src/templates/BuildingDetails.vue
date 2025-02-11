@@ -337,6 +337,12 @@ query ($id: ID!, $ID: String) {
           </p>
 
           <PieChart :graph-data="energyBreakdownData" />
+          <img
+            v-tooltip.bottom="tooltipMessage"
+            class="tooltip"
+            src="/help.svg"
+            alt="Help icon. Hover to reveal additional text."
+          >
         </div>
       </div>
 
@@ -450,6 +456,9 @@ import {
 } from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 
+import vToolTip from 'v-tooltip';
+Vue.use(vToolTip);
+
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
   DistrictSteam: '#ABABAB',
@@ -492,6 +501,15 @@ export default class BuildingDetails extends Vue {
     ElectricityUse: 'Electricity Use (kBTU)',
     NaturalGasUse: 'Fossil Gas Use (kBTU)',
   };
+
+  tooltipMessage = `
+    <p class="title">Why does this matter?</p>
+    <p>
+      Although reducing energy use overall is important, not all energy is created equal -
+      electricity can be created without emissions (via solar, wind, nuclear, etc.) but burning
+      natural gas always creates emissions.
+    </p>
+  `;
 
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
