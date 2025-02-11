@@ -48,8 +48,9 @@ import {IBuilding} from '../common-functions.vue';
 //   IBuildingOwner,
 //   BuildingOwners,
 // } from '../constants/buildings-owners.constant.vue';
-import { IBuildingOwner, BuildingOwners } from '../constants/building-owners.constant.vue';
-import { getBuildingCustomInfo } from '../constants/buildings-custom-info.constant.vue';
+import { BuildingOwners } from '../constants/building-owners.constant.vue';
+import { 
+  getBuildingCustomInfo, IBuildingOwner } from '../constants/buildings-custom-info.constant.vue';
 
 /**
  * A component that given a building shows the logo of its owner if one is set in

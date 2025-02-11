@@ -7,9 +7,9 @@ import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
 import {
-    BuildingsCustomInfo, IBuildingCustomInfo,
+    BuildingsCustomInfo, IBuildingCustomInfo, IBuildingOwner,
 } from '../constants/buildings-custom-info.constant.vue';
-import { IBuildingOwner, BuildingOwners } from '../constants/building-owners.constant.vue'; 
+import { BuildingOwners } from '../constants/building-owners.constant.vue'; 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 interface IBuildingEdge { node: IBuilding; }
