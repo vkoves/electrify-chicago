@@ -211,6 +211,8 @@ export default class BiggestBuildings extends Vue {
 
     p.main-paragraph {
       font-size: 1.125rem;
+
+      &:first-of-type { margin-top: 0; }
     }
   }
 

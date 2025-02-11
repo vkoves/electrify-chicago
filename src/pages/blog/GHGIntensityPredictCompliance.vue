@@ -395,7 +395,7 @@ export default class MillionsInMissedFine extends Vue {
                 </tr>
               </tbody>
             </table>
-            <p>
+            <p class="regression-p">
               <strong>Dependent Variable:</strong>
               {{ results.dependent_variable }}<br />
               <strong>Number of Observations:</strong>
@@ -486,6 +486,8 @@ export default class MillionsInMissedFine extends Vue {
     border: $border-thin solid $black;
   }
 
+  .regression-p { margin-top: 1rem; }
+
   iframe {
     border: $border-medium solid $black;
     border-radius: 0.5rem;
@@ -497,6 +499,12 @@ export default class MillionsInMissedFine extends Vue {
 
   section.-indented {
     margin-left: 1rem;
+  }
+
+  h3 {
+    margin-bottom: 0;
+
+    + p { margin-top: 0.25rem; }
   }
 }
 </style>

@@ -78,15 +78,12 @@ h6 {
   }
 }
 
-h1 {
-  margin: 1.5rem 0 0.5rem 0;
-}
-h2 {
-  margin: 1rem 0 0.5rem 0;
-}
+h1 { margin: 1.5rem 0 0.5rem 0; }
+h2 { margin: 1rem 0 0.5rem 0; }
 
-p.-no-margin,
-p:first-of-type {
+// Expose -no-margin variant to ignore default paragraph margins
+p:first-of-type,
+p.-no-margin {
   margin: 0;
 }
 
@@ -120,12 +117,6 @@ button {
   }
 }
 
-/**
- * Text helpers
- */
-.bold {
-  font-weight: bold;
-}
 
 dl {
   dt {
@@ -161,15 +152,29 @@ details {
   }
 }
 
-img {
-  max-width: 100%;
-}
+// Make sure images don't go beyond the page
+img { max-width: 100%; }
 
 img.-shadowed {
   margin-top: 1rem;
   border: solid $border-thin $grey;
   box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
 }
+
+/** Some basic default table styling */
+table {
+  thead { background-color: $grey; }
+
+  td, th { padding: 0.5rem; }
+}
+
+/**
+ * Text helpers
+ */
+.bold {
+  font-weight: bold;
+}
+
 
 .large-text {
   font-size: 1.3em;
