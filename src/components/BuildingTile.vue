@@ -34,8 +34,6 @@ export default class BuildingTile extends Vue {
    * through a district heating system.
    */
    get fullyGasFree(): boolean {
-    console.log(this.building);
-
     return (
       parseFloat(this.building.NaturalGasUse) === 0 &&
       parseFloat(this.building.DistrictSteamUse) === 0
