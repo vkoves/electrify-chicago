@@ -289,7 +289,7 @@ export default class Index extends Vue {
 
     h2 {
       display: inline;
-      margin: 0;
+      margin: 0 0.5rem 0 0;
     }
   }
   .list-desc {
