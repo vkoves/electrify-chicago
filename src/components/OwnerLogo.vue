@@ -100,7 +100,9 @@ export default class OwnerLogo extends Vue {
     margin: 0;
   }
 
-  a { display: block; }
+  a {
+    display: block;
+  }
 
   .owner-label {
     margin-top: 0.25rem;

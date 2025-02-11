@@ -73,7 +73,9 @@ export default class BuildingTile extends Vue {
               <dd>
                 <div class="value">
                   {{
-                    parseFloat(building.GHGIntensity.toString()).toLocaleString()
+                    parseFloat(
+                      building.GHGIntensity.toString(),
+                    ).toLocaleString()
                   }}
                 </div>
                 <div class="unit">kg CO<sub>2</sub> / sqft</div>
@@ -135,10 +137,13 @@ export default class BuildingTile extends Vue {
       top: 0;
       left: 0;
       background: $white;
-      padding: 0.5rem 1rem;
       top: 0;
       margin: 0;
       border-bottom-right-radius: $brd-rad-medium;
+
+      a {
+        padding: 0.5rem 1rem;
+      }
 
       img {
         display: block;
