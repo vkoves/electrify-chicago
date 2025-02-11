@@ -230,10 +230,12 @@ export default class BarGraph extends Vue {
 
             // If the min is right at the bottom right or bottom left, render it above
             // to prevent colliding with x-axis labels (e.g. Digital Lakeside > District Steam)
-            if (yPos > this.height * 0.9 && (xPos < 10 || xPos > this.width * 0.9)) {
+            if (
+              yPos > this.height * 0.9 &&
+              (xPos < 10 || xPos > this.width * 0.9)
+            ) {
               yPos -= this.LabelFontSize * 2;
-            }
-            else {
+            } else {
               // Otherwise if no special case, just draw it below
               yPos += this.LabelFontSize * 1.25;
             }
