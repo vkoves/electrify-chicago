@@ -348,10 +348,33 @@ nav.pager {
   }
 }
 
+/**
+ * Tooltips styling
+ *
+ * Base Component Structure:
+ *    <img
+ *      v-tooltip="tooltipMessage"
+ *      class="tooltip"
+ *      src="/help.svg"
+ *      alt="Help icon."
+ *    >
+ * 
+ * Positioning Modifier:
+ *    v-tooltip.[top | bottom | left | right]
+ *    Ex.
+ *      <img 
+ *        v-tooltip.bottom="tooltipMessage"
+ *        class="tooltip"
+ *        src="/help.svg"
+ *        alt="Help icon."
+ *      >
+ */
 .tooltip {
   align-self: flex-end;
   z-index: 10000;
   margin: 0rem 2rem 1rem 0rem;
+
+  --tooltip-margin: 5px;
 
   .tooltip-inner {
     background: $white;
@@ -381,66 +404,67 @@ nav.pager {
     height: 0;
     border-style: solid;
     position: absolute;
-    margin: 5px;
+    margin: var(--tooltip-margin);
     border-color: $blue-dark;
     z-index: 1;
   }
 
+  // Positioning modifiers
   &[x-placement^="top"] {
-    margin-bottom: 5px;
+    margin-bottom: var(--tooltip-margin);
 
     .tooltip-arrow {
-      border-width: 5px 5px 0 5px;
-      border-left-color: transparent !important;
-      border-right-color: transparent !important;
-      border-bottom-color: transparent !important;
-      bottom: -5px;
-      left: calc(50% - 5px);
+      border-width: var(--tooltip-margin) var(--tooltip-margin) 0 var(--tooltip-margin);
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      bottom: calc(0px - var(--tooltip-margin));
+      left: calc(50% - var(--tooltip-margin));
       margin-top: 0;
       margin-bottom: 0;
     }
   }
 
   &[x-placement^="bottom"] {
-    margin-top: 5px;
+    margin-top: var(--tooltip-margin);
 
     .tooltip-arrow {
-      border-width: 0 5px 5px 5px;
-      border-left-color: transparent !important;
-      border-right-color: transparent !important;
-      border-top-color: transparent !important;
-      top: -5px;
-      left: calc(50% - 5px);
+      border-width: 0 var(--tooltip-margin) var(--tooltip-margin) var(--tooltip-margin);
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-top-color: transparent;
+      top: calc(0px - var(--tooltip-margin));
+      left: calc(50% - var(--tooltip-margin));
       margin-top: 0;
       margin-bottom: 0;
     }
   }
 
   &[x-placement^="right"] {
-    margin-left: 5px;
+    margin-left: var(--tooltip-margin);
 
     .tooltip-arrow {
-      border-width: 5px 5px 5px 0;
-      border-left-color: transparent !important;
-      border-top-color: transparent !important;
-      border-bottom-color: transparent !important;
-      left: -5px;
-      top: calc(50% - 5px);
+      border-width: var(--tooltip-margin) var(--tooltip-margin) var(--tooltip-margin) 0;
+      border-left-color: transparent;
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+      left: calc(0px - var(--tooltip-margin));
+      top: calc(50% - var(--tooltip-margin));
       margin-left: 0;
       margin-right: 0;
     }
   }
 
   &[x-placement^="left"] {
-    margin-right: 5px;
+    margin-right: var(--tooltip-margin);
 
     .tooltip-arrow {
-      border-width: 5px 0 5px 5px;
-      border-top-color: transparent !important;
-      border-right-color: transparent !important;
-      border-bottom-color: transparent !important;
-      right: -5px;
-      top: calc(50% - 5px);
+      border-width: var(--tooltip-margin) 0 var(--tooltip-margin) var(--tooltip-margin);
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      right: calc(0px - var(--tooltip-margin));
+      top: calc(50% - var(--tooltip-margin));
       margin-left: 0;
       margin-right: 0;
     }
