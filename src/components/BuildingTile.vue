@@ -141,7 +141,8 @@ export default class BuildingTile extends Vue {
       margin: 0;
       border-bottom-right-radius: $brd-rad-medium;
 
-      &:hover, &:focus-within {
+      &:hover,
+      &:focus-within {
         background-color: $grey-light;
       }
 
