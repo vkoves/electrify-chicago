@@ -341,7 +341,8 @@ query ($id: ID!, $ID: String) {
             v-tooltip.bottom="tooltipMessage"
             class="tooltip"
             src="/help.svg"
-            alt="Help icon. Hover to reveal additional text."
+            alt="Help icon"
+            tabindex="0"
           >
         </div>
       </div>

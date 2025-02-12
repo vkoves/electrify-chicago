@@ -356,7 +356,8 @@ nav.pager {
  *      v-tooltip="tooltipMessage"
  *      class="tooltip"
  *      src="/help.svg"
- *      alt="Help icon."
+ *      alt="Help icon"
+ *      tabindex="0"
  *    >
  * 
  * Positioning Modifier:
@@ -366,7 +367,8 @@ nav.pager {
  *        v-tooltip.bottom="tooltipMessage"
  *        class="tooltip"
  *        src="/help.svg"
- *        alt="Help icon."
+ *        alt="Help icon"
+ *        tabindex="0"
  *      >
  */
 .tooltip {
