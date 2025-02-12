@@ -141,6 +141,10 @@ export default class BuildingTile extends Vue {
       margin: 0;
       border-bottom-right-radius: $brd-rad-medium;
 
+      &:hover, &:focus-within {
+        background-color: $grey-light;
+      }
+
       a {
         padding: 0.5rem 1rem;
       }
@@ -162,7 +166,6 @@ export default class BuildingTile extends Vue {
         padding: 0.125rem 1rem;
         border-radius: 1rem;
         font-size: 0.875rem;
-        box-shadow: 0.125rem 0.125rem 0.125rem $box-shadow-main;
 
         &.-all-electric {
           background: #fff6aa;
