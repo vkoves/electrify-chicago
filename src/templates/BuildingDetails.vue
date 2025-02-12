@@ -335,15 +335,16 @@ query ($id: ID!, $ID: String) {
             <strong>Total Energy Use:</strong>
             {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
           </p>
-
-          <PieChart :graph-data="energyBreakdownData" />
-          <img
-            v-tooltip.bottom="tooltipMessage"
-            class="tooltip"
-            src="/help.svg"
-            alt="Help icon"
-            tabindex="0"
-          >
+          <div class="energy-mix-cont">
+            <PieChart :graph-data="energyBreakdownData" />
+            <img
+              v-tooltip.bottom="tooltipMessage"
+              class="tooltip"
+              src="/help.svg"
+              alt="Help icon"
+              tabindex="0"
+            >
+          </div>
         </div>
       </div>
 
@@ -817,16 +818,26 @@ export default class BuildingDetails extends Vue {
     .stat-tiles-col {
       flex-basis: 70%;
     }
+    
     .chart-cont {
       flex-basis: 30%;
       flex-shrink: 0;
       margin-top: 1rem;
 
-      .pie-chart-cont {
+      .energy-mix-cont {
+        display: flex;
+        flex-direction: column;
         margin-top: 1rem;
         background-color: $off-white;
         border-radius: $brd-rad-medium;
         max-width: 24rem;
+
+        .tooltip {
+          align-self: flex-end;
+          width: fit-content;
+          margin-bottom: var(--tooltip-margin);
+          margin-right: var(--tooltip-margin);
+        }
       }
     }
   }

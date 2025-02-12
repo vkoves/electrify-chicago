@@ -350,6 +350,10 @@ nav.pager {
 
 /**
  * Tooltips styling
+ * 
+ * Base Imports:
+ *  import vToolTip from 'v-tooltip';
+ *  Vue.use(vToolTip);
  *
  * Base Component Structure:
  *    <img
@@ -372,11 +376,8 @@ nav.pager {
  *      >
  */
 .tooltip {
-  align-self: flex-end;
-  z-index: 10000;
-  margin: 0rem 2rem 1rem 0rem;
-
   --tooltip-margin: 5px;
+  z-index: 10000;
 
   .tooltip-inner {
     background: $white;
