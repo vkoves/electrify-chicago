@@ -331,10 +331,7 @@ def generate_missing_data_grade(
     return not_submitted_count_df
 
 
-def grade_ghg_intensity_energy_mix_all_years(
-    # csv_path : str = "building-benchmarks.csv",
-    building_data : pd.DataFrame,
-):
+def grade_ghg_intensity_energy_mix_all_years(building_data : pd.DataFrame):
     """Generate grades for all years in the dataset based on GHG intensity and
     energy mix.
 
@@ -369,7 +366,7 @@ def grade_ghg_intensity_energy_mix_all_years(
         on=["ID", "DataYear"],
     )
 
-    # Add to the orignal dataset:
+    # Add to the original dataset:
     df = pd.merge(
         building_data,
         grades_all_years_df,
