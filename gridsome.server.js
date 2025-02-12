@@ -98,7 +98,7 @@ function loadBuildingBenchmarkData(actions) {
     ]
 
     floatCols.forEach(col => {
-      build[col] = parseFloat(col);
+      building[col] = parseFloat(col);
     });
 
     if (!building.slugSource || typeof building.slugSource !== 'string') {
