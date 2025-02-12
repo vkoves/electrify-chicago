@@ -26,9 +26,6 @@ handle_error() {
   exit 1
 }
 
-<<<<<<< HEAD
-python3 -m src.data.scripts.clean_and_pare_down_data_current_year
-=======
 clean_dist_directory() {
   echo "Deleting data /dist directory contents..."
   rm -rf src/data/dist/*
@@ -77,4 +74,3 @@ echo -e "For more understandable intermediate data CSVs and JSON building stats,
 echo -e "\nNote: You must restart \`gridsome develop\` for data changes to take effect."
 
 exit 0
->>>>>>> main
