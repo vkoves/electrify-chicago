@@ -338,7 +338,7 @@ query ($id: ID!, $ID: String) {
           <div class="energy-mix-cont">
             <PieChart :graph-data="energyBreakdownData" />
             <img
-              v-tooltip.bottom="{ content: tooltipMessage, autoHide: false }"
+              v-tooltip.bottom="{ content: tooltipMessage }"
               class="tooltip"
               src="/help.svg"
               alt="Help icon"
