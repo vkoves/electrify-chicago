@@ -343,7 +343,7 @@ query ($id: ID!, $ID: String) {
               src="/help.svg"
               alt="Help icon"
               tabindex="0"
-            >
+            />
           </div>
         </div>
       </div>
@@ -818,7 +818,7 @@ export default class BuildingDetails extends Vue {
     .stat-tiles-col {
       flex-basis: 70%;
     }
-    
+
     .chart-cont {
       flex-basis: 30%;
       flex-shrink: 0;
