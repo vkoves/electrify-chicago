@@ -9,12 +9,14 @@ import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import LetterGrade from './LetterGrade.vue';
 
 @Component({
   components: {
-    RankText,
+    LetterGrade,
     OverallRankEmoji,
     OwnerLogo,
+    RankText,
   },
 })
 export default class BuildingsTable extends Vue {
@@ -73,6 +75,10 @@ export default class BuildingsTable extends Vue {
               :stats="BuildingBenchmarkStats"
             />
             <OwnerLogo :building="edge.node" :is-small="true" />
+            <LetterGrade v-if="edge.node.AvgPercentileLetterGrade"
+              :grade="edge.node.AvgPercentileLetterGrade"
+              class="-circled" />
+
 
             <div class="prop-address">
               {{ edge.node.Address }}
