@@ -350,7 +350,7 @@ nav.pager {
 
 /**
  * Tooltips styling
- * 
+ *
  * Base Imports:
  *  import vToolTip from 'v-tooltip';
  *  Vue.use(vToolTip);
@@ -363,11 +363,11 @@ nav.pager {
  *      alt="Help icon"
  *      tabindex="0"
  *    >
- * 
+ *
  * Positioning Modifier:
  *    v-tooltip.[top | bottom | left | right]
  *    Ex.
- *      <img 
+ *      <img
  *        v-tooltip.bottom="tooltipMessage"
  *        class="tooltip"
  *        src="/help.svg"
@@ -376,19 +376,20 @@ nav.pager {
  *      >
  */
 .tooltip {
-  --tooltip-margin: 5px;
+  // The width of the tooltip tip
+  $tooltipSize: 0.3125rem;
   z-index: 10000;
 
   .tooltip-inner {
     background: $white;
     color: $black;
     border-radius: 4px;
-    border: 1px solid $blue-dark;
-    box-shadow: 4px 4px 4px $grey;
-    padding: 5px 10px 4px;
+    border: $border-thin solid $blue-dark;
+    box-shadow: 0.25rem 0.25rem 0.25rem $grey;
+    padding: 0.25rem 0.5rem 0.25rem;
     width: 22rem;
     padding: 1rem;
-    
+
     p {
       font-size: 0.8rem;
     }
@@ -407,67 +408,67 @@ nav.pager {
     height: 0;
     border-style: solid;
     position: absolute;
-    margin: var(--tooltip-margin);
+    margin: $tooltipSize;
     border-color: $blue-dark;
     z-index: 1;
   }
 
   // Positioning modifiers
   &[x-placement^="top"] {
-    margin-bottom: var(--tooltip-margin);
+    margin-bottom: $tooltipSize;
 
     .tooltip-arrow {
-      border-width: var(--tooltip-margin) var(--tooltip-margin) 0 var(--tooltip-margin);
+      border-width: $tooltipSize $tooltipSize 0 $tooltipSize;
       border-left-color: transparent;
       border-right-color: transparent;
       border-bottom-color: transparent;
-      bottom: calc(0px - var(--tooltip-margin));
-      left: calc(50% - var(--tooltip-margin));
+      bottom: -$tooltipSize;
+      left: calc(50% - $tooltipSize);
       margin-top: 0;
       margin-bottom: 0;
     }
   }
 
   &[x-placement^="bottom"] {
-    margin-top: var(--tooltip-margin);
+    margin-top: $tooltipSize;
 
     .tooltip-arrow {
-      border-width: 0 var(--tooltip-margin) var(--tooltip-margin) var(--tooltip-margin);
+      border-width: 0 $tooltipSize $tooltipSize $tooltipSize;
       border-left-color: transparent;
       border-right-color: transparent;
       border-top-color: transparent;
-      top: calc(0px - var(--tooltip-margin));
-      left: calc(50% - var(--tooltip-margin));
+      top: -$tooltipSize;
+      left: calc(50% - $tooltipSize);
       margin-top: 0;
       margin-bottom: 0;
     }
   }
 
   &[x-placement^="right"] {
-    margin-left: var(--tooltip-margin);
+    margin-left: $tooltipSize;
 
     .tooltip-arrow {
-      border-width: var(--tooltip-margin) var(--tooltip-margin) var(--tooltip-margin) 0;
+      border-width: $tooltipSize $tooltipSize $tooltipSize 0;
       border-left-color: transparent;
       border-top-color: transparent;
       border-bottom-color: transparent;
-      left: calc(0px - var(--tooltip-margin));
-      top: calc(50% - var(--tooltip-margin));
+      left: -$tooltipSize;
+      top: calc(50% - $tooltipSize);
       margin-left: 0;
       margin-right: 0;
     }
   }
 
   &[x-placement^="left"] {
-    margin-right: var(--tooltip-margin);
+    margin-right: $tooltipSize;
 
     .tooltip-arrow {
-      border-width: var(--tooltip-margin) 0 var(--tooltip-margin) var(--tooltip-margin);
+      border-width: $tooltipSize 0 $tooltipSize $tooltipSize;
       border-top-color: transparent;
       border-right-color: transparent;
       border-bottom-color: transparent;
-      right: calc(0px - var(--tooltip-margin));
-      top: calc(50% - var(--tooltip-margin));
+      right: -$tooltipSize;
+      top: calc(50% - $tooltipSize);
       margin-left: 0;
       margin-right: 0;
     }

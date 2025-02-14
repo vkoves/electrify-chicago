@@ -338,7 +338,7 @@ query ($id: ID!, $ID: String) {
           <div class="energy-mix-cont">
             <PieChart :graph-data="energyBreakdownData" />
             <img
-              v-tooltip.bottom="tooltipMessage"
+              v-tooltip.bottom="{ content: tooltipMessage, autoHide: false }"
               class="tooltip"
               src="/help.svg"
               alt="Help icon"
@@ -459,6 +459,7 @@ import {
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 
 import vToolTip from 'v-tooltip';
+
 Vue.use(vToolTip);
 
 const EnergyBreakdownColors = {
@@ -835,8 +836,8 @@ export default class BuildingDetails extends Vue {
         .tooltip {
           align-self: flex-end;
           width: fit-content;
-          margin-bottom: var(--tooltip-margin);
-          margin-right: var(--tooltip-margin);
+          margin-bottom: 1rem;
+          margin-right: 1rem;
         }
       }
     }
