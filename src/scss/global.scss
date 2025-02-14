@@ -232,6 +232,14 @@ img.-shadowed {
     margin-left: 0.5rem;
     vertical-align: 1px;
   }
+
+  &.-large {
+    font-size: 2.5rem;
+  }
+
+  &.-spaced {
+    margin-left: 1rem;
+  }
 }
 
 // Use .constrained for a reasonable max-width for text readability and .layout-constrained for a

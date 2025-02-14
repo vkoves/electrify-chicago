@@ -5,9 +5,7 @@
       <span class="score"
         >{{ reportedYearsCount }}/{{ reportingHistory.length }}</span
       >
-      <span class="grade-letter" :class="`-${grade}` | lowercase">
-        {{ grade }}
-      </span>
+      <LetterGrade :grade="grade" class="-large -spaced" />
     </p>
 
     <ul>
@@ -47,6 +45,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { IHistoricData } from '../common-functions.vue';
 
 import { LatestDataYear } from '../constants/globals.vue';
+import LetterGrade from './LetterGrade.vue';
 
 /**
  * A tile that shows the reporting history of a building. For each year, it shows a
@@ -64,6 +63,9 @@ import { LatestDataYear } from '../constants/globals.vue';
  * 4. Crown Hall (only 3 years reported with the latest one missing)
  */
 @Component<any>({
+  components: {
+    LetterGrade,
+  },
   filters: {
     lowercase(value: string) {
       return value.toLowerCase();
@@ -112,7 +114,6 @@ export default class ReportingTile extends Vue {
     }
 
     .grade-letter {
-      font-size: 2.25rem;
       margin-left: 1rem;
     }
   }

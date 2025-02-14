@@ -330,7 +330,13 @@ query ($id: ID!, $ID: String) {
 
           <dl class="stat-tiles">
             <div>
-              <dt>Greenhouse Gas Intensity</dt>
+              <dt>
+                Greenhouse Gas Intensity
+                <!-- TODO: Drop default 'F' after fixing data bug -->
+                <LetterGrade
+                  :grade="building.GHGIntensityLetterGrade || 'F'"
+                  class="-large -spaced" />
+              </dt>
               <dd>
                 <StatTile
                   :building="$page.building"
@@ -420,7 +426,12 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="chart-cont">
-          <h2>Energy Mix</h2>
+          <h2>
+            Energy Mix
+            <LetterGrade
+              :grade="building.EnergyMixWeightedPctSumLetterGrade"
+              class="-large -spaced" />
+          </h2>
           <p>
             <strong>Total Energy Use:</strong>
             {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
@@ -829,12 +840,6 @@ export default class BuildingDetails extends Vue {
     font-size: 1.25rem;
   }
 
-  .grade-letter {
-    font-size: 1.5rem;
-
-    &.-overall { font-size: 3rem; }
-  }
-
   .building-banner {
     padding: 1rem;
     background-color: $warning-background;
@@ -892,6 +897,12 @@ export default class BuildingDetails extends Vue {
       color: $white;
       padding-top: 1rem;
       padding-bottom: 0.5rem;
+    }
+
+    .grade-letter {
+    font-size: 1.5rem;
+
+      &.-overall { font-size: 3rem; }
     }
 
     .grades-cont {
