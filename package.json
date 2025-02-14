@@ -5,7 +5,7 @@
   "repository": "git@github.com:vkoves/electrify-chicago.git",
   "author": "Viktor Köves <3187531+vkoves@users.noreply.github.com>",
   "engines": {
-    "node": ">=16.00 <= 23.0.0"
+    "node": ">=18.00 <= 23.0.0"
   },
   "license": "MIT",
   "scripts": {
@@ -13,7 +13,7 @@
     "develop": "gridsome develop",
     "explore": "gridsome explore",
     "eslint-ci": "yarn eslint-base --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
-    "eslint-base": "yarn eslint --ext .ts,.vue ./src",
+    "eslint-base": "yarn eslint",
     "prettier-base": "npx prettier ./**/*{.ts,.vue,.md}",
     "prettier-fix": "yarn prettier-base --write",
     "lint": "yarn eslint-base && yarn prettier-base --check",
@@ -30,17 +30,19 @@
     "webpack": "^4.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.20.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@types/d3": "^7.4.3",
     "@types/leaflet": "^1.9.3",
     "@types/sindresorhus__slugify": "^0.9.3",
-    "@typescript-eslint/eslint-plugin": "^5.56.0",
-    "@typescript-eslint/parser": "^5.56.0",
-    "eslint": ">=5.16.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.1.1",
-    "eslint-plugin-vue": "^9.9.0",
+    "typescript-eslint": "^8.24.0",
+    "@typescript-eslint/eslint-plugin": "^8.24.0",
+    "@typescript-eslint/parser": "^8.24.0",
+    "eslint": "^9.20.1",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-promise": "^7.2.1",
+    "eslint-plugin-vue": "^9.32.0",
+    "globals": "^15.15.0",
     "gridsome-plugin-typescript": "^0.4.0",
     "prettier": "3.4.2",
     "sass": "^1.59.3",
