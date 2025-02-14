@@ -510,7 +510,7 @@ export default class BuildingDetails extends Vue {
     <p>
       Although reducing energy use overall is important, not all energy is created equal -
       electricity can be created without emissions (via solar, wind, nuclear, etc.) but burning
-      natural gas always creates emissions.
+      fossil gas (aka natural gas) always creates emissions.
     </p>
   `;
 
