@@ -213,11 +213,24 @@ img.-shadowed {
   }
 
   &.-d {
-    color: #7fa52e;
+    color: #972222;
   }
 
   &.-f {
-    color: #972222;
+    color: #d60101;
+  }
+
+  &.-circled {
+    display: inline-block;
+    border: solid 1px;
+    padding: 0 0.25rem;
+    text-align: center;
+    letter-spacing: 3px;
+    border-radius: 1rem;
+    background: white;
+    border-width: 2px;
+    margin-left: 0.5rem;
+    vertical-align: 1px;
   }
 }
 
