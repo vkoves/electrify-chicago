@@ -46,6 +46,17 @@ query ($id: ID!, $ID: String) {
     GrossFloorAreaRankByPropertyType
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
+    # Grade data
+    GHGIntensityPercentileGrade,
+    GHGIntensityLetterGrade,
+    EnergyMixWeightedPctSum,
+    EnergyMixWeightedPctSumPercentileGrade,
+    EnergyMixWeightedPctSumLetterGrade,
+    MissingRecordsCount,
+    MissingRecordsCountPercentileGrade,
+    SubmittedRecordsGrade,
+    AvgPercentileGrade,
+    AvgPercentileLetterGrade,
   }
   allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
     edges {
@@ -231,6 +242,49 @@ query ($id: ID!, $ID: String) {
               </div>
             </dl>
           </div>
+
+          <ul>
+            <li>
+              <strong>GHGIntensityPercentileGrade:</strong>
+              {{ building.GHGIntensityPercentileGrade }}
+            </li>
+            <li>
+              <strong>GHGIntensityLetterGrade:</strong>
+              {{ building.GHGIntensityLetterGrade }}
+            </li>
+            <li>
+              <strong>EnergyMixWeightedPctSum:</strong>
+              {{ building.EnergyMixWeightedPctSum }}
+            </li>
+            <li>
+              <strong>EnergyMixWeightedPctSumPercentileGrade:</strong>
+              {{ building.EnergyMixWeightedPctSumPercentileGrade }}
+            </li>
+            <li>
+              <strong>EnergyMixWeightedPctSumLetterGrade:</strong>
+              {{ building.EnergyMixWeightedPctSumLetterGrade }}
+            </li>
+            <li>
+              <strong>MissingRecordsCount:</strong>
+              {{ building.MissingRecordsCount }}
+            </li>
+            <li>
+              <strong>MissingRecordsCountPercentileGrade:</strong>
+              {{ building.MissingRecordsCountPercentileGrade }}
+            </li>
+            <li>
+              <strong>SubmittedRecordsGrade:</strong>
+              {{ building.SubmittedRecordsGrade }}
+            </li>
+            <li>
+              <strong>AvgPercentileGrade:</strong>
+              {{ building.AvgPercentileGrade }}
+            </li>
+            <li>
+              <strong>AvgPercentileLetterGrade:</strong>
+              {{ building.AvgPercentileLetterGrade }}
+            </li>
+          </ul>
         </div>
       </div>
 
