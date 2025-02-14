@@ -73,20 +73,9 @@ import { LatestDataYear } from '../constants/globals.vue';
 export default class ReportingTile extends Vue {
   @Prop() historicData?: Array<IHistoricData>;
 
+  @Prop({ required: true }) grade!: string; /** A - F letter grade */
+
   readonly LatestDataYear: number = LatestDataYear;
-
-  get grade(): string {
-    const gradeRanges = [
-      { min: 0.9, grade: 'A' },
-      { min: 0.8, grade: 'B' },
-      { min: 0.7, grade: 'C' },
-      { min: 0.6, grade: 'D' },
-      { min: 0, grade: 'F' },
-    ];
-
-    const score = this.reportedYearsCount / this.reportingHistory.length;
-    return gradeRanges.find((range) => score >= range.min)!.grade;
-  }
 
   get reportedYearsCount(): number {
     return this.reportingHistory.filter((entry) => entry.isReported).length;

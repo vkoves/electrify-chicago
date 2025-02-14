@@ -139,118 +139,166 @@ query ($id: ID!, $ID: String) {
             >, the latest year reported
           </div>
 
-          <div class="building-top-info">
-            <h2>Building Info</h2>
+          <div class="info-and-report-card">
+            <div class="building-top-info">
+              <h2>Building Info</h2>
 
-            <dl>
-              <div>
-                <dt>Square Footage</dt>
-                <dd>
-                  <StatTile
-                    :building="$page.building"
-                    :stat-key="'GrossFloorArea'"
-                    :stats="BuildingBenchmarkStats"
-                    :unit="'sqft'"
-                  />
-                </dd>
+              <dl>
+                <div>
+                  <dt>Square Footage</dt>
+                  <dd>
+                    <StatTile
+                      :building="$page.building"
+                      :stat-key="'GrossFloorArea'"
+                      :stats="BuildingBenchmarkStats"
+                      :unit="'sqft'"
+                    />
+                  </dd>
+                </div>
+
+                <div>
+                  <dt>Built</dt>
+                  <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
+                </div>
+
+                <div>
+                  <dt>Primary Property Type</dt>
+                  <dd>
+                    <g-link
+                      class="nav-link"
+                      :to="`/search?type=${propertyTypeEncoded}`"
+                    >
+                      {{ $page.building.PrimaryPropertyType }}
+                    </g-link>
+                  </dd>
+                </div>
+
+                <!-- Only show building count if set and > 1, most are 1 -->
+                <div
+                  v-if="
+                    $page.building.NumberOfBuildings &&
+                    $page.building.NumberOfBuildings > 1
+                  "
+                >
+                  <dt>Building Count</dt>
+                  <dd>{{ $page.building.NumberOfBuildings }}</dd>
+                </div>
+
+                <div>
+                  <dt>Community Area</dt>
+                  <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
+                </div>
+
+                <!-- Show energy rating if it's a float value (not blank or NaN) -->
+                <div
+                  v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))"
+                >
+                  <dt>
+                    <a
+                      href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Chicago Energy Rating
+                      <NewTabIcon />
+                    </a>
+                  </dt>
+                  <dd>{{ $page.building.ChicagoEnergyRating }} / 4</dd>
+                </div>
+
+                <div v-if="$page.building.ENERGYSTARScore">
+                  <dt>
+                    <a
+                      href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Energy Star Score
+                      <NewTabIcon />
+                    </a>
+                  </dt>
+                  <dd>{{ $page.building.ENERGYSTARScore }} / 100</dd>
+                </div>
+
+                <div>
+                  <dt>Owner</dt>
+                  <OwnerLogo :building="$page.building" />
+                </div>
+
+                <div v-if="customLinks">
+                  <dt>Extra Resources</dt>
+
+                  <dd>
+                    <a
+                      v-for="link in customLinks"
+                      :key="link.url"
+                      :href="link.url"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      {{ link.text }}
+                      <NewTabIcon />
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- TODO: Break out report card to its own component -->
+            <div class="report-card">
+              <h2>{{ dataYear }} Report Card</h2>
+
+              <div class="grades-cont">
+                <div class="grade-row -overall">
+                  <div><strong>Overall Grade</strong></div>
+                  <LetterGrade :grade="building.AvgPercentileLetterGrade" class="-overall" />
+                </div>
+
+                <hr>
+
+                <div class="grade-row">
+                  <div><strong>Emissions Intensity</strong> (50%)</div>
+                  <!-- TODO: Drop default 'F' after fixing data bug -->
+                  <LetterGrade :grade="building.GHGIntensityLetterGrade || 'F'" />
+                </div>
+
+                <div class="grade-row">
+                  <div><strong>Energy Mix</strong> (40%)</div>
+                  <LetterGrade :grade="building.EnergyMixWeightedPctSumLetterGrade" />
+                </div>
+
+                <div class="grade-row">
+                  <div><strong>Consistent Reporting</strong> (10%)</div>
+                  <LetterGrade :grade="building.SubmittedRecordsGrade" />
+                </div>
               </div>
-
-              <div>
-                <dt>Built</dt>
-                <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
-              </div>
-
-              <div>
-                <dt>Primary Property Type</dt>
-                <dd>
-                  <g-link
-                    class="nav-link"
-                    :to="`/search?type=${propertyTypeEncoded}`"
-                  >
-                    {{ $page.building.PrimaryPropertyType }}
-                  </g-link>
-                </dd>
-              </div>
-
-              <!-- Only show building count if set and > 1, most are 1 -->
-              <div
-                v-if="
-                  $page.building.NumberOfBuildings &&
-                  $page.building.NumberOfBuildings > 1
-                "
-              >
-                <dt>Building Count</dt>
-                <dd>{{ $page.building.NumberOfBuildings }}</dd>
-              </div>
-
-              <div>
-                <dt>Community Area</dt>
-                <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
-              </div>
-
-              <!-- Show energy rating if it's a float value (not blank or NaN) -->
-              <div
-                v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))"
-              >
-                <dt>
-                  <a
-                    href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Chicago Energy Rating
-                    <NewTabIcon />
-                  </a>
-                </dt>
-                <dd>{{ $page.building.ChicagoEnergyRating }} / 4</dd>
-              </div>
-
-              <div v-if="$page.building.ENERGYSTARScore">
-                <dt>
-                  <a
-                    href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Energy Star Score
-                    <NewTabIcon />
-                  </a>
-                </dt>
-                <dd>{{ $page.building.ENERGYSTARScore }} / 100</dd>
-              </div>
-
-              <div>
-                <dt>Owner</dt>
-                <OwnerLogo :building="$page.building" />
-              </div>
-
-              <div v-if="customLinks">
-                <dt>Extra Resources</dt>
-
-                <dd>
-                  <a
-                    v-for="link in customLinks"
-                    :key="link.url"
-                    :href="link.url"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    {{ link.text }}
-                    <NewTabIcon />
-                  </a>
-                </dd>
-              </div>
-            </dl>
+            </div>
           </div>
+        </div>
+
+        <details>
+          <summary>Debug Full Grade Data</summary>
 
           <ul>
+            <li>
+              <strong>AvgPercentileLetterGrade:</strong>
+              <LetterGrade :grade="building.AvgPercentileLetterGrade" />
+            </li>
+            <li>
+              <strong>AvgPercentileGrade:</strong>
+              {{ building.AvgPercentileGrade }}
+            </li>
+            <li>
+              <strong>GHGIntensityLetterGrade:</strong>
+              <LetterGrade :grade="building.GHGIntensityLetterGrade" />
+            </li>
             <li>
               <strong>GHGIntensityPercentileGrade:</strong>
               {{ building.GHGIntensityPercentileGrade }}
             </li>
             <li>
-              <strong>GHGIntensityLetterGrade:</strong>
-              {{ building.GHGIntensityLetterGrade }}
+              <strong>EnergyMixWeightedPctSumLetterGrade:</strong>
+              <LetterGrade :grade="building.EnergyMixWeightedPctSumLetterGrade" />
             </li>
             <li>
               <strong>EnergyMixWeightedPctSum:</strong>
@@ -261,8 +309,8 @@ query ($id: ID!, $ID: String) {
               {{ building.EnergyMixWeightedPctSumPercentileGrade }}
             </li>
             <li>
-              <strong>EnergyMixWeightedPctSumLetterGrade:</strong>
-              {{ building.EnergyMixWeightedPctSumLetterGrade }}
+              <strong>SubmittedRecordsGrade:</strong>
+              <LetterGrade :grade="building.SubmittedRecordsGrade" />
             </li>
             <li>
               <strong>MissingRecordsCount:</strong>
@@ -272,20 +320,8 @@ query ($id: ID!, $ID: String) {
               <strong>MissingRecordsCountPercentileGrade:</strong>
               {{ building.MissingRecordsCountPercentileGrade }}
             </li>
-            <li>
-              <strong>SubmittedRecordsGrade:</strong>
-              {{ building.SubmittedRecordsGrade }}
-            </li>
-            <li>
-              <strong>AvgPercentileGrade:</strong>
-              {{ building.AvgPercentileGrade }}
-            </li>
-            <li>
-              <strong>AvgPercentileLetterGrade:</strong>
-              {{ building.AvgPercentileLetterGrade }}
-            </li>
           </ul>
-        </div>
+        </details>
       </div>
 
       <div class="main-cols">
@@ -320,7 +356,7 @@ query ($id: ID!, $ID: String) {
             </div>
           </dl>
           <div class="reporting-tiles">
-            <ReportingTile :historic-data="historicData" />
+            <ReportingTile :historic-data="historicData" :grade="building.SubmittedRecordsGrade" />
           </div>
           <div class="stat-tiles-col">
             <h2>Energy Breakdown</h2>
@@ -503,6 +539,7 @@ import {
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
+import LetterGrade from '../components/LetterGrade.vue';
 
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
@@ -521,20 +558,24 @@ const EnergyBreakdownColors = {
     BarGraph,
     BuildingImage,
     DataSourceFootnote,
+    EmailBuildingModal,
     HistoricalBuildingDataTable,
+    LetterGrade,
     NewTabIcon,
     OverallRankEmoji,
     OwnerLogo,
     PieChart,
-    StatTile,
     ReportingTile,
-    EmailBuildingModal,
+    StatTile,
   },
   filters: {
     titlecase(value: string) {
       return value
         .toLowerCase()
         .replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+    },
+    lowercase(value: string) {
+      return value.toLowerCase();
     },
   },
 })
@@ -773,6 +814,12 @@ export default class BuildingDetails extends Vue {
     }
   }
 
+  .info-and-report-card {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
   h1 {
     margin: 0;
   }
@@ -780,6 +827,12 @@ export default class BuildingDetails extends Vue {
   h2 {
     margin: 2.5rem 0 0;
     font-size: 1.25rem;
+  }
+
+  .grade-letter {
+    font-size: 1.5rem;
+
+    &.-overall { font-size: 3rem; }
   }
 
   .building-banner {
@@ -817,6 +870,41 @@ export default class BuildingDetails extends Vue {
 
     h2 {
       margin-top: 0;
+    }
+  }
+
+  .report-card {
+    background-color: $grey-light;
+    border-radius: $brd-rad-medium;
+    margin-top: 1rem;
+    flex-basis: 18rem;
+    flex-shrink: 0;
+    overflow: hidden;
+
+    h2, .grades-cont {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+
+    h2 {
+      margin-top: 0;
+      background-color: $chicago-red;
+      color: $white;
+      padding-top: 1rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .grades-cont {
+      padding-top: 0.5rem;
+      padding-bottom: 1rem;
+    }
+
+    .grade-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &.-overall { font-size: 1.5rem; }
     }
   }
 
@@ -929,6 +1017,11 @@ export default class BuildingDetails extends Vue {
   @media (max-width: 1200px) {
     .main-cols {
       flex-direction: column-reverse;
+    }
+
+    // Move report card to its own column
+    .info-and-report-card {
+      flex-direction: column;
     }
   }
 
