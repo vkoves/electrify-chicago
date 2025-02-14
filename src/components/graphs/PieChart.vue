@@ -34,7 +34,7 @@ export default class PieChart extends Vue {
 
   readonly graphMargins = { top: 0, right: 0, bottom: 0, left: 0 };
 
-  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, null>;
 
   mounted(): void {
     const outerWidth =
@@ -81,7 +81,7 @@ export default class PieChart extends Vue {
       .enter()
       .append('path')
       .attr('d', arcGenerator as any)
-      .attr('fill', (d) => (d.data as unknown as IPieSlice).color);
+      .attr('fill', (d) => (d.data as any as IPieSlice).color);
 
     // Calculate total value for % calculation
     let totalValue = 0;
@@ -125,7 +125,7 @@ export default class PieChart extends Vue {
         }
 
         return `translate(${labelArcGenerator.centroid(
-          d as unknown as d3.DefaultArcObject,
+          d as any as d3.DefaultArcObject,
         )})`;
       })
       .style('text-anchor', (d) => {

@@ -70,7 +70,7 @@ export default class MapPage extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  $page!: any;
+  $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** VueJS template refs */
   $refs!: {
@@ -108,7 +108,7 @@ export default class MapPage extends Vue {
   async mounted(): Promise<void> {
     // Do nothing if rendering the static HTML files - there's nothing we can do map wise and
     // Gridsome gets cranky importing Leaflet
-    if ((process as any).isClient) {
+    if (typeof window !== 'undefined') {
       // Runtime Leaflet imports
       this.Leaflet = require('leaflet');
       require('leaflet.gridlayer.googlemutant');
@@ -204,6 +204,7 @@ export default class MapPage extends Vue {
   setupGoogleMapsSearch(): void {
     // Create a <script> element to import Google Maps, then hook into it for the autocomplete input
     const googleMapsScriptElem = document.createElement('script');
+    googleMapsScriptElem.id = GoogleMapsScriptId;
     googleMapsScriptElem.src =
       'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places';
     document.body.appendChild(googleMapsScriptElem);
@@ -409,6 +410,7 @@ export default class MapPage extends Vue {
         {
           // Fix popup max-width
           maxWidth: 'auto',
+          // eslint-disable-next-line
         } as any,
       );
     });
