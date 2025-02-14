@@ -347,3 +347,142 @@ nav.pager {
     }
   }
 }
+
+/**
+ * Tooltips styling
+ *
+ * Base Imports:
+ *  import vToolTip from 'v-tooltip';
+ *  Vue.use(vToolTip);
+ *
+ * Base Component Structure:
+ *    <img
+ *      v-tooltip="tooltipMessage"
+ *      class="tooltip"
+ *      src="/help.svg"
+ *      alt="Help icon"
+ *      tabindex="0"
+ *    >
+ *
+ * Positioning Modifier:
+ *    v-tooltip.[top | bottom | left | right]
+ *    Ex.
+ *      <img
+ *        v-tooltip.bottom="tooltipMessage"
+ *        class="tooltip"
+ *        src="/help.svg"
+ *        alt="Help icon"
+ *        tabindex="0"
+ *      >
+ */
+.tooltip {
+  // The width of the tooltip tip
+  $tooltipSize: 0.3125rem;
+  z-index: 10000;
+
+  .tooltip-inner {
+    background: $white;
+    color: $black;
+    border-radius: 4px;
+    border: $border-thin solid $blue-dark;
+    box-shadow: 0.25rem 0.25rem 0.25rem $grey;
+    padding: 0.25rem 0.5rem 0.25rem;
+    width: 22rem;
+    padding: 1rem;
+
+    p {
+      font-size: 0.8rem;
+    }
+
+    .title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $blue-dark;
+      margin: 0;
+      margin-bottom: 0.75rem;
+    }
+  }
+
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: $tooltipSize;
+    border-color: $blue-dark;
+    z-index: 1;
+  }
+
+  // Positioning modifiers
+  &[x-placement^="top"] {
+    margin-bottom: $tooltipSize;
+
+    .tooltip-arrow {
+      border-width: $tooltipSize $tooltipSize 0 $tooltipSize;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      bottom: -$tooltipSize;
+      left: calc(50% - $tooltipSize);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^="bottom"] {
+    margin-top: $tooltipSize;
+
+    .tooltip-arrow {
+      border-width: 0 $tooltipSize $tooltipSize $tooltipSize;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-top-color: transparent;
+      top: -$tooltipSize;
+      left: calc(50% - $tooltipSize);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^="right"] {
+    margin-left: $tooltipSize;
+
+    .tooltip-arrow {
+      border-width: $tooltipSize $tooltipSize $tooltipSize 0;
+      border-left-color: transparent;
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+      left: -$tooltipSize;
+      top: calc(50% - $tooltipSize);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[x-placement^="left"] {
+    margin-right: $tooltipSize;
+
+    .tooltip-arrow {
+      border-width: $tooltipSize 0 $tooltipSize $tooltipSize;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      right: -$tooltipSize;
+      top: calc(50% - $tooltipSize);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .15s, visibility .15s;
+  }
+
+  &[aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .15s;
+  }
+}
