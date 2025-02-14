@@ -3,7 +3,7 @@ import os
 import csv
 import pandas as pd
 
-from src.data.scripts import clean_and_pare_down_data_current_year
+from src.data.scripts import clean_and_split_data
 from tests.data.scripts.utils import get_test_file_path
 
 src_dir = 'src'
@@ -25,11 +25,12 @@ def csv_reader() -> csv.reader:
 
 @pytest.fixture
 def processed_dataframe() -> pd.DataFrame:
-    '''Process our test data as per clean_and_pare_down_data_current_year.py
+    '''Process our test data as per clean_and_split_data.py, passing True for latest_year_only
     and return the resulting dataframe'''
 
     input_filename = get_test_file_path(test_input_file)
-    df = clean_and_pare_down_data_current_year.process(input_filename)
+    df = clean_and_split_data.process(input_filename, True)
+
     assert df is not None
     return df
 
@@ -122,8 +123,9 @@ def test_correct_year_selected(processed_dataframe):
 
     df = processed_dataframe
 
-    non_2022_df = df[~df['DataYear']==2022]
-    assert len(non_2022_df) == 0
+    # We have 3 records that submitted but whose latest year was before 2022
+    non_2022_df = df[df['DataYear'] < 2022]
+    assert len(non_2022_df) == 3
 
     yr_2022_df = df[df['DataYear']==2022]
     assert len(yr_2022_df) == 2
@@ -132,8 +134,14 @@ def test_correct_year_selected(processed_dataframe):
 def test_property_count(processed_dataframe):
     '''confirm the processed dataframe has the correct number of properties'''
 
+    print(processed_dataframe['ID'])
+    print(processed_dataframe['ReportingStatus'])
+
     df = processed_dataframe
-    assert len(df) == 2
+
+    # Expect we see the five properties that have submitted in an year in the data set
+    # IDs: 100856, 138730, 160196, 251245, 256419
+    assert len(df) == 5
 
 
 def test_no_ghg_property_is_excluded(processed_dataframe):

@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from src.data.scripts import clean_and_pare_down_data_all_years
+from src.data.scripts import clean_and_split_data
 from tests.data.scripts.utils import get_test_file_path
 
 src_dir = 'src'
@@ -12,11 +12,11 @@ test_output_file = 'test_output.csv'
 
 @pytest.fixture
 def processed_dataframe() -> pd.DataFrame:
-    '''Process our test data as per clean_and_pare_down_data_all_years.py
+    '''Process our test data as per clean_and_split_data.py
     and return the resulting dataframe'''
 
     input_filename = get_test_file_path(test_input_file)
-    df = clean_and_pare_down_data_all_years.process(input_filename, False)
+    df = clean_and_split_data.process(input_filename, False)
     assert df is not None
     return df
 
@@ -43,7 +43,7 @@ def test_expected_columns_present(processed_dataframe):
     '''confirm all expected columns are present in the processed dataframe'''
 
     df = processed_dataframe
-    mandatory_columns = clean_and_pare_down_data_all_years.columns_to_track_over_time
+    mandatory_columns = clean_and_split_data.columns_to_track_over_time
     assert set(df.columns) == set(mandatory_columns)
 
 

@@ -51,6 +51,9 @@ export default class Search extends Vue {
   searchResults: Array<IBuildingEdge> = [];
   totalResultsCount = 0;
 
+  /** Dropdown information on database details */
+  dataDisclaimer!: HTMLDetailsElement;
+
   created(): void {
     // Make sure on load we have some data
     this.setSearchResults(this.$static.allBuilding.edges);
@@ -157,6 +160,16 @@ export default class Search extends Vue {
     this.totalResultsCount = allResults.length;
     this.searchResults = allResults.slice(0, this.MaxBuildings);
   }
+
+  /**
+   * Toggles DataDisclaimer open from the no-results message
+   */
+  openDataDisclaimer(): void {
+    this.dataDisclaimer = document.getElementById(
+      'data-disclaimer',
+    ) as HTMLDetailsElement;
+    this.dataDisclaimer.open = true;
+  }
 }
 </script>
 
@@ -200,7 +213,7 @@ export default class Search extends Vue {
         results are limited to the first {{ MaxBuildings }} matches.
       </p>
 
-      <DataDisclaimer />
+      <DataDisclaimer id="data-disclaimer" />
 
       <form>
         <div>
@@ -238,9 +251,18 @@ export default class Search extends Vue {
       <div v-if="searchResults.length === 0" class="no-results-msg">
         <h2>No results found!</h2>
 
+        <p class="layout-constrained">
+          There may be a typo in your search, the building name may be different
+          in the underlying data, or the building you are looking for may not be
+          in our dataset (buildings in Chicago over 50,000 square feet - see
+          <a href="#data-disclaimer" @click="openDataDisclaimer"
+            >dataset disclaimer</a
+          >).
+        </p>
+
         <p>
-          There may be a typo in your query or in the underlying data, or the
-          building you are looking for may not be in our dataset.
+          <strong>Note:</strong> Addresses generally follow the format
+          <em>123 W Main St</em>
         </p>
       </div>
 
@@ -287,7 +309,7 @@ export default class Search extends Vue {
     }
 
     input[type='text'] {
-      width: 15rem;
+      width: 16rem;
     }
 
     button {
@@ -312,7 +334,7 @@ export default class Search extends Vue {
 
   .no-results-msg {
     background-color: $grey;
-    padding: 1rem;
+    padding: 1rem 0 2rem 0;
     text-align: center;
   }
 
