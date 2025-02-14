@@ -6,7 +6,7 @@ import { LatestDataYear } from '../constants/globals.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
-@Component<any>({
+@Component<unknown>({
   components: {
     NewTabIcon,
   },

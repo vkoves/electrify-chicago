@@ -8,7 +8,7 @@ import vue from "eslint-plugin-vue";
 export default tseslint.config(
     {
         // config with just ignores is the replacement for `.eslintignore`
-        ignores: ['src/.temp/**', '**/.venv/**', '**/dist/**'],
+        ignores: ['src/.temp/**', '**/.venv/**', '**/dist/**', "*.js"],
     },
     js.configs.recommended,
     eslint.configs.recommended,
@@ -24,6 +24,7 @@ export default tseslint.config(
         languageOptions: {
             globals: {
                 ...globals.browser,
+                'require': 'readonly'
             },
 
             ecmaVersion: 5,
@@ -94,7 +95,6 @@ export default tseslint.config(
                 ],
             }],
 
-            // "@typescript-eslint/indent": ["error", 2],
             "semi": ["error", "always"],
             "arrow-parens": ["error", "always"],
             "comma-dangle": ["error", "always-multiline"],
@@ -104,6 +104,9 @@ export default tseslint.config(
                 allowHigherOrderFunctions: true,
                 allowTypedFunctionExpressions: true,
             }],
+
+            // We have to use `require` in some cases
+            "@typescript-eslint/no-require-imports": "warn",
         },
     },
     {

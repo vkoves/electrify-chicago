@@ -26,7 +26,7 @@ const GoogleMapsScriptId = 'google-maps-script';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
-@Component<any>({
+@Component<unknown>({
   components: {
     BuildingImage,
     DataDisclaimer,
@@ -70,7 +70,7 @@ export default class MapPage extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  $page!: any;
+  $page!: { allBuilding: { edges: Array<IBuildingNode> }};
 
   /** VueJS template refs */
   $refs!: {
@@ -108,7 +108,7 @@ export default class MapPage extends Vue {
   async mounted(): Promise<void> {
     // Do nothing if rendering the static HTML files - there's nothing we can do map wise and
     // Gridsome gets cranky importing Leaflet
-    if ((process as any).isClient) {
+    if (typeof window !== 'undefined') {
       // Runtime Leaflet imports
       this.Leaflet = require('leaflet');
       require('leaflet.gridlayer.googlemutant');
@@ -151,7 +151,7 @@ export default class MapPage extends Vue {
 
   setupMapIcons(): void {
     // Fix Leaflet markers not working. Source: https://stackoverflow.com/a/65761448
-    delete (this.Leaflet.Icon.Default.prototype as any)._getIconUrl;
+    delete (this.Leaflet.Icon.Default.prototype as unknown)._getIconUrl;
 
     this.Leaflet.Icon.Default.mergeOptions({
       iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
@@ -167,29 +167,29 @@ export default class MapPage extends Vue {
       },
     });
 
-    this.icons.red = new (CustomMarkerIcon as any)({
+    this.icons.red = new (CustomMarkerIcon as unknown)({
       iconUrl: '/map-markers/marker-red.png',
     }) as Leaflet.Icon;
 
-    this.icons.green = new (CustomMarkerIcon as any)({
+    this.icons.green = new (CustomMarkerIcon as unknown)({
       iconUrl: '/map-markers/marker-green.png',
     }) as Leaflet.Icon;
 
-    this.icons.orange = new (CustomMarkerIcon as any)({
+    this.icons.orange = new (CustomMarkerIcon as unknown)({
       iconUrl: '/map-markers/marker-orange.png',
     }) as Leaflet.Icon;
 
-    this.icons.grey = new (CustomMarkerIcon as any)({
+    this.icons.grey = new (CustomMarkerIcon as unknown)({
       iconUrl: '/map-markers/marker-grey.png',
     }) as Leaflet.Icon;
 
-    this.icons.blue = new (CustomMarkerIcon as any)({
+    this.icons.blue = new (CustomMarkerIcon as unknown)({
       iconUrl: '/map-markers/marker-blue.png',
     }) as Leaflet.Icon;
   }
 
   setupGoogleMutant(): void {
-    (this.Leaflet.gridLayer as any)
+    (this.Leaflet.gridLayer as unknown)
       .googleMutant({
         type: 'roadmap', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
         styles: [
@@ -204,13 +204,14 @@ export default class MapPage extends Vue {
   setupGoogleMapsSearch(): void {
     // Create a <script> element to import Google Maps, then hook into it for the autocomplete input
     const googleMapsScriptElem = document.createElement('script');
+    googleMapsScriptElem.id = GoogleMapsScriptId;
     googleMapsScriptElem.src =
       'https://maps.googleapis.com/maps/api/js?key=AIzaSyChJYejLT7Vxh_UZhJkccsy0xqZTHX8fzU&libraries=places';
     document.body.appendChild(googleMapsScriptElem);
 
     googleMapsScriptElem.onload = () => {
       const searchInput = this.$refs.googleMapsSearchInput;
-      const google = (window as any).google;
+      const google = (window as unknown).google;
 
       // NW edge of O'Hare down to long of South edge
       const southwest = { lat: 41.644624, lng: -87.93976 };
@@ -409,6 +410,7 @@ export default class MapPage extends Vue {
         {
           // Fix popup max-width
           maxWidth: 'auto',
+        // eslint-disable-next-line
         } as any,
       );
     });

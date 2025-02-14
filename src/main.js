@@ -3,8 +3,7 @@
 
 import DefaultLayout from '~/layouts/Default.vue';
 
-// eslint-disable-next-line require-jsdoc
-export default function (Vue, { router, head, isClient }) {
+export default function (Vue, { head, isClient }) {
   // Set default layout as a global component
   Vue.component('DefaultLayout', DefaultLayout);
 
@@ -53,9 +52,11 @@ export default function (Vue, { router, head, isClient }) {
   // Google analytics code
   if (isClient) {
     window.dataLayer = window.dataLayer || [];
+
     function gtag() {
-      dataLayer.push(arguments);
+      window.dataLayer.push(arguments);
     }
+
     gtag('js', new Date());
 
     gtag('config', 'G-D4F03H5C02');

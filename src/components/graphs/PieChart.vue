@@ -34,7 +34,7 @@ export default class PieChart extends Vue {
 
   readonly graphMargins = { top: 0, right: 0, bottom: 0, left: 0 };
 
-  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, null>;
 
   mounted(): void {
     const outerWidth =
@@ -80,7 +80,7 @@ export default class PieChart extends Vue {
       .data(dataReady)
       .enter()
       .append('path')
-      .attr('d', arcGenerator as any)
+      .attr('d', arcGenerator as unknown)
       .attr('fill', (d) => (d.data as unknown as IPieSlice).color);
 
     // Calculate total value for % calculation
@@ -105,7 +105,7 @@ export default class PieChart extends Vue {
           return '';
         }
 
-        let data = d.data as any as IPieSlice;
+        let data = d.data as unknown as IPieSlice;
 
         const label =
           `<tspan class="percent">${this.calculatePercentage(

@@ -457,7 +457,7 @@ const EnergyBreakdownColors = {
   NaturalGas: '#993300',
 };
 
-@Component<any>({
+@Component<unknown>({
   metaInfo() {
     return {
       title: this.$page.building.PropertyName,
@@ -507,7 +507,7 @@ export default class BuildingDetails extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
 
   /** Set by Gridsome to results of GraphQL query */
-  $page: any;
+  $page!: { building: IBuilding, allBenchmark: { edges: Array<IHistoricData> }};
 
   energyBreakdownData!: Array<IPieSlice>;
 
@@ -635,9 +635,13 @@ export default class BuildingDetails extends Vue {
 
     this.currGraphData = this.historicData.map((datum: IHistoricData) => ({
       x: datum.DataYear,
+      // TODO: Investigate typing
+      // eslint-disable-next-line
       y: parseFloat((datum as any)[this.colToGraph] as string),
     }));
 
+    // TODO: Investigate typing
+    // eslint-disable-next-line
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
 }

@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
-@Component<any>({
+@Component<unknown>({
   components: {
     NewTabIcon,
   },

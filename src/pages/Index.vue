@@ -1,6 +1,6 @@
 <script lang="ts">
 // Gridsome doesn't have types, so can't import it properly
-// eslint-disable-next-line no-undef
+
 const Pager = require('gridsome').Pager;
 
 import { Component, Vue } from 'vue-property-decorator';
@@ -9,10 +9,11 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import EmissionsBreakdownGraph from '~/components/EmissionsBreakdownGraph.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { IBuildingNode } from '../common-functions.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
-@Component<any>({
+@Component<unknown>({
   components: {
     EmissionsBreakdownGraph,
     BuildingsTable,
@@ -26,7 +27,13 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 })
 export default class BiggestBuildings extends Vue {
   /** Set by Gridsome to results of GraphQL query */
-  $page: any;
+  $page!: { allBuilding: { pageInfo: {
+    hasNextPage: boolean;
+    totalPages: number;
+    currentPage: number;
+    perPage: number;
+    hasPreviousPage: boolean;
+  }, edges: Array<IBuildingNode> }};
 
   pageInput = 0;
 
