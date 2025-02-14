@@ -13,7 +13,7 @@ import { IBuildingNode } from '../common-functions.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
-@Component<unknown>({
+@Component<any>({
   components: {
     EmissionsBreakdownGraph,
     BuildingsTable,
@@ -27,13 +27,18 @@ import { IBuildingNode } from '../common-functions.vue';
 })
 export default class BiggestBuildings extends Vue {
   /** Set by Gridsome to results of GraphQL query */
-  $page!: { allBuilding: { pageInfo: {
-    hasNextPage: boolean;
-    totalPages: number;
-    currentPage: number;
-    perPage: number;
-    hasPreviousPage: boolean;
-  }, edges: Array<IBuildingNode> }};
+  $page!: {
+    allBuilding: {
+      pageInfo: {
+        hasNextPage: boolean;
+        totalPages: number;
+        currentPage: number;
+        perPage: number;
+        hasPreviousPage: boolean;
+      };
+      edges: Array<IBuildingNode>;
+    };
+  };
 
   pageInput = 0;
 

@@ -18,7 +18,7 @@ interface IBuildingEdge {
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
-@Component<unknown>({
+@Component<any>({
   components: {
     BuildingsTable,
     DataDisclaimer,
@@ -31,7 +31,7 @@ interface IBuildingEdge {
 })
 export default class ChicagoRetrofitParticipants extends Vue {
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!:  { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   buildingsFiltered: Array<IBuildingEdge> = [];
 

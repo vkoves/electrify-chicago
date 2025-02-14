@@ -457,7 +457,7 @@ const EnergyBreakdownColors = {
   NaturalGas: '#993300',
 };
 
-@Component<unknown>({
+@Component<any>({
   metaInfo() {
     return {
       title: this.$page.building.PropertyName,
@@ -507,7 +507,10 @@ export default class BuildingDetails extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
 
   /** Set by Gridsome to results of GraphQL query */
-  $page!: { building: IBuilding, allBenchmark: { edges: Array<IHistoricData> }};
+  $page!: {
+    building: IBuilding;
+    allBenchmark: { edges: Array<{ node: IHistoricData }> };
+  };
 
   energyBreakdownData!: Array<IPieSlice>;
 
@@ -580,9 +583,7 @@ export default class BuildingDetails extends Vue {
 
   created(): void {
     this.historicData =
-      this.$page.allBenchmark.edges.map(
-        (nodeObj: { node: IHistoricData }) => nodeObj.node,
-      ) || [];
+      this.$page.allBenchmark.edges.map((nodeObj) => nodeObj.node) || [];
 
     this.calculateEnergyBreakdown();
     this.updateGraph();
@@ -591,7 +592,7 @@ export default class BuildingDetails extends Vue {
   calculateEnergyBreakdown(): void {
     const energyBreakdown = [];
 
-    if ((this.building.ElectricityUse as unknown as number) > 0) {
+    if ((this.building.ElectricityUse as any as number) > 0) {
       energyBreakdown.push({
         label: 'Electricity',
         value: parseFloat(this.building.ElectricityUse.toString()),
@@ -599,7 +600,7 @@ export default class BuildingDetails extends Vue {
       });
     }
 
-    if ((this.building.NaturalGasUse as unknown as number) > 0) {
+    if ((this.building.NaturalGasUse as any as number) > 0) {
       energyBreakdown.push({
         label: 'Fossil Gas',
         value: parseFloat(this.building.NaturalGasUse.toString()),
@@ -607,7 +608,7 @@ export default class BuildingDetails extends Vue {
       });
     }
 
-    if ((this.building.DistrictSteamUse as unknown as number) > 0) {
+    if ((this.building.DistrictSteamUse as any as number) > 0) {
       energyBreakdown.push({
         label: 'District Steam',
         value: parseFloat(this.building.DistrictSteamUse.toString()),
@@ -615,7 +616,7 @@ export default class BuildingDetails extends Vue {
       });
     }
 
-    if ((this.building.DistrictChilledWaterUse as unknown as number) > 0) {
+    if ((this.building.DistrictChilledWaterUse as any as number) > 0) {
       energyBreakdown.push({
         label: 'District Chilling',
         value: parseFloat(this.building.DistrictChilledWaterUse.toString()),

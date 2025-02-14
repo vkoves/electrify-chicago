@@ -80,8 +80,8 @@ export default class PieChart extends Vue {
       .data(dataReady)
       .enter()
       .append('path')
-      .attr('d', arcGenerator as unknown)
-      .attr('fill', (d) => (d.data as unknown as IPieSlice).color);
+      .attr('d', arcGenerator as any)
+      .attr('fill', (d) => (d.data as any as IPieSlice).color);
 
     // Calculate total value for % calculation
     let totalValue = 0;
@@ -105,7 +105,7 @@ export default class PieChart extends Vue {
           return '';
         }
 
-        let data = d.data as unknown as IPieSlice;
+        let data = d.data as any as IPieSlice;
 
         const label =
           `<tspan class="percent">${this.calculatePercentage(
@@ -125,7 +125,7 @@ export default class PieChart extends Vue {
         }
 
         return `translate(${labelArcGenerator.centroid(
-          d as unknown as d3.DefaultArcObject,
+          d as any as d3.DefaultArcObject,
         )})`;
       })
       .style('text-anchor', (d) => {

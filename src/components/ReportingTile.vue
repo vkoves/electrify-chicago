@@ -63,7 +63,7 @@ import { LatestDataYear } from '../constants/globals.vue';
  * 3. Searle Chemistry Laboratory (all years reported)
  * 4. Crown Hall (only 3 years reported with the latest one missing)
  */
-@Component<unknown>({
+@Component({
   filters: {
     lowercase(value: string) {
       return value.toLowerCase();

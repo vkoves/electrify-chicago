@@ -111,7 +111,7 @@ export default class BuildingImage extends Vue {
       // between both, like Natural Gas Use on Merch Mart, which we also want to ignore
       return !this.historicBenchmarks.every((datum) => {
         return (
-          (datum as unknown)[colKey] === '' || (datum as unknown)[colKey] === '0.0'
+          (datum as any)[colKey] === '' || (datum as any)[colKey] === '0.0'
         );
       });
     });

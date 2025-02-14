@@ -107,6 +107,8 @@ export default tseslint.config(
 
             // We have to use `require` in some cases
             "@typescript-eslint/no-require-imports": "warn",
+
+            "@typescript-eslint/no-explicit-any": "warn",
         },
     },
     {
