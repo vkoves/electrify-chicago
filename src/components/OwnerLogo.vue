@@ -98,6 +98,8 @@ export default class OwnerLogo extends Vue {
     width: 20rem;
   }
 
-  p { margin: 0; }
+  p {
+    margin: 0;
+  }
 }
 </style>

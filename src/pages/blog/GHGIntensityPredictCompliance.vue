@@ -486,7 +486,9 @@ export default class MillionsInMissedFine extends Vue {
     border: $border-thin solid $black;
   }
 
-  .regression-p { margin-top: 1rem; }
+  .regression-p {
+    margin-top: 1rem;
+  }
 
   iframe {
     border: $border-medium solid $black;
@@ -504,7 +506,9 @@ export default class MillionsInMissedFine extends Vue {
   h3 {
     margin-bottom: 0;
 
-    + p { margin-top: 0.25rem; }
+    + p {
+      margin-top: 0.25rem;
+    }
   }
 
   /**
@@ -512,7 +516,9 @@ export default class MillionsInMissedFine extends Vue {
    */
   @media (max-width: $mobile-max-width) {
     // Shrink table font size so it's more visible
-    table { font-size: 0.75rem; }
+    table {
+      font-size: 0.75rem;
+    }
   }
 }
 </style>
