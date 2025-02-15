@@ -95,10 +95,11 @@ function loadBuildingBenchmarkData(actions) {
       'GHGIntensity',
       'ElectricityUse',
       'NaturalGasUse',
+      'DistrictSteamUse',
     ]
 
     floatCols.forEach(col => {
-      building[col] = parseFloat(col);
+      building[col] = parseFloat(building[col]);
     });
 
     if (!building.slugSource || typeof building.slugSource !== 'string') {
