@@ -308,6 +308,8 @@ form.search-form {
     font-size: 1.125rem;
   }
 
+  .faded { color: $text-mid-light; }
+
   @media (max-width: $mobile-max-width) {
     .bold {
       font-size: 1rem;

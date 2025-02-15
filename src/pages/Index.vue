@@ -1,20 +1,17 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 import BuildingTile from '../components/BuildingTile.vue';
+import { VueClass } from 'vue-class-component/lib/declarations';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
-    BuildingsTable,
     BuildingTile,
     DataDisclaimer,
-    NewTabIcon,
     DataSourceFootnote,
   },
   metaInfo() {
@@ -113,6 +110,11 @@ export default class Index extends Vue {
               </button>
             </div>
           </form>
+
+          <g-link class="map-link" to="/map">
+            <img src="/icons/location.svg" alt="" width="32" height="32" />
+            View Map
+          </g-link>
         </div>
       </div>
 
@@ -168,8 +170,8 @@ export default class Index extends Vue {
           <div class="announcements">
             <div class="announce-panel -orange">
               <h3>
-                <div class="regular-text-size">New Article</div>
                 📰 $30 Million In Missed Fines
+                <div class="regular-text-size faded">Feb. 2nd, 2024</div>
               </h3>
 
               <p>
@@ -202,7 +204,7 @@ export default class Index extends Vue {
     align-items: center;
     text-align: center;
     min-height: 28rem;
-    padding: 5rem 1rem;
+    padding: 5rem 1rem 6rem 1rem;
     color: $white;
     position: relative;
 
@@ -221,15 +223,26 @@ export default class Index extends Vue {
       filter: brightness(60%);
     }
 
+    .page-constrained {
+      padding: 0;
+    }
+
+    // Add a shadow to all the hero elements (h1 uses the same value as a text-shadow)
+    .input-cont,
+    .map-link {
+      box-shadow: 0 0.5rem 0.125rem $box-shadow-main;
+    }
+
     h1 {
       display: inline-block;
       font-size: 2.5rem;
       margin-top: 0;
       margin-bottom: 2rem;
+      text-shadow: 0 0.25rem 0.125rem $box-shadow-main;
     }
 
     form {
-      margin: 0 auto 2rem auto;
+      margin: 0 auto 1rem auto;
       width: 80%;
       max-width: 50rem; // 800px
 
@@ -270,6 +283,30 @@ export default class Index extends Vue {
             }
           }
         }
+      }
+    }
+
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: $brd-rad-medium;
+      min-width: 10rem;
+      width: 16rem;
+      max-width: 60%;
+      color: $white;
+      background: $blue-dark;
+      text-decoration: none;
+      text-align: center;
+      font-size: 1.25rem;
+      font-weight: bold;
+      outline-color: $chicago-blue;
+
+      &:hover,
+      &:focus {
+        background: $blue-very-dark;
       }
     }
   }
@@ -358,6 +395,10 @@ export default class Index extends Vue {
     > * {
       flex-basis: 100%;
     }
+
+    h3 {
+      font-size: 1.5rem;
+    }
   }
 
   .page-form {
@@ -381,6 +422,7 @@ export default class Index extends Vue {
   @media (max-width: $mobile-max-width) {
     .skyline-hero {
       min-height: unset;
+      padding: 4rem 1rem 5rem 1rem;
 
       // Switch to smaller size but taller skyline crop
       .background {
@@ -410,6 +452,10 @@ export default class Index extends Vue {
             }
           }
         }
+      }
+
+      .map-link {
+        font-size: 1.125rem;
       }
     }
 
