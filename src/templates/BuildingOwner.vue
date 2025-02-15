@@ -14,6 +14,7 @@ import {
 } from '../constants/buildings-custom-info.constant.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import BuildingTile from '../components/BuildingTile.vue';
 
 interface IBuildingEdge {
   node: IBuilding;
@@ -27,6 +28,7 @@ interface IBuildingEdge {
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
+    BuildingTile,
   },
   metaInfo() {
     return {
@@ -204,6 +206,12 @@ export default class BiggestBuildings extends Vue {
 
       <DataDisclaimer />
 
+      <ul class="tiles">
+        <li v-for="building in buildingsFiltered" :key="building.ID">
+          <BuildingTile :building="building.node" :path="building.node.path" />
+        </li>
+      </ul>
+
       <BuildingsTable :buildings="buildingsFiltered" />
 
       <DataSourceFootnote />
@@ -230,6 +238,16 @@ export default class BiggestBuildings extends Vue {
 
   h2 {
     margin-bottom: 0.5rem;
+  }
+
+  ul.tiles {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    gap: 2rem 1.5rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 0;
   }
 
   .stats {
