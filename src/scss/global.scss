@@ -72,10 +72,6 @@ h6 {
   h2 {
     font-size: 1.25rem;
   }
-
-  p {
-    font-size: 0.75rem;
-  }
 }
 
 h1 {
@@ -142,18 +138,21 @@ dl {
 
 /** Style the basic disclosure widget <details> and <summary> */
 details {
-  border: solid 0.01625rem $grey-dark;
   margin-bottom: 1rem;
-  border-radius: $brd-rad-medium;
+  border: solid $border-thin transparent;
+  background-color: $off-white;
+
+  &, summary {
+    border-radius: $brd-rad-medium;
+  }
 
   summary {
     background-color: $grey-light;
     padding: 1rem 1.5rem;
     cursor: pointer;
 
-    &:focus {
-      outline-offset: 0;
-    }
+    &:focus { outline-offset: 0; }
+    > span { margin-left: 0.5rem; }
   }
 
   .details-content {
@@ -219,6 +218,15 @@ img.-shadowed {
   &.-f {
     color: #972222;
   }
+}
+
+/**
+ * Class to mimic page width
+ */
+.page-constrained {
+  max-width: $desktop-max-width;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 // Use .constrained for a reasonable max-width for text readability and .layout-constrained for a
@@ -292,13 +300,15 @@ form.search-form {
     border-color: $chicago-blue;
   }
 
-  h2 {
+  h2, h3 {
     margin-top: 0;
   }
 
   .bold {
     font-size: 1.125rem;
   }
+
+  .faded { color: $text-mid-light; }
 
   @media (max-width: $mobile-max-width) {
     .bold {
