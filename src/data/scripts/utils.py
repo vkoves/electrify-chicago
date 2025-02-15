@@ -1,35 +1,42 @@
-###
-### Utils - Basic utilities for file processing that are agnostic to the specific
-### data being processed
-###
-import pandas
+"""
+Utils - Basic utilities for file processing that are agnostic to the specific
+data being processed
+"""
+
+import pandas as pd
 import pathlib
-from pathlib import Path
+import pathlib
 
 from typing import List
 
 def get_data_file_path(dir: str, f: str) -> str:
-    # get path for source data file to process
+    """Get path for source data file to process (in src/data)"""
+
     curr_path = pathlib.Path(".")
     path = curr_path.parent.absolute() / "src" / "data" / dir / f
+
     return path
 
-def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pandas.DataFrame:
+def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pd.DataFrame:
     """Fetch a building benchmarking CSV in Pandas, keeping the cols_to_keep (if specified)"""
 
     # Create a dictionary mapping column names (or indices) to dtypes:
     data_types = {
-        # Specify that "Exempt From Chicago Energy Rating" column is a string
+        # Specify that "Exempt From Chicago Energy Rating" column is a string, preventing default
+        # boolean parsing and warning of mixed types
         7: 'string',
     }
 
-    df = pandas.read_csv(path_to_csv, dtype=data_types)
+    df = pd.read_csv(path_to_csv, dtype=data_types)
 
     if cols_to_keep is None:
         return df
     else:
         return df[cols_to_keep]
 
+def output_to_csv(building_data: pd.DataFrame, output_path: str) -> None:
+    """Output a Pandas dataframe to a CSV file"""
+    building_data.to_csv(output_path, sep=',', encoding='utf-8', index=False)
 
 def json_data_builder(
     dataframe, outer_tag="default", is_array=True, array_key="emissionsByYear"
@@ -38,7 +45,7 @@ def json_data_builder(
 
     uniqueColKey = 'ID'
 
-    dataframe = dataframe.map(lambda x: "" if pandas.isnull(x) else x)
+    dataframe = dataframe.map(lambda x: "" if pd.isnull(x) else x)
 
     # initiate empty json object to iterate with
     json_object = []

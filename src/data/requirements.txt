@@ -2,3 +2,4 @@ python-slugify==4.0.1
 pandas==2.1.2
 numpy
 pytest==7.4.4
+pytest-mock==3.14.0

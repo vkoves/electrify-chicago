@@ -488,6 +488,7 @@ export default class MapPage extends Vue {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
+          DataAnomalies
         }
       }
     }

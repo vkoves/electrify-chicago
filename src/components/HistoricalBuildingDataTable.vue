@@ -29,13 +29,22 @@
           <th scope="col">Electricity Use <span class="unit">kBTU</span></th>
           <th scope="col">Fossil Gas Use <span class="unit">kBTU</span></th>
           <th v-if="renderedColumns.includes('DistrictSteamUse')" scope="col">
-            District Steam Use <span class="unit">kBTU</span>
+            District <br />
+            Steam Use <span class="unit">kBTU</span>
           </th>
+          <th
+            v-if="renderedColumns.includes('DistrictChilledWaterUse')"
+            scope="col"
+          >
+            District Chilled <br />
+            Water Use <span class="unit">kBTU</span>
+          </th>
+          <th class="text-center">Energy Mix</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="benchmark in historicBenchmarks" :key="benchmark.DataYear">
-          <td>{{ benchmark.DataYear }}</td>
+          <td class="bold">{{ benchmark.DataYear }}</td>
           <td v-if="renderedColumns.includes('GrossFloorArea')">
             {{ benchmark.GrossFloorArea | optionalInt }}
           </td>
@@ -55,6 +64,41 @@
           <td v-if="renderedColumns.includes('DistrictSteamUse')">
             {{ benchmark.DistrictSteamUse | optionalInt }}
           </td>
+          <td v-if="renderedColumns.includes('DistrictChilledWaterUse')">
+            {{ benchmark.DistrictChilledWaterUse | optionalInt }}
+          </td>
+
+          <!-- Energy mix-->
+          <td class="energy-mix">
+            <!-- Only show energy mix data if it's a reported year -->
+            <div v-if="benchmark.GHGIntensity" class="mix-text">
+              <div>
+                <span class="prcnt"
+                  >{{ calcEnergyMix(benchmark).elecPrcnt }}%</span
+                >
+                <span class="label">Electricity</span>
+              </div>
+              <div>
+                <span class="prcnt"
+                  >{{ calcEnergyMix(benchmark).natGasPrcnt }}%</span
+                >
+                <span class="label">Fossil Gas</span>
+              </div>
+              <div>
+                <span class="prcnt"
+                  >{{ calcEnergyMix(benchmark).otherPrcnt }}%</span
+                >
+                <span class="label">Other</span>
+              </div>
+            </div>
+
+            <PieChart
+              v-if="benchmark.GHGIntensity"
+              :id-prefix="'y' + benchmark.DataYear"
+              :graph-data="getBreakdown(benchmark)"
+              :show-labels="false"
+            />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -64,7 +108,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import { IHistoricData } from '../common-functions.vue';
+import {
+  calculateEnergyBreakdown,
+  IHistoricData,
+} from '../common-functions.vue';
+import PieChart, { IPieSlice } from './graphs/PieChart.vue';
 
 /**
  * A component that given an array of a building's benchmarking renders
@@ -78,27 +126,35 @@ import { IHistoricData } from '../common-functions.vue';
      *
      * Ex: null -> '-', '12345.67' -> '12,345'
      */
-    optionalInt(value: string) {
+    optionalInt(value: number | null) {
       if (!value) {
         return '-';
       }
 
-      return parseInt(value).toLocaleString();
+      return value.toLocaleString();
     },
 
-    optionalFloat(value: string) {
+    optionalFloat(value: number | null) {
       if (!value) {
         return '-';
       }
 
-      return parseFloat(value).toLocaleString();
+      return value.toLocaleString();
     },
   },
+  components: {
+    PieChart,
+  },
 })
-export default class BuildingImage extends Vue {
+export default class HistoricalBuildingTable extends Vue {
   @Prop({ required: true }) historicBenchmarks!: Array<IHistoricData>;
 
   renderedColumns: Array<string> = [];
+
+  /** Expose calculateEnergyBreakdown to template */
+  getBreakdown(benchmark: IHistoricData): Array<IPieSlice> {
+    return calculateEnergyBreakdown(benchmark).energyBreakdown;
+  }
 
   getRenderedColumns(): Array<string> {
     if (this.historicBenchmarks.length === 0) {
@@ -117,6 +173,32 @@ export default class BuildingImage extends Vue {
     });
 
     return emptyColKeys;
+  }
+
+  calcEnergyMix(benchmarkRow: IHistoricData): {
+    elecPrcnt: number;
+    natGasPrcnt: number;
+    otherPrcnt: number;
+  } {
+    const totalUse =
+      benchmarkRow.ElectricityUse +
+      benchmarkRow.NaturalGasUse +
+      benchmarkRow.DistrictSteamUse +
+      benchmarkRow.DistrictChilledWaterUse;
+
+    const elecPrcnt = Math.round(
+      100 * (benchmarkRow.ElectricityUse / totalUse),
+    );
+    const natGasPrcnt = Math.round(
+      100 * (benchmarkRow.NaturalGasUse / totalUse),
+    );
+    const otherUse =
+      benchmarkRow.DistrictSteamUse ||
+      0 + benchmarkRow.DistrictChilledWaterUse ||
+      0;
+    const otherPrcnt = Math.round((100 * otherUse) / totalUse);
+
+    return { elecPrcnt, otherPrcnt, natGasPrcnt };
   }
 
   created(): void {
@@ -138,7 +220,7 @@ table.historical-data {
   border-radius: $brd-rad-small;
   border-collapse: collapse;
   width: 100%;
-  min-width: 62.5rem; // 1000px
+  min-width: 80rem;
 
   .unit {
     display: block;
@@ -146,10 +228,44 @@ table.historical-data {
     font-weight: normal;
   }
 
+  .energy-mix {
+    display: flex;
+    font-size: 0.8125rem;
+    align-items: center;
+    justify-content: space-around;
+    gap: 1rem;
+
+    .mix-text {
+      flex-basis: 6rem;
+
+      div {
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+
+        .prcnt {
+          width: 40%;
+          text-align: right;
+        }
+        .label {
+          width: 100%;
+        }
+      }
+    }
+
+    .pie-chart-cont {
+      width: 4rem;
+    }
+  }
+
   th,
   td {
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 0.5rem;
     text-align: left;
+
+    &:first-of-type {
+      padding-left: 0.75rem;
+    }
   }
 
   thead {
@@ -160,6 +276,11 @@ table.historical-data {
     th {
       line-height: 1.25;
       font-size: 0.825rem;
+      white-space: nowrap;
+
+      &.text-center {
+        text-align: center;
+      }
     }
   }
 

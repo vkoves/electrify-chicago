@@ -151,6 +151,16 @@
             >.
           </p>
         </div>
+        <div v-else-if="building.DataAnomalies" class="panel -warning">
+          <div class="bold">
+            <span class="emoji">⚠️</span> Likely Reporting Error
+          </div>
+
+          <p class="smaller">
+            This building has burned gas in the past, so this latest year having
+            0 gas use is likely a reporting error.
+          </p>
+        </div>
         <div v-else>
           <div class="bold">This Building Uses District Heating ❗</div>
 
@@ -181,6 +191,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import buildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
 
 import {
+  DataAnomalies,
   estimateUtilitySpend,
   getRankLabel,
   getRankLabelByProperty,
@@ -235,26 +246,25 @@ export default class StatTile extends Vue {
   /**
    * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
    * through a district heating system.
+   *
+   * We do not mark this as true if we have detected gas use in the past
    */
   get fullyGasFree(): boolean {
     return (
-      parseFloat(this.building.NaturalGasUse) === 0 &&
-      parseFloat(this.building.DistrictSteamUse) === 0
+      !this.building.DataAnomalies.includes(
+        DataAnomalies.gasZeroWithPreviousUse,
+      ) &&
+      this.building.NaturalGasUse === 0 &&
+      this.building.DistrictSteamUse === 0
     );
   }
 
   /** The estimated cost for the given utility */
   get costEstimate(): number | null {
     if (this.statKey === 'ElectricityUse') {
-      return estimateUtilitySpend(
-        parseFloat(this.building[this.statKey] as string),
-        true,
-      );
+      return estimateUtilitySpend(this.building[this.statKey], true);
     } else if (this.statKey === 'NaturalGasUse') {
-      return estimateUtilitySpend(
-        parseFloat(this.building[this.statKey] as string),
-        false,
-      );
+      return estimateUtilitySpend(this.building[this.statKey], false);
     }
 
     return null;
