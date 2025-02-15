@@ -35,8 +35,7 @@ export default class BuildingTile extends Vue {
    */
   get fullyGasFree(): boolean {
     return (
-      this.building.NaturalGasUse === 0 &&
-      this.building.DistrictSteamUse === 0
+      this.building.NaturalGasUse === 0 && this.building.DistrictSteamUse === 0
     );
   }
 }
