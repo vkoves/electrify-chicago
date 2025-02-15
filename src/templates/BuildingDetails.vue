@@ -63,6 +63,7 @@ query ($id: ID!, $ID: String) {
           ElectricityUse
           NaturalGasUse
           DistrictSteamUse
+          DistrictChilledWaterUse
         }
     }
   }
@@ -370,7 +371,10 @@ query ($id: ID!, $ID: String) {
             {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
           </p>
 
-          <PieChart :graph-data="energyBreakdownData" />
+          <PieChart
+            :id-prefix="'energy-mix'"
+            :graph-data="energyBreakdownData"
+          />
         </div>
       </div>
 
@@ -471,6 +475,7 @@ import {
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
 import {
+  calculateEnergyBreakdown,
   DataAnomalies,
   IBuilding,
   IBuildingBenchmarkStats,
@@ -485,13 +490,6 @@ import {
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
-
-const EnergyBreakdownColors = {
-  DistrictChilling: '#01295F',
-  DistrictSteam: '#ABABAB',
-  Electricity: '#F0E100',
-  NaturalGas: '#993300',
-};
 
 @Component<any>({
   metaInfo() {
@@ -626,51 +624,13 @@ export default class BuildingDetails extends Vue {
         (nodeObj: { node: IHistoricData }) => nodeObj.node,
       ) || [];
 
-    this.calculateEnergyBreakdown();
+    const breakdownWithTotal = calculateEnergyBreakdown(this.building);
+    this.energyBreakdownData = breakdownWithTotal.energyBreakdown;
+    this.totalEnergyUsekBTU = breakdownWithTotal.totalEnergyUse;
     this.updateGraph();
   }
 
-  calculateEnergyBreakdown(): void {
-    const energyBreakdown = [];
-
-    if ((this.building.ElectricityUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'Electricity',
-        value: parseFloat(this.building.ElectricityUse.toString()),
-        color: EnergyBreakdownColors.Electricity,
-      });
-    }
-
-    if ((this.building.NaturalGasUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'Fossil Gas',
-        value: parseFloat(this.building.NaturalGasUse.toString()),
-        color: EnergyBreakdownColors.NaturalGas,
-      });
-    }
-
-    if ((this.building.DistrictSteamUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'District Steam',
-        value: parseFloat(this.building.DistrictSteamUse.toString()),
-        color: EnergyBreakdownColors.DistrictSteam,
-      });
-    }
-
-    if ((this.building.DistrictChilledWaterUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'District Chilling',
-        value: parseFloat(this.building.DistrictChilledWaterUse.toString()),
-        color: EnergyBreakdownColors.DistrictChilling,
-      });
-    }
-
-    let totalEnergyUse = 0;
-    energyBreakdown.forEach((datum) => (totalEnergyUse += datum.value));
-    this.totalEnergyUsekBTU = totalEnergyUse;
-
-    this.energyBreakdownData = energyBreakdown;
-  }
+  // TODO: Move to a helper function
 
   updateGraph(event?: Event): void {
     event?.preventDefault();

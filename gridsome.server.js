@@ -89,16 +89,17 @@ function loadBuildingBenchmarkData(actions) {
     // The csv parse returns everything as strings, so explicitly parse float columns so GraphQL
     // loads them properly and can apply filters (like `TotalGHGEmissions: { gt: 1000.0 }`)
     // TODO: Parse all our float and int columns so GraphQL can then filter them
-    const floatCols = [
-      'GrossFloorArea',
-      'TotalGHGEmissions',
-      'GHGIntensity',
-      'ElectricityUse',
-      'NaturalGasUse',
+    const buildingFloatCols = [
+      'DistrictChilledWaterUse',
       'DistrictSteamUse',
+      'ElectricityUse',
+      'GHGIntensity',
+      'GrossFloorArea',
+      'NaturalGasUse',
+      'TotalGHGEmissions',
     ]
 
-    floatCols.forEach(col => {
+    buildingFloatCols.forEach(col => {
       building[col] = parseFloat(building[col]);
     });
 
@@ -132,6 +133,24 @@ function loadHistoricBenchmarkDat(actions) {
   const collection = actions.addCollection({ typeName: 'Benchmark' });
 
   for (const benchmark of HistoricBenchmarksData) {
+    // The csv parse returns everything as strings, so explicitly parse float columns so GraphQL
+    // loads them properly and can apply filters (like `TotalGHGEmissions: { gt: 1000.0 }`)
+    // TODO: Parse all our float and int columns so GraphQL can then filter them
+    const historicFloatCols = [
+      'DistrictChilledWaterUse',
+      'DistrictSteamUse',
+      'ElectricityUse',
+      'GHGIntensity',
+      'GrossFloorArea',
+      'NaturalGasUse',
+      'SourceEUI',
+      'TotalGHGEmissions',
+    ]
+
+    historicFloatCols.forEach(col => {
+      benchmark[col] = parseFloat(benchmark[col]);
+    });
+
     collection.addNode(benchmark);
   }
 }

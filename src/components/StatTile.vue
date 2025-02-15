@@ -254,23 +254,17 @@ export default class StatTile extends Vue {
       !this.building.DataAnomalies.includes(
         DataAnomalies.gasZeroWithPreviousUse,
       ) &&
-      parseFloat(this.building.NaturalGasUse) === 0 &&
-      parseFloat(this.building.DistrictSteamUse) === 0
+      this.building.NaturalGasUse === 0 &&
+      this.building.DistrictSteamUse === 0
     );
   }
 
   /** The estimated cost for the given utility */
   get costEstimate(): number | null {
     if (this.statKey === 'ElectricityUse') {
-      return estimateUtilitySpend(
-        parseFloat(this.building[this.statKey] as string),
-        true,
-      );
+      return estimateUtilitySpend(this.building[this.statKey], true);
     } else if (this.statKey === 'NaturalGasUse') {
-      return estimateUtilitySpend(
-        parseFloat(this.building[this.statKey] as string),
-        false,
-      );
+      return estimateUtilitySpend(this.building[this.statKey], false);
     }
 
     return null;
