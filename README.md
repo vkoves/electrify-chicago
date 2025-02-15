@@ -4,7 +4,7 @@
 
 A site to publicize some of the most polluting buildings based on the Chicago Energy Benchmarking data published in the City of Chicago Data Portal.
 
-It's powered by [VueJS 2](https://v2.vuejs.org/) and [GridSome](https://gridsome.org/)
+Front-end in [VueJS 2](https://v2.vuejs.org/), statically built with [GridSome](https://gridsome.org/). Data processing with Python, and [Pandas](https://pandas.pydata.org/).
 
 ## Data Import
 
