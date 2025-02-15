@@ -8,26 +8,36 @@ import { Component, Vue } from 'vue-property-decorator';
   name: 'AppHeader',
 })
 export default class AppHeader extends Vue {
-  searchQuery = '';
+  isHomepage = false;
 
   mobileMenuOpen = false;
+
+  searchQuery = '';
 
   focusMain(): void {
     const mainHeading = document.getElementById('main-content');
 
-    mainHeading!.focus();
+    if (mainHeading) {
+      mainHeading.focus();
+    } else {
+      throw new Error(
+        "No main heading found matching selector '#main-content'!",
+      );
+    }
   }
 
   submitSearch(event?: Event): void {
-    if (event) {
-      event.preventDefault();
-    }
+    event?.preventDefault();
 
     document.location.href = `/search?q=${this.searchQuery}`;
   }
 
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
+  }
+
+  mounted(): void {
+    this.isHomepage = document.location.pathname === '/';
   }
 }
 </script>
@@ -44,7 +54,7 @@ export default class AppHeader extends Vue {
         <img
           src="/electrify-chicago-logo.svg"
           alt="Electrify Chicago Homepage"
-          width="334"
+          width="270"
           height="48"
           class="site-logo"
         />
@@ -82,7 +92,7 @@ export default class AppHeader extends Vue {
 
       <g-link class="nav-link" to="/blog"> Blog </g-link>
 
-      <form class="search-form">
+      <form v-if="!isHomepage" class="search-form">
         <div class="input-cont">
           <input
             id="search"
@@ -132,11 +142,6 @@ header.header {
   .logo-link {
     display: inline-flex;
     flex-shrink: 0;
-
-    .site-logo {
-      height: 3rem;
-      width: auto;
-    }
   }
 
   .top-nav {
@@ -167,6 +172,7 @@ header.header {
   }
 
   @media (max-width: $mobile-max-width) {
+    position: relative;
     flex-wrap: wrap;
     height: auto;
     gap: 0;
@@ -185,9 +191,13 @@ header.header {
     .header-primary {
       display: flex;
       justify-content: space-between;
+      width: 100%;
     }
 
     .top-nav {
+      position: absolute;
+      top: 100%;
+      z-index: 10;
       width: 100%;
       gap: 1rem 1.5rem;
       margin: 0;
