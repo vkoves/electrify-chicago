@@ -50,18 +50,18 @@ export default class BarGraph extends Vue {
 
   /** Underlying SVG size */
   readonly width = 320;
-  readonly height = 60;
+  readonly height = 140;
 
   /** The radius, in pixels, of the min and max dots and all the points on focus */
   readonly DotRadius = 8;
 
   /** The font-size of the label, in the <svg>'s internal space (so scaled as the SVG is scaled)' */
-  readonly LabelFontSize = 28;
+  readonly LabelFontSize = 30;
 
-  // The amount to shift the x-axis down by
-  readonly xAxisOffset = 60;
+  // The amount to shift the x-axis down by - ideally 0, so it's accurate
+  readonly xAxisOffset = 0;
 
-  readonly graphMargins = { top: 50, right: 15, bottom: 110, left: 15 };
+  readonly graphMargins = { top: 40, right: 50, bottom: 50, left: 20 };
   readonly barMargin = 0.2;
 
   randomId = Math.round(Math.random() * 1000);
@@ -140,7 +140,7 @@ export default class BarGraph extends Vue {
 
     const y = d3
       .scaleLinear()
-      .domain([d3.min(yVals) as number, d3.max(yVals) as number])
+      .domain([0, d3.max(yVals) as number])
       .rangeRound([this.height, 0]);
 
     // Render X axis
@@ -157,9 +157,12 @@ export default class BarGraph extends Vue {
           .tickSizeOuter(0), // make the x-axis a flat line, with no tick marks at the ends
       )
       .selectAll('text')
-      .attr('text-anchor', (d) => (d === maxYear ? 'end' : 'start'))
-      // shift label a bit further from the axis line
-      .attr('dy', '0.85em');
+      .attr('text-anchor', (d) => (d === maxYear ? 'start' : 'start'))
+      .attr('style', 'transform: rotate(15deg)')
+      // shift x-axis labels below the axis line
+      // .attr('dx', (d) => d === maxYear ? '-1em' : '-0.5em')
+      // shift x-axis labels below the axis line
+      .attr('dy', '1em');
 
     // Render Y axis
     this.svg
@@ -221,13 +224,25 @@ export default class BarGraph extends Vue {
           let xPos = x(d.x);
           let yPos = y(d.y);
 
-          // The min point should have its label below
+          // Min Point - The min point should have its label below
           if (d.x === this.minAndMaxPoints![0].x) {
-            yPos += this.LabelFontSize * 1.5;
+            console.log(yPos, d.y);
+
+            // If the min is right at the bottom right or bottom left, render it above
+            // to prevent colliding with x-axis labels (e.g. Digital Lakeside > District Steam)
+            if (
+              yPos > this.height * 0.9 &&
+              (xPos < 10 || xPos > this.width * 0.9)
+            ) {
+              yPos -= this.LabelFontSize * 2;
+            } else {
+              // Otherwise if no special case, just draw it below
+              yPos += this.LabelFontSize * 1.25;
+            }
 
             return `translate(${xPos},${yPos})`;
           }
-          // The max point has its label above
+          // Max Point -The max point has its label above
           else {
             yPos -= this.LabelFontSize * 0.5;
 
@@ -383,9 +398,17 @@ export default class BarGraph extends Vue {
     display: none;
   }
 
-  .x-axis .tick {
-    font-size: 1.6rem;
-    font-weight: normal;
+  .x-axis {
+    // Fade out the x-axis line a bit, so text rendered on top of it isn't so harsh
+    .domain {
+      opacity: 0.3;
+      stroke-width: 2px;
+    }
+
+    .tick {
+      font-size: 1.6rem;
+      font-weight: normal;
+    }
   }
 
   // Hide y-axis via CSS, we label points instead
