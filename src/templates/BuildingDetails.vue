@@ -105,7 +105,7 @@ query ($id: ID!, $ID: String) {
             </a>
           </div>
 
-          <p class="building-id">
+          <p class="building-id -no-margin">
             Chicago Building ID: {{ $page.building.ID }}
           </p>
         </div>
