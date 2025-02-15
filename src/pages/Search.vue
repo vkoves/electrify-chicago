@@ -268,9 +268,11 @@ export default class Search extends Vue {
         </p>
       </div>
 
-      <p>
-        Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total
-        {{ totalResultsCount }}
+      <p class="results-count">
+        Showing <strong>
+          {{ Math.min(MaxBuildings, totalResultsCount) }} of total
+          {{ totalResultsCount }}
+        </strong>
         matching buildings
       </p>
 
@@ -334,6 +336,9 @@ export default class Search extends Vue {
     form {
       background-color: $off-white;
     }
+
+    .no-results-msg { margin: 0 -1rem; }
+    .results-count { font-size: 0.8125rem;}
   }
 }
 </style>

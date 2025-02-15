@@ -103,7 +103,7 @@ export default class Index extends Vue {
                 type="text"
                 name="search"
                 aria-label="Search benchmarked buildings"
-                placeholder="Search property name/address"
+                placeholder="Search property name or address"
               />
               <button type="submit" @click="submitSearch">
                 <img src="/search.svg" alt="Search" width="32" height="32" />
@@ -442,13 +442,15 @@ export default class Index extends Vue {
 
           input {
             font-size: 1rem;
+            padding-left: 1.5rem;
           }
           button {
+            padding-left: 0.25rem;
             padding-right: 1rem;
 
             img {
-              width: 28px;
-              height: 28px;
+              width: 1.5rem;
+              height: 1.5rem;
             }
           }
         }
