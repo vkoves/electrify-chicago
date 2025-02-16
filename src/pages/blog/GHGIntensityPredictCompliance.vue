@@ -297,10 +297,6 @@ export default class MillionsInMissedFine extends Vue {
           Most of the buildings that did not report data coincided with the
           COVID-19 drop in reporting rates.
         </p>
-        <p>
-          <strong>Question:</strong> If we omit the year of data from COVID-19,
-          do the results change?
-        </p>
       </section>
 
       <section class="-indented">
@@ -310,10 +306,6 @@ export default class MillionsInMissedFine extends Vue {
           changes, several outliers are present. Outliers in GHG intensitity
           values distort mean values for groups (although median values should
           not be as affected).
-        </p>
-        <p>
-          <strong>Question:</strong> If we omitted the outliers, do the results
-          change?
         </p>
       </section>
 
@@ -328,41 +320,87 @@ export default class MillionsInMissedFine extends Vue {
           with reporting compliance in a way that could be obscuring underlying
           trends.
         </p>
-        <p>
-          <strong>Question:</strong> What other characteristics might be
-          predictive of GHG intensity, and if we control for them, will the
-          results change?
-        </p>
       </section>
 
-      <h2>Investigating Further: Analysis</h2>
+      <h2>Investigating Further</h2>
 
       <p>
         To address questions #1 and #2 (COVID-19 and/or outliers) driving our
-        results, we ran further analysyis where we excluded both of these sets
+        results, we ran further analysis where we excluded both of these sets
         of data points and recalculated our mean and median values across
-        groups. Ultimately, we found that
-        <b>the results still showed no meaningful difference between groups.</b>
-        This leads us to believe that these factors were not driving our
-        results.
+        groups. Ultimately, this simple descriptive analysis still found 
+        <b>no meaningful difference between groups.</b>
+        This made it seem like these characteristics were not driving our results.
       </p>
 
       <p>
-        What about other predictive factors that might be masking a
-        relationship? To try to address this question, we ran a regression
-        analysis and included square footage as a control variable. Linear
-        regression is a tool that can try to control for external factors to
-        understand what a variables isolated effect is on our outcome of
-        interest. A limitation in our regression model is that we have very few
-        variables to add as control variables. An area of future work could be
-        to merge other data sources into our buildings dataset to try to control
-        for a broader array of building characteristics. In this model, the only
-        control we added was square footage. The results are below:
+        If COVID-19 and outliers don't seem to be affecting our results, what about
+        omitted predictive characteristics? Is it possible
+        that there are strong connections between certain building characteristics 
+        (age of building, type of building, etc) and reporting rates?
+        One building characteristic, for example, that likely affects reporting and emissions 
+        is the building type (office, school, etc).
+        A quick visualization of reporting rates by building type in fact 
+        does show that there are
+        some patterns across groups: 
+        </p> 
+
+        <h3>Non-Reporting Rates by Building Category</h3>
+        <div>
+          <div v-if="isMobile">
+            <img
+              src="/blog/GHGIntensityPredictCompliance/reporting_rates_by_building_type_min_100.png"
+              alt="GHG Last Year Compliance"
+              style="width: 100%; height: auto"
+            />
+          </div>  
+
+          <div v-else>
+            <iframe
+              src="/blog/GHGIntensityPredictCompliance/reporting_rates_by_building_type_min_100.html"
+              frameborder="0"
+              width="100%"
+              height="400px"
+            ></iframe>
+
+          </div>
+        </div>
+
+        <p>
+        In the graph above, it can be seen that two of the most common building categories, 
+        "K-12 Schools" and "Multifamily Housing" have very different reporting rates 
+        (27% and 17%, respectfully). Is it possible that these trends, as well as their
+        intersection with other patterns like the drop off in COVID-19 reporting, 
+        could be signifcantly affecting our lack of a finding? 
+        </p> 
+
+        <h2>Regression Analysis</h2>
+        <p>
+        With these considerations in mind, we wanted to test 
+        the possibility that external factors might
+        be obfuscating an underlying connection between emissions and reporting.
+        To test this, we decided to run a linear regression analysis. Linear
+        regression is a statistical tool that attempts to control for external factors 
+        to understand what the isolated effect of a variable of interest is on 
+        a given outcome.
+        In our example, we are trying to rule out the possibility that some
+        building characteristics (i.e. square footage, age of building, building type)
+        and/or time trends could be driving our results by controlling 
+        for those factors in the regression model. Specifically, we fit a 
+        linear probability model where our outcome of interest is 
+        equal to 1 if a building failed to report in a given year. 
+        We controlled for characteristics of buildings that we had 
+        data on as well as the year the data was collected (to account for 
+        trends like COVID-19). The estimates 
+        of that model are reported below:
       </p>
+
+
+      
 
       <!-- Regression Results Section -->
       <div>
-        <h2>Regression Results: Linear Probability Model</h2>
+        <h3>Regression Results: Linear Probability Model</h3>
 
         <!-- Check if results exist -->
         <div id="regression-container">
@@ -393,13 +431,33 @@ export default class MillionsInMissedFine extends Vue {
                     {{ results.confidence_intervals[variable][1].toFixed(3) }}]
                   </td>
                 </tr>
+                <tr>
+                  <td class="cell-bordered">Building Type Dummy Variables:</td>
+                  <td class="cell-bordered">{{results.building_type_dummy}}</td>
+                  <td class="cell-bordered"> </td>
+                  <td class="cell-bordered"></td>
+                </tr>            
+                <tr>
+                  <td class="cell-bordered">Year Fixed Effects:</td>
+                  <td class="cell-bordered">{{results.year_fixed_effects}}</td>
+                  <td class="cell-bordered"> </td>
+                  <td class="cell-bordered"></td>
+                </tr>     
               </tbody>
             </table>
             <p class="regression-p">
               <strong>Dependent Variable:</strong>
-              {{ results.dependent_variable }}<br />
+              "{{ results.dependent_variable }}""<br />
+              <strong>"Building Type" Fixed Effects:</strong>
+              {{ results.building_type_dummy }}<br />
+              <strong>"Year" Fixed Effects:</strong>
+              {{ results.year_fixed_effects}}<br />
               <strong>Number of Observations:</strong>
               {{ results.number_of_observations }}<br />
+              <strong>Number of Observations Dropped in Regression Due to Missing Independent Variables:</strong>
+              {{ results.total_dropped_rows }} ({{ results.total_dropped_rows_pct }}%)<br />
+              <strong>Number of Observations Where Outcome was "{{results.dependent_variable}}":</strong>
+              {{ results.pct_obs_are_one }}% <br />
               <strong>R-Squared:</strong> {{ results.r_squared.toFixed(3)
               }}<br />
               <strong>Adjusted R-Squared:</strong>
@@ -416,15 +474,16 @@ export default class MillionsInMissedFine extends Vue {
 
         <p>
           <br />
-          It doesn't seem like the level of GHG intensity or the trend of GHG
-          intensity help predict compliance at all. Building size does help
-          predict compliance a tiny bit though. For every million additional
-          square feet, the building is roughly 1.5% less likely to be NON
-          compliant. In general, this is a very weak finding and the variables
-          we currently do have don't seem to predict reporting compliance much
-          at all. We ran these regressions with the dataset of no outliers and
-          no covid data as well and found similar results - details can be seen
-          in the linked Jupyter notebook below.
+          As can be seen from the regression analysis above, it doesn't 
+          seem like there is any meaningful relationship between the 
+          emission levels or trends of a building and whether or not it reports data. 
+          The coefficient estimates for both of our emission related variables 
+          (GHG Intensity Last Year and Change in GHG Intensity) are essentially zero. 
+          In fact, most of our variables don't seem to have a very strong connection 
+          to reporting rates. The only variables that seem to explain some of the 
+          reporting patterns are those related to time (i.e. the COVID-19 data 
+          disruption) and thoes related to building type (a couple building
+          categories have higher/lower reporting rates than average). 
         </p>
 
         <h2>Explore our Analysis</h2>
@@ -484,6 +543,7 @@ export default class MillionsInMissedFine extends Vue {
     border-collapse: collapse;
     width: 100%;
     border: $border-thin solid $black;
+    margin-bottom:0;
   }
 
   .regression-p {
