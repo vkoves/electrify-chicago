@@ -11,3 +11,7 @@ src/data/debug/*
 **/__pycache__/*
 
 .DS_Store
+
+*my-venv/
+*new-venv
+node_modules

@@ -7,7 +7,7 @@
     <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
     <img :src="buildingImg.imgUrl" alt="" />
 
-    <p class="attribution">
+    <p class="attribution -no-margin">
       <strong>Attribution:</strong>
       {{ buildingImg.fromGoogleMaps ? '© Google ' + currentYear : '' }}
       <a ref="noopener" :href="buildingImg.attributionUrl" target="_blank">
