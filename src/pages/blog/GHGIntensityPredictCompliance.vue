@@ -274,9 +274,19 @@ export default class MillionsInMissedFine extends Vue {
       </div>
 
       <div class="graph-caption">
-        <b>Note:</b> Graphs above showing only most recent year of data. See the
-        linked Jupyter Notebook file at the end of this blog for graphs
-        containing data from all years.
+        <b>Note:</b> Graphs above showing only most recent year of data.
+        Buildings that didn't report data in both years are not represented in
+        these scatter plots because we don't know what their emission levels
+        were in the previous year. To see additional exploration of the data and
+        graphs looking at different observation sets, refer to the code we used
+        for this analysis by clicking the
+        <a
+          href="https://nbviewer.org/github/vkoves/electrify-chicago/blob/compliance-analysis/src/data/analysis/GHG_intensity_compliance_correlation.ipynb"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Jupyter notebook link</a
+        >
+        at the end of this blog.
       </div>
 
       <h2>Results: No meaningful difference between groups</h2>
@@ -286,7 +296,7 @@ export default class MillionsInMissedFine extends Vue {
         real pattern between emission intensities or emission trends when it
         comes to compliance. Instead, it seems that whether or not buildings
         report their emissions data seems pretty unrelated to a buildings
-        emissions profile.
+        emissions profile in the previous year.
       </p>
 
       <h2>Investigating Further</h2>
@@ -371,14 +381,28 @@ export default class MillionsInMissedFine extends Vue {
           ></iframe>
         </div>
       </div>
+      <div class="graph-caption">
+        <b>Note:</b> This graph only showing building categories with 100 or
+        more observations. There are actually over 50 different building types,
+        but most have less than a dozen buildings in the data. To see this graph
+        with all the different building types, please view the
+        <a
+          href="https://nbviewer.org/github/vkoves/electrify-chicago/blob/compliance-analysis/src/data/analysis/GHG_intensity_compliance_correlation.ipynb"
+          target="_blank"
+          rel="noopener noreferrer"
+          >Jupyter notebook link</a
+        >
+        at the end of this blog.
+      </div>
 
       <p>
         In the graph above, it can be seen that two of the most common building
-        categories, "K-12 Schools" and "Multifamily Housing" have very different
-        reporting rates (27% and 17%, respectfully). Is it possible that these
-        trends, as well as their intersection with other patterns (like the drop
-        off in COVID-19 reporting), could be significantly affecting our lack of
-        a finding?
+        categories, <b>"K-12 Schools"</b> and <b>"Multifamily Housing"</b> have
+        very different reporting rates (<b>27%</b> and <b>17%</b>,
+        respectfully). Is it possible that these trends, as well as their
+        intersection with other patterns (like the drop off in COVID-19
+        reporting), could be obscuring a relationship between emission levels
+        and reporting compliance?
       </p>
 
       <h2>Regression Analysis</h2>
@@ -386,18 +410,31 @@ export default class MillionsInMissedFine extends Vue {
         With these considerations in mind, we wanted to test the possibility
         that external factors might be obfuscating an underlying connection
         between emissions and reporting. To test this, we decided to run a
-        linear regression analysis. Linear regression is a statistical tool that
-        attempts to control for external factors to understand what the isolated
-        effect of a variable of interest is on a given outcome. In our example,
+        linear regression analysis. Linear regression is a statistical technique
+        that attempts to understand what the isolated effect of a variable is on
+        a given outcome, while controlling for external factors. In our example,
         we are trying to rule out the possibility that some building
         characteristics (i.e. square footage, age of building, building type)
-        and/or time trends could be driving our results by controlling for those
-        factors in the regression model. Specifically, we fit a linear
-        probability model where our outcome of interest is equal to 1 if a
-        building failed to report in a given year. We controlled for
-        characteristics of buildings that we had data on as well as the year the
-        data was collected (to account for trends like COVID-19). The estimates
-        of that model are reported below:
+        and/or time trends could be obscuring a hidden pattern in the data of
+        emissions being linked to reporting.
+      </p>
+
+      <p>
+        Specifically, we fit a linear probability model where our outcome of
+        interest is equal to 1 if a building failed to report in a given year.
+        The analysis includes buildings that reported complete emissions data in
+        the past two years, regardless of whether they reported in the current
+        year. Thus, buildings that consistently fail to report are excluded, as
+        we can't determine how their emissions affect reporting compliance if we
+        don't have data on their emissions. Many buildings that consistently
+        report appear multiple times in the dataset for different time periods.
+      </p>
+
+      <p>
+        In the regression model, we controlled for
+        <b>building characteristics</b> that we observe as well as the
+        <b>time period</b> the data was collected in (to account for trends like
+        COVID-19). The estimates of that model are reported below:
       </p>
 
       <!-- Regression Results Section -->
@@ -442,7 +479,7 @@ export default class MillionsInMissedFine extends Vue {
                   <td class="cell-bordered"></td>
                 </tr>
                 <tr>
-                  <td class="cell-bordered">Year Fixed Effects:</td>
+                  <td class="cell-bordered">Year Dummy Variables:</td>
                   <td class="cell-bordered italic">
                     {{ results.year_fixed_effects }}
                   </td>
@@ -454,9 +491,9 @@ export default class MillionsInMissedFine extends Vue {
             <p class="regression-p">
               <strong>Dependent Variable:</strong>
               "{{ results.dependent_variable }}"<br />
-              <strong>"Building Type" Fixed Effects:</strong>
+              <strong>"Building Type" Categorical Dummy Variables:</strong>
               {{ results.building_type_dummy }}<br />
-              <strong>"Year" Fixed Effects:</strong>
+              <strong>"Year" Dummy Variables:</strong>
               {{ results.year_fixed_effects }}<br />
               <strong>Number of Observations:</strong>
               {{ results.number_of_observations }}<br />
