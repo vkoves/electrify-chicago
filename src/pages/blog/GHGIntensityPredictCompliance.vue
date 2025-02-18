@@ -328,7 +328,7 @@ export default class MillionsInMissedFine extends Vue {
         </p>
       </section>
 
-      <h2>Investigating Further</h2>
+      <h3>Additional Analysis</h3>
 
       <p>
         To address questions #1 and #2 (COVID-19 and/or outliers) driving our
@@ -351,7 +351,7 @@ export default class MillionsInMissedFine extends Vue {
         patterns across groups:
       </p>
 
-      <h3>Non-Reporting Rates by Building Category</h3>
+      <h3>Variance in Reporting Across Building Type</h3>
       <div>
         <div v-if="isMobile">
           <img
