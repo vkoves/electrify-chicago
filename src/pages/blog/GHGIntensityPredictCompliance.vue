@@ -90,7 +90,7 @@ export default class MillionsInMissedFine extends Vue {
           >Chicago building benchmarking data</a
         >
         <!-- Add space between two links -->
-        <span style="display: inline-block; width: 6px;"></span>
+        <span style="display: inline-block; width: 6px"></span>
         <a
           href="https://electrifychicago.net/blog/millions-in-missed-fines"
           target="_blank"
@@ -508,10 +508,24 @@ export default class MillionsInMissedFine extends Vue {
         <p>
           After looking at summary statistics and running regression analysis,
           it seems like there is no meaningful relationship between emission
-          patterns of buildings and their reporting compliance. Thus, our
-          initial hypothesis that some buildings might strategically stop
-          reporting data to cover up poor emissions performances does not seem
-          to be supported by the data.
+          patterns of buildings and their reporting compliance. This contradicts
+          our initial hypothesis that some buildings might withhold data to
+          conceal poor emissions performance.
+        </p>
+
+        <p>
+          This raises a key question: why do buildings choose to report or not?
+          At Electrify Chicago, we’ve noticed that few politicians and
+          policymakers are even aware of the existence of the Chicago Building
+          Benchmarking Data. So, it’s not surprising that we see no pattern—why
+          hide emissions if no one is paying attention?
+        </p>
+
+        <p>
+          Electrify Chicago aims to change that reality by making the building
+          benchmarking data more accessible. Still, nearly a third of buildings
+          fail to report each year. Understanding why may require further
+          quantitative and qualitative analysis.
         </p>
 
         <h3 class="italic">Explore our Analysis</h3>
