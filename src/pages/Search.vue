@@ -10,6 +10,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import PropertyTypesConstant from '../data/dist/property-types.json';
+import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 
 interface IBuildingEdge {
   node: IBuilding;
@@ -19,6 +20,7 @@ interface IBuildingEdge {
   components: {
     BuildingsTable,
     DataDisclaimer,
+    DataSourceFootnote,
     NewTabIcon,
   },
   metaInfo: {
@@ -266,23 +268,16 @@ export default class Search extends Vue {
         </p>
       </div>
 
-      <p>
-        Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total
-        {{ totalResultsCount }}
+      <p class="results-count">
+        Showing
+        <strong>
+          {{ Math.min(MaxBuildings, totalResultsCount) }} of total
+          {{ totalResultsCount }}
+        </strong>
         matching buildings
       </p>
 
-      <p class="footnote">
-        Data Source:
-        <!-- eslint-disable-next-line max-len -->
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener"
-        >
-          Chicago Energy Benchmarking Data <NewTabIcon />
-        </a>
-      </p>
+      <DataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>
@@ -341,6 +336,13 @@ export default class Search extends Vue {
   @media (max-width: $mobile-max-width) {
     form {
       background-color: $off-white;
+    }
+
+    .no-results-msg {
+      margin: 0 -1rem;
+    }
+    .results-count {
+      font-size: 0.8125rem;
     }
   }
 }

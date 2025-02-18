@@ -89,7 +89,8 @@ export default class MillionsInMissedFine extends Vue {
           rel="noopener noreferrer"
           >Chicago building benchmarking data</a
         >
-
+        <!-- Add space between two links -->
+        <span style="display: inline-block; width: 6px;"></span>
         <a
           href="https://electrifychicago.net/blog/millions-in-missed-fines"
           target="_blank"

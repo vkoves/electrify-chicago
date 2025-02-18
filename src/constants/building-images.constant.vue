@@ -199,6 +199,12 @@ export const BuildingImages: IBuildingImages = {
     imgUrl: BuildingImagesBase + 'mccormick-tribune-campus-center.jpg',
     fromGoogleMaps: true,
   },
+  // IIT life-sciences-research-building
+  '256439': {
+    attributionUrl: 'https://goo.gl/maps/DRpUvwYquHtWFaT58',
+    imgUrl: BuildingImagesBase + 'life-sciences-research.jpg',
+    fromGoogleMaps: true,
+  },
 
   /**
    * UChicago Buildings
@@ -286,6 +292,19 @@ export const BuildingImages: IBuildingImages = {
   '173497': {
     attributionUrl: 'https://goo.gl/maps/DRpUvwYquHtWFaT58',
     imgUrl: BuildingImagesBase + 'shop-and-save-nagle.jpg',
+    fromGoogleMaps: true,
+  },
+  // hyde-park-west-apartments
+  '102854': {
+    attributionUrl: 'https://goo.gl/maps/DRpUvwYquHtWFaT58',
+    imgUrl: BuildingImagesBase + 'hyde-park-west-apartments.jpg',
+    fromGoogleMaps: true,
+    isTall: true,
+  },
+  // salem-baptist-church-of-chicago
+  '163223': {
+    attributionUrl: 'https://goo.gl/maps/DRpUvwYquHtWFaT58',
+    imgUrl: BuildingImagesBase + '10909-s-cottage-grove.jpg',
     fromGoogleMaps: true,
   },
 };
