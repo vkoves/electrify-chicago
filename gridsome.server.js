@@ -10,6 +10,7 @@
  * https://gridsome.org/docs/fetching-data/#csv
  */
 const { readFileSync } = require('fs');
+const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
 
 const DataDirectory = './src/data/dist/';
@@ -90,7 +91,31 @@ function loadBuildingBenchmarkData(actions) {
       throw new Error('No building slug source (name or address)!', building);
     }
 
-    collection.addNode(building);
+    // If we get a duplicate node warning, notate the name, and then we tack on the ID to the URL
+    // so '/building/salvation-army` becomes `/building/salvation-army-1234`
+    const duplicateSlugs = [
+      'illinois-institute-of-technology',
+      'bricktown-square',
+      'the-woodlands-of-bronzeville-condominium-association',
+      'west-side-realty-corporation',
+      'gateway-centre',
+      'salvation-army',
+      'left-bank-at-k-station',
+      'tech-business-center',
+      'iit-research-tower',
+      'oakwood-shores-2d',
+    ]
+
+    try {
+      if (duplicateSlugs.includes(building.slugSource.toLowerCase().replaceAll(' ', '-'))) {
+        building.slugSource =   building.slugSource + building.ID;
+      }
+
+      collection.addNode(building);
+    }
+    catch (error) {
+      console.log('error', error);
+    }
   }
 }
 
