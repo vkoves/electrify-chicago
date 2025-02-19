@@ -78,7 +78,8 @@ def generate_percentile_grade(
         percent_scores,
         bins=bins,
         labels=letter_grades,
-        right=True
+        right=True,
+        include_lowest=True,
     )
     grades[f"{field}LetterGrade"] = letter_grades
 
