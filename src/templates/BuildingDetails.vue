@@ -251,20 +251,27 @@ query ($id: ID!, $ID: String) {
               <div class="grades-cont">
                 <div class="grade-row -overall">
                   <div><strong>Overall Grade</strong></div>
-                  <LetterGrade :grade="building.AvgPercentileLetterGrade" class="-overall" />
+                  <LetterGrade
+                    :grade="building.AvgPercentileLetterGrade"
+                    class="-overall"
+                  />
                 </div>
 
-                <hr>
+                <hr />
 
                 <div class="grade-row">
                   <div><strong>Emissions Intensity</strong> (50%)</div>
                   <!-- TODO: Drop default 'F' after fixing data bug -->
-                  <LetterGrade :grade="building.GHGIntensityLetterGrade || 'F'" />
+                  <LetterGrade
+                    :grade="building.GHGIntensityLetterGrade || 'F'"
+                  />
                 </div>
 
                 <div class="grade-row">
                   <div><strong>Energy Mix</strong> (40%)</div>
-                  <LetterGrade :grade="building.EnergyMixWeightedPctSumLetterGrade" />
+                  <LetterGrade
+                    :grade="building.EnergyMixWeightedPctSumLetterGrade"
+                  />
                 </div>
 
                 <div class="grade-row">
@@ -298,7 +305,9 @@ query ($id: ID!, $ID: String) {
             </li>
             <li>
               <strong>EnergyMixWeightedPctSumLetterGrade:</strong>
-              <LetterGrade :grade="building.EnergyMixWeightedPctSumLetterGrade" />
+              <LetterGrade
+                :grade="building.EnergyMixWeightedPctSumLetterGrade"
+              />
             </li>
             <li>
               <strong>EnergyMixWeightedPctSum:</strong>
@@ -335,7 +344,8 @@ query ($id: ID!, $ID: String) {
                 <!-- TODO: Drop default 'F' after fixing data bug -->
                 <LetterGrade
                   :grade="building.GHGIntensityLetterGrade || 'F'"
-                  class="-large -spaced" />
+                  class="-large -spaced"
+                />
               </dt>
               <dd>
                 <StatTile
@@ -362,7 +372,10 @@ query ($id: ID!, $ID: String) {
             </div>
           </dl>
           <div class="reporting-tiles">
-            <ReportingTile :historic-data="historicData" :grade="building.SubmittedRecordsGrade" />
+            <ReportingTile
+              :historic-data="historicData"
+              :grade="building.SubmittedRecordsGrade"
+            />
           </div>
           <div class="stat-tiles-col">
             <h2>Energy Breakdown</h2>
@@ -430,7 +443,8 @@ query ($id: ID!, $ID: String) {
             Energy Mix
             <LetterGrade
               :grade="building.EnergyMixWeightedPctSumLetterGrade"
-              class="-large -spaced" />
+              class="-large -spaced"
+            />
           </h2>
           <p>
             <strong>Total Energy Use:</strong>
@@ -907,7 +921,8 @@ export default class BuildingDetails extends Vue {
     flex-shrink: 0;
     overflow: hidden;
 
-    h2, .grades-cont {
+    h2,
+    .grades-cont {
       padding-left: 1.5rem;
       padding-right: 1.5rem;
     }
@@ -921,9 +936,11 @@ export default class BuildingDetails extends Vue {
     }
 
     .grade-letter {
-    font-size: 1.5rem;
+      font-size: 1.5rem;
 
-      &.-overall { font-size: 3rem; }
+      &.-overall {
+        font-size: 3rem;
+      }
     }
 
     .grades-cont {
@@ -936,7 +953,9 @@ export default class BuildingDetails extends Vue {
       justify-content: space-between;
       align-items: center;
 
-      &.-overall { font-size: 1.5rem; }
+      &.-overall {
+        font-size: 1.5rem;
+      }
     }
   }
 

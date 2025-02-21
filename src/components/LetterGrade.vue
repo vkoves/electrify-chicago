@@ -20,5 +20,4 @@ export default class LetterGrade extends Vue {
     {{ grade }}
   </span>
 </template>
-<style lang="scss">
-</style>
+<style lang="scss"></style>

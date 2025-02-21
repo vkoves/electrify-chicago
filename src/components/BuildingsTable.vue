@@ -76,9 +76,11 @@ export default class BuildingsTable extends Vue {
             />
 
             <OwnerLogo :building="edge.node" :is-text="true" />
-            <LetterGrade v-if="edge.node.AvgPercentileLetterGrade"
+            <LetterGrade
+              v-if="edge.node.AvgPercentileLetterGrade"
               :grade="edge.node.AvgPercentileLetterGrade"
-              class="-circled" />
+              class="-circled"
+            />
 
             <div class="prop-address">
               {{ edge.node.Address }}
