@@ -1,6 +1,8 @@
 <template>
   <details class="data-disclaimer">
-    <summary>Note: Data From Large Buildings in {{ LatestDataYear }}</summary>
+    <summary>
+      <span>Note: Data From Large Buildings in {{ LatestDataYear }}</span>
+    </summary>
 
     <div class="details-content">
       <p class="constrained">

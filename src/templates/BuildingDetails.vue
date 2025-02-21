@@ -436,8 +436,16 @@ query ($id: ID!, $ID: String) {
             <strong>Total Energy Use:</strong>
             {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
           </p>
-
-          <PieChart :graph-data="energyBreakdownData" />
+          <div class="energy-mix-cont">
+            <PieChart :graph-data="energyBreakdownData" />
+            <img
+              v-tooltip.bottom="{ content: tooltipMessage }"
+              class="tooltip"
+              src="/help.svg"
+              alt="Help icon"
+              tabindex="0"
+            />
+          </div>
         </div>
       </div>
 
@@ -552,6 +560,10 @@ import {
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 import LetterGrade from '../components/LetterGrade.vue';
 
+import vToolTip from 'v-tooltip';
+
+Vue.use(vToolTip);
+
 const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',
   DistrictSteam: '#ABABAB',
@@ -598,6 +610,15 @@ export default class BuildingDetails extends Vue {
     ElectricityUse: 'Electricity Use (kBTU)',
     NaturalGasUse: 'Fossil Gas Use (kBTU)',
   };
+
+  tooltipMessage = `
+    <p class="title">Why does this matter?</p>
+    <p>
+      Although reducing energy use overall is important, not all energy is created equal -
+      electricity can be created without emissions (via solar, wind, nuclear, etc.) but burning
+      fossil gas (aka natural gas) always creates emissions.
+    </p>
+  `;
 
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
@@ -951,16 +972,26 @@ export default class BuildingDetails extends Vue {
     .stat-tiles-col {
       flex-basis: 70%;
     }
+
     .chart-cont {
       flex-basis: 30%;
       flex-shrink: 0;
       margin-top: 1rem;
 
-      .pie-chart-cont {
+      .energy-mix-cont {
+        display: flex;
+        flex-direction: column;
         margin-top: 1rem;
         background-color: $off-white;
         border-radius: $brd-rad-medium;
         max-width: 24rem;
+
+        .tooltip {
+          align-self: flex-end;
+          width: fit-content;
+          margin-bottom: 1rem;
+          margin-right: 1rem;
+        }
       }
     }
   }

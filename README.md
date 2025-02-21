@@ -4,7 +4,7 @@
 
 A site to publicize some of the most polluting buildings based on the Chicago Energy Benchmarking data published in the City of Chicago Data Portal.
 
-It's powered by [VueJS 2](https://v2.vuejs.org/) and [GridSome](https://gridsome.org/)
+Front-end in [VueJS 2](https://v2.vuejs.org/), statically built with [GridSome](https://gridsome.org/). Data processing with Python, and [Pandas](https://pandas.pydata.org/).
 
 ## Data Import
 
@@ -160,7 +160,7 @@ We should reasonably crop images if needed and then scale them to be EITHER:
 - 1000px wide if it's a landscape image
 - 600px wide if it's a portrait image
 
-Make sure to export it as a `.jpg` image at a quality level of 70, which should ensure a reasonable
+Make sure to export it as a `.jpg` image at a **quality level of 70**, which should ensure a reasonable
 file size under 200 kB.
 
 \*\*Store the image in `/static/building-imgs/`.
