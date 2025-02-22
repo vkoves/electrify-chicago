@@ -10,17 +10,17 @@
       '-sq-footage': isSquareFootage,
     }"
   >
-    <template v-if="building[statKey]">
-      <SparkLine
-        v-if="historicStatData.length > 0"
-        :graph-data="historicStatData"
-        :graph-title="statKey"
-        :unit="unit"
-      />
+    <SparkLine
+      v-if="historicStatData.length > 0"
+      :graph-data="historicStatData"
+      :graph-title="statKey"
+      :unit="unit"
+    />
 
+    <template v-if="typeof building[statKey] === 'number'">
       <!-- The actual stat value-->
       <div class="stat-value">
-        {{ statValue }} <span class="unit" v-html="unit" />
+        {{ statValueStr }} <span class="unit" v-html="unit" />
       </div>
 
       <div v-if="costEstimate" class="bill-estimate">
@@ -98,7 +98,7 @@
       <div v-if="medianMultipleMsgCityWide" class="median-comparison">
         <div>
           <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
-          <span v-if="statValue !== '0'" class="val">
+          <span v-if="statValueStr !== '0'" class="val">
             {{ medianMultipleMsgCityWide }} median
           </span>
           <span v-else class="median-label"> Median Chicago Building </span>
@@ -111,7 +111,7 @@
 
         <div v-if="medianMultiplePropertyType">
           <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
-          <span v-if="statValue !== '0'" class="val">
+          <span v-if="statValueStr !== '0'" class="val">
             {{ medianMultiplePropertyType }} median {{ propertyType }}
           </span>
           <span v-else class="median-label"> Median {{ propertyType }} </span>
@@ -137,7 +137,7 @@
 
       <!-- Fossil Gas specific message -->
       <div
-        v-if="statValue === '0' && statKey === 'NaturalGasUse'"
+        v-if="statValueStr === '0' && statKey === 'NaturalGasUse'"
         class="no-gas-msg"
       >
         <div v-if="fullyGasFree">
@@ -179,7 +179,7 @@
       Not Reported
 
       <p class="empty-notice">
-        This data was not reported for this building, which
+        This data was not reported for this building this year, which
         <em>likely</em> means a value of zero for this field.
       </p>
     </template>
@@ -393,7 +393,10 @@ export default class StatTile extends Vue {
     return this.medianMultipleMsg(median, statValueNum);
   }
 
-  get statValue(): string {
+  /** The stat value, as a string */
+  get statValueStr(): string {
+    console.log('statValue', { stat: parseFloat(this.building[this.statKey] as string).toLocaleString() })
+
     return parseFloat(this.building[this.statKey] as string).toLocaleString();
   }
 
