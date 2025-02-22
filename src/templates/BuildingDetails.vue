@@ -135,9 +135,10 @@ query ($id: ID!, $ID: String) {
               </h2>
 
               <p>
-                This building reported zero fossil gas use in the most recent year, but has used
-                gas in the past, which may be a reporting error. Take a look at how this building
-                has used energy over time under "Extra Technical Info".
+                This building reported zero fossil gas use in the most recent
+                year, but has used gas in the past, which may be a reporting
+                error. Take a look at how this building has used energy over
+                time under "Extra Technical Info".
               </p>
             </div>
             <div v-if="anomaly === DataAnomalies.largeGasSwing">
