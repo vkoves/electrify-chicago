@@ -24,6 +24,17 @@ anomaly_values = {
     'large_gas_swing': 'gas:large-swings'
 }
 
+# The relative share of electric use that a building's gas use has to meet to be marked as
+# having used gas (e.g. 5% is 0.05). This should apply as a safeguard to all types of gas anomaly
+# checks, since going from 5% to 0% shouldn't be flagged, nor 0% to 5%
+#
+# Some examples we want this to exclude:
+# - https://electrifychicago.net/building/55-e-monroe - has four years where gas was 1% of total
+#   energy use, every other year was 0.
+# - https://electrifychicago.net/building/222-n-la-salle-st - had one year where gas was 7% of total
+#   energy use, every other year was less
+gas_use_min_share_decimal = 0.10
+
 out_dir = 'dist'
 
 # Input historic data from Step 1
@@ -31,6 +42,27 @@ input_historic_data_csv_path = get_data_file_path(out_dir, 'benchmarking-all-yea
 
 # Output main benchmark path
 input_benchmark_data_csv_path = get_data_file_path(out_dir, 'building-benchmarks.csv')
+
+
+def detect_gas_users(historic_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Identifies buildings that used a noticeable amount of natural gas relative to their electricity use.
+
+    This function filters the historic data to identify buildings that used natural gas above a
+    specified threshold (defaulting to 5% of their electricity use) in years prior to a given year.
+    This helps distinguish notable gas usage (HVAC) that should not change rapidly from small uses
+    like an industrial kitchen.
+
+    Example: 55 E Monroe, which used gas in the past, but was < 1% of its total energy use, and
+    should not be flagged.
+    """
+
+    # Handle cases where electricity use is zero to avoid division by zero errors
+    used_gas_before = historic_data.loc[
+        historic_data['NaturalGasUse'] > gas_use_min_share_decimal * historic_data['ElectricityUse']
+    ]
+
+    return used_gas_before
 
 def determine_abs_delta(x: pd.Series) -> Optional[float]:
     """
@@ -62,8 +94,11 @@ def detect_large_gas_swing_buildings(historic_data: pd.DataFrame, threshold: flo
         a list of building IDs that have anomalous gas use
     """
 
+    # Ignore buildings with a very small share of gas use
+    gas_users = detect_gas_users(historic_data)
+
     anom_gas_usage = (
-        historic_data.groupby('ID')
+        gas_users.groupby('ID')
         .agg({'NaturalGasUse': determine_abs_delta})
         .sort_values('NaturalGasUse', ascending=False)
         .dropna()
@@ -95,11 +130,16 @@ def detect_anomalous_zero_gas_buildings(historic_data: pd.DataFrame) -> List[int
         .loc[historic_data['DataYear'] == latest_year]
     )['ID']
 
-    used_gas_before = (
-        historic_data.loc[historic_data['DataYear'] < latest_year]
-        .loc[historic_data['NaturalGasUse'] > 0]
-    )
-    gas_anomalies = used_gas_before.loc[historic_data['ID'].isin(no_gas_use_ids)]
+    # If a building used a noticeable amount of gas relative to its total energy use (for
+    # simplicity, > 5% of their electric use), we flag it as having used gas. This prevents us
+    # flagging buildings that went from using very little gas to zero, which is likely not an error,
+    # but could come from an individual tenant using gas or only kitchens using gas and then going
+    # electric
+    old_records = historic_data.loc[historic_data['DataYear'] < latest_year]
+
+    used_gas_in_past = detect_gas_users(old_records)
+
+    gas_anomalies = used_gas_in_past.loc[historic_data['ID'].isin(no_gas_use_ids)]
 
     gas_anomaly_ids = gas_anomalies['ID'].unique().tolist()
 
