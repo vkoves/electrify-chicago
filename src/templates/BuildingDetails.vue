@@ -261,9 +261,8 @@ query ($id: ID!, $ID: String) {
 
                 <div class="grade-row">
                   <div><strong>Emissions Intensity</strong> (50%)</div>
-                  <!-- TODO: Drop default 'F' after fixing data bug -->
                   <LetterGrade
-                    :grade="building.GHGIntensityLetterGrade || 'F'"
+                    :grade="building.GHGIntensityLetterGrade"
                   />
                 </div>
 
@@ -341,9 +340,8 @@ query ($id: ID!, $ID: String) {
             <div>
               <dt>
                 Greenhouse Gas Intensity
-                <!-- TODO: Drop default 'F' after fixing data bug -->
                 <LetterGrade
-                  :grade="building.GHGIntensityLetterGrade || 'F'"
+                  :grade="building.GHGIntensityLetterGrade"
                   class="-large -spaced"
                 />
               </dt>
