@@ -15,16 +15,11 @@ export default function (Vue, { router, head, isClient }) {
     console.error('Vue error', err, info, vm);
   };
 
-  // Import Roboto font
+  // Roboto (for main text, with 900 weight ultra bold for letter grades) from Google Fonts
+  // https://fonts.google.com/specimen/Roboto?preview.text=A%20B%20C%20D%20F
   head.link.push({
     rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap',
-  });
-
-  // Import Caveat font
-  head.link.push({
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap',
+    href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&display=swap',
   });
 
   // Add meta description

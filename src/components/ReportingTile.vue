@@ -113,7 +113,7 @@ export default class ReportingTile extends Vue {
       margin-left: 0.25rem;
     }
 
-    .grade-letter {
+    .letter-grade {
       margin-left: 1rem;
     }
   }

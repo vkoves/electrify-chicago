@@ -16,7 +16,7 @@ export default class LetterGrade extends Vue {
 }
 </script>
 <template>
-  <span class="grade-letter" :class="`-${grade}` | lowercase">
+  <span class="letter-grade" :class="`-${grade}` | lowercase">
     {{ grade }}
   </span>
 </template>

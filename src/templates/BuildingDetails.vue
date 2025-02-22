@@ -244,41 +244,7 @@ query ($id: ID!, $ID: String) {
               </dl>
             </div>
 
-            <!-- TODO: Break out report card to its own component -->
-            <div class="report-card">
-              <h2>{{ dataYear }} Report Card</h2>
-
-              <div class="grades-cont">
-                <div class="grade-row -overall">
-                  <div><strong>Overall Grade</strong></div>
-                  <LetterGrade
-                    :grade="building.AvgPercentileLetterGrade"
-                    class="-overall"
-                  />
-                </div>
-
-                <hr />
-
-                <div class="grade-row">
-                  <div><strong>Emissions Intensity</strong> (50%)</div>
-                  <LetterGrade
-                    :grade="building.GHGIntensityLetterGrade"
-                  />
-                </div>
-
-                <div class="grade-row">
-                  <div><strong>Energy Mix</strong> (40%)</div>
-                  <LetterGrade
-                    :grade="building.EnergyMixWeightedPctSumLetterGrade"
-                  />
-                </div>
-
-                <div class="grade-row">
-                  <div><strong>Consistent Reporting</strong> (10%)</div>
-                  <LetterGrade :grade="building.SubmittedRecordsGrade" />
-                </div>
-              </div>
-            </div>
+            <ReportCard :building="building" :data-year="dataYear" />
           </div>
         </div>
 
@@ -573,6 +539,7 @@ import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 import LetterGrade from '../components/LetterGrade.vue';
 
 import vToolTip from 'v-tooltip';
+import ReportCard from '../components/ReportCard.vue';
 
 Vue.use(vToolTip);
 
@@ -600,6 +567,7 @@ const EnergyBreakdownColors = {
     OverallRankEmoji,
     OwnerLogo,
     PieChart,
+    ReportCard,
     ReportingTile,
     StatTile,
   },
@@ -907,53 +875,7 @@ export default class BuildingDetails extends Vue {
     margin-top: 1rem;
 
     h2 {
-      margin-top: 0;
-    }
-  }
-
-  .report-card {
-    background-color: $grey-light;
-    border-radius: $brd-rad-medium;
-    margin-top: 1rem;
-    flex-basis: 18rem;
-    flex-shrink: 0;
-    overflow: hidden;
-
-    h2,
-    .grades-cont {
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-
-    h2 {
-      margin-top: 0;
-      background-color: $chicago-red;
-      color: $white;
-      padding-top: 1rem;
-      padding-bottom: 0.5rem;
-    }
-
-    .grade-letter {
-      font-size: 1.5rem;
-
-      &.-overall {
-        font-size: 3rem;
-      }
-    }
-
-    .grades-cont {
-      padding-top: 0.5rem;
-      padding-bottom: 1rem;
-    }
-
-    .grade-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      &.-overall {
-        font-size: 1.5rem;
-      }
+      margin: 0 0 0.5rem 0;
     }
   }
 

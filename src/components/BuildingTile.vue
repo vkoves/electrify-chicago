@@ -263,7 +263,7 @@ export default class BuildingTile extends Vue {
       margin-right: 1.25rem;
       text-align: center;
 
-      .grade-letter {
+      .letter-grade {
         font-size: 2.5rem;
         line-height: 1.25;
       }

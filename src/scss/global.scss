@@ -195,9 +195,13 @@ img.-shadowed {
   }
 }
 
-.grade-letter {
-  font-family: 'Caveat', sans-serif;
-  font-weight: 700;
+/**
+ * Styling for our building letter grades (A-F) with colors for each for emphasis
+ */
+.letter-grade {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900;
+  line-height: 1;
 
   &.-a {
     color: #009f49;
