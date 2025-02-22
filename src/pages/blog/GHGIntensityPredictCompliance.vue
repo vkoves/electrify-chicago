@@ -627,18 +627,16 @@ export default class MillionsInMissedFine extends Vue {
   }
 
   .graph-caption {
-    background-color: rgba(187, 212, 255, 0.485);
+    background-color: $blue-light;
     font-size: 0.7rem;
-    border-radius: 1rem;
+    border-radius: $brd-rad-small;
     padding: 0.5rem;
   }
   .regression-p {
-    margin-top: 0.2rem;
-    background-color: rgba(187, 212, 255, 0.485);
-    border-bottom-left-radius: 1rem;
-    border-bottom-right-radius: 1rem;
+    margin: 0.5rem 0 1rem 0;
+    background-color: $blue-light;
+    border-radius: $brd-rad-small;
     padding: 1rem;
-    border: $border-thin solid $black;
     font-size: 0.9rem;
   }
 
