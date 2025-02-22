@@ -395,8 +395,6 @@ export default class StatTile extends Vue {
 
   /** The stat value, as a string */
   get statValueStr(): string {
-    console.log('statValue', { stat: parseFloat(this.building[this.statKey] as string).toLocaleString() })
-
     return parseFloat(this.building[this.statKey] as string).toLocaleString();
   }
 
