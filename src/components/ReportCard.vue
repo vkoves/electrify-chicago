@@ -33,17 +33,17 @@ export default class ReportCard extends Vue {
       <hr />
 
       <div class="grade-row">
-        <div><strong>Emissions Intensity</strong> (50%)</div>
+        <div><strong>Emissions Intensity</strong> - 50%</div>
         <LetterGrade :grade="building.GHGIntensityLetterGrade" />
       </div>
 
       <div class="grade-row">
-        <div><strong>Energy Mix</strong> (40%)</div>
+        <div><strong>Energy Mix</strong> - 40%</div>
         <LetterGrade :grade="building.EnergyMixWeightedPctSumLetterGrade" />
       </div>
 
       <div class="grade-row">
-        <div><strong>Consistent Reporting</strong> (10%)</div>
+        <div><strong>Consistent Reporting</strong> - 10%</div>
         <LetterGrade :grade="building.SubmittedRecordsGrade" />
       </div>
     </div>
@@ -64,12 +64,12 @@ export default class ReportCard extends Vue {
   }
 
   h2.title {
-    margin-top: 0;
+    margin: 0;
     background-color: $chicago-red;
     color: $white;
     padding-left: 1.5rem;
     padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
   }
 
   hr {
@@ -102,6 +102,7 @@ export default class ReportCard extends Vue {
     padding: 0.5rem 0.5rem 0.5rem 0.25rem;
 
     &.-overall {
+      padding-top: 0.25rem;
       padding-bottom: 0;
       font-size: 1.5rem;
     }

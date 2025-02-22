@@ -304,7 +304,7 @@ query ($id: ID!, $ID: String) {
 
           <dl class="stat-tiles">
             <div>
-              <dt>
+              <dt class="label-and-grade">
                 Greenhouse Gas Intensity
                 <LetterGrade
                   :grade="building.GHGIntensityLetterGrade"
@@ -323,7 +323,7 @@ query ($id: ID!, $ID: String) {
             </div>
 
             <div>
-              <dt>Total Greenhouse Gas Emissions</dt>
+              <dt class="label-and-grade">Total Greenhouse Gas Emissions</dt>
               <dd>
                 <StatTile
                   :building="$page.building"
@@ -403,18 +403,19 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="chart-cont">
-          <h2>
+          <h2 class="label-and-grade -energy-mix">
             Energy Mix
             <LetterGrade
               :grade="building.EnergyMixWeightedPctSumLetterGrade"
               class="-large -spaced"
             />
           </h2>
-          <p>
-            <strong>Total Energy Use:</strong>
-            {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
-          </p>
           <div class="energy-mix-cont">
+            <p>
+              <strong>Total Energy Use:</strong>
+              {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
+            </p>
+
             <PieChart :graph-data="energyBreakdownData" />
             <img
               v-tooltip.bottom="{ content: tooltipMessage }"
@@ -427,7 +428,7 @@ query ($id: ID!, $ID: String) {
         </div>
       </div>
 
-      <details>
+      <details class="extra-info">
         <summary class="bold">View Extra Technical Info</summary>
 
         <div class="details-content">
@@ -837,8 +838,23 @@ export default class BuildingDetails extends Vue {
   }
 
   h2 {
-    margin: 2.5rem 0 0;
+    margin: 2rem 0 0.5rem 0;
     font-size: 1.25rem;
+  }
+
+  .label-and-grade {
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    margin-top: 0.5rem;
+
+    &.-energy-mix {
+      margin-top: 3.5rem;
+      font-size: 1.5rem;
+    }
+
+    .letter-grade { line-height: 0.8; }
   }
 
   .building-banner {
@@ -920,7 +936,7 @@ export default class BuildingDetails extends Vue {
       .energy-mix-cont {
         display: flex;
         flex-direction: column;
-        margin-top: 1rem;
+        padding: 1rem;
         background-color: $off-white;
         border-radius: $brd-rad-medium;
         max-width: 24rem;
@@ -978,7 +994,7 @@ export default class BuildingDetails extends Vue {
     margin-bottom: 3rem;
   }
 
-  details {
+  details.extra-info {
     margin: 2rem 0;
 
     .stat-tiles dt {
