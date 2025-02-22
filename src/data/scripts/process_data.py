@@ -10,6 +10,7 @@ import json
 import pandas
 
 from typing import List
+from src.data.scripts.grade_buildings import grade_buildings
 from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion, output_to_csv
 from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
 
@@ -52,6 +53,9 @@ building_cols_to_rank = [
     'SiteEUI',
 ]
 
+# Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
+# median values for fields
+# Returns the output file if succeeds
 def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     """
     Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
@@ -139,6 +143,9 @@ def processBuildingData() -> List[str]:
 
         # The percentile rank can be ascending, we want to say this building is worse than X% of buildings
         building_data[col + 'PercentileRank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(pct=True).round(3)
+
+    # Add building grades:
+    building_data = grade_buildings(building_data)
 
     # Export the data
     output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')

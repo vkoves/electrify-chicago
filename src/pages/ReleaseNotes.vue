@@ -18,9 +18,48 @@ export default class About extends Vue {}
 <template>
   <DefaultLayout>
     <div class="release-notes-page">
-      <section class="layout-constrained">
+      <div class="layout-constrained">
         <h1 id="main-content" tabindex="-1">Release Notes</h1>
 
+        <h2>February 14th, 2025 - Homepage Redesign</h2>
+
+        <p>
+          We redesigned the homepage to make it more visually appealing and
+          prompt people to our two most common features - our search and our map
+          page. We also added some featured buildings, like museums, to
+          encourage people to explore the site for buildings they know about!
+        </p>
+      </div>
+
+      <div class="two-cols">
+        <div>
+          <a href="/release-notes/2025/homepage-before.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/homepage-before.webp"
+              alt="Electrify Chicago Homepage showing a lot of introductory text and a table of
+                buildings"
+            />
+          </a>
+
+          <p class="bold">Before</p>
+        </div>
+        <div>
+          <a href="/release-notes/2025/homepage-after.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/homepage-after.webp"
+              alt="Electrify Chicago Homepage with a large skyline hero section at the top with a
+                prominent search bar and a blue map links, and tiles of buildings below with images
+                for each building and their overall emissions and GHG intensity"
+            />
+          </a>
+
+          <p class="bold">After</p>
+        </div>
+      </div>
+
+      <div class="layout-constrained">
         <h2>
           August 30th, 2024 - New Visualizations for Historic Changes & Energy
           Mix
@@ -33,14 +72,17 @@ export default class About extends Vue {}
           consumes, making it easy to see at a glance if a building is mostly
           using electricity, fossil gas, or something else!
         </p>
-      </section>
+      </div>
 
       <div class="two-cols">
         <div>
-          <a href="/release-notes/merch-mart-pre-graphs.webp" target="_blank">
+          <a
+            href="/release-notes/2024/merch-mart-pre-graphs.webp"
+            target="_blank"
+          >
             <img
               class="-shadowed"
-              src="/release-notes/merch-mart-pre-graphs.webp"
+              src="/release-notes/2024/merch-mart-pre-graphs.webp"
               alt="Electrify Chicago Merchandise Mart Page showing just stat tiles with no graphs."
             />
           </a>
@@ -48,10 +90,13 @@ export default class About extends Vue {}
           <p class="bold">Before</p>
         </div>
         <div>
-          <a href="/release-notes/merch-mart-post-graphs.webp" target="_blank">
+          <a
+            href="/release-notes/2024/merch-mart-post-graphs.webp"
+            target="_blank"
+          >
             <img
               class="-shadowed"
-              src="/release-notes/merch-mart-post-graphs.webp"
+              src="/release-notes/2024/merch-mart-post-graphs.webp"
               alt="Electrify Chicago Merchandise Mart Page showing just stat tiles with graphs
               showing greenhouse gas intensity and total emissions have improved over time, and
               that Merch Mart's energy use is 44% electricity, 40% fossil gas, and 16% district
@@ -63,7 +108,7 @@ export default class About extends Vue {}
         </div>
       </div>
 
-      <section class="layout-constrained">
+      <div class="layout-constrained">
         <h2>April 2nd, 2024 - Data Update to 2022</h2>
 
         <p>
@@ -102,7 +147,7 @@ export default class About extends Vue {}
             File an issue on the Electrify Chicago GitHub </a
           >!
         </p>
-      </section>
+      </div>
     </div>
   </DefaultLayout>
 </template>
