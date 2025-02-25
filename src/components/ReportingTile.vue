@@ -1,42 +1,47 @@
 <template>
   <div class="reporting-tile">
-    <p class="headline">
-      Years Reported
-      <span class="score"
-        >{{ reportedYearsCount }}/{{ reportingHistory.length }}</span
-      >
+    <h3 id="years-reported" class="headline">
+      <div>
+        Years Reported
+        <span class="score"
+          >{{ reportedYearsCount }}/{{ reportingHistory.length }}</span
+        >
+      </div>
       <LetterGrade :grade="grade" class="-large -spaced" />
-    </p>
 
-    <ul>
-      <li
-        v-for="item in reportingHistory"
-        :key="item.year"
-        class="reporting-tile-item"
-      >
-        <div class="marker" :class="{ '-reported': item.isReported }">
-          <img
-            v-if="item.isReported"
-            src="/checkmark.svg"
-            :alt="`${item.year} data reported`"
-            class="reported"
-          />
-          <img
-            v-else
-            src="/cross.svg"
-            :alt="`${item.year} data not reported`"
-          />
-        </div>
-        <p>{{ item.year }}</p>
-      </li>
-    </ul>
+      <img
+        v-tooltip.bottom="{ content: tooltipMessage }"
+        class="tooltip"
+        src="/help.svg"
+        alt="Help icon"
+        tabindex="0"
+      />
+    </h3>
 
-    <p class="footnote">
-      <strong>Note:</strong> Buildings are marked as reporting when we have
-      greenhouse gas intensity values for them, but some buildings are missing
-      GHG intensity values but have reported the underlying energy use data, but
-      we're unsure why this is the case.
-    </p>
+    <div class="tile-container">
+      <ul>
+        <li
+          v-for="item in reportingHistory"
+          :key="item.year"
+          class="reporting-tile-item"
+        >
+          <div class="marker" :class="{ '-reported': item.isReported }">
+            <img
+              v-if="item.isReported"
+              src="/checkmark.svg"
+              :alt="`${item.year} data reported`"
+              class="reported"
+            />
+            <img
+              v-else
+              src="/cross.svg"
+              :alt="`${item.year} data not reported`"
+            />
+          </div>
+          <p>{{ item.year }}</p>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -96,16 +101,38 @@ export default class ReportingTile extends Vue {
       };
     });
   }
+
+  tooltipMessage = `
+    <p>
+      <strong>Note:</strong> We mark buildings as having reported when greenhouse gas intensity
+      values were reported for them, but some buildings are missing GHG intensity values but have
+      reported the underlying energy use data, but we're unsure why this is the case.
+    </p>
+    <p>
+      This means
+      we may mark a building as not reporting when the city does, because the building didn't report
+      full data.
+    </p>`;
 }
 </script>
 
 <style lang="scss">
 .reporting-tile {
+  display: inline-block;
+
+  .tile-container {
+    background-color: $off-white;
+    padding: 1rem 2rem;
+    border-radius: $brd-rad-small;
+  }
+
   .headline {
+    display: flex;
+    align-items: center;
     font-size: 1.5rem;
     font-weight: bold;
-    margin-right: 0.5rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
 
     .score {
       font-size: 1.1rem;
@@ -113,9 +140,8 @@ export default class ReportingTile extends Vue {
       margin-left: 0.25rem;
     }
 
-    .letter-grade {
-      margin-left: 1rem;
-    }
+    .letter-grade { margin-left: 1rem; }
+    img { margin-left: 2rem; }
   }
 
   ul {
@@ -124,6 +150,7 @@ export default class ReportingTile extends Vue {
     gap: 1rem 2rem;
     list-style: none;
     padding: 0;
+    margin: 0;
 
     .reporting-tile-item {
       margin-top: 0;
@@ -148,7 +175,6 @@ export default class ReportingTile extends Vue {
       height: 85%;
       border: 0.225rem solid #767676;
       border-radius: 50%;
-      z-index: -1;
     }
 
     img {
@@ -158,6 +184,7 @@ export default class ReportingTile extends Vue {
       transform: translate(-50%, -50%);
       width: 100%;
       height: 100%;
+      z-index: 1;
     }
 
     &.-reported {

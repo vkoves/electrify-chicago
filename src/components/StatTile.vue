@@ -98,7 +98,7 @@
       <div v-if="medianMultipleMsgCityWide" class="median-comparison">
         <div>
           <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
-          <span v-if="statValue !== '0'" class="val">
+          <span v-if="statValue !== '0'" class="median-mult">
             {{ medianMultipleMsgCityWide }} median
           </span>
           <span v-else class="median-label"> Median Chicago Building </span>
@@ -111,7 +111,7 @@
 
         <div v-if="medianMultiplePropertyType">
           <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
-          <span v-if="statValue !== '0'" class="val">
+          <span v-if="statValue !== '0'" class="median-mult">
             {{ medianMultiplePropertyType }} median {{ propertyType }}
           </span>
           <span v-else class="median-label"> Median {{ propertyType }} </span>
@@ -600,7 +600,7 @@ export default class StatTile extends Vue {
 <style lang="scss">
 .stat-tile {
   padding: 1rem;
-  background-color: #f5f5f5;
+  background-color: $off-white;
   // Use a bottom border to supplementally show how good this stat is
   border-bottom: solid 0.375rem $grey-dark;
   box-sizing: border-box;
@@ -672,16 +672,18 @@ export default class StatTile extends Vue {
   .median-comparison {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.25rem;
+    gap: 0.25rem;
+    margin-top: 0.5rem;
 
-    .val {
-      font-size: large;
+    .median-mult {
       font-weight: 500;
+      font-size: 0.875rem;
     }
 
     .median-val {
-      font-size: small;
+      font-size: 0.75rem;
+      color: $text-mid-light;
+      line-height: 1.25;
     }
     .median-label {
       font-size: 0.825rem;
@@ -695,7 +697,7 @@ export default class StatTile extends Vue {
   }
 
   .percentile {
-    font-weight: normal;
+    font-weight: 500;
     margin-bottom: 0.25rem;
   }
 

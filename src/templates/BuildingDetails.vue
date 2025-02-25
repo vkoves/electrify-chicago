@@ -255,7 +255,7 @@ query ($id: ID!, $ID: String) {
 
           <dl class="stat-tiles">
             <div>
-              <dt class="label-and-grade">
+              <dt id="emissions-intensity" class="label-and-grade">
                 Greenhouse Gas Intensity
                 <LetterGrade
                   :grade="building.GHGIntensityLetterGrade"
@@ -354,13 +354,13 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="chart-cont">
-          <h2 class="label-and-grade -energy-mix">
+          <h3 id="energy-mix" class="label-and-grade -energy-mix">
             Energy Mix
             <LetterGrade
               :grade="building.EnergyMixWeightedPctSumLetterGrade"
               class="-large -spaced"
             />
-          </h2>
+          </h3>
           <div class="energy-mix-cont">
             <p>
               <strong>Total Energy Use:</strong>
@@ -801,15 +801,19 @@ export default class BuildingDetails extends Vue {
     font-size: 1.25rem;
   }
 
+  .stat-tiles dt, .label-and-grade {
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+  }
+
   .label-and-grade {
     height: 2.5rem;
     display: flex;
     align-items: center;
-    margin-bottom: 0.5rem;
     margin-top: 0.5rem;
 
     &.-energy-mix {
-      margin-top: 3.5rem;
+      margin-top: 3.8rem;
       font-size: 1.5rem;
     }
 
@@ -823,7 +827,7 @@ export default class BuildingDetails extends Vue {
     background-color: $warning-background;
     border: dashed 0.125rem $warning-border;
     border-radius: $brd-rad-small;
-    margin: 1rem 0;
+    margin-bottom: 1rem;
     justify-self: flex-start;
 
     span.emoji {
@@ -846,7 +850,7 @@ export default class BuildingDetails extends Vue {
   }
 
   .building-top-info {
-    background: #ededed;
+    background: $off-white;
     border-radius: $brd-rad-medium;
     padding: 1rem 1.5rem;
 
@@ -936,7 +940,7 @@ export default class BuildingDetails extends Vue {
 
     dt {
       font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+      flex-shrink: 0;
     }
 
     dd,
@@ -950,8 +954,8 @@ export default class BuildingDetails extends Vue {
   }
 
   .reporting-tile {
-    margin-top: 2.5rem;
-    margin-bottom: 3rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
   }
 
   details.extra-info {
@@ -983,7 +987,6 @@ export default class BuildingDetails extends Vue {
 
       .report-card {
         flex-basis: initial;
-        margin-top: 1rem;
       }
     }
   }
@@ -1004,6 +1007,8 @@ export default class BuildingDetails extends Vue {
       .building-header-text {
         position: relative;
       }
+
+      .details-cont { margin-top: 1rem; }
 
       &.-has-img {
         &:not(.-img-tall),
