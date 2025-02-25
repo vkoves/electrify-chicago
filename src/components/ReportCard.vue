@@ -23,9 +23,7 @@ export default class ReportCard extends Vue {
     if (targetElem) {
       targetElem.focus();
     } else {
-      throw new Error(
-        `No element found matching selector '#${targetId}'!`,
-      );
+      throw new Error(`No element found matching selector '#${targetId}'!`);
     }
   }
 }
@@ -45,7 +43,11 @@ export default class ReportCard extends Vue {
 
       <hr />
 
-      <a href="#emissions-intensity" class="grade-row" @click="focusElem('emissions-intensity')">
+      <a
+        href="#emissions-intensity"
+        class="grade-row"
+        @click="focusElem('emissions-intensity')"
+      >
         <div><strong>Emissions Intensity</strong> - 50%</div>
         <LetterGrade :grade="building.GHGIntensityLetterGrade" />
       </a>
@@ -55,7 +57,11 @@ export default class ReportCard extends Vue {
         <LetterGrade :grade="building.EnergyMixWeightedPctSumLetterGrade" />
       </a>
 
-      <a href="#years-reported" class="grade-row" @click="focusElem('years-reported')">
+      <a
+        href="#years-reported"
+        class="grade-row"
+        @click="focusElem('years-reported')"
+      >
         <div><strong>Consistent Reporting</strong> - 10%</div>
         <LetterGrade :grade="building.SubmittedRecordsGrade" />
       </a>
@@ -128,7 +134,9 @@ export default class ReportCard extends Vue {
     text-decoration: none;
     color: $text-main;
 
-    &:hover { background-color: $off-white; }
+    &:hover {
+      background-color: $off-white;
+    }
 
     // For a more subtle link effect, use a dotted underline
     strong {
