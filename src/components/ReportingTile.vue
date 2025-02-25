@@ -140,8 +140,12 @@ export default class ReportingTile extends Vue {
       margin-left: 0.25rem;
     }
 
-    .letter-grade { margin-left: 1rem; }
-    img { margin-left: 2rem; }
+    .letter-grade {
+      margin-left: 1rem;
+    }
+    img {
+      margin-left: 2rem;
+    }
   }
 
   ul {

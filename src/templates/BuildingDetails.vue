@@ -801,7 +801,8 @@ export default class BuildingDetails extends Vue {
     font-size: 1.25rem;
   }
 
-  .stat-tiles dt, .label-and-grade {
+  .stat-tiles dt,
+  .label-and-grade {
     margin-bottom: 0.5rem;
     padding-left: 1rem;
   }
@@ -1008,7 +1009,9 @@ export default class BuildingDetails extends Vue {
         position: relative;
       }
 
-      .details-cont { margin-top: 1rem; }
+      .details-cont {
+        margin-top: 1rem;
+      }
 
       &.-has-img {
         &:not(.-img-tall),

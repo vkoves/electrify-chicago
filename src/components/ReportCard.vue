@@ -48,9 +48,7 @@ export default class ReportCard extends Vue {
       </div>
 
       <div class="learn-more-cont">
-        <a href="/blog/how-we-grade-buildings">
-          Learn About Our Grading
-        </a>
+        <a href="/blog/how-we-grade-buildings"> Learn About Our Grading </a>
       </div>
     </div>
   </div>
