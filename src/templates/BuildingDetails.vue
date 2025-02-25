@@ -87,6 +87,7 @@ query ($id: ID!, $ID: String) {
         :class="{
           '-has-img': Boolean(buildingImg),
           // The layout is better for tall images, so keeping it there
+          // TODO: Drop -img-tall and combine with -has-img
           '-img-tall': Boolean(buildingImg?.isTall || true),
         }"
       >
@@ -794,6 +795,7 @@ export default class BuildingDetails extends Vue {
 
   h1 {
     margin: 0;
+    line-height: 1.25;
   }
 
   h2 {
@@ -1003,10 +1005,18 @@ export default class BuildingDetails extends Vue {
       }
       .email-btn {
         align-self: flex-start;
+        margin-bottom: 0rem;
+        gap: 1rem;
+        font-size: 1rem;
+        min-width: initial;
+
+        img { height: 1.25rem; }
       }
 
       .building-header-text {
         position: relative;
+
+        .address { font-size: 1rem; }
       }
 
       .details-cont {
@@ -1038,11 +1048,9 @@ export default class BuildingDetails extends Vue {
           }
         }
 
-        &.-img-tall {
-          // Constrain tall images on mobile so they don't take up the whole view height
-          .building-img-cont {
-            width: 75%;
-          }
+        // Constrain tall images on mobile so they don't take up the whole view height
+        .building-img-cont.-tall {
+          width: 75%;
         }
       }
 

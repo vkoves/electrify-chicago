@@ -108,7 +108,6 @@ export const BuildingImages: IBuildingImages = {
     attributionUrl:
       'https://commons.wikimedia.org/wiki/File:Merchandise_Mart_080405.jpg',
     imgUrl: BuildingImagesBase + 'merchandise-mart.jpg',
-    isTall: true,
   },
   // the-monadnock-building
   '101567': {

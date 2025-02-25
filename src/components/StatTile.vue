@@ -725,6 +725,14 @@ export default class StatTile extends Vue {
       float: none;
       margin: 0;
     }
+
+    // Flip median comparison to row, with wrapping so very long property types (like
+    // "Multifamily Housing") can stay in columns
+    .median-comparison {
+      flex-direction: row;
+      gap: 0.25rem 1rem;
+      flex-wrap: wrap;
+    }
   }
 }
 </style>
