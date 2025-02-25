@@ -247,55 +247,6 @@ query ($id: ID!, $ID: String) {
             <ReportCard :building="building" :data-year="dataYear" />
           </div>
         </div>
-
-        <details>
-          <summary>Debug Full Grade Data</summary>
-
-          <ul>
-            <li>
-              <strong>AvgPercentileLetterGrade:</strong>
-              <LetterGrade :grade="building.AvgPercentileLetterGrade" />
-            </li>
-            <li>
-              <strong>AvgPercentileGrade:</strong>
-              {{ building.AvgPercentileGrade }}
-            </li>
-            <li>
-              <strong>GHGIntensityLetterGrade:</strong>
-              <LetterGrade :grade="building.GHGIntensityLetterGrade" />
-            </li>
-            <li>
-              <strong>GHGIntensityPercentileGrade:</strong>
-              {{ building.GHGIntensityPercentileGrade }}
-            </li>
-            <li>
-              <strong>EnergyMixWeightedPctSumLetterGrade:</strong>
-              <LetterGrade
-                :grade="building.EnergyMixWeightedPctSumLetterGrade"
-              />
-            </li>
-            <li>
-              <strong>EnergyMixWeightedPctSum:</strong>
-              {{ building.EnergyMixWeightedPctSum }}
-            </li>
-            <li>
-              <strong>EnergyMixWeightedPctSumPercentileGrade:</strong>
-              {{ building.EnergyMixWeightedPctSumPercentileGrade }}
-            </li>
-            <li>
-              <strong>SubmittedRecordsGrade:</strong>
-              <LetterGrade :grade="building.SubmittedRecordsGrade" />
-            </li>
-            <li>
-              <strong>MissingRecordsCount:</strong>
-              {{ building.MissingRecordsCount }}
-            </li>
-            <li>
-              <strong>MissingRecordsCountPercentileGrade:</strong>
-              {{ building.MissingRecordsCountPercentileGrade }}
-            </li>
-          </ul>
-        </details>
       </div>
 
       <div class="main-cols">
@@ -836,7 +787,9 @@ export default class BuildingDetails extends Vue {
     gap: 1rem;
     align-items: flex-start;
 
-    .report-card { flex-basis: 18rem; }
+    .report-card {
+      flex-basis: 18rem;
+    }
   }
 
   h1 {
@@ -860,7 +813,9 @@ export default class BuildingDetails extends Vue {
       font-size: 1.5rem;
     }
 
-    .letter-grade { line-height: 0.8; }
+    .letter-grade {
+      line-height: 0.8;
+    }
   }
 
   .building-banner {
