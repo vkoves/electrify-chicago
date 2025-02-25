@@ -46,6 +46,12 @@ export default class ReportCard extends Vue {
         <div><strong>Consistent Reporting</strong> - 10%</div>
         <LetterGrade :grade="building.SubmittedRecordsGrade" />
       </div>
+
+      <div class="learn-more-cont">
+        <a href="/blog/how-we-grade-buildings">
+          Learn About Our Grading
+        </a>
+      </div>
     </div>
   </div>
 </template>
@@ -103,6 +109,15 @@ export default class ReportCard extends Vue {
       padding-top: 0.25rem;
       padding-bottom: 0;
       font-size: 1.5rem;
+    }
+  }
+
+  .learn-more-cont {
+    margin-top: 1rem;
+
+    a {
+      font-weight: 500;
+      font-size: 0.8125rem;
     }
   }
 }

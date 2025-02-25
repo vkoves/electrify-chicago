@@ -30,7 +30,10 @@ export default class CleanestBuildings extends Vue {
 <static-query>
   query {
     allBuilding(
-      filter: { DataYear: { eq: "2022" } }, sortBy: "GHGIntensity", order: ASC, limit: 50
+      filter: {
+        DataYear: { eq: "2022" }
+      },
+      sortBy: "GHGIntensity", order: ASC, limit: 50
     ) {
       edges {
         node {

@@ -865,7 +865,7 @@ export default class BuildingDetails extends Vue {
     justify-content: space-around;
     padding: 0.8rem 1.5rem;
     min-width: 18.75rem;
-    margin-top: 1rem;
+    margin: 1rem 0;
     background-color: $blue-dark;
     border: none;
     color: $white;
