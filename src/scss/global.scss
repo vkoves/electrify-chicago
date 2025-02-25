@@ -20,6 +20,10 @@ body {
   &:has(dialog[open]) {
     overflow: hidden;
   }
+
+  *:target {
+    border-bottom: solid $border-thick $blue-very-dark !important;
+  }
 }
 
 // Default focus styles
@@ -45,12 +49,15 @@ a.grey-link {
   }
 }
 
+// Make sure headings handle focus, as well as elements marked "targetable", which have IDs for
+// anchor links (e.g. `<a href="#energy-mix">`)
 h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.targetable {
   &:focus {
     border-bottom: solid 0.5rem $chicago-blue;
     outline: none;
@@ -61,6 +68,7 @@ h6 {
     margin-top: 0;
   }
 }
+
 
 /**
  * Mobile Font Size Overrides

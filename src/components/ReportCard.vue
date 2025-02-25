@@ -15,6 +15,19 @@ export default class ReportCard extends Vue {
   @Prop({ required: true }) building!: IBuilding;
 
   @Prop({ required: true }) dataYear!: number;
+
+  /** Focus a given element, which allows us to apply CSS when it's focused */
+  focusElem(targetId: string): void {
+    const targetElem = document.getElementById(targetId);
+
+    if (targetElem) {
+      targetElem.focus();
+    } else {
+      throw new Error(
+        `No element found matching selector '#${targetId}'!`,
+      );
+    }
+  }
 }
 </script>
 <template>
@@ -32,20 +45,20 @@ export default class ReportCard extends Vue {
 
       <hr />
 
-      <div class="grade-row">
+      <a href="#emissions-intensity" class="grade-row" @click="focusElem('emissions-intensity')">
         <div><strong>Emissions Intensity</strong> - 50%</div>
         <LetterGrade :grade="building.GHGIntensityLetterGrade" />
-      </div>
+      </a>
 
-      <div class="grade-row">
+      <a href="#energy-mix" class="grade-row" @click="focusElem('energy-mix')">
         <div><strong>Energy Mix</strong> - 40%</div>
         <LetterGrade :grade="building.EnergyMixWeightedPctSumLetterGrade" />
-      </div>
+      </a>
 
-      <div class="grade-row">
+      <a href="#years-reported" class="grade-row" @click="focusElem('years-reported')">
         <div><strong>Consistent Reporting</strong> - 10%</div>
         <LetterGrade :grade="building.SubmittedRecordsGrade" />
-      </div>
+      </a>
 
       <div class="learn-more-cont">
         <a href="/blog/how-we-grade-buildings"> Learn About Our Grading </a>
@@ -107,6 +120,20 @@ export default class ReportCard extends Vue {
       padding-top: 0.25rem;
       padding-bottom: 0;
       font-size: 1.5rem;
+    }
+  }
+
+  // Style linked grade rows
+  a.grade-row {
+    text-decoration: none;
+    color: $text-main;
+
+    &:hover { background-color: $off-white; }
+
+    // For a more subtle link effect, use a dotted underline
+    strong {
+      text-decoration: underline;
+      text-decoration-style: dotted;
     }
   }
 

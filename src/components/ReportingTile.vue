@@ -1,6 +1,6 @@
 <template>
   <div class="reporting-tile">
-    <h3 id="years-reported" class="headline">
+    <h3 id="years-reported" class="headline targetable" tabindex="-1">
       <div>
         Years Reported
         <span class="score"
@@ -127,12 +127,12 @@ export default class ReportingTile extends Vue {
   }
 
   .headline {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
-    padding-left: 1rem;
+    margin-left: 1rem;
 
     .score {
       font-size: 1.1rem;

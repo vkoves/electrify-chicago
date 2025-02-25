@@ -256,7 +256,7 @@ query ($id: ID!, $ID: String) {
 
           <dl class="stat-tiles">
             <div>
-              <dt id="emissions-intensity" class="label-and-grade">
+              <dt id="emissions-intensity" class="label-and-grade targetable" tabindex="-1">
                 Greenhouse Gas Intensity
                 <LetterGrade
                   :grade="building.GHGIntensityLetterGrade"
@@ -355,7 +355,7 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="chart-cont">
-          <h3 id="energy-mix" class="label-and-grade -energy-mix">
+          <h3 id="energy-mix" class="label-and-grade -energy-mix targetable" tabindex="-1">
             Energy Mix
             <LetterGrade
               :grade="building.EnergyMixWeightedPctSumLetterGrade"
@@ -806,7 +806,7 @@ export default class BuildingDetails extends Vue {
   .stat-tiles dt,
   .label-and-grade {
     margin-bottom: 0.5rem;
-    padding-left: 1rem;
+    margin-left: 1rem;
   }
 
   .label-and-grade {
@@ -899,6 +899,7 @@ export default class BuildingDetails extends Vue {
       flex-basis: 30%;
       flex-shrink: 0;
       margin-top: 1rem;
+      max-width: 24rem;
 
       .energy-mix-cont {
         display: flex;
@@ -906,7 +907,6 @@ export default class BuildingDetails extends Vue {
         padding: 1rem;
         background-color: $off-white;
         border-radius: $brd-rad-medium;
-        max-width: 24rem;
 
         .tooltip {
           align-self: flex-end;
