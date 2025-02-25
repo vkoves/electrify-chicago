@@ -601,7 +601,8 @@ export default class StatTile extends Vue {
 .stat-tile {
   padding: 1rem;
   background-color: #f5f5f5;
-  border: solid 0.01625rem $grey-dark;
+  // Use a bottom border to supplementally show how good this stat is
+  border-bottom: solid 0.375rem $grey-dark;
   box-sizing: border-box;
   border-radius: $brd-rad-small;
 

@@ -52,8 +52,6 @@ export default class ReportCard extends Vue {
 <style lang="scss">
 .report-card {
   border-radius: $brd-rad-medium;
-  margin-top: 1rem;
-  flex-basis: 18rem;
   flex-shrink: 0;
   overflow: hidden;
 

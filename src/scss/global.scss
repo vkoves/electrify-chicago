@@ -223,17 +223,21 @@ img.-shadowed {
     color: #d60101;
   }
 
+  // Create a -circled style for the tables
   &.-circled {
     display: inline-block;
-    border: solid 1px;
-    padding: 0 0.25rem;
+    border: solid $border-thin;
+    width: 1.375rem;
+    height: 1.375rem;
+    padding: 1.5px;
     text-align: center;
-    letter-spacing: 3px;
     border-radius: 1rem;
     background: white;
-    border-width: 2px;
+    border-width: 0.125rem;
     margin-left: 0.5rem;
     vertical-align: 1px;
+
+    &.-d, &.-b { padding-right: 0; }
   }
 
   &.-large {

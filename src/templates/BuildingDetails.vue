@@ -827,10 +827,16 @@ export default class BuildingDetails extends Vue {
     }
   }
 
+  .building-header-text {
+    margin-bottom: 1rem;
+  }
+
   .info-and-report-card {
     display: flex;
     gap: 1rem;
     align-items: flex-start;
+
+    .report-card { flex-basis: 18rem; }
   }
 
   h1 {
@@ -888,7 +894,6 @@ export default class BuildingDetails extends Vue {
     background: #ededed;
     border-radius: $brd-rad-medium;
     padding: 1rem 1.5rem;
-    margin-top: 1rem;
 
     h2 {
       margin: 0 0 0.5rem 0;
@@ -1018,7 +1023,13 @@ export default class BuildingDetails extends Vue {
 
     // Move report card to its own column
     .info-and-report-card {
-      flex-direction: column;
+      flex-direction: column-reverse;
+      align-items: stretch;
+
+      .report-card {
+        flex-basis: initial;
+        margin-top: 1rem;
+      }
     }
   }
 
