@@ -97,7 +97,7 @@ export default class ReportingTile extends Vue {
     return this.historicData.map((datum: IHistoricData) => {
       return {
         year: parseInt(datum.DataYear),
-        isReported: !isNaN(parseInt(datum.GHGIntensity)),
+        isReported: typeof datum.GHGIntensity === 'number',
       };
     });
   }

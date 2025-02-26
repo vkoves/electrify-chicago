@@ -48,6 +48,7 @@ export default class Index extends Vue {
           NaturalGasUse
           DistrictSteamUse
           AvgPercentileLetterGrade
+          DataAnomalies
         }
       }
     }

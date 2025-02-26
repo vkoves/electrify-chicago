@@ -10,17 +10,17 @@
       '-sq-footage': isSquareFootage,
     }"
   >
-    <template v-if="building[statKey]">
-      <SparkLine
-        v-if="historicStatData.length > 0"
-        :graph-data="historicStatData"
-        :graph-title="statKey"
-        :unit="unit"
-      />
+    <SparkLine
+      v-if="historicStatData.length > 0"
+      :graph-data="historicStatData"
+      :graph-title="statKey"
+      :unit="unit"
+    />
 
+    <template v-if="typeof building[statKey] === 'number'">
       <!-- The actual stat value-->
       <div class="stat-value">
-        {{ statValue }} <span class="unit" v-html="unit" />
+        {{ statValueStr }} <span class="unit" v-html="unit" />
       </div>
 
       <div v-if="costEstimate" class="bill-estimate">
@@ -98,7 +98,7 @@
       <div v-if="medianMultipleMsgCityWide" class="median-comparison">
         <div>
           <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
-          <span v-if="statValue !== '0'" class="median-mult">
+          <span v-if="statValueStr !== '0'" class="median-mult">
             {{ medianMultipleMsgCityWide }} median
           </span>
           <span v-else class="median-label"> Median Chicago Building </span>
@@ -111,7 +111,7 @@
 
         <div v-if="medianMultiplePropertyType">
           <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
-          <span v-if="statValue !== '0'" class="median-mult">
+          <span v-if="statValueStr !== '0'" class="median-mult">
             {{ medianMultiplePropertyType }} median {{ propertyType }}
           </span>
           <span v-else class="median-label"> Median {{ propertyType }} </span>
@@ -137,7 +137,7 @@
 
       <!-- Fossil Gas specific message -->
       <div
-        v-if="statValue === '0' && statKey === 'NaturalGasUse'"
+        v-if="statValueStr === '0' && statKey === 'NaturalGasUse'"
         class="no-gas-msg"
       >
         <div v-if="fullyGasFree">
@@ -149,6 +149,16 @@
             <g-link to="/biggest-gas-free-buildings">
               Chicago's Biggest Gas Free Buildings </g-link
             >.
+          </p>
+        </div>
+        <div v-else-if="building.DataAnomalies" class="panel -warning">
+          <div class="bold">
+            <span class="emoji">⚠️</span> Likely Reporting Error
+          </div>
+
+          <p class="smaller">
+            This building has burned gas in the past, so this latest year having
+            0 gas use is likely a reporting error.
           </p>
         </div>
         <div v-else>
@@ -169,7 +179,7 @@
       Not Reported
 
       <p class="empty-notice">
-        This data was not reported for this building, which
+        This data was not reported for this building this year, which
         <em>likely</em> means a value of zero for this field.
       </p>
     </template>
@@ -181,6 +191,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import buildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
 
 import {
+  DataAnomalies,
   estimateUtilitySpend,
   getRankLabel,
   getRankLabelByProperty,
@@ -235,26 +246,25 @@ export default class StatTile extends Vue {
   /**
    * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
    * through a district heating system.
+   *
+   * We do not mark this as true if we have detected gas use in the past
    */
   get fullyGasFree(): boolean {
     return (
-      parseFloat(this.building.NaturalGasUse) === 0 &&
-      parseFloat(this.building.DistrictSteamUse) === 0
+      !this.building.DataAnomalies.includes(
+        DataAnomalies.gasZeroWithPreviousUse,
+      ) &&
+      this.building.NaturalGasUse === 0 &&
+      this.building.DistrictSteamUse === 0
     );
   }
 
   /** The estimated cost for the given utility */
   get costEstimate(): number | null {
     if (this.statKey === 'ElectricityUse') {
-      return estimateUtilitySpend(
-        parseFloat(this.building[this.statKey] as string),
-        true,
-      );
+      return estimateUtilitySpend(this.building[this.statKey], true);
     } else if (this.statKey === 'NaturalGasUse') {
-      return estimateUtilitySpend(
-        parseFloat(this.building[this.statKey] as string),
-        false,
-      );
+      return estimateUtilitySpend(this.building[this.statKey], false);
     }
 
     return null;
@@ -383,7 +393,8 @@ export default class StatTile extends Vue {
     return this.medianMultipleMsg(median, statValueNum);
   }
 
-  get statValue(): string {
+  /** The stat value, as a string */
+  get statValueStr(): string {
     return parseFloat(this.building[this.statKey] as string).toLocaleString();
   }
 

@@ -90,6 +90,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
           NaturalGasUseRank
           NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
+          DataAnomalies
         }
       }
     }

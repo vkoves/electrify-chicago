@@ -31,7 +31,12 @@ export default class CleanestBuildings extends Vue {
   query {
     allBuilding(
       filter: {
-        DataYear: { eq: "2022" }
+        DataYear: { eq: "2022" },
+        # Later on, we could filter to just larger buildings or ignore buildings flagged as
+        # anomalous
+        # DataAnomalies: { eq: "" },
+        # TotalGHGEmissions: { gt: 1000.0 }
+        # GrossFloorArea: { gt: 1000.0 }
       },
       sortBy: "GHGIntensity", order: ASC, limit: 50
     ) {
@@ -44,6 +49,7 @@ export default class CleanestBuildings extends Vue {
           Address
           path
           PrimaryPropertyType
+          GrossFloorArea
           GHGIntensity
           GHGIntensityRank
           GHGIntensityPercentileRank
@@ -57,6 +63,7 @@ export default class CleanestBuildings extends Vue {
           NaturalGasUseRank
           NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
+          DataAnomalies
         }
       }
     }

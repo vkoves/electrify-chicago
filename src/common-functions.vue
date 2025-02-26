@@ -1,5 +1,15 @@
 <script lang="ts">
+import { IPieSlice } from './components/graphs/PieChart.vue';
+
 export default {};
+
+/** Colors for our energy mix pie chart for each type of energy use */
+export const EnergyBreakdownColors = {
+  DistrictChilling: '#01295F',
+  DistrictSteam: '#ABABAB',
+  Electricity: '#F0E100',
+  NaturalGas: '#993300',
+};
 
 export interface IBuildingBenchmarkStat {
   count: number;
@@ -32,8 +42,14 @@ export interface IPropertyStats {
   [statKey: string]: IPropertyStat;
 }
 
+/** All the available data anomaly codes from detect_anomalous_buildings.py:anomaly_values */
+export enum DataAnomalies {
+  gasZeroWithPreviousUse = 'gas:zero-with-prev-use',
+  largeGasSwing = 'gas:large-swings',
+}
+
 /**
- * An individual building object
+ * An individual building object, with full details
  *
  * TODO: Type this more strictly, maybe with Python generating a types file with
  * all of the parameter types
@@ -44,9 +60,16 @@ export interface IBuilding {
   PrimaryPropertyType: string;
   Latitude: string;
   Longitude: string;
+  DataAnomalies: string;
 
-  NaturalGasUse: string;
-  DistrictSteamUse: string;
+  // Parsed as float in gridsome.server.js
+  DistrictChilledWaterUse: number;
+  DistrictSteamUse: number;
+  ElectricityUse: number;
+  GHGIntensity: number;
+  GrossFloorArea: number;
+  NaturalGasUse: number;
+  TotalGHGEmissions: number;
 
   [buildingKey: string]: string | number | boolean;
 }
@@ -56,19 +79,25 @@ export interface IBuildingNode {
   node: IBuilding;
 }
 
+/**
+ * A year of benchmark data, with columns we parse by
+ */
 export interface IHistoricData {
   ID: string;
   DataYear: string;
   // The actual data
   ChicagoEnergyRating: string;
-  DistrictSteamUse: string;
-  ElectricityUse: string;
   ENERGYSTARScore: string;
-  GHGIntensity: string;
-  GrossFloorArea: string;
-  NaturalGasUse: string;
-  SourceEUI: string;
-  TotalGHGEmissions: string;
+
+  // Parsed as float by gridsome.server.js (could also be null)
+  DistrictChilledWaterUse: number;
+  DistrictSteamUse: number;
+  ElectricityUse: number;
+  GHGIntensity: number;
+  GrossFloorArea: number;
+  NaturalGasUse: number;
+  SourceEUI: number;
+  TotalGHGEmissions: number;
 }
 
 /**
@@ -287,5 +316,66 @@ export function estimateUtilitySpend(
   else {
     return Math.round(estimateRaw / 10) * 10;
   }
+}
+
+/**
+ * Converts a building or benchmark record into pie chart slices and a total energy use
+ */
+export function calculateEnergyBreakdown(record: IBuilding | IHistoricData): {
+  energyBreakdown: Array<IPieSlice>;
+  totalEnergyUse: number;
+} {
+  const energyBreakdown: Array<IPieSlice> = [];
+
+  if (record.ElectricityUse > 0) {
+    energyBreakdown.push({
+      label: 'Electricity',
+      value: parseFloat(record.ElectricityUse.toString()),
+      color: EnergyBreakdownColors.Electricity,
+    });
+  }
+
+  if (record.NaturalGasUse > 0) {
+    energyBreakdown.push({
+      label: 'Fossil Gas',
+      value: parseFloat(record.NaturalGasUse.toString()),
+      color: EnergyBreakdownColors.NaturalGas,
+    });
+  }
+
+  if (record.DistrictSteamUse > 0) {
+    energyBreakdown.push({
+      label: 'District Steam',
+      value: parseFloat(record.DistrictSteamUse.toString()),
+      color: EnergyBreakdownColors.DistrictSteam,
+    });
+  }
+
+  if (record.DistrictChilledWaterUse > 0) {
+    energyBreakdown.push({
+      label: 'District Chilling',
+      value: parseFloat(record.DistrictChilledWaterUse.toString()),
+      color: EnergyBreakdownColors.DistrictChilling,
+    });
+  }
+
+  let totalEnergyUse = 0;
+  energyBreakdown.forEach((datum) => (totalEnergyUse += datum.value));
+
+  return {
+    energyBreakdown,
+    totalEnergyUse,
+  };
+}
+
+/**
+ * Split data anomaly tokens into an array
+ */
+export function parseAnomalies(dataAnomalies: string): Array<DataAnomalies> {
+  if (dataAnomalies.length === 0) {
+    return [];
+  }
+
+  return dataAnomalies.split(',') as Array<DataAnomalies>;
 }
 </script>

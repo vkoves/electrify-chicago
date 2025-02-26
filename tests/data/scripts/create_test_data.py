@@ -21,7 +21,7 @@ property_ids_to_include = [
 def write_test_sample(reader: csv.reader, writer: csv.writer, property_ids_to_include: List[str]) -> csv.writer:
     header_row = next(reader)
     if len(header_row) <= 0:
-        raise EOFError('ChicagoEnergyBenchmarking CSV file is empty!') 
+        raise EOFError('ChicagoEnergyBenchmarking CSV file is empty!')
     else:
         writer.writerow(header_row)
     for row in reader:
@@ -29,7 +29,7 @@ def write_test_sample(reader: csv.reader, writer: csv.writer, property_ids_to_in
         if property_id in property_ids_to_include:
             writer.writerow(row)
 
-def main():
+def main() -> None:
     # the first console argument is technically the python script so we skip that
     src_arg = sys.argv[1]
     target_arg = sys.argv[2]
@@ -38,7 +38,7 @@ def main():
     target_path = curr_path / target_arg
 
     csvfile = open(get_src_file_path(src_path), 'r')
-    src_csv = csv.reader(csvfile) 
+    src_csv = csv.reader(csvfile)
 
     csvfile = open(get_test_file_path(target_path), 'w')
     test_file = csv.writer(csvfile)
