@@ -413,7 +413,10 @@ query ($id: ID!, $ID: String) {
               {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
             </p>
 
-            <PieChart :id-prefix="'energy-mix'" :graph-data="energyBreakdownData" />
+            <PieChart
+              :id-prefix="'energy-mix'"
+              :graph-data="energyBreakdownData"
+            />
 
             <img
               v-tooltip.bottom="{ content: tooltipMessage }"

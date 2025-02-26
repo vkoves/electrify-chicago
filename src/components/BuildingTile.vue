@@ -100,7 +100,10 @@ export default class BuildingTile extends Vue {
 
             <div class="grade-cont">
               <LetterGrade :grade="building.AvgPercentileLetterGrade" />
-              / <LetterGrade :grade="building.AvgPercentileLetterGradeQuintiles" />
+              /
+              <LetterGrade
+                :grade="building.AvgPercentileLetterGradeQuintiles"
+              />
 
               <div>Overall Grade</div>
             </div>

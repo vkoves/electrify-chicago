@@ -52,11 +52,16 @@ export default class Search extends Vue {
   propertyTypeFilter = '';
 
   gradeFilter = '';
-  gradeQuintileFilter = ''
+  gradeQuintileFilter = '';
 
   propertyTypeOptions: Array<ISelectOption> = [
     { label: 'Select Property Type', value: '' },
-  ].concat(PropertyTypesConstant.propertyTypes.map(type => ({ label: type, value: type })));
+  ].concat(
+    PropertyTypesConstant.propertyTypes.map((type) => ({
+      label: type,
+      value: type,
+    })),
+  );
 
   letterGradeOptions: Array<ISelectOption> = [
     { label: 'Select Grade', value: '' },
@@ -133,7 +138,12 @@ export default class Search extends Vue {
     let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
 
     // If no filters are provided, return our max number
-    if (!query && !this.propertyTypeFilter && !this.gradeFilter && !this.gradeQuintileFilter) {
+    if (
+      !query &&
+      !this.propertyTypeFilter &&
+      !this.gradeFilter &&
+      !this.gradeQuintileFilter
+    ) {
       this.setSearchResults(buildingsResults);
       return;
     }
@@ -158,17 +168,26 @@ export default class Search extends Vue {
     // If property type filter is specified, filter down by that
     if (this.propertyTypeFilter) {
       buildingsResults = this.filterResults(
-        buildingsResults, 'PrimaryPropertyType', this.propertyTypeFilter);
+        buildingsResults,
+        'PrimaryPropertyType',
+        this.propertyTypeFilter,
+      );
     }
 
     if (this.gradeFilter) {
       buildingsResults = this.filterResults(
-        buildingsResults, 'AvgPercentileLetterGrade', this.gradeFilter);
+        buildingsResults,
+        'AvgPercentileLetterGrade',
+        this.gradeFilter,
+      );
     }
 
     if (this.gradeQuintileFilter) {
       buildingsResults = this.filterResults(
-        buildingsResults, 'AvgPercentileLetterGradeQuintiles', this.gradeQuintileFilter);
+        buildingsResults,
+        'AvgPercentileLetterGradeQuintiles',
+        this.gradeQuintileFilter,
+      );
     }
 
     this.setSearchResults(buildingsResults);
@@ -178,9 +197,13 @@ export default class Search extends Vue {
    * Filter building results by a column and a value
    */
   filterResults(
-    results: Array<IBuildingEdge>, column: string, value: string,
+    results: Array<IBuildingEdge>,
+    column: string,
+    value: string,
   ): Array<IBuildingEdge> {
-    return results.filter((buildingEdge: IBuildingEdge) => buildingEdge.node[column] === value);
+    return results.filter(
+      (buildingEdge: IBuildingEdge) => buildingEdge.node[column] === value,
+    );
   }
 
   /**
@@ -278,7 +301,8 @@ export default class Search extends Vue {
           <select id="property-type" v-model="gradeFilter">
             <option
               v-for="gradeOpt in letterGradeOptions"
-              :key="gradeOpt.value" :value="gradeOpt.value"
+              :key="gradeOpt.value"
+              :value="gradeOpt.value"
             >
               {{ gradeOpt.label }}
             </option>
@@ -291,7 +315,8 @@ export default class Search extends Vue {
           <select id="property-type" v-model="gradeQuintileFilter">
             <option
               v-for="gradeOpt in letterGradeOptions"
-              :key="gradeOpt.value" :value="gradeOpt.value"
+              :key="gradeOpt.value"
+              :value="gradeOpt.value"
             >
               {{ gradeOpt.label }}
             </option>
