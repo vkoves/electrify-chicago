@@ -111,7 +111,7 @@ def generate_energy_int_grade(
     Returns
     -------
     ghg_intensity_res : pd.DataFrame
-        Percentile and letter grades for `GHGIntensity` field. Uses `df`'s 
+        Percentile and letter grades for `GHGIntensity` field. Uses `df`'s
         index. `cols_to_keep` are also included.
 
     """
@@ -406,6 +406,13 @@ def grade_buildings(building_data):
     graded_df["AvgPercentileLetterGrade"] = pd.cut(
         graded_df["AvgPercentileGrade"],
         bins=bins,
+        labels=letter_grades,
+        right=True
+    )
+
+    graded_df["AvgPercentileLetterGradeQuintiles"] = pd.cut(
+        graded_df["AvgPercentileGrade"],
+        bins=5,
         labels=letter_grades,
         right=True
     )

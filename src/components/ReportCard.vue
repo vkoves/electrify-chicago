@@ -34,9 +34,19 @@ export default class ReportCard extends Vue {
 
     <div class="grades-cont">
       <div class="grade-row -overall">
-        <div><strong>Overall Grade</strong></div>
+        <div>
+          <strong>Overall Grade</strong>
+        </div>
         <LetterGrade
           :grade="building.AvgPercentileLetterGrade"
+          class="-overall"
+        />
+      </div>
+
+      <div class="grade-row -overall">
+        <div><strong>Overall Curved</strong></div>
+        <LetterGrade
+          :grade="building.AvgPercentileLetterGradeQuintiles"
           class="-overall"
         />
       </div>

@@ -116,6 +116,10 @@ export default class HowWeGradeBuildings extends Vue {}
 
         <li>Art Institute of Chicago - D</li>
       </ul>
+
+      <h2>Better Alternatives</h2>
+
+      <p>Energy Star! We can't do that because of data</p>
     </div>
   </DefaultLayout>
 </template>

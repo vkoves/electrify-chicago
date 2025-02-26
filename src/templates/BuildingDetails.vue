@@ -58,6 +58,7 @@ query ($id: ID!, $ID: String) {
     SubmittedRecordsGrade,
     AvgPercentileGrade,
     AvgPercentileLetterGrade,
+    AvgPercentileLetterGradeQuintiles,
   }
   allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
     edges {
