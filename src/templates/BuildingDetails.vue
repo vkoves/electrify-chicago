@@ -46,6 +46,7 @@ query ($id: ID!, $ID: String) {
     GrossFloorAreaRankByPropertyType
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
+    DataAnomalies
   }
   allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
     edges {
@@ -62,6 +63,7 @@ query ($id: ID!, $ID: String) {
           ElectricityUse
           NaturalGasUse
           DistrictSteamUse
+          DistrictChilledWaterUse
         }
     }
   }
@@ -121,11 +123,45 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="details-cont">
+          <div
+            v-for="anomaly in buildingAnomalies"
+            :key="anomaly"
+            class="building-banner"
+          >
+            <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
+              <h2>
+                <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas
+                Free
+              </h2>
+
+              <p>
+                This building reported zero fossil gas use in the most recent
+                year, but has used gas in the past, which may be a reporting
+                error. Take a look at how this building has used energy over
+                time under "Extra Technical Info".
+              </p>
+            </div>
+            <div v-if="anomaly === DataAnomalies.largeGasSwing">
+              <h2>
+                <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent
+                Gas Use
+              </h2>
+
+              <p>
+                This building has had extremely large changes in gas use, which
+                is likely to indicate errors in reporting.
+              </p>
+            </div>
+          </div>
+
           <div v-if="dataYear < LatestDataYear" class="building-banner">
-            <span class="emoji">⚠️</span> This building did not report data in
-            {{ LatestDataYear }},
-            <span class="bold">this data is from {{ dataYear }}</span
-            >, the latest year reported
+            <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
+
+            <p>
+              This building did not report full data in {{ LatestDataYear }}, so
+              <span class="bold">top-level stats are from {{ dataYear }}</span
+              >, the latest full year reported.
+            </p>
           </div>
 
           <div class="building-top-info">
@@ -336,7 +372,10 @@ query ($id: ID!, $ID: String) {
             {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
           </p>
           <div class="energy-mix-cont">
-            <PieChart :graph-data="energyBreakdownData" />
+            <PieChart
+              :id-prefix="'energy-mix'"
+              :graph-data="energyBreakdownData"
+            />
             <img
               v-tooltip.bottom="{ content: tooltipMessage }"
               class="tooltip"
@@ -445,10 +484,13 @@ import {
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
 import {
+  calculateEnergyBreakdown,
+  DataAnomalies,
   IBuilding,
-  IHistoricData,
-  UtilityCosts,
   IBuildingBenchmarkStats,
+  IHistoricData,
+  parseAnomalies,
+  UtilityCosts,
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
@@ -461,13 +503,6 @@ import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 import vToolTip from 'v-tooltip';
 
 Vue.use(vToolTip);
-
-const EnergyBreakdownColors = {
-  DistrictChilling: '#01295F',
-  DistrictSteam: '#ABABAB',
-  Electricity: '#F0E100',
-  NaturalGas: '#993300',
-};
 
 @Component<any>({
   metaInfo() {
@@ -517,6 +552,8 @@ export default class BuildingDetails extends Vue {
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
     BuildingBenchmarkStats;
+
+  readonly DataAnomalies = DataAnomalies;
 
   /** Expose UtilityCosts to template */
   readonly UtilityCosts: typeof UtilityCosts = UtilityCosts;
@@ -599,57 +636,23 @@ export default class BuildingDetails extends Vue {
     return null;
   }
 
+  get buildingAnomalies(): Array<DataAnomalies> {
+    return parseAnomalies(this.building.DataAnomalies);
+  }
+
   created(): void {
     this.historicData =
       this.$page.allBenchmark.edges.map(
         (nodeObj: { node: IHistoricData }) => nodeObj.node,
       ) || [];
 
-    this.calculateEnergyBreakdown();
+    const breakdownWithTotal = calculateEnergyBreakdown(this.building);
+    this.energyBreakdownData = breakdownWithTotal.energyBreakdown;
+    this.totalEnergyUsekBTU = breakdownWithTotal.totalEnergyUse;
     this.updateGraph();
   }
 
-  calculateEnergyBreakdown(): void {
-    const energyBreakdown = [];
-
-    if ((this.building.ElectricityUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'Electricity',
-        value: parseFloat(this.building.ElectricityUse.toString()),
-        color: EnergyBreakdownColors.Electricity,
-      });
-    }
-
-    if ((this.building.NaturalGasUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'Fossil Gas',
-        value: parseFloat(this.building.NaturalGasUse.toString()),
-        color: EnergyBreakdownColors.NaturalGas,
-      });
-    }
-
-    if ((this.building.DistrictSteamUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'District Steam',
-        value: parseFloat(this.building.DistrictSteamUse.toString()),
-        color: EnergyBreakdownColors.DistrictSteam,
-      });
-    }
-
-    if ((this.building.DistrictChilledWaterUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'District Chilling',
-        value: parseFloat(this.building.DistrictChilledWaterUse.toString()),
-        color: EnergyBreakdownColors.DistrictChilling,
-      });
-    }
-
-    let totalEnergyUse = 0;
-    energyBreakdown.forEach((datum) => (totalEnergyUse += datum.value));
-    this.totalEnergyUsekBTU = totalEnergyUse;
-
-    this.energyBreakdownData = energyBreakdown;
-  }
+  // TODO: Move to a helper function
 
   updateGraph(event?: Event): void {
     event?.preventDefault();
@@ -750,15 +753,23 @@ export default class BuildingDetails extends Vue {
   }
 
   .building-banner {
-    padding: 1rem;
+    padding: 0.5rem 0.75rem;
     background-color: $warning-background;
     border: dashed 0.125rem $warning-border;
     border-radius: $brd-rad-small;
     margin: 1rem 0;
     justify-self: flex-start;
+    max-width: 36rem;
 
+    h2 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+    }
     span.emoji {
       margin-right: 0.5rem;
+    }
+    p {
+      font-size: 0.75rem;
     }
   }
 

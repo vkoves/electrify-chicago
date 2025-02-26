@@ -27,8 +27,8 @@ export default class TopGasUsers extends Vue {}
     allBuilding(
       filter: {
         DataYear: { eq: "2022" },
-        NaturalGasUse: { eq: "0.0" },
-        DistrictSteamUse: { eq: "0.0" }
+        NaturalGasUse: { eq: 0 },
+        DistrictSteamUse: { eq: 0 }
       },
       sortBy: "GrossFloorArea", limit: 500
     ) {
@@ -55,6 +55,7 @@ export default class TopGasUsers extends Vue {}
           NaturalGasUseRank
           NaturalGasUsePercentileRank
           DistrictSteamUse
+          DataAnomalies
         }
       }
     }
