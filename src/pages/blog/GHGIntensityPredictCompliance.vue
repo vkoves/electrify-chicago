@@ -52,7 +52,7 @@ export default class MillionsInMissedFine extends Vue {
 
   metaInfo(): Record<string, unknown> {
     return {
-      title: 'Do High Emitting Buildings Fail to Report?',
+      title: 'Do High Emitting Buildings Report Emissions Less Often?',
     };
   }
 }
@@ -64,21 +64,20 @@ export default class MillionsInMissedFine extends Vue {
       <g-link to="/blog" class="back-link grey-link"> Back to Blog </g-link>
 
       <h1 id="main-content" tabindex="-1">
-        Do High Emitters Stop Reporting Emissions Data in the Future?
+        Do High Emitting Buildings Report Emissions Less Often?
       </h1>
       <p class="sub-title constrained">
         Analyzing Patterns in Greenhouse Gas Emissions Reporting
       </p>
-      <p class="author">
-        Analysis by
-        <a href="https://github.com/colton-lapp" class="author-link"
-          >Colton Lapp</a
-        >, with assistance and review by Viktor Köves
-      </p>
-
       <p class="publish-time">
         <!-- TODO: Update publish time when PR is about to get merged -->
-        Published <time datetime="2025-02-10">Feb. 10th, 2025</time>
+        Published <time datetime="2025-3-1">Mar. 1st, 2025</time>
+      </p>
+      <p class="author">
+        Analysis by
+        <a href="https://coltonlapp.com" class="author-link">Colton Lapp</a>
+        <br />
+        Assistance and review by Viktor Köves
       </p>
 
       <p class="constrained">
@@ -144,9 +143,9 @@ export default class MillionsInMissedFine extends Vue {
 
       <ul>
         <li>
-          The pool of covered buildings grew from a <b>few hundred</b> to a
-          <b>few thousand</b> buildings during the ramp up period of the program
-          from 2014 to 2016
+          The set of buildings subject to reporting requirements grew from a
+          <b>few hundred</b> to a <b>few thousand</b> buildings during the ramp
+          up period of the program from 2014 to 2016
         </li>
         <li>
           There was a sharp <b>drop in emissions</b> reporting during the
@@ -156,7 +155,7 @@ export default class MillionsInMissedFine extends Vue {
         </li>
         <li>
           Outside of the disruption from COVID-19, between <b>a third</b> to
-          <b>a fourth</b> of covered buildings
+          <b>a fourth</b> of buildings in the benchmarking database
           <b>fail to report every year</b> (starting in 2018)
         </li>
       </ul>
@@ -168,10 +167,11 @@ export default class MillionsInMissedFine extends Vue {
         buildings failing to report in subsequent years. To answer this, we need
         to choose a metric to measure what constitutes 'bad' levels of
         emissions. Our preferred metric is <b>Green House Gas Intensity</b> (GHG
-        Intensity), the amount of greenhouse gas released <em>per</em>
-        square foot. Buildings with GHG Intensity levels that are abnormally
-        high or trending in a bad direction may strategically choose not to
-        report data the next year.
+        Intensity), the amount of greenhouse gas released
+        <em>per square foot</em>
+        . Buildings with GHG Intensity levels that are abnormally high or
+        trending higher may strategically choose not to report data the next
+        year.
       </p>
 
       <p class="constrained bold">What are normal emissions intensities?</p>
@@ -274,19 +274,18 @@ export default class MillionsInMissedFine extends Vue {
       </div>
 
       <div class="graph-caption">
-        <b>Note:</b> Graphs above showing only most recent year of data.
-        Buildings that didn't report data in both years are not represented in
-        these scatter plots because we don't know what their emission levels
-        were in the previous year. To see additional exploration of the data and
-        graphs looking at different observation sets, refer to the code we used
-        for this analysis by clicking the
+        <b>Note:</b> Graphs above show only most recent year of data. Buildings
+        that didn't report data in both years are not represented in these
+        scatter plots because we don't know what their emission levels were in
+        the previous year. To see additional exploration of the data and graphs
+        looking at different observation sets, refer to the linked
         <a
           href="https://nbviewer.org/github/vkoves/electrify-chicago/blob/compliance-analysis/src/data/analysis/GHG_intensity_compliance_correlation.ipynb"
           target="_blank"
           rel="noopener noreferrer"
-          >Jupyter notebook link</a
+          >Jupyter notebook</a
         >
-        at the end of this blog.
+        .
       </div>
 
       <h2>Results: No meaningful difference between groups</h2>
@@ -295,8 +294,8 @@ export default class MillionsInMissedFine extends Vue {
         As can be seen from both of the graphs above, it seems that there is no
         real pattern between emission intensities or emission trends when it
         comes to compliance. Instead, it seems that whether or not buildings
-        report their emissions data seems pretty unrelated to a buildings
-        emissions profile in the previous year.
+        report their emissions data seems unrelated to a building's emissions
+        profile in the previous year.
       </p>
 
       <h2>Investigating Further</h2>
@@ -304,8 +303,8 @@ export default class MillionsInMissedFine extends Vue {
       <p>
         Although the graphs above suggest that the average values between
         compliant and non-compliant buildings are similar, several factors could
-        be driving this (lack of a) finding. These considerations are grouped
-        into three key areas:
+        be driving this finding. These considerations are grouped into three key
+        areas:
       </p>
 
       <section class="-indented">
@@ -332,10 +331,10 @@ export default class MillionsInMissedFine extends Vue {
           Emissions intensity and trends are not the only factors that might
           predict compliance with reporting laws. The building type, for
           example, likely matters a great deal when it comes to GHG intensity
-          (i.e. data centers, gyms and aquariums have different energy needs and
-          operating hours). Some of these characteristics might also correlate
-          with reporting compliance in a way that could be obscuring underlying
-          trends.
+          (i.e. data centers, gyms and aquariums may have higher energy needs
+          and longer operating hours). Some of these characteristics might also
+          correlate with reporting compliance in a way that could be obscuring
+          underlying trends.
         </p>
       </section>
 
@@ -382,17 +381,17 @@ export default class MillionsInMissedFine extends Vue {
         </div>
       </div>
       <div class="graph-caption">
-        <b>Note:</b> This graph only showing building categories with 100 or
-        more observations. There are actually over 50 different building types,
-        but most have less than a dozen buildings in the data. To see this graph
-        with all the different building types, please view the
+        <b>Note:</b> This graph only shows building categories with 100 or more
+        observations. There are over 50 different building types, but most have
+        under a dozen buildings in the data. To see this graph with all the
+        different building types, please view the full analysis in the linked
         <a
           href="https://nbviewer.org/github/vkoves/electrify-chicago/blob/compliance-analysis/src/data/analysis/GHG_intensity_compliance_correlation.ipynb"
           target="_blank"
           rel="noopener noreferrer"
-          >Jupyter notebook link</a
+          >Jupyter notebook</a
         >
-        at the end of this blog.
+        .
       </div>
 
       <p>
@@ -408,11 +407,11 @@ export default class MillionsInMissedFine extends Vue {
       <h2>Regression Analysis</h2>
       <p>
         With these considerations in mind, we wanted to test the possibility
-        that external factors might be obfuscating an underlying connection
-        between emissions and reporting. To test this, we decided to run a
-        linear regression analysis. Linear regression is a statistical technique
-        that attempts to understand what the isolated effect of a variable is on
-        a given outcome, while controlling for external factors. In our example,
+        that external factors might be hiding an underlying connection between
+        emissions and reporting. To test this, we decided to run a linear
+        regression analysis. Linear regression is a statistical technique that
+        attempts to understand what the isolated effect of a variable is on a
+        given outcome, while controlling for external factors. In our example,
         we are trying to rule out the possibility that some building
         characteristics (i.e. square footage, age of building, building type)
         and/or time trends could be obscuring a hidden pattern in the data of
@@ -461,7 +460,7 @@ export default class MillionsInMissedFine extends Vue {
                   :key="variable"
                 >
                   <td class="cell-bordered">{{ variable }}</td>
-                  <td class="cell-bordered">{{ coef.toFixed(3) }}</td>
+                  <td class="cell-bordered">{{ coef.toFixed(4) }}</td>
                   <td class="cell-bordered">
                     {{ results.p_values[variable].toFixed(3) }}
                   </td>
@@ -554,15 +553,18 @@ export default class MillionsInMissedFine extends Vue {
           This raises a key question: why do buildings choose to report or not?
           At Electrify Chicago, we’ve noticed that few politicians and
           policymakers are even aware of the existence of the Chicago Building
-          Benchmarking Data. So, it’s not surprising that we see no pattern—why
-          hide emissions if no one is paying attention?
+          Benchmarking Data. So, maybe it's not surprising we don't detect a
+          pattern between emissions levels and reporting compliance. After all,
+          why would buildings try to hide their emission levels if no one is
+          paying attention?
         </p>
 
         <p>
-          Electrify Chicago aims to change that reality by making the building
-          benchmarking data more accessible. Still, nearly a third of buildings
-          fail to report each year. Understanding why may require further
-          quantitative and qualitative analysis.
+          Electrify Chicago aims to change this reality by making the building
+          benchmarking data more accessible. Greater accessibility means greater
+          scrutiny—if more people are aware of the data, buildings hopefully
+          will not only be more likely to report but also more motivated to
+          transition to renewable energy and cut emissions.
         </p>
 
         <h3 class="italic">Explore our Analysis</h3>
@@ -602,14 +604,18 @@ export default class MillionsInMissedFine extends Vue {
     font-size: 0.9em; /* Slightly smaller */
     font-style: italic; /* Makes text italic */
     font-weight: normal;
-    margin-top: 0.2rem;
-    margin-bottom: 0.2rem;
+    margin-top: 0rem;
+    margin-bottom: 0.4rem;
     line-height: 1.2;
   }
 
   h3 {
     font-size: 1.1em;
     font-weight: bold;
+  }
+
+  .publish-time {
+    margin-bottom: 0.25rem;
   }
 
   a.back-link {
