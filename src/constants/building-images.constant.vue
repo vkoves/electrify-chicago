@@ -127,7 +127,6 @@ export const BuildingImages: IBuildingImages = {
     fromGoogleMaps: false,
     isTall: false,
   },
-  // todo: adding updated famous buildings ******************************************
   // Rookery Building
   '103721': {
     attributionUrl:
