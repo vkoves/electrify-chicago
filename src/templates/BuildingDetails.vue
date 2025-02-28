@@ -51,11 +51,11 @@ query ($id: ID!, $ID: String) {
     GHGIntensityPercentileGrade,
     GHGIntensityLetterGrade,
     EnergyMixWeightedPctSum,
-    EnergyMixWeightedPctSumPercentileGrade,
-    EnergyMixWeightedPctSumLetterGrade,
+    EnergyMixPercentileGrade,
+    EnergyMixLetterGrade,
     MissingRecordsCount,
-    MissingRecordsCountPercentileGrade,
-    SubmittedRecordsGrade,
+    SubmittedRecordsPercentileGrade,
+    SubmittedRecordsLetterGrade,
     AvgPercentileGrade,
     AvgPercentileLetterGrade,
     AvgPercentileLetterGradeQuintiles,
@@ -306,9 +306,9 @@ query ($id: ID!, $ID: String) {
                 {{ building.GHGIntensityPercentileGrade }}
               </li>
               <li>
-                <strong>EnergyMixWeightedPctSumLetterGrade:</strong>
+                <strong>EnergyMixLetterGrade:</strong>
                 <LetterGrade
-                  :grade="building.EnergyMixWeightedPctSumLetterGrade"
+                  :grade="building.EnergyMixLetterGrade"
                 />
               </li>
               <li>
@@ -316,20 +316,20 @@ query ($id: ID!, $ID: String) {
                 {{ building.EnergyMixWeightedPctSum }}
               </li>
               <li>
-                <strong>EnergyMixWeightedPctSumPercentileGrade:</strong>
-                {{ building.EnergyMixWeightedPctSumPercentileGrade }}
+                <strong>EnergyMixPercentileGrade:</strong>
+                {{ building.EnergyMixPercentileGrade }}
               </li>
               <li>
-                <strong>SubmittedRecordsGrade:</strong>
-                <LetterGrade :grade="building.SubmittedRecordsGrade" />
+                <strong>SubmittedRecordsLetterGrade:</strong>
+                <LetterGrade :grade="building.SubmittedRecordsLetterGrade" />
               </li>
               <li>
                 <strong>MissingRecordsCount:</strong>
                 {{ building.MissingRecordsCount }}
               </li>
               <li>
-                <strong>MissingRecordsCountPercentileGrade:</strong>
-                {{ building.MissingRecordsCountPercentileGrade }}
+                <strong>SubmittedRecordsPercentileGrade:</strong>
+                {{ building.SubmittedRecordsPercentileGrade }}
               </li>
             </ul>
           </details>
@@ -380,7 +380,7 @@ query ($id: ID!, $ID: String) {
           <div class="reporting-tiles">
             <ReportingTile
               :historic-data="historicData"
-              :grade="building.SubmittedRecordsGrade"
+              :grade="building.SubmittedRecordsLetterGrade"
             />
           </div>
           <div class="stat-tiles-col">
@@ -452,7 +452,7 @@ query ($id: ID!, $ID: String) {
           >
             Energy Mix
             <LetterGrade
-              :grade="building.EnergyMixWeightedPctSumLetterGrade"
+              :grade="building.EnergyMixLetterGrade"
               class="-large -spaced"
             />
           </h3>

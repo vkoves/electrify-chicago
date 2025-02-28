@@ -64,7 +64,7 @@ export default class ReportCard extends Vue {
 
       <a href="#energy-mix" class="grade-row" @click="focusElem('energy-mix')">
         <div><strong>Energy Mix</strong> - 40%</div>
-        <LetterGrade :grade="building.EnergyMixWeightedPctSumLetterGrade" />
+        <LetterGrade :grade="building.EnergyMixLetterGrade" />
       </a>
 
       <a
@@ -73,7 +73,7 @@ export default class ReportCard extends Vue {
         @click="focusElem('years-reported')"
       >
         <div><strong>Consistent Reporting</strong> - 10%</div>
-        <LetterGrade :grade="building.SubmittedRecordsGrade" />
+        <LetterGrade :grade="building.SubmittedRecordsLetterGrade" />
       </a>
 
       <div class="learn-more-cont">

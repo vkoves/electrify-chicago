@@ -76,6 +76,26 @@ export default class HowWeGradeBuildings extends Vue {}
         year-by-year.
       </p>
 
+      <h2>The Formula</h2>
+
+      <ol>
+        <li>
+          <strong>50% GHG Intensity</strong> - this is a percentile compared to the other
+          buildings in the data, so the highest score (e.g. 80%+/A) goes to a building with lower
+          emissions intensity than 99% of buildings.
+        </li>
+        <li>
+          <strong>40% Energy Mix</strong> - this is a percentile compared to the other
+          buildings in the data in terms of how much electricity (including district chilling,
+          where a central building cools water and then distributes it) the building uses. So the
+          highest score (80% / A) goes to a building with less gas use than 80% of buildings.
+        </li>
+        <li>
+          <strong>10% Consistent Reporting</strong> - this is a simple share of how consistently
+          a building reported. 80%+ reporting gets an A.
+        </li>
+      </ol>
+
       <h2>
         The Biggest Challenge: We Don't Know What Goes On <em>Inside</em> A
         Building
@@ -109,8 +129,12 @@ export default class HowWeGradeBuildings extends Vue {}
 
       Some example buildings:
 
+      <!-- TODO: Make this a pretty visual spectrum in Figma or something -->
+
       <ul>
-        <li>Merchandise Mart - B</li>
+        <li>Marina Towers - A</li> <!-- Also Merch Mart?-->
+
+        <li>The Monadnock Building - B</li> <!-- Also The John Hancock Center? -->
 
         <li>Core Site - C</li>
 

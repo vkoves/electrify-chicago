@@ -39,7 +39,7 @@ export default class CleanestBuildings extends Vue {
         # GrossFloorArea: { gt: 1000.0 }
         # AvgPercentileLetterGrade: { eq: "A" }
         # AvgPercentileLetterGradeQuintiles: { eq: "A" }
-        # EnergyMixWeightedPctSumLetterGrade: { eq: "A" }
+        # EnergyMixLetterGrade: { eq: "A" }
       },
       sortBy: "GHGIntensity", order: ASC, limit: 50
     ) {
@@ -67,7 +67,7 @@ export default class CleanestBuildings extends Vue {
           NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
           AvgPercentileLetterGradeQuintiles
-          EnergyMixWeightedPctSumLetterGrade
+          EnergyMixLetterGrade
           DataAnomalies
         }
       }
