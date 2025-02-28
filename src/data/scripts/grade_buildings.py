@@ -13,8 +13,9 @@ data_in_file_historical_path = get_data_file_path(
 )
 
 
-# Default bins and letter grades for percentile grading:
-bins = [0, 20, 40, 60, 80, 100]
+# Default bins and letter grades for percentile grading: (note the last bin is 101 so perfect scores
+# get an A)
+bins = [0, 20, 40, 60, 80, 101]
 letter_grades = ["F", "D", "C", "B", "A"]
 
 # Default weights for each energy source in the energy mix grade:
@@ -25,11 +26,6 @@ energy_mix_grade_weights = {
     "DistrictChilledWaterUse": 1,
     "AllOtherFuelUse": 0,
 }
-
-# Grading schema for Not Submitted records:
-bins_missing_records = [0, 1, 2, 3, 4, np.inf]
-labels_missing_records = ['A', 'B', 'C', 'D', 'F']
-
 
 def generate_percentile_grade(
     vals: pd.Series,
@@ -267,13 +263,52 @@ def generate_energymix_grade(
     return energy_mix_grades
 
 
-def generate_missing_data_grade(
+def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculates the submission rate per building (percentage of years submitted).
+
+    Args:
+        df (pd.DataFrame): The DataFrame with building and year data.
+        building_id_col (str): The name of the building ID column.
+        status_col (str): The name of the status column.
+        not_submitted_val (str): The value indicating a building is not submitted.
+
+    Returns:
+        pd.DataFrame: A DataFrame with building IDs and their submission rates as a SubmissionRate
+            column
+    """
+
+    def calculate_metrics(group):
+        total_years = len(group)
+        # TODO: Refactor not submitted to be no GHG Intensity, since that's our true count
+        not_submitted_count = (group['ReportingStatus'] == 'Not Submitted').sum()
+        submitted_years = total_years - not_submitted_count
+
+        if total_years == 0:
+            submission_rate = 0.0
+        else:
+            submission_rate = (submitted_years / total_years) * 100
+
+        return pd.Series({'submission_rate': submission_rate, 'not_submitted_count': not_submitted_count})
+
+    submission_rates = df.groupby('ID').apply(calculate_metrics).reset_index()
+
+    print('submission_rates', submission_rates.head())
+
+    return submission_rates
+
+
+def generate_consistent_reporting_grade(
     df: pd.DataFrame,
-    bins: List[int] = bins_missing_records,
-    labels: List[str] = labels_missing_records,
+    bins: List[int] = bins,
 ):
     """
-    Generate grades based on how many records are missing for each building.
+    Generate grades for consistent reporting, based on how many records are missing for each
+    building.
+
+    NOTE: This is not a relative percentile like the other grades, because there's a perfect score,
+    and we don't care about the average performance. If you report all years, you get a 100%, if you
+    report 1/5, you get a 20%.
 
     Parameters
     ----------
@@ -282,8 +317,6 @@ def generate_missing_data_grade(
     bins : List[int]
         Integers denoting boundaries between letter grades. Right threshold is
         included.
-    labels : List[str]
-        Letter grades corresponding to the bins.
 
     Returns
     -------
@@ -298,38 +331,34 @@ def generate_missing_data_grade(
     df = df.loc[:, ["ID", "DataYear", "ReportingStatus"]]
 
     # Calculate number of missing records for each building:
-    df["not_submitted"] = (df["ReportingStatus"] == 'Not Submitted').astype(int)
-    not_submitted_count_df = df.groupby("ID").agg(
-        not_submitted_count=("not_submitted", "sum")
-    )
+    submission_rates_df = calculate_building_submission_rate(df)
 
     # Calculate grades based on how many records are missing for each building:
-    not_submitted_count_df['SubmittedRecordsGrade'] = pd.cut(
-        not_submitted_count_df['not_submitted_count'],
+    submission_rates_df['SubmittedRecordsGrade'] = pd.cut(
+        submission_rates_df['submission_rate'],
         bins=bins,
-        labels=labels,
         include_lowest=True,
+        labels=letter_grades,
         right=False,
     )
 
     # Rename for consistent format:
-    not_submitted_count_df.rename(
-        columns={'not_submitted_count': 'MissingRecordsCount'}, inplace=True
+    submission_rates_df.rename(
+        columns={
+            'not_submitted_count': 'MissingRecordsCount',
+            'submission_rate': 'MissingRecordsCountPercentileGrade'
+        }, inplace=True
     )
 
-    not_submitted_count_df.reset_index(inplace=True)
+    submission_rates_df.reset_index(inplace=True)
 
-    # Capture percentiles:
-    percentiles = generate_percentile_grade(
-        vals=not_submitted_count_df["MissingRecordsCount"],
-        reverse=True,
-    )["MissingRecordsCountPercentileGrade"]
+    print('submission_rates_df', submission_rates_df.head())
 
-    not_submitted_count_df.insert(
-        2, "MissingRecordsCountPercentileGrade", percentiles
-    )
+    # submission_rates_df.insert(
+    #     2, "MissingRecordsCountPercentileGrade", percentiles
+    # )
 
-    return not_submitted_count_df
+    return submission_rates_df
 
 
 def grade_ghg_intensity_energy_mix_all_years(building_data: pd.DataFrame):
@@ -383,12 +412,12 @@ def grade_buildings(building_data):
         building_data=building_data,
     )
 
-    # Generate grades for missing records:
+    # Generate grades for consistent reporting (not missing records):
     df_historical = pd.read_csv(data_in_file_historical_path)
-    not_submitted_grades = generate_missing_data_grade(df_historical)
+    consistent_reporting_grades = generate_consistent_reporting_grade(df_historical)
     graded_df = pd.merge(
         left=graded_df,
-        right=not_submitted_grades,
+        right=consistent_reporting_grades,
         how="left",
         on="ID",
     )
