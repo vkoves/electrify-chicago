@@ -284,6 +284,55 @@ query ($id: ID!, $ID: String) {
 
             <ReportCard :building="building" :data-year="dataYear" />
           </div>
+
+          <details>
+            <summary>Debug Full Grade Data</summary>
+
+            <ul>
+              <li>
+                <strong>AvgPercentileLetterGrade:</strong>
+                <LetterGrade :grade="building.AvgPercentileLetterGrade" />
+              </li>
+              <li>
+                <strong>AvgPercentileGrade:</strong>
+                {{ building.AvgPercentileGrade }}
+              </li>
+              <li>
+                <strong>GHGIntensityLetterGrade:</strong>
+                <LetterGrade :grade="building.GHGIntensityLetterGrade" />
+              </li>
+              <li>
+                <strong>GHGIntensityPercentileGrade:</strong>
+                {{ building.GHGIntensityPercentileGrade }}
+              </li>
+              <li>
+                <strong>EnergyMixWeightedPctSumLetterGrade:</strong>
+                <LetterGrade
+                  :grade="building.EnergyMixWeightedPctSumLetterGrade"
+                />
+              </li>
+              <li>
+                <strong>EnergyMixWeightedPctSum:</strong>
+                {{ building.EnergyMixWeightedPctSum }}
+              </li>
+              <li>
+                <strong>EnergyMixWeightedPctSumPercentileGrade:</strong>
+                {{ building.EnergyMixWeightedPctSumPercentileGrade }}
+              </li>
+              <li>
+                <strong>SubmittedRecordsGrade:</strong>
+                <LetterGrade :grade="building.SubmittedRecordsGrade" />
+              </li>
+              <li>
+                <strong>MissingRecordsCount:</strong>
+                {{ building.MissingRecordsCount }}
+              </li>
+              <li>
+                <strong>MissingRecordsCountPercentileGrade:</strong>
+                {{ building.MissingRecordsCountPercentileGrade }}
+              </li>
+            </ul>
+          </details>
         </div>
       </div>
 
