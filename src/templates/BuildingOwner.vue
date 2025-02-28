@@ -93,8 +93,8 @@ export default class BiggestBuildings extends Vue {
     this.buildingsFiltered.forEach((buildingEdge: IBuildingEdge) => {
       const building: IBuilding = buildingEdge.node;
 
-      totalGHGIntensity += parseFloat(building.GHGIntensity as string);
-      totalGHGEmissions += parseFloat(building.TotalGHGEmissions as string);
+      totalGHGIntensity += building.GHGIntensity;
+      totalGHGEmissions += building.TotalGHGEmissions;
     });
 
     this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
@@ -140,6 +140,7 @@ export default class BiggestBuildings extends Vue {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
+          DataAnomalies
         }
       }
     }

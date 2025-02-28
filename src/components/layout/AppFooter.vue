@@ -13,7 +13,7 @@ export default class AppFooter extends Vue {}
 <template>
   <footer>
     <div class="constrained">
-      <div>
+      <div class="full-width">
         Created with <span class="heart">&#x2764;</span> by
         <a
           href="https://github.com/vkoves/electrify-chicago/graphs/contributors"
@@ -28,8 +28,12 @@ export default class AppFooter extends Vue {}
           class="github-link"
         >
           <img alt="" src="/github-mark.svg" width="16" />
-          Contribute to Electrify Chicago on GitHub
+          Contribute on GitHub
         </a>
+      </div>
+
+      <div>
+        <g-link to="/release-notes/" class="smaller"> Release Notes </g-link>
       </div>
     </div>
   </footer>
@@ -44,6 +48,7 @@ footer {
 
   > .constrained {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     margin: auto;
@@ -82,6 +87,11 @@ footer {
 
   @media (max-width: $mobile-max-width) {
     position: static;
+    padding: 1.25rem;
+
+    > .constrained {
+      gap: 0.8125rem;
+    }
   }
 }
 </style>
