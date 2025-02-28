@@ -12,6 +12,13 @@ src/data/debug/*
 
 .DS_Store
 
-*my-venv/
-*new-venv
+*.venv
+/.venv
 node_modules
+.venv*
+.venv-notebook
+
+.vscode/
+*.vscode/*
+settings.json
+*/settings.json

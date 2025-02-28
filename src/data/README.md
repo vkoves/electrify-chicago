@@ -1,3 +1,15 @@
+- [Data Folder](#data-folder)
+  - [Data Dist Folder](#data-dist-folder)
+  - [File Explainers](#file-explainers)
+    - [The Main/Holistic File - `building-benchmarks.csv`](#the-mainholistic-file---building-benchmarkscsv)
+    - [The Historical File - `benchmarking-all-years.csv`](#the-historical-file---benchmarking-all-yearscsv)
+    - [City-Wide Stats - `building-benchmark-stats.json`](#city-wide-stats---building-benchmark-statsjson)
+    - [Property Type Stats - `building-statistics-by-property-type.json`](#property-type-stats---building-statistics-by-property-typejson)
+    - [Available Property Types - `property-types.json`](#available-property-types---property-typesjson)
+
+(Generated using VSCode extension "Markdown All In One")
+
+
 # Data Folder
 
 This folder is for all of our data processing, including:
@@ -7,6 +19,8 @@ This folder is for all of our data processing, including:
 - `/dist` - the files generated from our data pipeline, used by the actual site
 - `/scripts` - all our data processing scripts
 - `/source` - input files to our data pipeline, typically the latest benchmarking data
+
+
 
 ## Data Dist Folder
 

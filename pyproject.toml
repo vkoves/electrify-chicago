@@ -1,0 +1,26 @@
+[project]
+name = "electrify-chicago"
+version = "0.1.0"
+dependencies = [
+    "python-slugify==4.0.1",
+    "pandas==2.1.2",
+    "numpy",
+    "pytest==7.4.4",
+    "plotly",
+    "statsmodels",
+    "nbformat",
+    "jupyter",
+    "ipykernel",
+    "pip"
+]
+
+[project.optional-dependencies]
+notebook = [
+    "kaleido",
+    "jupyterlab",
+    "matplotlib",
+    "ipywidgets",
+    "nbconvert",
+    "jupyter",
+    "ipykernel"
+]
