@@ -20,6 +20,10 @@ body {
   &:has(dialog[open]) {
     overflow: hidden;
   }
+
+  *:target {
+    border-bottom: solid $border-thick $blue-very-dark !important;
+  }
 }
 
 // Default focus styles
@@ -45,12 +49,15 @@ a.grey-link {
   }
 }
 
+// Make sure headings handle focus, as well as elements marked "targetable", which have IDs for
+// anchor links (e.g. `<a href="#energy-mix">`)
 h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.targetable {
   &:focus {
     border-bottom: solid 0.5rem $chicago-blue;
     outline: none;
@@ -61,6 +68,7 @@ h6 {
     margin-top: 0;
   }
 }
+
 
 /**
  * Mobile Font Size Overrides
@@ -195,9 +203,13 @@ img.-shadowed {
   }
 }
 
-.grade-letter {
-  font-family: 'Caveat', sans-serif;
-  font-weight: 700;
+/**
+ * Styling for our building letter grades (A-F) with colors for each for emphasis
+ */
+.letter-grade {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900;
+  line-height: 1;
 
   &.-a {
     color: #009f49;
@@ -212,11 +224,36 @@ img.-shadowed {
   }
 
   &.-d {
-    color: #7fa52e;
+    color: #972222;
   }
 
   &.-f {
-    color: #972222;
+    color: #d60101;
+  }
+
+  // Create a -circled style for the tables
+  &.-circled {
+    display: inline-block;
+    border: solid $border-thin;
+    width: 1.375rem;
+    height: 1.375rem;
+    padding: 1.5px;
+    text-align: center;
+    border-radius: 1rem;
+    background: white;
+    border-width: 0.125rem;
+    margin-left: 0.5rem;
+    vertical-align: 1px;
+
+    &.-d, &.-b { padding-right: 0; }
+  }
+
+  &.-large {
+    font-size: 2.5rem;
+  }
+
+  &.-spaced {
+    margin-left: 1rem;
   }
 }
 
