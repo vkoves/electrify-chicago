@@ -45,6 +45,7 @@ VENV_DIR=${1:-${VENV_DIR:-".venv"}}  # Use the first argument, otherwise $VENV_D
 
 if [ -d "$VENV_DIR" ]; then
   source "$VENV_DIR/bin/activate"
+  echo "Python virtual environment successfully activated at '$VENV_DIR'"
 else
   echo "Error: Virtual environment not found at '$VENV_DIR'."
   echo "Please create one or specify the correct path."
