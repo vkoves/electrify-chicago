@@ -2,14 +2,12 @@
 # Python Environment Setup: Using the tool UV
 
 ### Python Version:
-We use Python $PYTHON_VERSION to run checks, so make sure you have it installed. It can be installed with UV (see below)
+We use Python 3.13 to run checks, so make sure you have it installed. It can be installed with UV (see below)
 
-Pandas, however, is not compatible with Python 3.13 it seems, so we use Python 3.12 locally
 
-Export Python version to make setup easier 
 
 ```bash
-export PYTHON_VERSION="3.12"
+export PYTHON_VERSION="3.13"
 ```
 
 ### What is UV?
@@ -27,8 +25,8 @@ or use the recommended way:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### Install Python $PYTHON_VERSION
-Install Python $PYTHON_VERSION with:
+### Install Python 3.13
+Install Python 3.13 with:
 ```bash
 uv python install $PYTHON_VERSION
 ```

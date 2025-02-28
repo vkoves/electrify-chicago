@@ -39,24 +39,37 @@ start_time=$(date +%s%N)  # Get the starting time in seconds since the Epoch
 echo -e "${GREEN}Initializing data pipeline!${NC}"
 echo -e "Will be running from raw file at 'source/data/ChicagoEnergyBenchmarking.csv'."
 
-# Step 0: Delete existing dist files
+
+# Step 0: Activate Python virtual environment from command line, defaulting to .venv
+VENV_DIR=${1:-${VENV_DIR:-".venv"}}  # Use the first argument, otherwise $VENV_DIR, otherwise default to ".venv"
+
+if [ -d "$VENV_DIR" ]; then
+  source "$VENV_DIR/bin/activate"
+else
+  echo "Error: Virtual environment not found at '$VENV_DIR'."
+  echo "Please create one or specify the correct path."
+  echo "Refer to PythonDev.md for setup instructions."
+  exit 1
+fi
+
+# Step 1: Delete existing dist files
 clean_dist_directory
 
-# Step 1: clean_and_split_data
+# Step 2: clean_and_split_data
 print_step_header 1 "clean_and_split_data"
 
 if ! python3 -m src.data.scripts.clean_and_split_data; then
   handle_error "Step 1 / 3 failed! See logs above for info."
 fi
 
-# Step 2: process_data
+# Step 3: process_data
 print_step_header 2 "process_data"
 
 if ! python3 -m src.data.scripts.process_data; then
   handle_error "Step 2 / 3 failed! See logs above for info."
 fi
 
-# Step 3: add_context_by_property_type
+# Step 4: add_context_by_property_type
 print_step_header 3 "add_context_by_property_type"
 
 if ! python3 -m src.data.scripts.add_context_by_property_type; then

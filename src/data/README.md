@@ -1,4 +1,5 @@
 - [Data Folder](#data-folder)
+  - [Python setup](#python-setup)
   - [Data Dist Folder](#data-dist-folder)
   - [File Explainers](#file-explainers)
     - [The Main/Holistic File - `building-benchmarks.csv`](#the-mainholistic-file---building-benchmarkscsv)
@@ -21,6 +22,8 @@ This folder is for all of our data processing, including:
 - `/source` - input files to our data pipeline, typically the latest benchmarking data
 
 
+## Python setup
+Install virtual environments to manage dependencies according to the guide in [Electrify-Chicago/PythonDev.md](../../PythonDev.md)
 
 ## Data Dist Folder
 
