@@ -2,7 +2,16 @@
 # Python Environment Setup: Using the tool UV
 
 ### Python Version:
-We use Python 3.11 to run checks, so make sure you have it installed. It can be installed with UV (see below)
+We use Python $PYTHON_VERSION to run checks, so make sure you have it installed. It can be installed with UV (see below)
+
+Pandas, however, is not compatible with Python 3.13 it seems, so we use Python 3.12 locally
+
+Export Python version to make setup easier 
+
+```bash
+export PYTHON_VERSION="3.12"
+```
+
 ### What is UV?
 
 [uv](https://github.com/astral-sh/uv) is a fast Python package manager that replaces pip and venv while offering better performance, deterministic resolution, and a simplified workflow. Unlike pip, uv does not require the use of venv for isolating dependencies, but it works seamlessly with existing virtual environments.
@@ -18,16 +27,16 @@ or use the recommended way:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### Install Python 3.11
-Install Python 3.11 with:
+### Install Python $PYTHON_VERSION
+Install Python $PYTHON_VERSION with:
 ```bash
-uv python install 3.11
+uv python install $PYTHON_VERSION
 ```
 
 ### Virtual Environment Setup
 To set up the Python environment with uv:
 ```bash
-uv venv --python=3.11 .venv
+uv venv --python=$PYTHON_VERSION .venv
 ```
 This creates a virtual environment in .venv inside Electrify-Chicago
 
@@ -52,7 +61,7 @@ Additional dependencies for running Jupyter notebooks are defined as an extra gr
 To install both baseline + notebook dependencies into a seperate venv:
 ```bash
 deactivate # deactivate baseline venv if activated
-uv venv --python=3.11 .venv-notebook
+uv venv --python=$PYTHON_VERSION .venv-notebook
 source .venv-notebook/bin/activate
 uv pip install -r pyproject.toml --extra notebook
 ```
