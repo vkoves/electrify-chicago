@@ -127,6 +127,118 @@ export const BuildingImages: IBuildingImages = {
     fromGoogleMaps: false,
     isTall: false,
   },
+  // Rookery Building
+  '103721': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Rookery_Building,_LaSalle_Street_and_Adams_Street,_Chicago,_IL.jpg',
+    imgUrl: BuildingImagesBase + 'rookery-building.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
+  // 20 N Wacker Dr (Civic Opera)
+  '101709': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Civic_Opera_House_060528.jpg',
+    imgUrl: BuildingImagesBase + '20-n-wacker.jpg',
+    fromGoogleMaps: false,
+    isTall: true,
+  },
+  // Adler Planetarium
+  '165062': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Adler_Planetarium_Front.JPG',
+    imgUrl: BuildingImagesBase + 'adler-planetarium.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
+  // Museum of Contemporary Art
+  '165606': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:MCA_Chicago_060930.jpg',
+    imgUrl: BuildingImagesBase + 'museum-of-contemporary-art.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
+  // Tribune Tower
+  '101724': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Tribune_Tower_Chicago_2015.jpg',
+    imgUrl: BuildingImagesBase + 'tribune-tower.jpg',
+    fromGoogleMaps: false,
+    isTall: true,
+  },
+  // Thompson Center
+  '101742': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:James_R._Thompson_Center_(162116090).jpg',
+    imgUrl: BuildingImagesBase + 'thompson-center.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
+  // The Field Museum
+  '103638': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Field_Museum_of_Natural_History.jpg',
+    imgUrl: BuildingImagesBase + 'field-museum.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
+  // The Wrigley Building
+  '101920': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Wrigley_Building_-_Chicago,_Illinois.JPG',
+    imgUrl: BuildingImagesBase + 'wrigley-building.jpg',
+    fromGoogleMaps: false,
+    isTall: true,
+  },
+  // 110 N. Wacker Drive
+  '256782': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:110_North_Wacker_Drive,_Chicago.jpg',
+    imgUrl: BuildingImagesBase + '110-n-wacker.jpg',
+    fromGoogleMaps: false,
+    isTall: true,
+  },
+  // Aon Center
+  '101713': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Aon_Center_2022.jpg',
+    imgUrl: BuildingImagesBase + 'aon-center.jpg',
+    fromGoogleMaps: false,
+    isTall: true,
+  },
+  // Auditorium Building
+  '101784': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Auditorium_Building,_Michigan_Avenue,_Chicago,_IL.jpg',
+    imgUrl: BuildingImagesBase + 'auditorium-building.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
+  // Humboldt Park Fieldhouse
+  '250017': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Humboldt_Park_Field_House_(Chicago,_IL).jpg',
+    imgUrl: BuildingImagesBase + 'humboldt-park-fieldhouse.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
+  // Edgewater Beach Apartments
+  '237359': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:Edgewater_Beach_Apartments_(10127059874).jpg',
+    imgUrl: BuildingImagesBase + 'edgewater-beach-apartments.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
+  // South Shore Cultural Center
+  '250033': {
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:South_Shore_Cultural_Center_2.jpg',
+    imgUrl: BuildingImagesBase + 'south-shore-cultural-center.jpg',
+    fromGoogleMaps: false,
+    isTall: false,
+  },
 
   /**
    * Particularly Low GHG Intensity Buildings
