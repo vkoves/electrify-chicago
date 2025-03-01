@@ -11,7 +11,8 @@ dependencies = [
     "nbformat",
     "jupyter",
     "ipykernel",
-    "pip"
+    "pip",
+    "pytest"
 ]
 
 [project.optional-dependencies]
