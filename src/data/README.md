@@ -10,7 +10,6 @@
 
 (Generated using VSCode extension "Markdown All In One")
 
-
 # Data Folder
 
 This folder is for all of our data processing, including:
@@ -21,8 +20,8 @@ This folder is for all of our data processing, including:
 - `/scripts` - all our data processing scripts
 - `/source` - input files to our data pipeline, typically the latest benchmarking data
 
-
 ## Python setup
+
 Install virtual environments to manage dependencies according to the guide in [Electrify-Chicago/PythonDev.md](../../PythonDev.md)
 
 ## Data Dist Folder

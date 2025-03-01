@@ -24,6 +24,7 @@ for data processing
 [Leaflet](https://www.npmjs.com/package/leaflet) and [Leaflet Google mutant](https://www.npmjs.com/package/leaflet.gridlayer.googlemutant) for maps (e.g. the map page)
 
 [Uv](https://docs.astral.sh/uv/) for Python dependency management (see [PythonDev.md](PythonDev.md))
+
 ## Environment setup
 
 ### **1. Set up Docker**
