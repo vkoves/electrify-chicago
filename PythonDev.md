@@ -2,15 +2,21 @@
 
 ### Python Version:
 
-We use Python 3.13 to run checks, so make sure you have it installed. It can be installed with UV (see below)
+We are currently using Python 3.12. This is hardcoded in our tests in [.github/workflows/pytest.yml](.github/workflows/pytest.yml). Follow the virtual environment setup here to match the testing happening in our pytest.yml. 
 
 ```bash
-export PYTHON_VERSION="3.13"
+export PYTHON_VERSION="3.12"
 ```
 
 ### What is UV?
 
 [uv](https://github.com/astral-sh/uv) is a fast Python package manager that replaces pip and venv while offering better performance, deterministic resolution, and a simplified workflow. Unlike pip, uv does not require the use of venv for isolating dependencies, but it works seamlessly with existing virtual environments.
+
+
+### First: Ensure you have pip and it's updated
+```bash
+python -m pip install --upgrade pip
+```
 
 ### Setup UV
 
@@ -26,9 +32,9 @@ or use the recommended way:
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### Install Python 3.13
+### Install Python 3.12
 
-Install Python 3.13 with:
+Install Python 3.12 with:
 
 ```bash
 uv python install $PYTHON_VERSION
@@ -53,11 +59,12 @@ source .venv/bin/activate  # macOS/Linux
 
 These are the minimal dependencies required for running data processing scripts.
 
-- Defined in pyproject.toml under [project.dependencies]
+- Defined in pyproject.toml under \[project.optional-dependencies\]
 - Equivalent to the old requirements.txt
 
+**Install core package with development mode**
 ```bash
-uv pip install -r pyproject.toml
+uv pip install -e .
 ```
 
 ### Data Analysis Notebook-Specific Dependencies
@@ -73,7 +80,7 @@ To install both baseline + notebook dependencies into a seperate venv:
 deactivate # deactivate baseline venv if activated
 uv venv --python=$PYTHON_VERSION .venv-notebook
 source .venv-notebook/bin/activate
-uv pip install -r pyproject.toml --extra notebook
+uv pip install -e ".[notebook]"
 ```
 
 ### Adding new packages:
@@ -109,7 +116,7 @@ notebook = [
 Then install this new package:
 
 ```bash
-uv pip install -r pyproject.toml --extra notebook
+uv pip install -e ".[notebook]"
 ```
 
 ### Freezing Dependencies for Backward Compatibility

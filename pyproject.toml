@@ -1,10 +1,10 @@
 [project]
 name = "electrify-chicago"
 version = "0.1.0"
-requires-python = ">=3.13"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "python-slugify",
-    "pandas>=2.2.3",
+    "pandas",
     "numpy",
     "pytest",
     "plotly",
@@ -13,7 +13,8 @@ dependencies = [
     "jupyter",
     "ipykernel",
     "pip",
-    "pytest"
+    "pytest",
+    "pytest-mock"
 ]
 
 [project.optional-dependencies]

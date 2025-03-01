@@ -23,3 +23,5 @@ node_modules
 *.vscode/*
 settings.json
 */settings.json
+
+*.egg-info*
