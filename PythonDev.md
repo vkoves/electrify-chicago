@@ -2,7 +2,7 @@
 
 ### Python Version:
 
-We are currently using Python 3.12. This is hardcoded in our tests in [.github/workflows/pytest.yml](.github/workflows/pytest.yml). Follow the virtual environment setup here to match the testing happening in our pytest.yml. 
+We are currently using Python 3.12. This is hardcoded in our tests in [.github/workflows/pytest.yml](.github/workflows/pytest.yml). Follow the virtual environment setup here to match the testing happening in our pytest.yml.
 
 ```bash
 export PYTHON_VERSION="3.12"
@@ -12,8 +12,8 @@ export PYTHON_VERSION="3.12"
 
 [uv](https://github.com/astral-sh/uv) is a fast Python package manager that replaces pip and venv while offering better performance, deterministic resolution, and a simplified workflow. Unlike pip, uv does not require the use of venv for isolating dependencies, but it works seamlessly with existing virtual environments.
 
-
 ### First: Ensure you have pip and it's updated
+
 ```bash
 python -m pip install --upgrade pip
 ```
@@ -63,6 +63,7 @@ These are the minimal dependencies required for running data processing scripts.
 - Equivalent to the old requirements.txt
 
 **Install core package with development mode**
+
 ```bash
 uv pip install -e .
 ```

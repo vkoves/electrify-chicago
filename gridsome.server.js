@@ -97,9 +97,9 @@ function loadBuildingBenchmarkData(actions) {
       'GrossFloorArea',
       'NaturalGasUse',
       'TotalGHGEmissions',
-    ]
+    ];
 
-    buildingFloatCols.forEach(col => {
+    buildingFloatCols.forEach((col) => {
       building[col] = parseFloat(building[col]);
     });
 
@@ -145,9 +145,9 @@ function loadHistoricBenchmarkDat(actions) {
       'NaturalGasUse',
       'SourceEUI',
       'TotalGHGEmissions',
-    ]
+    ];
 
-    historicFloatCols.forEach(col => {
+    historicFloatCols.forEach((col) => {
       benchmark[col] = parseFloat(benchmark[col]);
     });
 

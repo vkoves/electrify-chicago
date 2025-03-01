@@ -74,8 +74,12 @@ h6 {
   }
 }
 
-h1 { margin: 1.5rem 0 0.5rem 0; }
-h2 { margin: 1rem 0 0.5rem 0; }
+h1 {
+  margin: 1.5rem 0 0.5rem 0;
+}
+h2 {
+  margin: 1rem 0 0.5rem 0;
+}
 
 // Expose -no-margin variant to ignore default paragraph margins
 p:first-of-type,
@@ -113,7 +117,6 @@ button {
   }
 }
 
-
 dl {
   dt {
     font-weight: bold;
@@ -133,7 +136,8 @@ details {
   border: solid $border-thin transparent;
   background-color: $off-white;
 
-  &, summary {
+  &,
+  summary {
     border-radius: $brd-rad-medium;
   }
 
@@ -142,8 +146,12 @@ details {
     padding: 1rem 1.5rem;
     cursor: pointer;
 
-    &:focus { outline-offset: 0; }
-    > span { margin-left: 0.5rem; }
+    &:focus {
+      outline-offset: 0;
+    }
+    > span {
+      margin-left: 0.5rem;
+    }
   }
 
   .details-content {
@@ -152,7 +160,9 @@ details {
 }
 
 // Make sure images don't go beyond the page
-img { max-width: 100%; }
+img {
+  max-width: 100%;
+}
 
 img.-shadowed {
   margin-top: 1rem;
@@ -162,9 +172,14 @@ img.-shadowed {
 
 /** Some basic default table styling */
 table {
-  thead { background-color: $grey; }
+  thead {
+    background-color: $grey;
+  }
 
-  td, th { padding: 0.5rem; }
+  td,
+  th {
+    padding: 0.5rem;
+  }
 }
 
 /**
@@ -173,7 +188,6 @@ table {
 .bold {
   font-weight: bold;
 }
-
 
 .large-text {
   font-size: 1.3em;
@@ -305,7 +319,8 @@ form.search-form {
     border-color: $chicago-blue;
   }
 
-  h2, h3 {
+  h2,
+  h3 {
     margin-top: 0;
   }
 
@@ -313,7 +328,9 @@ form.search-form {
     font-size: 1.125rem;
   }
 
-  .faded { color: $text-mid-light; }
+  .faded {
+    color: $text-mid-light;
+  }
 
   @media (max-width: $mobile-max-width) {
     .bold {
@@ -457,7 +474,7 @@ article.blog-post {
   }
 
   // Positioning modifiers
-  &[x-placement^="top"] {
+  &[x-placement^='top'] {
     margin-bottom: $tooltipSize;
 
     .tooltip-arrow {
@@ -472,7 +489,7 @@ article.blog-post {
     }
   }
 
-  &[x-placement^="bottom"] {
+  &[x-placement^='bottom'] {
     margin-top: $tooltipSize;
 
     .tooltip-arrow {
@@ -487,7 +504,7 @@ article.blog-post {
     }
   }
 
-  &[x-placement^="right"] {
+  &[x-placement^='right'] {
     margin-left: $tooltipSize;
 
     .tooltip-arrow {
@@ -502,7 +519,7 @@ article.blog-post {
     }
   }
 
-  &[x-placement^="left"] {
+  &[x-placement^='left'] {
     margin-right: $tooltipSize;
 
     .tooltip-arrow {
@@ -520,12 +537,14 @@ article.blog-post {
   &[aria-hidden='true'] {
     visibility: hidden;
     opacity: 0;
-    transition: opacity .15s, visibility .15s;
+    transition:
+      opacity 0.15s,
+      visibility 0.15s;
   }
 
   &[aria-hidden='false'] {
     visibility: visible;
     opacity: 1;
-    transition: opacity .15s;
+    transition: opacity 0.15s;
   }
 }
