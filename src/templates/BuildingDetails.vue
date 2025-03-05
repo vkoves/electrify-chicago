@@ -284,7 +284,7 @@ query ($id: ID!, $ID: String) {
             <ReportCard :building="building" :data-year="dataYear" />
           </div>
 
-          <details>
+          <details class="hidden">
             <summary>Debug Full Grade Data</summary>
 
             <ul>
@@ -306,9 +306,7 @@ query ($id: ID!, $ID: String) {
               </li>
               <li>
                 <strong>EnergyMixLetterGrade:</strong>
-                <LetterGrade
-                  :grade="building.EnergyMixLetterGrade"
-                />
+                <LetterGrade :grade="building.EnergyMixLetterGrade" />
               </li>
               <li>
                 <strong>EnergyMixWeightedPctSum:</strong>
@@ -849,7 +847,7 @@ export default class BuildingDetails extends Vue {
     gap: 1rem;
     align-items: flex-start;
 
-    .report-card {
+    .report-card-cont {
       flex-basis: 18rem;
     }
   }
@@ -1057,7 +1055,7 @@ export default class BuildingDetails extends Vue {
       flex-direction: column-reverse;
       align-items: stretch;
 
-      .report-card {
+      .report-card-cont {
         flex-basis: initial;
       }
     }

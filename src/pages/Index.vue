@@ -32,7 +32,7 @@ export default class Index extends Vue {
   query {
     worstBuildings: allBuilding(
       sortBy: "GHGIntensity", limit: 10
-    ) @paginate {
+    ) {
       edges {
         node {
           slugSource
@@ -326,59 +326,6 @@ export default class Index extends Vue {
     margin: 0;
   }
 
-  .buildings-scroll-cont {
-    position: relative;
-    $card-padding: 0.75rem;
-    // Grow to account for inner padding
-    margin: 1rem (-$card-padding) 2rem (-$card-padding);
-    overflow: scroll hidden;
-
-    // Create a fake partial right border to make clear it's scrollable
-    &::after {
-      content: '';
-      width: 60px;
-      height: 4px;
-      background: gray;
-      position: absolute;
-      bottom: -4px;
-    }
-
-    // Set scrollbar width
-    &::-webkit-scrollbar {
-      width: 0.75rem;
-    }
-    // Scrollbar track
-    &::-webkit-scrollbar-track {
-      background: #f1f1f1;
-      border-radius: $brd-rad-medium;
-      margin: $card-padding;
-    }
-
-    // Scrollbar Handle
-    &::-webkit-scrollbar-thumb {
-      background: #888;
-      border-radius: $brd-rad-medium;
-      cursor: pointer;
-
-      // Scroll handle on hover
-      &:hover {
-        background: #555;
-      }
-    }
-
-    ul.building-tiles {
-      list-style: none;
-      display: flex;
-      gap: 1rem;
-      margin: 0;
-      padding: 0;
-
-      li {
-        padding: 0.5rem $card-padding 1.5rem $card-padding;
-      }
-    }
-  }
-
   .row {
     display: flex;
     justify-content: space-between;
@@ -460,19 +407,6 @@ export default class Index extends Vue {
 
       .map-link {
         font-size: 1.125rem;
-      }
-    }
-
-    // Undo padding on mobile to make scroll full width
-    .buildings-scroll-cont {
-      margin-left: -1rem;
-      margin-right: -1rem;
-
-      ul.building-tiles {
-        li {
-          padding-left: 1rem;
-          padding-right: 1rem;
-        }
       }
     }
 

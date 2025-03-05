@@ -69,7 +69,6 @@ h6,
   }
 }
 
-
 /**
  * Mobile Font Size Overrides
  */
@@ -92,6 +91,11 @@ h2 {
 p.-no-margin,
 p:first-of-type {
   margin: 0;
+}
+
+/** A global class to hide elements via CSS */
+.hidden {
+  display: none;
 }
 
 /**
@@ -150,7 +154,8 @@ details {
   border: solid $border-thin transparent;
   background-color: $off-white;
 
-  &, summary {
+  &,
+  summary {
     border-radius: $brd-rad-medium;
   }
 
@@ -159,8 +164,12 @@ details {
     padding: 1rem 1.5rem;
     cursor: pointer;
 
-    &:focus { outline-offset: 0; }
-    > span { margin-left: 0.5rem; }
+    &:focus {
+      outline-offset: 0;
+    }
+    > span {
+      margin-left: 0.5rem;
+    }
   }
 
   .details-content {
@@ -245,7 +254,10 @@ img.-shadowed {
     margin-left: 0.5rem;
     vertical-align: 1px;
 
-    &.-d, &.-b { padding-right: 0; }
+    &.-d,
+    &.-b {
+      padding-right: 0;
+    }
   }
 
   &.-large {
@@ -337,7 +349,8 @@ form.search-form {
     border-color: $chicago-blue;
   }
 
-  h2, h3 {
+  h2,
+  h3 {
     margin-top: 0;
   }
 
@@ -345,7 +358,9 @@ form.search-form {
     font-size: 1.125rem;
   }
 
-  .faded { color: $text-mid-light; }
+  .faded {
+    color: $text-mid-light;
+  }
 
   @media (max-width: $mobile-max-width) {
     .bold {
@@ -476,7 +491,7 @@ nav.pager {
   }
 
   // Positioning modifiers
-  &[x-placement^="top"] {
+  &[x-placement^='top'] {
     margin-bottom: $tooltipSize;
 
     .tooltip-arrow {
@@ -491,7 +506,7 @@ nav.pager {
     }
   }
 
-  &[x-placement^="bottom"] {
+  &[x-placement^='bottom'] {
     margin-top: $tooltipSize;
 
     .tooltip-arrow {
@@ -506,7 +521,7 @@ nav.pager {
     }
   }
 
-  &[x-placement^="right"] {
+  &[x-placement^='right'] {
     margin-left: $tooltipSize;
 
     .tooltip-arrow {
@@ -521,7 +536,7 @@ nav.pager {
     }
   }
 
-  &[x-placement^="left"] {
+  &[x-placement^='left'] {
     margin-right: $tooltipSize;
 
     .tooltip-arrow {
@@ -539,12 +554,83 @@ nav.pager {
   &[aria-hidden='true'] {
     visibility: hidden;
     opacity: 0;
-    transition: opacity .15s, visibility .15s;
+    transition:
+      opacity 0.15s,
+      visibility 0.15s;
   }
 
   &[aria-hidden='false'] {
     visibility: visible;
     opacity: 1;
-    transition: opacity .15s;
+    transition: opacity 0.15s;
+  }
+}
+
+/** A container for multiple BuildingTiles */
+.buildings-scroll-cont {
+  position: relative;
+  $card-padding: 0.75rem;
+  // Grow to account for inner padding
+  margin: 1rem (-$card-padding) 2rem (-$card-padding);
+  overflow: scroll hidden;
+
+  // Create a fake partial right border to make clear it's scrollable
+  &::after {
+    content: '';
+    width: 60px;
+    height: 4px;
+    background: gray;
+    position: absolute;
+    bottom: -4px;
+  }
+
+  // Set scrollbar width
+  &::-webkit-scrollbar {
+    width: 0.75rem;
+  }
+  // Scrollbar track
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: $brd-rad-medium;
+    margin: $card-padding;
+  }
+
+  // Scrollbar Handle
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: $brd-rad-medium;
+    cursor: pointer;
+
+    // Scroll handle on hover
+    &:hover {
+      background: #555;
+    }
+  }
+
+  ul.building-tiles {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0.5rem $card-padding 1.5rem $card-padding;
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    // Undo padding on mobile to make scroll full width
+    & {
+      margin-left: -1rem;
+      margin-right: -1rem;
+
+      ul.building-tiles {
+        li {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+    }
   }
 }
