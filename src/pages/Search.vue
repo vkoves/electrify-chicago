@@ -182,14 +182,6 @@ export default class Search extends Vue {
       );
     }
 
-    if (this.gradeQuintileFilter) {
-      buildingsResults = this.filterResults(
-        buildingsResults,
-        'AvgPercentileLetterGradeQuintiles',
-        this.gradeQuintileFilter,
-      );
-    }
-
     this.setSearchResults(buildingsResults);
   }
 
@@ -251,7 +243,6 @@ export default class Search extends Vue {
           NaturalGasUseRank
           NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
-          AvgPercentileLetterGradeQuintiles
           DataAnomalies
         }
       }
@@ -299,20 +290,6 @@ export default class Search extends Vue {
         <div>
           <label for="property-type">Grade Original</label>
           <select id="property-type" v-model="gradeFilter">
-            <option
-              v-for="gradeOpt in letterGradeOptions"
-              :key="gradeOpt.value"
-              :value="gradeOpt.value"
-            >
-              {{ gradeOpt.label }}
-            </option>
-          </select>
-        </div>
-
-        <!-- TODO: Remove test quintile filter-->
-        <div>
-          <label for="property-type">Grade Curved</label>
-          <select id="property-type" v-model="gradeQuintileFilter">
             <option
               v-for="gradeOpt in letterGradeOptions"
               :key="gradeOpt.value"

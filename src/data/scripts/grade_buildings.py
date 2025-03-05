@@ -466,11 +466,4 @@ def grade_buildings(building_data):
         right=True
     )
 
-    graded_df["AvgPercentileLetterGradeQuintiles"] = pd.cut(
-        graded_df["AvgPercentileGrade"],
-        bins=5,
-        labels=letter_grades,
-        right=True
-    )
-
     return graded_df
