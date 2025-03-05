@@ -258,10 +258,12 @@ export default class HowWeGradeBuildings extends Vue {}
           report card, like so:
         </p>
 
-        <img src="/how-we-grade/sample-flagged-building.webp"
-        class="-shadowed"
+        <img
+          src="/how-we-grade/sample-flagged-building.webp"
+          class="-shadowed"
           alt="1830 N Winchester Ave's building page, showing an 'Anomaly Detected' notice at the
-            top and a warning obscuring the report card."/>
+            top and a warning obscuring the report card."
+        />
 
         <h2>Have Feedback On Our Grading?</h2>
 
