@@ -378,6 +378,7 @@ query ($id: ID!, $ID: String) {
             />
             <img
               v-tooltip.bottom="{ content: tooltipMessage }"
+              :data-v-tooltip="{ tooltipConfig: { trigger: 'click hover'}}"
               class="tooltip"
               src="/help.svg"
               alt="Help icon"
