@@ -20,6 +20,8 @@ We are currently using Python 3.12. This is hardcoded in the following places:
   - [.github/workflows/pytest.yml](.github/workflows/pytest.yml)
 - Our Dockerfile:
   - [Dockerfile](Dockerfile)
+- Our netlify.toml file:
+  - [netlify.toml](netlify.toml)
 
 ### Export Python Version:
 

@@ -4,7 +4,7 @@ version = "0.1.0"
 requires-python = ">=3.12,<3.13"
 dependencies = [
     "python-slugify==4.0.1",
-    "pandas==2.1.2",
+    "pandas==2.2.3",
     "scipy==1.11.3",
     "numpy",
     "pytest==7.4.4",
