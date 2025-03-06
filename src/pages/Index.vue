@@ -171,7 +171,7 @@ export default class Index extends Vue {
             <div class="announce-panel -orange">
               <h3>
                 📰 Do High Emitting Buildings Stop Reporting?
-                <div class="regular-text-size faded">Mar. 1st, 2025</div>
+                <div class="regular-text-size faded">Mar. 6th, 2025</div>
               </h3>
 
               <p>

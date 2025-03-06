@@ -71,7 +71,7 @@ export default class MillionsInMissedFine extends Vue {
       </p>
       <p class="publish-time">
         <!-- TODO: Update publish time when PR is about to get merged -->
-        Published <time datetime="2025-3-1">Mar. 1st, 2025</time>
+        Published <time datetime="2025-3-1">Mar. 6th, 2025</time>
       </p>
       <p class="author">
         Analysis by

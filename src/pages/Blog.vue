@@ -32,7 +32,7 @@ export default class About extends Vue {
           </h2>
           <p class="publish-time">
             <!-- TODO: Update publish time when PR is about to get merged -->
-            Published <time datetime="2025-3-01">Mar. 1st, 2025</time>
+            Published <time datetime="2025-3-06">Mar. 6th, 2025</time>
           </p>
 
           <p>
