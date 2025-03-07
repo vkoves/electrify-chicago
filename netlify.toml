@@ -11,5 +11,8 @@
   PIP_DISABLE_PIP_VERSION_CHECK = "1"
 
 [build.commands]
-  # Override the default Python setup and do nothing, since the build doesn't need Python
-  pre = """"""
+  # Override the default Python setup and delete requirements.txt to prevent dependencies being
+  # installed, which we don't need for Gridsome build
+  pre = """
+  rm requirements.txt # Delete requirements.txt,
+  """
