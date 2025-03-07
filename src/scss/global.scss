@@ -88,8 +88,9 @@ h2 {
   margin: 1rem 0 0.5rem 0;
 }
 
-p.-no-margin,
-p:first-of-type {
+// Expose -no-margin variant to ignore default paragraph margins
+p:first-of-type,
+p.-no-margin {
   margin: 0;
 }
 
@@ -126,13 +127,6 @@ button {
       background-color: $grey-dark;
     }
   }
-}
-
-/**
- * Text helpers
- */
-.bold {
-  font-weight: bold;
 }
 
 dl {
@@ -177,6 +171,7 @@ details {
   }
 }
 
+// Make sure images don't go beyond the page
 img {
   max-width: 100%;
 }
@@ -185,6 +180,25 @@ img.-shadowed {
   margin-top: 1rem;
   border: solid $border-thin $grey;
   box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
+}
+
+/** Some basic default table styling */
+table {
+  thead {
+    background-color: $grey;
+  }
+
+  td,
+  th {
+    padding: 0.5rem;
+  }
+}
+
+/**
+ * Text helpers
+ */
+.bold {
+  font-weight: bold;
 }
 
 .large-text {
@@ -423,6 +437,19 @@ nav.pager {
       width: 2rem;
     }
   }
+}
+
+article.blog-post {
+  .sub-title {
+    margin: 0;
+    font-weight: bold;
+  }
+}
+
+// Blog article publish time
+.publish-time {
+  margin-top: 0.25rem;
+  font-weight: 500;
 }
 
 /**

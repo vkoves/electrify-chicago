@@ -172,6 +172,28 @@ export default class Index extends Vue {
           <div class="announcements">
             <div class="announce-panel -orange">
               <h3>
+                📰 Do High Emitting Buildings Stop Reporting?
+                <div class="regular-text-size faded">Mar. 6th, 2025</div>
+              </h3>
+
+              <p>
+                Many buildings in Chicago that fall under the benchmarking
+                requirements don't report their energy use and emissions. We
+                investigated if there was a pattern at play, and whether poor
+                performing buildings stopped reporting at higher rates than good
+                performers.
+              </p>
+
+              <p>
+                <a href="/blog/GHG-Intensity-Predict-Compliance" class="bold"
+                  >Read Our Full Research On Whether Poor Performance Impacts
+                  Reporting Rate</a
+                >.
+              </p>
+            </div>
+
+            <div class="announce-panel -orange">
+              <h3>
                 📰 $30 Million In Missed Fines
                 <div class="regular-text-size faded">Feb. 2nd, 2024</div>
               </h3>
@@ -333,6 +355,10 @@ export default class Index extends Vue {
 
     p.main-paragraph {
       font-size: 1.125rem;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
     }
   }
 

@@ -113,5 +113,9 @@ export default class OwnerLogo extends Vue {
   img {
     width: 20rem;
   }
+
+  p {
+    margin: 0;
+  }
 }
 </style>
