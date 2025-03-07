@@ -77,7 +77,7 @@ docker-compose run --rm electrify-chicago yarn lint-fix
 2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
 ```bash
-docker-compose run --rm electrify-chicago bash run_all.py
+docker-compose run --rm electrify-chicago python3 run_all.py
 ```
 
 ### Run Data Processing Tests
@@ -100,6 +100,10 @@ docker-compose run --rm electrify-chicago python -m pytest
 ```bash
 docker-compose run --rm electrify-chicago python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
 ```
+
+## Running Python Scripts Locally
+
+If you want to run Python scripts or Jupyter notebooks locally outside of Docker, you should use a Python virtual environment. To see how to set up a Python virtual environment and manage Python dependencies, see our Python dev guide at [PythonDev.md](PythonDev.md).
 
 ## Managing The Data
 

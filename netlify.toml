@@ -1,0 +1,11 @@
+[build]
+  command = "yarn build"  # Your main build command
+
+[build.environment]
+  PYTHON_VERSION = "3.12.0"  # Using Python 3.12
+  NODE_VERSION = "16"       # Setting to the minimum version in your package.json
+
+  # Skip requirements.txt installation
+  NETLIFY_USE_YARN = "true"
+  NETLIFY_RESTORE_PYTHON = "false"  # Prevent automatic Python setup
+  PIP_DISABLE_PIP_VERSION_CHECK = "1"

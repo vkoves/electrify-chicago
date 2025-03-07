@@ -23,6 +23,8 @@ module.exports = {
         code: 100,
         // Fixes errors in HTML files with long links
         ignoreUrls: true,
+        // Ignore long lines that are just 'src="longurl"'
+        ignorePattern: '^\\s*src=".*"$',
       },
     ],
 

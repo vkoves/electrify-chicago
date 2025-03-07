@@ -3,7 +3,7 @@ services:
     # Solving jovyan permission issues for host dirs as described in
     # https://jupyter-docker-stacks.readthedocs.io/en/latest/using/troubleshooting.html#permission-denied-when-mounting-volumes
     user: root
-    environment: 
+    environment:
       - NB_UID=${MY_UID}
       - NB_GID=${MY_GID}
 
