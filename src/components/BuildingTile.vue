@@ -7,6 +7,7 @@ import {
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
 import OwnerLogo from './OwnerLogo.vue';
+import LetterGrade from './LetterGrade.vue';
 
 /**
  * A component that renders a tile for a building
@@ -14,6 +15,7 @@ import OwnerLogo from './OwnerLogo.vue';
 @Component({
   components: {
     OwnerLogo,
+    LetterGrade,
   },
 })
 export default class BuildingTile extends Vue {
@@ -66,34 +68,42 @@ export default class BuildingTile extends Vue {
           </g-link>
           <div class="prop-type">{{ building.PrimaryPropertyType }}</div>
 
-          <dl>
-            <div>
-              <dt>GHG Intensity</dt>
-              <dd>
-                <div class="value">
-                  {{
-                    parseFloat(
-                      building.GHGIntensity.toString(),
-                    ).toLocaleString()
-                  }}
-                </div>
-                <div class="unit">kg CO<sub>2</sub> / sqft</div>
-              </dd>
+          <div class="stats">
+            <dl>
+              <div>
+                <dt>GHG Intensity</dt>
+                <dd>
+                  <div class="value">
+                    {{
+                      parseFloat(
+                        building.GHGIntensity.toString(),
+                      ).toLocaleString()
+                    }}
+                  </div>
+                  <div class="unit">kg CO<sub>2</sub> / sqft</div>
+                </dd>
+              </div>
+              <div>
+                <dt>Total Emissions</dt>
+                <dd>
+                  <div class="value">
+                    {{
+                      parseInt(
+                        building.TotalGHGEmissions.toString(),
+                      ).toLocaleString()
+                    }}
+                  </div>
+                  <div class="unit">tons CO<sub>2</sub>e</div>
+                </dd>
+              </div>
+            </dl>
+
+            <div class="grade-cont">
+              <LetterGrade :grade="building.AvgPercentileLetterGrade" />
+
+              <div>Overall Grade</div>
             </div>
-            <div>
-              <dt>Total Emissions</dt>
-              <dd>
-                <div class="value">
-                  {{
-                    parseInt(
-                      building.TotalGHGEmissions.toString(),
-                    ).toLocaleString()
-                  }}
-                </div>
-                <div class="unit">tons CO<sub>2</sub>e</div>
-              </dd>
-            </div>
-          </dl>
+          </div>
         </div>
       </div>
     </g-link>
@@ -224,6 +234,11 @@ export default class BuildingTile extends Vue {
       font-size: 0.75rem;
     }
 
+    .stats {
+      display: flex;
+      justify-content: space-between;
+    }
+
     dl {
       display: flex;
       gap: 2rem;
@@ -237,6 +252,20 @@ export default class BuildingTile extends Vue {
       }
       .unit {
         line-height: 1;
+      }
+    }
+
+    .grade-cont {
+      font-size: 0.6125rem;
+      color: $text-mid-light;
+      margin-top: 0.25rem;
+      margin-right: 1.25rem;
+      text-align: center;
+      font-weight: bold;
+
+      .letter-grade {
+        font-size: 2.5rem;
+        line-height: 1.25;
       }
     }
   }

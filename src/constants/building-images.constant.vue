@@ -35,8 +35,6 @@ const BuildingImagesBase = '/building-imgs/';
  * - Have extra space on the bottom for the text, but crop pretty tightly up top to save space
  * - If the image must be TALL, make it ~600px wide (e.g. Marina Towers, Aqua)
  * - Use the JPG format with 80% quality for a good compromise of file size and quality
- *
- * TODO: Move to using building IDs, because slugs change with data updates
  */
 export const BuildingImages: IBuildingImages = {
   /**
@@ -110,7 +108,6 @@ export const BuildingImages: IBuildingImages = {
     attributionUrl:
       'https://commons.wikimedia.org/wiki/File:Merchandise_Mart_080405.jpg',
     imgUrl: BuildingImagesBase + 'merchandise-mart.jpg',
-    isTall: true,
   },
   // the-monadnock-building
   '101567': {
