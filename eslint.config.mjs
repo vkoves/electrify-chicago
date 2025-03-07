@@ -41,6 +41,8 @@ export default tseslint.config(
             "max-len": ["error", {
                 code: 100,
                 ignoreUrls: true,
+                // Ignore long lines that are just 'src="longurl"'
+                ignorePattern: '^\\s*src=".*"$',
             }],
 
             "vue/html-closing-bracket-newline": "off",
