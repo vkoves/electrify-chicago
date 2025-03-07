@@ -26,16 +26,20 @@ export default class MillionsInMissedFine extends Vue {
 </script>
 <template>
   <DefaultLayout>
-    <div class="layout-constrained millions-in-fines">
+    <article class="layout-constrained millions-in-fines blog-post">
       <g-link to="/blog" class="back-link grey-link"> Back to Blog </g-link>
 
       <h1 id="main-content" tabindex="-1">
         City Of Chicago Failed to Collect $30 Million In Potential Fines from
         Building Benchmarking Ordinance
       </h1>
-      <p class="constrained bold">
+      <p class="sub-title constrained">
         Not Enforcing The Benchmarking Ordinance&apos;s Fines From 2018 - 2022
         Reduced Accountability & Transparency
+      </p>
+
+      <p class="publish-time">
+        Published <time datetime="2024-02-02">Feb. 2nd, 2024</time>
       </p>
 
       <p class="constrained">
@@ -188,7 +192,7 @@ export default class MillionsInMissedFine extends Vue {
         Contact the lead developer on this site, Viktor Köves, by emailing
         <a href="mailto:contact@viktorkoves.com">contact@viktorkoves.com</a>
       </p>
-    </div>
+    </article>
   </DefaultLayout>
 </template>
 <style lang="scss">

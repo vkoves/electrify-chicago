@@ -3,11 +3,13 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
+import EmissionsBreakdownGraph from '../components/EmissionsBreakdownGraph.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
+    EmissionsBreakdownGraph,
     NewTabIcon,
   },
   metaInfo() {
@@ -23,19 +25,48 @@ export default class About extends Vue {
     <div class="about-page layout-constrained">
       <h1 id="main-content" tabindex="-1">About Us</h1>
 
-      <p class="constrained">
-        Electrify Chicago is an independent open-source project looking to shed
-        light onto one of the biggest sources of Chicago's CO<sub>2</sub>
-        emissions - buildings. By providing more information about some of the
-        city's largest and most polluting buildings, we hope t encourage these
-        buildings to electrify, particularly by mobilizing people related to the
-        building - whether that be students and faculty for a college building
-        or employees and patients at a hospital.
-      </p>
+      <div class="flex-row">
+        <div>
+          <p class="constrained">
+            Electrify Chicago is an independent open-source project looking to
+            shed light onto one of the biggest sources of Chicago's CO<sub
+              >2</sub
+            >
+            emissions - buildings. By providing more information about some of
+            the city's largest and most polluting buildings, we hope to
+            encourage these buildings to electrify, particularly by mobilizing
+            people related to the building - whether that be students and
+            faculty for a college building or employees and patients at a
+            hospital.
+          </p>
 
-      <p class="our-why large-text bold">
-        Our Goal? Get Large Buildings to <em>Electrify</em> And Use Less Energy
-      </p>
+          <h2>Why Buildings?</h2>
+
+          <p class="constrained -wide main-paragraph">
+            <!-- TODO: Move to consolidated sources object-->
+            According to the
+            <a
+              ref="noopener"
+              href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
+              target="_blank"
+            >
+              2022 Chicago Climate Action Plan<NewTabIcon /> </a
+            >, <strong>69% of Chicago's emissions come from buildings</strong>,
+            making building emissions our biggest challenge and
+            <em>our biggest opportunity</em> as a city to tackle climate change.
+            At Electrify Chicago, we showcase building performance using
+            publicly available data supplemented by community-submitted
+            photographs and building owners.
+          </p>
+
+          <p class="our-why large-text">
+            <strong>Our Goal?</strong> Get Large Buildings to
+            <em>Electrify</em> And Use Less Energy
+          </p>
+        </div>
+
+        <EmissionsBreakdownGraph class="-desktop" />
+      </div>
 
       <h2>But Why Electrify?</h2>
 
@@ -45,7 +76,7 @@ export default class About extends Vue {
             and 9% from Wind. Then 18% comes from Coal and 14% from Fossil Gas."
           class="-shadowed"
           src="/il-power-chart.webp"
-          width="350"
+          width="300"
         />
 
         <p class="footnote -img">
@@ -176,6 +207,19 @@ export default class About extends Vue {
     margin-top: 1.75rem;
   }
 
+  .flex-row {
+    display: flex;
+    gap: 2rem;
+
+    .emissions-breakdown {
+      flex-shrink: 0;
+
+      img {
+        margin: 0;
+      }
+    }
+  }
+
   p.our-why {
     display: inline-block;
     line-height: 1.25;
@@ -184,8 +228,12 @@ export default class About extends Vue {
 
   .power-chart {
     float: right;
-    margin-left: 1rem;
-    margin-bottom: 1rem;
+    margin-left: 2rem;
+    margin-bottom: 3rem;
+
+    img {
+      margin: 0;
+    }
   }
 
   .other-pages {
@@ -197,6 +245,10 @@ export default class About extends Vue {
   }
 
   @media (max-width: $mobile-max-width) {
+    .emissions-breakdown {
+      display: none;
+    }
+
     .power-chart {
       float: none;
       margin-left: 0;

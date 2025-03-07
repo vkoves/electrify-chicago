@@ -490,6 +490,7 @@ export default class MapPage extends Vue {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
+          DataAnomalies
         }
       }
     }
@@ -499,7 +500,7 @@ export default class MapPage extends Vue {
 <template>
   <DefaultLayout>
     <div class="map-page">
-      <h1 id="main-content" tabindex="-1">Buildings Map</h1>
+      <h1 id="main-content" tabindex="-1">Map</h1>
 
       <DataDisclaimer />
 

@@ -4,7 +4,7 @@
 
 A site to publicize some of the most polluting buildings based on the Chicago Energy Benchmarking data published in the City of Chicago Data Portal.
 
-It's powered by [VueJS 2](https://v2.vuejs.org/) and [GridSome](https://gridsome.org/)
+Front-end in [VueJS 2](https://v2.vuejs.org/), statically built with [GridSome](https://gridsome.org/). Data processing with Python, and [Pandas](https://pandas.pydata.org/).
 
 ## Data Import
 
@@ -77,7 +77,7 @@ docker-compose run --rm electrify-chicago yarn lint-fix
 2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
 ```bash
-docker-compose run --rm electrify-chicago bash run_all.sh
+docker-compose run --rm electrify-chicago python3 run_all.py
 ```
 
 ### Run Data Processing Tests
@@ -100,6 +100,10 @@ docker-compose run --rm electrify-chicago python -m pytest
 ```bash
 docker-compose run --rm electrify-chicago python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
 ```
+
+## Running Python Scripts Locally
+
+If you want to run Python scripts or Jupyter notebooks locally outside of Docker, you should use a Python virtual environment. To see how to set up a Python virtual environment and manage Python dependencies, see our Python dev guide at [PythonDev.md](PythonDev.md).
 
 ## Managing The Data
 
@@ -160,7 +164,7 @@ We should reasonably crop images if needed and then scale them to be EITHER:
 - 1000px wide if it's a landscape image
 - 600px wide if it's a portrait image
 
-Make sure to export it as a `.jpg` image at a quality level of 70, which should ensure a reasonable
+Make sure to export it as a `.jpg` image at a **quality level of 70**, which should ensure a reasonable
 file size under 200 kB.
 
 \*\*Store the image in `/static/building-imgs/`.

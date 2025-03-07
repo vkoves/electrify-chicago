@@ -46,6 +46,7 @@ query ($id: ID!, $ID: String) {
     GrossFloorAreaRankByPropertyType
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
+    DataAnomalies
   }
   allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
     edges {
@@ -62,6 +63,7 @@ query ($id: ID!, $ID: String) {
           ElectricityUse
           NaturalGasUse
           DistrictSteamUse
+          DistrictChilledWaterUse
         }
     }
   }
@@ -105,7 +107,7 @@ query ($id: ID!, $ID: String) {
             </a>
           </div>
 
-          <p class="building-id">
+          <p class="building-id -no-margin">
             Chicago Building ID: {{ $page.building.ID }}
           </p>
         </div>
@@ -121,11 +123,45 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="details-cont">
+          <div
+            v-for="anomaly in buildingAnomalies"
+            :key="anomaly"
+            class="building-banner"
+          >
+            <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
+              <h2>
+                <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas
+                Free
+              </h2>
+
+              <p>
+                This building reported zero fossil gas use in the most recent
+                year, but has used gas in the past, which may be a reporting
+                error. Take a look at how this building has used energy over
+                time under "Extra Technical Info".
+              </p>
+            </div>
+            <div v-if="anomaly === DataAnomalies.largeGasSwing">
+              <h2>
+                <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent
+                Gas Use
+              </h2>
+
+              <p>
+                This building has had extremely large changes in gas use, which
+                is likely to indicate errors in reporting.
+              </p>
+            </div>
+          </div>
+
           <div v-if="dataYear < LatestDataYear" class="building-banner">
-            <span class="emoji">⚠️</span> This building did not report data in
-            {{ LatestDataYear }},
-            <span class="bold">this data is from {{ dataYear }}</span
-            >, the latest year reported
+            <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
+
+            <p>
+              This building did not report full data in {{ LatestDataYear }}, so
+              <span class="bold">top-level stats are from {{ dataYear }}</span
+              >, the latest full year reported.
+            </p>
           </div>
 
           <div class="building-top-info">
@@ -335,8 +371,22 @@ query ($id: ID!, $ID: String) {
             <strong>Total Energy Use:</strong>
             {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
           </p>
-
-          <PieChart :graph-data="energyBreakdownData" />
+          <div class="energy-mix-cont">
+            <PieChart
+              :id-prefix="'energy-mix'"
+              :graph-data="energyBreakdownData"
+            />
+            <img
+              v-tooltip.bottom="{
+                content: tooltipMessage,
+                trigger: 'click hover',
+              }"
+              class="tooltip"
+              src="/help.svg"
+              alt="Help icon"
+              tabindex="0"
+            />
+          </div>
         </div>
       </div>
 
@@ -437,10 +487,13 @@ import {
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
 import {
+  calculateEnergyBreakdown,
+  DataAnomalies,
   IBuilding,
-  IHistoricData,
-  UtilityCosts,
   IBuildingBenchmarkStats,
+  IHistoricData,
+  parseAnomalies,
+  UtilityCosts,
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
@@ -450,12 +503,9 @@ import {
 } from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 
-const EnergyBreakdownColors = {
-  DistrictChilling: '#01295F',
-  DistrictSteam: '#ABABAB',
-  Electricity: '#F0E100',
-  NaturalGas: '#993300',
-};
+import vToolTip from 'v-tooltip';
+
+Vue.use(vToolTip);
 
 @Component<any>({
   metaInfo() {
@@ -493,9 +543,20 @@ export default class BuildingDetails extends Vue {
     NaturalGasUse: 'Fossil Gas Use (kBTU)',
   };
 
+  tooltipMessage = `
+    <p class="title">Why does this matter?</p>
+    <p>
+      Although reducing energy use overall is important, not all energy is created equal -
+      electricity can be created without emissions (via solar, wind, nuclear, etc.) but burning
+      fossil gas (aka natural gas) always creates emissions.
+    </p>
+  `;
+
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
     BuildingBenchmarkStats;
+
+  readonly DataAnomalies = DataAnomalies;
 
   /** Expose UtilityCosts to template */
   readonly UtilityCosts: typeof UtilityCosts = UtilityCosts;
@@ -581,54 +642,18 @@ export default class BuildingDetails extends Vue {
     return null;
   }
 
+  get buildingAnomalies(): Array<DataAnomalies> {
+    return parseAnomalies(this.building.DataAnomalies);
+  }
+
   created(): void {
     this.historicData =
       this.$page.allBenchmark.edges.map((nodeObj) => nodeObj.node) || [];
 
-    this.calculateEnergyBreakdown();
+    const breakdownWithTotal = calculateEnergyBreakdown(this.building);
+    this.energyBreakdownData = breakdownWithTotal.energyBreakdown;
+    this.totalEnergyUsekBTU = breakdownWithTotal.totalEnergyUse;
     this.updateGraph();
-  }
-
-  calculateEnergyBreakdown(): void {
-    const energyBreakdown = [];
-
-    if ((this.building.ElectricityUse as any as number) > 0) {
-      energyBreakdown.push({
-        label: 'Electricity',
-        value: parseFloat(this.building.ElectricityUse.toString()),
-        color: EnergyBreakdownColors.Electricity,
-      });
-    }
-
-    if ((this.building.NaturalGasUse as any as number) > 0) {
-      energyBreakdown.push({
-        label: 'Fossil Gas',
-        value: parseFloat(this.building.NaturalGasUse.toString()),
-        color: EnergyBreakdownColors.NaturalGas,
-      });
-    }
-
-    if ((this.building.DistrictSteamUse as any as number) > 0) {
-      energyBreakdown.push({
-        label: 'District Steam',
-        value: parseFloat(this.building.DistrictSteamUse.toString()),
-        color: EnergyBreakdownColors.DistrictSteam,
-      });
-    }
-
-    if ((this.building.DistrictChilledWaterUse as any as number) > 0) {
-      energyBreakdown.push({
-        label: 'District Chilling',
-        value: parseFloat(this.building.DistrictChilledWaterUse.toString()),
-        color: EnergyBreakdownColors.DistrictChilling,
-      });
-    }
-
-    let totalEnergyUse = 0;
-    energyBreakdown.forEach((datum) => (totalEnergyUse += datum.value));
-    this.totalEnergyUsekBTU = totalEnergyUse;
-
-    this.energyBreakdownData = energyBreakdown;
   }
 
   updateGraph(event?: Event): void {
@@ -734,15 +759,23 @@ export default class BuildingDetails extends Vue {
   }
 
   .building-banner {
-    padding: 1rem;
+    padding: 0.5rem 0.75rem;
     background-color: $warning-background;
     border: dashed 0.125rem $warning-border;
     border-radius: $brd-rad-small;
     margin: 1rem 0;
     justify-self: flex-start;
+    max-width: 36rem;
 
+    h2 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+    }
     span.emoji {
       margin-right: 0.5rem;
+    }
+    p {
+      font-size: 0.75rem;
     }
   }
 
@@ -803,16 +836,26 @@ export default class BuildingDetails extends Vue {
     .stat-tiles-col {
       flex-basis: 70%;
     }
+
     .chart-cont {
       flex-basis: 30%;
       flex-shrink: 0;
       margin-top: 1rem;
 
-      .pie-chart-cont {
+      .energy-mix-cont {
+        display: flex;
+        flex-direction: column;
         margin-top: 1rem;
         background-color: $off-white;
         border-radius: $brd-rad-medium;
         max-width: 24rem;
+
+        .tooltip {
+          align-self: flex-end;
+          width: fit-content;
+          margin-bottom: 1rem;
+          margin-right: 1rem;
+        }
       }
     }
   }
