@@ -4,20 +4,12 @@
 [build.environment]
   PYTHON_VERSION = "3.12.0"  # Using Python 3.12
   NODE_VERSION = "16"       # Setting to the minimum version in your package.json
-  
+
   # Skip requirements.txt installation
   NETLIFY_USE_YARN = "true"
   NETLIFY_RESTORE_PYTHON = "false"  # Prevent automatic Python setup
   PIP_DISABLE_PIP_VERSION_CHECK = "1"
 
 [build.commands]
-  # Override the default Python setup
-  pre = """
-    # Install Python 3.12 explicitly and make it the default
-    pyenv install -s 3.12.0
-    pyenv global 3.12.0
-    python --version
-    
-    # Install dependencies from pyproject.toml in root dir
-    pip install -e .
-  """
+  # Override the default Python setup and do nothing, since the build doesn't need Python
+  pre = """"""
