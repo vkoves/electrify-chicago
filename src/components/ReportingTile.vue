@@ -10,7 +10,10 @@
       <LetterGrade :grade="grade" class="-large -spaced" />
 
       <img
-        v-tooltip.bottom="{ content: tooltipMessage }"
+        v-tooltip.bottom="{
+          content: tooltipMessage,
+          trigger: 'click hover',
+        }"
         class="tooltip"
         src="/help.svg"
         alt="Help icon"
