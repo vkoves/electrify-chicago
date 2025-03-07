@@ -382,7 +382,7 @@ nav.pager {
  *
  * Base Component Structure:
  *    <img
- *      v-tooltip="tooltipMessage"
+ *      v-tooltip="{ content: tooltipMessage, trigger: 'click hover' }"
  *      class="tooltip"
  *      src="/help.svg"
  *      alt="Help icon"
@@ -393,7 +393,7 @@ nav.pager {
  *    v-tooltip.[top | bottom | left | right]
  *    Ex.
  *      <img
- *        v-tooltip.bottom="tooltipMessage"
+ *        v-tooltip.bottom="{ content: tooltipMessage, trigger: 'click hover' }"
  *        class="tooltip"
  *        src="/help.svg"
  *        alt="Help icon"
