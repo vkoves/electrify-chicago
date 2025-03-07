@@ -83,7 +83,7 @@ export default class RankText extends Vue {
 
   get isAboveMedian(): boolean {
     return (
-      typeof this.building[this.statKey] &&
+      typeof this.building[this.statKey] !== 'undefined' &&
       (this.building[this.statKey] as number) > this.stats[this.statKey].median
     );
   }

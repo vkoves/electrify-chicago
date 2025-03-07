@@ -1,6 +1,6 @@
 <script lang="ts">
 // Gridsome doesn't have types, so can't import it properly
-// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
+
 const Pager = require('gridsome').Pager;
 
 import { Component, Vue } from 'vue-property-decorator';

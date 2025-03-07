@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           # The Node version to use
-          node-version: 16
+          node-version: 22
 
       - name: Install ESLint
         run: yarn install

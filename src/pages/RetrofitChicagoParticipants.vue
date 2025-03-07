@@ -5,7 +5,7 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuilding } from '../common-functions.vue';
+import { IBuilding, IBuildingNode } from '../common-functions.vue';
 import {
   BuildingsCustomInfo,
   IBuildingCustomInfo,
@@ -31,8 +31,7 @@ interface IBuildingEdge {
 })
 export default class ChicagoRetrofitParticipants extends Vue {
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static: any;
-  readonly $context: any;
+  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   buildingsFiltered: Array<IBuildingEdge> = [];
 
