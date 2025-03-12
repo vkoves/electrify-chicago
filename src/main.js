@@ -22,12 +22,7 @@ export default function (Vue, { router, head, isClient }) {
     href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&display=swap',
   });
 
-  // Add meta description
-  head.meta.push({
-    name: 'description',
-    content:
-      "Learn about Chicago's most polluting buildings, and why we need to electrify!",
-  });
+  console.log('head', head.meta);
 
   // Add social images
   head.meta.push({

@@ -51,7 +51,7 @@ export default class ReportCard extends Vue {
       :class="{ '-faded': !showingWarning }"
     >
       <div class="warning-inner">
-        <h2>Warning - Data Errors Detected</h2>
+        <h2>Warning - Data Discrepencies Detected</h2>
 
         <p>
           We detected some issues with this building's data, so these grades may
@@ -139,7 +139,8 @@ export default class ReportCard extends Vue {
       backdrop-filter: blur(0.25rem);
 
       h2 {
-        margin: 0;
+        margin-top: 0;
+        font-size: 1rem;
       }
       p {
         font-size: 0.8125rem;

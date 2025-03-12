@@ -16,10 +16,23 @@ import AppHeader from '../components/layout/AppHeader.vue';
  *
  * Accepts a `mainClass` - pass `layout -full-width` to not have a normal width page
  */
-@Component({
+@Component<any>({
   components: {
     AppFooter,
     AppHeader,
+  },
+  metaInfo() {
+    return {
+      meta: [
+        {
+          // Default side wide meta description
+          key: 'description',
+          name: 'description',
+          content:
+            "Learn about Chicago's most polluting buildings, and why we need to electrify!",
+        },
+      ],
+    };
   },
 })
 export default class Default extends Vue {

@@ -16,10 +16,13 @@ import BuildingTile from '../../components/BuildingTile.vue';
       title: 'How We Grade Buildings, And Why',
       meta: [
         {
+          // TODO: Make this work
+          key: 'description',
           name: 'description',
-          content: 'Electrify Chicago gives buildings letter grades, but how do we calculate it?'
-        }
-      ]
+          content:
+            'Electrify Chicago gives buildings letter grades, but how are they calculated?',
+        },
+      ],
     };
   },
 })
@@ -71,7 +74,7 @@ export default class HowWeGradeBuildings extends Vue {}
             building is &ldquo;good&rdquo; or &ldquo;bad&rdquo; compared to
             other city buildings</strong
           >. But good and bad are relative, so let's explain what our team means
-          with that.
+          by that.
         </p>
 
         <h2 id="north-stars">Our North Stars - Energy Use & Energy Mix</h2>
@@ -167,16 +170,15 @@ export default class HowWeGradeBuildings extends Vue {}
         <ul class="-spaced">
           <li>
             <strong>50% GHG Intensity</strong> - this is a percentile compared
-            to the other buildings in the data, so the highest score (> 80%, an
-            A) goes to a building with lower emissions intensity than 99% of
-            buildings.
+            to the other buildings in the data, so the highest score (an A) goes
+            to a building with lower emissions intensity than 80% of buildings.
           </li>
           <li>
             <strong>40% Energy Mix</strong> - this is a percentile compared to
             the other buildings in the data in terms of how much electricity
             (including district chilling, where a central building cools water
-            and then distributes it) the building uses. So the highest score (>
-            80%, an A) goes to a building with less gas use than 80% of
+            and then distributes it) the building uses. So the highest score
+            (80%, an A) goes to a building with less gas use than 80% of
             buildings.
           </li>
           <li>
@@ -353,16 +355,23 @@ export default class HowWeGradeBuildings extends Vue {}
     }
   }
 
+  // Center images
+  img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   img.what-we-know-diagram {
     display: block;
-    margin: 1rem 0 0 2rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
     max-width: 30rem;
   }
 
   @media (max-width: $mobile-max-width) {
     img.what-we-know-diagram {
       width: 100%;
-      margin-left: 0;
     }
   }
 }
