@@ -226,7 +226,6 @@ export default class Search extends Vue {
   /** Called from handleSort, this function sorts
    * according to sortedField and sortedDirection state values */
   runSort(buildings: any): void {
-
     const sortedBuildings = buildings.sort(
       (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) => {
         const valueA = Number(buildingEdgeA.node[this.sortedField]);
