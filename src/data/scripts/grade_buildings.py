@@ -12,27 +12,41 @@ data_in_file_historical_path = get_data_file_path(
     data_directory, data_in_file_historical
 )
 
-
-# Default bins and letter grades for percentile grading:
-bins = [0, 20, 40, 60, 80, 100]
+# Default bins and letter grades for percentile grading: (note the last bin is 101 so perfect scores
+# get an A)
+bins = [0, 20, 40, 60, 80, 101]
 letter_grades = ["F", "D", "C", "B", "A"]
 
-# Default weights for each energy source in the energy mix grade:
-energy_mix_grade_weights = {
-    "ElectricityUse": 2,
-    "NaturalGasUse": 0.5,
-    "DistrictSteamUse": 1,
-    "DistrictChilledWaterUse": 1,
-    "AllOtherFuelUse": 0,
+# The weights for the overall formula
+# Publicly documented in HowWeGradeBuildings.vue
+overall_grade_weights = {
+    # 50% for GHG Intensity - the big kahuna
+    "ghg_intensity": 0.50,
+    # 40% for energy mix, not as important as emissions intensity but very important
+    "energy_mix": 0.40,
+    # 10% bonus for reporting consistently (a perfect building that has spotty reporting still gets
+    # an A, but it might slip an A- to a B)
+    "consistent_reporting": 0.10,
 }
 
-# Grading schema for Not Submitted records:
-bins_missing_records = [0, 1, 2, 3, 4, np.inf]
-labels_missing_records = ['A', 'B', 'C', 'D', 'F']
 
+# Default weights for each energy source in the energy mix grade, from 0 - 1, where 1 is totally
+# clean and 0 is totally dirty. E.g. a 50% gas building gets a C energy mix raw score, 100%
+# electric gets an A, but then we weight against overall building stock, so you get a B if you have
+# less gas use than the average building.
+# Publicly documented in HowWeGradeBuildings.vue
+energy_mix_grade_weights = {
+    "ElectricityUse": 1,
+    "DistrictChilledWaterUse": 1, # district chilling is electric, so count it as good
+    "NaturalGasUse": 0, # gas is gas, so no points
+    "DistrictSteamUse": 0, # district steam _could_ be electric, but in Chicago none are as of
+        # 2025 to our knowledge (IIT is the biggest one, and they for sure use gas)
+    "AllOtherFuelUse": 0, # assume fossil
+}
 
 def generate_percentile_grade(
     vals: pd.Series,
+    col_base_name: str,
     reverse: bool = False,
     bins: List[int] = bins,
     letter_grades: List[str] = letter_grades,
@@ -46,6 +60,8 @@ def generate_percentile_grade(
     Parameters
     ----------
     vals : pd.Series
+    col_base_name: The base column name to use, we then create "${col_base_name}PercentileGrade" and
+        "${col_base_name}LetterGrade" columns
     reverse : bool
         If True, lower values are better. If False, higher values are better.
     bins : List[int]
@@ -60,7 +76,6 @@ def generate_percentile_grade(
         Original Index is also preserved.
 
     """
-    field = vals.name
     grades = pd.DataFrame(index=vals.index)
 
     # Calculate percentile-based score out 100:
@@ -71,7 +86,7 @@ def generate_percentile_grade(
         def calc_func(x):
             return percentileofscore(vals, x, kind="weak")
     percent_scores: pd.Series = vals.apply(calc_func)
-    grades[f"{field}PercentileGrade"] = percent_scores
+    grades[f"{col_base_name}PercentileGrade"] = percent_scores
 
     # Calculate letter grades (right threshold is included):
     letter_grades = pd.cut(
@@ -81,7 +96,7 @@ def generate_percentile_grade(
         right=True,
         include_lowest=True,
     )
-    grades[f"{field}LetterGrade"] = letter_grades
+    grades[f"{col_base_name}LetterGrade"] = letter_grades
 
     return grades
 
@@ -111,7 +126,7 @@ def generate_energy_int_grade(
     Returns
     -------
     ghg_intensity_res : pd.DataFrame
-        Percentile and letter grades for `GHGIntensity` field. Uses `df`'s 
+        Percentile and letter grades for `GHGIntensity` field. Uses `df`'s
         index. `cols_to_keep` are also included.
 
     """
@@ -127,6 +142,7 @@ def generate_energy_int_grade(
 
     ghg_intensity_grades_df: pd.DataFrame = generate_percentile_grade(
         vals=ghg_intensity,
+        col_base_name='GHGIntensity',
         reverse=True,
         bins=bins,
         letter_grades=letter_grades,
@@ -243,6 +259,7 @@ def generate_energymix_grade(
     # Generate percentile and letter grades:
     energy_mix_grades: pd.DataFrame = generate_percentile_grade(
         weighted_pct_scores,
+        col_base_name="EnergyMix",
         reverse=False,
         bins=bins,
         letter_grades=letter_grades,
@@ -267,13 +284,50 @@ def generate_energymix_grade(
     return energy_mix_grades
 
 
-def generate_missing_data_grade(
+def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculates the submission rate per building (percentage of years submitted).
+
+    Args:
+        df (pd.DataFrame): The DataFrame with building and year data.
+        building_id_col (str): The name of the building ID column.
+        status_col (str): The name of the status column.
+        not_submitted_val (str): The value indicating a building is not submitted.
+
+    Returns:
+        pd.DataFrame: A DataFrame with building IDs and their submission rates as a SubmissionRate
+            column
+    """
+
+    def calculate_metrics(group):
+        total_years = len(group)
+        # TODO: Refactor not submitted to be no GHG Intensity, since that's our true count
+        not_submitted_count = (group['ReportingStatus'] == 'Not Submitted').sum()
+        submitted_years = total_years - not_submitted_count
+
+        if total_years == 0:
+            submission_rate = 0.0
+        else:
+            submission_rate = (submitted_years / total_years) * 100
+
+        return pd.Series({'submission_rate': submission_rate, 'not_submitted_count': not_submitted_count})
+
+    submission_rates = df.groupby('ID').apply(calculate_metrics).reset_index()
+
+    return submission_rates
+
+
+def generate_consistent_reporting_grade(
     df: pd.DataFrame,
-    bins: List[int] = bins_missing_records,
-    labels: List[str] = labels_missing_records,
+    bins: List[int] = bins,
 ):
     """
-    Generate grades based on how many records are missing for each building.
+    Generate grades for consistent reporting, based on how many records are missing for each
+    building.
+
+    NOTE: This is not a relative percentile like the other grades, because there's a perfect score,
+    and we don't care about the average performance. If you report all years, you get a 100%, if you
+    report 1/5, you get a 20%.
 
     Parameters
     ----------
@@ -282,8 +336,6 @@ def generate_missing_data_grade(
     bins : List[int]
         Integers denoting boundaries between letter grades. Right threshold is
         included.
-    labels : List[str]
-        Letter grades corresponding to the bins.
 
     Returns
     -------
@@ -298,38 +350,28 @@ def generate_missing_data_grade(
     df = df.loc[:, ["ID", "DataYear", "ReportingStatus"]]
 
     # Calculate number of missing records for each building:
-    df["not_submitted"] = (df["ReportingStatus"] == 'Not Submitted').astype(int)
-    not_submitted_count_df = df.groupby("ID").agg(
-        not_submitted_count=("not_submitted", "sum")
-    )
+    submission_rates_df = calculate_building_submission_rate(df)
 
     # Calculate grades based on how many records are missing for each building:
-    not_submitted_count_df['SubmittedRecordsGrade'] = pd.cut(
-        not_submitted_count_df['not_submitted_count'],
+    submission_rates_df['SubmittedRecordsLetterGrade'] = pd.cut(
+        submission_rates_df['submission_rate'],
         bins=bins,
-        labels=labels,
         include_lowest=True,
+        labels=letter_grades,
         right=False,
     )
 
     # Rename for consistent format:
-    not_submitted_count_df.rename(
-        columns={'not_submitted_count': 'MissingRecordsCount'}, inplace=True
+    submission_rates_df.rename(
+        columns={
+            'not_submitted_count': 'MissingRecordsCount',
+            'submission_rate': 'SubmittedRecordsPercentileGrade'
+        }, inplace=True
     )
 
-    not_submitted_count_df.reset_index(inplace=True)
+    submission_rates_df.reset_index(inplace=True)
 
-    # Capture percentiles:
-    percentiles = generate_percentile_grade(
-        vals=not_submitted_count_df["MissingRecordsCount"],
-        reverse=True,
-    )["MissingRecordsCountPercentileGrade"]
-
-    not_submitted_count_df.insert(
-        2, "MissingRecordsCountPercentileGrade", percentiles
-    )
-
-    return not_submitted_count_df
+    return submission_rates_df
 
 
 def grade_ghg_intensity_energy_mix_all_years(building_data: pd.DataFrame):
@@ -377,30 +419,44 @@ def grade_ghg_intensity_energy_mix_all_years(building_data: pd.DataFrame):
     return df
 
 
+def calculate_weighted_average(graded_df: pd.DataFrame) -> pd.Series:
+    """
+    Calculates the weighted average of percentile grades. This is our final grading formula that
+    combines all the sub-grades into one final grade.
+
+    Args:
+        graded_df (pd.DataFrame): The DataFrame containing percentile grades.
+
+    Returns:
+        pd.Series: A Series containing the weighted average.
+    """
+
+    weighted_average = (
+        graded_df["GHGIntensityPercentileGrade"] * overall_grade_weights['ghg_intensity']
+        + graded_df["EnergyMixPercentileGrade"] * overall_grade_weights['energy_mix']
+        + graded_df["SubmittedRecordsPercentileGrade"] * overall_grade_weights['consistent_reporting']
+    )
+
+    return weighted_average
+
 def grade_buildings(building_data):
     # Generate grades for all years for GHG Intensity and Energy Mix:
     graded_df = grade_ghg_intensity_energy_mix_all_years(
         building_data=building_data,
     )
 
-    # Generate grades for missing records:
+    # Generate grades for consistent reporting (not missing records):
     df_historical = pd.read_csv(data_in_file_historical_path)
-    not_submitted_grades = generate_missing_data_grade(df_historical)
+    consistent_reporting_grades = generate_consistent_reporting_grade(df_historical)
     graded_df = pd.merge(
         left=graded_df,
-        right=not_submitted_grades,
+        right=consistent_reporting_grades,
         how="left",
         on="ID",
     )
 
-    # Overall numerical grade, average of all percentile grades:
-    graded_df["AvgPercentileGrade"] = graded_df[
-        [
-            "GHGIntensityPercentileGrade",
-            "EnergyMixWeightedPctSumPercentileGrade",
-            "MissingRecordsCountPercentileGrade"
-        ]
-    ].mean(axis=1)
+    # Overall numerical grade, a weighted average of all percentile grades
+    graded_df["AvgPercentileGrade"] = calculate_weighted_average(graded_df)
 
     # Overall letter grade:
     graded_df["AvgPercentileLetterGrade"] = pd.cut(

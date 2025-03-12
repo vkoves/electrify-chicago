@@ -226,8 +226,6 @@ export default class BarGraph extends Vue {
 
           // Min Point - The min point should have its label below
           if (d.x === this.minAndMaxPoints![0].x) {
-            console.log(yPos, d.y);
-
             // If the min is right at the bottom right or bottom left, render it above
             // to prevent colliding with x-axis labels (e.g. Digital Lakeside > District Steam)
             if (
