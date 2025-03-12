@@ -14,6 +14,12 @@ import BuildingTile from '../../components/BuildingTile.vue';
   metaInfo() {
     return {
       title: 'How We Grade Buildings, And Why',
+      meta: [
+        {
+          name: 'description',
+          content: 'Electrify Chicago gives buildings letter grades, but how do we calculate it?'
+        }
+      ]
     };
   },
 })
@@ -23,8 +29,6 @@ export default class HowWeGradeBuildings extends Vue {}
   <DefaultLayout>
     <div class="how-we-grade-page">
       <div class="layout-constrained">
-        <g-link to="/blog" class="back-link grey-link"> Back to Blog </g-link>
-
         <h1 id="main-content" tabindex="-1">How We Grade Buildings, And Why</h1>
 
         <div class="table-of-contents">
@@ -55,7 +59,7 @@ export default class HowWeGradeBuildings extends Vue {}
 
         <p>
           We've been working towards grading buildings at Electrify Chicago for
-          a long-time, and in March 2025 we rolled out our first version. Let's
+          a long time, and in March 2025 we rolled out our first version. Let's
           walk through how it works, and why!
         </p>
 
@@ -90,8 +94,8 @@ export default class HowWeGradeBuildings extends Vue {}
         </ol>
 
         <p>
-          The first point is easy to explain - the less energy a building users
-          per square foot, the lower emissions it has, and it's a metric that's
+          The first point is easy to explain - the less energy a building uses
+          per square foot, the lower emissions it has, and this metric is
           agnostic to building size. We considered grading by total emissions,
           but that would mean that incredibly efficient large buildings could
           never get an A grade.
