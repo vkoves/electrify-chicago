@@ -31,8 +31,23 @@ export default class BuildingsTable extends Vue {
   @Prop({ default: false }) showGasUse!: boolean;
 
   @Prop({ default: false }) showElectricityUse!: boolean;
+
+  // **************************************************************
+  /** Props from Search component to store field (column) being sorted and the direction of the sort */
+  @Prop({ default: 'GHGIntensity'}) sortedField!: string;
+  @Prop({ default: 'desc'}) sortedDirection!: string;
+
+  // declares the property emit for TS
+  $emit: any;
+    // **************************************************************
+    
+
 }
+
+
 </script>
+
+
 
 <template>
   <div class="buildings-table-cont">
@@ -46,21 +61,35 @@ export default class BuildingsTable extends Vue {
           <th scope="col">Name / Address</th>
           <th scope="col" class="prop-type">Primary Property Type</th>
           <th v-if="showSquareFootage">Square Footage</th>
-          <th v-if="showGasUse" scope="col" class="numeric wide-col">
+             <!-- ADDING CLICK HANDLERS TO DATA COLUMNS -->
+          <th v-if="showGasUse" scope="col" class="numeric wide-col" @click="$emit('sort', 'NaturalGasUse')">
             Fossil Gas Use<br />
             <span class="unit">(kBtu)</span>
+            <span v-if="sortedField === 'NaturalGasUse'" class="sort-indicator">
+              {{ sortedDirection === 'asc' ? '▲' : '▼' }}
+            </span>
           </th>
-          <th v-if="showElectricityUse" scope="col" class="numeric wide-col">
+          <th v-if="showElectricityUse" scope="col" class="numeric wide-col" @click="$emit('sort', 'ElectricityUse')">
             Electricity Use<br />
             <span class="unit">(kBtu)</span>
+            <span v-if="sortedField === 'ElectricityUse'" class="sort-indicator">
+              {{ sortedDirection === 'asc' ? '▲' : '▼' }}
+            </span>
           </th>
-          <th scope="col" class="numeric wide-col">
+      
+          <th scope="col" class="numeric wide-col" @click="$emit('sort', 'GHGIntensity')">
             GHG Intensity<br />
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
+            <span v-if="sortedField === 'GHGIntensity'" class="sort-indicator">
+              {{ sortedDirection === 'asc' ? '▲' : '▼' }}
+            </span>
           </th>
-          <th scope="col" class="numeric wide-col">
+          <th scope="col" class="numeric wide-col" @click="$emit('sort', 'TotalGHGEmissions')">
             Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
+            <span v-if="sortedField === 'TotalGHGEmissions'" class="sort-indicator">
+              {{ sortedDirection === 'asc' ? '▲' : '▼' }}
+            </span>
           </th>
         </tr>
       </thead>
@@ -225,6 +254,12 @@ export default class BuildingsTable extends Vue {
       }
       &.numeric {
         text-align: right;
+        cursor: pointer;
+
+        .sort-indicator {
+          margin-left: 0.1rem;
+          font-size: 0.6rem;
+        }
       }
       &.wide-col {
         width: 20%;

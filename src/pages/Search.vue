@@ -51,6 +51,14 @@ export default class Search extends Vue {
   /** The selected property type filter */
   propertyTypeFilter = '';
 
+   // ************************************************************
+  /** The current sorted field (column) */
+  sortedField = 'GHGIntensity'
+
+  /** The direction of the sorted field (column) */
+  sortedDirection = 'desc'
+  // ************************************************************
+
   gradeFilter = '';
   gradeQuintileFilter = '';
 
@@ -185,6 +193,36 @@ export default class Search extends Vue {
     this.setSearchResults(buildingsResults);
   }
 
+  // *******************************************************************
+  /** click handler function, initially, to toggle the sortedDirection state between 'desc' and 'asc' */
+
+  // This function will be called on click handlers on headers in BuildingsTable, and would pass column (field) name
+  // State values: sortedField, sortedDirection
+  // field would be the column name, matching IHistoricData interface names (ex. GHGIntensity, NaturalGasUse)
+  handleSort(field: string): void {
+    // if clicking on the same field, this will toggle between 'desc' and 'asc'
+    if (this.sortedField === field) {
+      this.sortedDirection = this.sortedDirection === 'desc' ? 'asc' : 'desc';
+    } else {
+    // else if clicking on a new field, set sortedField state to the new field AND set initial sortedDirection to 'desc'
+      this.sortedField = field;
+      this.sortedDirection = 'desc'
+    }
+
+    // Sort results based on updated state values
+    this.runSort()
+  }
+
+  /** Called from handleSort, this function sorts according to the sortedField and sortedDirection state values */
+  runSort(): void {
+
+    // TODO: SYNTAX FOR SORTING ON THE SORTEDFIELD STATE COLUMN
+    console.log(this.$static.allBuilding.edges)
+  }
+
+
+// *******************************************************************
+
   /**
    * Filter building results by a column and a value
    */
@@ -306,7 +344,7 @@ export default class Search extends Vue {
         </button>
       </form>
 
-      <BuildingsTable :buildings="searchResults" />
+      <BuildingsTable :buildings="searchResults" :sort-field="sortedField" :sort-direction="sortedDirection" @sort="handleSort" />
 
       <div v-if="searchResults.length === 0" class="no-results-msg">
         <h2>No results found!</h2>
