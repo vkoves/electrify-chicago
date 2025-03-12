@@ -32,16 +32,12 @@ export default class BuildingsTable extends Vue {
 
   @Prop({ default: false }) showElectricityUse!: boolean;
 
-  // **************************************************************
   /** Props from Search component to store field (column) being sorted and the direction of the sort */
   @Prop({ default: 'GHGIntensity'}) sortedField!: string;
   @Prop({ default: 'desc'}) sortedDirection!: string;
 
   // declares the property emit for TS
   $emit: any;
-    // **************************************************************
-    
-
 }
 
 
@@ -61,7 +57,7 @@ export default class BuildingsTable extends Vue {
           <th scope="col">Name / Address</th>
           <th scope="col" class="prop-type">Primary Property Type</th>
           <th v-if="showSquareFootage">Square Footage</th>
-             <!-- ADDING CLICK HANDLERS TO DATA COLUMNS -->
+             <!-- Click handlers on numeric columns for sorting -->
           <th v-if="showGasUse" scope="col" class="numeric wide-col" @click="$emit('sort', 'NaturalGasUse')">
             Fossil Gas Use<br />
             <span class="unit">(kBtu)</span>
