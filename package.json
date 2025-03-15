@@ -14,7 +14,7 @@
     "explore": "gridsome explore",
     "eslint-ci": "yarn eslint-base --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "eslint-base": "yarn eslint",
-    "prettier-base": "npx prettier ./**/*{.ts,.vue,.md}",
+    "prettier-base": "npx prettier ./**/*{.ts,.vue,.md,.scss}",
     "prettier-fix": "yarn prettier-base --write",
     "lint": "yarn eslint-base && yarn prettier-base --check",
     "lint-fix": "yarn eslint-base --fix && yarn prettier-base --write"
