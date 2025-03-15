@@ -46,6 +46,18 @@ query ($id: ID!, $ID: String) {
     GrossFloorAreaRankByPropertyType
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
+    DataAnomalies
+    # Grade data
+    GHGIntensityPercentileGrade,
+    GHGIntensityLetterGrade,
+    EnergyMixWeightedPctSum,
+    EnergyMixPercentileGrade,
+    EnergyMixLetterGrade,
+    MissingRecordsCount,
+    SubmittedRecordsPercentileGrade,
+    SubmittedRecordsLetterGrade,
+    AvgPercentileGrade,
+    AvgPercentileLetterGrade,
   }
   allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
     edges {
@@ -62,6 +74,7 @@ query ($id: ID!, $ID: String) {
           ElectricityUse
           NaturalGasUse
           DistrictSteamUse
+          DistrictChilledWaterUse
         }
     }
   }
@@ -76,6 +89,7 @@ query ($id: ID!, $ID: String) {
         :class="{
           '-has-img': Boolean(buildingImg),
           // The layout is better for tall images, so keeping it there
+          // TODO: Drop -img-tall and combine with -has-img
           '-img-tall': Boolean(buildingImg?.isTall || true),
         }"
       >
@@ -105,7 +119,7 @@ query ($id: ID!, $ID: String) {
             </a>
           </div>
 
-          <p class="building-id">
+          <p class="building-id -no-margin">
             Chicago Building ID: {{ $page.building.ID }}
           </p>
         </div>
@@ -121,116 +135,201 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="details-cont">
+          <div
+            v-for="anomaly in buildingAnomalies"
+            :key="anomaly"
+            class="building-banner"
+          >
+            <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
+              <h2>
+                <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas
+                Free
+              </h2>
+
+              <p>
+                This building reported zero fossil gas use in the most recent
+                year, but has used gas in the past, which may be a reporting
+                error. Take a look at how this building has used energy over
+                time under "Extra Technical Info".
+              </p>
+            </div>
+            <div v-if="anomaly === DataAnomalies.largeGasSwing">
+              <h2>
+                <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent
+                Gas Use
+              </h2>
+
+              <p>
+                This building has had extremely large changes in gas use, which
+                is likely to indicate errors in reporting.
+              </p>
+            </div>
+          </div>
+
           <div v-if="dataYear < LatestDataYear" class="building-banner">
-            <span class="emoji">⚠️</span> This building did not report data in
-            {{ LatestDataYear }},
-            <span class="bold">this data is from {{ dataYear }}</span
-            >, the latest year reported
+            <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
+
+            <p>
+              This building did not report full data in {{ LatestDataYear }}, so
+              <span class="bold">top-level stats are from {{ dataYear }}</span
+              >, the latest full year reported.
+            </p>
           </div>
 
-          <div class="building-top-info">
-            <h2>Building Info</h2>
+          <div class="info-and-report-card">
+            <div class="building-top-info">
+              <h2>Building Info</h2>
 
-            <dl>
-              <div>
-                <dt>Square Footage</dt>
-                <dd>
-                  <StatTile
-                    :building="$page.building"
-                    :stat-key="'GrossFloorArea'"
-                    :stats="BuildingBenchmarkStats"
-                    :unit="'sqft'"
-                  />
-                </dd>
-              </div>
+              <dl>
+                <div>
+                  <dt>Square Footage</dt>
+                  <dd>
+                    <StatTile
+                      :building="$page.building"
+                      :stat-key="'GrossFloorArea'"
+                      :stats="BuildingBenchmarkStats"
+                      :unit="'sqft'"
+                    />
+                  </dd>
+                </div>
 
-              <div>
-                <dt>Built</dt>
-                <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
-              </div>
+                <div>
+                  <dt>Built</dt>
+                  <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
+                </div>
 
-              <div>
-                <dt>Primary Property Type</dt>
-                <dd>
-                  <g-link
-                    class="nav-link"
-                    :to="`/search?type=${propertyTypeEncoded}`"
-                  >
-                    {{ $page.building.PrimaryPropertyType }}
-                  </g-link>
-                </dd>
-              </div>
+                <div>
+                  <dt>Primary Property Type</dt>
+                  <dd>
+                    <g-link
+                      class="nav-link"
+                      :to="`/search?type=${propertyTypeEncoded}`"
+                    >
+                      {{ $page.building.PrimaryPropertyType }}
+                    </g-link>
+                  </dd>
+                </div>
 
-              <!-- Only show building count if set and > 1, most are 1 -->
-              <div
-                v-if="
-                  $page.building.NumberOfBuildings &&
-                  $page.building.NumberOfBuildings > 1
-                "
-              >
-                <dt>Building Count</dt>
-                <dd>{{ $page.building.NumberOfBuildings }}</dd>
-              </div>
+                <!-- Only show building count if set and > 1, most are 1 -->
+                <div
+                  v-if="
+                    $page.building.NumberOfBuildings &&
+                    $page.building.NumberOfBuildings > 1
+                  "
+                >
+                  <dt>Building Count</dt>
+                  <dd>{{ $page.building.NumberOfBuildings }}</dd>
+                </div>
 
-              <div>
-                <dt>Community Area</dt>
-                <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
-              </div>
+                <div>
+                  <dt>Community Area</dt>
+                  <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
+                </div>
 
-              <!-- Show energy rating if it's a float value (not blank or NaN) -->
-              <div
-                v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))"
-              >
-                <dt>
-                  <a
-                    href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Chicago Energy Rating
-                    <NewTabIcon />
-                  </a>
-                </dt>
-                <dd>{{ $page.building.ChicagoEnergyRating }} / 4</dd>
-              </div>
+                <!-- Show energy rating if it's a float value (not blank or NaN) -->
+                <div
+                  v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))"
+                >
+                  <dt>
+                    <a
+                      href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Chicago Energy Rating
+                      <NewTabIcon />
+                    </a>
+                  </dt>
+                  <dd>{{ $page.building.ChicagoEnergyRating }} / 4</dd>
+                </div>
 
-              <div v-if="$page.building.ENERGYSTARScore">
-                <dt>
-                  <a
-                    href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    Energy Star Score
-                    <NewTabIcon />
-                  </a>
-                </dt>
-                <dd>{{ $page.building.ENERGYSTARScore }} / 100</dd>
-              </div>
+                <div v-if="$page.building.ENERGYSTARScore">
+                  <dt>
+                    <a
+                      href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      Energy Star Score
+                      <NewTabIcon />
+                    </a>
+                  </dt>
+                  <dd>{{ $page.building.ENERGYSTARScore }} / 100</dd>
+                </div>
 
-              <div>
-                <dt>Owner</dt>
-                <OwnerLogo :building="$page.building" />
-              </div>
+                <div>
+                  <dt>Owner</dt>
+                  <OwnerLogo :building="$page.building" />
+                </div>
 
-              <div v-if="customLinks">
-                <dt>Extra Resources</dt>
+                <div v-if="customLinks">
+                  <dt>Extra Resources</dt>
 
-                <dd>
-                  <a
-                    v-for="link in customLinks"
-                    :key="link.url"
-                    :href="link.url"
-                    target="_blank"
-                    rel="noopener"
-                  >
-                    {{ link.text }}
-                    <NewTabIcon />
-                  </a>
-                </dd>
-              </div>
-            </dl>
+                  <dd>
+                    <a
+                      v-for="link in customLinks"
+                      :key="link.url"
+                      :href="link.url"
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      {{ link.text }}
+                      <NewTabIcon />
+                    </a>
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <ReportCard :building="building" :data-year="dataYear" />
           </div>
+
+          <details class="hidden">
+            <summary>Debug Full Grade Data</summary>
+
+            <ul>
+              <li>
+                <strong>AvgPercentileLetterGrade:</strong>
+                <LetterGrade :grade="building.AvgPercentileLetterGrade" />
+              </li>
+              <li>
+                <strong>AvgPercentileGrade:</strong>
+                {{ building.AvgPercentileGrade }}
+              </li>
+              <li>
+                <strong>GHGIntensityLetterGrade:</strong>
+                <LetterGrade :grade="building.GHGIntensityLetterGrade" />
+              </li>
+              <li>
+                <strong>GHGIntensityPercentileGrade:</strong>
+                {{ building.GHGIntensityPercentileGrade }}
+              </li>
+              <li>
+                <strong>EnergyMixLetterGrade:</strong>
+                <LetterGrade :grade="building.EnergyMixLetterGrade" />
+              </li>
+              <li>
+                <strong>EnergyMixWeightedPctSum:</strong>
+                {{ building.EnergyMixWeightedPctSum }}
+              </li>
+              <li>
+                <strong>EnergyMixPercentileGrade:</strong>
+                {{ building.EnergyMixPercentileGrade }}
+              </li>
+              <li>
+                <strong>SubmittedRecordsLetterGrade:</strong>
+                <LetterGrade :grade="building.SubmittedRecordsLetterGrade" />
+              </li>
+              <li>
+                <strong>MissingRecordsCount:</strong>
+                {{ building.MissingRecordsCount }}
+              </li>
+              <li>
+                <strong>SubmittedRecordsPercentileGrade:</strong>
+                {{ building.SubmittedRecordsPercentileGrade }}
+              </li>
+            </ul>
+          </details>
         </div>
       </div>
 
@@ -240,7 +339,17 @@ query ($id: ID!, $ID: String) {
 
           <dl class="stat-tiles">
             <div>
-              <dt>Greenhouse Gas Intensity</dt>
+              <dt
+                id="emissions-intensity"
+                class="label-and-grade targetable"
+                tabindex="-1"
+              >
+                Greenhouse Gas Intensity
+                <LetterGrade
+                  :grade="building.GHGIntensityLetterGrade"
+                  class="-large -spaced"
+                />
+              </dt>
               <dd>
                 <StatTile
                   :building="$page.building"
@@ -253,7 +362,7 @@ query ($id: ID!, $ID: String) {
             </div>
 
             <div>
-              <dt>Total Greenhouse Gas Emissions</dt>
+              <dt class="label-and-grade">Total Greenhouse Gas Emissions</dt>
               <dd>
                 <StatTile
                   :building="$page.building"
@@ -266,7 +375,10 @@ query ($id: ID!, $ID: String) {
             </div>
           </dl>
           <div class="reporting-tiles">
-            <ReportingTile :historic-data="historicData" />
+            <ReportingTile
+              :historic-data="historicData"
+              :grade="building.SubmittedRecordsLetterGrade"
+            />
           </div>
           <div class="stat-tiles-col">
             <h2>Energy Breakdown</h2>
@@ -330,15 +442,33 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="chart-cont">
-          <h2>Energy Mix</h2>
-          <p>
-            <strong>Total Energy Use:</strong>
-            {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
-          </p>
+          <h3
+            id="energy-mix"
+            class="label-and-grade -energy-mix targetable"
+            tabindex="-1"
+          >
+            Energy Mix
+            <LetterGrade
+              :grade="building.EnergyMixLetterGrade"
+              class="-large -spaced"
+            />
+          </h3>
           <div class="energy-mix-cont">
-            <PieChart :graph-data="energyBreakdownData" />
+            <p>
+              <strong>Total Energy Use:</strong>
+              {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
+            </p>
+
+            <PieChart
+              :id-prefix="'energy-mix'"
+              :graph-data="energyBreakdownData"
+            />
+
             <img
-              v-tooltip.bottom="{ content: tooltipMessage }"
+              v-tooltip.bottom="{
+                content: tooltipMessage,
+                trigger: 'click hover',
+              }"
               class="tooltip"
               src="/help.svg"
               alt="Help icon"
@@ -348,7 +478,7 @@ query ($id: ID!, $ID: String) {
         </div>
       </div>
 
-      <details>
+      <details class="extra-info">
         <summary class="bold">View Extra Technical Info</summary>
 
         <div class="details-content">
@@ -445,10 +575,13 @@ import {
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
 import {
+  calculateEnergyBreakdown,
+  DataAnomalies,
   IBuilding,
-  IHistoricData,
-  UtilityCosts,
   IBuildingBenchmarkStats,
+  IHistoricData,
+  parseAnomalies,
+  UtilityCosts,
 } from '../common-functions.vue';
 import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
@@ -457,17 +590,12 @@ import {
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
+import LetterGrade from '../components/LetterGrade.vue';
 
 import vToolTip from 'v-tooltip';
+import ReportCard from '../components/ReportCard.vue';
 
 Vue.use(vToolTip);
-
-const EnergyBreakdownColors = {
-  DistrictChilling: '#01295F',
-  DistrictSteam: '#ABABAB',
-  Electricity: '#F0E100',
-  NaturalGas: '#993300',
-};
 
 @Component<any>({
   metaInfo() {
@@ -479,20 +607,25 @@ const EnergyBreakdownColors = {
     BarGraph,
     BuildingImage,
     DataSourceFootnote,
+    EmailBuildingModal,
     HistoricalBuildingDataTable,
+    LetterGrade,
     NewTabIcon,
     OverallRankEmoji,
     OwnerLogo,
     PieChart,
-    StatTile,
+    ReportCard,
     ReportingTile,
-    EmailBuildingModal,
+    StatTile,
   },
   filters: {
     titlecase(value: string) {
       return value
         .toLowerCase()
         .replace(/(?:^|\s|-)\S/g, (x) => x.toUpperCase());
+    },
+    lowercase(value: string) {
+      return value.toLowerCase();
     },
   },
 })
@@ -517,6 +650,8 @@ export default class BuildingDetails extends Vue {
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
     BuildingBenchmarkStats;
+
+  readonly DataAnomalies = DataAnomalies;
 
   /** Expose UtilityCosts to template */
   readonly UtilityCosts: typeof UtilityCosts = UtilityCosts;
@@ -599,57 +734,23 @@ export default class BuildingDetails extends Vue {
     return null;
   }
 
+  get buildingAnomalies(): Array<DataAnomalies> {
+    return parseAnomalies(this.building.DataAnomalies);
+  }
+
   created(): void {
     this.historicData =
       this.$page.allBenchmark.edges.map(
         (nodeObj: { node: IHistoricData }) => nodeObj.node,
       ) || [];
 
-    this.calculateEnergyBreakdown();
+    const breakdownWithTotal = calculateEnergyBreakdown(this.building);
+    this.energyBreakdownData = breakdownWithTotal.energyBreakdown;
+    this.totalEnergyUsekBTU = breakdownWithTotal.totalEnergyUse;
     this.updateGraph();
   }
 
-  calculateEnergyBreakdown(): void {
-    const energyBreakdown = [];
-
-    if ((this.building.ElectricityUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'Electricity',
-        value: parseFloat(this.building.ElectricityUse.toString()),
-        color: EnergyBreakdownColors.Electricity,
-      });
-    }
-
-    if ((this.building.NaturalGasUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'Fossil Gas',
-        value: parseFloat(this.building.NaturalGasUse.toString()),
-        color: EnergyBreakdownColors.NaturalGas,
-      });
-    }
-
-    if ((this.building.DistrictSteamUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'District Steam',
-        value: parseFloat(this.building.DistrictSteamUse.toString()),
-        color: EnergyBreakdownColors.DistrictSteam,
-      });
-    }
-
-    if ((this.building.DistrictChilledWaterUse as unknown as number) > 0) {
-      energyBreakdown.push({
-        label: 'District Chilling',
-        value: parseFloat(this.building.DistrictChilledWaterUse.toString()),
-        color: EnergyBreakdownColors.DistrictChilling,
-      });
-    }
-
-    let totalEnergyUse = 0;
-    energyBreakdown.forEach((datum) => (totalEnergyUse += datum.value));
-    this.totalEnergyUsekBTU = totalEnergyUse;
-
-    this.energyBreakdownData = energyBreakdown;
-  }
+  // TODO: Move to a helper function
 
   updateGraph(event?: Event): void {
     event?.preventDefault();
@@ -740,25 +841,70 @@ export default class BuildingDetails extends Vue {
     }
   }
 
+  .building-header-text {
+    margin-bottom: 1rem;
+  }
+
+  .info-and-report-card {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+
+    .report-card-cont {
+      flex-basis: 18rem;
+    }
+  }
+
   h1 {
     margin: 0;
+    line-height: 1.25;
   }
 
   h2 {
-    margin: 2.5rem 0 0;
+    margin: 2rem 0 0.5rem 0;
     font-size: 1.25rem;
   }
 
+  .stat-tiles dt,
+  .label-and-grade {
+    margin-bottom: 0.5rem;
+    margin-left: 1rem;
+  }
+
+  .label-and-grade {
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
+
+    &.-energy-mix {
+      margin-top: 3.8rem;
+      font-size: 1.5rem;
+    }
+
+    .letter-grade {
+      line-height: 0.8;
+    }
+  }
+
   .building-banner {
-    padding: 1rem;
+    padding: 0.5rem 0.75rem;
     background-color: $warning-background;
     border: dashed 0.125rem $warning-border;
     border-radius: $brd-rad-small;
-    margin: 1rem 0;
+    margin-bottom: 1rem;
     justify-self: flex-start;
+    max-width: 36rem;
 
+    h2 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1rem;
+    }
     span.emoji {
       margin-right: 0.5rem;
+    }
+    p {
+      font-size: 0.75rem;
     }
   }
 
@@ -777,13 +923,12 @@ export default class BuildingDetails extends Vue {
   }
 
   .building-top-info {
-    background: #ededed;
+    background: $off-white;
     border-radius: $brd-rad-medium;
     padding: 1rem 1.5rem;
-    margin-top: 1rem;
 
     h2 {
-      margin-top: 0;
+      margin: 0 0 0.5rem 0;
     }
   }
 
@@ -793,7 +938,7 @@ export default class BuildingDetails extends Vue {
     justify-content: space-around;
     padding: 0.8rem 1.5rem;
     min-width: 18.75rem;
-    margin-top: 1rem;
+    margin: 1rem 0;
     background-color: $blue-dark;
     border: none;
     color: $white;
@@ -824,14 +969,14 @@ export default class BuildingDetails extends Vue {
       flex-basis: 30%;
       flex-shrink: 0;
       margin-top: 1rem;
+      max-width: 24rem;
 
       .energy-mix-cont {
         display: flex;
         flex-direction: column;
-        margin-top: 1rem;
+        padding: 1rem;
         background-color: $off-white;
         border-radius: $brd-rad-medium;
-        max-width: 24rem;
 
         .tooltip {
           align-self: flex-end;
@@ -868,7 +1013,7 @@ export default class BuildingDetails extends Vue {
 
     dt {
       font-size: 1.5rem;
-      margin-bottom: 0.5rem;
+      flex-shrink: 0;
     }
 
     dd,
@@ -882,11 +1027,11 @@ export default class BuildingDetails extends Vue {
   }
 
   .reporting-tile {
-    margin-top: 2.5rem;
-    margin-bottom: 3rem;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
   }
 
-  details {
+  details.extra-info {
     margin: 2rem 0;
 
     .stat-tiles dt {
@@ -907,6 +1052,16 @@ export default class BuildingDetails extends Vue {
     .main-cols {
       flex-direction: column-reverse;
     }
+
+    // Move report card to its own column
+    .info-and-report-card {
+      flex-direction: column-reverse;
+      align-items: stretch;
+
+      .report-card-cont {
+        flex-basis: initial;
+      }
+    }
   }
 
   /**
@@ -920,10 +1075,26 @@ export default class BuildingDetails extends Vue {
       }
       .email-btn {
         align-self: flex-start;
+        margin-bottom: 0rem;
+        gap: 1rem;
+        font-size: 1rem;
+        min-width: initial;
+
+        img {
+          height: 1.25rem;
+        }
       }
 
       .building-header-text {
         position: relative;
+
+        .address {
+          font-size: 1rem;
+        }
+      }
+
+      .details-cont {
+        margin-top: 1rem;
       }
 
       &.-has-img {
@@ -951,11 +1122,9 @@ export default class BuildingDetails extends Vue {
           }
         }
 
-        &.-img-tall {
-          // Constrain tall images on mobile so they don't take up the whole view height
-          .building-img-cont {
-            width: 75%;
-          }
+        // Constrain tall images on mobile so they don't take up the whole view height
+        .building-img-cont.-tall {
+          width: 75%;
         }
       }
 

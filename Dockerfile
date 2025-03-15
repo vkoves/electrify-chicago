@@ -1,4 +1,5 @@
-FROM python:3.9
+# Specify our Python version
+FROM python:3.12
 
 # Add the NodeSource PPA
 RUN echo 'Package: nodejs\nPin: origin deb.nodesource.com\nPin-Priority: 600' > /etc/apt/preferences.d/nodesource \
@@ -20,8 +21,8 @@ COPY yarn.lock .
 COPY . .
 
 # Install Python dependencies
-WORKDIR /app/src/data
-RUN pip install --no-cache-dir -r requirements.txt
+WORKDIR /app
+RUN pip install --no-cache-dir .
 
 WORKDIR /app
 # Install dependencies

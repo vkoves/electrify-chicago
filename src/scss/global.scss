@@ -20,6 +20,10 @@ body {
   &:has(dialog[open]) {
     overflow: hidden;
   }
+
+  *:target {
+    border-bottom: solid $border-thick $blue-very-dark !important;
+  }
 }
 
 // Default focus styles
@@ -45,12 +49,15 @@ a.grey-link {
   }
 }
 
+// Make sure headings handle focus, as well as elements marked "targetable", which have IDs for
+// anchor links (e.g. `<a href="#energy-mix">`)
 h1,
 h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+.targetable {
   &:focus {
     border-bottom: solid 0.5rem $chicago-blue;
     outline: none;
@@ -81,9 +88,15 @@ h2 {
   margin: 1rem 0 0.5rem 0;
 }
 
-p.-no-margin,
-p:first-of-type {
+// Expose -no-margin variant to ignore default paragraph margins
+p:first-of-type,
+p.-no-margin {
   margin: 0;
+}
+
+/** A global class to hide elements via CSS */
+.hidden {
+  display: none;
 }
 
 /**
@@ -116,13 +129,6 @@ button {
   }
 }
 
-/**
- * Text helpers
- */
-.bold {
-  font-weight: bold;
-}
-
 dl {
   dt {
     font-weight: bold;
@@ -142,7 +148,8 @@ details {
   border: solid $border-thin transparent;
   background-color: $off-white;
 
-  &, summary {
+  &,
+  summary {
     border-radius: $brd-rad-medium;
   }
 
@@ -151,8 +158,12 @@ details {
     padding: 1rem 1.5rem;
     cursor: pointer;
 
-    &:focus { outline-offset: 0; }
-    > span { margin-left: 0.5rem; }
+    &:focus {
+      outline-offset: 0;
+    }
+    > span {
+      margin-left: 0.5rem;
+    }
   }
 
   .details-content {
@@ -160,6 +171,7 @@ details {
   }
 }
 
+// Make sure images don't go beyond the page
 img {
   max-width: 100%;
 }
@@ -168,6 +180,25 @@ img.-shadowed {
   margin-top: 1rem;
   border: solid $border-thin $grey;
   box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
+}
+
+/** Some basic default table styling */
+table {
+  thead {
+    background-color: $grey;
+  }
+
+  td,
+  th {
+    padding: 0.5rem;
+  }
+}
+
+/**
+ * Text helpers
+ */
+.bold {
+  font-weight: bold;
 }
 
 .large-text {
@@ -195,9 +226,13 @@ img.-shadowed {
   }
 }
 
-.grade-letter {
-  font-family: 'Caveat', sans-serif;
-  font-weight: 700;
+/**
+ * Styling for our building letter grades (A-F) with colors for each for emphasis
+ */
+.letter-grade {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 900;
+  line-height: 1;
 
   &.-a {
     color: #009f49;
@@ -212,11 +247,39 @@ img.-shadowed {
   }
 
   &.-d {
-    color: #7fa52e;
+    color: #972222;
   }
 
   &.-f {
-    color: #972222;
+    color: #d60101;
+  }
+
+  // Create a -circled style for the tables
+  &.-circled {
+    display: inline-block;
+    border: solid $border-thin;
+    width: 1.375rem;
+    height: 1.375rem;
+    padding: 1.5px;
+    text-align: center;
+    border-radius: 1rem;
+    background: white;
+    border-width: 0.125rem;
+    margin-left: 0.5rem;
+    vertical-align: 1px;
+
+    &.-d,
+    &.-b {
+      padding-right: 0;
+    }
+  }
+
+  &.-large {
+    font-size: 2.5rem;
+  }
+
+  &.-spaced {
+    margin-left: 1rem;
   }
 }
 
@@ -300,7 +363,8 @@ form.search-form {
     border-color: $chicago-blue;
   }
 
-  h2, h3 {
+  h2,
+  h3 {
     margin-top: 0;
   }
 
@@ -308,12 +372,29 @@ form.search-form {
     font-size: 1.125rem;
   }
 
-  .faded { color: $text-mid-light; }
+  .faded {
+    color: $text-mid-light;
+  }
 
   @media (max-width: $mobile-max-width) {
     .bold {
       font-size: 1rem;
     }
+  }
+}
+
+/**
+ * A simple panel, for smaller warnings and such
+ */
+.panel {
+  border: solid $border-thin $grey-dark;
+  border-radius: $brd-rad-small;
+  padding: 1rem;
+  background: $grey-light;
+
+  &.-warning {
+    background: $warning-background;
+    border-color: $warning-border;
   }
 }
 
@@ -358,6 +439,19 @@ nav.pager {
   }
 }
 
+article.blog-post {
+  .sub-title {
+    margin: 0;
+    font-weight: bold;
+  }
+}
+
+// Blog article publish time
+.publish-time {
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
 /**
  * Tooltips styling
  *
@@ -367,7 +461,7 @@ nav.pager {
  *
  * Base Component Structure:
  *    <img
- *      v-tooltip="tooltipMessage"
+ *      v-tooltip="{ content: tooltipMessage, trigger: 'click hover' }"
  *      class="tooltip"
  *      src="/help.svg"
  *      alt="Help icon"
@@ -378,7 +472,7 @@ nav.pager {
  *    v-tooltip.[top | bottom | left | right]
  *    Ex.
  *      <img
- *        v-tooltip.bottom="tooltipMessage"
+ *        v-tooltip.bottom="{ content: tooltipMessage, trigger: 'click hover' }"
  *        class="tooltip"
  *        src="/help.svg"
  *        alt="Help icon"
@@ -424,7 +518,7 @@ nav.pager {
   }
 
   // Positioning modifiers
-  &[x-placement^="top"] {
+  &[x-placement^='top'] {
     margin-bottom: $tooltipSize;
 
     .tooltip-arrow {
@@ -439,7 +533,7 @@ nav.pager {
     }
   }
 
-  &[x-placement^="bottom"] {
+  &[x-placement^='bottom'] {
     margin-top: $tooltipSize;
 
     .tooltip-arrow {
@@ -454,7 +548,7 @@ nav.pager {
     }
   }
 
-  &[x-placement^="right"] {
+  &[x-placement^='right'] {
     margin-left: $tooltipSize;
 
     .tooltip-arrow {
@@ -469,7 +563,7 @@ nav.pager {
     }
   }
 
-  &[x-placement^="left"] {
+  &[x-placement^='left'] {
     margin-right: $tooltipSize;
 
     .tooltip-arrow {
@@ -487,12 +581,83 @@ nav.pager {
   &[aria-hidden='true'] {
     visibility: hidden;
     opacity: 0;
-    transition: opacity .15s, visibility .15s;
+    transition:
+      opacity 0.15s,
+      visibility 0.15s;
   }
 
   &[aria-hidden='false'] {
     visibility: visible;
     opacity: 1;
-    transition: opacity .15s;
+    transition: opacity 0.15s;
+  }
+}
+
+/** A container for multiple BuildingTiles */
+.buildings-scroll-cont {
+  position: relative;
+  $card-padding: 0.75rem;
+  // Grow to account for inner padding
+  margin: 1rem (-$card-padding) 2rem (-$card-padding);
+  overflow: scroll hidden;
+
+  // Create a fake partial right border to make clear it's scrollable
+  &::after {
+    content: '';
+    width: 60px;
+    height: 4px;
+    background: gray;
+    position: absolute;
+    bottom: -4px;
+  }
+
+  // Set scrollbar width
+  &::-webkit-scrollbar {
+    width: 0.75rem;
+  }
+  // Scrollbar track
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: $brd-rad-medium;
+    margin: $card-padding;
+  }
+
+  // Scrollbar Handle
+  &::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: $brd-rad-medium;
+    cursor: pointer;
+
+    // Scroll handle on hover
+    &:hover {
+      background: #555;
+    }
+  }
+
+  ul.building-tiles {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0.5rem $card-padding 1.5rem $card-padding;
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    // Undo padding on mobile to make scroll full width
+    & {
+      margin-left: -1rem;
+      margin-right: -1rem;
+
+      ul.building-tiles {
+        li {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+    }
   }
 }

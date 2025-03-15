@@ -46,6 +46,8 @@ export default class TopEmitters extends Vue {}
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
+          AvgPercentileLetterGrade
+          DataAnomalies
         }
       }
     }
