@@ -70,7 +70,7 @@ import LetterGrade from './LetterGrade.vue';
  * 3. Searle Chemistry Laboratory (all years reported)
  * 4. Crown Hall (only 3 years reported with the latest one missing)
  */
-@Component<any>({
+@Component({
   components: {
     LetterGrade,
   },

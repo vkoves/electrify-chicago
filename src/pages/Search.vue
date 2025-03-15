@@ -2,7 +2,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
+import {
+  IBuilding,
+  IBuildingBenchmarkStats,
+  IBuildingNode,
+} from '../common-functions.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
@@ -43,7 +47,7 @@ export default class Search extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static: any;
+  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** The search query */
   searchFilter = '';
