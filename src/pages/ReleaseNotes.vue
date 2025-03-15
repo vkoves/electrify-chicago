@@ -22,14 +22,14 @@ export default class About extends Vue {}
         <h1 id="main-content" tabindex="-1">Release Notes</h1>
       </div>
 
-
       <div class="layout-constrained">
         <h2>March 14th, 2025 - Building Grades v1</h2>
 
         <p>
-          We wanted to make buildings more easy to understand at a glance, so you can quickly see if
-          a building is a top performer or highly polluting. After months of hard work, we released
-          our first version of building grades, based off of emissions intensity, energy mix, and
+          We wanted to make buildings more easy to understand at a glance, so
+          you can quickly see if a building is a top performer or highly
+          polluting. After months of hard work, we released our first version of
+          building grades, based off of emissions intensity, energy mix, and
           consistent reporting.
         </p>
 
@@ -41,10 +41,7 @@ export default class About extends Vue {}
 
       <div class="two-cols">
         <div>
-          <a
-            href="/release-notes/2025/gradesv1-homepage.webp"
-            target="_blank"
-          >
+          <a href="/release-notes/2025/gradesv1-homepage.webp" target="_blank">
             <img
               class="-shadowed"
               src="/release-notes/2025/gradesv1-homepage.webp"
@@ -69,7 +66,9 @@ export default class About extends Vue {}
             />
           </a>
 
-          <p class="bold">A Sample Building With Its Report Card (as of March 2025)</p>
+          <p class="bold">
+            A Sample Building With Its Report Card (as of March 2025)
+          </p>
         </div>
       </div>
 

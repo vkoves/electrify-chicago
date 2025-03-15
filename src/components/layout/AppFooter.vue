@@ -35,10 +35,12 @@ export default class AppFooter extends Vue {}
       </div>
 
       <div>
-        <a href="https://bsky.app/profile/electrifychicago.net"
+        <a
+          href="https://bsky.app/profile/electrifychicago.net"
           class="bluesky"
           target="_blank"
-          rel="noopener">
+          rel="noopener"
+        >
           <img alt="" src="/bluesky.svg" height="16" />
           Follow Us On Bluesky
         </a>
@@ -75,7 +77,8 @@ footer {
     font-weight: 600;
   }
 
-  a.github-link, a.bluesky {
+  a.github-link,
+  a.bluesky {
     text-decoration: none;
     padding: 0.3125rem 1rem;
     border-radius: $brd-rad-full;
@@ -94,10 +97,11 @@ footer {
   }
 
   a.bluesky {
-    background-color: #0886FE; // Bluesky blue
+    background-color: #0886fe; // Bluesky blue
     color: $white;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: #016cd0;
     }
   }
