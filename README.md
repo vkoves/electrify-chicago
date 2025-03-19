@@ -175,6 +175,20 @@ file size under 200 kB.
 
 4. **Confirm the image is visible and looks good** - and that's all there is to it!
 
+### Handling Duplicate Nodes Errors
+
+When Gridsome builds, if you see an error like:
+
+```sh
+Building > Failed to add node: Duplicate key for property path: /building/salvation-army/
+```
+
+Add the building slug (the unique piece of the URL, e.g `salvation-army`) and add it to the
+`duplicateSlugs` array in `gridsome.server.js`. By doing this, when the build process sees this
+slug, it'll append the building ID to generate a unique URL. This happens when multiple buildings
+have the same name, like "Salvation Army" in our example (which has multiple locations, and doesn't
+specify their location in the title).
+
 ## Deploys
 
 This site deploys automatically via Netlify by running `gridsome build`.
