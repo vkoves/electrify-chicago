@@ -66,9 +66,9 @@ export default class BarGraph extends Vue {
 
   randomId = Math.round(Math.random() * 1000);
 
-  tooltip?: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+  tooltip?: d3.Selection<HTMLDivElement, unknown, HTMLElement, null>;
 
-  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, null>;
 
   mounted(): void {
     const outerWidth =
