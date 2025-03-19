@@ -20,7 +20,59 @@ export default class About extends Vue {}
     <div class="release-notes-page">
       <div class="layout-constrained">
         <h1 id="main-content" tabindex="-1">Release Notes</h1>
+      </div>
 
+      <div class="layout-constrained">
+        <h2>March 14th, 2025 - Building Grades v1</h2>
+
+        <p>
+          We wanted to make buildings more easy to understand at a glance, so
+          you can quickly see if a building is a top performer or highly
+          polluting. After months of hard work, we released our first version of
+          building grades, based off of emissions intensity, energy mix, and
+          consistent reporting.
+        </p>
+
+        <p>
+          Want to learn more?
+          <a href="/blog/how-we-grade-buildings">Read About Our Grading</a>!
+        </p>
+      </div>
+
+      <div class="two-cols">
+        <div>
+          <a href="/release-notes/2025/gradesv1-homepage.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/gradesv1-homepage.webp"
+              alt="The Electrify Chicago homepage showing Chicago's most emissions intense
+                buildings and some featured Chicago buildings, with Crown Hall getting an F,
+                Digital Lakeside getting a C, and more."
+            />
+          </a>
+
+          <p class="bold">Our Homepage With Grades (as of March 2025)</p>
+        </div>
+        <div>
+          <a
+            href="/release-notes/2025/gradesv1-marina-towers.webp"
+            target="_blank"
+          >
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/gradesv1-marina-towers.webp"
+              alt="Electrify Chicago's Marina Towers page, showing it has an overall A, a B under
+                emissions intensity, an A under electricity mix, and an A for consistent reporting."
+            />
+          </a>
+
+          <p class="bold">
+            A Sample Building With Its Report Card (as of March 2025)
+          </p>
+        </div>
+      </div>
+
+      <div class="layout-constrained">
         <h2>February 14th, 2025 - Homepage Redesign</h2>
 
         <p>
