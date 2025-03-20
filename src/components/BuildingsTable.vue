@@ -38,6 +38,17 @@ export default class BuildingsTable extends Vue {
 
   // declares the property emit for TS
   $emit: any;
+
+  /** Method to return the relevant aria-label value
+   * based on whether the column is selected and sorted */
+  getAriaLabelForSort(fieldname: string): string {
+    if (fieldname === this.sortedField) {
+      return `Currently sorted by ${this.sortedField} in 
+      ${this.sortedDirection === 'asc' ? 'ascending' : 'descending'} order.`;
+    } else {
+      return `Sort by this column, ${this.sortedField}`;
+    }
+  }
 }
 </script>
 
@@ -62,9 +73,22 @@ export default class BuildingsTable extends Vue {
           >
             Fossil Gas Use<br />
             <span class="unit">(kBtu)</span>
-            <button :class="sortedField === 'NaturalGasUse' ? 'sort selected' : 'sort deselected'" >
-              {{ sortedField === 'NaturalGasUse' ? (sortedDirection === 'asc' ? '▲' : '▼') : '▼' }}
-        </button>
+            <button
+              :class="
+                sortedField === 'NaturalGasUse'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('NaturalGasUse')"
+            >
+              {{
+                sortedField === 'NaturalGasUse'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
           <th
             v-if="showElectricityUse"
@@ -74,9 +98,22 @@ export default class BuildingsTable extends Vue {
           >
             Electricity Use<br />
             <span class="unit">(kBtu)</span>
-            <button :class="sortedField === 'ElectricityUse' ? 'sort selected' : 'sort deselected'" >
-              {{ sortedField === 'ElectricityUse' ? (sortedDirection === 'asc' ? '▲' : '▼') : '▼' }}
-        </button>
+            <button
+              :class="
+                sortedField === 'ElectricityUse'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('ElectricityUse')"
+            >
+              {{
+                sortedField === 'ElectricityUse'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
 
           <th
@@ -86,8 +123,21 @@ export default class BuildingsTable extends Vue {
           >
             GHG Intensity<br />
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
-            <button :class="sortedField === 'GHGIntensity' ? 'sort selected' : 'sort deselected'" >
-              {{ sortedField === 'GHGIntensity' ? (sortedDirection === 'asc' ? '▲' : '▼') : '▼' }}
+            <button
+              :class="
+                sortedField === 'GHGIntensity'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('GHGIntensity')"
+            >
+              {{
+                sortedField === 'GHGIntensity'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
             </button>
           </th>
           <th
@@ -97,9 +147,22 @@ export default class BuildingsTable extends Vue {
           >
             Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
-            <button :class="sortedField === 'TotalGHGEmissions' ? 'sort selected' : 'sort deselected'" >
-              {{ sortedField === 'TotalGHGEmissions' ? (sortedDirection === 'asc' ? '▲' : '▼') : '▼' }}
-        </button>
+            <button
+              :class="
+                sortedField === 'TotalGHGEmissions'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('TotalGHGEmissions')"
+            >
+              {{
+                sortedField === 'TotalGHGEmissions'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
         </tr>
       </thead>
@@ -277,7 +340,7 @@ export default class BuildingsTable extends Vue {
           color: black;
         }
         .sort.deselected {
-          color: gray
+          color: gray;
         }
       }
       &.wide-col {
