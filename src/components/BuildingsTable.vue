@@ -62,9 +62,9 @@ export default class BuildingsTable extends Vue {
           >
             Fossil Gas Use<br />
             <span class="unit">(kBtu)</span>
-            <span v-if="sortedField === 'NaturalGasUse'" class="sort-indicator">
-              {{ sortedDirection === 'asc' ? '▲' : '▼' }}
-            </span>
+            <button :class="sortedField === 'NaturalGasUse' ? 'sort selected' : 'sort deselected'" >
+              {{ sortedField === 'NaturalGasUse' ? (sortedDirection === 'asc' ? '▲' : '▼') : '▼' }}
+        </button>
           </th>
           <th
             v-if="showElectricityUse"
@@ -74,12 +74,9 @@ export default class BuildingsTable extends Vue {
           >
             Electricity Use<br />
             <span class="unit">(kBtu)</span>
-            <span
-              v-if="sortedField === 'ElectricityUse'"
-              class="sort-indicator"
-            >
-              {{ sortedDirection === 'asc' ? '▲' : '▼' }}
-            </span>
+            <button :class="sortedField === 'ElectricityUse' ? 'sort selected' : 'sort deselected'" >
+              {{ sortedField === 'ElectricityUse' ? (sortedDirection === 'asc' ? '▲' : '▼') : '▼' }}
+        </button>
           </th>
 
           <th
@@ -89,9 +86,9 @@ export default class BuildingsTable extends Vue {
           >
             GHG Intensity<br />
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
-            <span v-if="sortedField === 'GHGIntensity'" class="sort-indicator">
-              {{ sortedDirection === 'asc' ? '▲' : '▼' }}
-            </span>
+            <button :class="sortedField === 'GHGIntensity' ? 'sort selected' : 'sort deselected'" >
+              {{ sortedField === 'GHGIntensity' ? (sortedDirection === 'asc' ? '▲' : '▼') : '▼' }}
+            </button>
           </th>
           <th
             scope="col"
@@ -100,12 +97,9 @@ export default class BuildingsTable extends Vue {
           >
             Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
-            <span
-              v-if="sortedField === 'TotalGHGEmissions'"
-              class="sort-indicator"
-            >
-              {{ sortedDirection === 'asc' ? '▲' : '▼' }}
-            </span>
+            <button :class="sortedField === 'TotalGHGEmissions' ? 'sort selected' : 'sort deselected'" >
+              {{ sortedField === 'TotalGHGEmissions' ? (sortedDirection === 'asc' ? '▲' : '▼') : '▼' }}
+        </button>
           </th>
         </tr>
       </thead>
@@ -272,9 +266,18 @@ export default class BuildingsTable extends Vue {
         text-align: right;
         cursor: pointer;
 
-        .sort-indicator {
-          margin-left: 0.1rem;
-          font-size: 0.6rem;
+        .sort {
+          margin-left: 0.2rem;
+          font-size: 0.7rem;
+          padding: 0;
+          background-color: transparent;
+          border-bottom: none;
+        }
+        .sort.selected {
+          color: black;
+        }
+        .sort.deselected {
+          color: gray
         }
       }
       &.wide-col {
