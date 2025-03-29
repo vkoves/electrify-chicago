@@ -73,7 +73,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 Install Python 3.12 with:
 
 ```bash
-uv python install $PYTHON_VERSION
+uv python install 3.12
 ```
 
 ### Virtual Environment Setup
@@ -81,7 +81,7 @@ uv python install $PYTHON_VERSION
 To set up the Python environment with uv:
 
 ```bash
-uv venv --python=$PYTHON_VERSION .venv
+uv venv --python=$PYTHON_VERSION .venv # $PYTHON_VERSION  may need to be 3.12
 ```
 
 This creates a virtual environment in your root directory of Electrify-Chicago.

@@ -154,8 +154,8 @@ const BuildingOwnerIds = [
 
 ### Adding Building Images
 
-1. \*_Find A Suitable Image_ -- Building images can be sourced from Google Maps or a source that allows redistribution, like
-   Wikimedia.
+1. \*_Find A Suitable Image_ -- Building images can be sourced from Google Maps or a source that
+allows redistribution, like Wikimedia. Also see "Automatically Fetching Images from Streetview"
 
 2 **Process the Image**
 
@@ -174,6 +174,35 @@ file size under 200 kB.
    whether it's a tall (portrait) image and whether it's from Google Maps.
 
 4. **Confirm the image is visible and looks good** - and that's all there is to it!
+
+### Automatically Fetching Images from Streetview
+
+We have a handy script, `fetch_streetview_imagery.py` that can be used to automatically fetch
+Streetview building images by address. Unfortunately, Streetview imagery can be pretty hit or miss,
+and so this is still a pretty manual process.
+
+
+1. **Get a Google Maps API Key** - Ask Viktor for a key or setup your only Google Maps API key with
+Google
+
+2. **Create An Addresses CSV** - create a CSV file of buildings addresses you want to fetch, with
+columns:
+
+- **address** - the full address (e.g "10 W 31st Street, Chicago IL, 60616")
+
+3. **Run The Script** - run the script to fetch images, passing in the API key and the path to your
+addresses CSV, like so:
+
+```sh
+python3 -m src.data.scripts.fetch_streetview_imagery API_KEY ../addresses_to_img.csv
+```
+
+This will save images to `/tmp_streetview_images`, which is git ignored so you can't accidentally
+commit building images without manually reviewing them.
+
+4. **Copy Images You Like & Follow "Adding Building Images" Process** - a lot of the Google
+Streetview imagery might come back and not show the building well, so review the generated images,
+copy the ones you like over and follow our process above for adding building images.
 
 ### Handling Duplicate Nodes Errors
 
