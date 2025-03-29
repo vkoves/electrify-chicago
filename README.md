@@ -164,10 +164,10 @@ We should reasonably crop images if needed and then scale them to be EITHER:
 - 1000px wide if it's a landscape image
 - 600px wide if it's a portrait image
 
-Make sure to export it as a `.jpg` image at a **quality level of 70**, which should ensure a reasonable
+Make sure to export it as a `.webp` image at a **quality level of 70**, which should ensure a reasonable
 file size under 200 kB.
 
-\*\*Store the image in `/static/building-imgs/`.
+**Store the image in `/static/building-imgs/`.**
 
 3. **Tell The Site There's a Building Image** - Follow the pattern of other buildings in the
    `building-images.constant.vue`, providing an attribution URL, the image file name, and specify

@@ -244,6 +244,8 @@ export const BuildingImages: IBuildingImages = {
     isTall: true,
   },
 
+
+
   /**
    * Particularly Low GHG Intensity Buildings
    */
@@ -370,6 +372,11 @@ export const BuildingImages: IBuildingImages = {
   /**
    * Misc. High Emitters
    */
+  //
+  '100867': {
+    attributionUrl: 'https://commons.wikimedia.org/wiki/File:RUMC_-_new_tower.jpg',
+    imgUrl: BuildingImagesBase + 'ID-100867-Rush-Medical-Center.webp',
+  },
   // digital-lakeside
   '101185': {
     attributionUrl: 'https://goo.gl/maps/1H9Wct1qprbtzNux9',
