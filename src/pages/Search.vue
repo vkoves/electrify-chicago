@@ -2,7 +2,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
+import {
+  IBuilding,
+  IBuildingBenchmarkStats,
+  IBuildingNode,
+} from '../common-functions.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
@@ -43,7 +47,7 @@ export default class Search extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static: any;
+  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** The search query */
   searchFilter = '';
@@ -55,7 +59,7 @@ export default class Search extends Vue {
   sortedField = 'GHGIntensity';
 
   /** The direction of the sorted field (column) */
-  sortedDirection = 'desc';
+  sortedDirection: 'asc' | 'desc' = 'desc';
 
   /** Flags 'true' when any filter is applied,
    * so that column sort (asc, desc) applies only to filtered results */
@@ -225,7 +229,7 @@ export default class Search extends Vue {
 
   /** Called from handleSort, this function sorts
    * according to sortedField and sortedDirection state values */
-  runSort(buildings: any): void {
+  runSort(buildings: Array<IBuildingNode>): void {
     const sortedBuildings = buildings.sort(
       (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) => {
         const valueA = Number(buildingEdgeA.node[this.sortedField]);
@@ -367,6 +371,7 @@ export default class Search extends Vue {
         :buildings="searchResults"
         :sorted-field="sortedField"
         :sorted-direction="sortedDirection"
+        :show-sort="true"
         @sort="handleSort"
       />
 

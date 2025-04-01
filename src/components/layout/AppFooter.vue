@@ -12,7 +12,7 @@ export default class AppFooter extends Vue {}
 
 <template>
   <footer>
-    <div class="constrained">
+    <div class="page-constrained footer-inner">
       <div class="full-width">
         Created with <span class="heart">&#x2764;</span> by
         <a
@@ -26,9 +26,23 @@ export default class AppFooter extends Vue {}
         <a
           href="https://github.com/vkoves/electrify-chicago"
           class="github-link"
+          target="_blank"
+          rel="noopener"
         >
-          <img alt="" src="/github-mark.svg" width="16" />
+          <img alt="" src="/github-mark.svg" height="16" />
           Contribute on GitHub
+        </a>
+      </div>
+
+      <div>
+        <a
+          href="https://bsky.app/profile/electrifychicago.net"
+          class="bluesky"
+          target="_blank"
+          rel="noopener"
+        >
+          <img alt="" src="/bluesky.svg" height="16" />
+          Follow Us On Bluesky
         </a>
       </div>
 
@@ -46,7 +60,7 @@ footer {
   padding: 2rem 0;
   background-color: $grey;
 
-  > .constrained {
+  > .footer-inner {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -63,17 +77,32 @@ footer {
     font-weight: 600;
   }
 
-  a.github-link {
+  a.github-link,
+  a.bluesky {
     text-decoration: none;
-    padding: 0.25rem 0.5rem;
-    border-radius: 1rem;
+    padding: 0.3125rem 1rem;
+    border-radius: $brd-rad-full;
+    font-size: 0.825rem;
+    line-height: 1;
+  }
+
+  a.github-link {
     background-color: $off-white;
     border: none;
-    font-size: 0.825rem;
 
     &:hover,
     &:focus {
       background-color: $white;
+    }
+  }
+
+  a.bluesky {
+    background-color: #0886fe; // Bluesky blue
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: #016cd0;
     }
   }
 
@@ -89,7 +118,7 @@ footer {
     position: static;
     padding: 1.25rem;
 
-    > .constrained {
+    > .footer-inner {
       gap: 0.8125rem;
     }
   }

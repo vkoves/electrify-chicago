@@ -36,6 +36,10 @@ export default class BuildingsTable extends Vue {
   @Prop({ default: 'GHGIntensity' }) sortedField!: string;
   @Prop({ default: 'desc' }) sortedDirection!: string;
 
+  /** Prop to handle whether the sorting buttons should be shown
+   * (ex. with Search component) */
+  @Prop({ default: false }) showSort!: boolean;
+
   // declares the property emit for TS
   $emit: any;
 
@@ -43,10 +47,10 @@ export default class BuildingsTable extends Vue {
    * based on whether the column is selected and sorted */
   getAriaLabelForSort(fieldname: string): string {
     if (fieldname === this.sortedField) {
-      return `Currently sorted by ${this.sortedField} in 
+      return `Toggle sort ${this.sortedField} - currently sorting in 
       ${this.sortedDirection === 'asc' ? 'ascending' : 'descending'} order.`;
     } else {
-      return `Sort by this column, ${this.sortedField}`;
+      return `Sort by ${this.sortedField}`;
     }
   }
 }
@@ -69,11 +73,12 @@ export default class BuildingsTable extends Vue {
             v-if="showGasUse"
             scope="col"
             class="numeric wide-col"
-            @click="$emit('sort', 'NaturalGasUse')"
+            @click="showSort ? $emit('sort', 'NaturalGasUse') : null"
           >
             Fossil Gas Use<br />
             <span class="unit">(kBtu)</span>
             <button
+              v-if="showSort"
               :class="
                 sortedField === 'NaturalGasUse'
                   ? 'sort selected'
@@ -94,11 +99,12 @@ export default class BuildingsTable extends Vue {
             v-if="showElectricityUse"
             scope="col"
             class="numeric wide-col"
-            @click="$emit('sort', 'ElectricityUse')"
+            @click="showSort ? $emit('sort', 'ElectricityUse') : null"
           >
             Electricity Use<br />
             <span class="unit">(kBtu)</span>
             <button
+              v-if="showSort"
               :class="
                 sortedField === 'ElectricityUse'
                   ? 'sort selected'
@@ -119,11 +125,12 @@ export default class BuildingsTable extends Vue {
           <th
             scope="col"
             class="numeric wide-col"
-            @click="$emit('sort', 'GHGIntensity')"
+            @click="showSort ? $emit('sort', 'GHGIntensity') : null"
           >
             GHG Intensity<br />
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
             <button
+              v-if="showSort"
               :class="
                 sortedField === 'GHGIntensity'
                   ? 'sort selected'
@@ -143,11 +150,12 @@ export default class BuildingsTable extends Vue {
           <th
             scope="col"
             class="numeric wide-col"
-            @click="$emit('sort', 'TotalGHGEmissions')"
+            @click="showSort ? $emit('sort', 'TotalGHGEmissions') : null"
           >
             Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
             <button
+              v-if="showSort"
               :class="
                 sortedField === 'TotalGHGEmissions'
                   ? 'sort selected'
@@ -311,6 +319,10 @@ export default class BuildingsTable extends Vue {
           font-size: smaller;
           font-weight: normal;
         }
+
+        button {
+          cursor: pointer;
+        }
       }
     }
 
@@ -327,7 +339,6 @@ export default class BuildingsTable extends Vue {
       }
       &.numeric {
         text-align: right;
-        cursor: pointer;
 
         .sort {
           margin-left: 0.2rem;
@@ -337,10 +348,10 @@ export default class BuildingsTable extends Vue {
           border-bottom: none;
         }
         .sort.selected {
-          color: black;
+          color: $black;
         }
         .sort.deselected {
-          color: gray;
+          color: $grey;
         }
       }
       &.wide-col {

@@ -236,6 +236,13 @@ export const BuildingImages: IBuildingImages = {
     fromGoogleMaps: false,
     isTall: false,
   },
+  // The National
+  '103705': {
+    attributionUrl: 'https://viktorkoves.com',
+    imgUrl: BuildingImagesBase + 'the-national-103705.jpg',
+    fromGoogleMaps: false,
+    isTall: true,
+  },
 
   /**
    * Particularly Low GHG Intensity Buildings

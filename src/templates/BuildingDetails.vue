@@ -663,7 +663,10 @@ export default class BuildingDetails extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
 
   /** Set by Gridsome to results of GraphQL query */
-  $page: any;
+  $page!: {
+    building: IBuilding;
+    allBenchmark: { edges: Array<{ node: IHistoricData }> };
+  };
 
   energyBreakdownData!: Array<IPieSlice>;
 
@@ -740,9 +743,7 @@ export default class BuildingDetails extends Vue {
 
   created(): void {
     this.historicData =
-      this.$page.allBenchmark.edges.map(
-        (nodeObj: { node: IHistoricData }) => nodeObj.node,
-      ) || [];
+      this.$page.allBenchmark.edges.map((nodeObj) => nodeObj.node) || [];
 
     const breakdownWithTotal = calculateEnergyBreakdown(this.building);
     this.energyBreakdownData = breakdownWithTotal.energyBreakdown;
@@ -750,16 +751,18 @@ export default class BuildingDetails extends Vue {
     this.updateGraph();
   }
 
-  // TODO: Move to a helper function
-
   updateGraph(event?: Event): void {
     event?.preventDefault();
 
     this.currGraphData = this.historicData.map((datum: IHistoricData) => ({
       x: datum.DataYear,
+      // TODO: Investigate typing
+      // eslint-disable-next-line
       y: parseFloat((datum as any)[this.colToGraph] as string),
     }));
 
+    // TODO: Investigate typing
+    // eslint-disable-next-line
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
 }

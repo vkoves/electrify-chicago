@@ -5,7 +5,11 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuildingBenchmarkStats, IBuilding } from '../common-functions.vue';
+import {
+  IBuildingBenchmarkStats,
+  IBuilding,
+  IBuildingNode,
+} from '../common-functions.vue';
 import {
   BuildingOwners,
   IBuildingOwner,
@@ -42,8 +46,8 @@ export default class BiggestBuildings extends Vue {
     BuildingBenchmarkStats;
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static: any;
-  readonly $context: any;
+  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $context!: { ownerId: string };
 
   currOwner?: IBuildingOwner;
 
