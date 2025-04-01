@@ -41,6 +41,7 @@ export default class BuildingsTable extends Vue {
   @Prop({ default: false }) showSort!: boolean;
 
   // declares the property emit for TS
+  // TODO: Figure out why Vue $emit isn't recognized by Typescript
   $emit: any;
 
   /** Method to return the relevant aria-label value
