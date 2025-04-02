@@ -48,8 +48,10 @@ export default class BuildingsTable extends Vue {
    * based on whether the column is selected and sorted */
   getAriaLabelForSort(fieldname: string): string {
     if (fieldname === this.sortedField) {
-      return `Toggle sort ${this.sortedField} - currently sorting in 
-      ${this.sortedDirection === 'asc' ? 'ascending' : 'descending'} order.`;
+      return (
+        `Toggle sort ${this.sortedField} - currently sorting in ` +
+        `${this.sortedDirection === 'asc' ? 'ascending' : 'descending'} order.`
+      );
     } else {
       return `Sort by ${this.sortedField}`;
     }
@@ -74,6 +76,7 @@ export default class BuildingsTable extends Vue {
             v-if="showGasUse"
             scope="col"
             class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
             @click="showSort ? $emit('sort', 'NaturalGasUse') : null"
           >
             Fossil Gas Use<br />
@@ -100,6 +103,7 @@ export default class BuildingsTable extends Vue {
             v-if="showElectricityUse"
             scope="col"
             class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
             @click="showSort ? $emit('sort', 'ElectricityUse') : null"
           >
             Electricity Use<br />
@@ -126,6 +130,7 @@ export default class BuildingsTable extends Vue {
           <th
             scope="col"
             class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
             @click="showSort ? $emit('sort', 'GHGIntensity') : null"
           >
             GHG Intensity<br />
@@ -151,6 +156,7 @@ export default class BuildingsTable extends Vue {
           <th
             scope="col"
             class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
             @click="showSort ? $emit('sort', 'TotalGHGEmissions') : null"
           >
             Total GHG Emissions<br />
@@ -321,8 +327,26 @@ export default class BuildingsTable extends Vue {
           font-weight: normal;
         }
 
-        button {
+        // Style sortable column headers and icon
+        &.-sortable {
           cursor: pointer;
+
+          &:hover .sort.deselected,
+          .sort.selected {
+            color: $black;
+          }
+          .sort.deselected {
+            color: rgba(0, 0, 0, 0.5);
+          }
+
+          .sort {
+            margin-left: 0.2rem;
+            font-size: 0.7rem;
+            padding: 0;
+            background-color: transparent;
+            border-bottom: none;
+            transition: color 0.3s;
+          }
         }
       }
     }
@@ -340,20 +364,6 @@ export default class BuildingsTable extends Vue {
       }
       &.numeric {
         text-align: right;
-
-        .sort {
-          margin-left: 0.2rem;
-          font-size: 0.7rem;
-          padding: 0;
-          background-color: transparent;
-          border-bottom: none;
-        }
-        .sort.selected {
-          color: $black;
-        }
-        .sort.deselected {
-          color: $grey;
-        }
       }
       &.wide-col {
         width: 20%;
