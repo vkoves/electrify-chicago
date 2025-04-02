@@ -337,7 +337,8 @@ export const BuildingImages: IBuildingImages = {
   },
   '158403': {
     imgUrl:
-      BuildingImagesBase + 'auto-streetview/iit/158403-565_W_Adams_St_60661.webp',
+      BuildingImagesBase +
+      'auto-streetview/iit/158403-565_W_Adams_St_60661.webp',
     fromGoogleMaps: true,
   },
   '256421': {
@@ -348,12 +349,14 @@ export const BuildingImages: IBuildingImages = {
   },
   '256423': {
     imgUrl:
-      BuildingImagesBase + 'auto-streetview/iit/256423-10_W_33rd_Street_60616.webp',
+      BuildingImagesBase +
+      'auto-streetview/iit/256423-10_W_33rd_Street_60616.webp',
     fromGoogleMaps: true,
   },
   '256424': {
     imgUrl:
-      BuildingImagesBase + 'auto-streetview/iit/256424-10_W_31st_Street_60616.webp',
+      BuildingImagesBase +
+      'auto-streetview/iit/256424-10_W_31st_Street_60616.webp',
     fromGoogleMaps: true,
   },
   '256425': {
@@ -364,7 +367,8 @@ export const BuildingImages: IBuildingImages = {
   },
   '256429': {
     imgUrl:
-      BuildingImagesBase + 'auto-streetview/iit/256429-60_E_32nd_Street_60616.webp',
+      BuildingImagesBase +
+      'auto-streetview/iit/256429-60_E_32nd_Street_60616.webp',
     fromGoogleMaps: true,
   },
   '256433': {
@@ -375,7 +379,8 @@ export const BuildingImages: IBuildingImages = {
   },
   '256435': {
     imgUrl:
-      BuildingImagesBase + 'auto-streetview/iit/256435-55_W_34th_Street_60616.web',
+      BuildingImagesBase +
+      'auto-streetview/iit/256435-55_W_34th_Street_60616.web',
     fromGoogleMaps: true,
   },
 
@@ -399,135 +404,201 @@ export const BuildingImages: IBuildingImages = {
 
   /** Auto streetview biggest buildings */
   '100851': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/100851-600_W_Chicago_60654.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/100851-600_W_Chicago_60654.webp',
     fromGoogleMaps: true,
   },
   '101715': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101715-227_W_Monroe_60606.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101715-227_W_Monroe_60606.webp',
     fromGoogleMaps: true,
   },
   '101716': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101716-311_S_Wacker_60606.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101716-311_S_Wacker_60606.webp',
     fromGoogleMaps: true,
   },
   '101717': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101717-55_E_Monroe_St_60603.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101717-55_E_Monroe_St_60603.webp',
     fromGoogleMaps: true,
   },
   '101718': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101718-70_W_Madison_St_60602.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101718-70_W_Madison_St_60602.webp',
     fromGoogleMaps: true,
   },
   '101727': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101727-500_W_Madison_St_60661.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101727-500_W_Madison_St_60661.webp',
     fromGoogleMaps: true,
   },
   '101731': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101731-175_W_Jackson_60604.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101731-175_W_Jackson_60604.webp',
     fromGoogleMaps: true,
   },
   '101735': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101735-101_N_State_St_E_60602.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101735-101_N_State_St_E_60602.webp',
     fromGoogleMaps: true,
   },
   '101736': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101736-71_S_Wacker_Dr_60606.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101736-71_S_Wacker_Dr_60606.webp',
     fromGoogleMaps: true,
   },
   '101738': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101738-300_E_Randolph_60601.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101738-300_E_Randolph_60601.webp',
     fromGoogleMaps: true,
   },
   '101744': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101744-1_N_Wacker_Dr_60606.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101744-1_N_Wacker_Dr_60606.webp',
     fromGoogleMaps: true,
   },
   '101757': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101757-219_S_Dearborn_60604.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101757-219_S_Dearborn_60604.webp',
     fromGoogleMaps: true,
   },
   '101770': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101770-10_S_Wacker_Dr_60606.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101770-10_S_Wacker_Dr_60606.webp',
     fromGoogleMaps: true,
   },
   '101776': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101776-151_E_Wacker_Dr_60601.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101776-151_E_Wacker_Dr_60601.webp',
     fromGoogleMaps: true,
   },
   '101801': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/101801-205_N_Michigan_Ave_60601.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/101801-205_N_Michigan_Ave_60601.webp',
     fromGoogleMaps: true,
   },
   '102157': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/102157-130_E_Randolph_St_60601.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/102157-130_E_Randolph_St_60601.webp',
     fromGoogleMaps: true,
   },
   '102285': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/102285-836_W_Wellington_Ave_60657.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/102285-836_W_Wellington_Ave_60657.webp',
     fromGoogleMaps: true,
   },
   '103630': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/103630-1901_W_Harrison_St_60612.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/103630-1901_W_Harrison_St_60612.webp',
     fromGoogleMaps: true,
   },
   '103632': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/103632-251_E_Huron_St_60611.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/103632-251_E_Huron_St_60611.webp',
     fromGoogleMaps: true,
   },
   '103647': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/103647-135_S_LaSalle_St_60603.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/103647-135_S_LaSalle_St_60603.webp',
     fromGoogleMaps: true,
   },
   '103653': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/103653-350_N_Orleans_St_60654.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/103653-350_N_Orleans_St_60654.webp',
     fromGoogleMaps: true,
   },
   '103689': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/103689-404_W_HARRISON_ST_60607.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/103689-404_W_HARRISON_ST_60607.webp',
     fromGoogleMaps: true,
   },
   '103716': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/103716-17_E_Monroe_St_60603.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/103716-17_E_Monroe_St_60603.webp',
     fromGoogleMaps: true,
   },
   '103745': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/103745-900_North_Michigan_60611.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/103745-900_North_Michigan_60611.webp',
     fromGoogleMaps: true,
   },
   '103816': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/103816-330_N_Wabash_Av_60611.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/103816-330_N_Wabash_Av_60611.webp',
     fromGoogleMaps: true,
   },
   '112638': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/112638-1100_S_Hamilton_Ave_60612.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/112638-1100_S_Hamilton_Ave_60612.webp',
     fromGoogleMaps: true,
   },
   '112765': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/112765-5333_N_Sheridan_Rd_60640.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/112765-5333_N_Sheridan_Rd_60640.webp',
     fromGoogleMaps: true,
   },
   '157955': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/157955-720_S_Michigan_Ave_60605.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/157955-720_S_Michigan_Ave_60605.webp',
     fromGoogleMaps: true,
   },
   '159510': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/159510-555_W_Madison_St_60661.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/159510-555_W_Madison_St_60661.webp',
     fromGoogleMaps: true,
   },
   '160297': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/160297-150_W_Roosevelt_Rd_60605.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/160297-150_W_Roosevelt_Rd_60605.webp',
     fromGoogleMaps: true,
   },
   '243773': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/243773-680_N_Lake_Shore_Dr_60611.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/243773-680_N_Lake_Shore_Dr_60611.webp',
     fromGoogleMaps: true,
   },
   '250165': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/250165-322_E_Illinois_St_60611.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/250165-322_E_Illinois_St_60611.webp',
     fromGoogleMaps: true,
   },
   '256838': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/biggest/256838-5841_S__Maryland_Ave_MC0985.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/biggest/256838-5841_S__Maryland_Ave_MC0985.webp',
     fromGoogleMaps: true,
   },
 

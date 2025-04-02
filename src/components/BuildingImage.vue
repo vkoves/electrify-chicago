@@ -17,8 +17,8 @@
         target="_blank"
       >
         Source
-        <NewTabIcon /> </a
-      >
+        <NewTabIcon />
+      </a>
     </p>
   </div>
 </template>
