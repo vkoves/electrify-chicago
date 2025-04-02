@@ -7,7 +7,7 @@ export default {};
 
 export interface IBuildingImage {
   // The URL we can link to for attributing the image
-  attributionUrl: string;
+  attributionUrl?: string;
   // The actual local image URL
   imgUrl: string;
   // Whether this image is a tall portrait style photo - assumed fall if not specified
@@ -244,8 +244,6 @@ export const BuildingImages: IBuildingImages = {
     isTall: true,
   },
 
-
-
   /**
    * Particularly Low GHG Intensity Buildings
    */
@@ -323,6 +321,63 @@ export const BuildingImages: IBuildingImages = {
     imgUrl: BuildingImagesBase + 'life-sciences-research.jpg',
     fromGoogleMaps: true,
   },
+  // John T Retalliata
+  '256420': {
+    attributionUrl: 'https://maps.app.goo.gl/CVX7HYd27Y3EyihB9',
+    imgUrl: BuildingImagesBase + 'ID-256420-John-T-Rettaliata.webp',
+    fromGoogleMaps: true,
+  },
+
+  // Automated IIT buildings
+  '111290': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/111290-10_West_35th_Street_60616.webp',
+    fromGoogleMaps: true,
+  },
+  '158403': {
+    imgUrl:
+      BuildingImagesBase + 'auto-streetview/158403-565_W_Adams_St_60661.webp',
+    fromGoogleMaps: true,
+  },
+  '256421': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/256421-3105_S_Dearborn_St_60616.webp',
+    fromGoogleMaps: true,
+  },
+  '256423': {
+    imgUrl:
+      BuildingImagesBase + 'auto-streetview/256423-10_W_33rd_Street_60616.webp',
+    fromGoogleMaps: true,
+  },
+  '256424': {
+    imgUrl:
+      BuildingImagesBase + 'auto-streetview/256424-10_W_31st_Street_60616.webp',
+    fromGoogleMaps: true,
+  },
+  '256425': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/256425-3255_S_Dearborn_Street_60616.webp',
+    fromGoogleMaps: true,
+  },
+  '256429': {
+    imgUrl:
+      BuildingImagesBase + 'auto-streetview/256429-60_E_32nd_Street_60616.webp',
+    fromGoogleMaps: true,
+  },
+  '256433': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/256433-3301_S_State_Street_60616.webp',
+    fromGoogleMaps: true,
+  },
+  '256435': {
+    imgUrl:
+      BuildingImagesBase + 'auto-streetview/256435-55_W_34th_Street_60616.web',
+    fromGoogleMaps: true,
+  },
 
   /**
    * UChicago Buildings
@@ -374,7 +429,8 @@ export const BuildingImages: IBuildingImages = {
    */
   //
   '100867': {
-    attributionUrl: 'https://commons.wikimedia.org/wiki/File:RUMC_-_new_tower.jpg',
+    attributionUrl:
+      'https://commons.wikimedia.org/wiki/File:RUMC_-_new_tower.jpg',
     imgUrl: BuildingImagesBase + 'ID-100867-Rush-Medical-Center.webp',
   },
   // digital-lakeside

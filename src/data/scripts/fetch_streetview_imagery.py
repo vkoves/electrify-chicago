@@ -21,8 +21,11 @@ from typing import List
 
 from src.data.scripts.utils import print_red, print_yellow, print_green
 
+# Expected table columns
+address_col = 'address'
+id_col = 'ID'
 
-def get_and_store_streetview_image(address: str, api_key: str, size="640x320", fov=80, pitch=10, filename=""):
+def get_and_store_streetview_image(address: str, api_key: str, filename: str, fov=80, pitch=10, size="640x320"):
     """
     Retrieves a Google Street View image for a given address. Returns a filename if an image was
     found and saved, and None otherwise.
@@ -49,11 +52,8 @@ def get_and_store_streetview_image(address: str, api_key: str, size="640x320", f
         response.raise_for_status()
         img = Image.open(BytesIO(response.content))
 
-        if filename == "":
-            filename = f"{create_img_filename(address)}.webp"
-
         # Save as a 70% quality webp image to ensure small size
-        img.save(filename, optimize=True, quality=70)
+        img.save(filename, optimize=True, quality=90)
 
         return filename
     except requests.exceptions.RequestException as e:
@@ -70,23 +70,23 @@ def get_and_store_streetview_image(address: str, api_key: str, size="640x320", f
         print_red(f"An unexpected error occurred for {address}: {e}")
         return None
 
-def create_img_filename(address: str) -> str:
+def create_img_filename(building_id: str, address: str) -> str:
     """
     Given an address, generates a standardized image filename format. We don't store the city or
     state since this is a Chicago project, but keep the zipcode just in case. Example:
 
-    '10 W 31st Street, Chicago IL, 60616' -> '10_W_31st_St_60616'
+    ('256424', '10 W 31st Street, Chicago IL, 60616') -> '256424-10_W_31st_St_60616'
     """
 
     # Remove the city and state parts of the address.
     address_without_city_state = re.sub(r', Chicago IL,?', '', address).strip()
 
     # Replace spaces with underscores and remove other special characters.
-    filename = re.sub(r'[^\w]', '_', address_without_city_state).strip('_')
+    addr_cleaned = re.sub(r'[^\w]', '_', address_without_city_state).strip('_')
 
-    return filename
+    return f"{building_id}-{addr_cleaned}"
 
-def get_and_store_building_streetview_images(address_list: List[str], api_key: str, output_dir="tmp_streetview_images") -> int:
+def get_and_store_building_streetview_images(buildings: pd.DataFrame, api_key: str, output_dir: str) -> int:
     """
     Retrieves and saves Google Street View images for a list of addresses. Returns the number of
     images found and stored, since some buildings may not have imagery.
@@ -96,8 +96,11 @@ def get_and_store_building_streetview_images(address_list: List[str], api_key: s
 
     images_count = 0
 
-    for address in address_list:
-        filename = os.path.join(output_dir, f"{create_img_filename(address)}.webp")
+    for index, row in buildings.iterrows():
+        building_id = row[id_col]
+        address = row[address_col]
+
+        filename = os.path.join(output_dir, f"{create_img_filename(building_id, address)}.webp")
 
         output_filename = get_and_store_streetview_image(address, api_key, filename=filename)
 
@@ -106,7 +109,7 @@ def get_and_store_building_streetview_images(address_list: List[str], api_key: s
 
     return images_count
 
-def load_addresses_from_csv(csv_filepath: str) -> List[str]:
+def load_buildings_from_csv(csv_filepath: str) -> pd.DataFrame | None:
     """
     Read in some addresses from a CSV with an 'address' column, returning an array of addresses
     """
@@ -114,7 +117,15 @@ def load_addresses_from_csv(csv_filepath: str) -> List[str]:
     try:
         df = pd.read_csv(csv_filepath)
 
-        return df['address'].tolist()
+        print(f"{address_col} {id_col}")
+
+        if df is None or df.empty:
+            return None
+
+        if address_col not in df.columns or id_col not in df.columns:
+            return None
+
+        return df
     except FileNotFoundError:
         print(f"Error: CSV file '{csv_filepath}' not found.")
         return []
@@ -129,12 +140,15 @@ if __name__ == "__main__": # important for command line arguments.
     if len(sys.argv) > 2:
         csv_file = sys.argv[2]  # Override with command-line argument
 
-    addresses = load_addresses_from_csv(csv_file)
+    buildings = load_buildings_from_csv(csv_file)
 
-    if len(addresses) > 0:
-        print(f"Attempting to fetch imagery for {len(addresses)} buildings...")
-        imgs_count = get_and_store_building_streetview_images(addresses, api_key)
-        print_green(f"Done, {imgs_count} of {len(addresses)} buildings had images found and stored!")
+    if len(buildings) > 0:
+        print(f"Attempting to fetch imagery for {len(buildings)} buildings...")
+
+        output_dir = "tmp_streetview_images"
+        imgs_count = get_and_store_building_streetview_images(buildings, api_key, output_dir)
+
+        print_green(f"Done, {imgs_count} of {len(buildings)} buildings had images found and stored in '/{output_dir}'!")
         print('Make sure to verify imagery looks good before it is published!')
     else:
         print_red('Error! No addresses provided')

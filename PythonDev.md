@@ -81,7 +81,7 @@ uv python install 3.12
 To set up the Python environment with uv:
 
 ```bash
-uv venv --python=$PYTHON_VERSION .venv # $PYTHON_VERSION  may need to be 3.12
+uv venv --python=$PYTHON_VERSION .venv
 ```
 
 This creates a virtual environment in your root directory of Electrify-Chicago.

@@ -10,7 +10,12 @@
     <p class="attribution -no-margin">
       <strong>Attribution:</strong>
       {{ buildingImg.fromGoogleMaps ? '© Google ' + currentYear : '' }}
-      <a ref="noopener" :href="buildingImg.attributionUrl" target="_blank">
+      <a
+        v-if="buildingImg.attributionUrl"
+        ref="noopener"
+        :href="buildingImg.attributionUrl"
+        target="_blank"
+      >
         Image Source
         <NewTabIcon /> </a
       >. Cropped from original.
