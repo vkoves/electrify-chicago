@@ -55,6 +55,16 @@ export default class Search extends Vue {
   /** The selected property type filter */
   propertyTypeFilter = '';
 
+  /** The current sorted field (column) */
+  sortedField = 'GHGIntensity';
+
+  /** The direction of the sorted field (column) */
+  sortedDirection: 'asc' | 'desc' = 'desc';
+
+  /** Flags 'true' when any filter is applied,
+   * so that column sort (asc, desc) applies only to filtered results */
+  hasFilteredResults = false;
+
   gradeFilter = '';
   gradeQuintileFilter = '';
 
@@ -148,6 +158,7 @@ export default class Search extends Vue {
       !this.gradeFilter &&
       !this.gradeQuintileFilter
     ) {
+      this.hasFilteredResults = false;
       this.setSearchResults(buildingsResults);
       return;
     }
@@ -185,8 +196,54 @@ export default class Search extends Vue {
         this.gradeFilter,
       );
     }
+    this.hasFilteredResults = true;
 
     this.setSearchResults(buildingsResults);
+  }
+
+  /** Handles clicks on numeric columns in
+   * BuildingsTable and sorts (desc, asc) */
+  handleSort(field: string): void {
+    // if clicking on the same field,
+    // this will toggle between 'desc' and 'asc'
+    if (this.sortedField === field) {
+      this.sortedDirection = this.sortedDirection === 'desc' ? 'asc' : 'desc';
+    } else {
+      // else if clicking on a new field, set sortedField state
+      // to the new field AND set initial sortedDirection to 'desc'
+      this.sortedField = field;
+      this.sortedDirection = 'desc';
+    }
+
+    /** If there are filtered results (type, grade, search results)
+     * pass to runSort. If not, sort all. */
+    let buildingsToSort;
+    if (this.hasFilteredResults) {
+      buildingsToSort = [...this.searchResults];
+    } else {
+      buildingsToSort = [...this.$static.allBuilding.edges];
+    }
+
+    this.runSort(buildingsToSort);
+  }
+
+  /** Called from handleSort, this function sorts
+   * according to sortedField and sortedDirection state values */
+  runSort(buildings: Array<IBuildingNode>): void {
+    const sortedBuildings = buildings.sort(
+      (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) => {
+        const valueA = Number(buildingEdgeA.node[this.sortedField]);
+        const valueB = Number(buildingEdgeB.node[this.sortedField]);
+
+        if (this.sortedDirection === 'desc') {
+          return valueB - valueA;
+        } else {
+          return valueA - valueB;
+        }
+      },
+    );
+    // calls setSearchResults to update state and set to 100 buildings
+    this.setSearchResults(sortedBuildings);
   }
 
   /**
@@ -311,7 +368,13 @@ export default class Search extends Vue {
         </button>
       </form>
 
-      <BuildingsTable :buildings="searchResults" />
+      <BuildingsTable
+        :buildings="searchResults"
+        :sorted-field="sortedField"
+        :sorted-direction="sortedDirection"
+        :show-sort="true"
+        @sort="handleSort"
+      />
 
       <div v-if="searchResults.length === 0" class="no-results-msg">
         <h2>No results found!</h2>

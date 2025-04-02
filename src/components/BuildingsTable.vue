@@ -32,6 +32,31 @@ export default class BuildingsTable extends Vue {
 
   @Prop({ default: false }) showElectricityUse!: boolean;
 
+  /** Props from Search component to store field (column) being sorted and direction */
+  @Prop({ default: 'GHGIntensity' }) sortedField!: string;
+  @Prop({ default: 'desc' }) sortedDirection!: string;
+
+  /** Prop to handle whether the sorting buttons should be shown
+   * (ex. with Search component) */
+  @Prop({ default: false }) showSort!: boolean;
+
+  // declares the property emit for TS
+  // TODO: Figure out why Vue $emit isn't recognized by Typescript
+  $emit: any;
+
+  /** Method to return the relevant aria-label value
+   * based on whether the column is selected and sorted */
+  getAriaLabelForSort(fieldname: string): string {
+    if (fieldname === this.sortedField) {
+      return (
+        `Toggle sort ${this.sortedField} - currently sorting in ` +
+        `${this.sortedDirection === 'asc' ? 'ascending' : 'descending'} order.`
+      );
+    } else {
+      return `Sort by ${this.sortedField}`;
+    }
+  }
+  
   /**
    * Whether in debug mode where we show ID and full address, to allow copy pasting to building
    * address CSV
@@ -54,21 +79,113 @@ export default class BuildingsTable extends Vue {
           <th scope="col">Name / Address</th>
           <th scope="col" class="prop-type">Primary Property Type</th>
           <th v-if="showSquareFootage">Square Footage</th>
-          <th v-if="showGasUse" scope="col" class="numeric wide-col">
+          <!-- Click handlers on numeric columns for sorting -->
+          <th
+            v-if="showGasUse"
+            scope="col"
+            class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
+            @click="showSort ? $emit('sort', 'NaturalGasUse') : null"
+          >
             Fossil Gas Use<br />
             <span class="unit">(kBtu)</span>
+            <button
+              v-if="showSort"
+              :class="
+                sortedField === 'NaturalGasUse'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('NaturalGasUse')"
+            >
+              {{
+                sortedField === 'NaturalGasUse'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
-          <th v-if="showElectricityUse" scope="col" class="numeric wide-col">
+          <th
+            v-if="showElectricityUse"
+            scope="col"
+            class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
+            @click="showSort ? $emit('sort', 'ElectricityUse') : null"
+          >
             Electricity Use<br />
             <span class="unit">(kBtu)</span>
+            <button
+              v-if="showSort"
+              :class="
+                sortedField === 'ElectricityUse'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('ElectricityUse')"
+            >
+              {{
+                sortedField === 'ElectricityUse'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
-          <th scope="col" class="numeric wide-col">
+
+          <th
+            scope="col"
+            class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
+            @click="showSort ? $emit('sort', 'GHGIntensity') : null"
+          >
             GHG Intensity<br />
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
+            <button
+              v-if="showSort"
+              :class="
+                sortedField === 'GHGIntensity'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('GHGIntensity')"
+            >
+              {{
+                sortedField === 'GHGIntensity'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
-          <th scope="col" class="numeric wide-col">
+          <th
+            scope="col"
+            class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
+            @click="showSort ? $emit('sort', 'TotalGHGEmissions') : null"
+          >
             Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
+            <button
+              v-if="showSort"
+              :class="
+                sortedField === 'TotalGHGEmissions'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('TotalGHGEmissions')"
+            >
+              {{
+                sortedField === 'TotalGHGEmissions'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
         </tr>
       </thead>
@@ -222,6 +339,28 @@ export default class BuildingsTable extends Vue {
         .unit {
           font-size: smaller;
           font-weight: normal;
+        }
+
+        // Style sortable column headers and icon
+        &.-sortable {
+          cursor: pointer;
+
+          &:hover .sort.deselected,
+          .sort.selected {
+            color: $black;
+          }
+          .sort.deselected {
+            color: rgba(0, 0, 0, 0.5);
+          }
+
+          .sort {
+            margin-left: 0.2rem;
+            font-size: 0.7rem;
+            padding: 0;
+            background-color: transparent;
+            border-bottom: none;
+            transition: color 0.3s;
+          }
         }
       }
     }
