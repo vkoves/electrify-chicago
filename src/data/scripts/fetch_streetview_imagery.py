@@ -25,7 +25,7 @@ from src.data.scripts.utils import print_red, print_yellow, print_green
 address_col = 'address'
 id_col = 'ID'
 
-def get_and_store_streetview_image(address: str, api_key: str, filename: str, fov=80, pitch=10, size="640x320"):
+def get_and_store_streetview_image(address: str, api_key: str, filename: str, fov=90, pitch=10, size="640x320"):
     """
     Retrieves a Google Street View image for a given address. Returns a filename if an image was
     found and saved, and None otherwise.

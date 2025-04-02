@@ -309,6 +309,7 @@ export default class HowWeGradeBuildings extends Vue {}
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity

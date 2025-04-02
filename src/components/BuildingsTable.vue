@@ -31,6 +31,14 @@ export default class BuildingsTable extends Vue {
   @Prop({ default: false }) showGasUse!: boolean;
 
   @Prop({ default: false }) showElectricityUse!: boolean;
+
+  /**
+   * Whether in debug mode where we show ID and full address, to allow copy pasting to building
+   * address CSV
+   */
+  get isDebug(): boolean {
+    return window.location.search.includes('debug');
+  }
 }
 </script>
 
@@ -83,7 +91,13 @@ export default class BuildingsTable extends Vue {
             />
 
             <div class="prop-address">
-              {{ edge.node.Address }}
+              <template v-if="isDebug">
+                <!-- If '?debug' is in URL, show ID and full address in quotes for address CSV -->
+                {{ edge.node.ID }},"{{ edge.node.Address }}, Chicago IL, {{ edge.node.ZIPCode }}"
+              </template>
+              <template v-else>
+                {{ edge.node.Address }}{{ isDebug ? ', Chicago IL, ' + edge.node.ZIPCode : '' }}
+              </template>
             </div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>

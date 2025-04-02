@@ -16,9 +16,9 @@
         :href="buildingImg.attributionUrl"
         target="_blank"
       >
-        Image Source
+        Source
         <NewTabIcon /> </a
-      >. Cropped from original.
+      >
     </p>
   </div>
 </template>

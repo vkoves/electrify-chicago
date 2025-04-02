@@ -187,17 +187,24 @@ and so this is still a pretty manual process.
 2. **Create An Addresses CSV** - create a CSV file of buildings addresses you want to fetch, with
    columns:
 
-- **address** - the full address (e.g "10 W 31st Street, Chicago IL, 60616")
+   - **ID** - the building ID (e.g "256424"), used so the output filename contains the ID
+   - **address** - the full address (e.g "10 W 31st Street, Chicago IL, 60616")
+
+   You can use `template_buildings_to_img.csv` as an example.
+
+   **Tip!** If you're looking to check for images for a whole page, add `?debug` to the URL locally,
+   and it'll show you the ID and address formatted for the CSV, right under the building name in any
+   data table. You can then just copy paste each building you want to check into the CSV.
 
 3. **Run The Script** - run the script to fetch images, passing in the API key and the path to your
    addresses CSV, like so:
 
-```sh
-python3 -m src.data.scripts.fetch_streetview_imagery API_KEY ../addresses_to_img.csv
-```
+   ```sh
+   python3 -m src.data.scripts.fetch_streetview_imagery API_KEY ../addresses_to_img.csv
+   ```
 
-This will save images to `/tmp_streetview_images`, which is git ignored so you can't accidentally
-commit building images without manually reviewing them.
+   This will save images to `/tmp_streetview_images`, which is git ignored so you can't accidentally
+   commit building images without manually reviewing them.
 
 4. **Copy Images You Like & Follow "Adding Building Images" Process** - a lot of the Google
    Streetview imagery might come back and not show the building well, so review the generated images,
