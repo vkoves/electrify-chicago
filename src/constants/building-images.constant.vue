@@ -603,6 +603,111 @@ export const BuildingImages: IBuildingImages = {
   },
 
   /**
+   * DePaul Buildings (auto & manual)
+   */
+  '101562': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/101562-1_E_Jackson_Blvd_60604.webp',
+    fromGoogleMaps: true
+  },
+  '101975': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/101975-14_E_Jackson_Blvd_60604.webp',
+    fromGoogleMaps: true
+  },
+  '103634': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/103634-25_E_Jackson_Blvd_60604.webp',
+    fromGoogleMaps: true
+  },
+  '119808': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/119808-1110_W_Belden_60614.webp',
+    fromGoogleMaps: true
+  },
+  '134779': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/134779-243_S_Wabash_Ave_60604.webp',
+    fromGoogleMaps: true
+  },
+  '138514': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/138514-2323_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '166264': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/166264-525_S_State_St_60605.webp',
+    fromGoogleMaps: true
+  },
+  '173724': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/173724-2320_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '175365': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/175365-2247_N_Halstead_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251324': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251324-2315_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251325': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251325-2311_N_Racine_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251326': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251326-2345_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251328': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251328-2350_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251331': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251331-2312_N_Clifton_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251332': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251332-2235_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251334': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251334-2325_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251335': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251335-2250_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251337': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251337-2350_N_Racine_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251338': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251338-2322_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '251925': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251925-2219_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true
+  },
+  '254989': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/254989-2330_N_HALSTED_ST_60614.web',
+    fromGoogleMaps: true
+  },
+  '251330': {
+    imgUrl: BuildingImagesBase + 'ID-251330-depaul-mcgowan-north.webp',
+    fromGoogleMaps: true,
+  },
+  '251329': {
+    imgUrl: BuildingImagesBase + 'ID-251329-depaul-mccabe-hall.webp',
+    fromGoogleMaps: true,
+  },
+  '251321': {
+    imgUrl: BuildingImagesBase + 'ID-251321-depaul-1150-w-fullerton.webp',
+    fromGoogleMaps: true,
+  },
+  '251322': {
+    imgUrl: BuildingImagesBase + 'ID-251322-depaul-990-w-fullerton.webp',
+    fromGoogleMaps: true,
+  },
+
+
+  /**
    * UChicago Buildings
    */
   // 6045-kenwood-building

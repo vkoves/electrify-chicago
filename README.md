@@ -196,6 +196,12 @@ and so this is still a pretty manual process.
    and it'll show you the ID and address formatted for the CSV, right under the building name in any
    data table. You can then just copy paste each building you want to check into the CSV.
 
+   You can also then pull all the addresses by running some simple JS:
+
+   ```ts
+   Array.from(document.querySelectorAll('.prop-address')).map(elem => elem.innerText)
+   ```
+
 3. **Run The Script** - run the script to fetch images, passing in the API key and the path to your
    addresses CSV, like so:
 
