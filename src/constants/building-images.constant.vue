@@ -751,6 +751,76 @@ export const BuildingImages: IBuildingImages = {
     fromGoogleMaps: true,
     isTall: true,
   },
+  // Auto streetview
+  '102455': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/102455-5807_S_Woodlawn_Ave_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '118776': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/118776-450_N_Cityfront_Plz_60611.webp',
+    fromGoogleMaps: true,
+  },
+  '136212': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/136212-1155_E_60th_St_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '156942': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/156942-1005_E_60th_St_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252036': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252036-1101_E_56th_St_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252037': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252037-5530_S_Ellis_Ave_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252038': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252038-5730_S_Ellis_Ave_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252041': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252041-970_E_58th_St_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252044': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252044-1111_E_60th_St_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252047': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252047-5757_S_University_Ave_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252049': {
+    // eslint-disable-next-line max-len
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252049-5811___5827_S_Ellis_Ave_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252050': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252050-5747_S_Ellis_Ave_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252057': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252057-1126_E_59th_St_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '252061': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252061-1313_E_60th_St_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '254181': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/254181-1414_E_59th_St_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '254381': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/254381-5500_S_UNIVERSITY_AVE_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '256502': {
+    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/256502-1442_E__59th_Street_60637.web',
+    fromGoogleMaps: true,
+  },
 
   /**
    * Misc. High Emitters
