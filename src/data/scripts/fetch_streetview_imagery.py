@@ -25,14 +25,18 @@ from src.data.scripts.utils import print_red, print_yellow, print_green
 address_col = 'address'
 id_col = 'ID'
 
-def get_and_store_streetview_image(address: str, api_key: str, filename: str, fov=90, pitch=10, size="640x320"):
+def get_and_store_streetview_image(address: str, api_key: str, filename: str, fov=90, pitch=20, size="640x640"):
     """
     Retrieves a Google Street View image for a given address. Returns a filename if an image was
-    found and saved, and None otherwise.
+    found and saved, and None otherwise. Note that the FOV and the size are related, so don't shift
+    both at once.
 
     - The max size is 640x640.
     - We use a pitch of 10 (degrees) to angle up a bit for tall buildings and to not show road or
     sidewalk.
+    - For wide and short images, use fov=90, pitch=10, size=640x320
+    - For very big buildings (wide & tall), try fov=90, pitch=20, size=640x640
+    - For lean and tall buildings, try fov=100, pitch=30, size=420x640
 
     To learn more, see: https://developers.google.com/maps/documentation/streetview/overview
     For full info see: https://developers.google.com/maps/documentation/streetview/request-streetview

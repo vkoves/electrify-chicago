@@ -1,3 +1,4 @@
+<!-- eslint-disable max-len -->
 <script lang="ts">
 // The function Gridsome uses to make slugs, so it should match
 import slugify from '@sindresorhus/slugify';
@@ -606,88 +607,130 @@ export const BuildingImages: IBuildingImages = {
    * DePaul Buildings (auto & manual)
    */
   '101562': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/101562-1_E_Jackson_Blvd_60604.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/101562-1_E_Jackson_Blvd_60604.webp',
+    fromGoogleMaps: true,
   },
   '101975': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/101975-14_E_Jackson_Blvd_60604.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/101975-14_E_Jackson_Blvd_60604.webp',
+    fromGoogleMaps: true,
   },
   '103634': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/103634-25_E_Jackson_Blvd_60604.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/103634-25_E_Jackson_Blvd_60604.webp',
+    fromGoogleMaps: true,
   },
   '119808': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/119808-1110_W_Belden_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/119808-1110_W_Belden_60614.webp',
+    fromGoogleMaps: true,
   },
   '134779': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/134779-243_S_Wabash_Ave_60604.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/134779-243_S_Wabash_Ave_60604.webp',
+    fromGoogleMaps: true,
   },
   '138514': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/138514-2323_N_Sheffield_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/138514-2323_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '166264': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/166264-525_S_State_St_60605.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/166264-525_S_State_St_60605.webp',
+    fromGoogleMaps: true,
   },
   '173724': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/173724-2320_N_Kenmore_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/173724-2320_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '175365': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/175365-2247_N_Halstead_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/175365-2247_N_Halstead_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251324': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251324-2315_N_Kenmore_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251324-2315_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251325': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251325-2311_N_Racine_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251325-2311_N_Racine_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251326': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251326-2345_N_Sheffield_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251326-2345_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251328': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251328-2350_N_Kenmore_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251328-2350_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251331': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251331-2312_N_Clifton_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251331-2312_N_Clifton_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251332': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251332-2235_N_Sheffield_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251332-2235_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251334': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251334-2325_N_Sheffield_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251334-2325_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251335': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251335-2250_N_Sheffield_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251335-2250_N_Sheffield_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251337': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251337-2350_N_Racine_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251337-2350_N_Racine_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251338': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251338-2322_N_Kenmore_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251338-2322_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '251925': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/251925-2219_N_Kenmore_Ave_60614.webp',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/251925-2219_N_Kenmore_Ave_60614.webp',
+    fromGoogleMaps: true,
   },
   '254989': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/depaul/254989-2330_N_HALSTED_ST_60614.web',
-    fromGoogleMaps: true
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/depaul/254989-2330_N_HALSTED_ST_60614.web',
+    fromGoogleMaps: true,
   },
   '251330': {
     imgUrl: BuildingImagesBase + 'ID-251330-depaul-mcgowan-north.webp',
@@ -705,7 +748,6 @@ export const BuildingImages: IBuildingImages = {
     imgUrl: BuildingImagesBase + 'ID-251322-depaul-990-w-fullerton.webp',
     fromGoogleMaps: true,
   },
-
 
   /**
    * UChicago Buildings
@@ -753,72 +795,105 @@ export const BuildingImages: IBuildingImages = {
   },
   // Auto streetview
   '102455': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/102455-5807_S_Woodlawn_Ave_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/102455-5807_S_Woodlawn_Ave_60637.webp',
     fromGoogleMaps: true,
   },
   '118776': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/118776-450_N_Cityfront_Plz_60611.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/118776-450_N_Cityfront_Plz_60611.webp',
     fromGoogleMaps: true,
   },
   '136212': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/136212-1155_E_60th_St_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/136212-1155_E_60th_St_60637.webp',
     fromGoogleMaps: true,
   },
   '156942': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/156942-1005_E_60th_St_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/156942-1005_E_60th_St_60637.webp',
     fromGoogleMaps: true,
   },
   '252036': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252036-1101_E_56th_St_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252036-1101_E_56th_St_60637.webp',
     fromGoogleMaps: true,
   },
   '252037': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252037-5530_S_Ellis_Ave_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252037-5530_S_Ellis_Ave_60637.webp',
     fromGoogleMaps: true,
   },
   '252038': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252038-5730_S_Ellis_Ave_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252038-5730_S_Ellis_Ave_60637.webp',
     fromGoogleMaps: true,
   },
   '252041': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252041-970_E_58th_St_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252041-970_E_58th_St_60637.webp',
     fromGoogleMaps: true,
   },
   '252044': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252044-1111_E_60th_St_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252044-1111_E_60th_St_60637.webp',
     fromGoogleMaps: true,
   },
   '252047': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252047-5757_S_University_Ave_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252047-5757_S_University_Ave_60637.webp',
     fromGoogleMaps: true,
   },
   '252049': {
-    // eslint-disable-next-line max-len
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252049-5811___5827_S_Ellis_Ave_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252049-5811___5827_S_Ellis_Ave_60637.webp',
     fromGoogleMaps: true,
   },
   '252050': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252050-5747_S_Ellis_Ave_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252050-5747_S_Ellis_Ave_60637.webp',
     fromGoogleMaps: true,
   },
   '252057': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252057-1126_E_59th_St_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252057-1126_E_59th_St_60637.webp',
     fromGoogleMaps: true,
   },
   '252061': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/252061-1313_E_60th_St_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/252061-1313_E_60th_St_60637.webp',
     fromGoogleMaps: true,
   },
   '254181': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/254181-1414_E_59th_St_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/254181-1414_E_59th_St_60637.webp',
     fromGoogleMaps: true,
   },
   '254381': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/254381-5500_S_UNIVERSITY_AVE_60637.webp',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/254381-5500_S_UNIVERSITY_AVE_60637.webp',
     fromGoogleMaps: true,
   },
   '256502': {
-    imgUrl: BuildingImagesBase + 'auto-streetview/uchicago/256502-1442_E__59th_Street_60637.web',
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/uchicago/256502-1442_E__59th_Street_60637.web',
     fromGoogleMaps: true,
   },
 
@@ -882,6 +957,224 @@ export const BuildingImages: IBuildingImages = {
   '163223': {
     attributionUrl: 'https://goo.gl/maps/DRpUvwYquHtWFaT58',
     imgUrl: BuildingImagesBase + '10909-s-cottage-grove.jpg',
+    fromGoogleMaps: true,
+  },
+
+  /**
+   * Cleanest Buildings
+   */
+  '159571': {
+    imgUrl: BuildingImagesBase + 'ID-159571-2144-n-lincoln-park-west.webp',
+    fromGoogleMaps: true,
+  },
+  '133242': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/133242-1444_N_ORLEANS_ST_60610.webp',
+    fromGoogleMaps: true,
+  },
+  '232666': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/232666-600_S_Dearborn_St_60605.webp',
+    fromGoogleMaps: true,
+  },
+  '160455': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/160455-28_E_Jackson_Blvd_60604.webp',
+    fromGoogleMaps: true,
+  },
+  '173618': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/173618-318_W_Adams_St_60606.webp',
+    fromGoogleMaps: true,
+  },
+  '255934': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/255934-33_S_Aberdeen_St_60607.webp',
+    fromGoogleMaps: true,
+  },
+  '251294': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/251294-954_W_Washington_Blvd_60607.webp',
+    fromGoogleMaps: true,
+  },
+  '172613': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/172613-2720_2730_N_Greenview_Ave_60614.webp',
+    fromGoogleMaps: true,
+  },
+  '175686': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/175686-1001_W_BELMONT_AVE_60657.webp',
+    fromGoogleMaps: true,
+  },
+  '102610': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/102610-420_432_W_ONTARIO_ST_60654.webp',
+    fromGoogleMaps: true,
+  },
+  '256645': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/256645-1419_S_Wabash_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '254527': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/254527-6321_S_Cottage_Grove_Ave_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '134136': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/134136-141_173_W_OAK_ST_60610.webp',
+    fromGoogleMaps: true,
+  },
+  '252033': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/252033-1405_N_Washtenaw_60622.webp',
+    fromGoogleMaps: true,
+  },
+  '151257': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/151257-2758_2768_N_MILWAUKEE_AVE_60647.webp',
+    fromGoogleMaps: true,
+  },
+  '113706': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/113706-233_E_ERIE_ST_60611.webp',
+    fromGoogleMaps: true,
+  },
+  '158654': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/158654-2300_N_Lincoln_Park_West_60614.webp',
+    fromGoogleMaps: true,
+  },
+  '132489': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/132489-4537_S_DREXEL_BLVD_60653.webp',
+    fromGoogleMaps: true,
+  },
+  '251382': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/251382-24_W_Walton_St_60610.webp',
+    fromGoogleMaps: true,
+  },
+  '175813': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/175813-4260_N_BROADWAY_ST_60613.webp',
+    fromGoogleMaps: true,
+  },
+  '175837': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/175837-220_E_GARFIELD_BLVD_60615.webp',
+    fromGoogleMaps: true,
+  },
+  '257035': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/257035-2929_W_83rd_St_60652.webp',
+    fromGoogleMaps: true,
+  },
+  '174247': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/174247-421_E_62ND_ST_60637.webp',
+    fromGoogleMaps: true,
+  },
+  '256815': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/256815-2480_N_MILWAUKEE_AVE_60647.webp',
+    fromGoogleMaps: true,
+  },
+  '252295': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/252295-1501_W_Belmont_Ave_60657.webp',
+    fromGoogleMaps: true,
+  },
+  '156021': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/156021-717_N_Michigan_Ave_60611.webp',
+    fromGoogleMaps: true,
+  },
+  '124236': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/124236-830_N_Michigan_Ave_60611.webp',
+    fromGoogleMaps: true,
+  },
+  '113652': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/113652-233_E_Walton_Place_60611.webp',
+    fromGoogleMaps: true,
+  },
+  '252072': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/252072-641_W_Lake_St_60661.webp',
+    fromGoogleMaps: true,
+  },
+  '175981': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/175981-860_W_Evergreen_Ave_60642.webp',
+    fromGoogleMaps: true,
+  },
+  '256891': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/256891-104_S_LAFLIN_ST_60607.webp',
+    fromGoogleMaps: true,
+  },
+  '255932': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/255932-33_S_Ashland_Ave_60607.webp',
+    fromGoogleMaps: true,
+  },
+  '250071': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/250071-900_N_Hudson_60610.webp',
+    fromGoogleMaps: true,
+  },
+  '156750': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/156750-800_810_N_CLARK_ST_60610.webp',
+    fromGoogleMaps: true,
+  },
+  '117024': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/117024-1830_N_WINCHESTER_AVE_60622.webp',
+    fromGoogleMaps: true,
+  },
+  '104431': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/cleanest/104431-5948_5958_N_BROADWAY_60660.webp',
     fromGoogleMaps: true,
   },
 };

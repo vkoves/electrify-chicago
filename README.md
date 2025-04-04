@@ -199,7 +199,9 @@ and so this is still a pretty manual process.
    You can also then pull all the addresses by running some simple JS:
 
    ```ts
-   Array.from(document.querySelectorAll('.prop-address')).map(elem => elem.innerText)
+   Array.from(document.querySelectorAll('.prop-address')).map(
+     (elem) => elem.innerText,
+   );
    ```
 
 3. **Run The Script** - run the script to fetch images, passing in the API key and the path to your
