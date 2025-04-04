@@ -73,7 +73,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 Install Python 3.12 with:
 
 ```bash
-uv python install $PYTHON_VERSION
+uv python install 3.12
 ```
 
 ### Virtual Environment Setup

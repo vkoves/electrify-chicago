@@ -25,6 +25,8 @@ export interface IBuildingOwners {
 
 /**
  * An object containing the name and logos of custom flagged building owners
+ *
+ * Order maps to large-owners page
  */
 export const BuildingOwners: IBuildingOwners = {
   depaul: {
@@ -49,14 +51,6 @@ export const BuildingOwners: IBuildingOwners = {
     nameShort: 'UChicago',
     logoSmall: '/building-owners/uchicago/uchicago-small.jpg',
     logoLarge: '/building-owners/uchicago/uchicago-large.png',
-  },
-
-  uic: {
-    key: 'uic',
-    name: 'University of Illinois Chicago',
-    nameShort: 'UIC',
-    logoSmall: '/building-owners/uic/uic-large.jpg',
-    logoLarge: '/building-owners/uic/uic-large.png',
   },
 
   northwestern: {
@@ -140,6 +134,14 @@ export const BuildingOwners: IBuildingOwners = {
     nameShort: 'North Park',
     logoSmall: '/building-owners/npu/npu-large.png',
     logoLarge: '/building-owners/npu/npu-large.png',
+  },
+
+  uic: {
+    key: 'uic',
+    name: 'University of Illinois Chicago',
+    nameShort: 'UIC',
+    logoSmall: '/building-owners/uic/uic-large.jpg',
+    logoLarge: '/building-owners/uic/uic-large.png',
   },
 
   /**

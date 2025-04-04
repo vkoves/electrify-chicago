@@ -49,6 +49,7 @@ export default class CleanestBuildings extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GrossFloorArea

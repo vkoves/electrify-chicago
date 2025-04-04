@@ -35,6 +35,7 @@ export default class BiggestBuildings extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GrossFloorArea
