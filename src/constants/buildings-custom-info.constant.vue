@@ -1621,8 +1621,6 @@ export const BuildingsCustomInfo: {
    */
   // 400 W Superior St
   '103812': { owner: BuildingOwners.cityofchicago.key },
-  // Chicago Indoor Sports
-  '120015': { owner: BuildingOwners.cityofchicago.key },
   // City Hall
   '250115': { owner: BuildingOwners.cityofchicago.key },
   // Harold Washington Library
