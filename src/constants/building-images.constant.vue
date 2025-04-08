@@ -753,19 +753,26 @@ export const BuildingImages: IBuildingImages = {
    * City of Chicago Buildings
    */
   '103812': {
-    imgUrl: BuildingImagesBase + 'city-of-chicago/ID-103812-400-w-superior.webp ',
+    imgUrl:
+      BuildingImagesBase + 'city-of-chicago/ID-103812-400-w-superior.webp ',
     fromGoogleMaps: true,
   },
   '157964': {
-    imgUrl: BuildingImagesBase + 'city-of-chicago/ID-157964-harold-washington-library.webp ',
+    imgUrl:
+      BuildingImagesBase +
+      'city-of-chicago/ID-157964-harold-washington-library.webp ',
     fromGoogleMaps: true,
   },
   '250057': {
-    imgUrl: BuildingImagesBase + 'city-of-chicago/ID-250057-englewood-health-center.webp ',
+    imgUrl:
+      BuildingImagesBase +
+      'city-of-chicago/ID-250057-englewood-health-center.webp ',
     fromGoogleMaps: true,
   },
   '250058': {
-    imgUrl: BuildingImagesBase + 'city-of-chicago/ID-250058-mlk-community-center.webp ',
+    imgUrl:
+      BuildingImagesBase +
+      'city-of-chicago/ID-250058-mlk-community-center.webp ',
     fromGoogleMaps: true,
   },
   '250063': {
@@ -773,11 +780,14 @@ export const BuildingImages: IBuildingImages = {
     fromGoogleMaps: true,
   },
   '250065': {
-    imgUrl: BuildingImagesBase + 'city-of-chicago/ID-250065-sulzer-library.webp ',
+    imgUrl:
+      BuildingImagesBase + 'city-of-chicago/ID-250065-sulzer-library.webp ',
     fromGoogleMaps: true,
   },
   '250068': {
-    imgUrl: BuildingImagesBase + 'city-of-chicago/ID-250068-police-training-academy.webp ',
+    imgUrl:
+      BuildingImagesBase +
+      'city-of-chicago/ID-250068-police-training-academy.webp ',
     fromGoogleMaps: true,
   },
   '250115': {
