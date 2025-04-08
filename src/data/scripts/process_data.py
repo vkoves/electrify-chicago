@@ -11,7 +11,7 @@ import pandas
 
 from typing import List
 from src.data.scripts.grade_buildings import grade_buildings
-from src.data.scripts.wards_buildings import add_ward_numbers
+from src.data.scripts.add_ward_numbers import add_ward_numbers
 from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion, output_to_csv
 from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
 
