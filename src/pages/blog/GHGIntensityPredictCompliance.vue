@@ -3,9 +3,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
 // Extend Vue options with metaInfo
-@Component({
+@Component<any>({
   components: {
     NewTabIcon,
+  },
+  metaInfo() {
+    return {
+      title: 'Do High Emitting Buildings Report Emissions Less Often?',
+    };
   },
 })
 export default class MillionsInMissedFine extends Vue {
@@ -48,12 +53,6 @@ export default class MillionsInMissedFine extends Vue {
 
   checkScreenSize(): void {
     this.isMobile = window.innerWidth <= 768;
-  }
-
-  metaInfo(): Record<string, unknown> {
-    return {
-      title: 'Do High Emitting Buildings Report Emissions Less Often?',
-    };
   }
 }
 </script>
