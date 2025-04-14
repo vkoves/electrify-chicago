@@ -34,6 +34,9 @@ def add_ward_numbers(buildings: pd.DataFrame) -> pd.DataFrame:
     # Find corresponding Ward number for each building, using WardsShapes information
     buildings['Ward'] = buildings.apply(lambda building: find_ward_number(ward_shapes, building.Longitude, building.Latitude), axis = 1)
 
+    # Convert 'Ward' column to int, handling any NaN values
+    buildings['Ward'] = buildings['Ward'].fillna(-1).astype(int)
+
     return buildings
 
 # This file may be run by itself to test the add_ward_numbers function without saving the output
