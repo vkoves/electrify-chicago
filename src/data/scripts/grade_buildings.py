@@ -416,16 +416,12 @@ def grade_ghg_intensity_energy_mix_all_years(building_data: pd.DataFrame):
         on=["ID", "DataYear"],
     )
 
-    print('grades_all_years', grades_all_years_df[['GHGIntensityPercentileGrade', 'GHGIntensityLetterGrade']].head())
-
     # Add to the original dataset:
     df = pd.merge(
         building_data,
         grades_all_years_df,
         on=["ID", "DataYear"],
     )
-
-    print(building_data.head())
 
     return df
 
