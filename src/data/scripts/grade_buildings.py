@@ -439,14 +439,15 @@ def calculate_weighted_average(graded_df: pd.DataFrame) -> pd.Series:
 
     return weighted_average
 
-def grade_buildings(building_data):
+def grade_buildings():
+    df_historical = pd.read_csv(data_in_file_historical_path)
+   
     # Generate grades for all years for GHG Intensity and Energy Mix:
     graded_df = grade_ghg_intensity_energy_mix_all_years(
-        building_data=building_data,
+        building_data=df_historical,
     )
 
     # Generate grades for consistent reporting (not missing records):
-    df_historical = pd.read_csv(data_in_file_historical_path)
     consistent_reporting_grades = generate_consistent_reporting_grade(df_historical)
     graded_df = pd.merge(
         left=graded_df,
