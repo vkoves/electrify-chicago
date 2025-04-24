@@ -13,20 +13,20 @@ RUN npm install -g yarn
 # Set working directory
 WORKDIR /app
 
-# Copy requirements and dependency files to the working directory
-COPY package.json .
-COPY yarn.lock .
+# Copy pyproject file to the working directory
+COPY pyproject.toml .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir .
+
+# Copy package and lock files to the working directory
+COPY package.json yarn.lock .
+
+# Install dependencies
+RUN yarn install
 
 # Copy the rest of the application code
 COPY . .
-
-# Install Python dependencies
-WORKDIR /app
-RUN pip install --no-cache-dir .
-
-WORKDIR /app
-# Install dependencies
-RUN yarn install
 
 # Expose the port that the app runs on
 EXPOSE 8080
