@@ -4,7 +4,7 @@ Functions to automatically fetch images from the Google Maps API
 WIP - not integrated into data pipeline, call from root with with:
 
 ```
-python3 -m src.data.scripts.fetch_streetview_imagery API_KEY
+python3 -m src.data.scripts.fetch_streetview_imagery API_KEY addresses.csv
 ```
 
 Viktor has a Google Maps API key, or you can create your own!
@@ -127,14 +127,15 @@ def load_buildings_from_csv(csv_filepath: str) -> pd.DataFrame | None:
             return None
 
         if address_col not in df.columns or id_col not in df.columns:
+            print_red(f"Error: Columns '{address_col}' and '{id_col}' not found!")
             return None
 
         return df
     except FileNotFoundError:
-        print(f"Error: CSV file '{csv_filepath}' not found.")
+        print_red(f"Error: CSV file '{csv_filepath}' not found.")
         return []
 
-if __name__ == "__main__": # important for command line arguments.
+def main():
     if len(sys.argv) < 2:
         print("Usage: python script.py <YOUR_API_KEY> [csv_file]")
         sys.exit(1)
@@ -143,6 +144,8 @@ if __name__ == "__main__": # important for command line arguments.
 
     if len(sys.argv) > 2:
         csv_file = sys.argv[2]  # Override with command-line argument
+    else:
+        print_red("Error! No CSV path specified for second argument.")
 
     buildings = load_buildings_from_csv(csv_file)
 
@@ -156,3 +159,6 @@ if __name__ == "__main__": # important for command line arguments.
         print('Make sure to verify imagery looks good before it is published!')
     else:
         print_red('Error! No addresses provided')
+
+if __name__ == '__main__':
+    main()
