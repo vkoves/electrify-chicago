@@ -28,6 +28,9 @@ building_emissions_file = 'benchmarking-all-newest-temp.csv'
 # The final output file name
 building_emissions_file_out_name = 'building-benchmarks'
 
+out_file_dir = 'dist'
+all_years_out_filename = 'benchmarking-all-years.csv'
+
 # Columns we want to run statistical analysis and ranking on - order matters here
 building_cols_to_analyze = [
     'GHGIntensity',
@@ -145,7 +148,12 @@ def processBuildingData() -> List[str]:
         building_data[col + 'PercentileRank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(pct=True).round(3)
 
     # Add building grades:
-    building_data = grade_buildings(building_data)
+    historic_data_graded = grade_buildings()
+
+    all_years_out_path = get_data_file_path(out_file_dir, all_years_out_filename)
+
+    # The all years data is in it's final form already, we don't do ranks or stats off of it (yet)
+    output_to_csv(historic_data_graded, all_years_out_path)
 
     # Export the data
     output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')
