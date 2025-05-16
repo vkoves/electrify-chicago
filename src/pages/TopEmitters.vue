@@ -32,6 +32,7 @@ export default class TopEmitters extends Vue {}
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity

@@ -471,6 +471,7 @@ export default class MapPage extends Vue {
           PropertyName
           Address
           ZIPCode
+          ZIPCode
           Latitude
           Longitude
           path

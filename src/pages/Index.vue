@@ -40,6 +40,7 @@ export default class Index extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity
@@ -73,6 +74,7 @@ export default class Index extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity

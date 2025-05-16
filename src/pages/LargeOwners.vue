@@ -33,6 +33,7 @@ export default class LargeOwners extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity

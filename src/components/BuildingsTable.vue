@@ -1,4 +1,5 @@
 <script lang="ts">
+/** global process */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import RankText from '~/components/RankText.vue';
@@ -44,6 +45,8 @@ export default class BuildingsTable extends Vue {
   // TODO: Figure out why Vue $emit isn't recognized by Typescript
   $emit: any;
 
+  isDebug = false;
+
   /** Method to return the relevant aria-label value
    * based on whether the column is selected and sorted */
   getAriaLabelForSort(fieldname: string): string {
@@ -54,6 +57,17 @@ export default class BuildingsTable extends Vue {
       );
     } else {
       return `Sort by ${this.sortedField}`;
+    }
+  }
+
+  mounted(): void {
+    /**
+     * Whether in debug mode where we show ID and full address, to allow copy pasting to building
+     * address CSV. Set in mounted to avoid error on gridsome build, as this only works in the local
+     * dev server.
+     */
+    if (window) {
+      this.isDebug = window.location.search.includes('debug');
     }
   }
 }
@@ -200,7 +214,15 @@ export default class BuildingsTable extends Vue {
             />
 
             <div class="prop-address">
-              {{ edge.node.Address }}
+              <template v-if="isDebug">
+                <!-- If '?debug' is in URL, show ID and full address in quotes for address CSV -->
+                {{ edge.node.ID }},"{{ edge.node.Address }}, Chicago IL,
+                {{ edge.node.ZIPCode }}"
+              </template>
+              <template v-else>
+                {{ edge.node.Address
+                }}{{ isDebug ? ', Chicago IL, ' + edge.node.ZIPCode : '' }}
+              </template>
             </div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>
