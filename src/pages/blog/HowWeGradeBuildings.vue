@@ -316,7 +316,7 @@ export default class HowWeGradeBuildings extends Vue {}
           ElectricityUse
           NaturalGasUse
           DistrictSteamUse
-          AvgPercentileLetterGrade
+          # AvgPercentileLetterGrade
         }
       }
     }

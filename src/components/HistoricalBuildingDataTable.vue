@@ -40,6 +40,18 @@
             Water Use <span class="unit">kBTU</span>
           </th>
           <th class="text-center">Energy Mix</th>
+          <th class="text-center overall-grade-header">
+            Overall <br /> Grade
+          </th>
+          <th class="text-center small-col-header">
+            Emissions <br /> Intensity <br /> Sub-Grade
+          </th>
+          <th class="text-center small-col-header">
+            Energy Mix <br /> Sub-Grade
+          </th>
+          <th class="text-center small-col-header">
+            Reporting Mix <br /> Sub-Grade
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -99,6 +111,21 @@
               :show-labels="false"
             />
           </td>
+
+          <!-- Only show any grades if the average exists for that year, otherwise it's
+            incomplete data-->
+          <td v-if="benchmark.AvgPercentileLetterGrade" class="text-center">
+            <LetterGrade class="-overall" :grade="benchmark.AvgPercentileLetterGrade" />
+          </td>
+          <td v-if="benchmark.AvgPercentileLetterGrade" class="text-center">
+            <LetterGrade :grade="benchmark.GHGIntensityLetterGrade" />
+          </td>
+          <td v-if="benchmark.AvgPercentileLetterGrade" class="text-center">
+            <LetterGrade :grade="benchmark.EnergyMixLetterGrade" />
+          </td>
+          <td v-if="benchmark.AvgPercentileLetterGrade" class="text-center">
+            <LetterGrade :grade="benchmark.SubmittedRecordsLetterGrade" />
+          </td>
         </tr>
       </tbody>
     </table>
@@ -113,6 +140,7 @@ import {
   IHistoricData,
 } from '../common-functions.vue';
 import PieChart, { IPieSlice } from './graphs/PieChart.vue';
+import LetterGrade from './LetterGrade.vue';
 
 /**
  * A component that given an array of a building's benchmarking renders
@@ -143,6 +171,7 @@ import PieChart, { IPieSlice } from './graphs/PieChart.vue';
     },
   },
   components: {
+    LetterGrade,
     PieChart,
   },
 })
@@ -263,9 +292,8 @@ table.historical-data {
     padding: 0.5rem 0.5rem;
     text-align: left;
 
-    &:first-of-type {
-      padding-left: 0.75rem;
-    }
+    &:first-of-type { padding-left: 0.75rem; }
+    &.text-center { text-align: center; }
   }
 
   thead {
@@ -278,14 +306,28 @@ table.historical-data {
       font-size: 0.825rem;
       white-space: nowrap;
 
-      &.text-center {
-        text-align: center;
+      &.overall-grade-header {
+        padding-right: 1rem;
+      }
+
+      &.small-col-header {
+        font-weight: normal;
+        font-size: 0.7rem;
       }
     }
   }
 
   tbody tr:nth-of-type(even) {
     background-color: $grey-light;
+  }
+
+  .letter-grade {
+    font-size: 1.25rem;
+
+    &.-overall { font-size: 1.75rem; }
+    &:not(.-overall) {
+      vertical-align: bottom;
+    }
   }
 }
 </style>
