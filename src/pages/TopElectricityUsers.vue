@@ -46,7 +46,7 @@ export default class TopElectricityUsers extends Vue {}
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
-          # AvgPercentileLetterGrade
+          AvgPercentileLetterGrade
           DataAnomalies
         }
       }

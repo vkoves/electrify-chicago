@@ -303,7 +303,7 @@ export default class Search extends Vue {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
-          # AvgPercentileLetterGrade
+          AvgPercentileLetterGrade
           DataAnomalies
         }
       }

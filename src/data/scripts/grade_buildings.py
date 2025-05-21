@@ -29,6 +29,19 @@ overall_grade_weights = {
     "consistent_reporting": 0.10,
 }
 
+# The final output grading columns that get made
+grade_cols = [
+  'GHGIntensityPercentileGrade',
+  'GHGIntensityLetterGrade',
+  'EnergyMixWeightedPctSum',
+  'EnergyMixPercentileGrade',
+  'EnergyMixLetterGrade',
+  'SubmittedRecordsPercentileGrade',
+  'MissingRecordsCount',
+  'SubmittedRecordsLetterGrade',
+  'AvgPercentileGrade',
+  'AvgPercentileLetterGrade'
+]
 
 # Default weights for each energy source in the energy mix grade, from 0 - 1, where 1 is totally
 # clean and 0 is totally dirty. E.g. a 50% gas building gets a C energy mix raw score, 100%

@@ -48,16 +48,16 @@ query ($id: ID!, $ID: String) {
     SiteEUIRankByPropertyType
     DataAnomalies
     # Grade data
-    # GHGIntensityPercentileGrade,
-    # GHGIntensityLetterGrade,
-    # EnergyMixWeightedPctSum,
-    # EnergyMixPercentileGrade,
-    # EnergyMixLetterGrade,
-    # MissingRecordsCount,
-    # SubmittedRecordsPercentileGrade,
-    # SubmittedRecordsLetterGrade,
-    # AvgPercentileGrade,
-    # AvgPercentileLetterGrade,
+    GHGIntensityPercentileGrade,
+    GHGIntensityLetterGrade,
+    EnergyMixWeightedPctSum,
+    EnergyMixPercentileGrade,
+    EnergyMixLetterGrade,
+    MissingRecordsCount,
+    SubmittedRecordsPercentileGrade,
+    SubmittedRecordsLetterGrade,
+    AvgPercentileGrade,
+    AvgPercentileLetterGrade,
   }
   allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
     edges {
