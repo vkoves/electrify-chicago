@@ -15,10 +15,10 @@ Follow the instructions to generate and save building coordinates for use in the
 ## Instructions
 
 0. Prerequisite: To run the `./address_geocode.py` script, you must have a Google Maps Platform API Key. See
-[Use API Keys with Geocoding API](https://developers.google.com/maps/documentation/geocoding/get-api-key)
-for more information.
+   [Use API Keys with Geocoding API](https://developers.google.com/maps/documentation/geocoding/get-api-key)
+   for more information.
 1. Enter your Google Maps Platform API Key into `./address_geocode.py`.
 2. Run `./address_geocode.py`. Due to file pathing limitations, this file must be run from the
-electrify-chicago root directory (e.g. `python src/data/scripts/ward-numbers-by-shapes/address_geocode.py`).
+   electrify-chicago root directory (e.g. `python src/data/scripts/ward-numbers-by-shapes/address_geocode.py`).
 3. Wait for the script to generate `src/data/source/BuildingCoordinates.csv`. This may take a few minutes.
 4. The source file is now updated for use in the data pipeline!
