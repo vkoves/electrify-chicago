@@ -29,6 +29,19 @@ overall_grade_weights = {
     "consistent_reporting": 0.10,
 }
 
+# The final output grading columns that get made
+grade_cols = [
+  'GHGIntensityPercentileGrade',
+  'GHGIntensityLetterGrade',
+  'EnergyMixWeightedPctSum',
+  'EnergyMixPercentileGrade',
+  'EnergyMixLetterGrade',
+  'SubmittedRecordsPercentileGrade',
+  'MissingRecordsCount',
+  'SubmittedRecordsLetterGrade',
+  'AvgPercentileGrade',
+  'AvgPercentileLetterGrade'
+]
 
 # Default weights for each energy source in the energy mix grade, from 0 - 1, where 1 is totally
 # clean and 0 is totally dirty. E.g. a 50% gas building gets a C energy mix raw score, 100%
@@ -57,6 +70,9 @@ def generate_percentile_grade(
     grade of 56.37 means this building is better than 56.37% of records in
     `vals`.
 
+    NOTE: Handles NaN values by omitting them, so it doesn't error due to buildings missing
+    some data.
+
     Parameters
     ----------
     vals : pd.Series
@@ -78,13 +94,14 @@ def generate_percentile_grade(
     """
     grades = pd.DataFrame(index=vals.index)
 
-    # Calculate percentile-based score out 100:
+    # Calculate percentile-based score out 100, ignoring NaN values
     if reverse:
         def calc_func(x):
-            return 100 - percentileofscore(vals, x, kind="weak")
+            return 100 - percentileofscore(vals, x, kind="weak", nan_policy="omit")
     else:
         def calc_func(x):
-            return percentileofscore(vals, x, kind="weak")
+            return percentileofscore(vals, x, kind="weak", nan_policy="omit")
+
     percent_scores: pd.Series = vals.apply(calc_func)
     grades[f"{col_base_name}PercentileGrade"] = percent_scores
 
@@ -176,15 +193,18 @@ def apply_grade_func_all_years(df, func):
     """
     all_years = df["DataYear"].unique()
     grades_all_years = []
+
     for year in all_years:
         grades_df = func(
             df=df, year=year
         )
+
         grades_all_years.append(grades_df)
 
     grades_all_years_df = pd.concat(
         grades_all_years
     )
+
     return grades_all_years_df
 
 
@@ -439,14 +459,15 @@ def calculate_weighted_average(graded_df: pd.DataFrame) -> pd.Series:
 
     return weighted_average
 
-def grade_buildings(building_data):
+def grade_buildings():
+    df_historical = pd.read_csv(data_in_file_historical_path)
+
     # Generate grades for all years for GHG Intensity and Energy Mix:
     graded_df = grade_ghg_intensity_energy_mix_all_years(
-        building_data=building_data,
+        building_data=df_historical,
     )
 
     # Generate grades for consistent reporting (not missing records):
-    df_historical = pd.read_csv(data_in_file_historical_path)
     consistent_reporting_grades = generate_consistent_reporting_grade(df_historical)
     graded_df = pd.merge(
         left=graded_df,

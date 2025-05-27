@@ -75,6 +75,17 @@ query ($id: ID!, $ID: String) {
           NaturalGasUse
           DistrictSteamUse
           DistrictChilledWaterUse
+          # Grade data
+          GHGIntensityPercentileGrade,
+          GHGIntensityLetterGrade,
+          EnergyMixWeightedPctSum,
+          EnergyMixPercentileGrade,
+          EnergyMixLetterGrade,
+          MissingRecordsCount,
+          SubmittedRecordsPercentileGrade,
+          SubmittedRecordsLetterGrade,
+          AvgPercentileGrade,
+          AvgPercentileLetterGrade,
         }
     }
   }
