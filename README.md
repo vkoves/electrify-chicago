@@ -8,13 +8,9 @@ Front-end in [VueJS 2](https://v2.vuejs.org/), statically built with [GridSome](
 
 ## Data Import
 
-Our primary building data is only sourced from the city's benchmarking data:
+Our data is only sourced from the city's benchmarking data:
 
 - [Chicago Energy Benchmarking Data](https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/about_data)
-
-Building wards are checked against the city's Wards (2023-) data:
-
-- [Boundaries - Wards (2023-) - Map](https://data.cityofchicago.org/Facilities-Geographic-Boundaries/Boundaries-Wards-2023-Map/cdf7-bgn3)
 
 ### Cleanup
 
