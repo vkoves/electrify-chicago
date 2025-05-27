@@ -121,16 +121,19 @@ function loadBuildingBenchmarkData(actions) {
       'tech-business-center',
       'iit-research-tower',
       'oakwood-shores-2d',
-    ]
+    ];
 
     try {
-      if (duplicateSlugs.includes(building.slugSource.toLowerCase().replaceAll(' ', '-'))) {
-        building.slugSource =   building.slugSource + building.ID;
+      if (
+        duplicateSlugs.includes(
+          building.slugSource.toLowerCase().replaceAll(' ', '-'),
+        )
+      ) {
+        building.slugSource = building.slugSource + building.ID;
       }
 
       collection.addNode(building);
-    }
-    catch (error) {
+    } catch (error) {
       console.log('error', error);
     }
   }
