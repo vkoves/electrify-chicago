@@ -74,6 +74,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity

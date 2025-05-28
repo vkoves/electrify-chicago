@@ -32,6 +32,7 @@ export default class TopElectricityUsers extends Vue {}
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity

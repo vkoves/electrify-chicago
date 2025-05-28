@@ -9,6 +9,26 @@ import pathlib
 
 from typing import List
 
+# ANSI color codes for output
+RED = '\033[0;31m'
+GREEN = '\033[0;32m'
+YELLOW = '\033[0;33m'
+LIGHT_BLUE = '\033[0;34m'
+NC = '\033[0m'  # No Color
+
+def print_red(msg: str) -> None:
+    """Print to the console with red text"""
+    print(f"{RED}{msg}{NC}")
+
+def print_yellow(msg: str) -> None:
+    """Print to the console with yellow text"""
+    print(f"{YELLOW}{msg}{NC}")
+
+def print_green(msg: str) -> None:
+    """Print to the console with green text"""
+    print(f"{GREEN}{msg}{NC}")
+
+
 def get_data_file_path(dir: str, f: str) -> str:
     """Get path for source data file to process (in src/data)"""
 
@@ -94,9 +114,6 @@ def log_step_completion(step_num, outputted_paths):
                 debug_paths.append(path_str)
             else:
                 other_paths.append(path_str)
-
-    YELLOW = "\033[0;35m"  # ANSI escape code for yellow text
-    NC = "\033[0m"        # ANSI escape code to reset color
 
     print(f"Step {step_num} data processing done! Files exported/updated:\n")
 

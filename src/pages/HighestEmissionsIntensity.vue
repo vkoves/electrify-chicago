@@ -64,6 +64,7 @@ export default class HighestEmissionsIntensity extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GrossFloorArea

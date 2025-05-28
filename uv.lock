@@ -279,9 +279,11 @@ source = { virtual = "." }
 dependencies = [
     { name = "numpy" },
     { name = "pandas" },
+    { name = "pillow" },
     { name = "pytest" },
     { name = "pytest-mock" },
     { name = "python-slugify" },
+    { name = "requests" },
     { name = "scipy" },
 ]
 
@@ -309,10 +311,12 @@ requires-dist = [
     { name = "nbconvert", marker = "extra == 'notebook'", specifier = "==7.16.6" },
     { name = "numpy" },
     { name = "pandas", specifier = "==2.2.3" },
+    { name = "pillow", specifier = "==11.1.0" },
     { name = "plotly", marker = "extra == 'notebook'", specifier = "==6.0.0" },
     { name = "pytest", specifier = "==7.4.4" },
     { name = "pytest-mock", specifier = "==3.14.0" },
     { name = "python-slugify", specifier = "==4.0.1" },
+    { name = "requests", specifier = "==2.32.3" },
     { name = "scipy", specifier = "==1.11.3" },
     { name = "statsmodels", marker = "extra == 'notebook'", specifier = "==0.14.4" },
 ]

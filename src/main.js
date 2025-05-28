@@ -21,8 +21,6 @@ export default function (Vue, { head, isClient }) {
     href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&display=swap',
   });
 
-  console.log('head', head.meta);
-
   // Add social images
   head.meta.push({
     name: 'og:image',
