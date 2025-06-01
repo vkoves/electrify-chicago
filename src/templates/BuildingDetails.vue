@@ -25,6 +25,7 @@ query ($id: ID!, $ID: String) {
     Wards
     YearBuilt
     ZIPCode
+    WardByCityGeocoder
     GHGIntensityRank
     GHGIntensityPercentileRank
     TotalGHGEmissionsRank
@@ -224,6 +225,18 @@ query ($id: ID!, $ID: String) {
                 <div>
                   <dt>Community Area</dt>
                   <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
+                </div>
+
+                <div>
+                  <dt>Ward</dt>
+                  <dd>
+                    <g-link
+                      class="nav-link"
+                      :to="`/ward/${building.WardByCityGeocoder}`"
+                    >
+                      {{ building.WardByCityGeocoder }}
+                    </g-link>
+                  </dd>
                 </div>
 
                 <!-- Show energy rating if it's a float value (not blank or NaN) -->

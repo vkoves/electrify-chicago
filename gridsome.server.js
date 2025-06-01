@@ -44,7 +44,10 @@ module.exports = function (api) {
     loadHistoricBenchmarkDat(actions);
   });
 
-  // Use the Pages API here: https://gridsome.org/docs/pages-api/
+  /**
+   * Use the Pages API to create custom templates for building owners and wards
+   * @see https://gridsome.org/docs/pages-api
+    */
   api.createPages(({ createPage }) => {
     // Create pages for building owners. This could be a dynamic route, but making it this way
     // should let them get statically built as expected
@@ -55,6 +58,18 @@ module.exports = function (api) {
         context: { ownerId },
       });
     });
+
+    // Create pages for each of Chicago's 50 Wards
+    const ChicagoWardCount = 50;
+
+    for (var ward = 1; ward <= ChicagoWardCount; ward++) {
+      createPage({
+        path: `/ward/${ward}`,
+        component: './src/templates/Ward.vue',
+        // In the CSV the ward is a string, so we pass that to the context as well for GraphQL
+        context: { ward: ward.toString() },
+      });
+    }
   });
 };
 
