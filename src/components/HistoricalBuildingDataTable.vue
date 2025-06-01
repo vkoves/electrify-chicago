@@ -6,16 +6,21 @@
           <th scope="col">Year</th>
 
           <th class="text-center grade-header -overall">
-            Overall <br /> Grade
+            Overall <br />
+            Grade
           </th>
           <th class="text-center grade-header small-col-header">
-            Emissions <br /> Intensity <br /> Sub-Grade
+            Emissions <br />
+            Intensity <br />
+            Sub-Grade
           </th>
           <th class="text-center grade-header small-col-header">
-            Energy Mix <br /> Sub-Grade
+            Energy Mix <br />
+            Sub-Grade
           </th>
           <th class="text-center grade-header small-col-header">
-            Reporting Mix <br /> Sub-Grade
+            Reporting Mix <br />
+            Sub-Grade
           </th>
 
           <th scope="col">
@@ -66,20 +71,29 @@
           <!-- Only show any grades if the average exists for that year, otherwise it's
             incomplete data-->
           <td class="text-center">
-            <LetterGrade  v-if="benchmark.AvgPercentileLetterGrade"
-              class="-overall" :grade="benchmark.AvgPercentileLetterGrade" />
+            <LetterGrade
+              v-if="benchmark.AvgPercentileLetterGrade"
+              class="-overall"
+              :grade="benchmark.AvgPercentileLetterGrade"
+            />
           </td>
           <td class="text-center">
-            <LetterGrade  v-if="benchmark.AvgPercentileLetterGrade"
-              :grade="benchmark.GHGIntensityLetterGrade" />
+            <LetterGrade
+              v-if="benchmark.AvgPercentileLetterGrade"
+              :grade="benchmark.GHGIntensityLetterGrade"
+            />
           </td>
           <td class="text-center">
-            <LetterGrade  v-if="benchmark.AvgPercentileLetterGrade"
-              :grade="benchmark.EnergyMixLetterGrade" />
+            <LetterGrade
+              v-if="benchmark.AvgPercentileLetterGrade"
+              :grade="benchmark.EnergyMixLetterGrade"
+            />
           </td>
           <td class="text-center">
-            <LetterGrade  v-if="benchmark.AvgPercentileLetterGrade"
-              :grade="benchmark.SubmittedRecordsLetterGrade" />
+            <LetterGrade
+              v-if="benchmark.AvgPercentileLetterGrade"
+              :grade="benchmark.SubmittedRecordsLetterGrade"
+            />
           </td>
 
           <td>{{ benchmark.GHGIntensity }}</td>
@@ -302,8 +316,12 @@ table.historical-data {
     padding: 0.5rem 0.5rem;
     text-align: left;
 
-    &:first-of-type { padding-left: 0.75rem; }
-    &.text-center { text-align: center; }
+    &:first-of-type {
+      padding-left: 0.75rem;
+    }
+    &.text-center {
+      text-align: center;
+    }
   }
 
   thead {
@@ -319,7 +337,9 @@ table.historical-data {
       &.grade-header {
         width: 3rem;
 
-        &.-overall { padding-left: 1rem; }
+        &.-overall {
+          padding-left: 1rem;
+        }
       }
 
       &.small-col-header {
@@ -336,7 +356,9 @@ table.historical-data {
   .letter-grade {
     font-size: 1.25rem;
 
-    &.-overall { font-size: 1.75rem; }
+    &.-overall {
+      font-size: 1.75rem;
+    }
     &:not(.-overall) {
       vertical-align: bottom;
     }
