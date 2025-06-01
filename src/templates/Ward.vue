@@ -168,7 +168,7 @@ query ($ward: String) {
 
 <template>
   <DefaultLayout>
-    <div class="building-owner-page">
+    <div class="ward-page">
       <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
 
       <p>
@@ -241,7 +241,7 @@ query ($ward: String) {
 </template>
 
 <style lang="scss">
-.building-owner-page {
+.ward-page {
   h2 {
     margin-bottom: 0.5rem;
   }
