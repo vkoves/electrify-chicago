@@ -1,7 +1,6 @@
 import pytest
 import pandas as pd
 from src.data.scripts.utils import get_data_file_path
-from src.data.scripts.add_ward_numbers import compare_ward_methods
 
 building_path = get_data_file_path("dist", "building-benchmarks.csv")
 building_benchmarks = pd.read_csv(building_path)
@@ -16,10 +15,10 @@ property_ids_to_include = [
 ]
 
 def test_sample_buildings_with_wards():
-    # Test WardByCityGeocoder building benchmark attribute against the City of Chicago's
+    # Test Ward building benchmark attribute against the City of Chicago's
     # 'Find My Ward and Alderman page':
     # https://www.chicago.gov/city/en/depts/mayor/iframe/lookup_ward_and_alderman.html
     building_benchmarks_ordered = building_benchmarks.set_index('ID')
     test_data = building_benchmarks_ordered.loc[property_ids_to_include]
     expected_wards = [27, 3, 42, 20, -1, 24]
-    assert test_data['WardByCityGeocoder'].to_list() == expected_wards
+    assert test_data['Ward'].to_list() == expected_wards

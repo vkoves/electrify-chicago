@@ -25,7 +25,7 @@ query ($id: ID!, $ID: String) {
     Wards
     YearBuilt
     ZIPCode
-    WardByCityGeocoder
+    Ward
     GHGIntensityRank
     GHGIntensityPercentileRank
     TotalGHGEmissionsRank
@@ -232,9 +232,9 @@ query ($id: ID!, $ID: String) {
                   <dd>
                     <g-link
                       class="nav-link"
-                      :to="`/ward/${building.WardByCityGeocoder}`"
+                      :to="`/ward/${building.Ward}`"
                     >
-                      {{ building.WardByCityGeocoder }}
+                      {{ building.Ward }}
                     </g-link>
                   </dd>
                 </div>
