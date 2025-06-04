@@ -229,11 +229,12 @@ query ($id: ID!, $ID: String) {
 
                 <div>
                   <dt>Ward</dt>
-                  <dd>
+                  <dd v-if="building.Ward !== -1">
                     <g-link class="nav-link" :to="`/ward/${building.Ward}`">
                       {{ building.Ward }}
                     </g-link>
                   </dd>
+                  <dd v-if="building.Ward === -1">Not found</dd>
                 </div>
 
                 <!-- Show energy rating if it's a float value (not blank or NaN) -->
