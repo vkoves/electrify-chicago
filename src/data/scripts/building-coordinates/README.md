@@ -8,7 +8,7 @@ to identify a building's ward number.
 
 **Building coordinate information is not automatically updated from our data pipeline!** As new buildings
 are added to the dataset and ward boundaries as redrawn, these instructions must be manually completed
-to generate the source file containing the coordinates (`src/data/source/BuildingCoordinates.xlsx`).
+to generate the source file containing the coordinates (`src/data/source/BuildingCoordinates.csv`).
 
 Follow the instructions to generate and save building coordinates for use in the data pipeline.
 
