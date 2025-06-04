@@ -230,10 +230,7 @@ query ($id: ID!, $ID: String) {
                 <div>
                   <dt>Ward</dt>
                   <dd>
-                    <g-link
-                      class="nav-link"
-                      :to="`/ward/${building.Ward}`"
-                    >
+                    <g-link class="nav-link" :to="`/ward/${building.Ward}`">
                       {{ building.Ward }}
                     </g-link>
                   </dd>
