@@ -47,7 +47,7 @@ module.exports = function (api) {
   /**
    * Use the Pages API to create custom templates for building owners and wards
    * @see https://gridsome.org/docs/pages-api
-    */
+   */
   api.createPages(({ createPage }) => {
     // Create pages for building owners. This could be a dynamic route, but making it this way
     // should let them get statically built as expected
