@@ -1,6 +1,18 @@
 <template>
   <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">Release Notes</h1>
+    <h1 id="main-content" tabindex="-1">Citywide Stats</h1>
+    <!-- <p class="constrained">
+      Electrify Chicago is an independent open-source project looking to
+      shed light onto one of the biggest sources of Chicago's CO<sub
+        >2</sub
+      >
+      emissions - buildings. By providing more information about some of
+      the city's largest and most polluting buildings, we hope to
+      encourage these buildings to electrify, particularly by mobilizing
+      people related to the building - whether that be students and
+      faculty for a college building or employees and patients at a
+      hospital.
+    </p> -->
     <div id="my_dataviz"></div>
   </DefaultLayout>
 </template>
