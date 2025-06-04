@@ -50,11 +50,15 @@ grade_cols = [
 # Publicly documented in HowWeGradeBuildings.vue
 energy_mix_grade_weights = {
     "ElectricityUse": 1,
-    "DistrictChilledWaterUse": 1, # district chilling is electric, so count it as good
-    "NaturalGasUse": 0, # gas is gas, so no points
-    "DistrictSteamUse": 0, # district steam _could_ be electric, but in Chicago none are as of
-        # 2025 to our knowledge (IIT is the biggest one, and they for sure use gas)
-    "AllOtherFuelUse": 0, # assume fossil
+    # District chilling is electric (it works through large refrigerators) so count it as good
+    "DistrictChilledWaterUse": 1,
+    # Gas is gas, so no points
+    "NaturalGasUse": 0,
+    # district steam _could_ be electric, but in Chicago none are as of 2025 to our knowledge
+    # (IIT is the biggest one, and they for sure use gas)
+    "DistrictSteamUse": 0,
+    # Assume Other is fossil, quite rare
+    "AllOtherFuelUse": 0,
 }
 
 def generate_percentile_grade(
