@@ -176,6 +176,51 @@ def test_energy_mix_grading():
 
 
 # Integration test with simple mock data
+# Test that grades are generated for historical years
+def test_grades_generate_historically():
+    """
+    Test that grades are calculated and preserved for each historical year,
+    not just the latest year.
+    """
+    # Create historical data with multiple years
+    historical_data = pd.DataFrame({
+        "ID": [1, 1, 2, 2],  # Two buildings
+        "DataYear": [2021, 2022, 2021, 2022],  # Two years
+        "GHGIntensity": [10, 15, 20, 25],  # Different values each year
+        "ElectricityUse": [1000, 900, 500, 400],  # More electric = better
+        "NaturalGasUse": [0, 100, 500, 600],  # More gas = worse
+        "DistrictSteamUse": [0, 0, 0, 0],
+        "DistrictChilledWaterUse": [0, 0, 0, 0],
+        "AllOtherFuelUse": [0, 0, 0, 0],
+        "ReportingStatus": ["Submitted", "Submitted", "Submitted", "Submitted"]
+    })
+
+    # Use a simpler mock setup for this test
+    with patch("pandas.read_csv", return_value=historical_data):
+        # Skip mocking the intermediate functions - let them run for real
+        result = grade_buildings()
+
+        # Check that we have grades for both years
+        assert len(result["DataYear"].unique()) == 2
+        assert set(result["DataYear"].unique()) == {2021, 2022}
+
+        # Check that each building has grades for each year
+        for building_id in [1, 2]:
+            for year in [2021, 2022]:
+                # Get data for this building and year
+                building_year_data = result[(result["ID"] == building_id) &
+                                           (result["DataYear"] == year)]
+
+                # Should have one row per building per year
+                assert len(building_year_data) == 1
+
+                # Should have all grade columns
+                for col in ["GHGIntensityLetterGrade", "EnergyMixLetterGrade",
+                           "AvgPercentileGrade", "AvgPercentileLetterGrade"]:
+                    assert col in building_year_data.columns
+                    assert not pd.isna(building_year_data[col].iloc[0])
+
+
 def test_building_grade_examples():
     """
     Test that buildings with specific characteristics get the expected grades
