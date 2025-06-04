@@ -101,6 +101,30 @@ docker-compose run --rm electrify-chicago python -m pytest
 docker-compose run --rm electrify-chicago python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
 ```
 
+### Code Coverage
+
+To run tests with coverage and generate coverage reports:
+
+1. Run tests with coverage
+
+```bash
+docker-compose run --rm electrify-chicago coverage run --source=src/data/scripts -m pytest
+```
+
+2. View the coverage report in the terminal:
+
+```bash
+docker-compose run --rm electrify-chicago coverage report
+```
+
+3. Generate an HTML coverage report (results will be in the htmlcov/ directory):
+
+```bash
+docker-compose run --rm electrify-chicago coverage html
+```
+
+The `--source` parameter ensures that files without tests are still included in the coverage report, giving a more accurate picture of overall code coverage.
+
 ## Running Python Scripts Locally
 
 If you want to run Python scripts or Jupyter notebooks locally outside of Docker, you should use a Python virtual environment. To see how to set up a Python virtual environment and manage Python dependencies, see our Python dev guide at [PythonDev.md](PythonDev.md).
