@@ -16,8 +16,8 @@ city_geocoder_path = get_data_file_path("source", "CityGeocoder.xlsx")
 city_geocoder = pd.read_excel(city_geocoder_path)
 
 # Pull Building Coordinates into a Data Frame
-building_coordinates_path = get_data_file_path("source", "BuildingCoordinates.csv")
-building_coordinates = pd.read_csv(building_coordinates_path)
+# building_coordinates_path = get_data_file_path("source", "BuildingCoordinates.csv")
+# building_coordinates = pd.read_csv(building_coordinates_path)
 
 # Parse Ward shape from string (col: 'the_geom') to MultiPolygon (col: 'ward_multipolygon) in WardsShapes file
 ward_path = get_data_file_path("source", "WardsShapes.csv")
@@ -32,52 +32,52 @@ def find_ward_number_by_city_geocoder(address: str) -> int | None:
         return None
     return int(row["Wards (Current - 2023)"])
 
-def find_ward_number_by_obj_coordinates(ward_shapes: pd.DataFrame, coordinatesStr: str) -> int | None:
-    """Finds ward number for a given coordinate based on city ward shape files"""
-    coordinates = eval(coordinatesStr)
-    currLong = coordinates['longitude']
-    currLat = coordinates['latitude']
-    currPoint = Point(currLong, currLat)
-    if not currPoint:
-        return None
-    for index, ward in ward_shapes.iterrows():
-        for shape in ward['ward_multipolygon'].geoms:
-            if shape.contains(currPoint):
-                return int(ward['Ward'])
-    return None
+# def find_ward_number_by_obj_coordinates(ward_shapes: pd.DataFrame, coordinatesStr: str) -> int | None:
+#     """Finds ward number for a given coordinate based on city ward shape files"""
+#     coordinates = eval(coordinatesStr)
+#     currLong = coordinates['longitude']
+#     currLat = coordinates['latitude']
+#     currPoint = Point(currLong, currLat)
+#     if not currPoint:
+#         return None
+#     for index, ward in ward_shapes.iterrows():
+#         for shape in ward['ward_multipolygon'].geoms:
+#             if shape.contains(currPoint):
+#                 return int(ward['Ward'])
+#     return None
 
-def find_ward_number_by_point_coordinates(ward_shapes: pd.DataFrame, lat: float, long: float) -> int | None:
-    """Finds ward number for a given coordinate based on city ward shape files"""
-    currPoint = Point(long, lat)
-    if not currPoint:
-        return None
-    for index, ward in ward_shapes.iterrows():
-        for shape in ward['ward_multipolygon'].geoms:
-            if shape.contains(currPoint):
-                return int(ward['Ward'])
-    return None
+# def find_ward_number_by_point_coordinates(ward_shapes: pd.DataFrame, lat: float, long: float) -> int | None:
+#     """Finds ward number for a given coordinate based on city ward shape files"""
+#     currPoint = Point(long, lat)
+#     if not currPoint:
+#         return None
+#     for index, ward in ward_shapes.iterrows():
+#         for shape in ward['ward_multipolygon'].geoms:
+#             if shape.contains(currPoint):
+#                 return int(ward['Ward'])
+#     return None
 
-def compare_ward_methods(building: pd.DataFrame) -> int:
-    '''
-    Test function that compares Ward number methods
-    Output Key:
-        >0: All methods produced the same Ward number
-        -2: Odd one out is BenchmarkingCoord
-        -3: Odd one out is GMaps
-        -4: Odd one out is CityGeo
-        -5: None returns
-    '''
-    if building['WardByCityGeocoder'] == building['WardByGMapsCoordinates'] and building['WardByCityGeocoder'] == building['WardByBenchmarkingCoordinates']:
-        return building['WardByCityGeocoder']
-    elif building['WardByCityGeocoder'] != building['WardByGMapsCoordinates'] and building['WardByCityGeocoder'] != building['WardByBenchmarkingCoordinates']:
-       return -5
-    elif building['WardByCityGeocoder'] == building['WardByGMapsCoordinates']:
-        return -2
-    elif building['WardByCityGeocoder'] == building['WardByBenchmarkingCoordinates']:
-        return -3
-    elif building['WardByGMapsCoordinates'] == building['WardByGMapsCoordinates']:
-        return -4
-    return -5
+# def compare_ward_methods(building: pd.DataFrame) -> int:
+#     '''
+#     Test function that compares Ward number methods
+#     Output Key:
+#         >0: All methods produced the same Ward number
+#         -2: Odd one out is BenchmarkingCoord
+#         -3: Odd one out is GMaps
+#         -4: Odd one out is CityGeo
+#         -5: None returns
+#     '''
+#     if building['WardByCityGeocoder'] == building['WardByGMapsCoordinates'] and building['WardByCityGeocoder'] == building['WardByBenchmarkingCoordinates']:
+#         return building['WardByCityGeocoder']
+#     elif building['WardByCityGeocoder'] != building['WardByGMapsCoordinates'] and building['WardByCityGeocoder'] != building['WardByBenchmarkingCoordinates']:
+#        return -5
+#     elif building['WardByCityGeocoder'] == building['WardByGMapsCoordinates']:
+#         return -2
+#     elif building['WardByCityGeocoder'] == building['WardByBenchmarkingCoordinates']:
+#         return -3
+#     elif building['WardByGMapsCoordinates'] == building['WardByGMapsCoordinates']:
+#         return -4
+#     return -5
 
 def add_ward_numbers(buildings: pd.DataFrame) -> pd.DataFrame:
     """ Generates geocodes and ward numbers in a Data Frame of buildings """
@@ -89,7 +89,7 @@ def add_ward_numbers(buildings: pd.DataFrame) -> pd.DataFrame:
     buildings['Ward'] = buildings['Ward'].fillna(-1).astype(int)
 
     # Add coordinates to buildings
-    buildings = pd.merge(buildings, building_coordinates, how="left", on="Address")
+    # buildings = pd.merge(buildings, building_coordinates, how="left", on="Address")
 
     # Find corresponding Ward number for each building based on benchmark data coordinates, using WardsShapes information
     # First based on benchmark data coordinates, then based on Google Maps Geocoding API coordinates
