@@ -83,26 +83,26 @@ def add_ward_numbers(buildings: pd.DataFrame) -> pd.DataFrame:
     """ Generates geocodes and ward numbers in a Data Frame of buildings """
     # Find corresponding Ward number for each building based on benchmark data coordinates, using WardsShapes information
     # First based on benchmark data coordinates, then based on Google Maps Geocoding API coordinates
-    buildings['WardByCityGeocoder'] = buildings.apply(lambda building: find_ward_number_by_city_geocoder(building["Address"]), axis = 1)
+    buildings['Ward'] = buildings.apply(lambda building: find_ward_number_by_city_geocoder(building["Address"]), axis = 1)
 
     # Convert 'Ward' columns to int, handling any NaN values as -1
-    buildings['WardByCityGeocoder'] = buildings['WardByCityGeocoder'].fillna(-1).astype(int)
+    buildings['Ward'] = buildings['Ward'].fillna(-1).astype(int)
 
     # Add coordinates to buildings
     buildings = pd.merge(buildings, building_coordinates, how="left", on="Address")
 
     # Find corresponding Ward number for each building based on benchmark data coordinates, using WardsShapes information
     # First based on benchmark data coordinates, then based on Google Maps Geocoding API coordinates
-    buildings['WardByGMapsCoordinates'] = buildings.apply(lambda building: find_ward_number_by_obj_coordinates(ward_shapes, building["Coordinates"]), axis = 1)
+    # buildings['WardByGMapsCoordinates'] = buildings.apply(lambda building: find_ward_number_by_obj_coordinates(ward_shapes, building["Coordinates"]), axis = 1)
 
     # Convert 'Ward' and 'CalculatedWard' columns to int, handling any NaN values
-    buildings['WardByGMapsCoordinates'] = buildings['WardByGMapsCoordinates'].fillna(-1).astype(int)
+    # buildings['WardByGMapsCoordinates'] = buildings['WardByGMapsCoordinates'].fillna(-1).astype(int)
 
     # Find corresponding Ward number for each building based on benchmark data coordinates, using WardsShapes information
     # First based on benchmark data coordinates, then based on Google Maps Geocoding API coordinates
-    buildings['WardByBenchmarkingCoordinates'] = buildings.apply(lambda building: find_ward_number_by_point_coordinates(ward_shapes, building["Latitude"], building["Longitude"]), axis = 1)
+    # buildings['WardByBenchmarkingCoordinates'] = buildings.apply(lambda building: find_ward_number_by_point_coordinates(ward_shapes, building["Latitude"], building["Longitude"]), axis = 1)
 
     # Convert 'Ward' and 'CalculatedWard' columns to int, handling any NaN values
-    buildings['WardByBenchmarkingCoordinates'] = buildings['WardByBenchmarkingCoordinates'].fillna(-1).astype(int)
+    # buildings['WardByBenchmarkingCoordinates'] = buildings['WardByBenchmarkingCoordinates'].fillna(-1).astype(int)
 
     return buildings
