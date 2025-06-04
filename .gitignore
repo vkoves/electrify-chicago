@@ -9,6 +9,10 @@ dist/*
 # Ignore data debug directory, which is just used to view and debug the intermediate data
 src/data/debug/*
 
+# Ignore Streetview output directory - images have to be manually copy pasted into building_imgs for
+# publication
+tmp_streetview_images/*
+
 **/__pycache__/*
 .coverage
 

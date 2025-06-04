@@ -10,7 +10,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title: 'About Us' };
+    return { title: 'Release Notes' };
   },
 })
 export default class About extends Vue {}
