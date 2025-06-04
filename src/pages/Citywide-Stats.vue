@@ -45,18 +45,9 @@ export default class ScatterplotGraph extends Vue {
       .attr('width', width + margin.left + margin.right)
       .attr('height', height + margin.top + margin.bottom)
 
-      // <g> is the <svg> without the margins - so the margin is the space in between the <svg> and the <g>
       .append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
-    // extent() -- returns the minimum and maximum values in an array from the given array.
-    // in this case, the first and last year (2010, 2019)
-    // Domain is the input. Range is the output. This is one way to do it.
-
-    // I want a line - so grab scaleLinear
-    // what do I want to put on the line? My emissions values. So chuck that into the domain.
-    // how do I want to spread this data across my line? Put that distance into the range.
-    // naturally, you'll likely always keep this [height, 0] and [0, width] situation
     const topAndBottomEmissionsValues = d3.extent(
       emissionsData,
       (d: DataPoint) => d.value,
@@ -66,7 +57,6 @@ export default class ScatterplotGraph extends Vue {
       .domain(topAndBottomEmissionsValues)
       .range([height, 0]);
 
-    // or you can see here, it's less explicit but shorter code
     const topAndBottomYears = d3.extent(
       emissionsData,
       (d: DataPoint) => d.year,
@@ -76,31 +66,24 @@ export default class ScatterplotGraph extends Vue {
       width,
     ]);
 
-    // the x axis <g>
     svg
       .append('g')
       .attr('transform', `translate(0,${height})`)
       .call(
-        // remember the x axis we made? It's time to put it somewhere! But where do we put it?..
-        //.. at the bottom of course (thats what axiBottom does)
         d3
-          .axisBottom(xAxisLinearlyScaledLineWeMade) // draws the x line axis at the bottom
-          .tickFormat(d3.format('d')), // format the tick labels as regular integers
+          .axisBottom(xAxisLinearlyScaledLineWeMade) 
+          .tickFormat(d3.format('d')), 
       );
 
-    // the y axis <g>
-    // axisLeft draws the leftAxis
     svg.append('g').call(d3.axisLeft(yAxisLinearlyScaledLineWeMade));
 
-    // now we're putting the line on here
     svg
       .append('path')
-      .datum(emissionsData) // binds the whole array to only the single element <path>
+      .datum(emissionsData) 
       .attr('fill', 'none')
       .attr('stroke', '#69b3a2')
       .attr('stroke-width', 2)
 
-      // this is the crazy letters and numbers that you always see in the <path> of svgs
       .attr(
         'd',
         d3
@@ -118,10 +101,6 @@ export default class ScatterplotGraph extends Vue {
       .style('border-width', '1px')
       .style('border-radiux', '5px')
       .style('padding', '10px');
-
-    // a function that changes this tooltip when the user hovers over a point.
-    // Its opacity is set to 1: we can now see it. Plus it sets the text and
-    // position of the tooltip depending on the datapoint (d)
 
     const mouseover = (event: MouseEvent, d: DataPoint) => {
       tooltip.style('opacity', 1);
@@ -147,15 +126,14 @@ export default class ScatterplotGraph extends Vue {
         .style('pointer-events', 'none');
     };
 
-    // render circles
     svg
       .append('g')
-      .selectAll('circle') // Try to select existing <circle> elements
-      .data(emissionsData) // Bind your data array
-      .enter() // For each data item that doesn't have a matching <circle>...
-      .append('circle') // ...create one!
-      .attr('cx', (d: DataPoint) => xAxisLinearlyScaledLineWeMade(d.year)) // the center point of the x axis of the circle
-      .attr('cy', (d: DataPoint) => yAxisLinearlyScaledLineWeMade(d.value)) // the center point of the y axis of the circle
+      .selectAll('circle') 
+      .data(emissionsData) 
+      .enter() 
+      .append('circle') 
+      .attr('cx', (d: DataPoint) => xAxisLinearlyScaledLineWeMade(d.year)) 
+      .attr('cy', (d: DataPoint) => yAxisLinearlyScaledLineWeMade(d.value)) 
       .attr('r', 9)
       .attr('fill', '#69b3a2')
       .on('mouseover', mouseover)
