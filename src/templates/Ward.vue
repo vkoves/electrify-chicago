@@ -96,7 +96,7 @@ export default class BiggestBuildings extends Vue {
 query ($ward: String) {
   allBuilding(
     filter: {
-        WardByCityGeocoder: { eq: $ward }
+        Ward: { eq: $ward }
     }
     sortBy: "GrossFloorArea", limit: 500
   ) {
@@ -125,7 +125,7 @@ query ($ward: String) {
             Wards
             YearBuilt
             ZIPCode
-            WardByCityGeocoder
+            Ward
             GHGIntensityRank
             GHGIntensityPercentileRank
             TotalGHGEmissionsRank
@@ -148,7 +148,7 @@ query ($ward: String) {
             SourceEUIRankByPropertyType
             SiteEUIRankByPropertyType
             DataAnomalies
-            WardByCityGeocoder
+            Ward
             # Grade data
             GHGIntensityPercentileGrade,
             GHGIntensityLetterGrade,
