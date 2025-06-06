@@ -57,7 +57,9 @@ a.back-link {
   margin: 1rem 0 0 0;
   font-weight: 600;
 
-  img { height: 1rem; }
+  img {
+    height: 1rem;
+  }
 }
 
 // Make sure headings handle focus, as well as elements marked "targetable", which have IDs for

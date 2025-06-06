@@ -170,7 +170,7 @@ query ($ward: String) {
   <DefaultLayout>
     <div class="ward-page">
       <g-link to="/wards" class="grey-link back-link">
-        <img src="/icons/arrow-back.svg">
+        <img src="/icons/arrow-back.svg" />
         Back to All Wards
       </g-link>
 

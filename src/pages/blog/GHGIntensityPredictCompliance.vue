@@ -61,7 +61,7 @@ export default class MillionsInMissedFine extends Vue {
   <DefaultLayout>
     <article class="layout-constrained compliance-analysis blog-post">
       <g-link to="/blog" class="back-link grey-link">
-        <img src="/icons/arrow-back.svg">
+        <img src="/icons/arrow-back.svg" />
         Back to Blog
       </g-link>
 

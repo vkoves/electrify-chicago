@@ -14,7 +14,11 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 })
 export default class Wards extends Vue {
   /** The ward numbers, 1 - 50 */
-  wards = [...Array(50).fill(0).map((e,i) => i + 1)];
+  wards = [
+    ...Array(50)
+      .fill(0)
+      .map((e, i) => i + 1),
+  ];
 }
 </script>
 
@@ -23,14 +27,14 @@ export default class Wards extends Vue {
     <div class="wards-page layout-constrained">
       <h1 id="main-content" and tabindex="-1">Buildings By Ward</h1>
       <p class="subtitle">
-        Looking for the buildings in a specific Chicago aldermanic ward?
-        Just find your ward in the list below!
+        Looking for the buildings in a specific Chicago aldermanic ward? Just
+        find your ward in the list below!
       </p>
 
       <ol>
         <li v-for="ward in wards" :key="ward">
           <g-link class="grey-link" :to="`/ward/${ward}`">
-              Ward {{ ward }}
+            Ward {{ ward }}
           </g-link>
         </li>
       </ol>
