@@ -49,6 +49,17 @@ a.grey-link {
   }
 }
 
+// A generic back link variant that also handles the icon within
+a.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 1rem 0 0 0;
+  font-weight: 600;
+
+  img { height: 1rem; }
+}
+
 // Make sure headings handle focus, as well as elements marked "targetable", which have IDs for
 // anchor links (e.g. `<a href="#energy-mix">`)
 h1,
@@ -192,6 +203,13 @@ table {
   th {
     padding: 0.5rem;
   }
+}
+
+code {
+  font-family: monospace;
+  background-color: $grey-light;
+  padding: 0.1rem 0.25rem;
+  border-radius: $brd-rad-small;
 }
 
 /**

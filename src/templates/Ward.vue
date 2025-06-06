@@ -169,6 +169,11 @@ query ($ward: String) {
 <template>
   <DefaultLayout>
     <div class="ward-page">
+      <g-link to="/wards" class="grey-link back-link">
+        <img src="/icons/arrow-back.svg">
+        Back to All Wards
+      </g-link>
+
       <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
 
       <p>

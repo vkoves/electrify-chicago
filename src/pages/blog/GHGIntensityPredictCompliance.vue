@@ -60,7 +60,10 @@ export default class MillionsInMissedFine extends Vue {
 <template>
   <DefaultLayout>
     <article class="layout-constrained compliance-analysis blog-post">
-      <g-link to="/blog" class="back-link grey-link"> Back to Blog </g-link>
+      <g-link to="/blog" class="back-link grey-link">
+        <img src="/icons/arrow-back.svg">
+        Back to Blog
+      </g-link>
 
       <h1 id="main-content" tabindex="-1">
         Do High Emitting Buildings Report Emissions Less Often?
@@ -615,12 +618,6 @@ export default class MillionsInMissedFine extends Vue {
 
   .publish-time {
     margin-bottom: 0.25rem;
-  }
-
-  a.back-link {
-    margin: 1rem 0 0 0;
-    display: inline-block;
-    font-weight: 600;
   }
 
   table {

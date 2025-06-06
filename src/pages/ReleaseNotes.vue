@@ -23,6 +23,16 @@ export default class About extends Vue {}
       </div>
 
       <div class="layout-constrained">
+        <h2>June 6th, 2025 - Added Ward Info & Pages</h2>
+
+        <p>
+          Buildings now have their ward shown on the building details page, and there are pages for
+          all of Chicago's 50 wards. These are linked from an individual building,
+          our <g-link to="/wards">Wards Page</g-link>, or can be found directly at
+          <code>electrifychicago.net/ward/WardNumber</code> (e.g.
+          <a href="https://electrifychicago.net/ward/1/">https://electrifychicago.net/ward/1</a>).
+        </p>
+
         <h2>March 14th, 2025 - Building Grades v1</h2>
 
         <p>

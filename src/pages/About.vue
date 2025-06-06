@@ -140,7 +140,10 @@ export default class About extends Vue {
 
       <ul class="other-pages">
         <li>
-          <g-link to="/top-electricity-users"> Top Electricity Use </g-link>
+          <g-link to="/top-gas-users"> Top Gas Users </g-link>
+        </li>
+        <li>
+          <g-link to="/top-electricity-users"> Top Electricity Users </g-link>
         </li>
         <li>
           <g-link to="/biggest-gas-free-buildings">
