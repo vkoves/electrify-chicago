@@ -10,7 +10,7 @@ import json
 import pandas
 
 from typing import List
-from src.data.scripts.grade_buildings import grade_buildings
+from src.data.scripts.grade_buildings import grade_buildings, grade_cols
 from src.data.scripts.add_ward_numbers import add_ward_numbers
 from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion, output_to_csv
 from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
@@ -28,6 +28,9 @@ building_emissions_file = 'benchmarking-all-newest-temp.csv'
 
 # The final output file name
 building_emissions_file_out_name = 'building-benchmarks'
+
+out_file_dir = 'dist'
+historic_data_filename = 'benchmarking-all-years.csv'
 
 # Columns we want to run statistical analysis and ranking on - order matters here
 building_cols_to_analyze = [
@@ -66,6 +69,8 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     """
 
     # Clone the input data to prevent manipulating it on accident
+    # TODO: Rename this to latest_year_data or something like that, to reflect this is one entry
+    # per building
     building_data = building_data_in.copy()
 
     benchmark_stats_df = pandas.DataFrame()
@@ -145,18 +150,57 @@ def processBuildingData() -> List[str]:
         # The percentile rank can be ascending, we want to say this building is worse than X% of buildings
         building_data[col + 'PercentileRank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(pct=True).round(3)
 
-    # Add building grades:
-    building_data = grade_buildings(building_data)
+    ###
+    ### Grade Buildings Across All Years, Outputting to Both Files
+    ###
+
+    # Add building grades to the historic data
+    historic_data_graded = grade_buildings()
+
+    # Copy the latest year grade data
+    # latest_historical_data = historic_data_graded[historic_data_graded['DataYear'] == latest_year]
+
+    # Copy the grade_cols from latest_historical_data into building_data DataFrame
+    # building_data = pandas.merge(building_data, latest_historical_data[grade_cols + ['ID']], on='ID', how='left')
+
+    columns_to_merge = ['ID', 'DataYear'] + grade_cols
+    historic_grades_for_merge = historic_data_graded[columns_to_merge]
+
+    # 2. Perform the merge operation
+    #    'building_data' is our left DataFrame (we want to keep all its rows).
+    #    'historic_grades_for_merge' is our right DataFrame.
+    #    'on=['ID', 'DataYear']' specifies that the merge should happen when
+    #    both 'ID' and 'DataYear' columns match in both DataFrames.
+    #    'how='left'' ensures that all rows from 'building_data' are retained.
+    #    If a matching 'ID' and 'DataYear' combination is not found in
+    #    'historic_grades_for_merge' for a row in 'building_data', the
+    #    'grade_cols' for that row in 'building_data' will be filled with NaN.
+    building_data = pandas.merge(
+        building_data,
+        historic_grades_for_merge,
+        on=['ID', 'DataYear'],
+        how='left'
+    )
+
+    ###
+    ### Last Step - Save the Files
+    ###
+
+    historic_data_path = get_data_file_path(out_file_dir, historic_data_filename)
+
+    # The all years data is in it's final form already, we don't do ranks or stats off of it (yet)
+    output_to_csv(historic_data_graded, historic_data_path)
+    outputted_paths.append(historic_data_path)
 
     # Add building ward numbers under col: "Ward"
     building_data = add_ward_numbers(building_data)
 
     # Export the data
-    output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')
+    building_emissions_output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')
 
-    output_to_csv(building_data, output_path)
+    output_to_csv(building_data, building_emissions_output_path)
 
-    outputted_paths.append(output_path)
+    outputted_paths.append(building_emissions_output_path)
 
     # Convert the building benchmarks CSV to a JSON for debugging
     debug_json_data = json_data_builder(

@@ -14,6 +14,7 @@ src/data/debug/*
 tmp_streetview_images/*
 
 **/__pycache__/*
+.coverage
 
 .DS_Store
 

@@ -8,7 +8,7 @@ import vue from 'eslint-plugin-vue';
 export default tseslint.config(
   {
     // config with just ignores is the replacement for `.eslintignore`
-    ignores: ['src/.temp/**', '**/.venv/**', '**/dist/**', '*.js'],
+    ignores: ['src/.temp/**', '**/.venv/**', '**/dist/**', '**/htmlcov/**', '*.js'],
   },
   js.configs.recommended,
   eslint.configs.recommended,
