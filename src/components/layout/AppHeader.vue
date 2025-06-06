@@ -74,7 +74,7 @@ export default class AppHeader extends Vue {
 
       <g-link class="nav-link" to="/map"> Map </g-link>
 
-      <g-link class="nav-link" to="/top-gas-users"> Top Gas Users </g-link>
+      <g-link class="nav-link" to="/wards"> Wards </g-link>
 
       <g-link class="nav-link" to="/top-emitters"> Top Emitters </g-link>
 

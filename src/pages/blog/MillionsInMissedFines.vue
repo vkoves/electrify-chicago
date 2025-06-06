@@ -27,7 +27,10 @@ export default class MillionsInMissedFine extends Vue {
 <template>
   <DefaultLayout>
     <article class="layout-constrained millions-in-fines blog-post">
-      <g-link to="/blog" class="back-link grey-link"> Back to Blog </g-link>
+      <g-link to="/blog" class="back-link grey-link">
+        <img src="/icons/arrow-back.svg" />
+        Back to Blog
+      </g-link>
 
       <h1 id="main-content" tabindex="-1">
         City Of Chicago Failed to Collect $30 Million In Potential Fines from
@@ -204,12 +207,6 @@ export default class MillionsInMissedFine extends Vue {
     + p {
       margin: 0.25rem 0 0.5rem 0;
     }
-  }
-
-  a.back-link {
-    margin: 1rem 0 0 0;
-    display: inline-block;
-    font-weight: 600;
   }
 
   img.blog-img {
