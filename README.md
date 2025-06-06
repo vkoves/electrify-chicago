@@ -74,7 +74,11 @@ docker-compose run --rm electrify-chicago yarn lint-fix
 1. If you update the raw data CSVs or the data scripts that post-process them (like if you are adding
    a new statistical analysis), you need to re-run the data processing.
 
-2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
+2. If you update the [Chicago Energy Benchmarking Data](https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/about_data)
+   (`src/data/source/ChicagoEnergyBenchmarking.csv`), you need to update `src/data/source/CityGeocoder.xlsx` by following the
+   instructions in `src/data/scripts/city-geocodes/README.md`.
+
+3. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
 ```bash
 docker-compose run --rm electrify-chicago python3 run_all.py
