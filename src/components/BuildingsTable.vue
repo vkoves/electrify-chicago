@@ -37,8 +37,11 @@ export default class BuildingsTable extends Vue {
   @Prop({ default: 'GHGIntensity' }) sortedField!: string;
   @Prop({ default: 'desc' }) sortedDirection!: string;
 
-  /** Prop to handle whether the sorting buttons should be shown
-   * (ex. with Search component) */
+  /**
+   * Prop to handle whether the sorting buttons should be shown
+   * (ex. with Search component). We then emit the sorting reuqest and the parent handles
+   * actually sorting the data and passing it back in.
+   */
   @Prop({ default: false }) showSort!: boolean;
 
   // declares the property emit for TS

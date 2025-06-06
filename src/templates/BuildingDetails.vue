@@ -25,6 +25,7 @@ query ($id: ID!, $ID: String) {
     Wards
     YearBuilt
     ZIPCode
+    Ward
     GHGIntensityRank
     GHGIntensityPercentileRank
     TotalGHGEmissionsRank
@@ -233,6 +234,16 @@ query ($id: ID!, $ID: String) {
                 <div>
                   <dt>Community Area</dt>
                   <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
+                </div>
+
+                <div>
+                  <dt>Ward</dt>
+                  <dd v-if="parseInt(building.Ward) !== -1">
+                    <g-link class="nav-link" :to="`/ward/${building.Ward}`">
+                      {{ building.Ward }}
+                    </g-link>
+                  </dd>
+                  <dd v-else>Not found</dd>
                 </div>
 
                 <!-- Show energy rating if it's a float value (not blank or NaN) -->
