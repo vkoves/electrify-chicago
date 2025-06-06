@@ -17,7 +17,7 @@
     "prettier-base": "npx prettier ./**/*{.ts,.vue,.md,.scss}",
     "prettier-fix": "yarn prettier-base --write",
     "lint": "yarn eslint-base && yarn prettier-base --check",
-    "lint-fix": "yarn eslint-base --fix && yarn prettier-base --write"
+    "lint-fix": "yarn eslint-base --fix || yarn prettier-base --write"
   },
   "dependencies": {
     "csv-parse": "^5.3.6",
