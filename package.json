@@ -14,6 +14,7 @@
     "develop": "gridsome develop",
     "explore": "gridsome explore",
     "generate-social-images": "node scripts/generateSocialImages.js",
+    "generate-test-social-images": "node scripts/generateTestSocialImages.js",
     "eslint-ci": "yarn eslint-base --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "eslint-base": "yarn eslint",
     "prettier-base": "npx prettier ./**/*{.ts,.vue,.md,.scss}",
