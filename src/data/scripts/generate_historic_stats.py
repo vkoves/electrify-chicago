@@ -26,7 +26,7 @@ data_debug_directory = 'debug'
 
 # The input file from the previous step. Gatsby doesn't like spaces so we use a CSV with renamed
 # headers with no units
-building_emissions_file = 'benchmarking-all-newest-temp.csv'
+building_emissions_file = 'benchmarking-all-years.csv'
 
 # The final output file name
 building_emissions_file_out_name = 'building-benchmarks'
@@ -39,21 +39,8 @@ building_cols_to_analyze = [
     'NaturalGasUse',
     'SourceEUI',
     'SiteEUI',
-    'YearBuilt',
-    'GrossFloorArea',
     'DistrictSteamUse',
     'DistrictChilledWaterUse'
-]
-
-# Columns we want to rank for and append ranks to each building's data
-building_cols_to_rank = [
-    'GHGIntensity',
-    'TotalGHGEmissions',
-    'ElectricityUse',
-    'NaturalGasUse',
-    'GrossFloorArea',
-    'SourceEUI',
-    'SiteEUI',
 ]
 
 # Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
@@ -78,6 +65,8 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     benchmark_stats_df = building_data[building_cols_to_analyze].describe(
     ).loc[detail_cols_to_keep]
 
+    print(benchmark_stats_df)
+
     # Round all data to an int, all of the building data is pretty large values so the precision
     # isn't reasonable for statistical analysis
     benchmark_stats_df = benchmark_stats_df.round(1)
@@ -93,9 +82,6 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     stats_dist_output_path = get_data_file_path(data_out_directory, output_filename)
     stats_debug_output_path = str(get_data_file_path(data_debug_directory, output_filename))
 
-    # Get the unique primary property types, so the FE can show it as a filter
-    list_of_types = building_data.PrimaryPropertyType.unique()
-
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
     benchmark_stats_df.to_json(stats_dist_output_path)
     benchmark_stats_df.to_json(stats_debug_output_path, indent=4)
@@ -107,7 +93,7 @@ def main():
   # print(building_data_in)
 
   # Read in the newest buildings data CSV from the previous pipeline step
-  building_data = get_and_clean_csv(get_data_file_path(data_debug_directory, building_emissions_file))
+  building_data = get_and_clean_csv(get_data_file_path(data_out_directory, building_emissions_file))
 
   # Convert our columns to analyze to numeric data by stripping commas, otherwise the rankings
   # are junk
@@ -116,12 +102,12 @@ def main():
 
   # Mark columns that look like numbers but should be strings as such to prevent decimals showing
   # up (e.g. zipcode of 60614 or Ward 9)
-  building_data[benchmarking_string_cols] = building_data[benchmarking_string_cols].astype(str)
+  # building_data[benchmarking_string_cols] = building_data[benchmarking_string_cols].astype(str)
 
   # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-  building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
+  # building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
 
-  building_data['PropertyName'] = building_data['PropertyName'].fillna('').map(clean_property_name)
+  # building_data['PropertyName'] = building_data['PropertyName'].fillna('').map(clean_property_name)
 
   # find the latest year in the data
   latest_year = building_data['DataYear'].max()
