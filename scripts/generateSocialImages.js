@@ -55,7 +55,7 @@ async function generateSocialImages() {
     process.exit(1);
   }
 
-  const BatchSize = 10; // Process in batches to manage memory
+  const BatchSize = 1; // Process in batches to manage memory
   const MaxConsecutiveErrors = 5;
 
   let processed = 0;
