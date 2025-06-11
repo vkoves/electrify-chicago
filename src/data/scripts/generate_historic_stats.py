@@ -14,6 +14,9 @@ from src.data.scripts.grade_buildings import grade_buildings
 from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion, output_to_csv
 from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
 
+# Write out the data
+output_filename = 'historic-stats.json'
+
 # Assume run in /data
 data_directory = 'source'
 data_out_directory = 'dist'
@@ -87,11 +90,8 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
         '75%': 'seventyFifthPercentile',
     }, inplace=True)
 
-    # Write out the data
-    filename = 'building-benchmark-stats.json'
-
-    stats_dist_output_path = get_data_file_path(data_out_directory, filename)
-    stats_debug_output_path = str(get_data_file_path(data_debug_directory, filename))
+    stats_dist_output_path = get_data_file_path(data_out_directory, output_filename)
+    stats_debug_output_path = str(get_data_file_path(data_debug_directory, output_filename))
 
     # Get the unique primary property types, so the FE can show it as a filter
     list_of_types = building_data.PrimaryPropertyType.unique()
