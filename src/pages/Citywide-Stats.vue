@@ -21,6 +21,9 @@
 import { Component, Vue } from 'vue-property-decorator';
 import * as d3 from 'd3';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import HistoricStats from '../data/dist/historic-stats.json'
+
+console.log('the historic stats', HistoricStats)
 
 interface DataPoint {
   year: number;
