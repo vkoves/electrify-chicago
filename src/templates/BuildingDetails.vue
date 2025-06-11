@@ -619,8 +619,28 @@ Vue.use(vToolTip);
 
 @Component<any>({
   metaInfo() {
+    const propertyName = this.$page.building.PropertyName || this.$page.building.Address;
+    const grade = this.$page.building.AvgPercentileLetterGrade || 'N/A';
+    const emissions = Math.round(this.$page.building.TotalGHGEmissions || 0).toLocaleString();
+    const description = 
+      `${propertyName} in Chicago - Grade ${grade} building with ${emissions} tons CO₂e emissions.`;
+    const socialImageUrl = `/social-images/building-${this.$page.building.ID}.png`;
+    
     return {
-      title: this.$page.building.PropertyName,
+      title: propertyName,
+      meta: [
+        { name: 'description', content: description },
+        { property: 'og:title', content: propertyName },
+        { property: 'og:description', content: description },
+        { property: 'og:image', content: socialImageUrl },
+        { property: 'og:image:width', content: '1200' },
+        { property: 'og:image:height', content: '630' },
+        { property: 'og:type', content: 'website' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: propertyName },
+        { name: 'twitter:description', content: description },
+        { name: 'twitter:image', content: socialImageUrl },
+      ],
     };
   },
   components: {

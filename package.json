@@ -9,9 +9,11 @@
   },
   "license": "MIT",
   "scripts": {
-    "build": "gridsome build",
+    "build": "gridsome build && yarn generate-social-images",
+    "build-site-only": "gridsome build",
     "develop": "gridsome develop",
     "explore": "gridsome explore",
+    "generate-social-images": "node scripts/generateSocialImages.js",
     "eslint-ci": "yarn eslint-base --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "eslint-base": "yarn eslint",
     "prettier-base": "npx prettier ./**/*{.ts,.vue,.md,.scss}",
@@ -36,20 +38,22 @@
     "@types/d3": "^7.4.3",
     "@types/leaflet": "^1.9.3",
     "@types/sindresorhus__slugify": "^0.9.3",
-    "typescript-eslint": "^8.24.0",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
     "eslint": "^9.20.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-vue": "^9.32.0",
+    "fs-extra": "^11.3.0",
     "globals": "^15.15.0",
     "gridsome-plugin-typescript": "^0.4.0",
     "prettier": "3.4.2",
+    "puppeteer": "^24.10.0",
     "sass": "^1.59.3",
     "sass-loader": "^10.1.1",
     "style-resources-loader": "^1.5.0",
     "ts-loader": "~8.2.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "typescript-eslint": "^8.24.0"
   }
 }
