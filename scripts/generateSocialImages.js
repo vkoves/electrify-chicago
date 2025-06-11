@@ -32,25 +32,40 @@ async function generateSocialImages() {
   });
 
   let processed = 0;
+  let consecutiveErrors = 0;
   const batchSize = 10; // Process in batches to manage memory
+  const maxConsecutiveErrors = 5;
 
   for (let i = 0; i < buildingData.length; i += batchSize) {
     const batch = buildingData.slice(i, i + batchSize);
 
-    await Promise.all(
+    const results = await Promise.allSettled(
       batch.map(async (building) => {
-        try {
-          await generateSingleImage(browser, building);
-          processed++;
+        const result = await generateSingleImage(browser, building);
+        processed++;
 
-          if (processed % 50 === 0) {
-            console.log(`✅ Processed ${processed}/${buildingData.length} buildings`);
-          }
-        } catch (error) {
-          console.error(`❌ Failed to generate image for building ${building.ID}:`, error.message);
+        if (processed % 50 === 0) {
+          console.log(`✅ Processed ${processed}/${buildingData.length} buildings`);
         }
+        
+        return result;
       })
     );
+
+    // Check for consecutive errors at the start
+    for (const result of results) {
+      if (result.status === 'rejected') {
+        consecutiveErrors++;
+        if (consecutiveErrors >= maxConsecutiveErrors && processed <= maxConsecutiveErrors) {
+          console.error(`💥 First ${maxConsecutiveErrors} images all failed to generate. Exiting...`);
+          console.error('This usually means the development server is not running or the URLs are incorrect.');
+          await browser.close();
+          process.exit(1);
+        }
+      } else {
+        consecutiveErrors = 0; // Reset counter on success
+      }
+    }
   }
 
   await browser.close();
@@ -62,6 +77,7 @@ async function generateSocialImages() {
  */
 async function generateSingleImage(browser, building) {
   const outputPath = path.join(SOCIAL_IMAGES_DIR, `building-${building.ID}.png`);
+  const url = `${BASE_URL}/social-card/${building.ID}`;
 
   // Skip if image already exists (for incremental builds)
   if (await fs.pathExists(outputPath)) {
@@ -75,10 +91,9 @@ async function generateSingleImage(browser, building) {
     await page.setViewport({ width: 1200, height: 630 });
 
     // Navigate to social card page
-    const url = `${BASE_URL}/social-card/${building.ID}`;
     await page.goto(url, {
       waitUntil: 'networkidle0',
-      timeout: 3_000
+      timeout: 3_000 // this is a local page, so it should load in < 3 seconds
     });
 
     // Wait for fonts and images to load
@@ -91,6 +106,10 @@ async function generateSingleImage(browser, building) {
       omitBackground: false
     });
 
+  } catch (error) {
+    console.error(`❌ Failed to generate image for building ${building.ID} at URL: ${url}`);
+    console.error(`   Error: ${error.message}`);
+    throw error;
   } finally {
     await page.close();
   }
