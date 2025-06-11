@@ -1,34 +1,84 @@
 <template>
   <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">Citywide Stats</h1>
-    <!-- <p class="constrained">
-      Electrify Chicago is an independent open-source project looking to
-      shed light onto one of the biggest sources of Chicago's CO<sub
-        >2</sub
-      >
-      emissions - buildings. By providing more information about some of
-      the city's largest and most polluting buildings, we hope to
-      encourage these buildings to electrify, particularly by mobilizing
-      people related to the building - whether that be students and
-      faculty for a college building or employees and patients at a
-      hospital.
-    </p> -->
-    <div id="my_dataviz"></div>
+    <h1 class="page-title" tabindex="-1">Citywide Stats</h1>
+    
+    <div class="graphs-container">
+      <div class="graph-section">
+        <h2>GHG Intensity (kg CO2e/sq ft)</h2>
+        <div id="ghg-intensity-chart"></div>
+      </div>
+      
+      <div class="graph-section">
+        <h2>Total GHG Emissions (metric tons CO2e)</h2>
+        <div id="total-ghg-chart"></div>
+      </div>
+      
+      <div class="graph-section">
+        <h2>Electricity Use (kWh)</h2>
+        <div id="electricity-chart"></div>
+      </div>
+      
+      <div class="graph-section">
+        <h2>Natural Gas Use (therms)</h2>
+        <div id="natural-gas-chart"></div>
+      </div>
+      
+      <div class="graph-section">
+        <h2>Source EUI (kBtu/sq ft)</h2>
+        <div id="source-eui-chart"></div>
+      </div>
+      
+      <div class="graph-section">
+        <h2>Site EUI (kBtu/sq ft)</h2>
+        <div id="site-eui-chart"></div>
+      </div>
+    </div>
   </DefaultLayout>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import * as d3 from 'd3';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import HistoricStats from '../data/dist/historic-stats.json'
+import { renderScatterplot } from '../components/graphs/Scatterplot';
 
-console.log('the historic stats', HistoricStats)
+interface GraphConfig {
+  data: DataPoint[];
+  containerId: string;
+  title: string;
+  yAxisLabel: string;
+  color: string;
+}
 
 interface DataPoint {
   year: number;
   value: number;
 }
+
+interface MetricStats {
+  count: number;
+  mean: number;
+  std: number;
+  min: number;
+  max: number;
+  twentyFifthPercentile: number;
+  median: number;
+  seventyFifthPercentile: number;
+}
+
+interface YearData {
+  GHGIntensity?: MetricStats;
+  TotalGHGEmissions?: MetricStats;
+  ElectricityUse?: MetricStats;
+  NaturalGasUse?: MetricStats;
+  SourceEUI?: MetricStats;
+  SiteEUI?: MetricStats;
+  DistrictSteamUse?: MetricStats;
+  DistrictChilledWaterUse?: MetricStats;
+}
+
+
+type MetricDetail = 'count' | 'mean' | 'std' | 'min' | 'max' | '25%' | '50%' | '75%';
 
 @Component({
   components: {
@@ -36,130 +86,194 @@ interface DataPoint {
   },
 })
 export default class ScatterplotGraph extends Vue {
-  mounted() {
-    const margin = { top: 10, right: 30, bottom: 30, left: 60 };
-    const width = 500 - margin.left - margin.right;
-    const height = 440 - margin.top - margin.bottom;
 
-    const emissionsData: DataPoint[] = [
-      { year: 2010, value: 8140.71 },
-      { year: 2011, value: 8338.42 },
-      { year: 2012, value: 8371.15 },
-      { year: 2013, value: 8285.96 },
-      { year: 2014, value: 8197.8 },
-      { year: 2015, value: 8298.69 },
-      { year: 2016, value: 8880.23 },
-      { year: 2017, value: 8997.57 },
-      { year: 2018, value: 9001.64 },
-      { year: 2019, value: 10000 },
+  mounted() {
+
+// Map from user-friendly keys to actual MetricStats properties
+const detailKeyMap: Record<MetricDetail, keyof MetricStats> = {
+  count: 'count',
+  mean: 'mean',
+  std: 'std',
+  min: 'min',
+  max: 'max',
+  '25%': 'twentyFifthPercentile',
+  '50%': 'median',
+  '75%': 'seventyFifthPercentile'
+};
+
+// Helper function to extract data for a specific metric
+function extractMetricData(
+  metricName: keyof YearData,
+  detail: MetricDetail
+): DataPoint[] {
+  const historicStats = HistoricStats as Record<string, YearData>;
+
+  return Object.entries(historicStats)
+    .map(([year, yearData]: [string, YearData]) => {
+      const stats = yearData[metricName];
+      const value = stats ? stats[detailKeyMap[detail]] : undefined;
+
+      return {
+        year: parseInt(year),
+        value: value ?? 0
+      };
+    })
+    .filter((point: DataPoint) => point.value !== 0)
+    .sort((a: DataPoint, b: DataPoint) => a.year - b.year);
+}
+
+  const allData: Record<string, Record<MetricDetail, DataPoint[]>> = {
+    GHGIntensity: {
+      count: extractMetricData('GHGIntensity', 'count'),
+      mean: extractMetricData('GHGIntensity', 'mean'),
+      std: extractMetricData('GHGIntensity', 'std'),
+      min: extractMetricData('GHGIntensity', 'min'),
+      max: extractMetricData('GHGIntensity', 'max'),
+      '25%': extractMetricData('GHGIntensity', '25%'),
+      '50%': extractMetricData('GHGIntensity', '50%'),
+      '75%': extractMetricData('GHGIntensity', '75%'),
+    },
+    TotalGHGEmissions: {
+      count: extractMetricData('TotalGHGEmissions', 'count'),
+      mean: extractMetricData('TotalGHGEmissions', 'mean'),
+      std: extractMetricData('TotalGHGEmissions', 'std'),
+      min: extractMetricData('TotalGHGEmissions', 'min'),
+      max: extractMetricData('TotalGHGEmissions', 'max'),
+      '25%': extractMetricData('TotalGHGEmissions', '25%'),
+      '50%': extractMetricData('TotalGHGEmissions', '50%'),
+      '75%': extractMetricData('TotalGHGEmissions', '75%'),
+    },
+    ElectricityUse: {
+      count: extractMetricData('ElectricityUse', 'count'),
+      mean: extractMetricData('ElectricityUse', 'mean'),
+      std: extractMetricData('ElectricityUse', 'std'),
+      min: extractMetricData('ElectricityUse', 'min'),
+      max: extractMetricData('ElectricityUse', 'max'),
+      '25%': extractMetricData('ElectricityUse', '25%'),
+      '50%': extractMetricData('ElectricityUse', '50%'),
+      '75%': extractMetricData('ElectricityUse', '75%'),
+    },
+    NaturalGasUse: {
+      count: extractMetricData('NaturalGasUse', 'count'),
+      mean: extractMetricData('NaturalGasUse', 'mean'),
+      std: extractMetricData('NaturalGasUse', 'std'),
+      min: extractMetricData('NaturalGasUse', 'min'),
+      max: extractMetricData('NaturalGasUse', 'max'),
+      '25%': extractMetricData('NaturalGasUse', '25%'),
+      '50%': extractMetricData('NaturalGasUse', '50%'),
+      '75%': extractMetricData('NaturalGasUse', '75%'),
+    },
+    SourceEUI: {
+      count: extractMetricData('SourceEUI', 'count'),
+      mean: extractMetricData('SourceEUI', 'mean'),
+      std: extractMetricData('SourceEUI', 'std'),
+      min: extractMetricData('SourceEUI', 'min'),
+      max: extractMetricData('SourceEUI', 'max'),
+      '25%': extractMetricData('SourceEUI', '25%'),
+      '50%': extractMetricData('SourceEUI', '50%'),
+      '75%': extractMetricData('SourceEUI', '75%'),
+    },
+    SiteEUI: {
+      count: extractMetricData('SiteEUI', 'count'),
+      mean: extractMetricData('SiteEUI', 'mean'),
+      std: extractMetricData('SiteEUI', 'std'),
+      min: extractMetricData('SiteEUI', 'min'),
+      max: extractMetricData('SiteEUI', 'max'),
+      '25%': extractMetricData('SiteEUI', '25%'),
+      '50%': extractMetricData('SiteEUI', '50%'),
+      '75%': extractMetricData('SiteEUI', '75%'),
+    },
+  };
+
+    const graphConfigs: GraphConfig[] = [
+      {
+        data: allData.GHGIntensity['mean'],
+        containerId: 'ghg-intensity-chart',
+        title: 'GHG Intensity',
+        yAxisLabel: 'kg CO2e/sq ft',
+        color: '#e74c3c'
+      },
+      {
+        data: allData.TotalGHGEmissions['mean'],
+        containerId: 'total-ghg-chart',
+        title: 'Total GHG Emissions',
+        yAxisLabel: 'metric tons CO2e',
+        color: '#3498db'
+      },
+      {
+        data: allData.ElectricityUse['mean'],
+        containerId: 'electricity-chart',
+        title: 'Electricity Use',
+        yAxisLabel: 'kWh',
+        color: '#f39c12'
+      },
+      {
+        data: allData.NaturalGasUse['mean'],
+        containerId: 'natural-gas-chart',
+        title: 'Natural Gas Use',
+        yAxisLabel: 'therms',
+        color: '#27ae60'
+      },
+      {
+        data: allData.SourceEUI['mean'],
+        containerId: 'source-eui-chart',
+        title: 'Source EUI',
+        yAxisLabel: 'kBtu/sq ft',
+        color: '#9b59b6'
+      },
+      {
+        data: allData.SiteEUI['mean'],
+        containerId: 'site-eui-chart',
+        title: 'Site EUI',
+        yAxisLabel: 'kBtu/sq ft',
+        color: '#1abc9c'
+      }
     ];
 
-    const svg = d3
-      .select('#my_dataviz')
-      .append('svg')
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
-
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
-
-    const topAndBottomEmissionsValues = d3.extent(
-      emissionsData,
-      (d: DataPoint) => d.value,
-    ) as [number, number];
-    const yAxisLinearlyScaledLineWeMade = d3
-      .scaleLinear()
-      .domain(topAndBottomEmissionsValues)
-      .range([height, 0]);
-
-    const topAndBottomYears = d3.extent(
-      emissionsData,
-      (d: DataPoint) => d.year,
-    ) as [number, number];
-    const xAxisLinearlyScaledLineWeMade = d3.scaleLinear(topAndBottomYears, [
-      0,
-      width,
-    ]);
-
-    svg
-      .append('g')
-      .attr('transform', `translate(0,${height})`)
-      .call(
-        d3
-          .axisBottom(xAxisLinearlyScaledLineWeMade) 
-          .tickFormat(d3.format('d')), 
-      );
-
-    svg.append('g').call(d3.axisLeft(yAxisLinearlyScaledLineWeMade));
-
-    svg
-      .append('path')
-      .datum(emissionsData) 
-      .attr('fill', 'none')
-      .attr('stroke', '#69b3a2')
-      .attr('stroke-width', 2)
-
-      .attr(
-        'd',
-        d3
-          .line<DataPoint>()
-          .x((d: DataPoint) => xAxisLinearlyScaledLineWeMade(d.year))
-          .y((d: DataPoint) => yAxisLinearlyScaledLineWeMade(d.value)),
-      );
-
-    const tooltip = d3
-      .select('#my_dataviz')
-      .append('div')
-      .style('opacity', 0)
-      .attr('class', 'tooltip')
-      .style('border', 'solid')
-      .style('border-width', '1px')
-      .style('border-radiux', '5px')
-      .style('padding', '10px');
-
-    const mouseover = (event: MouseEvent, d: DataPoint) => {
-      tooltip.style('opacity', 1);
-    };
-
-    const mouseMove = function (event: MouseEvent, d: DataPoint) {
-      const [x, y] = d3.pointer(event);
-      tooltip
-        .html(d.year + ' Annual Emissions: ' + d.value)
-        .style('position', 'absolute')
-        .style('background-color', 'white')
-        .style('pointer-events', 'auto')
-        .style('left', `${x + 80}px`)
-        .style('top', `${y + 140}px`)
-        .style('position', 'absolute');
-    };
-
-    const mouseleave = (d: DataPoint) => {
-      tooltip
-        .transition()
-        .duration(200)
-        .style('opacity', 0)
-        .style('pointer-events', 'none');
-    };
-
-    svg
-      .append('g')
-      .selectAll('circle') 
-      .data(emissionsData) 
-      .enter() 
-      .append('circle') 
-      .attr('cx', (d: DataPoint) => xAxisLinearlyScaledLineWeMade(d.year)) 
-      .attr('cy', (d: DataPoint) => yAxisLinearlyScaledLineWeMade(d.value)) 
-      .attr('r', 9)
-      .attr('fill', '#69b3a2')
-      .on('mouseover', mouseover)
-      .on('mousemove', mouseMove)
-      .on('mouseout', mouseleave);
+    // Create all graphs
+    graphConfigs.forEach(config => {
+      if (config.data.length > 0) {
+        renderScatterplot(config);
+      }
+    });
   }
+
 }
+
+
 </script>
 
+
 <style lang="scss" scoped>
-#my_dataviz {
+.graphs-container {
   margin-top: 2rem;
+}
+
+
+.page-title {
+  text-align: center;
+}
+
+.graph-section {
+  margin-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  h2 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  div[id$="-chart"] {
+    position: relative;
+  }
+}
+
+.tooltip {
+  font-size: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 </style>
