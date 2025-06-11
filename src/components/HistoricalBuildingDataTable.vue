@@ -314,7 +314,8 @@ table.historical-data {
   th,
   td {
     padding: 0.5rem 0.5rem;
-    text-align: left;
+    // Numbers should be right aligned, and most columns are numbers
+    text-align: right;
 
     &:first-of-type {
       padding-left: 0.75rem;
