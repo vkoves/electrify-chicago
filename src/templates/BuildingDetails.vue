@@ -76,6 +76,17 @@ query ($id: ID!, $ID: String) {
           NaturalGasUse
           DistrictSteamUse
           DistrictChilledWaterUse
+          # Grade data
+          GHGIntensityPercentileGrade,
+          GHGIntensityLetterGrade,
+          EnergyMixWeightedPctSum,
+          EnergyMixPercentileGrade,
+          EnergyMixLetterGrade,
+          MissingRecordsCount,
+          SubmittedRecordsPercentileGrade,
+          SubmittedRecordsLetterGrade,
+          AvgPercentileGrade,
+          AvgPercentileLetterGrade,
         }
     }
   }
@@ -97,9 +108,7 @@ query ($id: ID!, $ID: String) {
         <div class="building-header-text">
           <div>
             <h1 id="main-content" tabindex="-1">
-              {{
-                $page.building.PropertyName || $page.building.Address
-              }}&nbsp;<OverallRankEmoji
+              {{ propertyName }}&nbsp;<OverallRankEmoji
                 :building="$page.building"
                 :stats="BuildingBenchmarkStats"
                 :large-view="true"
@@ -151,7 +160,7 @@ query ($id: ID!, $ID: String) {
                 This building reported zero fossil gas use in the most recent
                 year, but has used gas in the past, which may be a reporting
                 error. Take a look at how this building has used energy over
-                time under "Extra Technical Info".
+                time under "Extra Technical & Historic Info".
               </p>
             </div>
             <div v-if="anomaly === DataAnomalies.largeGasSwing">
@@ -490,7 +499,7 @@ query ($id: ID!, $ID: String) {
       </div>
 
       <details class="extra-info">
-        <summary class="bold">View Extra Technical Info</summary>
+        <summary class="bold">View Extra Technical & Historic Info</summary>
 
         <div class="details-content">
           <dl class="stat-tiles -supp">
@@ -522,7 +531,7 @@ query ($id: ID!, $ID: String) {
             </div>
           </dl>
 
-          <h2>Full Historical Data Table</h2>
+          <h2>Full Historical Data Table for {{ propertyName }}</h2>
 
           <HistoricalBuildingDataTable :historic-benchmarks="historicData" />
         </div>
@@ -698,6 +707,11 @@ export default class BuildingDetails extends Vue {
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
     return this.$page.building;
+  }
+
+  /** Helper for property name with address fallback */
+  get propertyName(): string {
+    return this.building.PropertyName || this.building.Address;
   }
 
   /** The primary property type of the current building as it shows in the data */

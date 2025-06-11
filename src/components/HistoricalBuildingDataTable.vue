@@ -4,28 +4,34 @@
       <thead>
         <tr>
           <th scope="col">Year</th>
-          <th v-if="renderedColumns.includes('GrossFloorArea')" scope="col">
-            Floor Area <span class="unit">sqft</span>
+
+          <th class="text-center grade-header -overall">
+            Overall <br />
+            Grade
           </th>
-          <th
-            v-if="renderedColumns.includes('ChicagoEnergyRating')"
-            scope="col"
-          >
-            Chicago Energy<br />
-            Rating
+          <th class="text-center grade-header small-col-header">
+            Emissions <br />
+            Intensity <br />
+            Sub-Grade
           </th>
-          <th v-if="renderedColumns.includes('ENERGYSTARScore')" scope="col">
-            Energy Star<br />
-            Score
+          <th class="text-center grade-header small-col-header">
+            Energy Mix <br />
+            Sub-Grade
           </th>
+          <th class="text-center grade-header small-col-header">
+            Reporting Mix <br />
+            Sub-Grade
+          </th>
+
           <th scope="col">
             GHG Intensity <span class="unit">kg CO<sub>2</sub>e / sqft</span>
           </th>
           <th scope="col">
             GHG Emissions <span class="unit">metric tons CO<sub>2</sub>e</span>
           </th>
-          <th scope="col">Source EUI <span class="unit">kBTU / sqft</span></th>
 
+          <!-- Energy Mix & Values -->
+          <th class="text-center">Energy Mix</th>
           <th scope="col">Electricity Use <span class="unit">kBTU</span></th>
           <th scope="col">Fossil Gas Use <span class="unit">kBTU</span></th>
           <th v-if="renderedColumns.includes('DistrictSteamUse')" scope="col">
@@ -39,36 +45,61 @@
             District Chilled <br />
             Water Use <span class="unit">kBTU</span>
           </th>
-          <th class="text-center">Energy Mix</th>
+
+          <th scope="col">Source EUI <span class="unit">kBTU / sqft</span></th>
+          <th v-if="renderedColumns.includes('GrossFloorArea')" scope="col">
+            Floor Area <span class="unit">sqft</span>
+          </th>
+
+          <th
+            v-if="renderedColumns.includes('ChicagoEnergyRating')"
+            scope="col"
+          >
+            Chicago Energy<br />
+            Rating
+          </th>
+          <th v-if="renderedColumns.includes('ENERGYSTARScore')" scope="col">
+            Energy Star<br />
+            Score
+          </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="benchmark in historicBenchmarks" :key="benchmark.DataYear">
           <td class="bold">{{ benchmark.DataYear }}</td>
-          <td v-if="renderedColumns.includes('GrossFloorArea')">
-            {{ benchmark.GrossFloorArea | optionalInt }}
+
+          <!-- Only show any grades if the average exists for that year, otherwise it's
+            incomplete data-->
+          <td class="text-center">
+            <LetterGrade
+              v-if="benchmark.AvgPercentileLetterGrade"
+              class="-overall"
+              :grade="benchmark.AvgPercentileLetterGrade"
+            />
           </td>
-          <td v-if="renderedColumns.includes('ChicagoEnergyRating')">
-            {{ benchmark.ChicagoEnergyRating || '-' }}
+          <td class="text-center">
+            <LetterGrade
+              v-if="benchmark.AvgPercentileLetterGrade"
+              :grade="benchmark.GHGIntensityLetterGrade"
+            />
           </td>
-          <td v-if="renderedColumns.includes('ENERGYSTARScore')">
-            {{ benchmark.ENERGYSTARScore || '-' }}
+          <td class="text-center">
+            <LetterGrade
+              v-if="benchmark.AvgPercentileLetterGrade"
+              :grade="benchmark.EnergyMixLetterGrade"
+            />
           </td>
+          <td class="text-center">
+            <LetterGrade
+              v-if="benchmark.AvgPercentileLetterGrade"
+              :grade="benchmark.SubmittedRecordsLetterGrade"
+            />
+          </td>
+
           <td>{{ benchmark.GHGIntensity }}</td>
           <td>{{ benchmark.TotalGHGEmissions | optionalFloat }}</td>
-          <td>{{ benchmark.SourceEUI }}</td>
 
-          <!-- Round big numbers -->
-          <td>{{ benchmark.ElectricityUse | optionalInt }}</td>
-          <td>{{ benchmark.NaturalGasUse | optionalInt }}</td>
-          <td v-if="renderedColumns.includes('DistrictSteamUse')">
-            {{ benchmark.DistrictSteamUse | optionalInt }}
-          </td>
-          <td v-if="renderedColumns.includes('DistrictChilledWaterUse')">
-            {{ benchmark.DistrictChilledWaterUse | optionalInt }}
-          </td>
-
-          <!-- Energy mix-->
+          <!-- Energy Mix & Energy (rounded because they are big numbers) -->
           <td class="energy-mix">
             <!-- Only show energy mix data if it's a reported year -->
             <div v-if="benchmark.GHGIntensity" class="mix-text">
@@ -99,6 +130,26 @@
               :show-labels="false"
             />
           </td>
+          <td>{{ benchmark.ElectricityUse | optionalInt }}</td>
+          <td>{{ benchmark.NaturalGasUse | optionalInt }}</td>
+          <td v-if="renderedColumns.includes('DistrictSteamUse')">
+            {{ benchmark.DistrictSteamUse | optionalInt }}
+          </td>
+          <td v-if="renderedColumns.includes('DistrictChilledWaterUse')">
+            {{ benchmark.DistrictChilledWaterUse | optionalInt }}
+          </td>
+
+          <td>{{ benchmark.SourceEUI }}</td>
+          <td v-if="renderedColumns.includes('GrossFloorArea')">
+            {{ benchmark.GrossFloorArea | optionalInt }}
+          </td>
+
+          <td v-if="renderedColumns.includes('ChicagoEnergyRating')">
+            {{ benchmark.ChicagoEnergyRating || '-' }}
+          </td>
+          <td v-if="renderedColumns.includes('ENERGYSTARScore')">
+            {{ benchmark.ENERGYSTARScore || '-' }}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -113,6 +164,7 @@ import {
   IHistoricData,
 } from '../common-functions.vue';
 import PieChart, { IPieSlice } from './graphs/PieChart.vue';
+import LetterGrade from './LetterGrade.vue';
 
 /**
  * A component that given an array of a building's benchmarking renders
@@ -143,6 +195,7 @@ import PieChart, { IPieSlice } from './graphs/PieChart.vue';
     },
   },
   components: {
+    LetterGrade,
     PieChart,
   },
 })
@@ -261,10 +314,14 @@ table.historical-data {
   th,
   td {
     padding: 0.5rem 0.5rem;
-    text-align: left;
+    // Numbers should be right aligned, and most columns are numbers
+    text-align: right;
 
     &:first-of-type {
       padding-left: 0.75rem;
+    }
+    &.text-center {
+      text-align: center;
     }
   }
 
@@ -278,14 +335,34 @@ table.historical-data {
       font-size: 0.825rem;
       white-space: nowrap;
 
-      &.text-center {
-        text-align: center;
+      &.grade-header {
+        width: 3rem;
+
+        &.-overall {
+          padding-left: 1rem;
+        }
+      }
+
+      &.small-col-header {
+        font-weight: normal;
+        font-size: 0.7rem;
       }
     }
   }
 
   tbody tr:nth-of-type(even) {
     background-color: $grey-light;
+  }
+
+  .letter-grade {
+    font-size: 1.25rem;
+
+    &.-overall {
+      font-size: 1.75rem;
+    }
+    &:not(.-overall) {
+      vertical-align: bottom;
+    }
   }
 }
 </style>
