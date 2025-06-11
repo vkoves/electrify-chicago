@@ -1,45 +1,70 @@
 <template>
   <div class="social-card">
     <div class="social-card-content">
+      <div class="header">
+        <div class="logo">
+          <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
+        </div>
+      </div>
+
       <div class="main-section">
         <div class="text-content">
           <div class="building-info">
-            <h1 class="building-name">{{ propertyName }}</h1>
-            <p class="building-address">{{ building.Address }}</p>
-          </div>
-          
-          <div class="stats-grid">
-            <div class="stat-item">
-              <div class="stat-label">Overall Grade</div>
-              <div class="stat-value">
+            <div class="building-title-row">
+              <div class="overall-grade-section">
+                <div class="overall-grade-label">Overall Grade</div>
                 <LetterGrade :grade="building.AvgPercentileLetterGrade" class="-large" />
               </div>
+              <div class="title-content">
+                <h1 class="building-name">{{ propertyName }}</h1>
+                <p class="building-address">{{ building.Address }}</p>
+              </div>
             </div>
-            
-            <div class="stat-item">
+          </div>
+
+          <div class="sub-grades">
+            <div class="sub-grade-item">
+              <span class="sub-grade-label">Emissions Intensity</span>
+              <LetterGrade :grade="building.GHGIntensityLetterGrade" />
+            </div>
+            <div class="sub-grade-item">
+              <span class="sub-grade-label">Energy Mix</span>
+              <LetterGrade :grade="building.EnergyMixLetterGrade" />
+            </div>
+            <div class="sub-grade-item">
+              <span class="sub-grade-label">Consistent Reporting</span>
+              <LetterGrade :grade="building.SubmittedRecordsLetterGrade" />
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-item -no-background">
               <div class="stat-label">GHG Intensity</div>
               <div class="stat-value">{{ formatGHGIntensity(building.GHGIntensity) }}</div>
               <div class="stat-unit">kg CO₂e/sqft</div>
             </div>
-            
-            <div class="stat-item">
+
+            <div class="stat-item -no-background">
               <div class="stat-label">Total Emissions</div>
               <div class="stat-value">{{ formatNumber(building.TotalGHGEmissions) }}</div>
               <div class="stat-unit">tons CO₂e</div>
             </div>
+
+            <div class="stat-item -no-background">
+              <div class="stat-label text-center">Energy Mix</div>
+              <div class="pie-chart-cont-inline">
+                <PieChart
+                  :id-prefix="'social-energy-mix'"
+                  :graph-data="energyBreakdownData"
+                />
+              </div>
+            </div>
           </div>
         </div>
-        
+
         <div v-if="buildingImg" class="image-section">
           <img :src="buildingImg.imgUrl" :alt="propertyName" class="building-image" />
         </div>
-      </div>
-      
-      <div class="footer">
-        <div class="logo">
-          <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
-        </div>
-        <div class="url">electrify-chicago.com</div>
       </div>
     </div>
   </div>
@@ -47,13 +72,15 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { IBuilding } from '../common-functions.vue';
+import { IBuilding, calculateEnergyBreakdown } from '../common-functions.vue';
 import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
 import LetterGrade from './LetterGrade.vue';
+import PieChart, { IPieSlice } from './graphs/PieChart.vue';
 
 @Component({
   components: {
     LetterGrade,
+    PieChart,
   },
 })
 export default class SocialCard extends Vue {
@@ -61,6 +88,8 @@ export default class SocialCard extends Vue {
   $page!: {
     building: IBuilding;
   };
+
+  energyBreakdownData!: Array<IPieSlice>;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -84,21 +113,31 @@ export default class SocialCard extends Vue {
 
   formatGHGIntensity(value: number): string {
     if (!value) return '—';
-    return value.toLocaleString(undefined, { 
-      minimumFractionDigits: 1, 
-      maximumFractionDigits: 1 
+    return value.toLocaleString(undefined, {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 1,
     });
+  }
+
+  created(): void {
+    const breakdownWithTotal = calculateEnergyBreakdown(this.building);
+    this.energyBreakdownData = breakdownWithTotal.energyBreakdown;
   }
 }
 </script>
 
+<!--
+ TODO:
+   - Move to SCSS variables from colors.scss
+   - Use border values from spacing.scss
+   - Use rem instead of px
+-->
 <style lang="scss" scoped>
 .social-card {
   width: 1200px;
   height: 630px;
   background: white;
   color: #1a1a1a;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -110,17 +149,24 @@ export default class SocialCard extends Vue {
 .social-card-content {
   width: 100%;
   height: 100%;
-  padding: 60px;
+  padding: 40px 60px 60px 60px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.logo img {
+  height: 32px;
 }
 
 .main-section {
   display: flex;
   gap: 40px;
   flex: 1;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .text-content {
@@ -129,7 +175,6 @@ export default class SocialCard extends Vue {
 
 .image-section {
   flex: 0 0 300px;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -140,11 +185,49 @@ export default class SocialCard extends Vue {
   max-height: 400px;
   border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.building-info {
-  margin-bottom: 30px;
+.building-title-row {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.overall-grade-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+  min-width: 120px;
+}
+
+.overall-grade-label {
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.title-content {
+  flex: 1;
+}
+
+.pie-chart-cont-inline {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+
+  // Override PieChart default sizing for inline display
+  :deep(svg) {
+    width: 15rem;
+  }
 }
 
 .building-name {
@@ -164,7 +247,8 @@ export default class SocialCard extends Vue {
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 20px;
+  gap: 30px;
+  margin-bottom: 25px;
 }
 
 .stat-item {
@@ -173,6 +257,12 @@ export default class SocialCard extends Vue {
   padding: 20px;
   text-align: center;
   border: 1px solid #e5e7eb;
+
+  &.-no-background {
+    background: none;
+    border: none;
+    padding: 0;
+  }
 }
 
 .stat-label {
@@ -180,6 +270,10 @@ export default class SocialCard extends Vue {
   color: #666;
   margin-bottom: 6px;
   font-weight: 500;
+
+  &.text-center {
+    text-align: center;
+  }
 }
 
 .stat-value {
@@ -194,24 +288,33 @@ export default class SocialCard extends Vue {
   color: #888;
 }
 
-.footer {
+.sub-grades {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  padding-top: 20px;
+  gap: 20px;
+  margin-bottom: 25px;
+  padding: 15px 0;
   border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-.logo img {
-  height: 36px;
+.sub-grade-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
 }
 
-.url {
-  font-size: 18px;
+.sub-grade-label {
+  color: #666;
   font-weight: 500;
-  color: #1a472a;
+  text-align: center;
+  line-height: 1.3;
 }
 
-// Use global letter-grade styling with -large modifier for bigger size
+.letter-grade {
+  font-size: 2.5rem;
+
+  &.-large { font-size: 4rem; }
+}
 </style>

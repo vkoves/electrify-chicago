@@ -8,6 +8,13 @@ query ($id: ID!) {
     TotalGHGEmissions
     GrossFloorArea
     AvgPercentileLetterGrade
+    ElectricityUse
+    NaturalGasUse
+    DistrictSteamUse
+    DistrictChilledWaterUse
+    EnergyMixLetterGrade
+    GHGIntensityLetterGrade
+    SubmittedRecordsLetterGrade
   }
 }
 </page-query>
