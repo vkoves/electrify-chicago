@@ -1,9 +1,8 @@
 """
 Our main data processing script (Step 2/3 in the data pipeline)
 
-Ranks all buildings in the latest year and generates overall city-wide statistics into
-`building-benchmark-stats.json`. This only processes the latest submitted year of each building,
-which is what shows up on the page for each building.
+Calculates year-over-year statistics for all buildings and generates overall city-wide statistics into
+`building-benchmark-stats.json`. This processes all years of data and provides statistics by year.
 """
 
 import json
@@ -13,6 +12,8 @@ from typing import List
 from src.data.scripts.grade_buildings import grade_buildings
 from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion, output_to_csv
 from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
+
+debug = False
 
 # Write out the data
 output_filename = 'historic-stats.json'
@@ -43,13 +44,11 @@ building_cols_to_analyze = [
     'DistrictChilledWaterUse'
 ]
 
-# Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
-# median values for fields
-# Returns the output file if succeeds
-def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
+# Calculates year-over-year stats for all buildings and outputs them into a keyed JSON file
+def calculateBuildingStatsByYear(building_data_in: pandas.DataFrame) -> str:
     """
-    Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
-    median values for fields
+    Calculates year-over-year stats for all buildings and outputs them into a keyed JSON file.
+    Returns statistics for each year in the dataset.
 
     Returns an array of files written to
     """
@@ -57,65 +56,80 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     # Clone the input data to prevent manipulating it on accident
     building_data = building_data_in.copy()
 
-    benchmark_stats_df = pandas.DataFrame()
-
     # The details columns we want to keep. Note that 50% = median
     detail_cols_to_keep = ['count', 'mean', 'std', 'min', 'max', '25%', '50%', '75%']
 
-    benchmark_stats_df = building_data[building_cols_to_analyze].describe(
-    ).loc[detail_cols_to_keep]
+    # Get all unique years in the dataset
+    years = sorted(building_data['DataYear'].unique())
+    
+    # Dictionary to store results for each year
+    yearly_stats = {}
+    
+    for year in years:
+        
+        # Filter data for this specific year
+        year_data = building_data[building_data['DataYear'] == year]
+        
+        # Calculate statistics for this year
+        year_stats_df = year_data[building_cols_to_analyze].describe().loc[detail_cols_to_keep]
+        
+        # Round all data to 1 decimal place
+        year_stats_df = year_stats_df.round(1)
+        
+        # Rename columns to work with GraphQL (no numbers like '25%')
+        year_stats_df.rename(index={
+            '25%': 'twentyFifthPercentile',
+            '50%': 'median',
+            '75%': 'seventyFifthPercentile',
+        }, inplace=True)
+        
+        # Convert to dictionary and store
+        yearly_stats[str(year)] = year_stats_df.to_dict()
 
-    print(benchmark_stats_df)
+    # Create summary statistics across all years
+    
+    if debug:
+      print(f"\n{'='*50}")
+      print("SUMMARY BY YEAR:")
+      print(f"{'='*50}")
+      print(f"{'Year':<6} {'Buildings':<10} {'Avg GHG':<12} {'Median GHG':<12} {'Avg Intensity':<12}")
+      print("-" * 60)
+    
+    for year in years:
+        year_stats = yearly_stats[str(year)]
+        buildings = int(year_stats['TotalGHGEmissions']['count'])
+        avg_ghg = year_stats['TotalGHGEmissions']['mean']
+        median_ghg = year_stats['TotalGHGEmissions']['median']
+        avg_intensity = year_stats['GHGIntensity']['mean']
 
-    # Round all data to an int, all of the building data is pretty large values so the precision
-    # isn't reasonable for statistical analysis
-    benchmark_stats_df = benchmark_stats_df.round(1)
+    if debug:
+      print(f"{year:<6} {buildings:<10} {avg_ghg:<12.1f} {median_ghg:<12.1f} {avg_intensity:<12.1f}")
 
-    # Rename columns to work with GraphQL (no numbers like '25%')
-    # Rename 50% to median since those tqo are equivalent
-    benchmark_stats_df.rename(index={
-        '25%': 'twentyFifthPercentile',
-        '50%': 'median',
-        '75%': 'seventyFifthPercentile',
-    }, inplace=True)
-
+    # Write output files
     stats_dist_output_path = get_data_file_path(data_out_directory, output_filename)
     stats_debug_output_path = str(get_data_file_path(data_debug_directory, output_filename))
 
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
-    benchmark_stats_df.to_json(stats_dist_output_path)
-    benchmark_stats_df.to_json(stats_debug_output_path, indent=4)
+    with open(stats_dist_output_path, 'w') as f:
+        json.dump(yearly_stats, f, separators=(',', ':'))
+    
+    with open(stats_debug_output_path, 'w') as f:
+        json.dump(yearly_stats, f, indent=4)
 
-    return [ stats_dist_output_path, stats_debug_output_path ]
+    return [stats_dist_output_path, stats_debug_output_path]
 
 
 def main():
-  # print(building_data_in)
+    # Read in the buildings data CSV from the previous pipeline step
+    building_data = get_and_clean_csv(get_data_file_path(data_out_directory, building_emissions_file))
 
-  # Read in the newest buildings data CSV from the previous pipeline step
-  building_data = get_and_clean_csv(get_data_file_path(data_out_directory, building_emissions_file))
+    # Convert our columns to analyze to numeric data by stripping commas, otherwise the rankings are junk
+    building_data[building_cols_to_analyze] = building_data[building_cols_to_analyze].apply(
+        lambda x: pandas.to_numeric(x.astype(str).str.replace(',', ''), errors='coerce'))
 
-  # Convert our columns to analyze to numeric data by stripping commas, otherwise the rankings
-  # are junk
-  building_data[building_cols_to_analyze] = building_data[building_cols_to_analyze].apply(
-      lambda x: pandas.to_numeric(x.astype(str).str.replace(',', ''), errors='coerce'))
-
-  # Mark columns that look like numbers but should be strings as such to prevent decimals showing
-  # up (e.g. zipcode of 60614 or Ward 9)
-  # building_data[benchmarking_string_cols] = building_data[benchmarking_string_cols].astype(str)
-
-  # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-  # building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
-
-  # building_data['PropertyName'] = building_data['PropertyName'].fillna('').map(clean_property_name)
-
-  # find the latest year in the data
-  latest_year = building_data['DataYear'].max()
-
-  # filter out all buildings that aren't the latest year
-  latest_building_data = building_data[building_data['DataYear'] == latest_year]
-  calculateBuildingStats(latest_building_data)
+    # Calculate statistics by year for all buildings
+    calculateBuildingStatsByYear(building_data)
 
 
-
-main()
+if __name__ == "__main__":
+    main()
