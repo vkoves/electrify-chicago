@@ -1,3 +1,4 @@
+/* eslint-env node */
 const puppeteer = require('puppeteer');
 const fs = require('fs-extra');
 const path = require('path');
@@ -25,19 +26,43 @@ async function generateSocialImages() {
 
   console.log(`📊 Found ${buildingData.length} buildings to process`);
 
-  // Launch browser
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
+  // Test if the base URL is accessible first
+  console.log(`🔗 Testing base URL: ${BASE_URL}`);
+
+  let browser;
+
+  try {
+    browser = await puppeteer.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+    });
+    const testPage = await browser.newPage();
+    await testPage.goto(BASE_URL, { timeout: 10000 });
+
+    // Fetch the <h1> to confirm we actually loaded the page
+    const topHeadingSelector = await testPage
+      .locator('h1')
+      .waitHandle();
+    const fullTitle = await topHeadingSelector?.evaluate(el => el.textContent);
+
+    await testPage.close();
+    console.log(`✅ Base URL is accessible! Found title: ${fullTitle.trim()}`);
+  } catch (error) {
+    console.error('❌ Cannot access base URL. Make sure your development server is running.');
+    console.error(`   Tried to access: ${BASE_URL}`);
+    console.error(`   Error: ${error.message}`);
+    console.error('   Run "yarn develop" or "gridsome develop" to start the server.');
+    process.exit(1);
+  }
+
+  const BatchSize = 10; // Process in batches to manage memory
+  const MaxConsecutiveErrors = 5;
 
   let processed = 0;
   let consecutiveErrors = 0;
-  const batchSize = 10; // Process in batches to manage memory
-  const maxConsecutiveErrors = 5;
 
-  for (let i = 0; i < buildingData.length; i += batchSize) {
-    const batch = buildingData.slice(i, i + batchSize);
+  for (let i = 0; i < buildingData.length; i += BatchSize) {
+    const batch = buildingData.slice(i, i + BatchSize);
 
     const results = await Promise.allSettled(
       batch.map(async (building) => {
@@ -47,7 +72,7 @@ async function generateSocialImages() {
         if (processed % 50 === 0) {
           console.log(`✅ Processed ${processed}/${buildingData.length} buildings`);
         }
-        
+
         return result;
       })
     );
@@ -56,8 +81,9 @@ async function generateSocialImages() {
     for (const result of results) {
       if (result.status === 'rejected') {
         consecutiveErrors++;
-        if (consecutiveErrors >= maxConsecutiveErrors && processed <= maxConsecutiveErrors) {
-          console.error(`💥 First ${maxConsecutiveErrors} images all failed to generate. Exiting...`);
+
+        if (consecutiveErrors >= MaxConsecutiveErrors && processed <= MaxConsecutiveErrors) {
+          console.error(`💥 First ${MaxConsecutiveErrors} images all failed to generate. Exiting...`);
           console.error('This usually means the development server is not running or the URLs are incorrect.');
           await browser.close();
           process.exit(1);
@@ -92,12 +118,9 @@ async function generateSingleImage(browser, building) {
 
     // Navigate to social card page
     await page.goto(url, {
-      waitUntil: 'networkidle0',
-      timeout: 3_000 // this is a local page, so it should load in < 3 seconds
+      // waitUntil: 'networkidle0',
+      timeout: 3_000 // Increased timeout for slower systems
     });
-
-    // Wait for fonts and images to load
-    await page.waitForTimeout(1000);
 
     // Take screenshot
     await page.screenshot({
