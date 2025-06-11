@@ -58,6 +58,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+/**
+ * TODO: Add this to footer in local dev
+ */
 @Component<any>({
   metaInfo() {
     return {

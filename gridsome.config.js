@@ -45,7 +45,7 @@ module.exports = {
         // Social card template for generating social images
         name: 'social-card',
         path: '/social-card/:ID',
-        component: './src/templates/SocialCard.vue',
+        component: './src/templates/SocialCardPage.vue',
       },
     ],
   },

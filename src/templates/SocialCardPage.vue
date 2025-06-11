@@ -20,12 +20,15 @@ query ($id: ID!) {
 import { Component, Vue } from 'vue-property-decorator';
 import SocialCard from '../components/SocialCard.vue';
 
+/**
+ * The page for building's social cards, found at `/social-card/:buildingId`
+ */
 @Component({
   components: {
     SocialCard,
   },
 })
-export default class SocialCardTemplate extends Vue {}
+export default class SocialCardPage extends Vue {}
 </script>
 
 <style>
