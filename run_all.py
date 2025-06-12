@@ -51,22 +51,22 @@ def main():
 
     # Each step of our data pipeline, in order
     pipeline_steps = [
-        {
-            "module": "src.data.scripts.clean_and_split_data",
-            "description": "clean_and_split_data"
-        },
-        {
-            "module": "src.data.scripts.process_data",
-            "description": "process_data"
-        },
-        {
-            "module": "src.data.scripts.add_context_by_property_type",
-            "description": "add_context_by_property_type"
-        },
-        {
-            "module": "src.data.scripts.detect_anomalous_buildings",
-            "description": "detect_anomalous_buildings"
-        },
+        # {
+        #     "module": "src.data.scripts.clean_and_split_data",
+        #     "description": "clean_and_split_data"
+        # },
+        # {
+        #     "module": "src.data.scripts.process_data",
+        #     "description": "process_data"
+        # },
+        # {
+        #     "module": "src.data.scripts.add_context_by_property_type",
+        #     "description": "add_context_by_property_type"
+        # },
+        # {
+        #     "module": "src.data.scripts.detect_anomalous_buildings",
+        #     "description": "detect_anomalous_buildings"
+        # },
     ]
 
     for index, step in enumerate(pipeline_steps):
@@ -86,6 +86,8 @@ def main():
     print("See output files in 'src/data/dist'.")
     print("For more understandable intermediate data CSVs and JSON building stats, see 'data/debug' directory")
     print("\nNote: You must restart `gridsome develop` for data changes to take effect.")
+    print(f"\n{YELLOW}Important! 📸 Don't forget to regenerate social images after data changes!{NC}")
+    print(f"   Run: {LIGHT_BLUE}yarn generate-social-images{NC}")
 
 if __name__ == '__main__':
     main()
