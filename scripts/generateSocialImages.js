@@ -9,22 +9,30 @@ const BUILDING_DATA_FILE = './src/data/dist/building-benchmarks.csv';
 const BASE_URL = process.env.SOCIAL_CARD_BASE_URL || 'http://localhost:8080';
 
 /**
- * Generate social images for all buildings using Puppeteer screenshots
+ * Generate social images for specific building IDs or all buildings
+ * @param {string[]} buildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
  */
-async function generateSocialImages() {
+async function generateSocialImages(buildingIds = null) {
   console.log('🎨 Starting social image generation...');
 
   // Ensure output directory exists
   await fs.ensureDir(SOCIAL_IMAGES_DIR);
 
-  // Read building data
-  const buildingDataRaw = await fs.readFile(BUILDING_DATA_FILE, 'utf8');
-  const buildingData = parse(buildingDataRaw, {
-    columns: true,
-    skip_empty_lines: true,
-  });
+  let buildingData;
 
-  console.log(`📊 Found ${buildingData.length} buildings to process`);
+  if (buildingIds) {
+    // Generate for specific building IDs
+    buildingData = buildingIds.map(id => ({ ID: id }));
+    console.log(`📊 Generating for ${buildingData.length} specific buildings`);
+  } else {
+    // Read all building data
+    const buildingDataRaw = await fs.readFile(BUILDING_DATA_FILE, 'utf8');
+    buildingData = parse(buildingDataRaw, {
+      columns: true,
+      skip_empty_lines: true,
+    });
+    console.log(`📊 Found ${buildingData.length} buildings to process`);
+  }
 
   // Test if the base URL is accessible first
   console.log(`🔗 Testing base URL: ${BASE_URL}`);
@@ -118,7 +126,7 @@ async function generateSingleImage(browser, building) {
 
     // Navigate to social card page
     await page.goto(url, {
-      // waitUntil: 'networkidle0',
+      waitUntil: 'networkidle2',
       timeout: 3_000 // Increased timeout for slower systems
     });
 
@@ -178,4 +186,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { generateSocialImages, cleanupOldImages };
+module.exports = { generateSocialImages, generateSingleImage, cleanupOldImages };
