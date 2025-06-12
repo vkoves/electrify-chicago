@@ -14,10 +14,8 @@
                 <p class="building-address">{{ building.Address }}</p>
               </div>
               <!-- If no building image, put the logo in the top right -->
-              <div v-if="!buildingImg">
-                <div class="logo -no-img">
-                    <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
-                  </div>
+              <div v-if="!buildingImg" class="logo -no-img">
+                <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
               </div>
             </div>
           </div>
@@ -142,14 +140,13 @@ export default class SocialCard extends Vue {
   position: relative;
   width: 1200px;
   height: 630px;
-  background: white;
-  color: #1a1a1a;
+  background: $white;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0;
   padding: 0;
-  border: 2px solid #e5e7eb;
+  border: 2px solid $grey-dark;
 }
 
 .social-card-content {
@@ -172,8 +169,10 @@ export default class SocialCard extends Vue {
     margin-top: auto;
     align-self: flex-end;
 
-    &.no-img {
+    // If at the top, align to top
+    &.-no-img {
       align-self: flex-start;
+      margin-top: 0;
     }
     img { height: 3rem; }
   }
@@ -215,8 +214,7 @@ export default class SocialCard extends Vue {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
+  background: $off-white;
   border-radius: 12px;
   padding: 16px;
   min-width: 120px;
@@ -224,7 +222,7 @@ export default class SocialCard extends Vue {
 
 .overall-grade-label {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: bold;
   text-align: center;
   line-height: 1.2;
 }
@@ -257,13 +255,12 @@ export default class SocialCard extends Vue {
   font-weight: bold;
   margin: 0 0 8px 0;
   line-height: 1.1;
-  color: #1a1a1a;
 }
 
 .building-address {
   font-size: 20px;
   margin: 0;
-  color: #666;
+  color: $text-mid-light;
 }
 
 .stats-grid {
@@ -274,26 +271,22 @@ export default class SocialCard extends Vue {
 }
 
 .stat-item {
-  background: #f9fafb;
   border-radius: 12px;
   padding: 20px;
   text-align: center;
-  border: 1px solid #e5e7eb;
 
   &.-no-background {
     background: none;
-    border: none;
     padding: 0;
   }
 }
 
 .sub-grade-label, .stat-label {
-  color: #666;
-  font-weight: 500;
+  color: $text-mid-light;
+  font-weight: bold;
+  font-size: 1.5rem;
   text-align: center;
   line-height: 1.3;
-  font-size: 1.5rem;
-  font-weight: 500;
   margin-bottom: 0.25rem;
 
   &.text-center {
@@ -304,14 +297,13 @@ export default class SocialCard extends Vue {
 .stat-value {
   font-size: 3rem;
   font-weight: bold;
-  color: #1a1a1a;
   line-height: 1;
   margin-top: 1rem;
 }
 
 .stat-unit {
   font-size: 1.5rem;
-  color: #888;
+  color: $text-mid-light;
   font-weight: 500;
 }
 
