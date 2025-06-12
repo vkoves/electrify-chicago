@@ -197,10 +197,10 @@ export default class SocialCard extends Vue {
 
 .image-section {
   display: flex;
-  flex: 0 0 18.75rem;
+  flex: 0 0 25rem;
   height: 100%;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
 }
 
@@ -216,7 +216,7 @@ export default class SocialCard extends Vue {
 .building-title-row {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 3rem;
   margin-bottom: 1.5rem;
   margin-left: 1rem;
 }

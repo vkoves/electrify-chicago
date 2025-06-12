@@ -20,6 +20,11 @@ async function generateSocialImages(buildingIds = null) {
 
   let buildingData;
 
+  // Clean out existing images for a fresh start
+  console.log('🧹 Cleaning existing social images...');
+  await fs.emptyDir(SOCIAL_IMAGES_DIR);
+  console.log('✅ Social images directory cleaned');
+
   if (buildingIds) {
     // Generate for specific building IDs
     buildingData = buildingIds.map(id => ({ ID: id }));
