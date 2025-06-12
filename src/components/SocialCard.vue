@@ -163,7 +163,7 @@ export default class SocialCard extends Vue {
   justify-content: center;
   margin: 0;
   padding: 0;
-  border: 2px solid $grey-dark;
+  border: $border-medium solid $grey-dark;
 }
 
 .social-card-content {
@@ -213,7 +213,7 @@ export default class SocialCard extends Vue {
 .building-image {
   max-width: 100%;
   max-height: 400px;
-  border-radius: 12px;
+  border-radius: $brd-rad-medium;
   object-fit: cover;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
   margin-top: auto;
@@ -253,13 +253,13 @@ export default class SocialCard extends Vue {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 1rem;
 
   // Override PieChart default sizing for inline display and hide labels, since
   // you acn't read them at that size anyway
   :deep(svg) {
     width: 11rem;
-    transform: scale(1.6) translate(0px, 0.15rem);
+    transform: scale(1.6) translate(0, 0.15rem);
 
     // Hide any external labels - allow internal labels like 100% electric
     text:not(.-only-slice) tspan {
@@ -282,7 +282,8 @@ export default class SocialCard extends Vue {
 }
 
 .building-address {
-  font-size: 20px;
+  line-height: 1;
+  font-size: 1.5rem;
   margin: 0;
   color: $text-mid-light;
 }
@@ -337,8 +338,8 @@ export default class SocialCard extends Vue {
   gap: 20px;
   margin-bottom: 25px;
   padding: 15px 0;
-  border-top: 1px solid #e5e7eb;
-  border-bottom: 1px solid #e5e7eb;
+  border-top: $border-thick solid $grey-light;
+  border-bottom: $border-thick solid $grey-light;
 }
 
 .sub-grade-item {
