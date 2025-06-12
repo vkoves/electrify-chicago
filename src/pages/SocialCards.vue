@@ -49,6 +49,20 @@
               </a>
             </div>
           </div>
+
+          <div class="test-card">
+            <h3>Merchandise Mart (good energy mix graph)</h3>
+            <p><strong>ID:</strong> 103656</p>
+            <p>Has a pretty three slice energy mix</p>
+            <div class="links">
+              <a :href="`/social-card/103656`" target="_blank" class="btn">
+                View Social Card
+              </a>
+              <a :href="`/building-id/103656`" target="_blank" class="btn -secondary">
+                View Building Page
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,12 +1,6 @@
 <template>
   <div class="social-card">
     <div class="social-card-content">
-      <div class="header">
-        <div class="logo">
-          <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
-        </div>
-      </div>
-
       <div class="main-section">
         <div class="text-content">
           <div class="building-info">
@@ -18,6 +12,12 @@
               <div class="title-content">
                 <h1 class="building-name">{{ propertyName }}</h1>
                 <p class="building-address">{{ building.Address }}</p>
+              </div>
+              <!-- If no building image, put the logo in the top right -->
+              <div v-if="!buildingImg">
+                <div class="logo -no-img">
+                    <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
+                  </div>
               </div>
             </div>
           </div>
@@ -62,8 +62,13 @@
           </div>
         </div>
 
+        <!-- Second column, if there's images -->
         <div v-if="buildingImg" class="image-section">
           <img :src="buildingImg.imgUrl" :alt="propertyName" class="building-image" />
+
+          <div class="logo">
+            <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
+          </div>
         </div>
       </div>
     </div>
@@ -134,6 +139,7 @@ export default class SocialCard extends Vue {
 -->
 <style lang="scss" scoped>
 .social-card {
+  position: relative;
   width: 1200px;
   height: 630px;
   background: white;
@@ -149,33 +155,40 @@ export default class SocialCard extends Vue {
 .social-card-content {
   width: 100%;
   height: 100%;
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
+
+  .main-section {
+    display: flex;
+    height: 100%;
+    gap: 2rem;
+    flex: 1;
+    align-items: center;
+  }
+
+  .logo {
+    text-align: right;
+    margin-top: auto;
+    align-self: flex-end;
+
+    &.no-img {
+      align-self: flex-start;
+    }
+    img { height: 3rem; }
+  }
 }
 
-.header {
-  margin-bottom: 20px;
-}
-
-.logo img {
-  height: 32px;
-}
-
-.main-section {
-  display: flex;
-  gap: 40px;
-  flex: 1;
-  align-items: flex-start;
-}
 
 .text-content {
   flex: 1;
 }
 
 .image-section {
-  flex: 0 0 300px;
   display: flex;
+  flex: 0 0 300px;
+  height: 100%;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -186,6 +199,7 @@ export default class SocialCard extends Vue {
   border-radius: 12px;
   object-fit: cover;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  margin-top: auto;
 }
 
 .building-title-row {
@@ -193,6 +207,7 @@ export default class SocialCard extends Vue {
   align-items: center;
   gap: 2rem;
   margin-bottom: 1.5rem;
+  margin-left: 1rem;
 }
 
 .overall-grade-section {
@@ -224,9 +239,13 @@ export default class SocialCard extends Vue {
   align-items: center;
   margin-top: 10px;
 
-  // Override PieChart default sizing for inline display
+  // Override PieChart default sizing for inline display and hide labels, since
+  // you acn't read them at that size anyway
   :deep(svg) {
-    width: 15rem;
+    width: 11rem;
+    transform: scale(1.6) translate(0px, 0.15rem);
+
+    tspan { display: none; }
   }
 }
 
@@ -247,8 +266,8 @@ export default class SocialCard extends Vue {
 .stats-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  gap: 30px;
-  margin-bottom: 25px;
+  gap: 2rem;
+  align-items: center;
 }
 
 .stat-item {
