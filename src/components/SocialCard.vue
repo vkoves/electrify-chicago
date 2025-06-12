@@ -24,7 +24,7 @@
 
           <div class="sub-grades">
             <div class="sub-grade-item">
-              <span class="sub-grade-label">Emissions Intensity</span>
+              <span class="sub-grade-label">GHG Intensity</span>
               <LetterGrade :grade="building.GHGIntensityLetterGrade" />
             </div>
             <div class="sub-grade-item">
@@ -32,7 +32,7 @@
               <LetterGrade :grade="building.EnergyMixLetterGrade" />
             </div>
             <div class="sub-grade-item">
-              <span class="sub-grade-label">Consistent Reporting</span>
+              <span class="sub-grade-label">Reporting</span>
               <LetterGrade :grade="building.SubmittedRecordsLetterGrade" />
             </div>
           </div>
@@ -149,7 +149,7 @@ export default class SocialCard extends Vue {
 .social-card-content {
   width: 100%;
   height: 100%;
-  padding: 40px 60px 60px 60px;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
 }
@@ -208,7 +208,7 @@ export default class SocialCard extends Vue {
 }
 
 .overall-grade-label {
-  font-size: 14px;
+  font-size: 1.25rem;
   font-weight: 600;
   text-align: center;
   line-height: 1.2;
@@ -265,11 +265,14 @@ export default class SocialCard extends Vue {
   }
 }
 
-.stat-label {
-  font-size: 16px;
+.sub-grade-label, .stat-label {
   color: #666;
-  margin-bottom: 6px;
   font-weight: 500;
+  text-align: center;
+  line-height: 1.3;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
 
   &.text-center {
     text-align: center;
@@ -277,15 +280,17 @@ export default class SocialCard extends Vue {
 }
 
 .stat-value {
-  font-size: 28px;
+  font-size: 3rem;
   font-weight: bold;
-  margin-bottom: 2px;
   color: #1a1a1a;
+  line-height: 1;
+  margin-top: 1rem;
 }
 
 .stat-unit {
-  font-size: 13px;
+  font-size: 1.5rem;
   color: #888;
+  font-weight: 500;
 }
 
 .sub-grades {
@@ -305,16 +310,9 @@ export default class SocialCard extends Vue {
   flex: 1;
 }
 
-.sub-grade-label {
-  color: #666;
-  font-weight: 500;
-  text-align: center;
-  line-height: 1.3;
-}
-
 .letter-grade {
-  font-size: 2.5rem;
+  font-size: 4rem;
 
-  &.-large { font-size: 4rem; }
+  &.-large { font-size: 6rem; }
 }
 </style>
