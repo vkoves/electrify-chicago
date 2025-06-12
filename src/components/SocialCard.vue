@@ -245,7 +245,10 @@ export default class SocialCard extends Vue {
     width: 11rem;
     transform: scale(1.6) translate(0px, 0.15rem);
 
-    tspan { display: none; }
+    // Hide any external labels - allow internal labels like 100% electric
+    text:not(.-only-slice) tspan { display: none; }
+    tspan.percent { font-size: 2.5rem; }
+    tspan.label { font-size: 1.5rem; }
   }
 }
 
