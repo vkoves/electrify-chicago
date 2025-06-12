@@ -619,13 +619,15 @@ Vue.use(vToolTip);
 
 @Component<any>({
   metaInfo() {
-    const propertyName = this.$page.building.PropertyName || this.$page.building.Address;
+    const propertyName =
+      this.$page.building.PropertyName || this.$page.building.Address;
     const grade = this.$page.building.AvgPercentileLetterGrade || 'N/A';
-    const emissions = Math.round(this.$page.building.TotalGHGEmissions || 0).toLocaleString();
-    const description = 
-      `${propertyName} in Chicago - Grade ${grade} building with ${emissions} tons CO₂e emissions.`;
+    const emissions = Math.round(
+      this.$page.building.TotalGHGEmissions || 0,
+    ).toLocaleString();
+    const description = `${propertyName} in Chicago - Grade ${grade} building with ${emissions} tons CO₂e emissions.`;
     const socialImageUrl = `/social-images/building-${this.$page.building.ID}.png`;
-    
+
     return {
       title: propertyName,
       meta: [

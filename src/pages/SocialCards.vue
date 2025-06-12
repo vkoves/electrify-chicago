@@ -11,12 +11,18 @@
           <div class="test-card">
             <h3>Crown Hall (Has Image)</h3>
             <p><strong>ID:</strong> 256419</p>
-            <p>Illinois Institute of Technology building with architectural image</p>
+            <p>
+              Illinois Institute of Technology building with architectural image
+            </p>
             <div class="links">
               <a :href="`/social-card/256419`" target="_blank" class="btn">
                 View Social Card
               </a>
-              <a :href="`/building-id/256419`" target="_blank" class="btn -secondary">
+              <a
+                :href="`/building-id/256419`"
+                target="_blank"
+                class="btn -secondary"
+              >
                 View Building Page
               </a>
             </div>
@@ -25,12 +31,18 @@
           <div class="test-card">
             <h3>Marina Towers (Long Title & Vert. Image)</h3>
             <p><strong>ID:</strong> 239096</p>
-            <p>Iconic Chicago residential towers with distinctive architecture</p>
+            <p>
+              Iconic Chicago residential towers with distinctive architecture
+            </p>
             <div class="links">
               <a :href="`/social-card/239096`" target="_blank" class="btn">
                 View Social Card
               </a>
-              <a :href="`/building-id/239096`" target="_blank" class="btn -secondary">
+              <a
+                :href="`/building-id/239096`"
+                target="_blank"
+                class="btn -secondary"
+              >
                 View Building Page
               </a>
             </div>
@@ -44,7 +56,11 @@
               <a :href="`/social-card/257000`" target="_blank" class="btn">
                 View Social Card
               </a>
-              <a :href="`/building-id/257000`" target="_blank" class="btn -secondary">
+              <a
+                :href="`/building-id/257000`"
+                target="_blank"
+                class="btn -secondary"
+              >
                 View Building Page
               </a>
             </div>
@@ -58,7 +74,11 @@
               <a :href="`/social-card/103656`" target="_blank" class="btn">
                 View Social Card
               </a>
-              <a :href="`/building-id/103656`" target="_blank" class="btn -secondary">
+              <a
+                :href="`/building-id/103656`"
+                target="_blank"
+                class="btn -secondary"
+              >
                 View Building Page
               </a>
             </div>
@@ -82,7 +102,7 @@ import { Component, Vue } from 'vue-property-decorator';
       meta: [
         { name: 'robots', content: 'noindex, nofollow' }, // Don't index debug page
       ],
-    }
+    };
   },
 })
 export default class SocialCards extends Vue {}
@@ -161,7 +181,8 @@ h1 {
   border: 1px solid #0ea5e9;
   border-radius: 12px;
 
-  h2, h3 {
+  h2,
+  h3 {
     color: #0c4a6e;
   }
 
@@ -173,7 +194,8 @@ h1 {
     font-size: 0.875rem;
   }
 
-  ol, ul {
+  ol,
+  ul {
     margin: 1rem 0;
     padding-left: 1.5rem;
   }

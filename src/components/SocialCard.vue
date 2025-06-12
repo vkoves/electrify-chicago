@@ -7,7 +7,10 @@
             <div class="building-title-row">
               <div class="overall-grade-section">
                 <div class="overall-grade-label">Overall Grade</div>
-                <LetterGrade :grade="building.AvgPercentileLetterGrade" class="-large" />
+                <LetterGrade
+                  :grade="building.AvgPercentileLetterGrade"
+                  class="-large"
+                />
               </div>
               <div class="title-content">
                 <h1 class="building-name">{{ propertyName }}</h1>
@@ -15,7 +18,10 @@
               </div>
               <!-- If no building image, put the logo in the top right -->
               <div v-if="!buildingImg" class="logo -no-img">
-                <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
+                <img
+                  src="/electrify-chicago-logo.svg"
+                  alt="Electrify Chicago"
+                />
               </div>
             </div>
           </div>
@@ -38,13 +44,17 @@
           <div class="stats-grid">
             <div class="stat-item -no-background">
               <div class="stat-label">GHG Intensity</div>
-              <div class="stat-value">{{ formatGHGIntensity(building.GHGIntensity) }}</div>
+              <div class="stat-value">
+                {{ formatGHGIntensity(building.GHGIntensity) }}
+              </div>
               <div class="stat-unit">kg CO₂e/sqft</div>
             </div>
 
             <div class="stat-item -no-background">
               <div class="stat-label">Total Emissions</div>
-              <div class="stat-value">{{ formatNumber(building.TotalGHGEmissions) }}</div>
+              <div class="stat-value">
+                {{ formatNumber(building.TotalGHGEmissions) }}
+              </div>
               <div class="stat-unit">tons CO₂e</div>
             </div>
 
@@ -62,7 +72,11 @@
 
         <!-- Second column, if there's images -->
         <div v-if="buildingImg" class="image-section">
-          <img :src="buildingImg.imgUrl" :alt="propertyName" class="building-image" />
+          <img
+            :src="buildingImg.imgUrl"
+            :alt="propertyName"
+            class="building-image"
+          />
 
           <div class="logo">
             <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
@@ -76,7 +90,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { IBuilding, calculateEnergyBreakdown } from '../common-functions.vue';
-import { getBuildingImage, IBuildingImage } from '../constants/building-images.constant.vue';
+import {
+  getBuildingImage,
+  IBuildingImage,
+} from '../constants/building-images.constant.vue';
 import LetterGrade from './LetterGrade.vue';
 import PieChart, { IPieSlice } from './graphs/PieChart.vue';
 
@@ -174,10 +191,11 @@ export default class SocialCard extends Vue {
       align-self: flex-start;
       margin-top: 0;
     }
-    img { height: 3rem; }
+    img {
+      height: 3rem;
+    }
   }
 }
-
 
 .text-content {
   flex: 1;
@@ -244,9 +262,15 @@ export default class SocialCard extends Vue {
     transform: scale(1.6) translate(0px, 0.15rem);
 
     // Hide any external labels - allow internal labels like 100% electric
-    text:not(.-only-slice) tspan { display: none; }
-    tspan.percent { font-size: 2.5rem; }
-    tspan.label { font-size: 1.5rem; }
+    text:not(.-only-slice) tspan {
+      display: none;
+    }
+    tspan.percent {
+      font-size: 2.5rem;
+    }
+    tspan.label {
+      font-size: 1.5rem;
+    }
   }
 }
 
@@ -281,7 +305,8 @@ export default class SocialCard extends Vue {
   }
 }
 
-.sub-grade-label, .stat-label {
+.sub-grade-label,
+.stat-label {
   color: $text-mid-light;
   font-weight: bold;
   font-size: 1.5rem;
@@ -327,6 +352,8 @@ export default class SocialCard extends Vue {
 .letter-grade {
   font-size: 4rem;
 
-  &.-large { font-size: 6rem; }
+  &.-large {
+    font-size: 6rem;
+  }
 }
 </style>

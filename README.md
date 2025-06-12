@@ -80,6 +80,7 @@ docker-compose run --rm electrify-chicago yarn generate-test-social-images
 ```
 
 **Social Images**: Each building page automatically gets a custom 1200x630px social media image featuring:
+
 - Building name and address
 - Overall grade (color-coded letter grade)
 - Key stats: GHG intensity, total emissions, square footage
