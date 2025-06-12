@@ -146,17 +146,11 @@ export default class SocialCard extends Vue {
 }
 </script>
 
-<!--
- TODO:
-   - Move to SCSS variables from colors.scss
-   - Use border values from spacing.scss
-   - Use rem instead of px
--->
 <style lang="scss" scoped>
 .social-card {
   position: relative;
-  width: 1200px;
-  height: 630px;
+  width: 75rem;
+  height: 39.375rem;
   background: $white;
   display: flex;
   align-items: center;
@@ -203,7 +197,7 @@ export default class SocialCard extends Vue {
 
 .image-section {
   display: flex;
-  flex: 0 0 300px;
+  flex: 0 0 18.75rem;
   height: 100%;
   flex-direction: column;
   align-items: center;
@@ -212,10 +206,10 @@ export default class SocialCard extends Vue {
 
 .building-image {
   max-width: 100%;
-  max-height: 400px;
+  max-height: 25rem;
   border-radius: $brd-rad-medium;
   object-fit: cover;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
   margin-top: auto;
 }
 
@@ -231,11 +225,11 @@ export default class SocialCard extends Vue {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   background: $off-white;
-  border-radius: 12px;
-  padding: 16px;
-  min-width: 120px;
+  border-radius: $brd-rad-medium;
+  padding: 1rem;
+  min-width: 7.5rem;
 }
 
 .overall-grade-label {
@@ -275,9 +269,9 @@ export default class SocialCard extends Vue {
 }
 
 .building-name {
-  font-size: 42px;
+  font-size: 2.625rem;
   font-weight: bold;
-  margin: 0 0 8px 0;
+  margin: 0 0 0.5rem 0;
   line-height: 1.1;
 }
 
@@ -296,8 +290,8 @@ export default class SocialCard extends Vue {
 }
 
 .stat-item {
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: $brd-rad-medium;
+  padding: 1.25rem;
   text-align: center;
 
   &.-no-background {
@@ -335,9 +329,9 @@ export default class SocialCard extends Vue {
 
 .sub-grades {
   display: flex;
-  gap: 20px;
-  margin-bottom: 25px;
-  padding: 15px 0;
+  gap: 1.25rem;
+  margin-bottom: 1.5625rem;
+  padding: 0.9375rem 0;
   border-top: $border-thick solid $grey-light;
   border-bottom: $border-thick solid $grey-light;
 }
@@ -346,7 +340,7 @@ export default class SocialCard extends Vue {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   flex: 1;
 }
 
