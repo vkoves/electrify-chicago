@@ -625,7 +625,8 @@ Vue.use(vToolTip);
     const emissions = Math.round(
       this.$page.building.TotalGHGEmissions || 0,
     ).toLocaleString();
-    const description = `${propertyName} in Chicago - Grade ${grade} building with ${emissions} tons CO₂e emissions.`;
+    const description = `${propertyName} in Chicago - `
+      + `Grade ${grade} building with ${emissions} tons CO₂e emissions.`;
     const socialImageUrl = `/social-images/building-${this.$page.building.ID}.png`;
 
     return {
