@@ -393,9 +393,16 @@ export default class StatTile extends Vue {
     return this.medianMultipleMsg(median, statValueNum);
   }
 
-  /** The stat value, as a string */
+// FIXED: ADD ROUNDING FOR BIG NUMBERS
+  /** The stat value, as a string */              
   get statValueStr(): string {
-    return parseFloat(this.building[this.statKey] as string).toLocaleString();
+    const rawValue = parseFloat(this.building[this.statKey] as string);
+    if (rawValue < 1000) {
+      return rawValue.toLocaleString();
+    } else {
+      const floorValue = Math.floor(rawValue);
+      return floorValue.toLocaleString();
+    }
   }
 
   // Returns a rounded number or undefined if no rank
@@ -403,7 +410,7 @@ export default class StatTile extends Vue {
     const statRank = this.building[this.statKey + 'Rank'] as string;
 
     if (statRank) {
-      return Math.round(parseFloat(statRank));
+      return Math.round(parseFloat(statRank));      
     } else {
       return null;
     }
@@ -600,7 +607,7 @@ export default class StatTile extends Vue {
     );
 
     if (statValFloat > 1_000) {
-      return Math.round(statValFloat);
+      return Math.floor(statValFloat);
     } else {
       return statValFloat;
     }
