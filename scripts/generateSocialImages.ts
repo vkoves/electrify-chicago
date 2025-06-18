@@ -19,9 +19,11 @@ interface Building {
 /**
  * Generate social images for specific building IDs or all buildings
  * @param buildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
+ * @param deleteExisting - Whether to delete existing images before generating new ones. Defaults to true.
  */
 export async function generateSocialImages(
   buildingIds: string[] | null = null,
+  deleteExisting: boolean = true,
 ): Promise<void> {
   console.log('🎨 Starting social image generation...');
 
@@ -30,10 +32,12 @@ export async function generateSocialImages(
 
   let buildingData: Building[];
 
-  // Clean out existing images for a fresh start
-  console.log('🧹 Cleaning existing social images...');
-  await fs.emptyDir(SOCIAL_IMAGES_DIR);
-  console.log('✅ Social images directory cleaned');
+  // Clean out existing images for a fresh start (if requested)
+  if (deleteExisting) {
+    console.log('🧹 Cleaning existing social images...');
+    await fs.emptyDir(SOCIAL_IMAGES_DIR);
+    console.log('✅ Social images directory cleaned');
+  }
 
   if (buildingIds) {
     // Generate for specific building IDs
@@ -94,6 +98,7 @@ export async function generateSocialImages(
 
   for (let i = 0; i < buildingData.length; i += BatchSize) {
     const batch = buildingData.slice(i, i + BatchSize);
+    const batchStartTime = Date.now();
 
     const results = await Promise.allSettled(
       batch.map(async (building) => {
@@ -101,8 +106,13 @@ export async function generateSocialImages(
         processed++;
 
         if (processed % 50 === 0) {
+          const batchEndTime = Date.now();
+          const batchDuration = ((batchEndTime - batchStartTime) / 1000).toFixed(1);
+          const percentage = ((processed / buildingData.length) * 100).toFixed(1);
+
           console.log(
-            `✅ Processed ${processed}/${buildingData.length} buildings`,
+            `✅ Processed ${processed.toLocaleString()}/${buildingData.length.toLocaleString()} ` +
+              `buildings (${percentage}%) (took ${batchDuration}s)`,
           );
         }
 
