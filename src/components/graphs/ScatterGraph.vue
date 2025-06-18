@@ -45,12 +45,12 @@ const renderScatterplot = () => {
 
   const xScale = d3
     .scaleLinear()
-    .domain(d3.extent(props.data, (d) => d.year) as [number, number])
+    .domain(d3.extent(props.data, (d: DataPoint) => d.year) as [number, number])
     .range([0, width])
 
   const yScale = d3
     .scaleLinear()
-    .domain(d3.extent(props.data, (d) => d.value) as [number, number])
+    .domain([0, 1.5 * (d3.max(props.data.map((d: DataPoint) => d.value)) as number)])
     .range([height, 0])
 
   svg.append('g')
@@ -74,8 +74,8 @@ const renderScatterplot = () => {
     .attr('stroke', props.color)
     .attr('stroke-width', 2)
     .attr('d', d3.line<DataPoint>()
-      .x((d) => xScale(d.year))
-      .y((d) => yScale(d.value))
+      .x((d: DataPoint) => xScale(d.year))
+      .y((d: DataPoint) => yScale(d.value))
     )
 
   const tooltip = container
@@ -110,8 +110,8 @@ const renderScatterplot = () => {
     .data(props.data)
     .enter()
     .append('circle')
-    .attr('cx', (d) => xScale(d.year))
-    .attr('cy', (d) => yScale(d.value))
+    .attr('cx', (d: DataPoint) => xScale(d.year))
+    .attr('cy', (d: DataPoint) => yScale(d.value))
     .attr('r', 6)
     .attr('fill', props.color)
     .on('mouseover', mouseover)

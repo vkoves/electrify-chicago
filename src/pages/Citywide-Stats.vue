@@ -87,42 +87,42 @@ export default defineComponent({
     return {
       graphConfigs: [
         {
-          data: extractMetricData('GHGIntensity', 'mean'),
+          data: extractMetricData('GHGIntensity', '50%'),
           containerId: 'ghg-intensity-chart',
           title: 'GHG Intensity',
           yAxisLabel: 'kg CO2e/sq ft',
           color: '#e74c3c'
         },
         {
-          data: extractMetricData('TotalGHGEmissions', 'mean'),
+          data: extractMetricData('TotalGHGEmissions', '50%'),
           containerId: 'total-ghg-chart',
           title: 'Total GHG Emissions',
           yAxisLabel: 'metric tons CO2e',
           color: '#3498db'
         },
         {
-          data: extractMetricData('ElectricityUse', 'mean'),
+          data: extractMetricData('ElectricityUse', '50%'),
           containerId: 'electricity-chart',
           title: 'Electricity Use',
           yAxisLabel: 'kWh',
           color: '#f39c12'
         },
         {
-          data: extractMetricData('NaturalGasUse', 'mean'),
+          data: extractMetricData('NaturalGasUse', '50%'),
           containerId: 'natural-gas-chart',
           title: 'Natural Gas Use',
           yAxisLabel: 'therms',
           color: '#27ae60'
         },
         {
-          data: extractMetricData('SourceEUI', 'mean'),
+          data: extractMetricData('SourceEUI', '50%'),
           containerId: 'source-eui-chart',
           title: 'Source EUI',
           yAxisLabel: 'kBtu/sq ft',
           color: '#9b59b6'
         },
         {
-          data: extractMetricData('SiteEUI', 'mean'),
+          data: extractMetricData('SiteEUI', '50%'),
           containerId: 'site-eui-chart',
           title: 'Site EUI',
           yAxisLabel: 'kBtu/sq ft',

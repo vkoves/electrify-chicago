@@ -1,17 +1,12 @@
 """
-Our main data processing script (Step 2/3 in the data pipeline)
-
-Calculates year-over-year statistics for all buildings and generates overall city-wide statistics into
-`building-benchmark-stats.json`. This processes all years of data and provides statistics by year.
+to run this script
+python3 -m src.data.scripts.generate_historic_stats
+from the root
 """
 
 import json
 import pandas
-
-from typing import List
-from src.data.scripts.grade_buildings import grade_buildings
-from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion, output_to_csv
-from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
+from src.data.scripts.utils import get_and_clean_csv, get_data_file_path, log_step_completion, output_to_csv
 
 debug = False
 
@@ -66,15 +61,25 @@ def calculateBuildingStatsByYear(building_data_in: pandas.DataFrame) -> str:
     yearly_stats = {}
     
     for year in years:
+                
+        if year < 2016: 
+          continue
+            
         
         # Filter data for this specific year
         year_data = building_data[building_data['DataYear'] == year]
         
         # Calculate statistics for this year
         year_stats_df = year_data[building_cols_to_analyze].describe().loc[detail_cols_to_keep]
+
         
         # Round all data to 1 decimal place
         year_stats_df = year_stats_df.round(1)
+        
+        if debug:
+          print("-" * 60)
+          print(year)
+          print(year_stats_df)
         
         # Rename columns to work with GraphQL (no numbers like '25%')
         year_stats_df.rename(index={
@@ -96,6 +101,10 @@ def calculateBuildingStatsByYear(building_data_in: pandas.DataFrame) -> str:
       print("-" * 60)
     
     for year in years:
+        
+        if year < 2016: 
+          continue
+            
         year_stats = yearly_stats[str(year)]
         buildings = int(year_stats['TotalGHGEmissions']['count'])
         avg_ghg = year_stats['TotalGHGEmissions']['mean']
