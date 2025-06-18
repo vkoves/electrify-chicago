@@ -74,7 +74,11 @@ docker-compose run --rm electrify-chicago yarn lint-fix
 1. If you update the raw data CSVs or the data scripts that post-process them (like if you are adding
    a new statistical analysis), you need to re-run the data processing.
 
-2. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
+2. If you update the [Chicago Energy Benchmarking Data](https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/about_data)
+   (`src/data/source/ChicagoEnergyBenchmarking.csv`), you need to update `src/data/source/CityGeocoder.xlsx` by following the
+   instructions in `src/data/scripts/city-geocodes/README.md`.
+
+3. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
 ```bash
 docker-compose run --rm electrify-chicago python3 run_all.py
@@ -100,6 +104,30 @@ docker-compose run --rm electrify-chicago python -m pytest
 ```bash
 docker-compose run --rm electrify-chicago python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
 ```
+
+### Code Coverage
+
+To run tests with coverage and generate coverage reports:
+
+1. Run tests with coverage
+
+```bash
+docker-compose run --rm electrify-chicago coverage run --source=src/data/scripts -m pytest
+```
+
+2. View the coverage report in the terminal:
+
+```bash
+docker-compose run --rm electrify-chicago coverage report
+```
+
+3. Generate an HTML coverage report (results will be in the htmlcov/ directory):
+
+```bash
+docker-compose run --rm electrify-chicago coverage html
+```
+
+The `--source` parameter ensures that files without tests are still included in the coverage report, giving a more accurate picture of overall code coverage.
 
 ## Running Python Scripts Locally
 

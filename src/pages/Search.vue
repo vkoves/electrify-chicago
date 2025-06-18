@@ -350,7 +350,7 @@ export default class Search extends Vue {
         </div>
 
         <div>
-          <label for="property-type">Grade Original</label>
+          <label for="property-type">Grade</label>
           <select id="property-type" v-model="gradeFilter">
             <option
               v-for="gradeOpt in letterGradeOptions"

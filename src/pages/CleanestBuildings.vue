@@ -37,7 +37,7 @@ export default class CleanestBuildings extends Vue {
         # DataAnomalies: { eq: "" },
         # TotalGHGEmissions: { gt: 1000.0 }
         # GrossFloorArea: { gt: 1000.0 }
-        # AvgPercentileLetterGrade: { eq: "A" }
+        AvgPercentileLetterGrade: { eq: "A" }
         # EnergyMixLetterGrade: { eq: "A" }
       },
       sortBy: "GHGIntensity", order: ASC, limit: 50
