@@ -108,7 +108,9 @@ export async function generateSocialImages(
         if (processed % 50 === 0) {
           const currentTime = Date.now();
           const batchDuration = ((currentTime - lastLogTime) / 1000).toFixed(1);
-          const percentage = ((processed / buildingData.length) * 100).toFixed(1);
+          const percentage = ((processed / buildingData.length) * 100).toFixed(
+            1,
+          );
           lastLogTime = currentTime;
 
           console.log(
