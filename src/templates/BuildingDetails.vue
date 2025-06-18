@@ -626,8 +626,9 @@ Vue.use(vToolTip);
       this.$page.building.TotalGHGEmissions || 0,
     ).toLocaleString();
     const description =
-      `${propertyName} in Chicago - ` +
-      `Grade ${grade} building with ${emissions} tons CO₂e emissions.`;
+      `Is ${propertyName} doing its part for Chicago's climate goals? ` +
+      `We gave it an ${grade} grade, and it emits ${emissions} tons of CO₂.` +
+      `See how it stacks up and what can be done about it!`;
     const socialImageUrl = `/social-images/building-${this.$page.building.ID}.webp`;
 
     return {
