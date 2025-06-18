@@ -12,8 +12,8 @@
     "build": "gridsome build",
     "develop": "gridsome develop",
     "explore": "gridsome explore",
-    "generate-social-images": "npx ts-node scripts/generateSocialImages.ts",
-    "generate-test-social-images": "npx ts-node scripts/generateTestSocialImages.ts",
+    "generate-social-images": "npx tsx scripts/generateSocialImages.ts",
+    "generate-test-social-images": "npx tsx scripts/generateTestSocialImages.ts",
     "eslint-ci": "yarn eslint-base --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "eslint-base": "yarn eslint",
     "prettier-base": "npx prettier ./**/*{.ts,.vue,.md,.scss}",
@@ -54,6 +54,7 @@
     "sass-loader": "^10.1.1",
     "style-resources-loader": "^1.5.0",
     "ts-loader": "~8.2.0",
+    "tsx": "^4.20.3",
     "typescript": "^5.0.2",
     "typescript-eslint": "^8.24.0"
   }
