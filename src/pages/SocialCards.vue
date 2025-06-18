@@ -15,7 +15,11 @@
               Illinois Institute of Technology building with architectural image
             </p>
             <div class="links">
-              <a :href="`/social-card/256419`" target="_blank" class="grey-link">
+              <a
+                :href="`/social-card/256419`"
+                target="_blank"
+                class="grey-link"
+              >
                 View Social Card
               </a>
               <a
@@ -35,7 +39,11 @@
               Iconic Chicago residential towers with distinctive architecture
             </p>
             <div class="links">
-              <a :href="`/social-card/239096`" target="_blank" class="grey-link">
+              <a
+                :href="`/social-card/239096`"
+                target="_blank"
+                class="grey-link"
+              >
                 View Social Card
               </a>
               <a
@@ -53,7 +61,11 @@
             <p><strong>ID:</strong> 257000</p>
             <p>Building without image to test text-only layout</p>
             <div class="links">
-              <a :href="`/social-card/257000`" target="_blank" class="grey-link">
+              <a
+                :href="`/social-card/257000`"
+                target="_blank"
+                class="grey-link"
+              >
                 View Social Card
               </a>
               <a
@@ -71,7 +83,11 @@
             <p><strong>ID:</strong> 103656</p>
             <p>Has a pretty three slice energy mix</p>
             <div class="links">
-              <a :href="`/social-card/103656`" target="_blank" class="grey-link">
+              <a
+                :href="`/social-card/103656`"
+                target="_blank"
+                class="grey-link"
+              >
                 View Social Card
               </a>
               <a
@@ -135,7 +151,8 @@ export default class SocialCards extends Vue {}
       color: $white;
       background-color: $blue-dark;
 
-      &:focus, &:hover {
+      &:focus,
+      &:hover {
         background-color: $blue-very-dark;
       }
     }
