@@ -38,11 +38,4 @@ import SocialCard from '../components/SocialCard.vue';
 export default class SocialCardPage extends Vue {}
 </script>
 
-<style>
-/* Remove default body margins for clean screenshots */
-body {
-  margin: 0 !important;
-  padding: 0 !important;
-  overflow: hidden !important;
-}
-</style>
+<style></style>

@@ -627,7 +627,7 @@ Vue.use(vToolTip);
     ).toLocaleString();
     const description =
       `Is ${propertyName} doing its part for Chicago's climate goals? ` +
-      `We gave it an ${grade} grade, and it emits ${emissions} tons of CO₂.` +
+      `We gave it an ${grade} grade, and it emits ${emissions} tons of CO₂. ` +
       `See how it stacks up and what can be done about it!`;
     const socialImageUrl = `/social-images/building-${this.$page.building.ID}.webp`;
 
