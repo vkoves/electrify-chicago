@@ -22,9 +22,12 @@ export async function generateTestSocialImages(): Promise<void> {
     // List the generated files
     const SOCIAL_IMAGES_DIR = './static/social-images';
     const generatedFiles = TEST_BUILDING_IDS.map((id) => `building-${id}.webp`);
+
     console.log(`\n📋 Generated files:`);
+
     for (const file of generatedFiles) {
       const filePath = path.join(SOCIAL_IMAGES_DIR, file);
+
       if (await fs.pathExists(filePath)) {
         console.log(`   ✅ ${file}`);
       } else {
