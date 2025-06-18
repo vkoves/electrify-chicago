@@ -189,6 +189,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import buildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
+import { roundUpLargeNumber } from '../common-functions.vue';
 
 import {
   DataAnomalies,
@@ -397,12 +398,8 @@ export default class StatTile extends Vue {
   /** The stat value, as a string */              
   get statValueStr(): string {
     const rawValue = parseFloat(this.building[this.statKey] as string);
-    if (rawValue < 1000) {
-      return rawValue.toLocaleString();
-    } else {
-      const floorValue = Math.floor(rawValue);
-      return floorValue.toLocaleString();
-    }
+    const roundedNumber = roundUpLargeNumber(rawValue);
+    return roundedNumber.toLocaleString();
   }
 
   // Returns a rounded number or undefined if no rank
@@ -606,11 +603,7 @@ export default class StatTile extends Vue {
       datum[this.statKey as keyof IHistoricData] as string,
     );
 
-    if (statValFloat > 1_000) {
-      return Math.floor(statValFloat);
-    } else {
-      return statValFloat;
-    }
+    return roundUpLargeNumber(statValFloat);
   }
 }
 </script>
