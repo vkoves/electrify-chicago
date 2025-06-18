@@ -95,10 +95,10 @@ export async function generateSocialImages(
 
   let processed = 0;
   let consecutiveErrors = 0;
+  let lastLogTime = Date.now();
 
   for (let i = 0; i < buildingData.length; i += BatchSize) {
     const batch = buildingData.slice(i, i + BatchSize);
-    const batchStartTime = Date.now();
 
     const results = await Promise.allSettled(
       batch.map(async (building) => {
@@ -106,9 +106,10 @@ export async function generateSocialImages(
         processed++;
 
         if (processed % 50 === 0) {
-          const batchEndTime = Date.now();
-          const batchDuration = ((batchEndTime - batchStartTime) / 1000).toFixed(1);
+          const currentTime = Date.now();
+          const batchDuration = ((currentTime - lastLogTime) / 1000).toFixed(1);
           const percentage = ((processed / buildingData.length) * 100).toFixed(1);
+          lastLogTime = currentTime;
 
           console.log(
             `✅ Processed ${processed.toLocaleString()}/${buildingData.length.toLocaleString()} ` +

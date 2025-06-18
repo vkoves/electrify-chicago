@@ -36,14 +36,14 @@ async function generateMissingSocialImages(): Promise<void> {
       SOCIAL_IMAGES_DIR,
       `building-${building.ID}.webp`,
     );
-    
+
     if (!(await fs.pathExists(imagePath))) {
       missingCount++;
     }
   }
 
   console.log(`📊 Found ${allBuildings.length} total buildings`);
-  console.log(`🔍 ${missingCount} buildings are missing social images`);
+  console.log(`🔍 ${missingCount} buildings are missing social images! \n`);
 
   if (missingCount === 0) {
     console.log('✅ All buildings already have social images! Nothing to do.');
