@@ -2,6 +2,7 @@ import * as puppeteer from 'puppeteer';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
+import { IBuilding } from '../src/common-functions.vue';
 
 type Browser = puppeteer.Browser;
 type Page = puppeteer.Page;
@@ -9,12 +10,6 @@ type Page = puppeteer.Page;
 const SOCIAL_IMAGES_DIR = './static/social-images';
 const BUILDING_DATA_FILE = './src/data/dist/building-benchmarks.csv';
 const BASE_URL = process.env.SOCIAL_CARD_BASE_URL || 'http://localhost:8080';
-
-interface Building {
-  ID: string;
-  // eslint-disable-next-line
-  [key: string]: any;
-}
 
 /**
  * Generate social images for specific building IDs or all buildings
@@ -30,7 +25,7 @@ export async function generateSocialImages(
   // Ensure output directory exists
   await fs.ensureDir(SOCIAL_IMAGES_DIR);
 
-  let buildingData: Building[];
+  let buildingData: IBuilding[];
 
   // Clean out existing images for a fresh start (if requested)
   if (deleteExisting) {
@@ -49,7 +44,7 @@ export async function generateSocialImages(
     buildingData = parse(buildingDataRaw, {
       columns: true,
       skip_empty_lines: true,
-    }) as Building[];
+    }) as IBuilding[];
     console.log(`📊 Found ${buildingData.length} buildings to process`);
   }
 
@@ -156,7 +151,7 @@ export async function generateSocialImages(
  */
 export async function generateSingleImage(
   browser: Browser,
-  building: Building,
+  building: IBuilding,
 ): Promise<void> {
   const outputPath = path.join(
     SOCIAL_IMAGES_DIR,
@@ -212,7 +207,7 @@ export async function cleanupOldImages(): Promise<void> {
   const buildingData = parse(buildingDataRaw, {
     columns: true,
     skip_empty_lines: true,
-  }) as Building[];
+  }) as IBuilding[];
 
   const currentBuildingIds = new Set(
     buildingData.map((b) => `building-${b.ID}.webp`),

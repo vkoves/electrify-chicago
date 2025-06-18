@@ -2,15 +2,10 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
 import { generateSocialImages } from './generateSocialImages';
+import { IBuilding } from '../src/common-functions.vue';
 
 const SOCIAL_IMAGES_DIR = './static/social-images';
 const BUILDING_DATA_FILE = './src/data/dist/building-benchmarks.csv';
-
-interface Building {
-  ID: string;
-  // eslint-disable-next-line
-  [key: string]: any;
-}
 
 /**
  * Generate social images only for buildings that don't already have images
@@ -27,7 +22,7 @@ async function generateMissingSocialImages(): Promise<void> {
   const allBuildings = parse(buildingDataRaw, {
     columns: true,
     skip_empty_lines: true,
-  }) as Building[];
+  }) as IBuilding[];
 
   // Count missing images
   let missingCount = 0;
