@@ -44,13 +44,7 @@
           <div class="stats-grid">
             <div
               class="stat-item"
-              :class="{
-                'concern-level-very-bad': ghgIntensityConcernLevel === 4,
-                'concern-level-bad': ghgIntensityConcernLevel === 3,
-                'concern-level-medium': ghgIntensityConcernLevel === 2,
-                'concern-level-good': ghgIntensityConcernLevel === 1,
-                'concern-level-great': ghgIntensityConcernLevel === 0,
-              }"
+              :class="getConcernLevelClasses(ghgIntensityConcernLevel)"
             >
               <div class="stat-label">GHG Intensity</div>
               <div class="stat-value">
@@ -69,13 +63,7 @@
 
             <div
               class="stat-item"
-              :class="{
-                'concern-level-very-bad': energyMixConcernLevel === 4,
-                'concern-level-bad': energyMixConcernLevel === 3,
-                'concern-level-medium': energyMixConcernLevel === 2,
-                'concern-level-good': energyMixConcernLevel === 1,
-                'concern-level-great': energyMixConcernLevel === 0,
-              }"
+              :class="getConcernLevelClasses(energyMixConcernLevel)"
             >
               <div class="stat-label text-center">Energy Mix</div>
               <div class="pie-chart-cont-inline">
@@ -88,13 +76,7 @@
 
             <div
               class="stat-item"
-              :class="{
-                'concern-level-very-bad': totalEmissionsConcernLevel === 4,
-                'concern-level-bad': totalEmissionsConcernLevel === 3,
-                'concern-level-medium': totalEmissionsConcernLevel === 2,
-                'concern-level-good': totalEmissionsConcernLevel === 1,
-                'concern-level-great': totalEmissionsConcernLevel === 0,
-              }"
+              :class="getConcernLevelClasses(totalEmissionsConcernLevel)"
             >
               <div class="stat-label">Total Emissions</div>
               <div class="stat-value">
@@ -198,27 +180,29 @@ export default class SocialCard extends Vue {
 
     // Convert letter grade to concern level
     switch (grade) {
-      case 'A': return 0; // great
-      case 'B': return 1; // good
-      case 'C': return 2; // medium
-      case 'D': return 3; // bad
-      case 'F': return 4; // very bad
-      default: return null;
+      case 'A':
+        return 0; // great
+      case 'B':
+        return 1; // good
+      case 'C':
+        return 2; // medium
+      case 'D':
+        return 3; // bad
+      case 'F':
+        return 4; // very bad
+      default:
+        return null;
     }
   }
 
   /** Get median multiple message for GHG Intensity */
   get ghgIntensityMedianMsg(): string | null {
-    const median = this.stats.GHGIntensity.median;
-    const statValue = this.building.GHGIntensity;
-    return getMedianMultipleMsg(median, statValue);
+    return this.getMedianMessage('GHGIntensity');
   }
 
   /** Get median multiple message for Total Emissions */
   get totalEmissionsMedianMsg(): string | null {
-    const median = this.stats.TotalGHGEmissions.median;
-    const statValue = this.building.TotalGHGEmissions;
-    return getMedianMultipleMsg(median, statValue);
+    return this.getMedianMessage('TotalGHGEmissions');
   }
 
   formatNumber(value: number): string {
@@ -232,6 +216,24 @@ export default class SocialCard extends Vue {
       minimumFractionDigits: 1,
       maximumFractionDigits: 1,
     });
+  }
+
+  /** Returns concern level class bindings for a given concern level */
+  getConcernLevelClasses(concernLevel: number | null): Record<string, boolean> {
+    return {
+      'concern-level-very-bad': concernLevel === 4,
+      'concern-level-bad': concernLevel === 3,
+      'concern-level-medium': concernLevel === 2,
+      'concern-level-good': concernLevel === 1,
+      'concern-level-great': concernLevel === 0,
+    };
+  }
+
+  /** Returns median multiple message for a given stat key */
+  getMedianMessage(statKey: string): string | null {
+    const median = this.stats[statKey]?.median;
+    const statValue = this.building[statKey] as number;
+    return getMedianMultipleMsg(median, statValue);
   }
 
   created(): void {

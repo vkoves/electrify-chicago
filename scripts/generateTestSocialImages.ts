@@ -21,7 +21,10 @@ export async function generateTestSocialImages(): Promise<void> {
   // Delete only the test images we're about to regenerate
   console.log('🧹 Cleaning existing test images...');
   for (const buildingId of TEST_BUILDING_IDS) {
-    const testImagePath = path.join(SOCIAL_IMAGES_DIR, `building-${buildingId}.webp`);
+    const testImagePath = path.join(
+      SOCIAL_IMAGES_DIR,
+      `building-${buildingId}.webp`,
+    );
     if (await fs.pathExists(testImagePath)) {
       await fs.remove(testImagePath);
       console.log(`   🗑️  Removed building-${buildingId}.webp`);
