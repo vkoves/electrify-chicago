@@ -134,6 +134,16 @@ export function roundUpLargeNumber(value: number): number {
 }
 
 /**
+ * Calculate how many typical gas cars' worth of emissions a building produces annually
+ * Based on EPA estimate of 4.6 metric tons CO2 per year for a typical passenger vehicle
+ * Source: https://www.epa.gov/greenvehicles/greenhouse-gas-emissions-typical-passenger-vehicle
+ */
+export function calculateGasCarEquivalent(totalGHGEmissions: number): number {
+  const TONS_CO2_PER_CAR_ANNUALLY = 4.6;
+  return Math.round(totalGHGEmissions / TONS_CO2_PER_CAR_ANNUALLY);
+}
+
+/**
  * Returns a string rank for very bad buildings, or null if not in top 50
  * worst
  */

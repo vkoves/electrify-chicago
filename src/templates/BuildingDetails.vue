@@ -392,6 +392,7 @@ query ($id: ID!, $ID: String) {
                   :unit="'tons CO<sub>2</sub>e'"
                 />
               </dd>
+              <GasCarEquivalent :total-g-h-g-emissions="building.TotalGHGEmissions" />
             </div>
           </dl>
           <div class="reporting-tiles">
@@ -610,6 +611,7 @@ import {
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
+import GasCarEquivalent from '../components/GasCarEquivalent.vue';
 import LetterGrade from '../components/LetterGrade.vue';
 
 import vToolTip from 'v-tooltip';
@@ -628,6 +630,7 @@ Vue.use(vToolTip);
     BuildingImage,
     DataSourceFootnote,
     EmailBuildingModal,
+    GasCarEquivalent,
     HistoricalBuildingDataTable,
     LetterGrade,
     NewTabIcon,
