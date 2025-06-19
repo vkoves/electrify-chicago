@@ -70,6 +70,25 @@
             <div
               class="stat-item"
               :class="{
+                'concern-level-very-bad': energyMixConcernLevel === 4,
+                'concern-level-bad': energyMixConcernLevel === 3,
+                'concern-level-medium': energyMixConcernLevel === 2,
+                'concern-level-good': energyMixConcernLevel === 1,
+                'concern-level-great': energyMixConcernLevel === 0,
+              }"
+            >
+              <div class="stat-label text-center">Energy Mix</div>
+              <div class="pie-chart-cont-inline">
+                <PieChart
+                  :id-prefix="'social-energy-mix'"
+                  :graph-data="energyBreakdownData"
+                />
+              </div>
+            </div>
+
+            <div
+              class="stat-item"
+              :class="{
                 'concern-level-very-bad': totalEmissionsConcernLevel === 4,
                 'concern-level-bad': totalEmissionsConcernLevel === 3,
                 'concern-level-medium': totalEmissionsConcernLevel === 2,
@@ -92,16 +111,6 @@
                   }}
                   tons CO₂e
                 </div>
-              </div>
-            </div>
-
-            <div class="stat-item -no-background">
-              <div class="stat-label text-center">Energy Mix</div>
-              <div class="pie-chart-cont-inline">
-                <PieChart
-                  :id-prefix="'social-energy-mix'"
-                  :graph-data="energyBreakdownData"
-                />
               </div>
             </div>
           </div>
@@ -180,6 +189,22 @@ export default class SocialCard extends Vue {
   /** Get concern level for Total Emissions */
   get totalEmissionsConcernLevel(): number | null {
     return getConcernLevel(this.building, 'TotalGHGEmissions', this.stats);
+  }
+
+  /** Get concern level for Energy Mix based on letter grade */
+  get energyMixConcernLevel(): number | null {
+    const grade = this.building.EnergyMixLetterGrade;
+    if (!grade) return null;
+
+    // Convert letter grade to concern level
+    switch (grade) {
+      case 'A': return 0; // great
+      case 'B': return 1; // good
+      case 'C': return 2; // medium
+      case 'D': return 3; // bad
+      case 'F': return 4; // very bad
+      default: return null;
+    }
   }
 
   /** Get median multiple message for GHG Intensity */
@@ -328,7 +353,7 @@ export default class SocialCard extends Vue {
   // Override PieChart default sizing for inline display and hide labels, since
   // you acn't read them at that size anyway
   :deep(svg) {
-    width: 11rem;
+    width: 10rem;
     transform: scale(1.6) translate(0, 0.15rem);
 
     // Hide any external labels - allow internal labels like 100% electric
@@ -372,6 +397,7 @@ export default class SocialCard extends Vue {
   text-align: center;
   border-bottom-width: 0.625rem;
   border-bottom-style: solid;
+  height: 100%;
 
   &.-no-background {
     background: none;
