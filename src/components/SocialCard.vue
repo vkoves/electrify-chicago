@@ -1,7 +1,7 @@
 <template>
   <div class="social-card">
     <div class="social-card-content">
-      <div class="main-section">
+      <div class="main-section" :class="{ '-no-img': !buildingImg }">
         <div class="text-content">
           <div class="building-info">
             <div class="building-title-row">
@@ -240,9 +240,27 @@ export default class SocialCard extends Vue {
   .main-section {
     display: flex;
     height: 100%;
-    gap: 2rem;
+    gap: 2.5rem;
     flex: 1;
     align-items: center;
+
+    &.-no-img .stats-grid {
+      // If there's no image, we don't need to save space, so lock each column
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .text-content {
+      flex: 1;
+    }
+
+    .image-section {
+      display: flex;
+      flex: 0 0 24rem;
+      height: 100%;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: center;
+    }
   }
 
   .logo {
@@ -255,28 +273,16 @@ export default class SocialCard extends Vue {
       align-self: flex-start;
       margin-top: 0;
     }
+
     img {
-      height: 3rem;
+      height: 2.25rem;
     }
   }
 }
 
-.text-content {
-  flex: 1;
-}
-
-.image-section {
-  display: flex;
-  flex: 0 0 25rem;
-  height: 100%;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: center;
-}
-
 .building-image {
   max-width: 100%;
-  max-height: 25rem;
+  max-height: 80%;
   border-radius: $brd-rad-medium;
   object-fit: cover;
   box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
@@ -354,16 +360,17 @@ export default class SocialCard extends Vue {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2rem;
+  // Lock the two stat tiles to the same width, allow energy mix to be smaller
+  grid-template-columns: 1fr 1fr auto;
+  gap: 1.5rem;
   align-items: center;
 }
 
 .stat-item {
   border-radius: $brd-rad-medium;
-  padding: 1.25rem;
+  padding: 1.25rem 1.25rem 1rem 1.25rem;
   text-align: center;
-  border-bottom-width: 0.375rem;
+  border-bottom-width: 0.625rem;
   border-bottom-style: solid;
 
   &.-no-background {
@@ -379,15 +386,17 @@ export default class SocialCard extends Vue {
   .median-mult {
     font-size: 1.5rem;
   }
+
+  // Hiding the median value for now, it's too much info
   .median-val {
-    font-size: 1rem;
+    display: none;
   }
 }
 
 .sub-grade-label,
 .stat-label {
   font-weight: bold;
-  font-size: 1.5rem;
+  font-size: 1.65rem;
   text-align: center;
   line-height: 1.3;
   margin-bottom: 0.25rem;
@@ -411,8 +420,6 @@ export default class SocialCard extends Vue {
 
 .stat-unit {
   font-size: 1.5rem;
-  color: $text-mid-light;
-  font-weight: 500;
 }
 
 .sub-grades {
