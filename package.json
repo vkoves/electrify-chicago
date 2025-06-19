@@ -12,12 +12,15 @@
     "build": "gridsome build",
     "develop": "gridsome develop",
     "explore": "gridsome explore",
+    "gen-fresh-social-imgs": "npx tsx scripts/generateSocialImages.ts",
+    "gen-missing-social-imgs": "npx tsx scripts/generateMissingSocialImages.ts",
+    "gen-test-social-imgs": "npx tsx scripts/generateTestSocialImages.ts",
     "eslint-ci": "yarn eslint-base --format @microsoft/eslint-formatter-sarif --output-file eslint-results.sarif",
     "eslint-base": "yarn eslint",
     "prettier-base": "npx prettier ./**/*{.ts,.vue,.md,.scss}",
     "prettier-fix": "yarn prettier-base --write",
     "lint": "yarn eslint-base && yarn prettier-base --check",
-    "lint-fix": "yarn eslint-base --fix; yarn prettier-base --write"
+    "lint-fix": "yarn eslint-base --fix; yarn prettier-base --write --log-level warn"
   },
   "dependencies": {
     "csv-parse": "^5.3.6",
@@ -34,22 +37,26 @@
     "@eslint/js": "^9.20.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
     "@types/d3": "^7.4.3",
+    "@types/fs-extra": "^11.0.4",
     "@types/leaflet": "^1.9.3",
     "@types/sindresorhus__slugify": "^0.9.3",
-    "typescript-eslint": "^8.24.0",
     "@typescript-eslint/eslint-plugin": "^8.24.0",
     "@typescript-eslint/parser": "^8.24.0",
     "eslint": "^9.20.1",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-promise": "^7.2.1",
     "eslint-plugin-vue": "^9.32.0",
+    "fs-extra": "^11.3.0",
     "globals": "^15.15.0",
     "gridsome-plugin-typescript": "^0.4.0",
     "prettier": "3.4.2",
+    "puppeteer": "^24.10.0",
     "sass": "^1.59.3",
     "sass-loader": "^10.1.1",
     "style-resources-loader": "^1.5.0",
     "ts-loader": "~8.2.0",
-    "typescript": "^5.0.2"
+    "tsx": "^4.20.3",
+    "typescript": "^5.0.2",
+    "typescript-eslint": "^8.24.0"
   }
 }
