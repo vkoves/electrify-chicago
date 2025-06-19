@@ -394,8 +394,8 @@ export default class StatTile extends Vue {
     return this.medianMultipleMsg(median, statValueNum);
   }
 
-// FIXED: ADD ROUNDING FOR BIG NUMBERS
-  /** The stat value, as a string */              
+  // FIXED: ADD ROUNDING FOR BIG NUMBERS
+  /** The stat value, as a string */
   get statValueStr(): string {
     const rawValue = parseFloat(this.building[this.statKey] as string);
     const roundedNumber = roundUpLargeNumber(rawValue);
@@ -407,7 +407,7 @@ export default class StatTile extends Vue {
     const statRank = this.building[this.statKey + 'Rank'] as string;
 
     if (statRank) {
-      return Math.round(parseFloat(statRank));      
+      return Math.round(parseFloat(statRank));
     } else {
       return null;
     }

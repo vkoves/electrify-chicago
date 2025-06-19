@@ -189,9 +189,9 @@ import LetterGrade from './LetterGrade.vue';
       if (!value) {
         return '-';
       }
-      if(value >= 1000) {
+      if (value >= 1000) {
         return Math.floor(value).toLocaleString();
-      } 
+      }
       return value.toLocaleString();
     },
   },

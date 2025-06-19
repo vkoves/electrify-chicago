@@ -125,13 +125,13 @@ export const RankConfig = {
  * otherwise returns the original number
  * This function always returns a NUMBER
  */
- export function roundUpLargeNumber(value: number): number {
+export function roundUpLargeNumber(value: number): number {
   if (value > 1000) {
     return Math.floor(value);
   } else {
     return value;
   }
- }
+}
 
 /**
  * Returns a string rank for very bad buildings, or null if not in top 50
