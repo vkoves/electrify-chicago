@@ -42,20 +42,57 @@
           </div>
 
           <div class="stats-grid">
-            <div class="stat-item -no-background">
+            <div
+              class="stat-item"
+              :class="{
+                'concern-level-very-bad': ghgIntensityConcernLevel === 4,
+                'concern-level-bad': ghgIntensityConcernLevel === 3,
+                'concern-level-medium': ghgIntensityConcernLevel === 2,
+                'concern-level-good': ghgIntensityConcernLevel === 1,
+                'concern-level-great': ghgIntensityConcernLevel === 0,
+              }"
+            >
               <div class="stat-label">GHG Intensity</div>
               <div class="stat-value">
                 {{ formatGHGIntensity(building.GHGIntensity) }}
               </div>
               <div class="stat-unit">kg CO₂e/sqft</div>
+              <div v-if="ghgIntensityMedianMsg" class="median-comparison">
+                <span class="median-mult"
+                  >{{ ghgIntensityMedianMsg }} median</span
+                >
+                <div class="median-val">
+                  {{ stats.GHGIntensity.median.toLocaleString() }} kg CO₂e/sqft
+                </div>
+              </div>
             </div>
 
-            <div class="stat-item -no-background">
+            <div
+              class="stat-item"
+              :class="{
+                'concern-level-very-bad': totalEmissionsConcernLevel === 4,
+                'concern-level-bad': totalEmissionsConcernLevel === 3,
+                'concern-level-medium': totalEmissionsConcernLevel === 2,
+                'concern-level-good': totalEmissionsConcernLevel === 1,
+                'concern-level-great': totalEmissionsConcernLevel === 0,
+              }"
+            >
               <div class="stat-label">Total Emissions</div>
               <div class="stat-value">
                 {{ formatNumber(building.TotalGHGEmissions) }}
               </div>
               <div class="stat-unit">tons CO₂e</div>
+              <div v-if="totalEmissionsMedianMsg" class="median-comparison">
+                <span class="median-mult"
+                  >{{ totalEmissionsMedianMsg }} median</span
+                >
+                <div class="median-val">
+                  {{
+                    Math.round(stats.TotalGHGEmissions.median).toLocaleString()
+                  }}
+                  tons CO₂e
+                </div>
+              </div>
             </div>
 
             <div class="stat-item -no-background">
@@ -89,11 +126,18 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { IBuilding, calculateEnergyBreakdown } from '../common-functions.vue';
+import {
+  IBuilding,
+  calculateEnergyBreakdown,
+  IBuildingBenchmarkStats,
+  getConcernLevel,
+  getMedianMultipleMsg,
+} from '../common-functions.vue';
 import {
   getBuildingImage,
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
+import buildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import LetterGrade from './LetterGrade.vue';
 import PieChart, { IPieSlice } from './graphs/PieChart.vue';
 
@@ -111,6 +155,8 @@ export default class SocialCard extends Vue {
 
   energyBreakdownData!: Array<IPieSlice>;
 
+  readonly stats: IBuildingBenchmarkStats = buildingBenchmarkStats;
+
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
     return this.$page.building;
@@ -124,6 +170,30 @@ export default class SocialCard extends Vue {
   /** Get building image if available */
   get buildingImg(): IBuildingImage | null {
     return getBuildingImage(this.building);
+  }
+
+  /** Get concern level for GHG Intensity */
+  get ghgIntensityConcernLevel(): number | null {
+    return getConcernLevel(this.building, 'GHGIntensity', this.stats);
+  }
+
+  /** Get concern level for Total Emissions */
+  get totalEmissionsConcernLevel(): number | null {
+    return getConcernLevel(this.building, 'TotalGHGEmissions', this.stats);
+  }
+
+  /** Get median multiple message for GHG Intensity */
+  get ghgIntensityMedianMsg(): string | null {
+    const median = this.stats.GHGIntensity.median;
+    const statValue = this.building.GHGIntensity;
+    return getMedianMultipleMsg(median, statValue);
+  }
+
+  /** Get median multiple message for Total Emissions */
+  get totalEmissionsMedianMsg(): string | null {
+    const median = this.stats.TotalGHGEmissions.median;
+    const statValue = this.building.TotalGHGEmissions;
+    return getMedianMultipleMsg(median, statValue);
   }
 
   formatNumber(value: number): string {
@@ -293,16 +363,29 @@ export default class SocialCard extends Vue {
   border-radius: $brd-rad-medium;
   padding: 1.25rem;
   text-align: center;
+  border-bottom-width: 0.375rem;
+  border-bottom-style: solid;
 
   &.-no-background {
     background: none;
     padding: 0;
+    border: none;
+
+    .stat-label {
+      color: $text-mid-light;
+    }
+  }
+
+  .median-mult {
+    font-size: 1.5rem;
+  }
+  .median-val {
+    font-size: 1rem;
   }
 }
 
 .sub-grade-label,
 .stat-label {
-  color: $text-mid-light;
   font-weight: bold;
   font-size: 1.5rem;
   text-align: center;
@@ -312,6 +395,11 @@ export default class SocialCard extends Vue {
   &.text-center {
     text-align: center;
   }
+}
+
+.sub-grade-label,
+.stat-item.-no-background .stat-label {
+  color: $text-mid-light;
 }
 
 .stat-value {

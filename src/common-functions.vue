@@ -196,6 +196,87 @@ export function getStatRankInverted(
 }
 
 /**
+ * Returns the multiplier for a building's stat compared to the median (e.g. '3' times median
+ * '1/5' median)
+ */
+export function getMedianMultipleMsg(
+  median: number,
+  statValueNum: number,
+): string | null {
+  if (median) {
+    const medianMult = statValueNum / median;
+
+    // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
+    if (medianMult > 5) {
+      return Math.round(medianMult) + 'x';
+    } else if (medianMult > 1) {
+      return medianMult.toFixed(1) + 'x';
+    } else if (medianMult < 0.5) {
+      // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
+      return `1/${Math.round(1 / medianMult)}`;
+    } else {
+      return medianMult.toFixed(1) + 'x';
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Calculate concern level for a stat
+ * 0 = outstanding performer in category
+ * 1 = no concern
+ * 2 = medium concern (above median)
+ * 3 = high concern (> 1 std. deviation above the mean)
+ * 4 = very high concern (top 10 in category)
+ */
+export function getConcernLevel(
+  building: IBuilding,
+  statKey: string,
+  stats: IBuildingBenchmarkStats,
+  colsToHideComparison: string[] = [
+    'DistrictSteamUse',
+    'DistrictChilledWaterUse',
+  ],
+): number | null {
+  // Some columns never show comparisons, because there's incomplete data
+  if (colsToHideComparison.includes(statKey)) {
+    return null;
+  }
+
+  const statValue = building[statKey] as number;
+  const median = stats[statKey].median;
+  const mean = stats[statKey].mean;
+  const std = stats[statKey].std;
+  const statRank = building[statKey + 'Rank'] as string;
+
+  if (!statValue || !median) return null;
+
+  const isAboveMedian = statValue > median;
+  const isOneStdDeviationAboveMean = statValue > mean + std;
+  const statRankNum = statRank ? Math.round(parseFloat(statRank)) : 1000;
+
+  // Very high concern if top 10
+  if (statRankNum <= 10) {
+    return 4;
+    // High concern if top 30 or well above mean
+  } else if (statRankNum <= 30 || isOneStdDeviationAboveMean) {
+    return 3;
+  } else if (isAboveMedian) {
+    return 2;
+  } else {
+    const statRankInverted = getStatRankInverted(statKey, statRankNum, stats);
+    if (statRankInverted && statRankInverted >= 30) {
+      return 1;
+    } else if (statRankInverted && statRankInverted <= 30) {
+      return 0;
+    }
+  }
+
+  return null;
+}
+
+/**
  * Given a building with all of its stats, return the _worst_ emoji applicable
  * based on getRankLabel.
  *
