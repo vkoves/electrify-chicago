@@ -121,6 +121,19 @@ export const RankConfig = {
 };
 
 /**
+ * Rounds a number to whole number if it is greater than 1000,
+ * otherwise returns the original number
+ * This function always returns a NUMBER
+ */
+export function roundUpLargeNumber(value: number): number {
+  if (value > 1000) {
+    return Math.floor(value);
+  } else {
+    return value;
+  }
+}
+
+/**
  * Returns a string rank for very bad buildings, or null if not in top 50
  * worst
  */

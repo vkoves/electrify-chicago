@@ -182,15 +182,16 @@ import LetterGrade from './LetterGrade.vue';
       if (!value) {
         return '-';
       }
-
-      return value.toLocaleString();
+      return Math.round(value).toLocaleString();
     },
 
     optionalFloat(value: number | null) {
       if (!value) {
         return '-';
       }
-
+      if (value >= 1000) {
+        return Math.floor(value).toLocaleString();
+      }
       return value.toLocaleString();
     },
   },
