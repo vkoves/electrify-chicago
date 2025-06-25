@@ -13,11 +13,11 @@ const TEST_BUILDING_IDS: string[] = [
  * Generate social images for the three test buildings only
  */
 export async function generateTestSocialImages(): Promise<void> {
-  console.log('🎨 Starting test social image generation...');
-  console.log('📁 Preserving existing social images (except test images)');
-
-  // Delete only the test images we're about to regenerate
-  console.log('🧹 Cleaning existing test images...');
+  console.log(
+    '🎨 Starting test social image generation...\n' +
+      '📁 Preserving existing social images (except test images)\n' +
+      '🧹 Cleaning existing test images...',
+  );
   await removeImages(TEST_BUILDING_IDS);
 
   try {

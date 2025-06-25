@@ -17,9 +17,9 @@ async function generateMissingSocialImages(): Promise<void> {
   const allBuildings = await loadAllBuildingData();
   const missingIds = await findMissingImages();
 
-  console.log(`📊 Found ${allBuildings.length} total buildings`);
   console.log(
-    `🔍 ${missingIds.length} buildings are missing social images! \n`,
+    `📊 Found ${allBuildings.length} total buildings\n` +
+      `🔍 ${missingIds.length} buildings are missing social images!\n`,
   );
 
   if (missingIds.length === 0) {

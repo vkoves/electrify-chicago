@@ -34,9 +34,11 @@ async function loadBuildingIds(
  * Clean existing social images directory
  */
 async function cleanupExistingImages(): Promise<void> {
-  console.log('🧹 Cleaning existing social images...');
+  console.log(
+    '🧹 Cleaning existing social images...\n' +
+      '✅ Social images directory cleaned',
+  );
   await fs.emptyDir(SOCIAL_IMAGES_DIR);
-  console.log('✅ Social images directory cleaned');
 }
 
 /**
@@ -131,10 +133,8 @@ async function processBuildingBatch(
           processed <= maxConsecutiveErrors
         ) {
           console.error(
-            `💥 First ${maxConsecutiveErrors} images all failed to generate. Exiting...`,
-          );
-          console.error(
-            'This usually means the development server is not running or the URLs are incorrect.',
+            `💥 First ${maxConsecutiveErrors} images all failed to generate. Exiting...\n` +
+              'This usually means the development server is not running or the URLs are incorrect.',
           );
           throw new Error('Too many consecutive errors at start');
         }
@@ -210,9 +210,9 @@ export async function generateSingleImage(
     });
   } catch (error) {
     console.error(
-      `❌ Failed to generate image for building ${buildingId} at URL: ${url}`,
+      `❌ Failed to generate image for building ${buildingId} at URL: ${url}\n` +
+        `   Error: ${(error as Error).message}`,
     );
-    console.error(`   Error: ${(error as Error).message}`);
     throw error;
   } finally {
     await page.close();
