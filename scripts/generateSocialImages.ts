@@ -75,13 +75,12 @@ export async function generateSocialImages(
     console.log(`✅ Base URL is accessible! Found title: ${fullTitle?.trim()}`);
   } catch (error) {
     console.error(
-      '❌ Cannot access base URL. Make sure your development server is running.',
+      `❌ Cannot access base URL. Make sure your development server is running.\n` +
+        `   Tried to access: ${BASE_URL}\n` +
+        `   Error: ${(error as Error).message}\n` +
+        `   Run "yarn develop" or "gridsome develop" to start the server.`,
     );
-    console.error(`   Tried to access: ${BASE_URL}`);
-    console.error(`   Error: ${(error as Error).message}`);
-    console.error(
-      '   Run "yarn develop" or "gridsome develop" to start the server.',
-    );
+
     process.exit(1);
   }
 
@@ -148,6 +147,8 @@ export async function generateSocialImages(
 
 /**
  * Generate a social image for a single building
+ *
+ * TODO: Refactor just use an ID
  */
 export async function generateSingleImage(
   browser: Browser,

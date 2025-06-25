@@ -51,22 +51,22 @@ def main():
 
     # Each step of our data pipeline, in order
     pipeline_steps = [
-        # {
-        #     "module": "src.data.scripts.clean_and_split_data",
-        #     "description": "clean_and_split_data"
-        # },
-        # {
-        #     "module": "src.data.scripts.process_data",
-        #     "description": "process_data"
-        # },
-        # {
-        #     "module": "src.data.scripts.add_context_by_property_type",
-        #     "description": "add_context_by_property_type"
-        # },
-        # {
-        #     "module": "src.data.scripts.detect_anomalous_buildings",
-        #     "description": "detect_anomalous_buildings"
-        # },
+        {
+            "module": "src.data.scripts.clean_and_split_data",
+            "description": "clean_and_split_data"
+        },
+        {
+            "module": "src.data.scripts.process_data",
+            "description": "process_data"
+        },
+        {
+            "module": "src.data.scripts.add_context_by_property_type",
+            "description": "add_context_by_property_type"
+        },
+        {
+            "module": "src.data.scripts.detect_anomalous_buildings",
+            "description": "detect_anomalous_buildings"
+        },
     ]
 
     for index, step in enumerate(pipeline_steps):
