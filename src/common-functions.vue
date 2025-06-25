@@ -216,23 +216,24 @@ export function getMedianMultipleMsg(
   median: number,
   statValueNum: number,
 ): string | null {
-  if (median) {
-    const medianMult = statValueNum / median;
-
-    // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
-    if (medianMult > 5) {
-      return Math.round(medianMult) + 'x';
-    } else if (medianMult > 1) {
-      return medianMult.toFixed(1) + 'x';
-    } else if (medianMult < 0.5) {
-      // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
-      return `1/${Math.round(1 / medianMult)}`;
-    } else {
-      return medianMult.toFixed(1) + 'x';
-    }
+  if (!median) {
+    return null;
   }
 
-  return null;
+  const medianMult = statValueNum / median;
+
+  // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
+  if (medianMult > 5) {
+    return Math.round(medianMult) + 'x';
+  }
+
+  // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
+  if (medianMult < 0.5) {
+    return `1/${Math.round(1 / medianMult)}`;
+  }
+
+  // Base case - if between 0.5 and 5, do 2x, 0.7x, etc.
+  return medianMult.toFixed(1) + 'x';
 }
 
 /**
