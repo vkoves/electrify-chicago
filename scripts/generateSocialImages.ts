@@ -11,67 +11,63 @@ const BUILDING_DATA_FILE = './src/data/dist/building-benchmarks.csv';
 const BASE_URL = process.env.SOCIAL_CARD_BASE_URL || 'http://localhost:8080';
 
 /**
- * Generate social images for specific building IDs or all buildings
- * @param reqBuildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
- * @param deleteExisting - Whether to delete existing images before generating new ones. Defaults to true.
+ * Load building IDs from either the provided list or the CSV file
  */
-export async function generateSocialImages(
-  reqBuildingIds: string[] | null = null,
-  deleteExisting: boolean = true,
-): Promise<void> {
-  console.log('🎨 Starting social image generation...');
-
-  // Ensure output directory exists
-  await fs.ensureDir(SOCIAL_IMAGES_DIR);
-
-  let buildingIds: string[];
-
-  // Clean out existing images for a fresh start (if requested)
-  if (deleteExisting) {
-    console.log('🧹 Cleaning existing social images...');
-    await fs.emptyDir(SOCIAL_IMAGES_DIR);
-    console.log('✅ Social images directory cleaned');
-  }
-
+async function loadBuildingIds(
+  reqBuildingIds: string[] | null,
+): Promise<string[]> {
   if (reqBuildingIds) {
-    // Generate for specific building IDs
-    buildingIds = reqBuildingIds;
-    console.log(`📊 Generating for ${buildingIds.length} specific buildings`);
-  } else {
-    // Read all building data
-    const buildingDataRaw = await fs.readFile(BUILDING_DATA_FILE, 'utf8');
-    const buildingData = parse(buildingDataRaw, {
-      columns: true,
-      skip_empty_lines: true,
-    }) as { ID: string | number | boolean }[];
-    buildingIds = buildingData.map(building => String(building.ID));
-    console.log(`📊 Found ${buildingIds.length} buildings to process`);
+    console.log(
+      `📊 Generating for ${reqBuildingIds.length} specific buildings`,
+    );
+    return reqBuildingIds;
   }
 
-  // Test if the base URL is accessible first
+  const buildingDataRaw = await fs.readFile(BUILDING_DATA_FILE, 'utf8');
+  const buildingData = parse(buildingDataRaw, {
+    columns: true,
+    skip_empty_lines: true,
+  }) as { ID: string | number | boolean }[];
+
+  const buildingIds = buildingData.map((building) => String(building.ID));
+  console.log(`📊 Found ${buildingIds.length} buildings to process`);
+  return buildingIds;
+}
+
+/**
+ * Clean existing social images directory
+ */
+async function cleanupExistingImages(): Promise<void> {
+  console.log('🧹 Cleaning existing social images...');
+  await fs.emptyDir(SOCIAL_IMAGES_DIR);
+  console.log('✅ Social images directory cleaned');
+}
+
+/**
+ * Setup and test browser accessibility
+ */
+async function setupBrowser(): Promise<Browser> {
   console.log(`🔗 Testing base URL: ${BASE_URL}`);
 
-  let browser: Browser;
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+      '--no-sandbox',
+      '--disable-setuid-sandbox',
+      '--disable-dev-shm-usage',
+    ],
+  });
+
+  const testPage = await browser.newPage();
 
   try {
-    browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-      ],
-    });
-    const testPage = await browser.newPage();
     await testPage.goto(BASE_URL, { timeout: 10000 });
 
-    // Fetch the <h1> to confirm we actually loaded the page
     const topHeadingSelector = await testPage.locator('h1').waitHandle();
     const fullTitle = await topHeadingSelector?.evaluate(
       (el) => el.textContent,
     );
 
-    await testPage.close();
     console.log(`✅ Base URL is accessible! Found title: ${fullTitle?.trim()}`);
   } catch (error) {
     console.error(
@@ -81,18 +77,30 @@ export async function generateSocialImages(
         `   Run "yarn develop" or "gridsome develop" to start the server.`,
     );
 
+    await browser.close();
     process.exit(1);
+  } finally {
+    await testPage.close();
   }
 
-  const BatchSize = 1; // Process in batches to manage memory
-  const MaxConsecutiveErrors = 5;
+  return browser;
+}
 
+/**
+ * Process building images in batches with error handling and progress logging
+ */
+async function processBuildingBatch(
+  browser: Browser,
+  buildingIds: string[],
+  batchSize: number = 1,
+  maxConsecutiveErrors: number = 5,
+): Promise<void> {
   let processed = 0;
   let consecutiveErrors = 0;
   let lastLogTime = Date.now();
 
-  for (let i = 0; i < buildingIds.length; i += BatchSize) {
-    const batch = buildingIds.slice(i, i + BatchSize);
+  for (let i = 0; i < buildingIds.length; i += batchSize) {
+    const batch = buildingIds.slice(i, i + batchSize);
 
     const results = await Promise.allSettled(
       batch.map(async (buildingId) => {
@@ -123,17 +131,16 @@ export async function generateSocialImages(
         consecutiveErrors++;
 
         if (
-          consecutiveErrors >= MaxConsecutiveErrors &&
-          processed <= MaxConsecutiveErrors
+          consecutiveErrors >= maxConsecutiveErrors &&
+          processed <= maxConsecutiveErrors
         ) {
           console.error(
-            `💥 First ${MaxConsecutiveErrors} images all failed to generate. Exiting...`,
+            `💥 First ${maxConsecutiveErrors} images all failed to generate. Exiting...`,
           );
           console.error(
             'This usually means the development server is not running or the URLs are incorrect.',
           );
-          await browser.close();
-          process.exit(1);
+          throw new Error('Too many consecutive errors at start');
         }
       } else {
         consecutiveErrors = 0; // Reset counter on success
@@ -141,8 +148,34 @@ export async function generateSocialImages(
     }
   }
 
-  await browser.close();
   console.log(`🎉 Completed generating ${processed} social images!`);
+}
+
+/**
+ * Generate social images for specific building IDs or all buildings
+ * @param reqBuildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
+ * @param deleteExisting - Whether to delete existing images before generating new ones. Defaults to true.
+ */
+export async function generateSocialImages(
+  reqBuildingIds: string[] | null = null,
+  deleteExisting: boolean = true,
+): Promise<void> {
+  console.log('🎨 Starting social image generation...');
+
+  await fs.ensureDir(SOCIAL_IMAGES_DIR);
+
+  if (deleteExisting) {
+    await cleanupExistingImages();
+  }
+
+  const buildingIds = await loadBuildingIds(reqBuildingIds);
+  const browser = await setupBrowser();
+
+  try {
+    await processBuildingBatch(browser, buildingIds);
+  } finally {
+    await browser.close();
+  }
 }
 
 /**
