@@ -2,7 +2,6 @@ import * as puppeteer from 'puppeteer';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
-import { IBuilding } from '../src/common-functions.vue';
 
 type Browser = puppeteer.Browser;
 type Page = puppeteer.Page;
@@ -13,11 +12,11 @@ const BASE_URL = process.env.SOCIAL_CARD_BASE_URL || 'http://localhost:8080';
 
 /**
  * Generate social images for specific building IDs or all buildings
- * @param buildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
+ * @param reqBuildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
  * @param deleteExisting - Whether to delete existing images before generating new ones. Defaults to true.
  */
 export async function generateSocialImages(
-  buildingIds: string[] | null = null,
+  reqBuildingIds: string[] | null = null,
   deleteExisting: boolean = true,
 ): Promise<void> {
   console.log('🎨 Starting social image generation...');
@@ -25,7 +24,7 @@ export async function generateSocialImages(
   // Ensure output directory exists
   await fs.ensureDir(SOCIAL_IMAGES_DIR);
 
-  let buildingData: IBuilding[];
+  let buildingIds: string[];
 
   // Clean out existing images for a fresh start (if requested)
   if (deleteExisting) {
@@ -34,18 +33,19 @@ export async function generateSocialImages(
     console.log('✅ Social images directory cleaned');
   }
 
-  if (buildingIds) {
+  if (reqBuildingIds) {
     // Generate for specific building IDs
-    buildingData = buildingIds.map((id) => ({ ID: id }));
-    console.log(`📊 Generating for ${buildingData.length} specific buildings`);
+    buildingIds = reqBuildingIds;
+    console.log(`📊 Generating for ${buildingIds.length} specific buildings`);
   } else {
     // Read all building data
     const buildingDataRaw = await fs.readFile(BUILDING_DATA_FILE, 'utf8');
-    buildingData = parse(buildingDataRaw, {
+    const buildingData = parse(buildingDataRaw, {
       columns: true,
       skip_empty_lines: true,
-    }) as IBuilding[];
-    console.log(`📊 Found ${buildingData.length} buildings to process`);
+    }) as { ID: string | number | boolean }[];
+    buildingIds = buildingData.map(building => String(building.ID));
+    console.log(`📊 Found ${buildingIds.length} buildings to process`);
   }
 
   // Test if the base URL is accessible first
@@ -91,24 +91,24 @@ export async function generateSocialImages(
   let consecutiveErrors = 0;
   let lastLogTime = Date.now();
 
-  for (let i = 0; i < buildingData.length; i += BatchSize) {
-    const batch = buildingData.slice(i, i + BatchSize);
+  for (let i = 0; i < buildingIds.length; i += BatchSize) {
+    const batch = buildingIds.slice(i, i + BatchSize);
 
     const results = await Promise.allSettled(
-      batch.map(async (building) => {
-        const result = await generateSingleImage(browser, building);
+      batch.map(async (buildingId) => {
+        const result = await generateSingleImage(browser, buildingId);
         processed++;
 
         if (processed % 50 === 0) {
           const currentTime = Date.now();
           const batchDuration = ((currentTime - lastLogTime) / 1000).toFixed(1);
-          const percentage = ((processed / buildingData.length) * 100).toFixed(
+          const percentage = ((processed / buildingIds.length) * 100).toFixed(
             1,
           );
           lastLogTime = currentTime;
 
           console.log(
-            `✅ Processed ${processed.toLocaleString()}/${buildingData.length.toLocaleString()} ` +
+            `✅ Processed ${processed.toLocaleString()}/${buildingIds.length.toLocaleString()} ` +
               `buildings (${percentage}%) (took ${batchDuration}s)`,
           );
         }
@@ -147,18 +147,16 @@ export async function generateSocialImages(
 
 /**
  * Generate a social image for a single building
- *
- * TODO: Refactor just use an ID
  */
 export async function generateSingleImage(
   browser: Browser,
-  building: IBuilding,
+  buildingId: string,
 ): Promise<void> {
   const outputPath = path.join(
     SOCIAL_IMAGES_DIR,
-    `building-${building.ID}.webp`,
+    `building-${buildingId}.webp`,
   ) as `${string}.webp`;
-  const url = `${BASE_URL}/social-card/${building.ID}`;
+  const url = `${BASE_URL}/social-card/${buildingId}`;
 
   // Skip if image already exists (for incremental builds)
   if (await fs.pathExists(outputPath)) {
@@ -186,7 +184,7 @@ export async function generateSingleImage(
     });
   } catch (error) {
     console.error(
-      `❌ Failed to generate image for building ${building.ID} at URL: ${url}`,
+      `❌ Failed to generate image for building ${buildingId} at URL: ${url}`,
     );
     console.error(`   Error: ${(error as Error).message}`);
     throw error;
@@ -208,10 +206,10 @@ export async function cleanupOldImages(): Promise<void> {
   const buildingData = parse(buildingDataRaw, {
     columns: true,
     skip_empty_lines: true,
-  }) as IBuilding[];
+  }) as { ID: string | number | boolean }[];
 
   const currentBuildingIds = new Set(
-    buildingData.map((b) => `building-${b.ID}.webp`),
+    buildingData.map((b) => `building-${String(b.ID)}.webp`),
   );
 
   // Get existing images
