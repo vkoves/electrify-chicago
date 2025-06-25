@@ -1,4 +1,5 @@
 <script lang="ts">
+/* global process */
 import { Component, Vue } from 'vue-property-decorator';
 
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
@@ -21,8 +22,7 @@ export default class Index extends Vue {
   searchQuery = '';
 
   get isDevelopment(): boolean {
-    // This comes from node and certainly exists
-    // eslint-disable-next-line no-undef
+    // This comes from Node during build
     return process.env.NODE_ENV === 'development';
   }
 
