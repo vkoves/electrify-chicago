@@ -1,14 +1,16 @@
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { parse } from 'csv-parse/sync';
+import {
+  SOCIAL_IMAGES_DIR,
+  BASE_URL,
+  loadBuildingIds as loadAllBuildingIds,
+  ensureSocialImagesDirectory,
+  getSocialImagePath,
+} from './social-images-helpers';
 
 type Browser = puppeteer.Browser;
 type Page = puppeteer.Page;
-
-const SOCIAL_IMAGES_DIR = './static/social-images';
-const BUILDING_DATA_FILE = './src/data/dist/building-benchmarks.csv';
-const BASE_URL = process.env.SOCIAL_CARD_BASE_URL || 'http://localhost:8080';
 
 /**
  * Load building IDs from either the provided list or the CSV file
@@ -23,13 +25,7 @@ async function loadBuildingIds(
     return reqBuildingIds;
   }
 
-  const buildingDataRaw = await fs.readFile(BUILDING_DATA_FILE, 'utf8');
-  const buildingData = parse(buildingDataRaw, {
-    columns: true,
-    skip_empty_lines: true,
-  }) as { ID: string | number | boolean }[];
-
-  const buildingIds = buildingData.map((building) => String(building.ID));
+  const buildingIds = await loadAllBuildingIds();
   console.log(`📊 Found ${buildingIds.length} buildings to process`);
   return buildingIds;
 }
@@ -162,7 +158,7 @@ export async function generateSocialImages(
 ): Promise<void> {
   console.log('🎨 Starting social image generation...');
 
-  await fs.ensureDir(SOCIAL_IMAGES_DIR);
+  await ensureSocialImagesDirectory();
 
   if (deleteExisting) {
     await cleanupExistingImages();
@@ -185,10 +181,7 @@ export async function generateSingleImage(
   browser: Browser,
   buildingId: string,
 ): Promise<void> {
-  const outputPath = path.join(
-    SOCIAL_IMAGES_DIR,
-    `building-${buildingId}.webp`,
-  ) as `${string}.webp`;
+  const outputPath = getSocialImagePath(buildingId) as `${string}.webp`;
   const url = `${BASE_URL}/social-card/${buildingId}`;
 
   // Skip if image already exists (for incremental builds)
@@ -235,14 +228,9 @@ export async function cleanupOldImages(): Promise<void> {
   }
 
   // Read current building IDs
-  const buildingDataRaw = await fs.readFile(BUILDING_DATA_FILE, 'utf8');
-  const buildingData = parse(buildingDataRaw, {
-    columns: true,
-    skip_empty_lines: true,
-  }) as { ID: string | number | boolean }[];
-
+  const buildingIds = await loadAllBuildingIds();
   const currentBuildingIds = new Set(
-    buildingData.map((b) => `building-${String(b.ID)}.webp`),
+    buildingIds.map((id) => `building-${id}.webp`),
   );
 
   // Get existing images

@@ -1,11 +1,9 @@
-import * as fs from 'fs-extra';
-import * as path from 'path';
-import { parse } from 'csv-parse/sync';
 import { generateSocialImages } from './generateSocialImages';
-import { IBuilding } from '../src/common-functions.vue';
-
-const SOCIAL_IMAGES_DIR = './static/social-images';
-const BUILDING_DATA_FILE = './src/data/dist/building-benchmarks.csv';
+import {
+  loadAllBuildingData,
+  ensureSocialImagesDirectory,
+  findMissingImages,
+} from './social-images-helpers';
 
 /**
  * Generate social images only for buildings that don't already have images
@@ -14,33 +12,17 @@ const BUILDING_DATA_FILE = './src/data/dist/building-benchmarks.csv';
 async function generateMissingSocialImages(): Promise<void> {
   console.log('🔍 Checking for missing social images...');
 
-  // Ensure output directory exists
-  await fs.ensureDir(SOCIAL_IMAGES_DIR);
+  await ensureSocialImagesDirectory();
 
-  // Read all building data
-  const buildingDataRaw = await fs.readFile(BUILDING_DATA_FILE, 'utf8');
-  const allBuildings = parse(buildingDataRaw, {
-    columns: true,
-    skip_empty_lines: true,
-  }) as IBuilding[];
-
-  // Count missing images
-  let missingCount = 0;
-  for (const building of allBuildings) {
-    const imagePath = path.join(
-      SOCIAL_IMAGES_DIR,
-      `building-${building.ID}.webp`,
-    );
-
-    if (!(await fs.pathExists(imagePath))) {
-      missingCount++;
-    }
-  }
+  const allBuildings = await loadAllBuildingData();
+  const missingIds = await findMissingImages();
 
   console.log(`📊 Found ${allBuildings.length} total buildings`);
-  console.log(`🔍 ${missingCount} buildings are missing social images! \n`);
+  console.log(
+    `🔍 ${missingIds.length} buildings are missing social images! \n`,
+  );
 
-  if (missingCount === 0) {
+  if (missingIds.length === 0) {
     console.log('✅ All buildings already have social images! Nothing to do.');
     return;
   }
