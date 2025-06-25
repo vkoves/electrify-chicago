@@ -28,11 +28,13 @@ const renderScatterplot = () => {
   const containerWidth = parseInt(container.style('width'), 10) || 500
   const containerHeight = 300
 
-  const margin = { top: 10, right: 30, bottom: 40, left: 80 }
+  const margin = { top: 10, right: 30, bottom: 40, left: 60 }
   const width = containerWidth - margin.left - margin.right
   const height = containerHeight - margin.top - margin.bottom
 
   container.selectAll('*').remove()
+
+  const graphYears = props.data.map(((d: DataPoint) => d.year));
 
   const svg = container
     .append('svg')
@@ -55,7 +57,7 @@ const renderScatterplot = () => {
 
   svg.append('g')
     .attr('transform', `translate(0,${height})`)
-    .call(d3.axisBottom(xScale).tickFormat(d3.format('d')))
+    .call(d3.axisBottom(xScale).tickFormat(d3.format('d')).tickValues(graphYears))
 
   svg.append('g').call(d3.axisLeft(yScale))
 
