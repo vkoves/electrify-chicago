@@ -86,6 +86,8 @@ def main():
     print("See output files in 'src/data/dist'.")
     print("For more understandable intermediate data CSVs and JSON building stats, see 'data/debug' directory")
     print("\nNote: You must restart `gridsome develop` for data changes to take effect.")
+    print(f"\n{YELLOW}Important! 📸 Don't forget to regenerate social images after data changes!{NC}")
+    print(f"   Run: {LIGHT_BLUE}yarn gen-fresh-social-imgs{NC}")
 
 if __name__ == '__main__':
     main()

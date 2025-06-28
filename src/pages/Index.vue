@@ -1,4 +1,5 @@
 <script lang="ts">
+/* global process */
 import { Component, Vue } from 'vue-property-decorator';
 
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
@@ -19,6 +20,11 @@ import BuildingTile from '../components/BuildingTile.vue';
 })
 export default class Index extends Vue {
   searchQuery = '';
+
+  get isDevelopment(): boolean {
+    // This comes from Node during build
+    return process.env.NODE_ENV === 'development';
+  }
 
   submitSearch(event?: Event): void {
     event?.preventDefault();
@@ -218,6 +224,18 @@ export default class Index extends Vue {
         <DataDisclaimer />
 
         <DataSourceFootnote />
+
+        <!-- Debug tools panel for development -->
+        <div v-if="isDevelopment" class="debug-tools">
+          <div class="announce-panel -blue">
+            <h3>🔧 Local Debug Tools</h3>
+            <p>
+              <g-link to="/social-cards" class="bold">
+                View Sample Social Cards
+              </g-link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </DefaultLayout>
@@ -454,6 +472,10 @@ export default class Index extends Vue {
       flex-direction: column;
       align-items: flex-start;
     }
+  }
+
+  .debug-tools {
+    margin-top: 2rem;
   }
 }
 </style>

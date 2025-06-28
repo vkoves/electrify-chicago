@@ -618,25 +618,19 @@ export default class StatTile extends Vue {
   border-radius: $brd-rad-small;
 
   &.-very-bad {
-    background-color: #ffd9d9;
-    border-color: red;
+    @extend .concern-level-very-bad;
   }
   &.-bad {
-    background-color: #ffedf0;
-    border-color: red;
+    @extend .concern-level-bad;
   }
-  // Also be pretty subtle for indicating medium attributes
   &.-medium {
-    border-color: #935700;
+    @extend .concern-level-medium;
   }
-  // Very subtly highlight good attributes
   &.-good {
-    border-color: green;
+    @extend .concern-level-good;
   }
-  // Highlight best in class buildings
   &.-great {
-    border-color: green;
-    background-color: #e9ffe9;
+    @extend .concern-level-great;
   }
   // Square footage should override and clear anything since that's not really an
   // environmental factor, just an interesting stat
@@ -678,28 +672,6 @@ export default class StatTile extends Vue {
   .bill-estimate {
     margin-bottom: 0.25rem;
     font-size: small;
-  }
-
-  .median-comparison {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    margin-top: 0.5rem;
-
-    .median-mult {
-      font-weight: 500;
-      font-size: 0.875rem;
-    }
-
-    .median-val {
-      font-size: 0.75rem;
-      color: $text-mid-light;
-      line-height: 1.25;
-    }
-    .median-label {
-      font-size: 0.825rem;
-      font-weight: 600;
-    }
   }
 
   .median,
