@@ -1187,16 +1187,22 @@ export default class BuildingDetails extends Vue {
   @media print {
     // Prevent removing backgrounds from warning panels and top info
     // when printing
-    .building-banner, .building-top-info {
+    .building-banner,
+    .building-top-info {
       print-color-adjust: exact;
     }
 
     // Hide interactive elements - email this building button and extra info section
-    .email-btn, .extra-info { display: none; }
+    .email-btn,
+    .extra-info {
+      display: none;
+    }
 
     // The print page is mobile (~670px) but we want it to render more desktop style,
     // since a print page ends up being 8.5" wide and so can be denser
-    .building-img-cont { width: 60% !important; }
+    .building-img-cont {
+      width: 60% !important;
+    }
 
     .info-and-report-card {
       flex-direction: row;

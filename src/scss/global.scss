@@ -693,8 +693,12 @@ article.blog-post {
 @media print {
   // We want to keep the site logo, but drop all the links
   header.header .top-nav,
-  header.header button.mobile-menu-toggle { display: none; }
+  header.header button.mobile-menu-toggle {
+    display: none;
+  }
 
   // Totally hide the footer
-  footer { display: none; }
+  footer {
+    display: none;
+  }
 }
