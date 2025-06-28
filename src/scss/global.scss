@@ -681,3 +681,20 @@ article.blog-post {
     }
   }
 }
+
+/**
+ * Print Styling - hides interactive elements and simplifies layout. Note that print
+ * layout is around 670px
+ *
+ *
+ *
+ * TODO: Break into a separate stylesheet for performance
+ */
+@media print {
+  // We want to keep the site logo, but drop all the links
+  header.header .top-nav,
+  header.header button.mobile-menu-toggle { display: none; }
+
+  // Totally hide the footer
+  footer { display: none; }
+}

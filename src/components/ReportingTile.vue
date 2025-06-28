@@ -127,6 +127,8 @@ export default class ReportingTile extends Vue {
     background-color: $off-white;
     padding: 1rem 2rem;
     border-radius: $brd-rad-small;
+    // When printing, don't remove colors or backgrounds
+    print-color-adjust: exact;
   }
 
   .headline {

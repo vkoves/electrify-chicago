@@ -616,6 +616,8 @@ export default class StatTile extends Vue {
   border-bottom: solid 0.375rem $grey-dark;
   box-sizing: border-box;
   border-radius: $brd-rad-small;
+  // When printing, don't remove colors or backgrounds
+  print-color-adjust: exact;
 
   &.-very-bad {
     background-color: #ffd9d9;
