@@ -117,6 +117,8 @@ export default class ReportCard extends Vue {
   border-radius: $brd-rad-medium;
   overflow: hidden;
   flex-shrink: 0;
+  // When printing, don't remove colors or backgrounds
+  print-color-adjust: exact;
 
   .anomaly-warning {
     position: absolute;
