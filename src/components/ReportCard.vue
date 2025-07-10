@@ -245,5 +245,11 @@ export default class ReportCard extends Vue {
       }
     }
   }
+
+  /** Print Styling - Hide Learn More link and drop underlines from sub-sections */
+  @media print {
+    .report-card a.grade-row strong { text-decoration: none; }
+    .learn-more-cont { display: none; }
+  }
 }
 </style>

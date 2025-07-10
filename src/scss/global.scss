@@ -691,10 +691,21 @@ article.blog-post {
  * TODO: Break into a separate stylesheet for performance
  */
 @media print {
+  // Shrink all fonts
+  html { font-size: 0.6125rem; }
+
   // We want to keep the site logo, but drop all the links
   header.header .top-nav,
   header.header button.mobile-menu-toggle {
     display: none;
+  }
+
+  header.header .site-logo { width: 12.5rem; }
+
+  // Drop main-content padding, since printed pages already have plenty
+  .layout .main-content {
+    padding-left: 0;
+    padding-right: 0;
   }
 
   // Totally hide the footer

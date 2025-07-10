@@ -121,7 +121,7 @@ query ($id: ID!, $ID: String) {
             {{ $page.building.ZIPCode }}
             <a
               :href="'https://www.google.com/maps/search/' + encodedAddress"
-              class="google-maps-link"
+              class="google-maps-link no-print"
               target="_blank"
               rel="noopener"
             >
@@ -400,8 +400,12 @@ query ($id: ID!, $ID: String) {
               :grade="building.SubmittedRecordsLetterGrade"
             />
           </div>
-          <div class="stat-tiles-col">
-            <h2>Energy Breakdown</h2>
+
+          <div class="stat-tiles-col -energy-breakdown">
+            <h2>
+              Energy Breakdown
+              <span class="print-only">for {{ propertyName }}</span>
+            </h2>
 
             <dl class="stat-tiles">
               <div>
@@ -560,9 +564,11 @@ query ($id: ID!, $ID: String) {
 
       <DataSourceFootnote />
 
-      <h2>What Should We Do About This?</h2>
+      <div class="no-print">
+        <h2>What Should We Do About This?</h2>
 
-      <a href="/take-action-tips"> Own this Building? Take Action. </a>
+        <a href="/take-action-tips"> Own this Building? Take Action. </a>
+      </div>
 
       <email-building-modal
         v-if="isModalOpen"
@@ -1097,10 +1103,17 @@ export default class BuildingDetails extends Vue {
    */
   @media (max-width: $mobile-max-width) {
     .building-header {
+      &.-has-img {
+        grid-template-areas:
+          "img title"
+          "img details" !important;
+      }
+
       .building-img-cont,
       .building-header-text {
         width: 100%;
       }
+
       .email-btn {
         align-self: flex-start;
         margin-bottom: 0rem;
@@ -1182,35 +1195,59 @@ export default class BuildingDetails extends Vue {
     }
   }
 
+  @media not print {
+    // Hide print only content, like duplicate title text
+    .print-only { display: none; }
+  }
+
   /** Print Styling - hides interactive elements and simplifies layout */
   // TODO: Break into a separate stylesheet for performance
   @media print {
     // Prevent removing backgrounds from warning panels and top info
     // when printing
     .building-banner,
-    .building-top-info {
+    .building-top-info,
+    .energy-mix-cont {
       print-color-adjust: exact;
     }
 
     // Hide interactive elements - email this building button and extra info section
     .email-btn,
-    .extra-info {
+    .extra-info,
+    img.tooltip,
+    .no-print {
       display: none;
     }
 
     // The print page is mobile (~670px) but we want it to render more desktop style,
     // since a print page ends up being 8.5" wide and so can be denser
     .building-img-cont {
-      width: 60% !important;
+      width: 100% !important;
     }
+
+    .main-cols { flex-direction: row; }
 
     .info-and-report-card {
       flex-direction: row;
+
+      // Remove any link styling, like for Energy Star Score
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .new-tab-icon { display: none; }
     }
 
     // Make stat tiles two columns again
     .stat-tiles > div {
       flex-basis: 48%;
+    }
+
+    // Break the Energy Breakdown to a new page
+    .stat-tiles-col.-energy-breakdown {
+      page-break-before: always;
+
+      h2 { font-size: 2rem; }
     }
   }
 }
