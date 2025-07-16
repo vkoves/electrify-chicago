@@ -216,17 +216,19 @@ export default class HistoricalBuildingTable extends Vue {
     }
 
     const allColKeys: Array<string> = Object.keys(this.historicBenchmarks[0]);
-    const emptyColKeys = allColKeys.filter((colKey: string) => {
+    console.log(this.historicBenchmarks);
+    const notEmptyColKeys = allColKeys.filter((colKey: string) => {
       // A column is empty if it's all empty string or '0', so skip it if so. Some columns switch
       // between both, like Natural Gas Use on Merch Mart, which we also want to ignore
-      return !this.historicBenchmarks.every((datum) => {
+      return this.historicBenchmarks.some((datum) => {
+        console.log(datum, "datum")
         return (
-          (datum as any)[colKey] === '' || (datum as any)[colKey] === '0.0'
+          (datum as any)[colKey] !== "" && (datum as any)[colKey] !== 0.0 && (datum as any)[colKey] !== null
         );
       });
     });
-
-    return emptyColKeys;
+    console.log(notEmptyColKeys, "notEmptyColKeys");
+    return notEmptyColKeys;
   }
 
   calcEnergyMix(benchmarkRow: IHistoricData): {
