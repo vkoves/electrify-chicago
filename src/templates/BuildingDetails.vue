@@ -1105,8 +1105,8 @@ export default class BuildingDetails extends Vue {
     .building-header {
       &.-has-img {
         grid-template-areas:
-          "img title"
-          "img details" !important;
+          'img title'
+          'img details' !important;
       }
 
       .building-img-cont,
@@ -1197,7 +1197,9 @@ export default class BuildingDetails extends Vue {
 
   @media not print {
     // Hide print only content, like duplicate title text
-    .print-only { display: none; }
+    .print-only {
+      display: none;
+    }
   }
 
   /** Print Styling - hides interactive elements and simplifies layout */
@@ -1225,7 +1227,9 @@ export default class BuildingDetails extends Vue {
       width: 100% !important;
     }
 
-    .main-cols { flex-direction: row; }
+    .main-cols {
+      flex-direction: row;
+    }
 
     .info-and-report-card {
       flex-direction: row;
@@ -1235,7 +1239,9 @@ export default class BuildingDetails extends Vue {
         color: inherit;
         text-decoration: none;
       }
-      .new-tab-icon { display: none; }
+      .new-tab-icon {
+        display: none;
+      }
     }
 
     // Make stat tiles two columns again
@@ -1247,7 +1253,9 @@ export default class BuildingDetails extends Vue {
     .stat-tiles-col.-energy-breakdown {
       page-break-before: always;
 
-      h2 { font-size: 2rem; }
+      h2 {
+        font-size: 2rem;
+      }
     }
   }
 }

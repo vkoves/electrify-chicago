@@ -692,7 +692,9 @@ article.blog-post {
  */
 @media print {
   // Shrink all fonts
-  html { font-size: 0.6125rem; }
+  html {
+    font-size: 0.6125rem;
+  }
 
   // We want to keep the site logo, but drop all the links
   header.header .top-nav,
@@ -700,7 +702,9 @@ article.blog-post {
     display: none;
   }
 
-  header.header .site-logo { width: 12.5rem; }
+  header.header .site-logo {
+    width: 12.5rem;
+  }
 
   // Drop main-content padding, since printed pages already have plenty
   .layout .main-content {
