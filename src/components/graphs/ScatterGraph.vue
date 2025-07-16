@@ -139,13 +139,13 @@ const renderScatterplot = () => {
   }
 
   // Axes
-  const xAxis = chartGroup
+  chartGroup
     .append('g')
     .attr('class', 'x-axis')
     .attr('transform', `translate(0,${height})`)
     .call(d3.axisBottom(xScale).tickFormat(d3.format('d')).tickSize(-10));
 
-  const yAxis = chartGroup
+  chartGroup
     .append('g')
     .attr('class', 'y-axis')
     .call(d3.axisLeft(yScale).tickFormat(d3.format('.2s')).tickSize(-10));
