@@ -214,16 +214,15 @@ export default class HistoricalBuildingTable extends Vue {
     if (this.historicBenchmarks.length === 0) {
       return [];
     }
-
     const allColKeys: Array<string> = Object.keys(this.historicBenchmarks[0]);
-    console.log(this.historicBenchmarks);
+    console.log(this.historicBenchmarks, "historic");
+    const blankData: any[] = [null, "", 0.0, undefined];
     const notEmptyColKeys = allColKeys.filter((colKey: string) => {
-      // A column is empty if it's all empty string or '0', so skip it if so. Some columns switch
-      // between both, like Natural Gas Use on Merch Mart, which we also want to ignore
+      // A column is not empty if it is not part of our predefined
+      // blank data states seen in the blankData array
       return this.historicBenchmarks.some((year) => {
-        console.log(year, "datum")
         return (
-          (year as any)[colKey] !== "" && (year as any)[colKey] !== 0.0 && (year as any)[colKey] !== null
+          !blankData.includes((year as any)[colKey])
         );
       });
     });
