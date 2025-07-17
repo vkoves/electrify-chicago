@@ -222,7 +222,8 @@ export default class HistoricalBuildingTable extends Vue {
     console.log(this.historicBenchmarks, "historic");
     const blankData: any[] = [null, "", 0.0, undefined];
     const notEmptyColKeys = allColKeys.filter((colKey: string) => {
-      // A column is not empty if it is not part of our predefined
+      // A column is not empty if any of the datapoints
+      // for that category are not part of our predefined
       // blank data states seen in the blankData array
       return this.historicBenchmarks.some((year) => {
         return (
