@@ -32,8 +32,8 @@
 
           <!-- Energy Mix & Values -->
           <th class="text-center">Energy Mix</th>
-          <th scope="col">Electricity Use <span class="unit">kBTU</span></th>
-          <th scope="col">Fossil Gas Use <span class="unit">kBTU</span></th>
+          <th v-if="renderedColumns.includes('ElectricityUse')" scope="col">Electricity Use <span class="unit">kBTU</span></th>
+          <th v-if="renderedColumns.includes('NaturalGasUse')" scope="col">Fossil Gas Use <span class="unit">kBTU</span></th>
           <th v-if="renderedColumns.includes('DistrictSteamUse')" scope="col">
             District <br />
             Steam Use <span class="unit">kBTU</span>
@@ -130,8 +130,12 @@
               :show-labels="false"
             />
           </td>
-          <td>{{ benchmark.ElectricityUse | optionalInt }}</td>
-          <td>{{ benchmark.NaturalGasUse | optionalInt }}</td>
+          <td v-if="renderedColumns.includes('ElectricityUse')">
+            {{ benchmark.ElectricityUse | optionalInt }}
+          </td>
+          <td v-if="renderedColumns.includes('NaturalGasUse')">
+            {{ benchmark.NaturalGasUse | optionalInt }}
+          </td>
           <td v-if="renderedColumns.includes('DistrictSteamUse')">
             {{ benchmark.DistrictSteamUse | optionalInt }}
           </td>
