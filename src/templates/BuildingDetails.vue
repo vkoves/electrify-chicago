@@ -465,7 +465,7 @@ query ($id: ID!, $ID: String) {
           </div>
         </div>
 
-        <div class="chart-cont">
+        <div class="chart-col">
           <h3
             id="energy-mix"
             class="label-and-grade -energy-mix targetable"
@@ -498,6 +498,19 @@ query ($id: ID!, $ID: String) {
               alt="Help icon"
               tabindex="0"
             />
+          </div>
+
+          <!-- QR Code Container, for printing -->
+          <div class="qr-cont print-only">
+            <h2>Scan To Learn More</h2>
+
+            <div :id="QRCodeElementId" class="qr-code">
+              <!-- Gets qrcode when printing-->
+            </div>
+
+            <p class="url">
+              {{ prodBuildingUrl }}
+            </p>
           </div>
         </div>
       </div>
@@ -582,6 +595,8 @@ query ($id: ID!, $ID: String) {
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+import qrcode from 'qrcode-generator';
+
 import { LatestDataYear } from '../constants/globals.vue';
 import BarGraph from '~/components/graphs/BarGraph.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
@@ -664,6 +679,9 @@ export default class BuildingDetails extends Vue {
     NaturalGasUse: 'Fossil Gas Use (kBTU)',
   };
 
+  /** QR code element ID */
+  private readonly QRCodeElementId = 'qrcode';
+
   tooltipMessage = `
     <p class="title">Why does this matter?</p>
     <p>
@@ -735,6 +753,10 @@ export default class BuildingDetails extends Vue {
     return encodeURIComponent(this.propertyType);
   }
 
+  get prodBuildingUrl(): string {
+    return `https://electrifychicago.net/${window.location.pathname}`;
+  }
+
   /**
    * A URL encoded complete address of the current building to use as a query param for a Google
    * Maps link
@@ -780,6 +802,36 @@ export default class BuildingDetails extends Vue {
     this.energyBreakdownData = breakdownWithTotal.energyBreakdown;
     this.totalEnergyUsekBTU = breakdownWithTotal.totalEnergyUse;
     this.updateGraph();
+
+    window.addEventListener('beforeprint', () => {
+      // Render the QR code before printing, we don't need it otherwise
+      this.renderQrCode();
+    });
+  }
+
+  mounted(): void {
+    // this.renderQrCode();
+  }
+
+  /**
+   * Render a QR code pointing to the current page
+   */
+  renderQrCode(): void {
+    const qr = qrcode(0, 'M');
+
+    // Always make the QR code point to prod
+    qr.addData(this.prodBuildingUrl);
+    qr.make();
+
+    const qrCodeElement = document.getElementById(this.QRCodeElementId);
+
+    // qrCodeElement!.innerHTML = qr.createImgTag();
+
+    qrCodeElement!.innerHTML = qr.createSvgTag({
+      cellSize: 4,
+      margin: 2,
+      scalable: true,
+    });
   }
 
   updateGraph(event?: Event): void {
@@ -999,7 +1051,7 @@ export default class BuildingDetails extends Vue {
       flex-basis: 70%;
     }
 
-    .chart-cont {
+    .chart-col {
       flex-basis: 30%;
       flex-shrink: 0;
       margin-top: 1rem;
@@ -1019,6 +1071,37 @@ export default class BuildingDetails extends Vue {
           margin-right: 1rem;
         }
       }
+    }
+  }
+
+  .qr-cont {
+    padding: 1rem;
+    background-color: $grey-light;
+    border-radius: $brd-rad-small;
+    text-align: center;
+    margin-top: 3rem;
+
+    .qr-code {
+      display: inline-block;
+      width: 70%;
+      aspect-ratio: 1;
+      background: $white;
+      margin: 1rem 0;
+      border: solid 0.75rem $white;
+      border-radius: 1rem;
+
+      > * {
+        display: block;
+      }
+    }
+
+    h2 {
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    p.url {
+      font-size: 0.75rem;
     }
   }
 
@@ -1174,7 +1257,7 @@ export default class BuildingDetails extends Vue {
       }
     }
 
-    .main-cols .chart-cont {
+    .main-cols .chart-col {
       margin-top: 0;
     }
 
@@ -1209,7 +1292,8 @@ export default class BuildingDetails extends Vue {
     // when printing
     .building-banner,
     .building-top-info,
-    .energy-mix-cont {
+    .energy-mix-cont,
+    .qr-cont {
       print-color-adjust: exact;
     }
 
