@@ -708,8 +708,8 @@ article.blog-post {
 
   // Drop main-content padding, since printed pages already have plenty
   .layout .main-content {
-    padding-left: 0;
-    padding-right: 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 
   // Totally hide the footer

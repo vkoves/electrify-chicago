@@ -129,7 +129,7 @@ query ($id: ID!, $ID: String) {
             </a>
           </div>
 
-          <p class="building-id -no-margin">
+          <p class="building-id -no-margin no-print">
             Chicago Building ID: {{ $page.building.ID }}
           </p>
         </div>
@@ -1305,7 +1305,15 @@ export default class BuildingDetails extends Vue {
     .extra-info,
     img.tooltip,
     .no-print {
-      display: none;
+      display: none !important;
+    }
+
+    // Scale up title and address
+    h1 { font-size: 3rem; }
+    .address { font-size: 1.5rem !important; }
+
+    .report-card-cont {
+      flex-basis: 20rem !important;
     }
 
     // The print page is mobile (~670px) but we want it to render more desktop style,
