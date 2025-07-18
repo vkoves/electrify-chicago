@@ -250,6 +250,10 @@ export default class ReportCard extends Vue {
    * Print Styling - Hide Learn More link and drop underlines from sub-sections
    */
   @media print {
+    // Hide the anomaly warning when printing to not cover grades - there's already a top level
+    // banner warning
+    .anomaly-warning { display: none !important; }
+
     h2.title { font-size: 1.5rem; }
 
     .grade-row {
