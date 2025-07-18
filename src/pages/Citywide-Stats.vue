@@ -14,6 +14,7 @@
           :y-axis-label="graph.yAxisLabel"
           :color="graph.color"
           :container-id="graph.containerId"
+          :show-grid="true"
         />
       </div>
     </div>
@@ -22,7 +23,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
 import ScatterGraph from '@/components/graphs/ScatterGraph.vue';
 import { graphConfigs } from '../components/citywide-stats/graph-data';
 
