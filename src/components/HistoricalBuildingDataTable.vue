@@ -32,8 +32,12 @@
 
           <!-- Energy Mix & Values -->
           <th class="text-center">Energy Mix</th>
-          <th v-if="renderedColumns.includes('ElectricityUse')" scope="col">Electricity Use <span class="unit">kBTU</span></th>
-          <th v-if="renderedColumns.includes('NaturalGasUse')" scope="col">Fossil Gas Use <span class="unit">kBTU</span></th>
+          <th v-if="renderedColumns.includes('ElectricityUse')" scope="col">
+            Electricity Use <span class="unit">kBTU</span>
+          </th>
+          <th v-if="renderedColumns.includes('NaturalGasUse')" scope="col">
+            Fossil Gas Use <span class="unit">kBTU</span>
+          </th>
           <th v-if="renderedColumns.includes('DistrictSteamUse')" scope="col">
             District <br />
             Steam Use <span class="unit">kBTU</span>
@@ -219,19 +223,17 @@ export default class HistoricalBuildingTable extends Vue {
       return [];
     }
     const allColKeys: Array<string> = Object.keys(this.historicBenchmarks[0]);
-    console.log(this.historicBenchmarks, "historic");
-    const blankData: any[] = [null, "", 0.0, undefined];
+    type blankDataType = string | null | number | undefined;
+    const blankData: blankDataType[] = [null, '', 0.0, undefined];
     const notEmptyColKeys = allColKeys.filter((colKey: string) => {
       // A column is not empty if any of the datapoints
       // for that category are not part of our predefined
       // blank data states seen in the blankData array
       return this.historicBenchmarks.some((year) => {
-        return (
-          !blankData.includes((year as any)[colKey])
-        );
+        return !blankData.includes((year as any)[colKey]);
       });
     });
-    console.log(notEmptyColKeys, "notEmptyColKeys");
+    console.log(notEmptyColKeys, 'notEmptyColKeys');
     return notEmptyColKeys;
   }
 
