@@ -35,14 +35,25 @@ const chartContainer = ref<HTMLElement | null>(null);
 const loading = ref(true);
 const hasAnimated = ref(false);
 const isInView = ref(false);
-let resizeObserver: ResizeObserver | undefined;
-let intersectionObserver: IntersectionObserver | undefined;
+const chartRendered = ref(false);
+let xScale: d3.ScaleLinear<number, number> = d3.scaleLinear().range([0, 0]);
+let yScale: d3.ScaleLinear<number, number> = d3.scaleLinear().range([0, 0]);
+
+// Store references to chart elements for later animation
+let chartElements: {
+  container: any;
+  chartGroup: any;
+  tooltip: any;
+  circles?: any;
+  path?: any;
+  trendLine?: any;
+} | null = null;
 
 const sortedData = computed(() => {
   return [...props.data].sort((a, b) => a.year - b.year);
 });
 
-const render = (): void => {
+const renderChartStructure = (): void => {
   if (!chartContainer.value || !sortedData.value.length) return;
 
   // Grab Height and Width from the DOM
@@ -55,7 +66,7 @@ const render = (): void => {
   const width = containerWidth - margin.left - margin.right;
   const height = containerHeight - margin.top - margin.bottom;
 
-  // avoid dupliate charts
+  // avoid duplicate charts
   container.selectAll('svg').remove();
 
   // Create and Style SVG
@@ -69,6 +80,7 @@ const render = (): void => {
     .append('g')
     .attr('transform', `translate(${margin.left},${margin.top})`);
 
+  // Title
   svg
     .append('text')
     .attr('x', containerWidth / 2)
@@ -79,7 +91,8 @@ const render = (): void => {
     .style('fill', '#1e293b')
     .text(props.title);
 
-  const xScale = d3
+  // Scales
+  xScale = d3
     .scaleLinear()
     .domain(
       d3.extent(sortedData.value, (d: DataPoint) => d.year) as [number, number],
@@ -91,11 +104,12 @@ const render = (): void => {
     number,
   ];
   const yPadding = (yExtent[1] - yExtent[0]) * 0.1;
-  const yScale = d3
+  yScale = d3
     .scaleLinear()
     .domain([Math.max(0, yExtent[0] - yPadding), yExtent[1] + yPadding])
     .range([height, 0]);
 
+  // Grid
   const gridGroup = chartGroup.append('g').attr('class', 'grid');
 
   gridGroup
@@ -126,49 +140,45 @@ const render = (): void => {
     .style('stroke-width', 1)
     .style('opacity', 0.5);
 
-  // X Axis line / ticks / label
-  const xAxis = chartGroup
+  // Axes
+  chartGroup
     .append('g')
-    .attr('class', 'x-axis') // this class is only for targeting, not styling
-    .attr('transform', `translate(0,${height})`) // put x axis on the bottom of the container
+    .attr('class', 'x-axis')
+    .attr('transform', `translate(0,${height})`)
     .call(
       d3
         .axisBottom(xScale)
-        .tickValues(sortedData.value.map((d) => d.year)) // prevent d3 from auto-generating ticks - leads to duplication
+        .tickValues(sortedData.value.map((d) => d.year))
         .tickFormat((d) => {
           return containerWidth < 400 ? `'${String(d).slice(2)}` : String(d);
         })
         .tickSize(-10),
     );
 
-  // Y Axis line / ticks / label
   chartGroup
     .append('g')
-    .attr('class', 'y-axis') // this class is only for targeting, not styling
+    .attr('class', 'y-axis')
     .call(d3.axisLeft(yScale).tickFormat(d3.format('.2s')).tickSize(-10));
 
-  // Stroke styling for the X and Y axes
+  // Style axes
   svg
     .selectAll('.x-axis, .y-axis')
     .selectAll('path, line')
-    .style('stroke', '#64748b') // dark gray
+    .style('stroke', '#64748b')
     .style('stroke-width', 2);
 
-  // Font styling for x and y axes text labels
   svg
     .selectAll('.x-axis, .y-axis')
     .selectAll('text')
     .style('fill', '#475569')
     .style('font-size', '12px');
 
-  // The Y-Axis Label
+  // Axis labels
   chartGroup
     .append('text')
     .attr('transform', 'rotate(-90)')
     .attr('y', 0 - margin.left)
     .attr('x', 0 - height / 2)
-
-    // this may need to be adjusted for mobile viewports - need as much room as we can get
     .attr('dy', '2.5em')
     .style('text-anchor', 'middle')
     .style('font-size', '14px')
@@ -176,7 +186,6 @@ const render = (): void => {
     .style('fill', '#374151')
     .text(props.yAxisLabel);
 
-  // The X-Axis Label
   chartGroup
     .append('text')
     .attr('transform', `translate(${width / 2}, ${height + 45})`)
@@ -186,56 +195,7 @@ const render = (): void => {
     .style('fill', '#374151')
     .text('Year');
 
-  // Animated Trend Line
-  if (props.showTrendLine && sortedData.value.length > 1) {
-    const regression = calculateLinearRegression(sortedData.value);
-    const trendLine = chartGroup
-      .append('line')
-      .attr('x1', xScale(regression.x1))
-      .attr('x2', xScale(regression.x1))
-      .attr('y1', yScale(regression.y1))
-      .attr('y2', yScale(regression.y1))
-      .style('stroke', '#8b5cf6')
-      .style('stroke-width', 3)
-      .style('stroke-dasharray', '20,5')
-      .style('opacity', 0);
-
-    // Animate the trend line
-    trendLine
-      .transition()
-      .duration(props.animationDuration)
-      .delay(props.animationDuration * 0.2)
-      .ease(d3.easeQuadOut)
-      .attr('x2', xScale(regression.x2))
-      .attr('y2', yScale(regression.y2))
-      .style('opacity', 0.7);
-  }
-
-  const line = d3
-    .line<DataPoint>()
-    .x((d: DataPoint) => xScale(d.year))
-    .y((d: DataPoint) => yScale(d.value))
-    .curve(d3.curveMonotoneX);
-
-  const path = chartGroup
-    .append('path')
-    .datum(sortedData.value)
-    .attr('class', 'line')
-    .attr('fill', 'none')
-    .attr('stroke', props.color)
-    .attr('stroke-width', 3)
-    .attr('d', line)
-    .style('filter', 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))');
-
-  const totalLength = path.node()?.getTotalLength() || 0;
-  path
-    .attr('stroke-dasharray', totalLength + ' ' + totalLength)
-    .attr('stroke-dashoffset', totalLength)
-    .transition()
-    .duration(props.animationDuration)
-    .ease(d3.easeLinear)
-    .attr('stroke-dashoffset', 0);
-
+  // Create tooltip (but don't show it yet)
   const tooltip = container
     .append('div')
     .style('opacity', 0)
@@ -251,32 +211,42 @@ const render = (): void => {
     .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.15)')
     .style('z-index', '1000');
 
-  const mouseover = (): void => {
-    tooltip.style('opacity', 1);
-  };
+  // Prepare data elements (but don't show them yet)
+  const line = d3
+    .line<DataPoint>()
+    .x((d: DataPoint) => xScale(d.year))
+    .y((d: DataPoint) => yScale(d.value))
+    .curve(d3.curveMonotoneX);
 
-  const mousemove = (event: MouseEvent, d: DataPoint): void => {
-    const [x, y] = d3.pointer(event, container.node());
-    tooltip
-      .html(
-        `
-        <div style="color: #1e293b; font-weight: 600; margin-bottom: 4px;">
-          Year: ${d.year}
-        </div>
-        <div style="color: ${props.color}; font-weight: 600;">
-          ${props.yAxisLabel}: ${d.value.toLocaleString()}
-        </div>
-      `,
-      )
-      .style('left', `${x + 15}px`)
-      .style('top', `${y - 10}px`);
-  };
+  // Create path but make it invisible
+  const path = chartGroup
+    .append('path')
+    .datum(sortedData.value)
+    .attr('class', 'line')
+    .attr('fill', 'none')
+    .attr('stroke', props.color)
+    .attr('stroke-width', 3)
+    .attr('d', line)
+    .style('filter', 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))')
+    .style('opacity', 0); // Start invisible
 
-  const mouseleave = (): void => {
-    tooltip.transition().duration(tooltipAnimationDuration).style('opacity', 0);
-  };
+  // Create trend line but make it invisible
+  let trendLine = null;
+  if (props.showTrendLine && sortedData.value.length > 1) {
+    const regression = calculateLinearRegression(sortedData.value);
+    trendLine = chartGroup
+      .append('line')
+      .attr('x1', xScale(regression.x1))
+      .attr('x2', xScale(regression.x2))
+      .attr('y1', yScale(regression.y1))
+      .attr('y2', yScale(regression.y2))
+      .style('stroke', '#8b5cf6')
+      .style('stroke-width', 3)
+      .style('stroke-dasharray', '20,5')
+      .style('opacity', 0); // Start invisible
+  }
 
-  // Data points
+  // Create circles but make them invisible
   const circles = chartGroup
     .append('g')
     .selectAll('circle')
@@ -285,34 +255,119 @@ const render = (): void => {
     .append('circle')
     .attr('cx', (d: DataPoint) => xScale(d.year))
     .attr('cy', (d: DataPoint) => yScale(d.value))
-    .attr('r', 0)
+    .attr('r', 0) // Start with 0 radius
     .attr('fill', props.color)
     .style('cursor', 'pointer')
-    .on('mouseover', function () {
-      mouseover();
-      d3.select(this)
-        .transition()
-        .duration(tooltipAnimationDuration)
-        .attr('r', 8);
+    .style('opacity', 0) // Start invisible
+    .on('mouseover', function (event, d) {
+      if (hasAnimated.value) {
+        // Only show tooltip after animation
+        tooltip.style('opacity', 1);
+        d3.select(this)
+          .transition()
+          .duration(tooltipAnimationDuration)
+          .attr('r', 8);
+      }
     })
-    .on('mousemove', mousemove)
+    .on('mousemove', function (event, d) {
+      if (hasAnimated.value) {
+        const [x, y] = d3.pointer(event, container.node());
+        tooltip
+          .html(
+            `
+            <div style="color: #1e293b; font-weight: 600; margin-bottom: 4px;">
+              Year: ${d.year}
+            </div>
+            <div style="color: ${props.color}; font-weight: 600;">
+              ${props.yAxisLabel}: ${d.value.toLocaleString()}
+            </div>
+          `,
+          )
+          .style('left', `${x + 15}px`)
+          .style('top', `${y - 10}px`);
+      }
+    })
     .on('mouseout', function () {
-      mouseleave();
-      d3.select(this)
-        .transition()
-        .duration(tooltipAnimationDuration)
-        .attr('r', 6);
+      if (hasAnimated.value) {
+        tooltip
+          .transition()
+          .duration(tooltipAnimationDuration)
+          .style('opacity', 0);
+        d3.select(this)
+          .transition()
+          .duration(tooltipAnimationDuration)
+          .attr('r', 6);
+      }
     });
+
+  if (props.showTrendLine && sortedData.value.length > 1) {
+    const regression = calculateLinearRegression(sortedData.value);
+    trendLine = chartGroup
+      .append('line')
+      .attr('x1', xScale(regression.x1))
+      .attr('y1', yScale(regression.y1))
+      // Start collapsed at (x1, y1)
+      .attr('x2', xScale(regression.x1))
+      .attr('y2', yScale(regression.y1))
+      .style('stroke', '#8b5cf6')
+      .style('stroke-width', 3)
+      .style('stroke-dasharray', '20,5')
+      .style('opacity', 0); // Start invisible
+  }
+
+  // Store references for later animation
+  chartElements = {
+    container,
+    chartGroup,
+    tooltip,
+    circles,
+    path,
+    trendLine,
+  };
+
+  loading.value = false;
+  chartRendered.value = true;
+};
+
+const animateDataElements = (): void => {
+  if (!chartElements || hasAnimated.value) return;
+
+  const { circles, path, trendLine } = chartElements;
+
+  // Animate the line
+  const totalLength = path.node()?.getTotalLength() || 0;
+  path
+    .attr('stroke-dasharray', totalLength + ' ' + totalLength)
+    .attr('stroke-dashoffset', totalLength)
+    .style('opacity', 1)
+    .transition()
+    .duration(props.animationDuration)
+    .ease(d3.easeLinear)
+    .attr('stroke-dashoffset', 0);
 
   // Animate circles
   circles
+    .style('opacity', 1)
     .transition()
     .duration(props.animationDuration)
-    .delay((d, i) => i * 100)
+    .delay((d: DataPoint, i: number) => i * 100)
     .attr('r', 6)
     .ease(d3.easeBackOut);
 
-  loading.value = false;
+  // Animate trend line
+  if (trendLine) {
+    const regression = calculateLinearRegression(sortedData.value);
+    trendLine
+      .style('opacity', 0.7)
+      .transition()
+      .duration(props.animationDuration)
+      .delay(props.animationDuration * 0.2)
+      .ease(d3.easeQuadOut)
+      .attr('x2', xScale(regression.x2))
+      .attr('y2', yScale(regression.y2));
+  }
+
+  hasAnimated.value = true;
 };
 
 const calculateLinearRegression = (data: DataPoint[]): RegressionLine => {
@@ -336,41 +391,43 @@ const calculateLinearRegression = (data: DataPoint[]): RegressionLine => {
   };
 };
 
+let intersectionObserver: IntersectionObserver | undefined;
+
 onMounted(() => {
-  if (chartContainer.value) {
-    intersectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated.value) {
-            isInView.value = true;
-            hasAnimated.value = true;
-            render();
-          }
-        });
-      },
-      {
-        threshold: 0.6, // Trigger when 30% of the element is visible
-      },
-    );
+  // Render chart structure immediately
+  renderChartStructure();
 
-    intersectionObserver.observe(chartContainer.value);
-  }
+  // Set up intersection observer for data animation
+  intersectionObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (
+          entry.isIntersecting &&
+          !hasAnimated.value &&
+          entry.intersectionRatio >= 0.5 &&
+          chartRendered.value
+        ) {
+          console.log('Animating chart data for:', props.containerId);
+          animateDataElements();
+        }
+      });
+    },
+    {
+      threshold: 0.5,
+    },
+  );
 
-  // If the user is changing the viewport width, this keeps it at the proper dimensions
-  if (chartContainer.value) {
-    resizeObserver = new ResizeObserver(() => {
-      render();
-    });
-    resizeObserver.observe(chartContainer.value);
-  }
+  requestAnimationFrame(() => {
+    if (intersectionObserver && chartContainer.value) {
+      intersectionObserver.observe(chartContainer.value);
+    }
+  });
 });
 
 onBeforeUnmount(() => {
-  if (resizeObserver && chartContainer.value) {
-    resizeObserver.unobserve(chartContainer.value);
-  }
   if (intersectionObserver && chartContainer.value) {
     intersectionObserver.unobserve(chartContainer.value);
+    intersectionObserver.disconnect();
   }
 });
 
@@ -378,10 +435,10 @@ watch(
   () => props.data,
   () => {
     loading.value = true;
-    // Reset animation state when data changes
     hasAnimated.value = false;
-    isInView.value = false;
-    render();
+    chartRendered.value = false;
+    renderChartStructure();
+    animateDataElements();
   },
   { deep: true },
 );
@@ -389,10 +446,17 @@ watch(
 
 <style scoped>
 .scatterplot-container {
-  width: min(95%, 1000px);
+  width: 100%;
+  min-height: 400px;
   position: relative;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
     sans-serif;
+}
+
+@media screen and (min-width: 500px) {
+  .scatterplot-container {
+    width: min(90%, 1000px);
+  }
 }
 
 .loading-overlay {
@@ -427,7 +491,6 @@ watch(
   }
 }
 
-/* Responsive design */
 @media (max-width: 768px) {
   .scatterplot-container {
     font-size: 12px;

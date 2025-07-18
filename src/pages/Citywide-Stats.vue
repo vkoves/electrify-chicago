@@ -15,6 +15,7 @@
           :color="graph.color"
           :container-id="graph.containerId"
           :show-grid="true"
+          :title="graph.title"
         />
       </div>
     </div>
