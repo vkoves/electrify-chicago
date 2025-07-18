@@ -9,11 +9,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue';
 import * as d3 from 'd3';
-
-export interface DataPoint {
-  year: number;
-  value: number;
-}
+import { DataPoint } from '../citywide-stats/types';
 
 const props = withDefaults(
   defineProps<{
