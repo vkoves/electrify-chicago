@@ -83,6 +83,7 @@ const renderScatterplot = () => {
     .domain(
       d3.extent(sortedData.value, (d: DataPoint) => d.year) as [number, number],
     )
+    .domain([2016, 2022])
     .range([0, width]);
 
   const yExtent = d3.extent(sortedData.value, (d: DataPoint) => d.value) as [
@@ -125,17 +126,23 @@ const renderScatterplot = () => {
     .style('stroke-width', 1)
     .style('opacity', 0.5);
 
-  // X Axis
+  // X Axis line / ticks / label
   chartGroup
     .append('g')
-    .attr('class', 'x-axis')
-    .attr('transform', `translate(0,${height})`)
-    .call(d3.axisBottom(xScale).tickFormat(d3.format('d')).tickSize(-10));
+    .attr('class', 'x-axis') // this class is only for targeting, not styling
+    .attr('transform', `translate(0,${height})`) // put x axis on the bottom of the container
+    .call(
+      d3
+        .axisBottom(xScale)
+        .tickValues(sortedData.value.map((d) => d.year)) // prevent d3 from auto-generating ticks - leads to duplication
+        .tickFormat(d3.format('d'))
+        .tickSize(-10),
+    );
 
-  // Y Axis
+  // Y Axis line / ticks / label
   chartGroup
     .append('g')
-    .attr('class', 'y-axis')
+    .attr('class', 'y-axis') // this class is only for targeting, not styling
     .call(d3.axisLeft(yScale).tickFormat(d3.format('.2s')).tickSize(-10));
 
   // Stroke styling for the X and Y axes
@@ -313,12 +320,10 @@ const calculateLinearRegression = (data: DataPoint[]) => {
 
 onMounted(() => {
   if (chartContainer.value) {
-    console.log('chartContainer.value', chartContainer.value);
     intersectionObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && !hasAnimated.value) {
-            console.log('firing inside if');
             isInView.value = true;
             hasAnimated.value = true;
             renderScatterplot();
