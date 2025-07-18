@@ -190,6 +190,7 @@ query ($id: ID!, $ID: String) {
             <div class="building-top-info">
               <h2>Building Info</h2>
 
+              <!-- NOTE: We hide some less essential building info when printing -->
               <dl>
                 <div>
                   <dt>Square Footage</dt>
@@ -226,12 +227,13 @@ query ($id: ID!, $ID: String) {
                     $page.building.NumberOfBuildings &&
                     $page.building.NumberOfBuildings > 1
                   "
+                  class="no-print"
                 >
                   <dt>Building Count</dt>
                   <dd>{{ $page.building.NumberOfBuildings }}</dd>
                 </div>
 
-                <div>
+                <div class="no-print">
                   <dt>Community Area</dt>
                   <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
                 </div>
@@ -249,6 +251,7 @@ query ($id: ID!, $ID: String) {
                 <!-- Show energy rating if it's a float value (not blank or NaN) -->
                 <div
                   v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))"
+                  class="no-print"
                 >
                   <dt>
                     <a
