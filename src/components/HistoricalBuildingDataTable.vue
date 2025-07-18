@@ -233,7 +233,6 @@ export default class HistoricalBuildingTable extends Vue {
         return !blankData.includes((year as any)[colKey]);
       });
     });
-    console.log(notEmptyColKeys, 'notEmptyColKeys');
     return notEmptyColKeys;
   }
 
