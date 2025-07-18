@@ -3,6 +3,13 @@ export interface DataPoint {
   value: number;
 }
 
+export type RegressionLine = {
+  x1: number;
+  x2: number;
+  y1: number;
+  y2: number;
+};
+
 export interface MetricStats {
   count: number;
   mean: number;

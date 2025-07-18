@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue';
 import * as d3 from 'd3';
-import { DataPoint } from '../citywide-stats/types';
+import { DataPoint, RegressionLine } from '../citywide-stats/types';
 
 const props = withDefaults(
   defineProps<{
@@ -30,6 +30,7 @@ const props = withDefaults(
   },
 );
 
+const tooltipAnimationDuration = 300;
 const chartContainer = ref<HTMLElement | null>(null);
 const loading = ref(true);
 const hasAnimated = ref(false);
@@ -41,7 +42,7 @@ const sortedData = computed(() => {
   return [...props.data].sort((a, b) => a.year - b.year);
 });
 
-const renderScatterplot = () => {
+const render = (): void => {
   if (!chartContainer.value || !sortedData.value.length) return;
 
   // Grab Height and Width from the DOM
@@ -83,7 +84,6 @@ const renderScatterplot = () => {
     .domain(
       d3.extent(sortedData.value, (d: DataPoint) => d.year) as [number, number],
     )
-    .domain([2016, 2022])
     .range([0, width]);
 
   const yExtent = d3.extent(sortedData.value, (d: DataPoint) => d.value) as [
@@ -127,7 +127,7 @@ const renderScatterplot = () => {
     .style('opacity', 0.5);
 
   // X Axis line / ticks / label
-  chartGroup
+  const xAxis = chartGroup
     .append('g')
     .attr('class', 'x-axis') // this class is only for targeting, not styling
     .attr('transform', `translate(0,${height})`) // put x axis on the bottom of the container
@@ -135,7 +135,9 @@ const renderScatterplot = () => {
       d3
         .axisBottom(xScale)
         .tickValues(sortedData.value.map((d) => d.year)) // prevent d3 from auto-generating ticks - leads to duplication
-        .tickFormat(d3.format('d'))
+        .tickFormat((d) => {
+          return containerWidth < 400 ? `'${String(d).slice(2)}` : String(d);
+        })
         .tickSize(-10),
     );
 
@@ -184,18 +186,28 @@ const renderScatterplot = () => {
     .style('fill', '#374151')
     .text('Year');
 
+  // Animated Trend Line
   if (props.showTrendLine && sortedData.value.length > 1) {
     const regression = calculateLinearRegression(sortedData.value);
-    chartGroup
+    const trendLine = chartGroup
       .append('line')
-      .attr('class', 'trend-line')
       .attr('x1', xScale(regression.x1))
+      .attr('x2', xScale(regression.x1))
       .attr('y1', yScale(regression.y1))
+      .attr('y2', yScale(regression.y1))
+      .style('stroke', '#8b5cf6')
+      .style('stroke-width', 3)
+      .style('stroke-dasharray', '20,5')
+      .style('opacity', 0);
+
+    // Animate the trend line
+    trendLine
+      .transition()
+      .duration(props.animationDuration)
+      .delay(props.animationDuration * 0.2)
+      .ease(d3.easeQuadOut)
       .attr('x2', xScale(regression.x2))
       .attr('y2', yScale(regression.y2))
-      .style('stroke', '#ef4444')
-      .style('stroke-width', 2)
-      .style('stroke-dasharray', '5,5')
       .style('opacity', 0.7);
   }
 
@@ -239,11 +251,11 @@ const renderScatterplot = () => {
     .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.15)')
     .style('z-index', '1000');
 
-  const mouseover = () => {
+  const mouseover = (): void => {
     tooltip.style('opacity', 1);
   };
 
-  const mousemove = (event: MouseEvent, d: DataPoint) => {
+  const mousemove = (event: MouseEvent, d: DataPoint): void => {
     const [x, y] = d3.pointer(event, container.node());
     tooltip
       .html(
@@ -260,8 +272,8 @@ const renderScatterplot = () => {
       .style('top', `${y - 10}px`);
   };
 
-  const mouseleave = () => {
-    tooltip.transition().duration(200).style('opacity', 0);
+  const mouseleave = (): void => {
+    tooltip.transition().duration(tooltipAnimationDuration).style('opacity', 0);
   };
 
   // Data points
@@ -276,14 +288,20 @@ const renderScatterplot = () => {
     .attr('r', 0)
     .attr('fill', props.color)
     .style('cursor', 'pointer')
-    .on('mouseover', function (event, d) {
+    .on('mouseover', function () {
       mouseover();
-      d3.select(this).transition().duration(200).attr('r', 8);
+      d3.select(this)
+        .transition()
+        .duration(tooltipAnimationDuration)
+        .attr('r', 8);
     })
     .on('mousemove', mousemove)
-    .on('mouseout', function (event, d) {
+    .on('mouseout', function () {
       mouseleave();
-      d3.select(this).transition().duration(200).attr('r', 6);
+      d3.select(this)
+        .transition()
+        .duration(tooltipAnimationDuration)
+        .attr('r', 6);
     });
 
   // Animate circles
@@ -297,7 +315,7 @@ const renderScatterplot = () => {
   loading.value = false;
 };
 
-const calculateLinearRegression = (data: DataPoint[]) => {
+const calculateLinearRegression = (data: DataPoint[]): RegressionLine => {
   const n = data.length;
   const sumX = data.reduce((sum, d) => sum + d.year, 0);
   const sumY = data.reduce((sum, d) => sum + d.value, 0);
@@ -326,7 +344,7 @@ onMounted(() => {
           if (entry.isIntersecting && !hasAnimated.value) {
             isInView.value = true;
             hasAnimated.value = true;
-            renderScatterplot();
+            render();
           }
         });
       },
@@ -341,7 +359,7 @@ onMounted(() => {
   // If the user is changing the viewport width, this keeps it at the proper dimensions
   if (chartContainer.value) {
     resizeObserver = new ResizeObserver(() => {
-      renderScatterplot();
+      render();
     });
     resizeObserver.observe(chartContainer.value);
   }
@@ -363,7 +381,7 @@ watch(
     // Reset animation state when data changes
     hasAnimated.value = false;
     isInView.value = false;
-    renderScatterplot();
+    render();
   },
   { deep: true },
 );
@@ -371,7 +389,7 @@ watch(
 
 <style scoped>
 .scatterplot-container {
-  width: min(90%, 1000px);
+  width: min(95%, 1000px);
   position: relative;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
     sans-serif;
