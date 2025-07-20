@@ -223,14 +223,13 @@ export default class HistoricalBuildingTable extends Vue {
       return [];
     }
     const allColKeys: Array<string> = Object.keys(this.historicBenchmarks[0]);
-    type blankDataType = string | null | number | undefined;
-    const blankData: blankDataType[] = [null, '', 0.0, undefined];
+    const blankData: any[] = [null, '', 0.0, undefined];
     const notEmptyColKeys = allColKeys.filter((colKey: string) => {
       // A column is not empty if any of the datapoints
       // for that category are not part of our predefined
       // blank data states seen in the blankData array
-      return this.historicBenchmarks.some((year) => {
-        return !blankData.includes((year as any)[colKey]);
+      return this.historicBenchmarks.some((annualData) => {
+        return !blankData.includes((annualData as any)[colKey]);
       });
     });
     return notEmptyColKeys;
