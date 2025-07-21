@@ -448,7 +448,6 @@ watch(
 <style scoped>
 .scatterplot-container {
   width: 100%;
-  min-height: 400px;
   position: relative;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
     sans-serif;
