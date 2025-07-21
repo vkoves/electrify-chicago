@@ -11,6 +11,15 @@ import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue';
 import * as d3 from 'd3';
 import { DataPoint, RegressionLine } from '../citywide-stats/types';
 
+interface ChartElements {
+  container: d3.Selection<HTMLElement, unknown, null, undefined>;
+  chartGroup: d3.Selection<SVGGElement, unknown, null, undefined>;
+  tooltip: d3.Selection<HTMLDivElement, unknown, null, undefined>;
+  circles: d3.Selection<SVGCircleElement, DataPoint, SVGGElement, unknown>;
+  path: d3.Selection<SVGPathElement, DataPoint[], null, undefined>;
+  trendLine: d3.Selection<SVGLineElement, unknown, null, undefined> | null;
+}
+
 const props = withDefaults(
   defineProps<{
     data: DataPoint[];
@@ -34,20 +43,12 @@ const tooltipAnimationDuration = 300;
 const chartContainer = ref<HTMLElement | null>(null);
 const loading = ref(true);
 const hasAnimated = ref(false);
-const isInView = ref(false);
 const chartRendered = ref(false);
 let xScale: d3.ScaleLinear<number, number> = d3.scaleLinear().range([0, 0]);
 let yScale: d3.ScaleLinear<number, number> = d3.scaleLinear().range([0, 0]);
 
 // Store references to chart elements for later animation
-let chartElements: {
-  container: any;
-  chartGroup: any;
-  tooltip: any;
-  circles?: any;
-  path?: any;
-  trendLine?: any;
-} | null = null;
+let chartElements: ChartElements | null = null;
 
 const sortedData = computed(() => {
   return [...props.data].sort((a, b) => a.year - b.year);
@@ -259,7 +260,7 @@ const renderChartStructure = (): void => {
     .attr('fill', props.color)
     .style('cursor', 'pointer')
     .style('opacity', 0) // Start invisible
-    .on('mouseover', function (event, d) {
+    .on('mouseover', function () {
       if (hasAnimated.value) {
         // Only show tooltip after animation
         tooltip.style('opacity', 1);
