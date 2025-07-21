@@ -37,6 +37,10 @@ export const graphConfigs = [
     title: 'GHG Intensity',
     yAxisLabel: 'kg CO2e/sq ft',
     color: '#e74c3c',
+    description: [
+      'This chart shows the median greenhouse gas (GHG) emissions intensity of buildings. It is measured in kilograms of CO2-equivalent per square foot (kg CO2e/sq ft).',
+      'This unit expresses how much climate pollution a building emits per square foot of space, helping to normalize for building size. Lower numbers suggest better efficiency or cleaner energy use.',
+    ],
   },
   {
     data: extractMetricData('TotalGHGEmissions', '50%'),
@@ -44,6 +48,10 @@ export const graphConfigs = [
     title: 'Total GHG Emissions',
     yAxisLabel: 'metric tons CO2e',
     color: '#3498db',
+    description: [
+      'Displays the median total greenhouse gas emissions per building, measured in metric tons of CO2-equivalent (CO2e).',
+      'This includes emissions from electricity, natural gas, and other sources. A metric ton equals 1,000 kilograms — roughly the emissions from driving a typical gasoline car for over 2,000 miles.',
+    ],
   },
   {
     data: extractMetricData('ElectricityUse', '50%'),
@@ -51,6 +59,10 @@ export const graphConfigs = [
     title: 'Electricity Use',
     yAxisLabel: 'kWh',
     color: '#f39c12',
+    description: [
+      'Shows median annual electricity consumption in kilowatt-hours (kWh).',
+      'One kWh is the amount of energy used by a 1,000-watt appliance running for one hour — for example, a clothes dryer for 45 minutes or 10 LED bulbs for 10 hours. This metric reflects how much power buildings are drawing from the grid.',
+    ],
   },
   {
     data: extractMetricData('NaturalGasUse', '50%'),
@@ -58,6 +70,10 @@ export const graphConfigs = [
     title: 'Natural Gas Use',
     yAxisLabel: 'therms',
     color: '#27ae60',
+    description: [
+      'Indicates the median natural gas consumption per building, measured in therms.',
+      'One therm is roughly equivalent to burning 100 cubic feet of natural gas and releases about 5.3 kg of CO2. This metric tracks building heating and hot water use, which are major sources of wintertime emissions.',
+    ],
   },
   {
     data: extractMetricData('SourceEUI', '50%'),
@@ -65,6 +81,10 @@ export const graphConfigs = [
     title: 'Source EUI',
     yAxisLabel: 'kBtu/sq ft',
     color: '#9b59b6',
+    description: [
+      'Source Energy Use Intensity (Source EUI) measures the total energy used per square foot (kBtu/sq ft), including generation and transmission losses.',
+      'One kBtu (1,000 British thermal units) is about the energy in a kitchen match. This metric gives a full picture of energy demands on the wider energy system.',
+    ],
   },
   {
     data: extractMetricData('SiteEUI', '50%'),
@@ -72,5 +92,9 @@ export const graphConfigs = [
     title: 'Site EUI',
     yAxisLabel: 'kBtu/sq ft',
     color: '#1abc9c',
+    description: [
+      'Site Energy Use Intensity (Site EUI) reflects the amount of energy consumed per square foot at the building site itself, measured in kBtu/sq ft.',
+      'It excludes upstream losses and focuses purely on what the building uses. It’s commonly used to benchmark and compare buildings’ operational efficiency.',
+    ],
   },
 ] as const;

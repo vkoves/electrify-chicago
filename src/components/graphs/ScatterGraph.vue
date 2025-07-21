@@ -455,7 +455,7 @@ watch(
 
 @media screen and (min-width: 500px) {
   .scatterplot-container {
-    width: min(90%, 1000px);
+    max-width: 1000px;
   }
 }
 
