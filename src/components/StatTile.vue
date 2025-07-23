@@ -719,5 +719,26 @@ export default class StatTile extends Vue {
       flex-wrap: wrap;
     }
   }
+
+  /** Print Mode styling - make stats vertical with graph at bottom */
+  @media print {
+    display: flex;
+    flex-direction: column;
+
+    // Scale up not square footage stat values
+    &:not(.-sq-footage) {
+      .stat-value { font-size: 2.5rem; }
+    }
+
+    .spark-graph-cont {
+      order: 3;
+      margin-top: 3rem;
+    }
+
+    .unit {
+      font-weight: bold !important;
+      font-size: 1.5rem !important;
+    }
+  }
 }
 </style>

@@ -1235,6 +1235,7 @@ export default class BuildingDetails extends Vue {
 
       .building-header-text {
         position: relative;
+        margin-bottom: 0;
 
         .address {
           font-size: 1rem;
@@ -1338,6 +1339,23 @@ export default class BuildingDetails extends Vue {
 
     .report-card-cont {
       flex-basis: 20rem !important;
+    }
+
+
+    .stat-tiles-col h2 { font-size: 1.75rem !important; }
+
+    // Lock the height of the stat tiles and the energy mix chart
+    .energy-mix-cont, .stat-tiles dd {
+      height: 21.5rem !important;
+    }
+
+    .stat-tiles dt,
+    .label-and-grade {
+      margin-left: 0;
+    }
+
+    .label-and-grade.-energy-mix {
+      margin-top: 6rem;
     }
 
     // The print page is mobile (~670px) but we want it to render more desktop style,

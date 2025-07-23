@@ -738,8 +738,9 @@ article.blog-post {
 }
 
 /**
- * Print Styling - hides interactive elements and simplifies layout. Note that print
- * layout is around 670px
+ * Print Styling - hides interactive elements and simplifies layout.
+ *
+ * NOTE: Print layout is around 670px (or 740px?) wide, so make sure to test that way
  */
 @media print {
   // Shrink all fonts
