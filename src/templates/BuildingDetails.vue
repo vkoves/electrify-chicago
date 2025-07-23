@@ -145,45 +145,48 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="details-cont">
-          <div
-            v-for="anomaly in buildingAnomalies"
-            :key="anomaly"
-            class="building-banner"
-          >
-            <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
-              <h2>
-                <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas
-                Free
-              </h2>
+          <!-- Show warning container if we have anomalies our out of date data -->
+          <div v-if="buildingAnomalies.length > 0 || dataYear < LatestDataYear"
+            class="building-banner">
+            <div
+              v-for="anomaly in buildingAnomalies"
+              :key="anomaly"
+            >
+              <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
+                <h2>
+                  <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas
+                  Free
+                </h2>
+
+                <p>
+                  This building reported zero fossil gas use in the most recent
+                  year, but has used gas in the past, which may be a reporting
+                  error. Take a look at how this building has used energy over
+                  time under "Extra Technical & Historic Info".
+                </p>
+              </div>
+              <div v-if="anomaly === DataAnomalies.largeGasSwing">
+                <h2>
+                  <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent
+                  Gas Use
+                </h2>
+
+                <p>
+                  This building has had extremely large changes in gas use, which
+                  is likely to indicate errors in reporting.
+                </p>
+              </div>
+            </div>
+
+            <div v-if="dataYear < LatestDataYear">
+              <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
 
               <p>
-                This building reported zero fossil gas use in the most recent
-                year, but has used gas in the past, which may be a reporting
-                error. Take a look at how this building has used energy over
-                time under "Extra Technical & Historic Info".
+                This building did not report full data in {{ LatestDataYear }}, so
+                <span class="bold">top-level stats are from {{ dataYear }}</span
+                >, the latest full year reported.
               </p>
             </div>
-            <div v-if="anomaly === DataAnomalies.largeGasSwing">
-              <h2>
-                <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent
-                Gas Use
-              </h2>
-
-              <p>
-                This building has had extremely large changes in gas use, which
-                is likely to indicate errors in reporting.
-              </p>
-            </div>
-          </div>
-
-          <div v-if="dataYear < LatestDataYear" class="building-banner">
-            <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
-
-            <p>
-              This building did not report full data in {{ LatestDataYear }}, so
-              <span class="bold">top-level stats are from {{ dataYear }}</span
-              >, the latest full year reported.
-            </p>
           </div>
 
           <div class="info-and-report-card">
@@ -1016,6 +1019,8 @@ export default class BuildingDetails extends Vue {
     p {
       font-size: 0.75rem;
     }
+
+    > div + div { margin-top: 0.5rem; }
   }
 
   .address {
@@ -1355,7 +1360,7 @@ export default class BuildingDetails extends Vue {
     }
 
     .label-and-grade.-energy-mix {
-      margin-top: 6rem;
+      margin-top: 5.75rem;
     }
 
     // The print page is mobile (~670px) but we want it to render more desktop style,
