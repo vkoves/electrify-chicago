@@ -252,9 +252,13 @@ export default class ReportCard extends Vue {
   @media print {
     // Hide the anomaly warning when printing to not cover grades - there's already a top level
     // banner warning
-    .anomaly-warning { display: none !important; }
+    .anomaly-warning {
+      display: none !important;
+    }
 
-    h2.title { font-size: 1.5rem; }
+    h2.title {
+      font-size: 1.5rem;
+    }
 
     .grade-row {
       font-size: 1.2rem;
@@ -262,7 +266,9 @@ export default class ReportCard extends Vue {
       .letter-grade {
         font-size: 2rem !important;
 
-        &.-overall { font-size: 4rem !important; }
+        &.-overall {
+          font-size: 4rem !important;
+        }
       }
     }
 

@@ -1329,8 +1329,12 @@ export default class BuildingDetails extends Vue {
     }
 
     // Scale up title and address
-    h1 { font-size: 3rem; }
-    .address { font-size: 1.5rem !important; }
+    h1 {
+      font-size: 3rem;
+    }
+    .address {
+      font-size: 1.5rem !important;
+    }
 
     .report-card-cont {
       flex-basis: 20rem !important;
