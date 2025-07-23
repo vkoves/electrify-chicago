@@ -751,14 +751,18 @@ article.blog-post {
   /** Expose global "no-print" class for hiding elements from printing */
   .no-print { display: none !important; }
 
-  // We want to keep the site logo, but drop all the links
-  header.header .top-nav,
-  header.header button.mobile-menu-toggle {
-    display: none;
-  }
+  // Drop header border and padding
+  header.header {
+    padding: 0;
 
-  header.header .site-logo {
-    width: 12.5rem;
+    .site-logo {
+      width: 20rem;
+    }
+
+    // Drop all header links (just keep the logo)
+    .top-nav, button.mobile-menu-toggle {
+      display: none;
+    }
   }
 
   // Drop main-content padding, since printed pages already have plenty
