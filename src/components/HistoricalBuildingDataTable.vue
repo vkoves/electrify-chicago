@@ -222,7 +222,9 @@ export default class HistoricalBuildingTable extends Vue {
     if (this.historicBenchmarks.length === 0) {
       return [];
     }
-    const allColKeys = Object.keys(this.historicBenchmarks[0]) as Array<keyof IHistoricData>;
+    const allColKeys = Object.keys(this.historicBenchmarks[0]) as Array<
+      keyof IHistoricData
+    >;
     const blankData = [null, '', 0.0, undefined];
 
     const notEmptyColKeys = allColKeys.filter((colKey) => {
