@@ -1108,11 +1108,11 @@ export default class BuildingDetails extends Vue {
     background-color: $grey-light;
     border-radius: $brd-rad-small;
     text-align: center;
-    margin-top: 3rem;
+    margin-top: 5rem;
 
     .qr-code {
       display: inline-block;
-      width: 70%;
+      width: 60%;
       aspect-ratio: 1;
       background: $white;
       margin: 1rem 0;
@@ -1215,12 +1215,6 @@ export default class BuildingDetails extends Vue {
    */
   @media (max-width: $mobile-max-width) {
     .building-header {
-      &.-has-img {
-        grid-template-areas:
-          'img title'
-          'img details' !important;
-      }
-
       .building-img-cont,
       .building-header-text {
         width: 100%;
@@ -1334,6 +1328,14 @@ export default class BuildingDetails extends Vue {
       display: none !important;
     }
 
+    // Undo mobile layout
+    .building-header.-has-img {
+      grid-template-areas:
+        'img title'
+        'img details' !important;
+      grid-template-columns: 1fr 60%;
+    }
+
     // Scale up title and address
     h1 {
       font-size: 3rem;
@@ -1346,7 +1348,6 @@ export default class BuildingDetails extends Vue {
       flex-basis: 20rem !important;
     }
 
-
     .stat-tiles-col h2 { font-size: 1.75rem !important; }
 
     // Lock the height of the stat tiles and the energy mix chart
@@ -1354,8 +1355,10 @@ export default class BuildingDetails extends Vue {
       height: 21.5rem !important;
     }
 
+    // Drop left margin from section titles
     .stat-tiles dt,
-    .label-and-grade {
+    .label-and-grade,
+    .reporting-tile .headline {
       margin-left: 0;
     }
 
@@ -1387,11 +1390,17 @@ export default class BuildingDetails extends Vue {
     }
 
     // Make stat tiles two columns again
-    .stat-tiles > div {
-      flex-basis: 48%;
+    .stat-tiles {
+      margin: 0;
+
+      > div {
+        flex-basis: 48%;
+      }
     }
 
-    // Break the Energy Breakdown to a new page
+    .reporting-tile { margin-top: 1rem; }
+
+    // Break the Energy Breakdown to page 2
     .stat-tiles-col.-energy-breakdown {
       page-break-before: always;
 

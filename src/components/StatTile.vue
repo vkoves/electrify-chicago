@@ -727,12 +727,12 @@ export default class StatTile extends Vue {
 
     // Scale up not square footage stat values
     &:not(.-sq-footage) {
-      .stat-value { font-size: 2.5rem; }
+      .stat-value { font-size: 2rem; }
     }
 
     .spark-graph-cont {
       order: 3;
-      margin-top: 3rem;
+      margin-top: 2rem;
     }
 
     .unit {
