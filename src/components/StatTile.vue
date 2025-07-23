@@ -735,6 +735,11 @@ export default class StatTile extends Vue {
       margin-top: 2rem;
     }
 
+    .property-rank {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
     .unit {
       font-weight: bold !important;
       font-size: 1.5rem !important;

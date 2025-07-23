@@ -1104,19 +1104,28 @@ export default class BuildingDetails extends Vue {
   }
 
   .qr-cont {
-    padding: 1rem;
-    background-color: $grey-light;
-    border-radius: $brd-rad-small;
+    background-color: $off-white;
+    border-radius: $brd-rad-medium;
     text-align: center;
-    margin-top: 5rem;
+    margin-top: 3rem;
+    overflow: hidden;
+
+    h2 {
+      font-size: 1.75rem;
+      margin: 0 0 1rem 0;
+      padding: 1rem;
+      background-color: $blue-very-dark;
+      color: $white;
+    }
 
     .qr-code {
       display: inline-block;
       width: 60%;
       aspect-ratio: 1;
       background: $white;
+      padding: 0.5rem;
       margin: 1rem 0;
-      border: solid 0.75rem $white;
+      border: solid 0.25rem $grey-dark;
       border-radius: 1rem;
 
       > * {
@@ -1124,13 +1133,10 @@ export default class BuildingDetails extends Vue {
       }
     }
 
-    h2 {
-      font-size: 2rem;
-      margin: 0;
-    }
-
     p.url {
       font-size: 0.75rem;
+      max-width: 80%;
+      margin: 0 auto 1rem auto;
     }
   }
 
@@ -1323,8 +1329,7 @@ export default class BuildingDetails extends Vue {
     // Hide interactive elements - email this building button and extra info section
     .email-btn,
     .extra-info,
-    img.tooltip,
-    .no-print {
+    img.tooltip {
       display: none !important;
     }
 
@@ -1341,7 +1346,8 @@ export default class BuildingDetails extends Vue {
       font-size: 3rem;
     }
     .address {
-      font-size: 1.5rem !important;
+      font-size: 1.25rem !important;
+      line-height: 1;
     }
 
     .report-card-cont {

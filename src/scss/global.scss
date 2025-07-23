@@ -748,6 +748,9 @@ article.blog-post {
     font-size: 0.6125rem;
   }
 
+  /** Expose global "no-print" class for hiding elements from printing */
+  .no-print { display: none !important; }
+
   // We want to keep the site logo, but drop all the links
   header.header .top-nav,
   header.header button.mobile-menu-toggle {
