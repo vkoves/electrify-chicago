@@ -1310,7 +1310,6 @@ export default class BuildingDetails extends Vue {
   }
 
   /** Print Styling - hides interactive elements and simplifies layout */
-  // TODO: Break into a separate stylesheet for performance
   @media print {
     // Prevent removing backgrounds from warning panels and top info
     // when printing

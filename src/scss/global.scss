@@ -740,10 +740,6 @@ article.blog-post {
 /**
  * Print Styling - hides interactive elements and simplifies layout. Note that print
  * layout is around 670px
- *
- *
- *
- * TODO: Break into a separate stylesheet for performance
  */
 @media print {
   // Shrink all fonts
