@@ -1113,14 +1113,14 @@ export default class BuildingDetails extends Vue {
     h2 {
       font-size: 1.75rem;
       margin: 0 0 1rem 0;
-      padding: 1rem;
+      padding: 0.75rem;
       background-color: $blue-very-dark;
       color: $white;
     }
 
     .qr-code {
       display: inline-block;
-      width: 60%;
+      width: 50%;
       aspect-ratio: 1;
       background: $white;
       padding: 0.5rem;
