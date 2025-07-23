@@ -32,8 +32,12 @@
 
           <!-- Energy Mix & Values -->
           <th class="text-center">Energy Mix</th>
-          <th scope="col">Electricity Use <span class="unit">kBTU</span></th>
-          <th scope="col">Fossil Gas Use <span class="unit">kBTU</span></th>
+          <th v-if="renderedColumns.includes('ElectricityUse')" scope="col">
+            Electricity Use <span class="unit">kBTU</span>
+          </th>
+          <th v-if="renderedColumns.includes('NaturalGasUse')" scope="col">
+            Fossil Gas Use <span class="unit">kBTU</span>
+          </th>
           <th v-if="renderedColumns.includes('DistrictSteamUse')" scope="col">
             District <br />
             Steam Use <span class="unit">kBTU</span>
@@ -130,8 +134,12 @@
               :show-labels="false"
             />
           </td>
-          <td>{{ benchmark.ElectricityUse | optionalInt }}</td>
-          <td>{{ benchmark.NaturalGasUse | optionalInt }}</td>
+          <td v-if="renderedColumns.includes('ElectricityUse')">
+            {{ benchmark.ElectricityUse | optionalInt }}
+          </td>
+          <td v-if="renderedColumns.includes('NaturalGasUse')">
+            {{ benchmark.NaturalGasUse | optionalInt }}
+          </td>
           <td v-if="renderedColumns.includes('DistrictSteamUse')">
             {{ benchmark.DistrictSteamUse | optionalInt }}
           </td>
@@ -214,19 +222,20 @@ export default class HistoricalBuildingTable extends Vue {
     if (this.historicBenchmarks.length === 0) {
       return [];
     }
+    const allColKeys = Object.keys(this.historicBenchmarks[0]) as Array<
+      keyof IHistoricData
+    >;
+    const blankData = [null, '', 0.0, undefined];
 
-    const allColKeys: Array<string> = Object.keys(this.historicBenchmarks[0]);
-    const emptyColKeys = allColKeys.filter((colKey: string) => {
-      // A column is empty if it's all empty string or '0', so skip it if so. Some columns switch
-      // between both, like Natural Gas Use on Merch Mart, which we also want to ignore
-      return !this.historicBenchmarks.every((datum) => {
-        return (
-          (datum as any)[colKey] === '' || (datum as any)[colKey] === '0.0'
-        );
+    const notEmptyColKeys = allColKeys.filter((colKey) => {
+      // A column is not empty if any of the datapoints
+      // for that category are not part of our predefined
+      // blank data states seen in the blankData array
+      return this.historicBenchmarks.some((annualData: IHistoricData) => {
+        return !blankData.includes(annualData[colKey]);
       });
     });
-
-    return emptyColKeys;
+    return notEmptyColKeys;
   }
 
   calcEnergyMix(benchmarkRow: IHistoricData): {
