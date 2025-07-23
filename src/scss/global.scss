@@ -749,7 +749,9 @@ article.blog-post {
   }
 
   /** Expose global "no-print" class for hiding elements from printing */
-  .no-print { display: none !important; }
+  .no-print {
+    display: none !important;
+  }
 
   // Drop header border and padding
   header.header {
@@ -760,7 +762,8 @@ article.blog-post {
     }
 
     // Drop all header links (just keep the logo)
-    .top-nav, button.mobile-menu-toggle {
+    .top-nav,
+    button.mobile-menu-toggle {
       display: none;
     }
   }

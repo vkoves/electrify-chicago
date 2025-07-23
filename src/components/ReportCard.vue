@@ -256,7 +256,9 @@ export default class ReportCard extends Vue {
       display: none !important;
     }
 
-    .report-card { filter: none !important; }
+    .report-card {
+      filter: none !important;
+    }
 
     h2.title {
       font-size: 1.5rem;

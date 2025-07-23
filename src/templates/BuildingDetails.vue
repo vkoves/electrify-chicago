@@ -146,16 +146,15 @@ query ($id: ID!, $ID: String) {
 
         <div class="details-cont">
           <!-- Show warning container if we have anomalies our out of date data -->
-          <div v-if="buildingAnomalies.length > 0 || dataYear < LatestDataYear"
-            class="building-banner">
-            <div
-              v-for="anomaly in buildingAnomalies"
-              :key="anomaly"
-            >
+          <div
+            v-if="buildingAnomalies.length > 0 || dataYear < LatestDataYear"
+            class="building-banner"
+          >
+            <div v-for="anomaly in buildingAnomalies" :key="anomaly">
               <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
                 <h2>
-                  <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas
-                  Free
+                  <span class="emoji">⚠️</span> Anomaly Detected - Likely Not
+                  Gas Free
                 </h2>
 
                 <p>
@@ -172,8 +171,8 @@ query ($id: ID!, $ID: String) {
                 </h2>
 
                 <p>
-                  This building has had extremely large changes in gas use, which
-                  is likely to indicate errors in reporting.
+                  This building has had extremely large changes in gas use,
+                  which is likely to indicate errors in reporting.
                 </p>
               </div>
             </div>
@@ -182,7 +181,8 @@ query ($id: ID!, $ID: String) {
               <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
 
               <p>
-                This building did not report full data in {{ LatestDataYear }}, so
+                This building did not report full data in {{ LatestDataYear }},
+                so
                 <span class="bold">top-level stats are from {{ dataYear }}</span
                 >, the latest full year reported.
               </p>
@@ -1020,7 +1020,9 @@ export default class BuildingDetails extends Vue {
       font-size: 0.75rem;
     }
 
-    > div + div { margin-top: 0.5rem; }
+    > div + div {
+      margin-top: 0.5rem;
+    }
   }
 
   .address {
@@ -1354,10 +1356,13 @@ export default class BuildingDetails extends Vue {
       flex-basis: 20rem !important;
     }
 
-    .stat-tiles-col h2 { font-size: 1.75rem !important; }
+    .stat-tiles-col h2 {
+      font-size: 1.75rem !important;
+    }
 
     // Lock the height of the stat tiles and the energy mix chart
-    .energy-mix-cont, .stat-tiles dd {
+    .energy-mix-cont,
+    .stat-tiles dd {
       height: 21.5rem !important;
     }
 
@@ -1404,7 +1409,9 @@ export default class BuildingDetails extends Vue {
       }
     }
 
-    .reporting-tile { margin-top: 1rem; }
+    .reporting-tile {
+      margin-top: 1rem;
+    }
 
     // Break the Energy Breakdown to page 2
     .stat-tiles-col.-energy-breakdown {
