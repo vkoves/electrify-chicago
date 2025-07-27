@@ -259,23 +259,23 @@ code {
   line-height: 1;
 
   &.-a {
-    color: #009f49;
+    color: $grade-a-green;
   }
 
   &.-b {
-    color: #7fa52e;
+    color: $grade-b-green;
   }
 
   &.-c {
-    color: #b36a15;
+    color: $grade-c-orange;
   }
 
   &.-d {
-    color: #972222;
+    color: $grade-d-red;
   }
 
   &.-f {
-    color: #d60101;
+    color: $grade-f-red;
   }
 
   // Create a -circled style for the tables
@@ -284,13 +284,13 @@ code {
     border: solid $border-thin;
     width: 1.375rem;
     height: 1.375rem;
-    padding: 1.5px;
+    padding: 0.0938rem; // 1.5px
     text-align: center;
     border-radius: 1rem;
-    background: white;
+    background: $white;
     border-width: 0.125rem;
     margin-left: 0.5rem;
-    vertical-align: 1px;
+    vertical-align: 0.0625rem; // 1px
 
     &.-d,
     &.-b {
@@ -376,7 +376,7 @@ form.search-form {
 .announce-panel {
   padding: 1rem;
   border-radius: 1rem;
-  border: solid 0.25rem #ff5454;
+  border: solid 0.25rem $announcement-border-red;
   background: $off-white;
   border-top-width: 2rem;
   max-width: 40rem;
@@ -514,7 +514,7 @@ article.blog-post {
   .tooltip-inner {
     background: $white;
     color: $black;
-    border-radius: 4px;
+    border-radius: 0.25rem; // 4px
     border: $border-thin solid $blue-dark;
     box-shadow: 0.25rem 0.25rem 0.25rem $grey;
     width: 22rem;
@@ -626,28 +626,28 @@ article.blog-post {
  * Based on building performance relative to citywide medians
  */
 .concern-level-very-bad {
-  background-color: #ffd9d9;
-  border-color: red;
+  background-color: $concern-very-bad-background;
+  border-color: $red;
 }
 
 .concern-level-bad {
-  background-color: #ffedf0;
-  border-color: red;
+  background-color: $concern-bad-background;
+  border-color: $red;
 }
 
 .concern-level-medium {
   background-color: $off-white;
-  border-color: #935700;
+  border-color: $concern-medium-border;
 }
 
 .concern-level-good {
   background-color: $off-white;
-  border-color: green;
+  border-color: $green;
 }
 
 .concern-level-great {
-  background-color: #e9ffe9;
-  border-color: green;
+  background-color: $concern-great-background;
+  border-color: $green;
 }
 
 /**
@@ -688,11 +688,11 @@ article.blog-post {
   // Create a fake partial right border to make clear it's scrollable
   &::after {
     content: '';
-    width: 60px;
-    height: 4px;
-    background: gray;
+    width: 3.75rem; // 60px
+    height: 0.25rem; // 4px
+    background: $gray;
     position: absolute;
-    bottom: -4px;
+    bottom: -0.25rem; // -4px
   }
 
   // Set scrollbar width
@@ -702,20 +702,20 @@ article.blog-post {
 
   // Scrollbar track
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: $scrollbar-track;
     border-radius: $brd-rad-medium;
     margin: $card-padding;
   }
 
   // Scrollbar Handle
   &::-webkit-scrollbar-thumb {
-    background: #888888;
+    background: $scrollbar-thumb;
     border-radius: $brd-rad-medium;
     cursor: pointer;
 
     // Scroll handle on hover
     &:hover {
-      background: #555555;
+      background: $scrollbar-thumb-hover;
     }
   }
 

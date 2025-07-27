@@ -6,6 +6,7 @@
     "unit-disallowed-list": ["px"],
     "color-hex-length": "long",
     "color-no-hex": true,
+    "color-named": "never",
     "declaration-property-value-disallowed-list": {
       "/^color$/": ["/^#/"],
       "/^background-color$/": ["/^#/"],
@@ -31,7 +32,9 @@
     "scss/dollar-variable-pattern": null,
     "scss/dollar-variable-empty-line-before": null,
     "scss/double-slash-comment-empty-line-before": null,
-    "declaration-block-no-duplicate-properties": null
+    "declaration-block-no-duplicate-properties": null,
+    "color-function-alias-notation": null,
+    "alpha-value-notation": null
   },
   "ignoreFiles": [
     "node_modules/**/*",
