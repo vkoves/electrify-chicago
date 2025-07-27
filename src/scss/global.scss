@@ -12,7 +12,7 @@ body {
 
   &,
   * {
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto, sans-serif;
     box-sizing: border-box;
   }
 
@@ -54,7 +54,7 @@ a.back-link {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  margin: 1rem 0 0 0;
+  margin: 1rem 0 0;
   font-weight: 600;
 
   img {
@@ -89,16 +89,18 @@ h6,
   h1 {
     font-size: 1.75rem;
   }
+
   h2 {
     font-size: 1.25rem;
   }
 }
 
 h1 {
-  margin: 1.5rem 0 0.5rem 0;
+  margin: 1.5rem 0 0.5rem;
 }
+
 h2 {
-  margin: 1rem 0 0.5rem 0;
+  margin: 1rem 0 0.5rem;
 }
 
 // Expose -no-margin variant to ignore default paragraph margins
@@ -121,7 +123,7 @@ select {
 }
 
 button {
-  padding: 0.5rem 1rem 0.3rem 1rem;
+  padding: 0.5rem 1rem 0.3rem;
   background-color: $white;
   border-radius: $brd-rad-small;
   color: $black;
@@ -146,6 +148,7 @@ dl {
   dt {
     font-weight: bold;
   }
+
   dd {
     margin-left: 0;
   }
@@ -174,6 +177,7 @@ details {
     &:focus {
       outline-offset: 0;
     }
+
     > span {
       margin-left: 0.5rem;
     }
@@ -250,7 +254,7 @@ code {
  * Styling for our building letter grades (A-F) with colors for each for emphasis
  */
 .letter-grade {
-  font-family: 'Roboto', sans-serif;
+  font-family: Roboto, sans-serif;
   font-weight: 900;
   line-height: 1;
 
@@ -321,6 +325,7 @@ code {
   &.-wide {
     max-width: 60rem;
   }
+
   &.layout-constrained {
     margin: auto;
   }
@@ -379,6 +384,7 @@ form.search-form {
   &.-orange {
     border-color: $orange;
   }
+
   &.-blue {
     border-color: $chicago-blue;
   }
@@ -502,6 +508,7 @@ article.blog-post {
 .tooltip {
   // The width of the tooltip tip
   $tooltipSize: 0.3125rem;
+
   z-index: 10000;
 
   .tooltip-inner {
@@ -510,7 +517,6 @@ article.blog-post {
     border-radius: 4px;
     border: $border-thin solid $blue-dark;
     box-shadow: 0.25rem 0.25rem 0.25rem $grey;
-    padding: 0.25rem 0.5rem 0.25rem;
     width: 22rem;
     padding: 1rem;
 
@@ -557,7 +563,7 @@ article.blog-post {
     margin-top: $tooltipSize;
 
     .tooltip-arrow {
-      border-width: 0 $tooltipSize $tooltipSize $tooltipSize;
+      border-width: 0 $tooltipSize $tooltipSize;
       border-left-color: transparent;
       border-right-color: transparent;
       border-top-color: transparent;
@@ -614,6 +620,7 @@ article.blog-post {
 }
 
 /** A container for multiple BuildingTiles */
+
 /**
  * Concern level styling for stats (used by StatTile and other components)
  * Based on building performance relative to citywide medians
@@ -671,9 +678,11 @@ article.blog-post {
 
 .buildings-scroll-cont {
   position: relative;
+
   $card-padding: 0.75rem;
+
   // Grow to account for inner padding
-  margin: 1rem (-$card-padding) 2rem (-$card-padding);
+  margin: 1rem (-$card-padding) 2rem;
   overflow: scroll hidden;
 
   // Create a fake partial right border to make clear it's scrollable
@@ -690,6 +699,7 @@ article.blog-post {
   &::-webkit-scrollbar {
     width: 0.75rem;
   }
+
   // Scrollbar track
   &::-webkit-scrollbar-track {
     background: #f1f1f1;
@@ -699,13 +709,13 @@ article.blog-post {
 
   // Scrollbar Handle
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #888888;
     border-radius: $brd-rad-medium;
     cursor: pointer;
 
     // Scroll handle on hover
     &:hover {
-      background: #555;
+      background: #555555;
     }
   }
 
@@ -717,7 +727,7 @@ article.blog-post {
     padding: 0;
 
     li {
-      padding: 0.5rem $card-padding 1.5rem $card-padding;
+      padding: 0.5rem $card-padding 1.5rem;
     }
   }
 

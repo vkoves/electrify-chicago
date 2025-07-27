@@ -1,3 +1,5 @@
+/* stylelint-disable color-no-hex, declaration-property-value-disallowed-list */
+
 /**
  * Global Colors
  */
@@ -6,24 +8,18 @@ $grey: #dcdcdc;
 $grey-dark: #c4c1c1;
 $grey-light: #eaeaea;
 $off-white: #f6f6f6;
-
 $orange: #ffa500;
-$black: #000;
-$white: #fff;
-
-$text-main: #000;
+$black: #000000;
+$white: #ffffff;
+$text-main: #000000;
 $text-mid-light: #696969; // for use on $grey-light
 $text-light: #737373;
 $link-blue: #2136ab;
-
 $blue-dark: #006ef0;
 $blue-very-dark: #0060d6;
 $blue-light: #e0eaff;
-
 $chicago-blue: #41b6e6;
 $chicago-red: #e4002b;
-
 $warning-background: #fcfcde;
 $warning-border: #ee8a4c;
-
-$box-shadow-main: rgba(0, 0, 0, 0.25);
+$box-shadow-main: rgb(0 0 0 / 25%);

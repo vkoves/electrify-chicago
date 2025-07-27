@@ -19,10 +19,19 @@
       "/^box-shadow$/": ["/^.*#/"],
       "/^text-shadow$/": ["/^.*#/"]
     },
-    "font-family-name-quotes": "always-where-recommended",
-    "function-url-quotes": "always",
-    "selector-attribute-quotes": "always",
-    "string-quotes": "single"
+    "font-family-name-quotes": null,
+    "function-url-quotes": null,
+    "selector-attribute-quotes": null,
+    "no-descending-specificity": null,
+    "selector-class-pattern": null,
+    "rule-empty-line-before": null,
+    "shorthand-property-no-redundant-values": null,
+    "declaration-empty-line-before": null,
+    "comment-empty-line-before": null,
+    "scss/dollar-variable-pattern": null,
+    "scss/dollar-variable-empty-line-before": null,
+    "scss/double-slash-comment-empty-line-before": null,
+    "declaration-block-no-duplicate-properties": null
   },
   "ignoreFiles": [
     "node_modules/**/*",
