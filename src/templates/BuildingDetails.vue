@@ -144,7 +144,7 @@ query ($id: ID!, $ID: String) {
             </button>
 
             <!-- Print Flyer button -->
-            <button class="action-btn -print" @click="printFlyer">
+            <button class="action-btn -print" @click="printPage">
               <img src="/icons/printer.svg" alt="Print Flyer" />
             </button>
           </div>
@@ -882,7 +882,7 @@ export default class BuildingDetails extends Vue {
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
 
-  printFlyer(): void {
+  printPage(): void {
     window.print();
   }
 }
