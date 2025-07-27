@@ -738,6 +738,45 @@ article.blog-post {
 }
 
 /**
+ * Blue Action Button Styling - shared styles for large call-to-action buttons
+ */
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+  padding: 0.25rem 1.5rem;
+  height: 2.75rem; // use height to keep Email & Print consistent
+  background-color: $blue-dark;
+  border: none;
+  color: $white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: $brd-rad-medium;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: $blue-very-dark;
+  }
+
+  img {
+    border-radius: 0;
+    height: 1.5rem;
+  }
+
+  @media (max-width: $mobile-max-width) {
+    margin-bottom: 0rem;
+    font-size: 1rem;
+    min-width: initial;
+
+    img {
+      height: 1.25rem;
+    }
+  }
+}
+
+/**
  * Print Styling - hides interactive elements and simplifies layout.
  *
  * NOTE: Print layout is around 670px (or 740px?) wide, so make sure to test that way

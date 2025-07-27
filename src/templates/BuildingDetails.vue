@@ -137,11 +137,17 @@ query ($id: ID!, $ID: String) {
         <div class="building-img-cont">
           <BuildingImage :building="$page.building" />
 
-          <!-- Button opens Popup for "Email This Building" -->
-          <button class="email-btn" @click="isModalOpen = true">
-            <img src="/email.svg" alt="" />
-            Email This Building
-          </button>
+          <div class="cta-btns">
+            <button class="action-btn" @click="isEmailModalOpen = true">
+              <img src="/email.svg" alt="" />
+              Email Building
+            </button>
+
+            <!-- Print Flyer button -->
+            <button class="action-btn -print" @click="printFlyer">
+              <img src="/icons/printer.svg" alt="Print Flyer" />
+            </button>
+          </div>
         </div>
 
         <div class="details-cont">
@@ -590,9 +596,9 @@ query ($id: ID!, $ID: String) {
       </div>
 
       <email-building-modal
-        v-if="isModalOpen"
+        v-if="isEmailModalOpen"
         :building="$page.building"
-        @close="isModalOpen = false"
+        @close="isEmailModalOpen = false"
       />
     </div>
   </DefaultLayout>
@@ -753,7 +759,7 @@ export default class BuildingDetails extends Vue {
 
   totalEnergyUsekBTU!: number;
 
-  isModalOpen = false;
+  isEmailModalOpen = false;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -875,6 +881,10 @@ export default class BuildingDetails extends Vue {
     // eslint-disable-next-line
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
   }
+
+  printFlyer(): void {
+    window.print();
+  }
 }
 </script>
 
@@ -978,6 +988,20 @@ export default class BuildingDetails extends Vue {
     font-size: 1.25rem;
   }
 
+  .cta-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+
+    .action-btn.-print {
+      aspect-ratio: 1;
+      padding: 0;
+
+      img { height: 2rem; }
+    }
+  }
+
   .stat-tiles dt,
   .label-and-grade {
     margin-bottom: 0.5rem;
@@ -1049,30 +1073,6 @@ export default class BuildingDetails extends Vue {
     }
   }
 
-  .email-btn {
-    display: flex;
-    align-self: flex-end;
-    justify-content: space-around;
-    padding: 0.8rem 1.5rem;
-    min-width: 18.75rem;
-    margin: 1rem 0;
-    background-color: $blue-dark;
-    border: none;
-    color: $white;
-    font-size: 1.25rem;
-    font-weight: bold;
-    border-radius: $brd-rad-medium;
-
-    &:hover,
-    &:focus {
-      background-color: $blue-very-dark;
-    }
-
-    img {
-      border-radius: 0;
-      height: 1.5rem;
-    }
-  }
 
   .main-cols {
     display: flex;
@@ -1228,18 +1228,6 @@ export default class BuildingDetails extends Vue {
         width: 100%;
       }
 
-      .email-btn {
-        align-self: flex-start;
-        margin-bottom: 0rem;
-        gap: 1rem;
-        font-size: 1rem;
-        min-width: initial;
-
-        img {
-          height: 1.25rem;
-        }
-      }
-
       .building-header-text {
         position: relative;
         margin-bottom: 0;
@@ -1289,6 +1277,11 @@ export default class BuildingDetails extends Vue {
       }
     }
 
+    .cta-btns {
+      justify-content: flex-start;
+      gap: 0.5rem;
+    }
+
     .main-cols .chart-col {
       margin-top: 0;
     }
@@ -1328,8 +1321,8 @@ export default class BuildingDetails extends Vue {
       print-color-adjust: exact;
     }
 
-    // Hide interactive elements - email this building button and extra info section
-    .email-btn,
+    // Hide interactive elements - action buttons and extra info section
+    .action-btn,
     .extra-info,
     img.tooltip {
       display: none !important;
