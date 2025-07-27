@@ -1,4 +1,4 @@
-/* stylelint-disable color-no-hex, declaration-property-value-disallowed-list */
+/* stylelint-disable color-no-hex, declaration-property-value-disallowed-list, function-disallowed-list, color-function-notation */
 
 /**
  * Global Colors
@@ -22,7 +22,7 @@ $chicago-blue: #41b6e6;
 $chicago-red: #e4002b;
 $warning-background: #fcfcde;
 $warning-border: #ee8a4c;
-$box-shadow-main: rgb(0 0 0 / 25%);
+$box-shadow-main: rgba(0, 0, 0, 0.25);
 
 // Letter grade colors
 $grade-a-green: #009f49;
@@ -40,3 +40,8 @@ $concern-great-background: #e9ffe9;
 $scrollbar-track: #f1f1f1;
 $scrollbar-thumb: #888888;
 $scrollbar-thumb-hover: #555555;
+
+// Basic HTML color equivalents
+$red: #ff0000;
+$green: #008000;
+$gray: #808080;

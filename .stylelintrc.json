@@ -7,6 +7,7 @@
     "color-hex-length": "long",
     "color-no-hex": true,
     "color-named": "never",
+    "function-disallowed-list": ["rgb", "rgba", "hsl", "hsla", "hwb", "lab", "lch", "oklab", "oklch"],
     "declaration-property-value-disallowed-list": {
       "/^color$/": ["/^#/"],
       "/^background-color$/": ["/^#/"],
