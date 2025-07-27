@@ -998,7 +998,9 @@ export default class BuildingDetails extends Vue {
       aspect-ratio: 1;
       padding: 0;
 
-      img { height: 2rem; }
+      img {
+        height: 2rem;
+      }
     }
   }
 
@@ -1072,7 +1074,6 @@ export default class BuildingDetails extends Vue {
       margin: 0 0 0.5rem 0;
     }
   }
-
 
   .main-cols {
     display: flex;
