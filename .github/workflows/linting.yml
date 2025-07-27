@@ -7,7 +7,7 @@
 # More details at https://github.com/eslint/eslint
 # and https://eslint.org
 
-name: ESLint & Prettier
+name: ESLint, Stylelint & Prettier
 
 on:
   push:
@@ -18,7 +18,7 @@ on:
 
 jobs:
   linting:
-    name: Run ESLint & Prettier
+    name: Run ESLint, Stylelint & Prettier
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -33,11 +33,15 @@ jobs:
           # The Node version to use
           node-version: 22
 
-      - name: Install ESLint
+      - name: Install dependencies
         run: yarn install
 
       - name: Run ESLint
         run: yarn eslint-ci
+        continue-on-error: true
+
+      - name: Run Stylelint
+        run: yarn stylelint-ci
         continue-on-error: true
 
       - name: Run Prettier
