@@ -9,7 +9,7 @@
         improvements.
       </p>
 
-      <section
+      <div
         class="graphs-container"
         aria-label="citywide data and info for all buidings we track"
       >
@@ -34,7 +34,7 @@
             :title="graph.title"
           />
         </article>
-      </section>
+      </div>
     </div>
   </DefaultLayout>
 </template>
@@ -94,7 +94,7 @@ export default defineComponent({
 }
 
 /* Mobile breakpoint — stack vertically */
-@media (max-width: 768px) {
+@media (max-width: $mobile-max-width) {
   .graphs-container article {
     flex-direction: column;
     align-items: center; /* Center content horizontally */
