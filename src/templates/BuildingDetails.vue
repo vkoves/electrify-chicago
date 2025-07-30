@@ -787,7 +787,11 @@ export default class BuildingDetails extends Vue {
   }
 
   get prodBuildingUrl(): string {
-    return `https://electrifychicago.net/${window.location.pathname}`;
+    if (typeof window !== 'undefined' && window.location?.pathname) {
+      return `https://electrifychicago.net${window.location.pathname}`;
+    }
+
+    return `https://electrifychicago.net/building/${this.building.ID}`;
   }
 
   /**
@@ -836,10 +840,12 @@ export default class BuildingDetails extends Vue {
     this.totalEnergyUsekBTU = breakdownWithTotal.totalEnergyUse;
     this.updateGraph();
 
-    window.addEventListener('beforeprint', () => {
-      // Render the QR code before printing, we don't need it otherwise
-      this.renderQrCode();
-    });
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeprint', () => {
+        // Render the QR code before printing, we don't need it otherwise
+        this.renderQrCode();
+      });
+    }
   }
 
   mounted(): void {
@@ -850,6 +856,10 @@ export default class BuildingDetails extends Vue {
    * Render a QR code pointing to the current page
    */
   renderQrCode(): void {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+
     const qr = qrcode(0, 'M');
 
     // Always make the QR code point to prod
@@ -858,13 +868,13 @@ export default class BuildingDetails extends Vue {
 
     const qrCodeElement = document.getElementById(this.QRCodeElementId);
 
-    // qrCodeElement!.innerHTML = qr.createImgTag();
-
-    qrCodeElement!.innerHTML = qr.createSvgTag({
-      cellSize: 4,
-      margin: 2,
-      scalable: true,
-    });
+    if (qrCodeElement) {
+      qrCodeElement.innerHTML = qr.createSvgTag({
+        cellSize: 4,
+        margin: 2,
+        scalable: true,
+      });
+    }
   }
 
   updateGraph(event?: Event): void {
@@ -883,7 +893,9 @@ export default class BuildingDetails extends Vue {
   }
 
   printPage(): void {
-    window.print();
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
   }
 }
 </script>
