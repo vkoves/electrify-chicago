@@ -616,6 +616,8 @@ export default class StatTile extends Vue {
   border-bottom: solid 0.375rem $grey-dark;
   box-sizing: border-box;
   border-radius: $brd-rad-small;
+  // When printing, don't remove colors or backgrounds
+  print-color-adjust: exact;
 
   &.-very-bad {
     @extend .concern-level-very-bad;
@@ -715,6 +717,38 @@ export default class StatTile extends Vue {
       flex-direction: row;
       gap: 0.25rem 1rem;
       flex-wrap: wrap;
+    }
+  }
+
+  /** Print Mode styling - make stats vertical with graph at bottom */
+  @media print {
+    display: flex;
+    flex-direction: column;
+
+    // Scale up not square footage stat values
+    &:not(.-sq-footage) {
+      .stat-value {
+        font-size: 2rem;
+      }
+    }
+
+    .spark-graph-cont {
+      order: 3;
+      margin-top: 2rem;
+    }
+
+    .property-rank {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .unit {
+      font-weight: bold !important;
+      font-size: 1.5rem !important;
+    }
+
+    .median-comparison .median-val {
+      color: $text-main;
     }
   }
 }

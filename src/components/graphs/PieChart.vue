@@ -196,5 +196,16 @@ export default class PieChart extends Vue {
   tspan.label {
     font-size: 0.65em;
   }
+
+  // When printing, scale up text and thicken borders
+  @media print {
+    svg {
+      font-size: 2rem;
+
+      path {
+        stroke-width: 0.6125rem;
+      }
+    }
+  }
 }
 </style>

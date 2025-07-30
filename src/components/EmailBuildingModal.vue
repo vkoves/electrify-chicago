@@ -156,7 +156,7 @@ dialog.email-this-building {
   }
 
   h2 {
-    margin-top: 1rem;
+    margin: 1rem 0 0;
   }
 
   .email-prompt-wrapper {

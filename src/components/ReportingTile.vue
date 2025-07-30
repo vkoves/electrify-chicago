@@ -127,6 +127,8 @@ export default class ReportingTile extends Vue {
     background-color: $off-white;
     padding: 1rem 2rem;
     border-radius: $brd-rad-small;
+    // When printing, don't remove colors or backgrounds
+    print-color-adjust: exact;
   }
 
   .headline {
@@ -167,6 +169,7 @@ export default class ReportingTile extends Vue {
   }
 
   .marker {
+    display: inline-block;
     position: relative;
     width: 2.5rem;
     height: 2.5rem;
@@ -217,6 +220,26 @@ export default class ReportingTile extends Vue {
 
       &::before {
         border-width: 0.175rem;
+      }
+    }
+  }
+
+  @media print {
+    min-width: 60%;
+    width: 100%;
+    font-size: 1.25rem;
+
+    ul {
+      gap: 0 2rem;
+      justify-content: space-around;
+    }
+
+    .marker {
+      width: 3rem;
+      height: 3rem;
+
+      &::before {
+        border-width: 0.3rem;
       }
     }
   }

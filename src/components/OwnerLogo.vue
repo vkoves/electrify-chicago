@@ -14,7 +14,7 @@
         <img :src="ownerLogoSrc" :alt="owner.name" />
         <div v-if="isLarge" class="owner-label" />
 
-        <div v-if="isLarge">
+        <div v-if="isLarge" class="no-print">
           View All Tagged {{ owner.nameShort }} Buildings
         </div>
       </g-link>

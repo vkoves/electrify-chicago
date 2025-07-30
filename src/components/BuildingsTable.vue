@@ -308,6 +308,8 @@ export default class BuildingsTable extends Vue {
   overflow: auto;
   border: solid $border-thin $grey-dark;
   box-sizing: border-box;
+  // Don't change table colors when printing
+  print-color-adjust: exact;
 
   table {
     width: 100%;
@@ -427,6 +429,11 @@ export default class BuildingsTable extends Vue {
         width: 10rem;
       }
     }
+  }
+
+  @media print {
+    // Undo negative margin when printing, since we drop page margins
+    margin: 0 !important;
   }
 }
 </style>
