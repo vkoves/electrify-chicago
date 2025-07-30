@@ -202,7 +202,9 @@ export default class PieChart extends Vue {
     svg {
       font-size: 2rem;
 
-      path { stroke-width: 0.6125rem; }
+      path {
+        stroke-width: 0.6125rem;
+      }
     }
   }
 }
