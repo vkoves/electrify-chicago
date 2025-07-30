@@ -746,6 +746,10 @@ export default class StatTile extends Vue {
       font-weight: bold !important;
       font-size: 1.5rem !important;
     }
+
+    .median-comparison .median-val {
+      color: $text-main;
+    }
   }
 }
 </style>
