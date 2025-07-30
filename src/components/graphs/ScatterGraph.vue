@@ -449,13 +449,11 @@ watch(
 .scatterplot-container {
   width: 100%;
   position: relative;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
-    sans-serif;
 }
 
 @media screen and (min-width: 500px) {
   .scatterplot-container {
-    max-width: 1000px;
+    max-width: 62.5rem;
   }
 }
 
