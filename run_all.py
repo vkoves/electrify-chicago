@@ -60,6 +60,10 @@ def main():
             "description": "process_data"
         },
         {
+            "module": "src.data.scripts.generate_citywide_stats",
+            "description": "generate_citywide_stats"
+        },
+        {
             "module": "src.data.scripts.add_context_by_property_type",
             "description": "add_context_by_property_type"
         },
