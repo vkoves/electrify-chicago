@@ -19,10 +19,10 @@ benchmarking_int_cols = [
     'NumberOfBuildings',
     'ENERGYSTARScore',
     # TODO: Move to string after figuring out why the X.0 is showing up
-    'Wards',
-    'CensusTracts',
-    'CommunityAreas',
-    'HistoricalWards2003-2015'
+    #'Wards',
+    #'CensusTracts',
+    #'CommunityAreas',
+    #'HistoricalWards2003-2015'
 ]
 
 

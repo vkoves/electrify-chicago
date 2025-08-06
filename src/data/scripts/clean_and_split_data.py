@@ -82,12 +82,12 @@ replace_headers = {
     'Latitude': 'Latitude',
     'Longitude': 'Longitude',
     'Location': 'Location',
-    'Row_ID': 'Row_ID',
-    'Wards': 'Wards',
-    'Community Areas': 'CommunityAreas',
-    'Zip Codes': 'ZipCodes',
-    'Census Tracts': 'CensusTracts',
-    'Historical Wards 2003-2015': 'HistoricalWards2003-2015'
+    'Row_ID': 'Row_ID'
+    # 'Wards': 'Wards',
+    # 'Community Areas': 'CommunityAreas',
+    # 'Zip Codes': 'ZipCodes',
+    # 'Census Tracts': 'CensusTracts',
+    # 'Historical Wards 2003-2015': 'HistoricalWards2003-2015'
 }
 
 def rename_columns(building_data: pd.DataFrame) -> pd.DataFrame:
@@ -127,6 +127,7 @@ def fix_str_cols(all_recent_submitted_data: pd.DataFrame, renamed_building_data:
     return all_recent_submitted_data
 
 def fix_int_cols(building_data: pd.DataFrame) -> pd.DataFrame:
+    print("Columns available in the DataFrame:", building_data.columns.tolist())
     building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
     return building_data
 
