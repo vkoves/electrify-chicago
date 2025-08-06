@@ -1,3 +1,5 @@
+/* stylelint-disable color-no-hex, declaration-property-value-disallowed-list, function-disallowed-list, color-function-notation */
+
 /**
  * Global Colors
  */
@@ -6,24 +8,40 @@ $grey: #dcdcdc;
 $grey-dark: #c4c1c1;
 $grey-light: #eaeaea;
 $off-white: #f6f6f6;
-
 $orange: #ffa500;
-$black: #000;
-$white: #fff;
-
-$text-main: #000;
+$black: #000000;
+$white: #ffffff;
+$text-main: #000000;
 $text-mid-light: #696969; // for use on $grey-light
 $text-light: #737373;
 $link-blue: #2136ab;
-
 $blue-dark: #006ef0;
 $blue-very-dark: #0060d6;
 $blue-light: #e0eaff;
-
 $chicago-blue: #41b6e6;
 $chicago-red: #e4002b;
-
 $warning-background: #fcfcde;
 $warning-border: #ee8a4c;
-
 $box-shadow-main: rgba(0, 0, 0, 0.25);
+
+// Letter grade colors
+$grade-a-green: #009f49;
+$grade-b-green: #7fa52e;
+$grade-c-orange: #b36a15;
+$grade-d-red: #972222;
+$grade-f-red: #d60101;
+
+// Additional UI colors
+$announcement-border-red: #ff5454;
+$concern-very-bad-background: #ffd9d9;
+$concern-bad-background: #ffedf0;
+$concern-medium-border: #935700;
+$concern-great-background: #e9ffe9;
+$scrollbar-track: #f1f1f1;
+$scrollbar-thumb: #888888;
+$scrollbar-thumb-hover: #555555;
+
+// Basic HTML color equivalents
+$red: #ff0000;
+$green: #008000;
+$gray: #808080;
