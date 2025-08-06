@@ -59,10 +59,11 @@ def calculateBuildingStatsByYear(building_data_in: pandas.DataFrame) -> str:
     
     # Dictionary to store results for each year
     yearly_stats = {}
+    HISTORIC_DATA_START_YEAR = 2016
     
     for year in years:
                 
-        if year < 2016: 
+        if year < HISTORIC_DATA_START_YEAR: 
           continue
             
         
@@ -102,7 +103,7 @@ def calculateBuildingStatsByYear(building_data_in: pandas.DataFrame) -> str:
     
     for year in years:
         
-        if year < 2016: 
+        if year < HISTORIC_DATA_START_YEAR: 
           continue
             
         year_stats = yearly_stats[str(year)]
@@ -138,6 +139,8 @@ def main():
 
     # Calculate statistics by year for all buildings
     calculateBuildingStatsByYear(building_data)
+
+    log_step_completion(5, calculateBuildingStatsByYear(building_data))
 
 
 if __name__ == "__main__":

@@ -60,16 +60,16 @@ def main():
             "description": "process_data"
         },
         {
-            "module": "src.data.scripts.generate_historic_stats",
-            "description": "generate_historic_stats"
-        },
-        {
             "module": "src.data.scripts.add_context_by_property_type",
             "description": "add_context_by_property_type"
         },
         {
             "module": "src.data.scripts.detect_anomalous_buildings",
             "description": "detect_anomalous_buildings"
+        },
+        {
+            "module": "src.data.scripts.generate_historic_stats",
+            "description": "generate_historic_stats"
         },
     ]
 
