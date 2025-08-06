@@ -974,6 +974,11 @@ export default class BuildingDetails extends Vue {
         }
       }
     }
+
+    // Align buttons to right underneath the image
+    .cta-btns {
+      justify-content: flex-end;
+    }
   }
 
   .building-header-text {
@@ -1003,8 +1008,7 @@ export default class BuildingDetails extends Vue {
   .cta-btns {
     display: flex;
     gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 1rem;
+    margin: 1rem 0;
 
     .action-btn.-print {
       aspect-ratio: 1;
