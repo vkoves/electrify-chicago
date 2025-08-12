@@ -644,7 +644,7 @@ article.blog-post {
 }
 
 /**
- * Median comparison styling for stats
+ * Median comparison styling for stats (social card and stat tile)
  */
 .median-comparison {
   display: flex;
@@ -734,5 +734,87 @@ article.blog-post {
         }
       }
     }
+  }
+}
+
+/**
+ * Blue Action Button Styling - shared styles for large call-to-action buttons
+ */
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+  padding: 0.25rem 1.5rem;
+  height: 2.75rem; // use height to keep Email & Print consistent
+  background-color: $blue-dark;
+  border: none;
+  color: $white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: $brd-rad-medium;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: $blue-very-dark;
+  }
+
+  img {
+    border-radius: 0;
+    height: 1.5rem;
+  }
+
+  @media (max-width: $mobile-max-width) {
+    margin-bottom: 0rem;
+    font-size: 1rem;
+    min-width: initial;
+
+    img {
+      height: 1.25rem;
+    }
+  }
+}
+
+/**
+ * Print Styling - hides interactive elements and simplifies layout.
+ *
+ * NOTE: Print layout is around 670px (or 740px?) wide, so make sure to test that way
+ */
+@media print {
+  // Shrink all fonts
+  html {
+    font-size: 0.6125rem;
+  }
+
+  /** Expose global "no-print" class for hiding elements from printing */
+  .no-print {
+    display: none !important;
+  }
+
+  // Drop header border and padding
+  header.header {
+    padding: 0;
+
+    .site-logo {
+      width: 20rem;
+    }
+
+    // Drop all header links (just keep the logo)
+    .top-nav,
+    button.mobile-menu-toggle {
+      display: none;
+    }
+  }
+
+  // Drop main-content padding, since printed pages already have plenty
+  .layout .main-content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  // Totally hide the footer
+  footer {
+    display: none;
   }
 }
