@@ -11,7 +11,33 @@ const detailKeyMap: Record<MetricDetail, keyof MetricStats> = {
   '50%': 'median',
   '75%': 'seventyFifthPercentile',
 };
-
+/**
+ * Extracts and processes metric data from historic statistics for visualization or analysis.
+ *
+ * This function takes a specific metric name and detail level, then processes the historic
+ * data to return a clean array of data points suitable for charting or further analysis.
+ * It filters out zero values and sorts the results chronologically.
+ *
+ * @param metricName - The key of the metric to extract from each year's data (must be a valid key from YearData)
+ * @param detail - The specific detail/granularity level of the metric to extract
+ * @returns An array of DataPoint objects containing year and value pairs, sorted by year ascending
+ *
+ * @example
+ * ```typescript
+ * // Extract the mean values for a temperature metric
+ * const avgTemperature = extractMetricData('temperature', 'mean');
+ * // Returns: [{ year: 2020, value: 15.2 }, { year: 2021, value: 15.8 }, ...]
+ *
+ * // Extract the 75th percentile for a sales metric
+ * const salesP75 = extractMetricData('sales', '75%');
+ * ```
+ *
+ * @remarks
+ * - Zero values are automatically filtered out from the results
+ * - Missing or undefined values are treated as 0 and subsequently filtered out
+ * - Results are sorted chronologically by year in ascending order
+ * - Uses the `detailKeyMap` to map the detail parameter to the appropriate data key
+ */
 export function extractMetricData(
   metricName: keyof YearData,
   detail: MetricDetail,
