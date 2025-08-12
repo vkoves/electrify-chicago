@@ -9,7 +9,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, ref, watch, computed } from 'vue';
 import * as d3 from 'd3';
-import { DataPoint, RegressionLine } from '../citywide-stats/types';
+import { DataPoint, RegressionLine } from '../../common-functions.vue';
 
 interface ChartElements {
   container: d3.Selection<HTMLElement, unknown, null, undefined>;

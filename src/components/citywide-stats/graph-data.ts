@@ -1,4 +1,9 @@
-import { DataPoint, MetricDetail, MetricStats, YearData } from './types';
+import {
+  DataPoint,
+  MetricDetail,
+  MetricStats,
+  YearData,
+} from '../../common-functions.vue';
 import HistoricStats from '../../data/dist/historic-stats.json';
 
 const detailKeyMap: Record<MetricDetail, keyof MetricStats> = {
