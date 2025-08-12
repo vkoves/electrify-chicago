@@ -65,7 +65,7 @@ export const graphConfigs = [
   {
     data: extractMetricData('GHGIntensity', '50%'),
     containerId: 'ghg-intensity-chart',
-    title: 'GHG Intensity',
+    title: 'Median GHG Intensity',
     yAxisLabel: 'kg CO2e/sq ft',
     color: '#e74c3c',
     description: [
@@ -80,7 +80,7 @@ export const graphConfigs = [
   {
     data: extractMetricData('TotalGHGEmissions', '50%'),
     containerId: 'total-ghg-chart',
-    title: 'Total GHG Emissions',
+    title: 'Median GHG Emissions',
     yAxisLabel: 'metric tons CO2e',
     color: '#3498db',
     description: [
@@ -94,7 +94,7 @@ export const graphConfigs = [
   {
     data: extractMetricData('ElectricityUse', '50%'),
     containerId: 'electricity-chart',
-    title: 'Electricity Use',
+    title: 'Median Electricity Use',
     yAxisLabel: 'kWh',
     color: '#f39c12',
     description: [
@@ -108,7 +108,7 @@ export const graphConfigs = [
   {
     data: extractMetricData('NaturalGasUse', '50%'),
     containerId: 'natural-gas-chart',
-    title: 'Natural Gas Use',
+    title: 'Median Natural Gas Use',
     yAxisLabel: 'therms',
     color: '#27ae60',
     description: [
@@ -122,7 +122,7 @@ export const graphConfigs = [
   {
     data: extractMetricData('SourceEUI', '50%'),
     containerId: 'source-eui-chart',
-    title: 'Source EUI',
+    title: 'Median Source EUI',
     yAxisLabel: 'kBtu/sq ft',
     color: '#9b59b6',
     description: [
@@ -137,7 +137,7 @@ export const graphConfigs = [
   {
     data: extractMetricData('SiteEUI', '50%'),
     containerId: 'site-eui-chart',
-    title: 'Site EUI',
+    title: 'Median Site EUI',
     yAxisLabel: 'kBtu/sq ft',
     color: '#1abc9c',
     description: [
