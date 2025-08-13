@@ -67,7 +67,8 @@ export const graphConfigs = [
     containerId: 'ghg-intensity-chart',
     title: 'Median GHG Intensity',
     yAxisLabel: 'kg CO2e/sq ft',
-    stroke: 'ghg-intensity-color',
+    color: 'chart-red',
+    stroke: 'chart-red',
     description: [
       'This chart shows the median greenhouse gas (GHG) emissions intensity of ' +
         'buildings. It is measured in kilograms of CO2-equivalent per square foot ' +
@@ -82,7 +83,8 @@ export const graphConfigs = [
     containerId: 'total-ghg-chart',
     title: 'Median GHG Emissions',
     yAxisLabel: 'metric tons CO2e',
-    stroke: 'total-ghg-emissions-color',
+    color: 'chart-blue',
+    stroke: 'chart-blue',
     description: [
       'Displays the median total greenhouse gas emissions per building, measured ' +
         'in metric tons of CO2-equivalent (CO2e).',
@@ -96,6 +98,7 @@ export const graphConfigs = [
     containerId: 'electricity-chart',
     title: 'Median Electricity Use',
     yAxisLabel: 'kWh',
+    color: 'chart-orange',
     stroke: 'median-electricity-use-color',
     description: [
       'Shows median annual electricity consumption in kilowatt-hours (kWh).',
@@ -110,6 +113,7 @@ export const graphConfigs = [
     containerId: 'natural-gas-chart',
     title: 'Median Natural Gas Use',
     yAxisLabel: 'therms',
+    color: 'chart-green',
     stroke: 'median-natural-gas-color',
     description: [
       'Indicates the median natural gas consumption per building, measured in ' +
@@ -124,6 +128,7 @@ export const graphConfigs = [
     containerId: 'source-eui-chart',
     title: 'Median Source EUI',
     yAxisLabel: 'kBtu/sq ft',
+    color: 'chart-purple',
     stroke: 'median-natural-gas-color',
     description: [
       'Source Energy Use Intensity (Source EUI) measures the total energy used ' +
@@ -139,6 +144,7 @@ export const graphConfigs = [
     containerId: 'site-eui-chart',
     title: 'Median Site EUI',
     yAxisLabel: 'kBtu/sq ft',
+    color: 'chart-teal',
     stroke: 'median-site-eui-color',
     description: [
       'Site Energy Use Intensity (Site EUI) reflects the amount of energy ' +

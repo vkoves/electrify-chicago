@@ -25,7 +25,7 @@ const props = withDefaults(
     data: DataPoint[];
     yAxisLabel: string;
     stroke: string;
-    color?: string;
+    color: string;
     containerId: string;
     title: string;
     showGrid: boolean;
@@ -228,7 +228,8 @@ const renderChartStructure = (): void => {
     .datum(sortedData.value)
     .attr('class', 'line')
     .attr('fill', 'none')
-    .attr('class', props.stroke)
+    .attr('stroke', props.color)
+    .attr('stroke-width', 3)
     .attr('d', line)
     .style('filter', 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))')
     .style('opacity', 0); // Start invisible
@@ -259,7 +260,7 @@ const renderChartStructure = (): void => {
     .attr('cx', (d: DataPoint) => xScale(d.year))
     .attr('cy', (d: DataPoint) => yScale(d.value))
     .attr('r', 0) // Start with 0 radius
-    .attr('fill', props.color)
+    .attr('fill', props.stroke)
     .style('cursor', 'pointer')
     .style('opacity', 0) // Start invisible
     .on('mouseover', function () {
