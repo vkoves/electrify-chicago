@@ -27,13 +27,8 @@ jobs:
           restore-keys: |
             uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
             uv-${{ runner.os }}
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pytest
-          pip install -e .
-          python -c "import sys; print(f'Python version: {sys.version}')"
-          python -c "import pandas as pd; print(f'Pandas version: {pd.__version__}')"
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
       - name: Test with pytest
         run: uv run python -m pytest -v tests/
       - name: Minimize uv cache
