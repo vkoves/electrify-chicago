@@ -29,3 +29,38 @@ $warning-border: #ee8a4c;
 $box-shadow-main: rgba(0, 0, 0, 0.25);
 
 $ghg-intensity-color: #e74c3c;
+$total-ghg-emissions-color: #3498db;
+$median-electricity-use-color: #3498db;
+$median-natural-gas-color: #27ae60;
+$median-source-eui-color: #9b59b6;
+$median-site-eui-color: #1abc9c;
+
+.ghg-intensity-color {
+  stroke: $ghg-intensity-color;
+  stroke-width: 3px;
+}
+
+.total-ghg-emissions-color {
+  stroke: $total-ghg-emissions-color;
+  stroke-width: 3px;
+}
+
+.median-electricity-use-color {
+  stroke: $median-electricity-use-color;
+  stroke-width: 3px;
+}
+
+.median-natural-gas-color {
+  stroke: $median-natural-gas-color;
+  stroke-width: 3px;
+}
+
+.median-source-eui-color {
+  stroke: $median-source-eui-color;
+  stroke-width: 3px;
+}
+
+.median-site-eui-color {
+  stroke: $median-site-eui-color;
+  stroke-width: 3px;
+}

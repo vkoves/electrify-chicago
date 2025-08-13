@@ -24,6 +24,7 @@ const props = withDefaults(
   defineProps<{
     data: DataPoint[];
     yAxisLabel: string;
+    stroke: string;
     color?: string;
     containerId: string;
     title: string;
@@ -220,13 +221,14 @@ const renderChartStructure = (): void => {
     .curve(d3.curveMonotoneX);
 
   // Create path but make it invisible
+
+  console.log('props.stroke', props.stroke);
   const path = chartGroup
     .append('path')
     .datum(sortedData.value)
     .attr('class', 'line')
     .attr('fill', 'none')
-    .attr('stroke', props.color)
-    .attr('stroke-width', 3)
+    .attr('class', props.stroke)
     .attr('d', line)
     .style('filter', 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))')
     .style('opacity', 0); // Start invisible

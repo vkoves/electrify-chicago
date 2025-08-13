@@ -23,7 +23,7 @@ const detailKeyMap: Record<MetricDetail, keyof MetricStats> = {
  * data to return a clean array of data points suitable for charting or further analysis.
  * It filters out zero values and sorts the results chronologically.
  *
- * @param metricName - The key of the metric to extract from each year's data (must be a valid key from YearData)
+ * @param metricName - The key of the metric to extract from each year's data
  * @param detail - The specific detail/granularity level of the metric to extract
  * @returns An array of DataPoint objects containing year and value pairs, sorted by year ascending
  *
@@ -67,7 +67,7 @@ export const graphConfigs = [
     containerId: 'ghg-intensity-chart',
     title: 'Median GHG Intensity',
     yAxisLabel: 'kg CO2e/sq ft',
-    color: '#e74c3c',
+    stroke: 'ghg-intensity-color',
     description: [
       'This chart shows the median greenhouse gas (GHG) emissions intensity of ' +
         'buildings. It is measured in kilograms of CO2-equivalent per square foot ' +
@@ -82,7 +82,7 @@ export const graphConfigs = [
     containerId: 'total-ghg-chart',
     title: 'Median GHG Emissions',
     yAxisLabel: 'metric tons CO2e',
-    color: '#3498db',
+    stroke: 'total-ghg-emissions-color',
     description: [
       'Displays the median total greenhouse gas emissions per building, measured ' +
         'in metric tons of CO2-equivalent (CO2e).',
@@ -96,7 +96,7 @@ export const graphConfigs = [
     containerId: 'electricity-chart',
     title: 'Median Electricity Use',
     yAxisLabel: 'kWh',
-    color: '#f39c12',
+    stroke: 'median-electricity-use-color',
     description: [
       'Shows median annual electricity consumption in kilowatt-hours (kWh).',
       'One kWh is the amount of energy used by a 1,000-watt appliance running for ' +
@@ -110,7 +110,7 @@ export const graphConfigs = [
     containerId: 'natural-gas-chart',
     title: 'Median Natural Gas Use',
     yAxisLabel: 'therms',
-    color: '#27ae60',
+    stroke: 'median-natural-gas-color',
     description: [
       'Indicates the median natural gas consumption per building, measured in ' +
         'therms.',
@@ -124,7 +124,7 @@ export const graphConfigs = [
     containerId: 'source-eui-chart',
     title: 'Median Source EUI',
     yAxisLabel: 'kBtu/sq ft',
-    color: '#9b59b6',
+    stroke: 'median-natural-gas-color',
     description: [
       'Source Energy Use Intensity (Source EUI) measures the total energy used ' +
         'per square foot (kBtu/sq ft), including generation and transmission ' +
@@ -139,7 +139,7 @@ export const graphConfigs = [
     containerId: 'site-eui-chart',
     title: 'Median Site EUI',
     yAxisLabel: 'kBtu/sq ft',
-    color: '#1abc9c',
+    stroke: 'median-site-eui-color',
     description: [
       'Site Energy Use Intensity (Site EUI) reflects the amount of energy ' +
         'consumed per square foot at the building site itself, measured in ' +
