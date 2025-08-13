@@ -23,6 +23,7 @@
     "lint-fix": "yarn eslint-base --fix; yarn prettier-base --write --log-level warn"
   },
   "dependencies": {
+    "@gridsome/plugin-sitemap": "^0.4.0",
     "csv-parse": "^5.3.6",
     "d3": "^7.9.0",
     "gridsome": "^0.7.23",
