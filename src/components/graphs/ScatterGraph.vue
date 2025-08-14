@@ -184,7 +184,7 @@ const renderChartStructure = (): void => {
     .style('text-anchor', 'middle')
     .style('font-size', '14px')
     .style('font-weight', '600')
-    .style('fill', '#374151')
+    .style('fill', 'black')
     .text(props.yAxisLabel);
 
   chartGroup
@@ -193,7 +193,7 @@ const renderChartStructure = (): void => {
     .style('text-anchor', 'middle')
     .style('font-size', '14px')
     .style('font-weight', '600')
-    .style('fill', '#374151')
+    .style('fill', 'black')
     .text('Year');
 
   // Create tooltip (but don't show it yet)
@@ -400,13 +400,17 @@ onMounted(() => {
   renderChartStructure();
 
   // Set up intersection observer for data animation
+
+  // 1 = 100%. .5 = 50%. 0 = 0%.
+  const percentageOfVisibleChartBeforeAnimationBegins = 0.5;
   intersectionObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (
           entry.isIntersecting &&
           !hasAnimated.value &&
-          entry.intersectionRatio >= 0.5 &&
+          entry.intersectionRatio >=
+            percentageOfVisibleChartBeforeAnimationBegins &&
           chartRendered.value
         ) {
           animateDataElements();
