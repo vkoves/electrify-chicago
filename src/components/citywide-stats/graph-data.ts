@@ -67,8 +67,8 @@ export const graphConfigs = [
     containerId: 'ghg-intensity-chart',
     title: 'Median GHG Intensity',
     yAxisLabel: 'kg CO2e/sq ft',
-    color: 'chart-red',
-    stroke: 'chart-red',
+    strokeColor: 'chart-stroke-red',
+    fillColor: 'chart-fill-red',
     description: [
       'This chart shows the median greenhouse gas (GHG) emissions intensity of ' +
         'buildings. It is measured in kilograms of CO2-equivalent per square foot ' +
@@ -83,8 +83,8 @@ export const graphConfigs = [
     containerId: 'total-ghg-chart',
     title: 'Median GHG Emissions',
     yAxisLabel: 'metric tons CO2e',
-    color: 'chart-blue',
-    stroke: 'chart-blue',
+    strokeColor: 'chart-stroke-blue',
+    fillColor: 'chart-fill-blue',
     description: [
       'Displays the median total greenhouse gas emissions per building, measured ' +
         'in metric tons of CO2-equivalent (CO2e).',
@@ -98,8 +98,8 @@ export const graphConfigs = [
     containerId: 'electricity-chart',
     title: 'Median Electricity Use',
     yAxisLabel: 'kWh',
-    color: 'chart-orange',
-    stroke: 'median-electricity-use-color',
+    strokeColor: 'chart-stroke-orange',
+    fillColor: 'chart-fill-orange',
     description: [
       'Shows median annual electricity consumption in kilowatt-hours (kWh).',
       'One kWh is the amount of energy used by a 1,000-watt appliance running for ' +
@@ -113,8 +113,8 @@ export const graphConfigs = [
     containerId: 'natural-gas-chart',
     title: 'Median Natural Gas Use',
     yAxisLabel: 'therms',
-    color: 'chart-green',
-    stroke: 'median-natural-gas-color',
+    strokeColor: 'chart-stroke-green',
+    fillColor: 'chart-fill-green',
     description: [
       'Indicates the median natural gas consumption per building, measured in ' +
         'therms.',
@@ -128,8 +128,8 @@ export const graphConfigs = [
     containerId: 'source-eui-chart',
     title: 'Median Source EUI',
     yAxisLabel: 'kBtu/sq ft',
-    color: 'chart-purple',
-    stroke: 'median-natural-gas-color',
+    strokeColor: 'chart-stroke-purple',
+    fillColor: 'chart-fill-purple',
     description: [
       'Source Energy Use Intensity (Source EUI) measures the total energy used ' +
         'per square foot (kBtu/sq ft), including generation and transmission ' +
@@ -144,8 +144,8 @@ export const graphConfigs = [
     containerId: 'site-eui-chart',
     title: 'Median Site EUI',
     yAxisLabel: 'kBtu/sq ft',
-    color: 'chart-teal',
-    stroke: 'median-site-eui-color',
+    strokeColor: 'chart-stroke-teal',
+    fillColor: 'chart-fill-teal',
     description: [
       'Site Energy Use Intensity (Site EUI) reflects the amount of energy ' +
         'consumed per square foot at the building site itself, measured in ' +

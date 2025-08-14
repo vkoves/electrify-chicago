@@ -24,8 +24,8 @@ const props = withDefaults(
   defineProps<{
     data: DataPoint[];
     yAxisLabel: string;
-    stroke: string;
-    color: string;
+    strokeColor: string;
+    fillColor: string;
     containerId: string;
     title: string;
     showGrid: boolean;
@@ -33,7 +33,6 @@ const props = withDefaults(
     animationDuration?: number;
   }>(),
   {
-    color: '#3B82F6',
     showGrid: true,
     showTrendLine: true,
     animationDuration: 800,
@@ -222,13 +221,12 @@ const renderChartStructure = (): void => {
 
   // Create path but make it invisible
 
-  console.log('props.stroke', props.stroke);
   const path = chartGroup
     .append('path')
     .datum(sortedData.value)
     .attr('class', 'line')
     .attr('fill', 'none')
-    .attr('stroke', props.color)
+    .attr('class', props.strokeColor)
     .attr('stroke-width', 3)
     .attr('d', line)
     .style('filter', 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))')
@@ -260,7 +258,7 @@ const renderChartStructure = (): void => {
     .attr('cx', (d: DataPoint) => xScale(d.year))
     .attr('cy', (d: DataPoint) => yScale(d.value))
     .attr('r', 0) // Start with 0 radius
-    .attr('fill', props.stroke)
+    .attr('class', props.fillColor)
     .style('cursor', 'pointer')
     .style('opacity', 0) // Start invisible
     .on('mouseover', function () {
@@ -282,7 +280,7 @@ const renderChartStructure = (): void => {
             <div style="color: #1e293b; font-weight: 600; margin-bottom: 4px;">
               Year: ${d.year}
             </div>
-            <div style="color: ${props.color}; font-weight: 600;">
+            <div style="font-weight: 600;">
               ${props.yAxisLabel}: ${d.value.toLocaleString()}
             </div>
           `,
@@ -411,7 +409,6 @@ onMounted(() => {
           entry.intersectionRatio >= 0.5 &&
           chartRendered.value
         ) {
-          console.log('Animating chart data for:', props.containerId);
           animateDataElements();
         }
       });

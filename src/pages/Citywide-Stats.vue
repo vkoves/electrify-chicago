@@ -28,7 +28,8 @@
           <ScatterGraph
             :data="graph.data"
             :y-axis-label="graph.yAxisLabel"
-            :stroke="graph.stroke"
+            :strokeColor="graph.strokeColor"
+            :fillColor="graph.fillColor"
             :container-id="graph.containerId"
             :show-grid="true"
             :title="graph.title"

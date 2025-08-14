@@ -35,26 +35,49 @@ $chart-green: #27ae60;
 $chart-purple: #9b59b6;
 $chart-teal: #1abc9c;
 
-.chart-red {
+.chart-stroke-red {
   stroke: $chart-red;
 }
 
-.chart-blue {
+.chart-fill-red {
+  fill: $chart-red;
+}
+
+.chart-stroke-blue {
   stroke: $chart-blue;
 }
 
-.chart-orange {
+.chart-fill-blue {
+  fill: $chart-blue;
+}
+
+.chart-stroke-orange {
   stroke: $chart-orange;
 }
 
-.chart-green {
+.chart-fill-orange {
+  fill: $chart-orange;
+}
+
+.chart-stroke-green {
   stroke: $chart-green;
 }
 
-.chart-purple {
+.chart-fill-green {
+  fill: $chart-green;
+}
+
+.chart-stroke-purple {
   stroke: $chart-purple;
 }
 
-.chart-teal {
+.chart-fill-purple {
+  fill: $chart-purple;
+}
+.chart-stroke-teal {
   stroke: $chart-teal;
+}
+
+.chart-fill-teal {
+  fill: $chart-teal;
 }
