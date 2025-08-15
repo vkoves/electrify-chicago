@@ -88,7 +88,7 @@ const graphConfigs = [
     description: [
       'Displays the median total greenhouse gas emissions per building, measured ' +
         'in metric tons of CO2-equivalent (CO2e).',
-      'This includes emissions from electricity, natural gas, and other sources. A ' +
+      'This includes emissions from electricity, fossil gas, and other sources. A ' +
         'metric ton equals 1,000 kilograms — roughly the emissions from driving a ' +
         'typical gasoline car for over 2,000 miles.',
     ],
@@ -111,14 +111,14 @@ const graphConfigs = [
   {
     data: extractMetricData('NaturalGasUse', '50%'),
     containerId: 'natural-gas-chart',
-    title: 'Median Natural Gas Use',
+    title: 'Median Fossil Gas Use',
     yAxisLabel: 'therms',
     strokeColor: 'chart-stroke-green',
     fillColor: 'chart-fill-green',
     description: [
-      'Indicates the median natural gas consumption per building, measured in ' +
+      'Indicates the median fossil gas consumption per building, measured in ' +
         'therms.',
-      'One therm is roughly equivalent to burning 100 cubic feet of natural gas ' +
+      'One therm is roughly equivalent to burning 100 cubic feet of fossil gas ' +
         'and releases about 5.3 kg of CO2. This metric tracks building heating and ' +
         'hot water use, which are major sources of wintertime emissions.',
     ],
