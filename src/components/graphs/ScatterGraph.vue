@@ -146,7 +146,7 @@ export default class ScatterPlot extends Vue {
       number,
       number,
     ];
-    const yPaddingTop = (yExtent[1] - 0) * 0.2; // 10% padding above max
+    const yPaddingTop = yExtent[1] * 0.5; // 10% padding above max
 
     this.yScale = d3
       .scaleLinear()
@@ -200,7 +200,14 @@ export default class ScatterPlot extends Vue {
     chartGroup
       .append('g')
       .attr('class', 'y-axis')
-      .call(d3.axisLeft(this.yScale).tickSize(-10));
+      .call(
+        d3
+          .axisLeft(this.yScale)
+          .tickSize(-10)
+          .tickFormat((d: d3.NumberValue, _i: number) =>
+            +d === 0 ? '' : d3.format('~s')(d),
+          ),
+      );
 
     // Axis labels
     chartGroup
