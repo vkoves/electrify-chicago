@@ -2,7 +2,6 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
@@ -16,7 +15,6 @@ import {
 @Component<any>({
   components: {
     BuildingsTable,
-    DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
   },
@@ -72,6 +70,38 @@ export default class LatestUpdates extends Vue {
         newBuildingIds.includes(edge.node.ID.toString()),
       )
       .sort((a, b) => b.node.GrossFloorArea - a.node.GrossFloorArea);
+  }
+
+  get consistentReportersCount(): number {
+    // Get buildings that reported in both years
+    const latestYearSubmitted = new Set(
+      this.$static.allBenchmark.edges
+        .filter(
+          (edge: { node: IHistoricData }) =>
+            edge.node.DataYear === this.LatestDataYear &&
+            hasReportedData(edge.node),
+        )
+        .map((edge: { node: IHistoricData }) => edge.node.ID),
+    );
+
+    const previousYearSubmitted = new Set(
+      this.$static.allBenchmark.edges
+        .filter(
+          (edge: { node: IHistoricData }) =>
+            edge.node.DataYear === this.PreviousDataYear &&
+            hasReportedData(edge.node),
+        )
+        .map((edge: { node: IHistoricData }) => edge.node.ID),
+    );
+
+    // Count buildings that reported in BOTH years
+    return Array.from(latestYearSubmitted).filter(id =>
+      previousYearSubmitted.has(id)
+    ).length;
+  }
+
+  get netChangeInReporting(): number {
+    return this.newBuildings.length - this.stoppedReportingBuildings.length;
   }
 
   get stoppedReportingBuildings(): Array<{ node: IBuilding }> {
@@ -176,10 +206,53 @@ export default class LatestUpdates extends Vue {
       in {{ LatestDataYear }}).
     </p>
 
-    <DataDisclaimer />
+    <!-- Quick Stats Section -->
+    <section class="stats-overview">
+      <h2>Quick Stats</h2>
+      <div class="stats-grid">
+        <div class="stat-card positive">
+          <div class="stat-number">{{ newBuildings.length }}</div>
+          <div class="stat-label">
+            <a href="#new-buildings">New Buildings</a>
+          </div>
+          <div class="stat-description">
+            First time reporting in {{ LatestDataYear }}
+          </div>
+        </div>
+
+        <div class="stat-card negative">
+          <div class="stat-number">{{ stoppedReportingBuildings.length }}</div>
+          <div class="stat-label">
+            <a href="#stopped-reporting">Stopped Reporting</a>
+          </div>
+          <div class="stat-description">
+            Reported in {{ PreviousDataYear }} but not {{ LatestDataYear }}
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-number">{{ consistentReportersCount }}</div>
+          <div class="stat-label">Consistent Reporters</div>
+          <div class="stat-description">
+            Reported in both {{ PreviousDataYear }} and {{ LatestDataYear }}
+          </div>
+        </div>
+
+        <div class="stat-card" :class="{ 'net-positive': netChangeInReporting > 0, 'net-negative': netChangeInReporting < 0, 'net-zero': netChangeInReporting === 0 }">
+          <div class="stat-number">
+            {{ netChangeInReporting > 0 ? '+' : '' }}{{ netChangeInReporting }}
+          </div>
+          <div class="stat-label">Net Change</div>
+          <div class="stat-description">
+            {{ netChangeInReporting > 0 ? 'More' : netChangeInReporting < 0 ? 'Fewer' : 'Same' }}
+            buildings reporting vs {{ PreviousDataYear }}
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- New Buildings Section -->
-    <section>
+    <section id="new-buildings">
       <h2>New Buildings ({{ newBuildings.length }})</h2>
       <p>
         These buildings first submitted data in {{ LatestDataYear }} - they may be new buildings,
@@ -199,7 +272,7 @@ export default class LatestUpdates extends Vue {
     </section>
 
     <!-- Stopped Reporting Section -->
-    <section>
+    <section id="stopped-reporting">
       <h2>Stopped Reporting ({{ stoppedReportingBuildings.length }})</h2>
       <p>
         Submitted data in {{ PreviousDataYear }} but not {{ LatestDataYear }},
@@ -250,6 +323,72 @@ export default class LatestUpdates extends Vue {
   p {
     margin: 0;
     font-size: 0.9rem;
+  }
+}
+
+.stats-overview {
+  margin: 2rem 0;
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .stat-card {
+    background-color: $off-white;
+    border-radius: $brd-rad-medium;
+    padding: 1.5rem;
+    text-align: center;
+    border: $border-thin solid $grey-light;
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: $blue-dark;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+
+      a {
+        color: $text-main;
+        text-decoration: none;
+
+        &:hover {
+          color: $blue-dark;
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .stat-description {
+      font-size: 0.9rem;
+    }
+
+    &.net-positive .stat-number {
+      color: $green;
+    }
+
+    &.net-negative .stat-number {
+      color: $chicago-red;
+    }
+
+    &.net-zero .stat-number {
+      color: $grey;
+    }
+
+    &.positive .stat-number {
+      color: $green;
+    }
+
+    &.negative .stat-number {
+      color: $chicago-red;
+    }
   }
 }
 
