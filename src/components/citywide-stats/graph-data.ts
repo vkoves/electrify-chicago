@@ -43,13 +43,13 @@ const detailKeyMap: Record<MetricDetail, keyof MetricStats> = {
  * - Results are sorted chronologically by year in ascending order
  * - Uses the `detailKeyMap` to map the detail parameter to the appropriate data key
  */
-export function extractMetricData(
+function extractMetricData(
   metricName: keyof YearData,
   detail: MetricDetail,
 ): DataPoint[] {
   const historicStats = HistoricStats as Record<string, YearData>;
   return Object.entries(historicStats)
-    .map(([year, yearData]) => {
+    .map(([year, yearData]: [string, YearData]) => {
       const stats = yearData[metricName];
       const value = stats ? stats[detailKeyMap[detail]] : undefined;
       return {
@@ -57,11 +57,11 @@ export function extractMetricData(
         value: value ?? 0,
       };
     })
-    .filter((d) => d.value !== 0)
-    .sort((a, b) => a.year - b.year);
+    .filter((d: DataPoint) => d.value !== 0)
+    .sort((a: DataPoint, b: DataPoint) => a.year - b.year);
 }
 
-export const graphConfigs = [
+const graphConfigs = [
   {
     data: extractMetricData('GHGIntensity', '50%'),
     containerId: 'ghg-intensity-chart',
@@ -156,3 +156,5 @@ export const graphConfigs = [
     ],
   },
 ] as const;
+
+export { extractMetricData, graphConfigs };
