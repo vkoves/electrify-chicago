@@ -108,7 +108,10 @@ export interface IHistoricData {
  * not just if it submitted paperwork.
  */
 export function hasReportedData(historicData: IHistoricData): boolean {
-  return typeof historicData.GHGIntensity === 'number' && historicData.GHGIntensity > 0;
+  return (
+    typeof historicData.GHGIntensity === 'number' &&
+    historicData.GHGIntensity > 0
+  );
 }
 
 /**

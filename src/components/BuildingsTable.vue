@@ -82,7 +82,11 @@ export default class BuildingsTable extends Vue {
   <div class="buildings-table-cont">
     <table
       :class="{
-        '-wide': showSquareFootage || showGasUse || showElectricityUse || showYearBuilt,
+        '-wide':
+          showSquareFootage ||
+          showGasUse ||
+          showElectricityUse ||
+          showYearBuilt,
       }"
     >
       <thead>
@@ -90,7 +94,9 @@ export default class BuildingsTable extends Vue {
           <th scope="col">Name / Address</th>
           <th scope="col" class="prop-type">Primary Property Type</th>
           <th v-if="showYearBuilt" scope="col" class="year-col">Year Built</th>
-          <th v-if="showSquareFootage" scope="col" class="sq-footage numeric">Square Footage</th>
+          <th v-if="showSquareFootage" scope="col" class="sq-footage numeric">
+            Square Footage
+          </th>
           <!-- Click handlers on numeric columns for sorting -->
           <th
             v-if="showGasUse"
@@ -203,7 +209,10 @@ export default class BuildingsTable extends Vue {
       </thead>
       <tbody>
         <tr v-for="edge in buildings" :key="edge.node.id">
-          <td class="property-name" :class="{ '-narrow': showYearBuilt || showSquareFootage }">
+          <td
+            class="property-name"
+            :class="{ '-narrow': showYearBuilt || showSquareFootage }"
+          >
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
             </g-link>

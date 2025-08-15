@@ -95,8 +95,8 @@ export default class LatestUpdates extends Vue {
     );
 
     // Count buildings that reported in BOTH years
-    return Array.from(latestYearSubmitted).filter(id =>
-      previousYearSubmitted.has(id)
+    return Array.from(latestYearSubmitted).filter((id) =>
+      previousYearSubmitted.has(id),
     ).length;
   }
 
@@ -239,13 +239,26 @@ export default class LatestUpdates extends Vue {
           </div>
         </div>
 
-        <div class="stat-card" :class="{ 'net-positive': netChangeInReporting > 0, 'net-negative': netChangeInReporting < 0, 'net-zero': netChangeInReporting === 0 }">
+        <div
+          class="stat-card"
+          :class="{
+            'net-positive': netChangeInReporting > 0,
+            'net-negative': netChangeInReporting < 0,
+            'net-zero': netChangeInReporting === 0,
+          }"
+        >
           <div class="stat-number">
             {{ netChangeInReporting > 0 ? '+' : '' }}{{ netChangeInReporting }}
           </div>
           <div class="stat-label">Net Change</div>
           <div class="stat-description">
-            {{ netChangeInReporting > 0 ? 'More' : netChangeInReporting < 0 ? 'Fewer' : 'Same' }}
+            {{
+              netChangeInReporting > 0
+                ? 'More'
+                : netChangeInReporting < 0
+                  ? 'Fewer'
+                  : 'Same'
+            }}
             buildings reporting vs {{ PreviousDataYear }}
           </div>
         </div>
@@ -256,8 +269,9 @@ export default class LatestUpdates extends Vue {
     <section id="new-buildings">
       <h2>New Buildings ({{ newBuildings.length }})</h2>
       <p>
-        These buildings first submitted data in {{ LatestDataYear }} - they may be new buildings,
-        or just started reporting after non-compliance. Sorted by square footage (largest first).
+        These buildings first submitted data in {{ LatestDataYear }} - they may
+        be new buildings, or just started reporting after non-compliance. Sorted
+        by square footage (largest first).
       </p>
 
       <p v-if="newBuildings.length === 0" class="no-results">
@@ -288,8 +302,9 @@ export default class LatestUpdates extends Vue {
 
       <div v-else class="stopped-reporting-note">
         <p>
-          These buildings submitted data in {{ PreviousDataYear }} but did not submit in
-          {{ LatestDataYear }}. Data shown is from their most recent submission.
+          These buildings submitted data in {{ PreviousDataYear }} but did not
+          submit in {{ LatestDataYear }}. Data shown is from their most recent
+          submission.
         </p>
       </div>
 

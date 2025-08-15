@@ -28,12 +28,14 @@ export default class About extends Vue {}
         <p>
           Updated the source data to the year 2023, bringing in the latest
           building emissions and energy data. This update includes
-          <strong>61 new buildings</strong> that submitted data for the first time
-          and <strong>288 buildings that stopped reporting</strong> from the previous year.
+          <strong>61 new buildings</strong> that submitted data for the first
+          time and <strong>288 buildings that stopped reporting</strong> from
+          the previous year.
         </p>
 
         <p>
-          We've also added a new <g-link to="/latest-updates">Latest Updates page</g-link>
+          We've also added a new
+          <g-link to="/latest-updates">Latest Updates page</g-link>
           that shows which buildings started or stopped reporting between years,
           helping track participation in Chicago's energy benchmarking program.
         </p>
