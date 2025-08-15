@@ -109,11 +109,6 @@ def test_expected_columns_present(processed_dataframe):
         'Longitude',
         'Location',
         'Row_ID',
-        'Wards',
-        'CommunityAreas',
-        'ZipCodes',
-        'CensusTracts',
-        'HistoricalWards2003-2015',
     )
     assert set(df.columns) == set(mandatory_columns)
 
@@ -123,12 +118,12 @@ def test_correct_year_selected(processed_dataframe):
 
     df = processed_dataframe
 
-    # We have 3 records that submitted but whose latest year was before 2022
-    non_2022_df = df[df['DataYear'] < 2022]
-    assert len(non_2022_df) == 3
+    # We have 3 records that submitted but whose latest year was before 2023
+    non_2023_df = df[df['DataYear'] < 2023]
+    assert len(non_2023_df) == 3
 
-    yr_2022_df = df[df['DataYear']==2022]
-    assert len(yr_2022_df) == 2
+    yr_2023_df = df[df['DataYear']==2023]
+    assert len(yr_2023_df) == 2
 
 
 def test_property_count(processed_dataframe):

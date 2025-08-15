@@ -108,11 +108,6 @@ def test_expected_columns_present(processed_dataframe):
         'Longitude',
         'Location',
         'Row_ID',
-        'Wards',
-        'CommunityAreas',
-        'ZipCodes',
-        'CensusTracts',
-        'HistoricalWards2003-2015',
     )
     assert set(df.columns) == set(mandatory_columns)
 
