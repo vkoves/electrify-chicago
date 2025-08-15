@@ -53,6 +53,16 @@ Running the above command will result in the following output in your terminal
 
 When you see the above output, it means the site is now running and now you can browse to http://localhost:8080
 
+**"This Dependency was not found:" Error**
+
+If you are running into this error even after installing the dependency multiple times and trying the tip above, do the following:
+
+1. Remove all project data: `docker-compose down --volumes --remove-orphans`
+2. Remove everything from the system: `docker system prune -f`
+3. Rebuild container from scratch: `docker-compose up --build --force-recreate`
+
+For more information, see this excellent article <a href="https://www.timsanteford.com/posts/how-to-force-a-complete-rebuild-in-docker-compose-including-anonymous-volumes/" target="_blank">How to Force a Complete Rebuild in Docker Compose, Including Anonymous Volumes</a> by <a href="https://www.timsanteford.com/about-me/" target="_blank">Tim Santeford</a>.
+
 ### **3. Stop Docker**
 
 - To stop and completely remove the server (i.e. the running Docker container), run `docker-compose down`

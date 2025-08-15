@@ -40,6 +40,43 @@ export default class About extends Vue {}
           helping track participation in Chicago's energy benchmarking program.
         </p>
 
+        <h2>August 5th, 2025 - Improved Printing for Buildings</h2>
+
+        <p>
+          We added a new print button that makes it easy to print our building
+          pages, so you can print off a building that you're interested in. Our
+          print mode removes navigation elements to focus on the building data
+          and make pages more suitable for printing or saving as PDFs, including
+          a QR code so folks who see the printed page can see the full data.
+        </p>
+      </div>
+
+      <div class="two-cols">
+        <div>
+          <a href="/release-notes/2025/print-mode-btn.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/print-mode-btn.webp"
+              alt="Building page showing the new print mode button in the top right corner"
+            />
+          </a>
+
+          <p class="bold">New Print Button</p>
+        </div>
+        <div>
+          <a href="/release-notes/2025/print-mode-preview.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/print-mode-preview.webp"
+              alt="Building page in print mode showing clean layout without navigation or footer"
+            />
+          </a>
+
+          <p class="bold">Print Preview</p>
+        </div>
+      </div>
+
+      <div class="layout-constrained">
         <h2>June 6th, 2025 - Added Ward Info & Pages</h2>
 
         <p>

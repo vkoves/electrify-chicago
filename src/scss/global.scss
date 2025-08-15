@@ -12,7 +12,7 @@ body {
 
   &,
   * {
-    font-family: 'Roboto', sans-serif;
+    font-family: Roboto, sans-serif;
     box-sizing: border-box;
   }
 
@@ -54,7 +54,7 @@ a.back-link {
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  margin: 1rem 0 0 0;
+  margin: 1rem 0 0;
   font-weight: 600;
 
   img {
@@ -89,16 +89,18 @@ h6,
   h1 {
     font-size: 1.75rem;
   }
+
   h2 {
     font-size: 1.25rem;
   }
 }
 
 h1 {
-  margin: 1.5rem 0 0.5rem 0;
+  margin: 1.5rem 0 0.5rem;
 }
+
 h2 {
-  margin: 1rem 0 0.5rem 0;
+  margin: 1rem 0 0.5rem;
 }
 
 // Expose -no-margin variant to ignore default paragraph margins
@@ -121,7 +123,7 @@ select {
 }
 
 button {
-  padding: 0.5rem 1rem 0.3rem 1rem;
+  padding: 0.5rem 1rem 0.3rem;
   background-color: $white;
   border-radius: $brd-rad-small;
   color: $black;
@@ -146,6 +148,7 @@ dl {
   dt {
     font-weight: bold;
   }
+
   dd {
     margin-left: 0;
   }
@@ -174,6 +177,7 @@ details {
     &:focus {
       outline-offset: 0;
     }
+
     > span {
       margin-left: 0.5rem;
     }
@@ -250,28 +254,28 @@ code {
  * Styling for our building letter grades (A-F) with colors for each for emphasis
  */
 .letter-grade {
-  font-family: 'Roboto', sans-serif;
+  font-family: Roboto, sans-serif;
   font-weight: 900;
   line-height: 1;
 
   &.-a {
-    color: #009f49;
+    color: $grade-a-green;
   }
 
   &.-b {
-    color: #7fa52e;
+    color: $grade-b-green;
   }
 
   &.-c {
-    color: #b36a15;
+    color: $grade-c-orange;
   }
 
   &.-d {
-    color: #972222;
+    color: $grade-d-red;
   }
 
   &.-f {
-    color: #d60101;
+    color: $grade-f-red;
   }
 
   // Create a -circled style for the tables
@@ -280,13 +284,13 @@ code {
     border: solid $border-thin;
     width: 1.375rem;
     height: 1.375rem;
-    padding: 1.5px;
+    padding: 0.0938rem; // 1.5px
     text-align: center;
     border-radius: 1rem;
-    background: white;
+    background: $white;
     border-width: 0.125rem;
     margin-left: 0.5rem;
-    vertical-align: 1px;
+    vertical-align: 0.0625rem; // 1px
 
     &.-d,
     &.-b {
@@ -321,6 +325,7 @@ code {
   &.-wide {
     max-width: 60rem;
   }
+
   &.layout-constrained {
     margin: auto;
   }
@@ -371,7 +376,7 @@ form.search-form {
 .announce-panel {
   padding: 1rem;
   border-radius: 1rem;
-  border: solid 0.25rem #ff5454;
+  border: solid 0.25rem $announcement-border-red;
   background: $off-white;
   border-top-width: 2rem;
   max-width: 40rem;
@@ -379,6 +384,7 @@ form.search-form {
   &.-orange {
     border-color: $orange;
   }
+
   &.-blue {
     border-color: $chicago-blue;
   }
@@ -502,15 +508,15 @@ article.blog-post {
 .tooltip {
   // The width of the tooltip tip
   $tooltipSize: 0.3125rem;
+
   z-index: 10000;
 
   .tooltip-inner {
     background: $white;
     color: $black;
-    border-radius: 4px;
+    border-radius: 0.25rem; // 4px
     border: $border-thin solid $blue-dark;
     box-shadow: 0.25rem 0.25rem 0.25rem $grey;
-    padding: 0.25rem 0.5rem 0.25rem;
     width: 22rem;
     padding: 1rem;
 
@@ -557,7 +563,7 @@ article.blog-post {
     margin-top: $tooltipSize;
 
     .tooltip-arrow {
-      border-width: 0 $tooltipSize $tooltipSize $tooltipSize;
+      border-width: 0 $tooltipSize $tooltipSize;
       border-left-color: transparent;
       border-right-color: transparent;
       border-top-color: transparent;
@@ -614,37 +620,38 @@ article.blog-post {
 }
 
 /** A container for multiple BuildingTiles */
+
 /**
  * Concern level styling for stats (used by StatTile and other components)
  * Based on building performance relative to citywide medians
  */
 .concern-level-very-bad {
-  background-color: #ffd9d9;
-  border-color: red;
+  background-color: $concern-very-bad-background;
+  border-color: $red;
 }
 
 .concern-level-bad {
-  background-color: #ffedf0;
-  border-color: red;
+  background-color: $concern-bad-background;
+  border-color: $red;
 }
 
 .concern-level-medium {
   background-color: $off-white;
-  border-color: #935700;
+  border-color: $concern-medium-border;
 }
 
 .concern-level-good {
   background-color: $off-white;
-  border-color: green;
+  border-color: $green;
 }
 
 .concern-level-great {
-  background-color: #e9ffe9;
-  border-color: green;
+  background-color: $concern-great-background;
+  border-color: $green;
 }
 
 /**
- * Median comparison styling for stats
+ * Median comparison styling for stats (social card and stat tile)
  */
 .median-comparison {
   display: flex;
@@ -671,41 +678,44 @@ article.blog-post {
 
 .buildings-scroll-cont {
   position: relative;
+
   $card-padding: 0.75rem;
+
   // Grow to account for inner padding
-  margin: 1rem (-$card-padding) 2rem (-$card-padding);
+  margin: 1rem (-$card-padding) 2rem;
   overflow: scroll hidden;
 
   // Create a fake partial right border to make clear it's scrollable
   &::after {
     content: '';
-    width: 60px;
-    height: 4px;
-    background: gray;
+    width: 3.75rem; // 60px
+    height: 0.25rem; // 4px
+    background: $gray;
     position: absolute;
-    bottom: -4px;
+    bottom: -0.25rem; // -4px
   }
 
   // Set scrollbar width
   &::-webkit-scrollbar {
     width: 0.75rem;
   }
+
   // Scrollbar track
   &::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: $scrollbar-track;
     border-radius: $brd-rad-medium;
     margin: $card-padding;
   }
 
   // Scrollbar Handle
   &::-webkit-scrollbar-thumb {
-    background: #888;
+    background: $scrollbar-thumb;
     border-radius: $brd-rad-medium;
     cursor: pointer;
 
     // Scroll handle on hover
     &:hover {
-      background: #555;
+      background: $scrollbar-thumb-hover;
     }
   }
 
@@ -717,7 +727,7 @@ article.blog-post {
     padding: 0;
 
     li {
-      padding: 0.5rem $card-padding 1.5rem $card-padding;
+      padding: 0.5rem $card-padding 1.5rem;
     }
   }
 
@@ -734,5 +744,87 @@ article.blog-post {
         }
       }
     }
+  }
+}
+
+/**
+ * Blue Action Button Styling - shared styles for large call-to-action buttons
+ */
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+  padding: 0.25rem 1.5rem;
+  height: 2.75rem; // use height to keep Email & Print consistent
+  background-color: $blue-dark;
+  border: none;
+  color: $white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: $brd-rad-medium;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: $blue-very-dark;
+  }
+
+  img {
+    border-radius: 0;
+    height: 1.5rem;
+  }
+
+  @media (max-width: $mobile-max-width) {
+    margin-bottom: 0;
+    font-size: 1rem;
+    min-width: initial;
+
+    img {
+      height: 1.25rem;
+    }
+  }
+}
+
+/**
+ * Print Styling - hides interactive elements and simplifies layout.
+ *
+ * NOTE: Print layout is around 670px (or 740px?) wide, so make sure to test that way
+ */
+@media print {
+  // Shrink all fonts
+  html {
+    font-size: 0.6125rem;
+  }
+
+  /** Expose global "no-print" class for hiding elements from printing */
+  .no-print {
+    display: none !important;
+  }
+
+  // Drop header border and padding
+  header.header {
+    padding: 0;
+
+    .site-logo {
+      width: 20rem;
+    }
+
+    // Drop all header links (just keep the logo)
+    .top-nav,
+    button.mobile-menu-toggle {
+      display: none;
+    }
+  }
+
+  // Drop main-content padding, since printed pages already have plenty
+  .layout .main-content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  // Totally hide the footer
+  footer {
+    display: none;
   }
 }

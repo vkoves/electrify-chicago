@@ -117,6 +117,8 @@ export default class ReportCard extends Vue {
   border-radius: $brd-rad-medium;
   overflow: hidden;
   flex-shrink: 0;
+  // When printing, don't remove colors or backgrounds
+  print-color-adjust: exact;
 
   .anomaly-warning {
     position: absolute;
@@ -241,6 +243,45 @@ export default class ReportCard extends Vue {
         font-weight: 500;
         font-size: 0.8125rem;
       }
+    }
+  }
+
+  /**
+   * Print Styling - Hide Learn More link and drop underlines from sub-sections
+   */
+  @media print {
+    // Hide the anomaly warning when printing to not cover grades - there's already a top level
+    // banner warning
+    .anomaly-warning {
+      display: none !important;
+    }
+
+    .report-card {
+      filter: none !important;
+    }
+
+    h2.title {
+      font-size: 1.5rem;
+    }
+
+    .grade-row {
+      font-size: 1.2rem;
+
+      .letter-grade {
+        font-size: 2rem !important;
+
+        &.-overall {
+          font-size: 4rem !important;
+        }
+      }
+    }
+
+    .report-card a.grade-row strong {
+      text-decoration: none;
+    }
+
+    .learn-more-cont {
+      display: none;
     }
   }
 }

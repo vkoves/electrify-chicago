@@ -86,5 +86,14 @@ export default class BuildingImage extends Vue {
       text-align: left;
     }
   }
+
+  /**
+   * Print Styling - hide attribution, since a lot of them just say "Source"
+   */
+  @media print {
+    .attribution {
+      display: none;
+    }
+  }
 }
 </style>
