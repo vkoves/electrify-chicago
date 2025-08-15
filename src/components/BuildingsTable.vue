@@ -523,7 +523,9 @@ export default class BuildingsTable extends Vue {
         width: 24rem;
 
         // Make sure long property names wrap
-        a { white-space: normal; }
+        a {
+          white-space: normal;
+        }
       }
     }
 

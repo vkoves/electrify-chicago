@@ -35,7 +35,10 @@ export default class About extends Vue {
           </p>
 
           <p>
-            Electrify Chicago gives buildings letter grades from A to F based on their environmental performance. Learn how we calculate these grades, what they mean, and why we think grading buildings helps drive transparency and improvement in Chicago's building emissions.
+            Electrify Chicago gives buildings letter grades from A to F based on
+            their environmental performance. Learn how we calculate these
+            grades, what they mean, and why we think grading buildings helps
+            drive transparency and improvement in Chicago's building emissions.
           </p>
         </li>
 
