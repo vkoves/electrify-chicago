@@ -29,7 +29,9 @@ export default class LatestUpdates extends Vue {
   /** Set by Gridsome to results of GraphQL query */
   readonly $static!: {
     allBuilding: { edges: Array<IBuildingNode> };
-    allBenchmark: { edges: Array<{ node: IHistoricData }> };
+    latestYearBenchmarks: { edges: Array<{ node: IHistoricData }> };
+    previousYearBenchmarks: { edges: Array<{ node: IHistoricData }> };
+    allPreviousYearsBenchmarks: { edges: Array<{ node: IHistoricData }> };
   };
 
   mounted(): void {
@@ -37,25 +39,17 @@ export default class LatestUpdates extends Vue {
   }
 
   get newBuildings(): Array<{ node: IBuilding }> {
-    // Get all buildings that submitted in the latest year
+    // Get all buildings that submitted in the latest year (already filtered by GraphQL)
     const latestYearSubmitted = new Set(
-      this.$static.allBenchmark.edges
-        .filter(
-          (edge: { node: IHistoricData }) =>
-            edge.node.DataYear === this.LatestDataYear &&
-            hasReportedData(edge.node),
-        )
+      this.$static.latestYearBenchmarks.edges
+        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
 
-    // Get all buildings that submitted in any previous year
+    // Get all buildings that submitted in any previous year (already filtered by GraphQL)
     const previousYearsSubmitted = new Set(
-      this.$static.allBenchmark.edges
-        .filter(
-          (edge: { node: IHistoricData }) =>
-            edge.node.DataYear < this.LatestDataYear &&
-            hasReportedData(edge.node),
-        )
+      this.$static.allPreviousYearsBenchmarks.edges
+        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
 
@@ -73,24 +67,16 @@ export default class LatestUpdates extends Vue {
   }
 
   get consistentReportersCount(): number {
-    // Get buildings that reported in both years
+    // Get buildings that reported in both years (already filtered by GraphQL)
     const latestYearSubmitted = new Set(
-      this.$static.allBenchmark.edges
-        .filter(
-          (edge: { node: IHistoricData }) =>
-            edge.node.DataYear === this.LatestDataYear &&
-            hasReportedData(edge.node),
-        )
+      this.$static.latestYearBenchmarks.edges
+        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
 
     const previousYearSubmitted = new Set(
-      this.$static.allBenchmark.edges
-        .filter(
-          (edge: { node: IHistoricData }) =>
-            edge.node.DataYear === this.PreviousDataYear &&
-            hasReportedData(edge.node),
-        )
+      this.$static.previousYearBenchmarks.edges
+        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
 
@@ -105,25 +91,17 @@ export default class LatestUpdates extends Vue {
   }
 
   get stoppedReportingBuildings(): Array<{ node: IBuilding }> {
-    // Get buildings that submitted in the previous year
+    // Get buildings that submitted in the previous year (already filtered by GraphQL)
     const previousYearSubmitted = new Set(
-      this.$static.allBenchmark.edges
-        .filter(
-          (edge: { node: IHistoricData }) =>
-            edge.node.DataYear === this.PreviousDataYear &&
-            hasReportedData(edge.node),
-        )
+      this.$static.previousYearBenchmarks.edges
+        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
 
-    // Get buildings that submitted in the latest year
+    // Get buildings that submitted in the latest year (already filtered by GraphQL)
     const latestYearSubmitted = new Set(
-      this.$static.allBenchmark.edges
-        .filter(
-          (edge: { node: IHistoricData }) =>
-            edge.node.DataYear === this.LatestDataYear &&
-            hasReportedData(edge.node),
-        )
+      this.$static.latestYearBenchmarks.edges
+        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
 
@@ -145,15 +123,14 @@ export default class LatestUpdates extends Vue {
 
 <static-query>
   query {
+    # Building details for display in tables (name, address, rankings, grades)
     allBuilding {
       edges {
         node {
           slugSource
           ID
-          DataYear
           PropertyName
           Address
-          ZIPCode
           path
           PrimaryPropertyType
           YearBuilt
@@ -166,18 +143,42 @@ export default class LatestUpdates extends Vue {
           TotalGHGEmissions
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
-          ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
-          DataAnomalies
         }
       }
     }
-    allBenchmark {
+    # Latest year (2023) benchmark data for identifying current reporters
+    latestYearBenchmarks: allBenchmark(filter: { DataYear: { eq: 2023 } }) {
+      edges {
+        node {
+          ID
+          DataYear
+          ReportingStatus
+          GrossFloorArea
+          TotalGHGEmissions
+          GHGIntensity
+          ElectricityUse
+          NaturalGasUse
+        }
+      }
+    }
+    # Previous year (2022) benchmark data for consistent reporter count
+    previousYearBenchmarks: allBenchmark(filter: { DataYear: { eq: 2022 } }) {
+      edges {
+        node {
+          ID
+          DataYear
+          ReportingStatus
+          GrossFloorArea
+          TotalGHGEmissions
+          GHGIntensity
+          ElectricityUse
+          NaturalGasUse
+        }
+      }
+    }
+    # All pre-2023 benchmark data for identifying truly new buildings
+    allPreviousYearsBenchmarks: allBenchmark(filter: { DataYear: { lt: 2023 } }) {
       edges {
         node {
           ID
