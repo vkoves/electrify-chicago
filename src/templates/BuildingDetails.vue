@@ -121,7 +121,7 @@ query ($id: ID!, $ID: String) {
             {{ $page.building.ZIPCode }}
             <a
               :href="'https://www.google.com/maps/search/' + encodedAddress"
-              class="google-maps-link"
+              class="google-maps-link no-print"
               target="_blank"
               rel="noopener"
             >
@@ -129,7 +129,7 @@ query ($id: ID!, $ID: String) {
             </a>
           </div>
 
-          <p class="building-id -no-margin">
+          <p class="building-id -no-margin no-print">
             Chicago Building ID: {{ $page.building.ID }}
           </p>
         </div>
@@ -137,59 +137,69 @@ query ($id: ID!, $ID: String) {
         <div class="building-img-cont">
           <BuildingImage :building="$page.building" />
 
-          <!-- Button opens Popup for "Email This Building" -->
-          <button class="email-btn" @click="isModalOpen = true">
-            <img src="/email.svg" alt="" />
-            Email This Building
-          </button>
+          <div class="cta-btns">
+            <button class="action-btn" @click="isEmailModalOpen = true">
+              <img src="/email.svg" alt="" />
+              Email Building
+            </button>
+
+            <!-- Print Flyer button -->
+            <button class="action-btn -print" @click="printPage">
+              <img src="/icons/printer.svg" alt="Print Flyer" />
+            </button>
+          </div>
         </div>
 
         <div class="details-cont">
+          <!-- Show warning container if we have anomalies our out of date data -->
           <div
-            v-for="anomaly in buildingAnomalies"
-            :key="anomaly"
+            v-if="buildingAnomalies.length > 0 || dataYear < LatestDataYear"
             class="building-banner"
           >
-            <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
-              <h2>
-                <span class="emoji">⚠️</span> Anomaly Detected - Likely Not Gas
-                Free
-              </h2>
+            <div v-for="anomaly in buildingAnomalies" :key="anomaly">
+              <div v-if="anomaly === DataAnomalies.gasZeroWithPreviousUse">
+                <h2>
+                  <span class="emoji">⚠️</span> Anomaly Detected - Likely Not
+                  Gas Free
+                </h2>
+
+                <p>
+                  This building reported zero fossil gas use in the most recent
+                  year, but has used gas in the past, which may be a reporting
+                  error. Take a look at how this building has used energy over
+                  time under "Extra Technical & Historic Info".
+                </p>
+              </div>
+              <div v-if="anomaly === DataAnomalies.largeGasSwing">
+                <h2>
+                  <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent
+                  Gas Use
+                </h2>
+
+                <p>
+                  This building has had extremely large changes in gas use,
+                  which is likely to indicate errors in reporting.
+                </p>
+              </div>
+            </div>
+
+            <div v-if="dataYear < LatestDataYear">
+              <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
 
               <p>
-                This building reported zero fossil gas use in the most recent
-                year, but has used gas in the past, which may be a reporting
-                error. Take a look at how this building has used energy over
-                time under "Extra Technical & Historic Info".
+                This building did not report full data in {{ LatestDataYear }},
+                so
+                <span class="bold">top-level stats are from {{ dataYear }}</span
+                >, the latest full year reported.
               </p>
             </div>
-            <div v-if="anomaly === DataAnomalies.largeGasSwing">
-              <h2>
-                <span class="emoji">⚠️</span> Anomaly Detected - Inconsistent
-                Gas Use
-              </h2>
-
-              <p>
-                This building has had extremely large changes in gas use, which
-                is likely to indicate errors in reporting.
-              </p>
-            </div>
-          </div>
-
-          <div v-if="dataYear < LatestDataYear" class="building-banner">
-            <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
-
-            <p>
-              This building did not report full data in {{ LatestDataYear }}, so
-              <span class="bold">top-level stats are from {{ dataYear }}</span
-              >, the latest full year reported.
-            </p>
           </div>
 
           <div class="info-and-report-card">
             <div class="building-top-info">
               <h2>Building Info</h2>
 
+              <!-- NOTE: We hide some less essential building info when printing -->
               <dl>
                 <div>
                   <dt>Square Footage</dt>
@@ -226,12 +236,13 @@ query ($id: ID!, $ID: String) {
                     $page.building.NumberOfBuildings &&
                     $page.building.NumberOfBuildings > 1
                   "
+                  class="no-print"
                 >
                   <dt>Building Count</dt>
                   <dd>{{ $page.building.NumberOfBuildings }}</dd>
                 </div>
 
-                <div>
+                <div class="no-print">
                   <dt>Community Area</dt>
                   <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
                 </div>
@@ -249,6 +260,7 @@ query ($id: ID!, $ID: String) {
                 <!-- Show energy rating if it's a float value (not blank or NaN) -->
                 <div
                   v-if="!isNaN(parseFloat($page.building.ChicagoEnergyRating))"
+                  class="no-print"
                 >
                   <dt>
                     <a
@@ -400,8 +412,12 @@ query ($id: ID!, $ID: String) {
               :grade="building.SubmittedRecordsLetterGrade"
             />
           </div>
-          <div class="stat-tiles-col">
-            <h2>Energy Breakdown</h2>
+
+          <div class="stat-tiles-col -energy-breakdown">
+            <h2>
+              Energy Breakdown
+              <span class="print-only">for {{ propertyName }}</span>
+            </h2>
 
             <dl class="stat-tiles">
               <div>
@@ -461,7 +477,7 @@ query ($id: ID!, $ID: String) {
           </div>
         </div>
 
-        <div class="chart-cont">
+        <div class="chart-col">
           <h3
             id="energy-mix"
             class="label-and-grade -energy-mix targetable"
@@ -494,6 +510,19 @@ query ($id: ID!, $ID: String) {
               alt="Help icon"
               tabindex="0"
             />
+          </div>
+
+          <!-- QR Code Container, for printing -->
+          <div class="qr-cont print-only">
+            <h2>Scan To Learn More</h2>
+
+            <div :id="QRCodeElementId" class="qr-code">
+              <!-- Gets qrcode when printing-->
+            </div>
+
+            <p class="url">
+              {{ prodBuildingUrl }}
+            </p>
           </div>
         </div>
       </div>
@@ -560,14 +589,16 @@ query ($id: ID!, $ID: String) {
 
       <DataSourceFootnote />
 
-      <h2>What Should We Do About This?</h2>
+      <div class="no-print">
+        <h2>What Should We Do About This?</h2>
 
-      <a href="/take-action-tips"> Own this Building? Take Action. </a>
+        <a href="/take-action-tips"> Own this Building? Take Action. </a>
+      </div>
 
       <email-building-modal
-        v-if="isModalOpen"
+        v-if="isEmailModalOpen"
         :building="$page.building"
-        @close="isModalOpen = false"
+        @close="isEmailModalOpen = false"
       />
     </div>
   </DefaultLayout>
@@ -575,6 +606,8 @@ query ($id: ID!, $ID: String) {
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+
+import qrcode from 'qrcode-generator';
 
 import { LatestDataYear } from '../constants/globals.vue';
 import BarGraph from '~/components/graphs/BarGraph.vue';
@@ -679,6 +712,9 @@ export default class BuildingDetails extends Vue {
     NaturalGasUse: 'Fossil Gas Use (kBTU)',
   };
 
+  /** QR code element ID */
+  private readonly QRCodeElementId = 'qrcode';
+
   tooltipMessage = `
     <p class="title">Why does this matter?</p>
     <p>
@@ -723,7 +759,7 @@ export default class BuildingDetails extends Vue {
 
   totalEnergyUsekBTU!: number;
 
-  isModalOpen = false;
+  isEmailModalOpen = false;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
@@ -748,6 +784,14 @@ export default class BuildingDetails extends Vue {
   /** The primary property type of the current building, URL encoded for a link */
   get propertyTypeEncoded(): string {
     return encodeURIComponent(this.propertyType);
+  }
+
+  get prodBuildingUrl(): string {
+    if (typeof window !== 'undefined' && window.location?.pathname) {
+      return `https://electrifychicago.net${window.location.pathname}`;
+    }
+
+    return `https://electrifychicago.net/building/${this.building.ID}`;
   }
 
   /**
@@ -795,6 +839,42 @@ export default class BuildingDetails extends Vue {
     this.energyBreakdownData = breakdownWithTotal.energyBreakdown;
     this.totalEnergyUsekBTU = breakdownWithTotal.totalEnergyUse;
     this.updateGraph();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeprint', () => {
+        // Render the QR code before printing, we don't need it otherwise
+        this.renderQrCode();
+      });
+    }
+  }
+
+  mounted(): void {
+    // this.renderQrCode();
+  }
+
+  /**
+   * Render a QR code pointing to the current page
+   */
+  renderQrCode(): void {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+      return;
+    }
+
+    const qr = qrcode(0, 'M');
+
+    // Always make the QR code point to prod
+    qr.addData(this.prodBuildingUrl);
+    qr.make();
+
+    const qrCodeElement = document.getElementById(this.QRCodeElementId);
+
+    if (qrCodeElement) {
+      qrCodeElement.innerHTML = qr.createSvgTag({
+        cellSize: 4,
+        margin: 2,
+        scalable: true,
+      });
+    }
   }
 
   updateGraph(event?: Event): void {
@@ -810,6 +890,12 @@ export default class BuildingDetails extends Vue {
     // TODO: Investigate typing
     // eslint-disable-next-line
     this.currGraphTitle = (this.graphTitles as any)[this.colToGraph];
+  }
+
+  printPage(): void {
+    if (typeof window !== 'undefined') {
+      window.print();
+    }
   }
 }
 </script>
@@ -888,6 +974,11 @@ export default class BuildingDetails extends Vue {
         }
       }
     }
+
+    // Align buttons to right underneath the image
+    .cta-btns {
+      justify-content: flex-end;
+    }
   }
 
   .building-header-text {
@@ -912,6 +1003,21 @@ export default class BuildingDetails extends Vue {
   h2 {
     margin: 2rem 0 0.5rem 0;
     font-size: 1.25rem;
+  }
+
+  .cta-btns {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+
+    .action-btn.-print {
+      aspect-ratio: 1;
+      padding: 0;
+
+      img {
+        height: 2rem;
+      }
+    }
   }
 
   .stat-tiles dt,
@@ -955,6 +1061,10 @@ export default class BuildingDetails extends Vue {
     p {
       font-size: 0.75rem;
     }
+
+    > div + div {
+      margin-top: 0.5rem;
+    }
   }
 
   .address {
@@ -981,31 +1091,6 @@ export default class BuildingDetails extends Vue {
     }
   }
 
-  .email-btn {
-    display: flex;
-    align-self: flex-end;
-    justify-content: space-around;
-    padding: 0.8rem 1.5rem;
-    min-width: 18.75rem;
-    margin: 1rem 0;
-    background-color: $blue-dark;
-    border: none;
-    color: $white;
-    font-size: 1.25rem;
-    font-weight: bold;
-    border-radius: $brd-rad-medium;
-
-    &:hover,
-    &:focus {
-      background-color: $blue-very-dark;
-    }
-
-    img {
-      border-radius: 0;
-      height: 1.5rem;
-    }
-  }
-
   .main-cols {
     display: flex;
     gap: 2rem;
@@ -1014,7 +1099,7 @@ export default class BuildingDetails extends Vue {
       flex-basis: 70%;
     }
 
-    .chart-cont {
+    .chart-col {
       flex-basis: 30%;
       flex-shrink: 0;
       margin-top: 1rem;
@@ -1034,6 +1119,43 @@ export default class BuildingDetails extends Vue {
           margin-right: 1rem;
         }
       }
+    }
+  }
+
+  .qr-cont {
+    background-color: $off-white;
+    border-radius: $brd-rad-medium;
+    text-align: center;
+    margin-top: 3rem;
+    overflow: hidden;
+
+    h2 {
+      font-size: 1.75rem;
+      margin: 0 0 1rem 0;
+      padding: 0.75rem;
+      background-color: $blue-very-dark;
+      color: $white;
+    }
+
+    .qr-code {
+      display: inline-block;
+      width: 50%;
+      aspect-ratio: 1;
+      background: $white;
+      padding: 0.5rem;
+      margin: 1rem 0;
+      border: solid 0.25rem $grey-dark;
+      border-radius: 1rem;
+
+      > * {
+        display: block;
+      }
+    }
+
+    p.url {
+      font-size: 0.75rem;
+      max-width: 80%;
+      margin: 0 auto 1rem auto;
     }
   }
 
@@ -1122,20 +1244,10 @@ export default class BuildingDetails extends Vue {
       .building-header-text {
         width: 100%;
       }
-      .email-btn {
-        align-self: flex-start;
-        margin-bottom: 0rem;
-        gap: 1rem;
-        font-size: 1rem;
-        min-width: initial;
-
-        img {
-          height: 1.25rem;
-        }
-      }
 
       .building-header-text {
         position: relative;
+        margin-bottom: 0;
 
         .address {
           font-size: 1rem;
@@ -1182,7 +1294,12 @@ export default class BuildingDetails extends Vue {
       }
     }
 
-    .main-cols .chart-cont {
+    .cta-btns {
+      justify-content: flex-start;
+      gap: 0.5rem;
+    }
+
+    .main-cols .chart-col {
       margin-top: 0;
     }
 
@@ -1200,6 +1317,119 @@ export default class BuildingDetails extends Vue {
     .stat-tiles > div {
       flex-basis: 100%;
       max-width: none;
+    }
+  }
+
+  @media not print {
+    // Hide print only content, like duplicate title text
+    .print-only {
+      display: none;
+    }
+  }
+
+  /** Print Styling - hides interactive elements and simplifies layout */
+  @media print {
+    // Prevent removing backgrounds from warning panels and top info
+    // when printing
+    .building-banner,
+    .building-top-info,
+    .energy-mix-cont,
+    .qr-cont {
+      print-color-adjust: exact;
+    }
+
+    // Hide interactive elements - action buttons and extra info section
+    .action-btn,
+    .extra-info,
+    img.tooltip {
+      display: none !important;
+    }
+
+    // Undo mobile layout
+    .building-header.-has-img {
+      grid-template-areas:
+        'img title'
+        'img details' !important;
+      grid-template-columns: 1fr 60%;
+    }
+
+    // Scale up title and address
+    h1 {
+      font-size: 3rem;
+    }
+    .address {
+      font-size: 1.25rem !important;
+      line-height: 1;
+    }
+
+    .report-card-cont {
+      flex-basis: 20rem !important;
+    }
+
+    .stat-tiles-col h2 {
+      font-size: 1.75rem !important;
+    }
+
+    // Lock the height of the stat tiles and the energy mix chart
+    .energy-mix-cont,
+    .stat-tiles dd {
+      height: 21.5rem !important;
+    }
+
+    // Drop left margin from section titles
+    .stat-tiles dt,
+    .label-and-grade,
+    .reporting-tile .headline {
+      margin-left: 0;
+    }
+
+    .label-and-grade.-energy-mix {
+      margin-top: 5.75rem;
+    }
+
+    // The print page is mobile (~670px) but we want it to render more desktop style,
+    // since a print page ends up being 8.5" wide and so can be denser
+    .building-img-cont {
+      width: 100% !important;
+    }
+
+    .main-cols {
+      flex-direction: row;
+    }
+
+    .info-and-report-card {
+      flex-direction: row;
+
+      // Remove any link styling, like for Energy Star Score
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .new-tab-icon {
+        display: none;
+      }
+    }
+
+    // Make stat tiles two columns again
+    .stat-tiles {
+      margin: 0;
+
+      > div {
+        flex-basis: 48%;
+      }
+    }
+
+    .reporting-tile {
+      margin-top: 1rem;
+    }
+
+    // Break the Energy Breakdown to page 2
+    .stat-tiles-col.-energy-breakdown {
+      page-break-before: always;
+
+      h2 {
+        font-size: 2rem;
+      }
     }
   }
 }

@@ -1784,6 +1784,11 @@
   resolved "https://registry.npmjs.org/@types/q/-/q-1.5.8.tgz"
   integrity sha512-hroOstUScF6zhIi+5+x0dzqrHA1EJi+Irri6b1fxolMTqqHIV/Cg77EtnQcZqZCu8hR3mX2BzIxN4/GzI68Kfw==
 
+"@types/qrcodejs@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@types/qrcodejs/-/qrcodejs-1.0.4.tgz#53fe71f858f79e8e388858c7df9fc08f6b595590"
+  integrity sha512-beXPZlCp8TtY4zXl3gEx+vYJqrpcYZwKJ1faYd0zDrfZVj3vZGdTrRp2aAIXEkSTRSn549KGlS+8PvF+ZOaUBQ==
+
 "@types/react@^16.8.12":
   version "16.14.60"
   resolved "https://registry.npmjs.org/@types/react/-/react-16.14.60.tgz"
@@ -9811,6 +9816,11 @@ q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.npmjs.org/q/-/q-1.5.1.tgz"
   integrity sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==
+
+qrcode-generator@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/qrcode-generator/-/qrcode-generator-2.0.2.tgz#251fc1d7f6ca585604a873c682b4633f2f846be9"
+  integrity sha512-1uRIBGF1qsh+mRXumB4KCPaOxEUbwrs/wuq6/ZcRDg1U6MbKWS42/ykO77Y3bgPjbvJUo0ukK0hTu+KCVstweg==
 
 qs@6.13.0, qs@^6.11.2:
   version "6.13.0"
