@@ -320,7 +320,7 @@ export default class ScatterPlot extends Vue {
     this.chartRendered = true;
   }
 
-  private animateDataElements() {
+  private animateDataElements(): void {
     if (!this.chartElements || this.hasAnimated) return;
     const { circles, path } = this.chartElements;
 
