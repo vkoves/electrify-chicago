@@ -182,7 +182,7 @@ export default class LatestUpdates extends Vue {
 <template>
   <DefaultLayout>
     <h1 id="main-content" tabindex="-1">
-      Latest Updates: {{ LatestDataYear }} Reporting Changes
+      Latest Updates - Changes with {{ LatestDataYear }} Data
     </h1>
 
     <p class="constrained -wide">
@@ -196,33 +196,29 @@ export default class LatestUpdates extends Vue {
     <section class="stats-overview">
       <h2>Quick Stats</h2>
       <div class="stats-grid">
-        <div class="stat-card positive">
-          <div class="stat-number">{{ newBuildings.length }}</div>
-          <div class="stat-label">
-            <a href="#new-buildings">New Buildings</a>
+        <a href="#new-buildings" class="stat-card-link">
+          <div class="stat-card positive -clickable">
+            <div class="stat-number">
+              {{ newBuildings.length.toLocaleString() }}
+            </div>
+            <div class="stat-label">New Buildings</div>
+            <div class="stat-description">
+              Reported for the first time in {{ LatestDataYear }}
+            </div>
           </div>
-          <div class="stat-description">
-            First time reporting in {{ LatestDataYear }}
-          </div>
-        </div>
+        </a>
 
-        <div class="stat-card negative">
-          <div class="stat-number">{{ stoppedReportingBuildings.length }}</div>
-          <div class="stat-label">
-            <a href="#stopped-reporting">Stopped Reporting</a>
+        <a href="#stopped-reporting" class="stat-card-link">
+          <div class="stat-card negative -clickable">
+            <div class="stat-number">
+              {{ stoppedReportingBuildings.length.toLocaleString() }}
+            </div>
+            <div class="stat-label">Stopped Reporting</div>
+            <div class="stat-description">
+              Reported in {{ PreviousDataYear }} but not {{ LatestDataYear }}
+            </div>
           </div>
-          <div class="stat-description">
-            Reported in {{ PreviousDataYear }} but not {{ LatestDataYear }}
-          </div>
-        </div>
-
-        <div class="stat-card">
-          <div class="stat-number">{{ consistentReportersCount }}</div>
-          <div class="stat-label">Consistent Reporters</div>
-          <div class="stat-description">
-            Reported in both {{ PreviousDataYear }} and {{ LatestDataYear }}
-          </div>
-        </div>
+        </a>
 
         <div
           class="stat-card"
@@ -233,7 +229,8 @@ export default class LatestUpdates extends Vue {
           }"
         >
           <div class="stat-number">
-            {{ netChangeInReporting > 0 ? '+' : '' }}{{ netChangeInReporting }}
+            {{ netChangeInReporting > 0 ? '+' : ''
+            }}{{ netChangeInReporting.toLocaleString() }}
           </div>
           <div class="stat-label">Net Change</div>
           <div class="stat-description">
@@ -247,12 +244,24 @@ export default class LatestUpdates extends Vue {
             buildings reporting vs {{ PreviousDataYear }}
           </div>
         </div>
+
+        <div class="stat-card">
+          <div class="stat-number">
+            {{ consistentReportersCount.toLocaleString() }}
+          </div>
+          <div class="stat-label">Consistent Reporters</div>
+          <div class="stat-description">
+            Reported in both {{ PreviousDataYear }} and {{ LatestDataYear }}
+          </div>
+        </div>
       </div>
     </section>
 
     <!-- New Buildings Section -->
-    <section id="new-buildings">
-      <h2>New Buildings ({{ newBuildings.length }})</h2>
+    <section>
+      <h2 id="new-buildings" tabindex="-1">
+        New Buildings ({{ newBuildings.length }})
+      </h2>
       <p>
         These buildings first submitted data in {{ LatestDataYear }} - they may
         be new buildings, or just started reporting after non-compliance. Sorted
@@ -273,8 +282,10 @@ export default class LatestUpdates extends Vue {
     </section>
 
     <!-- Stopped Reporting Section -->
-    <section id="stopped-reporting">
-      <h2>Stopped Reporting ({{ stoppedReportingBuildings.length }})</h2>
+    <section>
+      <h2 id="stopped-reporting" tabindex="-1">
+        Stopped Reporting ({{ stoppedReportingBuildings.length }})
+      </h2>
       <p>
         Submitted data in {{ PreviousDataYear }} but not {{ LatestDataYear }},
         sorted by square footage (largest first)
@@ -338,38 +349,64 @@ export default class LatestUpdates extends Vue {
     margin-top: 1rem;
   }
 
+  .stat-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+
+    &:hover,
+    &:focus {
+      .stat-card.-clickable {
+        box-shadow: 0.125rem 0.125rem 0.75rem $box-shadow-main;
+        border-color: $blue-dark;
+
+        .stat-label {
+          color: $blue-dark;
+        }
+      }
+    }
+  }
+
   .stat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     background-color: $off-white;
     border-radius: $brd-rad-medium;
     padding: 1.5rem;
     text-align: center;
     border: $border-thin solid $grey-light;
+    transition: all 0.2s ease-in-out;
+
+    &.-clickable {
+      cursor: pointer;
+      position: relative;
+      border: $border-medium solid $blue-dark;
+      background-color: $white;
+
+      .stat-label {
+        color: $blue-dark;
+      }
+    }
 
     .stat-number {
       font-size: 2.5rem;
       font-weight: bold;
       color: $blue-dark;
-      margin-bottom: 0.5rem;
+      line-height: 1;
+      margin-bottom: 0.25rem;
     }
 
     .stat-label {
       font-size: 1.1rem;
+      line-height: 1.5;
       font-weight: bold;
-      margin-bottom: 0.25rem;
-
-      a {
-        color: $text-main;
-        text-decoration: none;
-
-        &:hover {
-          color: $blue-dark;
-          text-decoration: underline;
-        }
-      }
+      transition: color 0.2s ease-in-out;
     }
 
     .stat-description {
-      font-size: 0.9rem;
+      font-size: 0.75rem;
+      line-height: 1.5;
     }
 
     &.net-positive .stat-number {
