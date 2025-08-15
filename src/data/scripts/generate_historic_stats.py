@@ -9,7 +9,7 @@ import json
 import pandas
 from src.data.scripts.utils import get_and_clean_csv, get_data_file_path, log_step_completion, output_to_csv
 
-debug = False
+debug = True
 
 # Write out the data
 output_filename = 'historic-stats.json'
@@ -104,17 +104,17 @@ def calculateBuildingStatsByYear(building_data_in: pandas.DataFrame) -> str:
     
     for year in years:
         
-        if year < HISTORIC_DATA_START_YEAR: 
-          continue
-            
-        year_stats = yearly_stats[str(year)]
-        buildings = int(year_stats['TotalGHGEmissions']['count'])
-        avg_ghg = year_stats['TotalGHGEmissions']['mean']
-        median_ghg = year_stats['TotalGHGEmissions']['median']
-        avg_intensity = year_stats['GHGIntensity']['mean']
-
-    if debug:
-      print(f"{year:<6} {buildings:<10} {avg_ghg:<12.1f} {median_ghg:<12.1f} {avg_intensity:<12.1f}")
+      if year < HISTORIC_DATA_START_YEAR: 
+        continue
+          
+      year_stats = yearly_stats[str(year)]
+      buildings = int(year_stats['TotalGHGEmissions']['count'])
+      avg_ghg = year_stats['TotalGHGEmissions']['mean']
+      median_ghg = year_stats['TotalGHGEmissions']['median']
+      avg_intensity = year_stats['GHGIntensity']['mean']
+    
+      if debug:
+        print(f"{year:<6} {buildings:<10} {avg_ghg:<12.1f} {median_ghg:<12.1f} {avg_intensity:<12.1f}")
 
     # Write output files
     stats_dist_output_path = get_data_file_path(data_out_directory, output_filename)
