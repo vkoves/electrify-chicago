@@ -154,13 +154,7 @@ export default class LatestUpdates extends Vue {
       edges {
         node {
           ID
-          DataYear
-          ReportingStatus
-          GrossFloorArea
-          TotalGHGEmissions
           GHGIntensity
-          ElectricityUse
-          NaturalGasUse
         }
       }
     }
@@ -169,13 +163,7 @@ export default class LatestUpdates extends Vue {
       edges {
         node {
           ID
-          DataYear
-          ReportingStatus
-          GrossFloorArea
-          TotalGHGEmissions
           GHGIntensity
-          ElectricityUse
-          NaturalGasUse
         }
       }
     }
@@ -184,13 +172,7 @@ export default class LatestUpdates extends Vue {
       edges {
         node {
           ID
-          DataYear
-          ReportingStatus
-          GrossFloorArea
-          TotalGHGEmissions
           GHGIntensity
-          ElectricityUse
-          NaturalGasUse
         }
       }
     }
