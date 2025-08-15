@@ -12,7 +12,7 @@ The key workflow is simple: If you want to run Python code outside of the Docker
 
 ## Setting up a Virtual Environment
 
-### Python Version:
+### Python Version
 
 We are currently using Python 3.12. This is hardcoded in the following places:
 
@@ -23,7 +23,7 @@ We are currently using Python 3.12. This is hardcoded in the following places:
 - Our netlify.toml file:
   - [netlify.toml](netlify.toml)
 
-### Export Python Version:
+### Export Python Version
 
 Run the following command to set the Python version to 3.12 in your terminal:
 
@@ -31,7 +31,7 @@ Run the following command to set the Python version to 3.12 in your terminal:
 export PYTHON_VERSION="3.12"
 ```
 
-### Python Dependency List:
+### Python Dependency List
 
 We use a [pyproject.toml](pyproject.toml) file to manage our Python dependencies. This file contains a list of all the packages required to run our project. The dependencies are divided into two groups:
 
@@ -48,49 +48,34 @@ As the project becomes more complex, we may add more dependencies to these group
 
 ### UV Installation and Setup Guide
 
-#### First: Ensure you have pip and it's updated
-
-```bash
-python -m pip install --upgrade pip
-```
-
-#### Setup UV
-
-Install uv using the following command:
-
-```bash
-pip install uv
-```
-
-or use the recommended way:
+MacOS and Linux users can install uv using the following command:
 
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-### Install Python 3.12
+See the [uv installation guide](https://docs.astral.sh/uv/#installation) for more details.
 
-Install Python 3.12 with:
+### Set up the project with uv
+
+You should be able to run the following command to set up the project with uv:
 
 ```bash
-uv python install 3.12
+uv sync --locked --all-groups
 ```
 
-### Virtual Environment Setup
+This installs Python and all of the dependencies in a virtual environment `.venv`.
 
-To set up the Python environment with uv:
+To run scripts or commands under this environment prefix them with `uv run`, like so:
 
 ```bash
-uv venv --python=$PYTHON_VERSION .venv
+uv run python script.py
 ```
 
-This creates a virtual environment in your root directory of Electrify-Chicago.
-
-The virtual environment is a folder and should be called `.venv` by default. In that folder, there is a script that activates the virtual environment. To activate the virtual environment with this script, run the following command:
+Or
 
 ```bash
-source .venv/bin/activate  # macOS/Linux
-.venv\Scripts\activate  # Windows
+uv run jupyter notebook
 ```
 
 ### Install the Baseline Dependencies (Core Requirements)
@@ -102,30 +87,19 @@ These are the minimal dependencies required for running data processing scripts.
 **Install core package**
 
 ```bash
-uv pip install -e .
+uv sync --locked
 ```
 
 ### Data Analysis Notebook-Specific Dependencies
 
 Additional dependencies for running Jupyter notebooks are defined as an extra group in pyproject.toml.
 
-- Defined under `[tool.uv.extras.notebook]`
+- Defined under `[dependency-groups]` -> `notebook` in [pyproject.toml](pyproject.toml)
 
 To install both baseline + notebook dependencies:
 
 ```bash
-uv pip install -e ".[notebook]"
-```
-
-Alternatively, you might want to create a separate virtual environment for running notebooks. This is useful if you want to keep the baseline environment clean and avoid installing unnecessary packages.
-
-To create a separate virtual environment for notebooks:
-
-```bash
-deactivate # deactivate baseline venv if activated
-uv venv --python=$PYTHON_VERSION .venv-notebook # Create new venv with different name
-source .venv-notebook/bin/activate
-uv pip install -e ".[notebook]" # Install notebook dependencies
+uv sync --locked --group notebook
 ```
 
 ### Adding new packages to the Core Dependencies
@@ -144,44 +118,10 @@ This installs numpy and updates `pyproject.toml` under `[dependencies]`.
 
 ### How to Add a Package to the Notebook-Only Dependencies
 
-UV does not have a built-in command to add packages to optional dependencies. If you want to add a new package to the notebook dependencies, you need to manually edit `pyproject.toml`.
-
-- open `pyproject.toml`
-- add the package inside `[project.optional-dependencies.notebook]`:
-
-```text
-[project.optional-dependencies]
-notebook = [
-    "kaleido",
-    "jupyterlab",
-    "matplotlib",
-    "ipywidgets",
-    ""<- NEW PACKAGE HERE
-]
-```
-
-Then install this new package in the virtual environment you are using:
+You can add a package to the notebook dependencies using `uv add` as well, but you need to specify the group:
 
 ```bash
-uv pip install -e ".[notebook]"
-```
-
-### Freezing Dependencies for Backward Compatibility
-
-If you need to generate a `requirements.txt` for environments that don’t use `uv`, you can do:
-
-```bash
-source .venv/bin/activate # activate baseline venv
-uv pip freeze > requirements.txt
-```
-
-Doing this will generate a `requirements.txt` file with all the dependencies you have installed in the virtual environment. Users who don’t have `uv` can install these dependencies using `pip install -r requirements.txt`.
-
-To freeze requirements files for additional dependencies, make sure you activate that .venv first
-
-```bash
-source .venv-notebook/bin/activate # activate venv with additional depencies
-uv pip freeze > requirements-notebook.txt
+uv add kaleido --group notebook
 ```
 
 #### Uv pip install vs uv add
@@ -194,17 +134,5 @@ _Example: Install a package for temporary use_
 uv pip install seaborn
 ```
 
-This installs seaborn without modifying `pyproject.toml`
-
-### Running a Script with a Temporary Set of Requirements
-
-If you want to run a script with a temporary environment (without permanently installing packages), use:
-
-```bash
-uv pip install -r requirements-notebook.txt --run python script.py
-```
-
-This:
-
-- Installs dependencies only for this session.
-- Does not persist them in requirements.txt.
+This installs seaborn without modifying `pyproject.toml`.
+This is useful if you want to experiemnt with a package or use a one off CLI without committing it to the project dependencies.
