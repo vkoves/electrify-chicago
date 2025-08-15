@@ -1,5 +1,5 @@
 [build]
-  command = "yarn build"  # Your main build command
+  command = "NODE_OPTIONS='--max-old-space-size=4096' yarn build"  # Your main build command with increased memory
 
 [build.environment]
   PYTHON_VERSION = "3.12.0"  # Using Python 3.12

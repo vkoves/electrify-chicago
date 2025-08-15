@@ -16,5 +16,10 @@ Please also list any relevant details for your test configuration
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
+- [ ] If I added a large new feature, I added it to the release notes (ReleaseNotes.vue)
+
+## Data Update (if applicable):
+
+- [ ] I have followed the [Data Update Checklist](DATA_UPDATE_CHECKLIST.md) for updating to new year's data
 
 <!-- PR template modified from: https://embeddedartistry.com/blog/2017/08/04/a-github-pull-request-template-for-your-projects/ -->

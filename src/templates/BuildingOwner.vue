@@ -122,6 +122,7 @@ export default class BiggestBuildings extends Vue {
 -->
 <static-query>
   query {
+    # BuildingOwner page only needs core BuildingsTable fields (no conditional fields)
     allBuilding(sortBy: "GHGIntensity") {
       edges {
         node {
@@ -130,7 +131,6 @@ export default class BiggestBuildings extends Vue {
           DataYear
           PropertyName
           Address
-          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity
@@ -139,12 +139,6 @@ export default class BiggestBuildings extends Vue {
           TotalGHGEmissions
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
-          ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
           DataAnomalies
         }

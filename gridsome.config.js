@@ -48,12 +48,13 @@ module.exports = {
         path: '/building-id/:ID',
         component: './src/templates/BuildingIDRedirect.vue',
       },
-      {
+      // Only include social card template during local development
+      ...(process.env.NODE_ENV !== 'production' ? [{
         // Social card template for generating social images
         name: 'social-card',
         path: '/social-card/:ID',
         component: './src/templates/SocialCardPage.vue',
-      },
+      }] : []),
     ],
   },
 

@@ -164,6 +164,10 @@ export interface ILink {
 /**
  * Custom Tags for associating groups of buildings for later retrieval, like those that participated
  * in city programs
+ *
+ * IMPORTANT: If you modify buildings tagged with hasRetrofitCaseStudy, you MUST also update
+ * the hard-coded GraphQL filter in src/pages/RetrofitChicagoParticipants.vue for performance
+ * optimization. The validation in that component will detect mismatches and throw an error.
  * */
 export enum BuildingTags {
   hasRetrofitCaseStudy = 'has-retrofit-case-study',

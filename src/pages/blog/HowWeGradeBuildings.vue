@@ -32,7 +32,16 @@ export default class HowWeGradeBuildings extends Vue {}
   <DefaultLayout>
     <div class="how-we-grade-page">
       <div class="layout-constrained">
+        <g-link to="/blog" class="back-link grey-link">
+          <img src="/icons/arrow-back.svg" />
+          Back to Blog
+        </g-link>
+
         <h1 id="main-content" tabindex="-1">How We Grade Buildings, And Why</h1>
+
+        <p class="publish-time">
+          Published <time datetime="2025-03-11">Mar. 11th, 2025</time>
+        </p>
 
         <div class="table-of-contents">
           <h2>Table Of Contents</h2>

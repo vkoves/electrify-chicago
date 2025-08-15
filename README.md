@@ -81,6 +81,8 @@ docker compose run --rm electrify-chicago yarn build
 
 ```
 
+## Social Images
+
 You can also run scripts to generate social images, which require
 the platform to be running:
 

@@ -70,6 +70,7 @@ export interface IBuilding {
   GrossFloorArea: number;
   NaturalGasUse: number;
   TotalGHGEmissions: number;
+  YearBuilt: number;
 
   [buildingKey: string]: string | number | boolean;
 }
@@ -84,7 +85,8 @@ export interface IBuildingNode {
  */
 export interface IHistoricData {
   ID: string;
-  DataYear: string;
+  DataYear: number;
+  ReportingStatus: string;
   // The actual data
   ChicagoEnergyRating: string;
   ENERGYSTARScore: string;
@@ -98,6 +100,18 @@ export interface IHistoricData {
   NaturalGasUse: number;
   SourceEUI: number;
   TotalGHGEmissions: number;
+}
+
+/**
+ * Determines if a building actually reported meaningful data for a given year.
+ * A building is considered to have "reported" if it has valid GHG intensity data,
+ * not just if it submitted paperwork.
+ */
+export function hasReportedData(historicData: IHistoricData): boolean {
+  return (
+    typeof historicData.GHGIntensity === 'number' &&
+    historicData.GHGIntensity > 0
+  );
 }
 
 /**

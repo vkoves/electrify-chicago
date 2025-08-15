@@ -122,7 +122,6 @@ query ($ward: String) {
             SiteEUI
             SourceEUI
             TotalGHGEmissions
-            Wards
             YearBuilt
             ZIPCode
             Ward

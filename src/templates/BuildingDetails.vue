@@ -22,7 +22,6 @@ query ($id: ID!, $ID: String) {
     SiteEUI
     SourceEUI
     TotalGHGEmissions
-    Wards
     YearBuilt
     ZIPCode
     Ward

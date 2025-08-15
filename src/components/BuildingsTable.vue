@@ -33,6 +33,8 @@ export default class BuildingsTable extends Vue {
 
   @Prop({ default: false }) showElectricityUse!: boolean;
 
+  @Prop({ default: false }) showYearBuilt!: boolean;
+
   /** Props from Search component to store field (column) being sorted and direction */
   @Prop({ default: 'GHGIntensity' }) sortedField!: string;
   @Prop({ default: 'desc' }) sortedDirection!: string;
@@ -43,6 +45,30 @@ export default class BuildingsTable extends Vue {
    * actually sorting the data and passing it back in.
    */
   @Prop({ default: false }) showSort!: boolean;
+
+  /**
+   * Required fields for buildings (from GraphQL query):
+   *
+   * Always required:
+   * - slugSource, ID, path - for building links and routing
+   * - PropertyName, Address - displayed in name/address column
+   * - PrimaryPropertyType - displayed in property type column
+   * - GHGIntensity + GHGIntensityRank + GHGIntensityPercentileRank - always shown
+   * - TotalGHGEmissions + TotalGHGEmissionsRank + TotalGHGEmissionsPercentileRank - always shown
+   * - AvgPercentileLetterGrade - letter grade badge (LetterGrade component)
+   * - DataYear, DataAnomalies - emoji indicators (OverallRankEmoji component)
+   *
+   * Conditionally required based on props:
+   *
+   * when showYearBuilt: true
+   * - YearBuilt
+   * when showSquareFootage: true
+   * - GrossFloorArea + GrossFloorAreaRank + GrossFloorAreaPercentileRank
+   * when showElectricityUse: true
+   * - ElectricityUse + ElectricityUseRank + ElectricityUsePercentileRank
+   * when showGasUse: true
+   * - NaturalGasUse + NaturalGasUseRank + NaturalGasUsePercentileRank
+   */
 
   // declares the property emit for TS
   // TODO: Figure out why Vue $emit isn't recognized by Typescript
@@ -72,6 +98,72 @@ export default class BuildingsTable extends Vue {
     if (window) {
       this.isDebug = window.location.search.includes('debug');
     }
+
+    // Validate required fields are present
+    this.validateRequiredFields();
+  }
+
+  validateRequiredFields(): void {
+    const requiredFields = [
+      'slugSource',
+      'ID',
+      'path',
+      'PropertyName',
+      'Address',
+      'PrimaryPropertyType',
+      'GHGIntensity',
+      'GHGIntensityRank',
+      'GHGIntensityPercentileRank',
+      'TotalGHGEmissions',
+      'TotalGHGEmissionsRank',
+      'TotalGHGEmissionsPercentileRank',
+      'AvgPercentileLetterGrade',
+      'DataYear',
+      'DataAnomalies',
+    ];
+
+    const conditionalFields = [
+      { field: 'YearBuilt', condition: this.showYearBuilt },
+      { field: 'GrossFloorArea', condition: this.showSquareFootage },
+      { field: 'GrossFloorAreaRank', condition: this.showSquareFootage },
+      {
+        field: 'GrossFloorAreaPercentileRank',
+        condition: this.showSquareFootage,
+      },
+      { field: 'ElectricityUse', condition: this.showElectricityUse },
+      { field: 'ElectricityUseRank', condition: this.showElectricityUse },
+      {
+        field: 'ElectricityUsePercentileRank',
+        condition: this.showElectricityUse,
+      },
+      { field: 'NaturalGasUse', condition: this.showGasUse },
+      { field: 'NaturalGasUseRank', condition: this.showGasUse },
+      { field: 'NaturalGasUsePercentileRank', condition: this.showGasUse },
+    ];
+
+    if (this.buildings.length === 0) return;
+
+    const firstBuilding = this.buildings[0].node;
+
+    // Check required fields
+    for (const field of requiredFields) {
+      if (typeof firstBuilding[field] === 'undefined') {
+        throw new Error(
+          `BuildingsTable: Missing required field '${field}' in buildings data. ` +
+            `Make sure to include it in your GraphQL query. See docs for field requirements.`,
+        );
+      }
+    }
+
+    // Check conditional fields
+    for (const { field, condition } of conditionalFields) {
+      if (condition && typeof firstBuilding[field] === 'undefined') {
+        throw new Error(
+          `BuildingsTable: Missing required field '${field}' when condition is true. ` +
+            `Make sure to include it in your GraphQL query when using the corresponding show prop.`,
+        );
+      }
+    }
   }
 }
 </script>
@@ -80,14 +172,21 @@ export default class BuildingsTable extends Vue {
   <div class="buildings-table-cont">
     <table
       :class="{
-        '-wide': showSquareFootage || showGasUse || showElectricityUse,
+        '-wide':
+          showSquareFootage ||
+          showGasUse ||
+          showElectricityUse ||
+          showYearBuilt,
       }"
     >
       <thead>
         <tr>
           <th scope="col">Name / Address</th>
           <th scope="col" class="prop-type">Primary Property Type</th>
-          <th v-if="showSquareFootage">Square Footage</th>
+          <th v-if="showYearBuilt" scope="col" class="year-col">Year Built</th>
+          <th v-if="showSquareFootage" scope="col" class="sq-footage numeric">
+            Square Footage
+          </th>
           <!-- Click handlers on numeric columns for sorting -->
           <th
             v-if="showGasUse"
@@ -200,7 +299,10 @@ export default class BuildingsTable extends Vue {
       </thead>
       <tbody>
         <tr v-for="edge in buildings" :key="edge.node.id">
-          <td class="property-name">
+          <td
+            class="property-name"
+            :class="{ '-narrow': showYearBuilt || showSquareFootage }"
+          >
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
             </g-link>
@@ -229,6 +331,14 @@ export default class BuildingsTable extends Vue {
             </div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>
+
+          <!-- Year built (optional) -->
+          <td v-if="showYearBuilt">
+            <template v-if="edge.node.YearBuilt">
+              {{ Math.round(edge.node.YearBuilt) }}
+            </template>
+            <template v-else> - </template>
+          </td>
 
           <!-- Square footage is optional, only shown on BiggestBuildings -->
           <td v-if="showSquareFootage" class="numeric">
@@ -397,6 +507,25 @@ export default class BuildingsTable extends Vue {
       }
       &.prop-type {
         width: 12rem;
+      }
+      &.year-col {
+        width: 5rem;
+      }
+      &.sq-footage {
+        width: 7rem;
+      }
+    }
+
+    // When we show more columns, we limit the property name column more
+    .property-name {
+      &.-narrow {
+        max-width: 24rem;
+        width: 24rem;
+
+        // Make sure long property names wrap
+        a {
+          white-space: normal;
+        }
       }
     }
 

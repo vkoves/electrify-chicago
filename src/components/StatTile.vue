@@ -579,7 +579,7 @@ export default class StatTile extends Vue {
   mounted(): void {
     if (this.historicData) {
       this.historicStatData = this.historicData.map((datum: IHistoricData) => ({
-        x: parseInt(datum.DataYear),
+        x: datum.DataYear,
         y: this.parseStatValueForGraph(datum),
       }));
 

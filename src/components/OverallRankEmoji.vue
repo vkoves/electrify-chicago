@@ -73,6 +73,12 @@ export default class OverallRankEmoji extends Vue {
 
   /** Whether this building's latest data is old, not matching the latest data year */
   get isOldData(): boolean {
+    if (typeof this.building.DataYear === 'undefined') {
+      throw new Error(
+        'Building does not have DataYear! Make sure to add it to GraphQL query',
+      );
+    }
+
     return parseInt(this.building.DataYear.toString()) < LatestDataYear;
   }
 
@@ -91,7 +97,6 @@ export default class OverallRankEmoji extends Vue {
 <style lang="scss">
 .overall-rank-emoji-cont {
   display: inline;
-  white-space: nowrap;
 
   .emoji {
     vertical-align: 0.2em;
