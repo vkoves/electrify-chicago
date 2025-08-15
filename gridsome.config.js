@@ -29,6 +29,9 @@ module.exports = {
     },
     {
       use: '@gridsome/plugin-sitemap',
+      options: {
+        exclude: ['/social-card*', '/social-card/*'],
+      },
     },
   ],
 
