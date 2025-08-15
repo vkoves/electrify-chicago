@@ -102,6 +102,15 @@ export interface IHistoricData {
 }
 
 /**
+ * Determines if a building actually reported meaningful data for a given year.
+ * A building is considered to have "reported" if it has valid GHG intensity data,
+ * not just if it submitted paperwork.
+ */
+export function hasReportedData(historicData: IHistoricData): boolean {
+  return typeof historicData.GHGIntensity === 'number' && historicData.GHGIntensity > 0;
+}
+
+/**
  * A constant for what we use as min and max values for flagged ranks
  */
 export const RankConfig = {

@@ -10,6 +10,7 @@ import {
   IBuilding,
   IBuildingNode,
   IHistoricData,
+  hasReportedData,
 } from '../common-functions.vue';
 
 @Component<any>({
@@ -44,7 +45,7 @@ export default class LatestUpdates extends Vue {
         .filter(
           (edge: { node: IHistoricData }) =>
             edge.node.DataYear === this.LatestDataYear &&
-            ['Submitted', 'Submitted Data'].includes(edge.node.ReportingStatus),
+            hasReportedData(edge.node),
         )
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
@@ -55,7 +56,7 @@ export default class LatestUpdates extends Vue {
         .filter(
           (edge: { node: IHistoricData }) =>
             edge.node.DataYear < this.LatestDataYear &&
-            ['Submitted', 'Submitted Data'].includes(edge.node.ReportingStatus),
+            hasReportedData(edge.node),
         )
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
@@ -80,7 +81,7 @@ export default class LatestUpdates extends Vue {
         .filter(
           (edge: { node: IHistoricData }) =>
             edge.node.DataYear === this.PreviousDataYear &&
-            ['Submitted', 'Submitted Data'].includes(edge.node.ReportingStatus),
+            hasReportedData(edge.node),
         )
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
@@ -91,7 +92,7 @@ export default class LatestUpdates extends Vue {
         .filter(
           (edge: { node: IHistoricData }) =>
             edge.node.DataYear === this.LatestDataYear &&
-            ['Submitted', 'Submitted Data'].includes(edge.node.ReportingStatus),
+            hasReportedData(edge.node),
         )
         .map((edge: { node: IHistoricData }) => edge.node.ID),
     );
@@ -181,8 +182,8 @@ export default class LatestUpdates extends Vue {
     <section>
       <h2>New Buildings ({{ newBuildings.length }})</h2>
       <p>
-        First submitted data in {{ LatestDataYear }}, sorted by square footage
-        (largest first)
+        These buildings first submitted data in {{ LatestDataYear }} - they may be new buildings,
+        or just started reporting after non-compliance. Sorted by square footage (largest first).
       </p>
 
       <p v-if="newBuildings.length === 0" class="no-results">
@@ -212,9 +213,8 @@ export default class LatestUpdates extends Vue {
 
       <div v-else class="stopped-reporting-note">
         <p>
-          <strong>Note:</strong> These buildings submitted data in
-          {{ PreviousDataYear }} but did not submit in {{ LatestDataYear }}.
-          Data shown is from their most recent submission.
+          These buildings submitted data in {{ PreviousDataYear }} but did not submit in
+          {{ LatestDataYear }}. Data shown is from their most recent submission.
         </p>
       </div>
 
@@ -258,9 +258,14 @@ section {
 
   h2 {
     margin-bottom: 0;
+
+    + p {
+      margin-bottom: 1rem;
+    }
   }
-  h2 + p {
-    margin-bottom: 1rem;
+
+  .buildings-table-cont {
+    margin-top: 1rem;
   }
 }
 </style>
