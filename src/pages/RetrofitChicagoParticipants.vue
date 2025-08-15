@@ -8,7 +8,6 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import { IBuilding, IBuildingNode } from '../common-functions.vue';
 import {
   BuildingsCustomInfo,
-  IBuildingCustomInfo,
   BuildingTags,
 } from '../constants/buildings-custom-info.constant.vue';
 
@@ -50,7 +49,9 @@ export default class ChicagoRetrofitParticipants extends Vue {
    */
   validateRetrofitBuildings(): void {
     const expectedIds = Object.entries(BuildingsCustomInfo)
-      .filter(([, info]) => info.tags?.includes(BuildingTags.hasRetrofitCaseStudy))
+      .filter(([, info]) =>
+        info.tags?.includes(BuildingTags.hasRetrofitCaseStudy),
+      )
       .map(([id]) => id)
       .sort();
 
