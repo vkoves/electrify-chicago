@@ -22,7 +22,7 @@ interface ChartElements {
 
 @Component
 export default class ScatterPlot extends Vue {
-    $refs!: {
+  $refs!: {
     chartContainer: HTMLElement;
   };
   @Prop({ required: true }) data!: DataPoint[];
@@ -116,7 +116,9 @@ export default class ScatterPlot extends Vue {
       .style('background', 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)')
       .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.1)');
 
-    const chartGroup = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+    const chartGroup = svg
+      .append('g')
+      .attr('transform', `translate(${margin.left},${margin.top})`);
 
     // Title
     svg
@@ -132,14 +134,23 @@ export default class ScatterPlot extends Vue {
     // Scales
     this.xScale = d3
       .scaleLinear()
-      .domain(d3.extent(this.sortedData, (d: DataPoint) => d.year) as [number, number])
+      .domain(
+        d3.extent(this.sortedData, (d: DataPoint) => d.year) as [
+          number,
+          number,
+        ],
+      )
       .range([0, width]);
 
-    const yExtent = d3.extent(this.sortedData, (d: DataPoint) => d.value) as [number, number];
-    const yPadding = (yExtent[1] - yExtent[0]) * 0.1;
+    const yExtent = d3.extent(this.sortedData, (d: DataPoint) => d.value) as [
+      number,
+      number,
+    ];
+    const yPaddingTop = (yExtent[1] - 0) * 0.2; // 10% padding above max
+
     this.yScale = d3
       .scaleLinear()
-      .domain([Math.max(0, yExtent[0] - yPadding), yExtent[1] + yPadding])
+      .domain([0, yExtent[1] + yPaddingTop]) // always start at 0
       .range([height, 0]);
 
     // Grid
@@ -186,7 +197,10 @@ export default class ScatterPlot extends Vue {
           .tickSize(-10),
       );
 
-    chartGroup.append('g').attr('class', 'y-axis').call(d3.axisLeft(this.yScale).tickSize(-10));
+    chartGroup
+      .append('g')
+      .attr('class', 'y-axis')
+      .call(d3.axisLeft(this.yScale).tickSize(-10));
 
     // Axis labels
     chartGroup
@@ -262,7 +276,9 @@ export default class ScatterPlot extends Vue {
       .on('mousemove', (event: MouseEvent, d: DataPoint) => {
         const [x, y] = d3.pointer(event, container.node());
         tooltip
-          .html(`<div>Year: ${d.year}</div><div>${this.yAxisLabel}: ${d.value}</div>`)
+          .html(
+            `<div>Year: ${d.year}</div><div>${this.yAxisLabel}: ${d.value}</div>`,
+          )
           .style('left', `${x + 15}px`)
           .style('top', `${y - 10}px`);
       })
@@ -270,31 +286,35 @@ export default class ScatterPlot extends Vue {
         tooltip.style('opacity', 0);
       });
 
-    let trendLine: d3.Selection<SVGLineElement, unknown, null, undefined> | null = null;
+    let trendLine: d3.Selection<
+      SVGLineElement,
+      unknown,
+      null,
+      undefined
+    > | null = null;
 
-if (this.showTrendLine && this.sortedData.length > 1) {
-  const regression = this.calculateLinearRegression(this.sortedData);
-  trendLine = chartGroup
-    .append('line')
-    .attr('x1', this.xScale(regression.x1))
-    .attr('y1', this.yScale(regression.y1))
-    .attr('x2', this.xScale(regression.x1)) // collapsed start
-    .attr('y2', this.yScale(regression.y1))
-    .style('stroke', '#8b5cf6')
-    .style('stroke-width', 3)
-    .style('stroke-dasharray', '20,5')
-    .style('opacity', 0);
-}
+    if (this.showTrendLine && this.sortedData.length > 1) {
+      const regression = this.calculateLinearRegression(this.sortedData);
+      trendLine = chartGroup
+        .append('line')
+        .attr('x1', this.xScale(regression.x1))
+        .attr('y1', this.yScale(regression.y1))
+        .attr('x2', this.xScale(regression.x1)) // collapsed start
+        .attr('y2', this.yScale(regression.y1))
+        .style('stroke', '#8b5cf6')
+        .style('stroke-width', 3)
+        .style('stroke-dasharray', '20,5')
+        .style('opacity', 0);
+    }
 
-this.chartElements = {
-  container,
-  chartGroup,
-  tooltip,
-  circles,
-  path,
-  trendLine,
-};
-
+    this.chartElements = {
+      container,
+      chartGroup,
+      tooltip,
+      circles,
+      path,
+      trendLine,
+    };
 
     this.loading = false;
     this.chartRendered = true;
@@ -305,21 +325,21 @@ this.chartElements = {
     const { circles, path } = this.chartElements;
 
     if (this.chartElements.trendLine) {
-  const regression = this.calculateLinearRegression(this.sortedData);
-  this.chartElements.trendLine
-    .style('opacity', 0.7)
-    .transition()
-    .duration(this.animationDuration)
-    .delay(this.animationDuration * 0.2)
-    .ease(d3.easeQuadOut)
-    .attr('x2', this.xScale(regression.x2))
-    .attr('y2', this.yScale(regression.y2));
-}
-
+      const regression = this.calculateLinearRegression(this.sortedData);
+      this.chartElements.trendLine
+        .style('opacity', 0.7)
+        .transition()
+        .duration(this.animationDuration)
+        .delay(this.animationDuration * 0.2)
+        .ease(d3.easeQuadOut)
+        .attr('x2', this.xScale(regression.x2))
+        .attr('y2', this.yScale(regression.y2));
+    }
 
     // Animate line
     const totalLength = path.node()?.getTotalLength() || 0;
-    path.attr('stroke-dasharray', `${totalLength} ${totalLength}`)
+    path
+      .attr('stroke-dasharray', `${totalLength} ${totalLength}`)
       .attr('stroke-dashoffset', totalLength)
       .style('opacity', 1)
       .transition()
@@ -361,7 +381,6 @@ this.chartElements = {
   }
 }
 </script>
-
 
 <style scoped>
 .scatterplot-container {
