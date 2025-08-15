@@ -150,7 +150,7 @@ export default class BuildingsTable extends Vue {
       if (typeof firstBuilding[field] === 'undefined') {
         throw new Error(
           `BuildingsTable: Missing required field '${field}' in buildings data. ` +
-            `Make sure to include it in your GraphQL query. See component documentation for full field requirements.`,
+            `Make sure to include it in your GraphQL query. See docs for field requirements.`,
         );
       }
     }
