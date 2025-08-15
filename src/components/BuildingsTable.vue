@@ -46,6 +46,30 @@ export default class BuildingsTable extends Vue {
    */
   @Prop({ default: false }) showSort!: boolean;
 
+  /**
+   * Required fields for buildings (from GraphQL query):
+   *
+   * Always required:
+   * - slugSource, ID, path - for building links and routing
+   * - PropertyName, Address - displayed in name/address column
+   * - PrimaryPropertyType - displayed in property type column
+   * - GHGIntensity + GHGIntensityRank + GHGIntensityPercentileRank - always shown
+   * - TotalGHGEmissions + TotalGHGEmissionsRank + TotalGHGEmissionsPercentileRank - always shown
+   * - AvgPercentileLetterGrade - letter grade badge (LetterGrade component)
+   * - DataYear, DataAnomalies - emoji indicators (OverallRankEmoji component)
+   *
+   * Conditionally required based on props:
+   *
+   * when showYearBuilt: true
+   * - YearBuilt
+   * when showSquareFootage: true
+   * - GrossFloorArea + GrossFloorAreaRank + GrossFloorAreaPercentileRank
+   * when showElectricityUse: true
+   * - ElectricityUse + ElectricityUseRank + ElectricityUsePercentileRank
+   * when showGasUse: true
+   * - NaturalGasUse + NaturalGasUseRank + NaturalGasUsePercentileRank
+   */
+
   // declares the property emit for TS
   // TODO: Figure out why Vue $emit isn't recognized by Typescript
   $emit: any;
@@ -73,6 +97,55 @@ export default class BuildingsTable extends Vue {
      */
     if (window) {
       this.isDebug = window.location.search.includes('debug');
+    }
+
+    // Validate required fields are present
+    this.validateRequiredFields();
+  }
+
+  validateRequiredFields(): void {
+    const requiredFields = [
+      'slugSource', 'ID', 'path', 'PropertyName', 'Address', 'PrimaryPropertyType',
+      'GHGIntensity', 'GHGIntensityRank', 'GHGIntensityPercentileRank',
+      'TotalGHGEmissions', 'TotalGHGEmissionsRank', 'TotalGHGEmissionsPercentileRank',
+      'AvgPercentileLetterGrade', 'DataYear', 'DataAnomalies'
+    ];
+
+    const conditionalFields = [
+      { field: 'YearBuilt', condition: this.showYearBuilt },
+      { field: 'GrossFloorArea', condition: this.showSquareFootage },
+      { field: 'GrossFloorAreaRank', condition: this.showSquareFootage },
+      { field: 'GrossFloorAreaPercentileRank', condition: this.showSquareFootage },
+      { field: 'ElectricityUse', condition: this.showElectricityUse },
+      { field: 'ElectricityUseRank', condition: this.showElectricityUse },
+      { field: 'ElectricityUsePercentileRank', condition: this.showElectricityUse },
+      { field: 'NaturalGasUse', condition: this.showGasUse },
+      { field: 'NaturalGasUseRank', condition: this.showGasUse },
+      { field: 'NaturalGasUsePercentileRank', condition: this.showGasUse }
+    ];
+
+    if (this.buildings.length === 0) return;
+
+    const firstBuilding = this.buildings[0].node;
+
+    // Check required fields
+    for (const field of requiredFields) {
+      if (typeof firstBuilding[field] === 'undefined') {
+        throw new Error(
+          `BuildingsTable: Missing required field '${field}' in buildings data. ` +
+          `Make sure to include it in your GraphQL query. See component documentation for full field requirements.`
+        );
+      }
+    }
+
+    // Check conditional fields
+    for (const { field, condition } of conditionalFields) {
+      if (condition && typeof firstBuilding[field] === 'undefined') {
+        throw new Error(
+          `BuildingsTable: Missing required field '${field}' when condition is true. ` +
+          `Make sure to include it in your GraphQL query when using the corresponding show prop.`
+        );
+      }
     }
   }
 }

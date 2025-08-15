@@ -129,6 +129,7 @@ export default class LatestUpdates extends Vue {
         node {
           slugSource
           ID
+          DataYear
           PropertyName
           Address
           path
@@ -144,6 +145,7 @@ export default class LatestUpdates extends Vue {
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
           AvgPercentileLetterGrade
+          DataAnomalies
         }
       }
     }
