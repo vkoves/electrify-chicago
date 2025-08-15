@@ -18,6 +18,7 @@ Please also list any relevant details for your test configuration
 - [ ] New and existing unit tests pass locally with my changes
 
 ## Data Update (if applicable):
+
 - [ ] I have followed the [Data Update Checklist](DATA_UPDATE_CHECKLIST.md) for updating to new year's data
 
 <!-- PR template modified from: https://embeddedartistry.com/blog/2017/08/04/a-github-pull-request-template-for-your-projects/ -->
