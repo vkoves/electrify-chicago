@@ -1,7 +1,8 @@
 """
-to run this script
-python3 -m src.data.scripts.generate_historic_stats
-from the root
+
+This script processes multi-year building energy benchmarking data to generate 
+comprehensive statistical summaries.  It transforms raw building energy data 
+into year-over-year statistical insights used for analysis and visualization.
 """
 
 import json
