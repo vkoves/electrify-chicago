@@ -91,7 +91,6 @@ export default class OverallRankEmoji extends Vue {
 <style lang="scss">
 .overall-rank-emoji-cont {
   display: inline;
-  white-space: nowrap;
 
   .emoji {
     vertical-align: 0.2em;

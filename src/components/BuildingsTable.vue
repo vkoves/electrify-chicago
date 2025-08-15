@@ -33,6 +33,8 @@ export default class BuildingsTable extends Vue {
 
   @Prop({ default: false }) showElectricityUse!: boolean;
 
+  @Prop({ default: false }) showYearBuilt!: boolean;
+
   /** Props from Search component to store field (column) being sorted and direction */
   @Prop({ default: 'GHGIntensity' }) sortedField!: string;
   @Prop({ default: 'desc' }) sortedDirection!: string;
@@ -80,14 +82,15 @@ export default class BuildingsTable extends Vue {
   <div class="buildings-table-cont">
     <table
       :class="{
-        '-wide': showSquareFootage || showGasUse || showElectricityUse,
+        '-wide': showSquareFootage || showGasUse || showElectricityUse || showYearBuilt,
       }"
     >
       <thead>
         <tr>
           <th scope="col">Name / Address</th>
           <th scope="col" class="prop-type">Primary Property Type</th>
-          <th v-if="showSquareFootage">Square Footage</th>
+          <th v-if="showYearBuilt" scope="col" class="year-col">Year Built</th>
+          <th v-if="showSquareFootage" scope="col" class="sq-footage numeric">Square Footage</th>
           <!-- Click handlers on numeric columns for sorting -->
           <th
             v-if="showGasUse"
@@ -200,7 +203,7 @@ export default class BuildingsTable extends Vue {
       </thead>
       <tbody>
         <tr v-for="edge in buildings" :key="edge.node.id">
-          <td class="property-name">
+          <td class="property-name" :class="{ '-narrow': showYearBuilt || showSquareFootage }">
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
             </g-link>
@@ -229,6 +232,14 @@ export default class BuildingsTable extends Vue {
             </div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>
+
+          <!-- Year built (optional) -->
+          <td v-if="showYearBuilt">
+            <template v-if="edge.node.YearBuilt">
+              {{ Math.round(edge.node.YearBuilt) }}
+            </template>
+            <template v-else> - </template>
+          </td>
 
           <!-- Square footage is optional, only shown on BiggestBuildings -->
           <td v-if="showSquareFootage" class="numeric">
@@ -395,6 +406,20 @@ export default class BuildingsTable extends Vue {
       }
       &.prop-type {
         width: 12rem;
+      }
+      &.year-col {
+        width: 5rem;
+      }
+      &.sq-footage {
+        width: 7rem;
+      }
+    }
+
+    // When we show more columns, we limit the property name column more
+    .property-name {
+      &.-narrow {
+        max-width: 24rem;
+        width: 24rem;
       }
     }
 

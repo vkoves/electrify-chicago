@@ -156,6 +156,7 @@ export default class LatestUpdates extends Vue {
           ZIPCode
           path
           PrimaryPropertyType
+          YearBuilt
           GrossFloorArea
           GrossFloorAreaRank
           GrossFloorAreaPercentileRank
@@ -268,6 +269,7 @@ export default class LatestUpdates extends Vue {
         v-else
         :buildings="newBuildings"
         :show-square-footage="true"
+        :show-year-built="true"
       />
     </section>
 

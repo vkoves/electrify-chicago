@@ -70,6 +70,7 @@ export interface IBuilding {
   GrossFloorArea: number;
   NaturalGasUse: number;
   TotalGHGEmissions: number;
+  YearBuilt: number;
 
   [buildingKey: string]: string | number | boolean;
 }
