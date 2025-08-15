@@ -22,9 +22,16 @@ function addStyleResource(rule) {
 
 module.exports = {
   siteName: 'Electrify Chicago',
+  siteUrl: 'https://electrifychicago.net',
   plugins: [
     {
       use: 'gridsome-plugin-typescript',
+    },
+    {
+      use: '@gridsome/plugin-sitemap',
+      options: {
+        exclude: ['/social-card*', '/social-card/*'],
+      },
     },
   ],
 
