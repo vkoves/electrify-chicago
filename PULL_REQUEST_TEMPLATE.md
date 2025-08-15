@@ -16,6 +16,7 @@ Please also list any relevant details for your test configuration
 - [ ] I have commented my code, particularly in hard-to-understand areas
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
+- [ ] If I added a large new feature, I added it to the release notes (ReleaseNotes.vue)
 
 ## Data Update (if applicable):
 
