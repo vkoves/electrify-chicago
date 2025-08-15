@@ -66,6 +66,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
 -->
 <static-query>
   query {
+    # Retrofit page only needs core BuildingsTable fields (no conditional fields)
     allBuilding(sortBy: "GHGIntensity") {
       edges {
         node {
@@ -74,7 +75,6 @@ export default class ChicagoRetrofitParticipants extends Vue {
           DataYear
           PropertyName
           Address
-          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity
@@ -83,12 +83,6 @@ export default class ChicagoRetrofitParticipants extends Vue {
           TotalGHGEmissions
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
-          ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
           DataAnomalies
         }
