@@ -105,23 +105,40 @@ export default class BuildingsTable extends Vue {
 
   validateRequiredFields(): void {
     const requiredFields = [
-      'slugSource', 'ID', 'path', 'PropertyName', 'Address', 'PrimaryPropertyType',
-      'GHGIntensity', 'GHGIntensityRank', 'GHGIntensityPercentileRank',
-      'TotalGHGEmissions', 'TotalGHGEmissionsRank', 'TotalGHGEmissionsPercentileRank',
-      'AvgPercentileLetterGrade', 'DataYear', 'DataAnomalies'
+      'slugSource',
+      'ID',
+      'path',
+      'PropertyName',
+      'Address',
+      'PrimaryPropertyType',
+      'GHGIntensity',
+      'GHGIntensityRank',
+      'GHGIntensityPercentileRank',
+      'TotalGHGEmissions',
+      'TotalGHGEmissionsRank',
+      'TotalGHGEmissionsPercentileRank',
+      'AvgPercentileLetterGrade',
+      'DataYear',
+      'DataAnomalies',
     ];
 
     const conditionalFields = [
       { field: 'YearBuilt', condition: this.showYearBuilt },
       { field: 'GrossFloorArea', condition: this.showSquareFootage },
       { field: 'GrossFloorAreaRank', condition: this.showSquareFootage },
-      { field: 'GrossFloorAreaPercentileRank', condition: this.showSquareFootage },
+      {
+        field: 'GrossFloorAreaPercentileRank',
+        condition: this.showSquareFootage,
+      },
       { field: 'ElectricityUse', condition: this.showElectricityUse },
       { field: 'ElectricityUseRank', condition: this.showElectricityUse },
-      { field: 'ElectricityUsePercentileRank', condition: this.showElectricityUse },
+      {
+        field: 'ElectricityUsePercentileRank',
+        condition: this.showElectricityUse,
+      },
       { field: 'NaturalGasUse', condition: this.showGasUse },
       { field: 'NaturalGasUseRank', condition: this.showGasUse },
-      { field: 'NaturalGasUsePercentileRank', condition: this.showGasUse }
+      { field: 'NaturalGasUsePercentileRank', condition: this.showGasUse },
     ];
 
     if (this.buildings.length === 0) return;
@@ -133,7 +150,7 @@ export default class BuildingsTable extends Vue {
       if (typeof firstBuilding[field] === 'undefined') {
         throw new Error(
           `BuildingsTable: Missing required field '${field}' in buildings data. ` +
-          `Make sure to include it in your GraphQL query. See component documentation for full field requirements.`
+            `Make sure to include it in your GraphQL query. See component documentation for full field requirements.`,
         );
       }
     }
@@ -143,7 +160,7 @@ export default class BuildingsTable extends Vue {
       if (condition && typeof firstBuilding[field] === 'undefined') {
         throw new Error(
           `BuildingsTable: Missing required field '${field}' when condition is true. ` +
-          `Make sure to include it in your GraphQL query when using the corresponding show prop.`
+            `Make sure to include it in your GraphQL query when using the corresponding show prop.`,
         );
       }
     }
