@@ -84,7 +84,8 @@ export interface IBuildingNode {
  */
 export interface IHistoricData {
   ID: string;
-  DataYear: string;
+  DataYear: number;
+  ReportingStatus: string;
   // The actual data
   ChicagoEnergyRating: string;
   ENERGYSTARScore: string;

@@ -99,7 +99,7 @@ export default class ReportingTile extends Vue {
 
     return this.historicData.map((datum: IHistoricData) => {
       return {
-        year: parseInt(datum.DataYear),
+        year: datum.DataYear,
         isReported: typeof datum.GHGIntensity === 'number',
       };
     });
