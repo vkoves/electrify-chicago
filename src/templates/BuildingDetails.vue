@@ -149,10 +149,7 @@ query ($id: ID!, $ID: String) {
             </button>
 
             <!-- Share button -->
-            <ShareButton
-              :title="propertyName"
-              :text="shareText"
-            />
+            <ShareButton :title="propertyName" :text="shareText" />
           </div>
         </div>
 
@@ -844,8 +841,10 @@ export default class BuildingDetails extends Vue {
     const emissions = Math.round(
       this.building.TotalGHGEmissions || 0,
     ).toLocaleString();
-    return `Check out ${this.propertyName} on Electrify Chicago! ` +
-           `It got a ${grade} grade and emits ${emissions} tons of CO₂.`;
+    return (
+      `Check out ${this.propertyName} on Electrify Chicago! ` +
+      `It got a ${grade} grade and emits ${emissions} tons of CO₂.`
+    );
   }
 
   created(): void {
@@ -914,7 +913,6 @@ export default class BuildingDetails extends Vue {
       window.print();
     }
   }
-
 }
 </script>
 

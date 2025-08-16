@@ -39,7 +39,8 @@ export default class ShareButton extends Vue {
   private readonly AlertDisplayDurationMs = 2500;
 
   handleShare(): void {
-    const shareUrl = this.url || (typeof window !== 'undefined' ? window.location.href : '');
+    const shareUrl =
+      this.url || (typeof window !== 'undefined' ? window.location.href : '');
 
     if (typeof window !== 'undefined' && window.navigator?.share) {
       // Use the Web Share API - a native browser API that allows websites to share content
