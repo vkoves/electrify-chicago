@@ -129,6 +129,12 @@ docker compose run --rm electrify-chicago yarn lint-fix
 docker compose run --rm electrify-chicago python3 run_all.py
 ```
 
+4. If you would prefer to process an individual python script, you can do so like this:
+
+```bash
+docker compose run --rm electrify-chicago python3 -m src.data.scripts.name_of_your_script
+```
+
 ### Run Data Processing Tests
 
 1. Make sure test data is created/replaced before running tests by running the following script (it will overwrite the existing test data file if it exists):
