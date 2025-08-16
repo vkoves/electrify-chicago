@@ -392,7 +392,9 @@ export default class ScatterPlot extends Vue {
 <style scoped>
 .scatterplot-container {
   width: 100%;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media screen and (min-width: 500px) {
