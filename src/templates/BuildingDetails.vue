@@ -147,6 +147,20 @@ query ($id: ID!, $ID: String) {
             <button class="action-btn -print" @click="printPage">
               <img src="/icons/printer.svg" alt="Print Flyer" />
             </button>
+
+            <!-- Share button -->
+            <div class="share-button-container">
+              <button class="action-btn -share" @click="shareBuilding">
+                <img src="/icons/share.svg" alt="Share Building" />
+              </button>
+              <div
+                v-show="showCopyAlert"
+                class="copy-alert"
+                :class="{ show: copyAlertVisible }"
+              >
+                Link copied to clipboard!
+              </div>
+            </div>
           </div>
         </div>
 
@@ -761,6 +775,14 @@ export default class BuildingDetails extends Vue {
 
   isEmailModalOpen = false;
 
+  showCopyAlert = false;
+
+  copyAlertVisible = false;
+
+  // Animation timing constants
+  private readonly AlertFadeDurationMs = 300;
+  private readonly AlertDisplayDurationMs = 2500;
+
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
     return this.$page.building;
@@ -897,6 +919,68 @@ export default class BuildingDetails extends Vue {
       window.print();
     }
   }
+
+  shareBuilding(): void {
+    if (typeof window !== 'undefined' && window.navigator?.share) {
+      const propertyName = this.propertyName;
+      const grade = this.building.AvgPercentileLetterGrade || 'N/A';
+      const emissions = Math.round(
+        this.building.TotalGHGEmissions || 0,
+      ).toLocaleString();
+
+      // Use the Web Share API - a native browser API that allows websites to share content
+      // using the device's native sharing mechanisms (e.g., share sheet on mobile devices)
+      // Supported on most modern mobile browsers and some desktop browsers
+      window.navigator
+        .share({
+          title: propertyName,
+          text:
+            `Check out ${propertyName} on Electrify Chicago! ` +
+            `It got a ${grade} grade and emits ${emissions} tons of CO₂.`,
+          url: window.location.href,
+        })
+        .catch(() => {
+          // Fallback: copy to clipboard
+          this.copyToClipboard();
+        });
+    } else {
+      // Fallback for browsers without Web Share API
+      this.copyToClipboard();
+    }
+  }
+
+  private copyToClipboard(): void {
+    if (typeof window !== 'undefined') {
+      navigator.clipboard
+        .writeText(window.location.href)
+        .then(() => {
+          this.showCopiedAlert();
+        })
+        .catch(() => {
+          // Final fallback - show URL in prompt
+          prompt('Copy this link to share:', window.location.href);
+        });
+    }
+  }
+
+  private showCopiedAlert(): void {
+    this.showCopyAlert = true;
+    this.copyAlertVisible = false;
+
+    // Small delay to ensure DOM element is rendered, then trigger fade in
+    setTimeout(() => {
+      this.copyAlertVisible = true;
+    }, 10);
+
+    // Start fade out after display duration, then hide completely
+    setTimeout(() => {
+      this.copyAlertVisible = false;
+      // Hide element after animation completes
+      setTimeout(() => {
+        this.showCopyAlert = false;
+      }, this.AlertFadeDurationMs);
+    }, this.AlertDisplayDurationMs);
+  }
 }
 </script>
 
@@ -1010,12 +1094,46 @@ export default class BuildingDetails extends Vue {
     gap: 1rem;
     margin: 1rem 0;
 
-    .action-btn.-print {
+    .action-btn.-print,
+    .action-btn.-share {
       aspect-ratio: 1;
       padding: 0;
 
       img {
         height: 2rem;
+      }
+    }
+
+    .action-btn.-share {
+      padding-left: 0.4rem;
+      padding-bottom: 0.2rem;
+    }
+  }
+
+  .share-button-container {
+    position: relative;
+    display: inline-block;
+
+    .copy-alert {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.5rem;
+      background-color: $off-black;
+      color: $white;
+      padding: 0.5rem 0.75rem;
+      border-radius: $brd-rad-small;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      z-index: 1000;
+      box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
+      opacity: 0;
+      transform: translateY(-0.5rem);
+      transition: all 0.3s ease-in-out;
+
+      &.show {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   }
