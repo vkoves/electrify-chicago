@@ -38,6 +38,36 @@ export default class LatestUpdates extends Vue {
     console.log(this.$static.allBuilding);
   }
 
+  /**
+   * A JS based scroll for `<a href="#anchor">` elements, so that we don't need to globally apply
+   * smooth scrolling to the whole site
+   */
+  smoothlyScrollToAnchor(event: MouseEvent): void {
+    event.preventDefault();
+
+    const link = event.currentTarget as HTMLAnchorElement;
+    const targetId = link.getAttribute('href')?.substring(1);
+
+    if (targetId) {
+      const targetElement = document.getElementById(targetId);
+
+      if (targetElement) {
+        targetElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+
+        setTimeout(() => {
+          // Set focus to the target heading for keyboard users, after a delay for animation
+          targetElement.focus();
+        }, 350);
+
+        // Update the URL hash to maintain browser history
+        window.history.pushState(null, '', `#${targetId}`);
+      }
+    }
+  }
+
   get newBuildings(): Array<{ node: IBuilding }> {
     // Get all buildings that submitted in the latest year (already filtered by GraphQL)
     const latestYearSubmitted = new Set(
@@ -196,7 +226,11 @@ export default class LatestUpdates extends Vue {
     <section class="stats-overview">
       <h2>Quick Stats</h2>
       <div class="stats-grid">
-        <a href="#new-buildings" class="stat-card-link">
+        <a
+          href="#new-buildings"
+          class="stat-card-link"
+          @click="smoothlyScrollToAnchor"
+        >
           <div class="stat-card positive -clickable">
             <div class="stat-number">
               {{ newBuildings.length.toLocaleString() }}
@@ -208,7 +242,11 @@ export default class LatestUpdates extends Vue {
           </div>
         </a>
 
-        <a href="#stopped-reporting" class="stat-card-link">
+        <a
+          href="#stopped-reporting"
+          class="stat-card-link"
+          @click="smoothlyScrollToAnchor"
+        >
           <div class="stat-card negative -clickable">
             <div class="stat-number">
               {{ stoppedReportingBuildings.length.toLocaleString() }}
@@ -392,7 +430,7 @@ export default class LatestUpdates extends Vue {
     .stat-number {
       font-size: 2.5rem;
       font-weight: bold;
-      color: $blue-dark;
+      color: $text-mid-light;
       line-height: 1;
       margin-bottom: 0.25rem;
     }
@@ -436,6 +474,7 @@ section {
 
   h2 {
     margin-bottom: 0;
+    scroll-margin-top: 1rem;
 
     + p {
       margin-bottom: 1rem;
