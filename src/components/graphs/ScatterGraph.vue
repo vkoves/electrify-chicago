@@ -49,13 +49,13 @@ export default class ScatterPlot extends Vue {
     return [...this.data].sort((a, b) => a.year - b.year);
   }
 
-  mounted() {
+  mounted(): void {
     this.chartContainer = this.$refs.chartContainer as HTMLElement;
     this.renderChartStructure();
     this.setupIntersectionObserver();
   }
 
-  beforeDestroy() {
+  beforeDestroy(): void {
     if (this.intersectionObserver && this.chartContainer) {
       this.intersectionObserver.unobserve(this.chartContainer);
       this.intersectionObserver.disconnect();
@@ -63,7 +63,7 @@ export default class ScatterPlot extends Vue {
   }
 
   @Watch('data', { deep: true })
-  onDataChange() {
+  onDataChange(): void {
     this.loading = true;
     this.hasAnimated = false;
     this.chartRendered = false;
@@ -71,7 +71,7 @@ export default class ScatterPlot extends Vue {
     this.animateDataElements();
   }
 
-  private setupIntersectionObserver() {
+  private setupIntersectionObserver(): void {
     if (!this.chartContainer) return;
 
     const threshold = 0.5;
@@ -98,7 +98,7 @@ export default class ScatterPlot extends Vue {
     });
   }
 
-  private renderChartStructure() {
+  private renderChartStructure(): void {
     if (!this.chartContainer || !this.sortedData.length) return;
 
     const container = d3.select(this.chartContainer);
@@ -193,7 +193,7 @@ export default class ScatterPlot extends Vue {
         d3
           .axisBottom(this.xScale)
           .tickValues(this.sortedData.map((d: DataPoint) => d.year))
-          .tickFormat((d: d3.NumberValue, i: number) => String(d.valueOf()))
+          .tickFormat((d: d3.NumberValue) => String(d.valueOf()))
           .tickSize(-10),
       );
 
@@ -204,7 +204,7 @@ export default class ScatterPlot extends Vue {
         d3
           .axisLeft(this.yScale)
           .tickSize(-10)
-          .tickFormat((d: d3.NumberValue, _i: number) =>
+          .tickFormat((d: d3.NumberValue) =>
             +d === 0 ? '' : d3.format('~s')(d),
           ),
       );
