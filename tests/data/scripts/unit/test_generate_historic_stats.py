@@ -299,3 +299,4 @@ def test_calculateBuildingStatsByYear_with_missing_values():
 
     # TotalGHGEmissions has 2 valid values out of 3
     assert year_stats['TotalGHGEmissions']['count'] == 2
+    

@@ -71,16 +71,15 @@ export const graphConfigs = [
     fillColor: 'chart-fill-red',
     description: [
       'Buildings are responsible for about 40% of global greenhouse gas emissions, making them ' +
-        'a critical piece of the climate puzzle. GHG intensity shows how much climate pollution ' +
-        'a building produces per square foot of space (measured in kg CO2e/sq ft).',
-      "Think of this as your building's carbon footprint per square foot. A typical " +
-        'Chicago office ' +
-        "building might emit 15-25 kg CO2e per square foot annually — that's like the " +
-        'emissions from ' +
-        'driving 30-50 miles in a gas car, but for every square foot of the building, every year.',
+      'a critical piece of the climate puzzle. GHG intensity shows how much climate pollution ' +
+      'a building produces per square foot of space (measured in kg CO2e/sq ft).',
+      "Think of this as your building's carbon footprint per square foot. To put this in " +
+      'perspective, the annual emissions from each square foot of a typical commercial building ' +
+      'can be comparable to driving dozens of miles in a gas car — but that impact is happening ' +
+      'for every square foot of the building, every year.',
       'Lower intensity means the building is either more energy-efficient or using cleaner ' +
-        'energy sources. ' +
-        'This metric helps level the playing field between a small café and a massive skyscraper.',
+      'energy sources. ' +
+      'This metric helps level the playing field between a small café and a massive skyscraper.',
     ],
   },
   {
