@@ -43,7 +43,7 @@ const detailKeyMap: Record<MetricDetail, keyof MetricStats> = {
  * - Results are sorted chronologically by year in ascending order
  * - Uses the `detailKeyMap` to map the detail parameter to the appropriate data key
  */
-function extractMetricData(
+export function extractMetricData(
   metricName: keyof YearData,
   detail: MetricDetail,
 ): DataPoint[] {
@@ -61,7 +61,7 @@ function extractMetricData(
     .sort((a: DataPoint, b: DataPoint) => a.year - b.year);
 }
 
-const graphConfigs = [
+export const graphConfigs = [
   {
     data: extractMetricData('GHGIntensity', '50%'),
     containerId: 'ghg-intensity-chart',
@@ -176,5 +176,3 @@ const graphConfigs = [
     ],
   },
 ] as const;
-
-export { extractMetricData, graphConfigs };
