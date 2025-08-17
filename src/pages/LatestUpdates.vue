@@ -361,7 +361,12 @@ export default class LatestUpdates extends Vue {
     margin-top: 1rem;
     align-items: stretch; // Ensures all grid items have equal height
 
-    @media (min-width: $desktop-min-width) {
+    @media (min-width: $desktop-min-width) and 
+           (max-width: calc(#{$large-desktop-min-width} - 0.0625rem)) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: $large-desktop-min-width) {
       grid-template-columns: repeat(4, 1fr);
     }
 
