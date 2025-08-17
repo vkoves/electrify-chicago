@@ -1,7 +1,9 @@
 /**
  * Screen Sizes
  */
+$small-mobile-max-width: 30rem; // 480px
 $mobile-max-width: 50rem; // 800px
+$desktop-min-width: 50.0625rem; // 801px (mobile breakpoint + 1px in rem)
 $desktop-max-width: 87.5rem; // 1400px
 
 $border-thin: 0.0625rem; // eq. to 1px

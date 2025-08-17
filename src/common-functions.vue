@@ -487,4 +487,34 @@ export function parseAnomalies(dataAnomalies: string): Array<DataAnomalies> {
 
   return dataAnomalies.split(',') as Array<DataAnomalies>;
 }
+
+/**
+ * A JS based scroll for `<a href="#anchor">` elements, so that we don't need to globally apply
+ * smooth scrolling to the whole site
+ */
+export function smoothlyScrollToAnchor(event: MouseEvent): void {
+  event.preventDefault();
+
+  const link = event.currentTarget as HTMLAnchorElement;
+  const targetId = link.getAttribute('href')?.substring(1);
+
+  if (targetId) {
+    const targetElement = document.getElementById(targetId);
+
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+
+      setTimeout(() => {
+        // Set focus to the target heading for keyboard users, after a delay for animation
+        targetElement.focus();
+      }, 350);
+
+      // Update the URL hash (maintaining default browser behavior)
+      window.history.pushState(null, '', `#${targetId}`);
+    }
+  }
+}
 </script>

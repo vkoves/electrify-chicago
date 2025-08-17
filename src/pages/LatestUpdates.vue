@@ -10,6 +10,7 @@ import {
   IBuildingNode,
   IHistoricData,
   hasReportedData,
+  smoothlyScrollToAnchor,
 } from '../common-functions.vue';
 
 @Component<any>({
@@ -38,35 +39,8 @@ export default class LatestUpdates extends Vue {
     console.log(this.$static.allBuilding);
   }
 
-  /**
-   * A JS based scroll for `<a href="#anchor">` elements, so that we don't need to globally apply
-   * smooth scrolling to the whole site
-   */
-  smoothlyScrollToAnchor(event: MouseEvent): void {
-    event.preventDefault();
-
-    const link = event.currentTarget as HTMLAnchorElement;
-    const targetId = link.getAttribute('href')?.substring(1);
-
-    if (targetId) {
-      const targetElement = document.getElementById(targetId);
-
-      if (targetElement) {
-        targetElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-
-        setTimeout(() => {
-          // Set focus to the target heading for keyboard users, after a delay for animation
-          targetElement.focus();
-        }, 350);
-
-        // Update the URL hash to maintain browser history
-        window.history.pushState(null, '', `#${targetId}`);
-      }
-    }
-  }
+  // Import the smooth scroll function from common-functions
+  readonly smoothlyScrollToAnchor = smoothlyScrollToAnchor;
 
   get newBuildings(): Array<{ node: IBuilding }> {
     // Get all buildings that submitted in the latest year (already filtered by GraphQL)
@@ -382,15 +356,25 @@ export default class LatestUpdates extends Vue {
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
     margin-top: 1rem;
+    align-items: stretch; // Ensures all grid items have equal height
+
+    @media (min-width: $desktop-min-width) {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: $small-mobile-max-width) {
+      gap: 1rem; // Smaller gap on very small screens
+    }
   }
 
   .stat-card-link {
     text-decoration: none;
     color: inherit;
     display: block;
+    height: 100%; // Fill the full grid cell height
 
     &:hover,
     &:focus {
@@ -415,6 +399,13 @@ export default class LatestUpdates extends Vue {
     text-align: center;
     border: $border-thin solid $grey-light;
     transition: all 0.2s ease-in-out;
+    height: 100%; // Fill the full link height
+    min-height: 140px; // Minimum height to prevent cards from being too short
+
+    @media (max-width: $small-mobile-max-width) {
+      padding: 1rem; // Smaller padding on small mobile
+      min-height: 120px; // Smaller minimum height on mobile
+    }
 
     &.-clickable {
       cursor: pointer;
@@ -433,18 +424,30 @@ export default class LatestUpdates extends Vue {
       color: $text-mid-light;
       line-height: 1;
       margin-bottom: 0.25rem;
+
+      @media (max-width: $small-mobile-max-width) {
+        font-size: 2rem; // Smaller font on small mobile
+      }
     }
 
     .stat-label {
       font-size: 1.1rem;
-      line-height: 1.5;
+      line-height: 1.25;
       font-weight: bold;
       transition: color 0.2s ease-in-out;
+
+      @media (max-width: $small-mobile-max-width) {
+        font-size: 1rem; // Slightly smaller on small mobile
+      }
     }
 
     .stat-description {
       font-size: 0.75rem;
       line-height: 1.5;
+
+      @media (max-width: $small-mobile-max-width) {
+        font-size: 0.7rem; // Slightly smaller on small mobile
+      }
     }
 
     &.net-positive .stat-number {
