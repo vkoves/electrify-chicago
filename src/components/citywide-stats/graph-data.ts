@@ -71,13 +71,13 @@ const graphConfigs = [
     fillColor: 'chart-fill-red',
     description: [
       'Buildings are responsible for about 40% of global greenhouse gas emissions, making them ' +
-      'a critical piece of the climate puzzle. GHG intensity shows how much climate pollution ' +
-      'a building produces per square foot of space (measured in kg CO2e/sq ft).',
-      'Think of this as your building\'s carbon footprint per square foot. A typical Chicago office ' +
-      'building might emit 15-25 kg CO2e per square foot annually — that\'s like the emissions from ' +
-      'driving 30-50 miles in a gas car, but for every square foot of the building, every year.',
+        'a critical piece of the climate puzzle. GHG intensity shows how much climate pollution ' +
+        'a building produces per square foot of space (measured in kg CO2e/sq ft).',
+      "Think of this as your building's carbon footprint per square foot. A typical Chicago office " +
+        "building might emit 15-25 kg CO2e per square foot annually — that's like the emissions from " +
+        'driving 30-50 miles in a gas car, but for every square foot of the building, every year.',
       'Lower intensity means the building is either more energy-efficient or using cleaner energy sources. ' +
-      'This metric helps level the playing field between a small café and a massive skyscraper.'
+        'This metric helps level the playing field between a small café and a massive skyscraper.',
     ],
   },
   {
@@ -89,14 +89,14 @@ const graphConfigs = [
     fillColor: 'chart-fill-blue',
     description: [
       'This tracks the total climate impact of buildings — all the greenhouse gases they produce ' +
-      'from electricity, heating, and cooling combined. Every kilowatt-hour of electricity and ' +
-      'every therm of gas burned adds to a building\'s total emissions.',
+        'from electricity, heating, and cooling combined. Every kilowatt-hour of electricity and ' +
+        "every therm of gas burned adds to a building's total emissions.",
       'One metric ton of CO2e equals about 2,200 pounds of carbon pollution — roughly what a typical ' +
-      'gas car produces driving 2,500 miles. A large Chicago office building might emit hundreds or ' +
-      'even thousands of metric tons per year.',
-      'Unlike intensity metrics, total emissions show a building\'s absolute climate impact. A highly ' +
-      'efficient skyscraper might still have high total emissions simply because it\'s massive, while ' +
-      'an inefficient small building could have relatively low total emissions.'
+        'gas car produces driving 2,500 miles. A large Chicago office building might emit hundreds or ' +
+        'even thousands of metric tons per year.',
+      "Unlike intensity metrics, total emissions show a building's absolute climate impact. A highly " +
+        "efficient skyscraper might still have high total emissions simply because it's massive, while " +
+        'an inefficient small building could have relatively low total emissions.',
     ],
   },
   {
@@ -108,14 +108,14 @@ const graphConfigs = [
     fillColor: 'chart-fill-orange',
     description: [
       'Electricity powers everything in modern buildings — lights, computers, elevators, air conditioning, ' +
-      'and increasingly, heating and hot water too. As more buildings electrify to reduce emissions, ' +
-      'understanding electricity use becomes even more important.',
+        'and increasingly, heating and hot water too. As more buildings electrify to reduce emissions, ' +
+        'understanding electricity use becomes even more important.',
       'One kilowatt-hour (kWh) powers a desktop computer for about 3-4 hours, or runs your microwave ' +
-      'for an hour. A typical Chicago office building uses thousands of kWh daily — enough to power ' +
-      'hundreds of homes.',
+        'for an hour. A typical Chicago office building uses thousands of kWh daily — enough to power ' +
+        'hundreds of homes.',
       'The climate impact of electricity varies dramatically based on the energy source. In Illinois, ' +
-      'where about half our electricity comes from nuclear and renewables, each kWh produces less ' +
-      'emissions than in coal-heavy states. This is why electrification can be a climate win.'
+        'where about half our electricity comes from nuclear and renewables, each kWh produces less ' +
+        'emissions than in coal-heavy states. This is why electrification can be a climate win.',
     ],
   },
   {
@@ -127,14 +127,14 @@ const graphConfigs = [
     fillColor: 'chart-fill-green',
     description: [
       'Fossil gas (often called "natural gas") is the biggest source of building emissions in Chicago. ' +
-      'Most buildings use it for heating, hot water, and cooking — and every therm burned releases ' +
-      'carbon directly into the atmosphere.',
+        'Most buildings use it for heating, hot water, and cooking — and every therm burned releases ' +
+        'carbon directly into the atmosphere.',
       'One therm equals about 100 cubic feet of gas and produces roughly 11 pounds of CO2 when burned. ' +
-      'A typical Chicago building might use hundreds or thousands of therms during winter months. ' +
-      'That adds up fast when you consider the city\'s long, cold winters.',
+        'A typical Chicago building might use hundreds or thousands of therms during winter months. ' +
+        "That adds up fast when you consider the city's long, cold winters.",
       'Unlike electricity, which can get cleaner as the grid adds more renewables, burning fossil gas ' +
-      'will always produce emissions. That\'s why many climate strategies focus on electrifying heating ' +
-      'and switching to heat pumps, electric water heaters, and induction cooking.'
+        "will always produce emissions. That's why many climate strategies focus on electrifying heating " +
+        'and switching to heat pumps, electric water heaters, and induction cooking.',
     ],
   },
   {
@@ -146,14 +146,14 @@ const graphConfigs = [
     fillColor: 'chart-fill-purple',
     description: [
       'Source EUI captures the total energy demand a building places on our energy system — not just ' +
-      'what shows up on the utility bill, but including all the energy lost generating and delivering ' +
-      'that power to the building.',
+        'what shows up on the utility bill, but including all the energy lost generating and delivering ' +
+        'that power to the building.',
       'For every kWh that reaches your building, about 2-3 kWh of primary energy was needed at the ' +
-      'power plant due to conversion and transmission losses. One kBtu is roughly the energy in a ' +
-      'wooden kitchen match — buildings typically use tens of thousands of kBtu per square foot annually.',
+        'power plant due to conversion and transmission losses. One kBtu is roughly the energy in a ' +
+        'wooden kitchen match — buildings typically use tens of thousands of kBtu per square foot annually.',
       'This metric matters because it reflects the true demand buildings place on our energy infrastructure. ' +
-      'A building with high source EUI is straining the broader system more, requiring more power plants, ' +
-      'gas wells, and transmission lines to support it.'
+        'A building with high source EUI is straining the broader system more, requiring more power plants, ' +
+        'gas wells, and transmission lines to support it.',
     ],
   },
   {
@@ -165,14 +165,14 @@ const graphConfigs = [
     fillColor: 'chart-fill-teal',
     description: [
       'Site EUI measures the energy actually delivered to and consumed by the building itself — ' +
-      'what you\'d see on your utility bills. This is the most straightforward way to understand ' +
-      'how much energy a building uses per square foot.',
+        "what you'd see on your utility bills. This is the most straightforward way to understand " +
+        'how much energy a building uses per square foot.',
       'A well-insulated, efficient building in Chicago might use 50-80 kBtu per square foot annually, ' +
-      'while an older, inefficient building could use 150+ kBtu per square foot. That\'s the difference ' +
-      'between a warm sweater and a thin t-shirt in a Chicago winter.',
-      'Site EUI is the go-to metric for comparing building performance because it\'s directly tied to ' +
-      'what building owners can control — insulation, windows, HVAC efficiency, and occupant behavior. ' +
-      'It\'s also what most energy benchmarking programs use to set targets and requirements.'
+        "while an older, inefficient building could use 150+ kBtu per square foot. That's the difference " +
+        'between a warm sweater and a thin t-shirt in a Chicago winter.',
+      "Site EUI is the go-to metric for comparing building performance because it's directly tied to " +
+        'what building owners can control — insulation, windows, HVAC efficiency, and occupant behavior. ' +
+        "It's also what most energy benchmarking programs use to set targets and requirements.",
     ],
   },
 ] as const;
