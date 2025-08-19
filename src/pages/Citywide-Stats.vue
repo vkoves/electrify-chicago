@@ -36,23 +36,23 @@
           />
         </article>
       </div>
-      <p>* According to the Department of Energy the 
+      <p>* According to the Department of Energy, 
         <a href="https://afdc.energy.gov/data/10310" 
           target="_blank" 
           aria-label="department of energy average fuel economy data - opens in a new tab"
         >
-          average car gets 24.40 MPG
+          the average car gets 24.4 MPG
         </a>
-        , which would require 102.5 gallons of gas to travel 2,500 miles. 
-        According to the 
+        , which requires approximately 102.5 gallons of gas to travel 2,500 miles.
+        Using the
         <a 
           href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator" 
           target="_blank" 
           aria-label="EPA  Greenhouse Gas Equivalencies Calculator - opens in a new tab"
         >
-          Greenhouse Gas Equivalencies Calculator
+          EPA’s Greenhouse Gas Equivalencies Calculator
         </a> 
-        by the EPA, that translates to .911 metric tons, or 2000 pounds of CO2.</p>
+        , this corresponds to about 0.911 metric tons, or roughly 2,000 pounds of CO₂.</p>
     </div>
   </DefaultLayout>
 </template>
