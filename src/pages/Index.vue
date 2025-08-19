@@ -101,15 +101,13 @@ export default class Index extends Vue {
     <div class="data-update-banner">
       <div class="page-constrained">
         <div class="content-left">
-          <h3>🎉 Updated with 2023 Data!</h3>
+          <h2>🎉 Updated with 2023 Data!</h2>
           <p>
-            We've updated our database with the latest 2023 Chicago energy benchmarking data.
-            See what buildings are new to reporting and which ones stopped.
+            We've updated with the latest 2023 Chicago energy benchmarking data!
+            See what buildings are new in the data, and which stopped reporting.
           </p>
         </div>
-        <g-link to="/latest-updates">
-          View Latest Updates
-        </g-link>
+        <g-link to="/latest-updates"> View Latest Updates </g-link>
       </div>
     </div>
 

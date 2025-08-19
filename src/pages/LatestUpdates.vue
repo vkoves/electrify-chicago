@@ -235,8 +235,8 @@ export default class LatestUpdates extends Vue {
         <div
           class="stat-card"
           :class="{
-            'net-positive': netChangeInReporting > 0,
-            'net-negative': netChangeInReporting < 0,
+            positive: netChangeInReporting > 0,
+            negative: netChangeInReporting < 0,
             'net-zero': netChangeInReporting === 0,
           }"
         >
@@ -356,22 +356,22 @@ export default class LatestUpdates extends Vue {
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); // default to 2x2 grid (mobile layout)
     gap: 1.5rem;
     margin-top: 1rem;
     align-items: stretch; // Ensures all grid items have equal height
 
-    @media (min-width: $desktop-min-width) and 
-           (max-width: calc(#{$large-desktop-min-width} - 0.0625rem)) {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
+    /** Large Desktop - one row of cards */
     @media (min-width: $large-desktop-min-width) {
       grid-template-columns: repeat(4, 1fr);
     }
 
+    /** Small mobile */
     @media (max-width: $small-mobile-max-width) {
-      gap: 1rem; // Smaller gap on very small screens
+      gap: 1rem;
     }
   }
 
@@ -403,14 +403,9 @@ export default class LatestUpdates extends Vue {
     padding: 1.5rem;
     text-align: center;
     border: $border-thin solid $grey-light;
-    transition: all 0.2s ease-in-out;
+    transition: box-shadow 0.2s ease-in-out;
     height: 100%; // Fill the full link height
-    min-height: 140px; // Minimum height to prevent cards from being too short
-
-    @media (max-width: $small-mobile-max-width) {
-      padding: 1rem; // Smaller padding on small mobile
-      min-height: 120px; // Smaller minimum height on mobile
-    }
+    min-height: 8.75rem; //1 140px Minimum height to prevent cards from being too short
 
     &.-clickable {
       cursor: pointer;
@@ -423,46 +418,6 @@ export default class LatestUpdates extends Vue {
       }
     }
 
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: $text-mid-light;
-      line-height: 1;
-      margin-bottom: 0.25rem;
-
-      @media (max-width: $small-mobile-max-width) {
-        font-size: 2rem; // Smaller font on small mobile
-      }
-    }
-
-    .stat-label {
-      font-size: 1.1rem;
-      line-height: 1.25;
-      font-weight: bold;
-      transition: color 0.2s ease-in-out;
-
-      @media (max-width: $small-mobile-max-width) {
-        font-size: 1rem; // Slightly smaller on small mobile
-      }
-    }
-
-    .stat-description {
-      font-size: 0.75rem;
-      line-height: 1.5;
-
-      @media (max-width: $small-mobile-max-width) {
-        font-size: 0.7rem; // Slightly smaller on small mobile
-      }
-    }
-
-    &.net-positive .stat-number {
-      color: $green;
-    }
-
-    &.net-negative .stat-number {
-      color: $chicago-red;
-    }
-
     &.net-zero .stat-number {
       color: $grey;
     }
@@ -473,6 +428,44 @@ export default class LatestUpdates extends Vue {
 
     &.negative .stat-number {
       color: $chicago-red;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: $text-mid-light;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-description {
+      font-size: 0.75rem;
+      line-height: 1.5;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      line-height: 1.25;
+      font-weight: bold;
+      transition: color 0.2s ease-in-out;
+    }
+
+    /** Mobile styling */
+    @media (max-width: $small-mobile-max-width) {
+      padding: 1rem;
+      min-height: 7.5rem; // Smaller 120px minimum height on mobile
+
+      .stat-description {
+        font-size: 0.7rem;
+      }
+
+      .stat-label {
+        font-size: 1rem;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+      }
     }
   }
 }
