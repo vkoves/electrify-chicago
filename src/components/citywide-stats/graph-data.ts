@@ -43,7 +43,7 @@ const detailKeyMap: Record<MetricDetail, keyof MetricStats> = {
  * - Results are sorted chronologically by year in ascending order
  * - Uses the `detailKeyMap` to map the detail parameter to the appropriate data key
  */
-export function extractMetricData(
+function extractMetricData(
   metricName: keyof YearData,
   detail: MetricDetail,
 ): DataPoint[] {
@@ -61,7 +61,7 @@ export function extractMetricData(
     .sort((a: DataPoint, b: DataPoint) => a.year - b.year);
 }
 
-export const graphConfigs = [
+const graphConfigs = [
   {
     data: extractMetricData('GHGIntensity', '50%'),
     containerId: 'ghg-intensity-chart',
@@ -93,7 +93,7 @@ export const graphConfigs = [
       'This tracks the total climate impact of buildings — all the greenhouse gases they produce ' +
         'from electricity, heating, and cooling combined. Every kilowatt-hour of electricity and ' +
         "every therm of gas burned adds to a building's total emissions.",
-      'One metric ton of CO2e equals about 2,200 pounds of carbon pollution — roughly what a ' +
+      'One metric ton of CO2e equals about 2,000 pounds* of carbon pollution — roughly what a ' +
         'typical ' +
         'gas car produces driving 2,500 miles. A large Chicago office building might emit ' +
         'hundreds or ' +
@@ -207,3 +207,5 @@ export const graphConfigs = [
     ],
   },
 ] as const;
+
+export { graphConfigs, extractMetricData }
