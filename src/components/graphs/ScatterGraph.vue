@@ -20,6 +20,15 @@ interface ChartElements {
   trendLine: d3.Selection<SVGLineElement, unknown, null, undefined> | null;
 }
 
+/**
+ * TODOS For Future:
+ *
+ *  - Add doc block to this component, including an example perhaps
+ *  - Migrate duplicate CSS to styling
+ *  - Ensure all colors come from colors.scss
+ *  - Avoid magic numbers
+ *  - Make tooltips consistent with SparkGraph, and ideally consolidate functionality
+ */
 @Component
 export default class ScatterPlot extends Vue {
   $refs!: {
@@ -31,6 +40,7 @@ export default class ScatterPlot extends Vue {
   @Prop({ required: true }) fillColor!: string;
   @Prop({ required: true }) containerId!: string;
   @Prop({ required: true }) title!: string;
+
   @Prop({ default: true }) showGrid!: boolean;
   @Prop({ default: true }) showTrendLine!: boolean;
   @Prop({ default: 800 }) animationDuration!: number;
@@ -43,7 +53,11 @@ export default class ScatterPlot extends Vue {
   private yScale: d3.ScaleLinear<number, number> = d3.scaleLinear();
   private chartElements: ChartElements | null = null;
   private intersectionObserver: IntersectionObserver | undefined;
-  private tooltipAnimationDuration: number = 300;
+
+  // Tooltip positioning constants
+  private readonly TooltipOffset = 15; // Distance from cursor to tooltip
+  private readonly TooltipEstimatedWidth = 150; // Estimated tooltip width for positioning
+  private readonly TooltipEdgeBuffer = 30; // Buffer from container edge
 
   get sortedData(): DataPoint[] {
     return [...this.data].sort((a, b) => a.year - b.year);
@@ -113,6 +127,7 @@ export default class ScatterPlot extends Vue {
     const svg = container
       .append('svg')
       .attr('viewBox', `0 0 ${containerWidth} ${containerHeight}`)
+      // TODO: Move to CSS standardize
       .style('background', 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)')
       .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.1)');
 
@@ -282,12 +297,24 @@ export default class ScatterPlot extends Vue {
       })
       .on('mousemove', (event: MouseEvent, d: DataPoint) => {
         const [x, y] = d3.pointer(event, container.node());
+        const containerWidth = parseInt(container.style('width'), 10) || 500;
+
+        // Check if tooltip would extend beyond right edge of container
+        const shouldLeftAlign =
+          x + this.TooltipEstimatedWidth >
+          containerWidth - this.TooltipEdgeBuffer;
+
         tooltip
           .html(
             `<div>Year: ${d.year}</div><div>${this.yAxisLabel}: ${d.value}</div>`,
           )
-          .style('left', `${x + 15}px`)
-          .style('top', `${y - 10}px`);
+          .style(
+            'left',
+            shouldLeftAlign
+              ? `${x - this.TooltipEstimatedWidth - this.TooltipOffset}px`
+              : `${x + this.TooltipOffset}px`,
+          )
+          .style('top', `${y - this.TooltipOffset}px`);
       })
       .on('mouseout', function () {
         tooltip.style('opacity', 0);
