@@ -12,7 +12,7 @@ Follow the instructions to update the source file: `src/data/source/CityGeocoder
 ## Instructions
 
 1. Run `./unique_addresses.py`. Due to file pathing limitations, this file must be run from the
-   electrify-chicago root directory (e.g. `python src/data/scripts/ward-numbers/unique_addresses.py`). This
+   electrify-chicago root directory (e.g. `python3 src/data/scripts/city-geocodes/unique_addresses.py`). This
    script generates `./UniqueAddresses.xlsx`.
 2. Navigate to the
    [City of Chicago Geocoder - Bulk Geocode](https://gisapps.chicago.gov/geocoder/bulkgeo/single). Upload
