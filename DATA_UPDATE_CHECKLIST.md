@@ -19,6 +19,10 @@ Quick checklist for updating to a new year's data.
   ```bash
   docker-compose run --rm electrify-chicago python -m pytest
   ```
+- [ ] **Regenerate social images**:
+  ```bash
+  yarn gen-fresh-social-imgs
+  ```
 - [ ] **Update Release Notes** - Add data update section to `src/pages/ReleaseNotes.vue`
 
 ## Common Test Fixes Needed
