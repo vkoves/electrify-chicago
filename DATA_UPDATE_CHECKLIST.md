@@ -16,7 +16,6 @@ PR template, to indicate you've completed all steps!**
 
 - [ ] **Fetch updated ward numbers for new buildings** - Follow instructions in `src/data/scripts/city-geocodes/README.md` to generate updated `src/data/source/CityGeocoder.xlsx` file using the City of Chicago Geocoder
 
-
 - [ ] **Regenerate Python test data**:
 
   ```bash

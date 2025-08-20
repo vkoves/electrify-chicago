@@ -196,6 +196,19 @@ export default class LatestUpdates extends Vue {
       in {{ LatestDataYear }}).
     </p>
 
+    <p class="constrained -wide">
+      Want to see how the overall set of buildings has changed over time? Check
+      out our new
+      <g-link to="/citywide-stats">City Wide Statistics Page</g-link>! You can
+      also view
+      <a
+        href="https://www.chicago.gov/content/dam/city/depts/doe/Reports/43360-20250404-DOE-Sustainability%20Report_C.pdf"
+      >
+        Chicago's 2022 - 2023 Chicago Energy Benchmarking Report
+      </a>
+      for more analysis.
+    </p>
+
     <!-- Quick Stats Section -->
     <section class="stats-overview">
       <h2>Quick Stats</h2>
