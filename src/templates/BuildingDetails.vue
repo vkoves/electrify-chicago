@@ -146,6 +146,9 @@ query ($id: ID!, $ID: String) {
             <button class="action-btn -print" @click="printPage">
               <img src="/icons/printer.svg" alt="Print Flyer" />
             </button>
+
+            <!-- Share button -->
+            <ShareButton :title="propertyName" :text="shareText" />
           </div>
         </div>
 
@@ -643,6 +646,7 @@ import {
 } from '../constants/buildings-custom-info.constant.vue';
 import EmailBuildingModal from '../components/EmailBuildingModal.vue';
 import LetterGrade from '../components/LetterGrade.vue';
+import ShareButton from '../components/ShareButton.vue';
 
 import vToolTip from 'v-tooltip';
 import ReportCard from '../components/ReportCard.vue';
@@ -689,6 +693,7 @@ Vue.use(vToolTip);
     PieChart,
     ReportCard,
     ReportingTile,
+    ShareButton,
     StatTile,
   },
   filters: {
@@ -828,6 +833,17 @@ export default class BuildingDetails extends Vue {
 
   get buildingAnomalies(): Array<DataAnomalies> {
     return parseAnomalies(this.building.DataAnomalies);
+  }
+
+  get shareText(): string {
+    const grade = this.building.AvgPercentileLetterGrade || 'N/A';
+    const emissions = Math.round(
+      this.building.TotalGHGEmissions || 0,
+    ).toLocaleString();
+    return (
+      `Check out ${this.propertyName} on Electrify Chicago! ` +
+      `It got a ${grade} grade and emits ${emissions} tons of CO₂.`
+    );
   }
 
   created(): void {

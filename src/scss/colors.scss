@@ -10,6 +10,7 @@ $grey-light: #eaeaea;
 $off-white: #f6f6f6;
 $orange: #ffa500;
 $black: #000000;
+$off-black: #1a1a1a;
 $white: #ffffff;
 $text-main: #000000;
 $text-mid-light: #696969; // for use on $grey-light
@@ -46,3 +47,57 @@ $scrollbar-thumb-hover: #555555;
 $red: #ff0000;
 $green: #008000;
 $gray: #808080;
+
+$chart-red: #e74c3c;
+$chart-blue: #3498db;
+$chart-orange: #f39c12;
+$chart-green: #27ae60;
+$chart-purple: #9b59b6;
+$chart-teal: #1abc9c;
+
+.chart-stroke-red {
+  stroke: $chart-red;
+}
+
+.chart-fill-red {
+  fill: $chart-red;
+}
+
+.chart-stroke-blue {
+  stroke: $chart-blue;
+}
+
+.chart-fill-blue {
+  fill: $chart-blue;
+}
+
+.chart-stroke-orange {
+  stroke: $chart-orange;
+}
+
+.chart-fill-orange {
+  fill: $chart-orange;
+}
+
+.chart-stroke-green {
+  stroke: $chart-green;
+}
+
+.chart-fill-green {
+  fill: $chart-green;
+}
+
+.chart-stroke-purple {
+  stroke: $chart-purple;
+}
+
+.chart-fill-purple {
+  fill: $chart-purple;
+}
+.chart-stroke-teal {
+  stroke: $chart-teal;
+}
+
+.chart-fill-teal {
+  fill: $chart-teal;
+}
