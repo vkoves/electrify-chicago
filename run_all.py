@@ -67,6 +67,10 @@ def main():
             "module": "src.data.scripts.detect_anomalous_buildings",
             "description": "detect_anomalous_buildings"
         },
+        {
+            "module": "src.data.scripts.generate_historic_stats",
+            "description": "generate_historic_stats"
+        },
     ]
 
     for index, step in enumerate(pipeline_steps):
