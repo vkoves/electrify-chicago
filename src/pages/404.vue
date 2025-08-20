@@ -6,8 +6,7 @@ import { Component, Vue } from 'vue-property-decorator';
     title: 'Page Not Found',
   },
 })
-export default class NotFound extends Vue {
-}
+export default class NotFound extends Vue {}
 </script>
 
 <template>
@@ -18,8 +17,8 @@ export default class NotFound extends Vue {
       <h1 id="main-content" tabindex="-1">Ope, We Can't Find That Page!</h1>
 
       <p class="large-text">
-        Sorry, the page you're looking for doesn't exist. It may have been moved,
-        deleted, or you may have typed the URL incorrectly.
+        Sorry, the page you're looking for doesn't exist. It may have been
+        moved, deleted, or you may have typed the URL incorrectly.
       </p>
     </div>
   </DefaultLayout>
@@ -43,5 +42,4 @@ export default class NotFound extends Vue {
     font-size: 4rem;
   }
 }
-
 </style>
