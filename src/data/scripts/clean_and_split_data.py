@@ -127,8 +127,6 @@ def fix_str_cols(all_recent_submitted_data: pd.DataFrame, renamed_building_data:
     return all_recent_submitted_data
 
 def fix_int_cols(building_data: pd.DataFrame) -> pd.DataFrame:
-    # print("Columns available in the DataFrame:", building_data.columns.tolist())
-
     building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
     return building_data
 
