@@ -112,6 +112,7 @@ export default class ScatterPlot extends Vue {
     });
   }
 
+  // TODO: Break apart this massive function
   private renderChartStructure(): void {
     if (!this.chartContainer || !this.sortedData.length) return;
 
@@ -246,6 +247,28 @@ export default class ScatterPlot extends Vue {
       .style('fill', 'black')
       .text('Year');
 
+    // Trend line (drawn first to appear behind data)
+    let trendLine: d3.Selection<
+      SVGLineElement,
+      unknown,
+      null,
+      undefined
+    > | null = null;
+
+    if (this.showTrendLine && this.sortedData.length > 1) {
+      const regression = this.calculateLinearRegression(this.sortedData);
+      trendLine = chartGroup
+        .append('line')
+        .attr('x1', this.xScale(regression.x1))
+        .attr('y1', this.yScale(regression.y1))
+        .attr('x2', this.xScale(regression.x1)) // collapsed start
+        .attr('y2', this.yScale(regression.y1))
+        .style('stroke', '#8b5cf6')
+        .style('stroke-width', 3)
+        .style('stroke-dasharray', '20,5')
+        .style('opacity', 0);
+    }
+
     // Tooltip
     const tooltip = container
       .append('div')
@@ -319,27 +342,6 @@ export default class ScatterPlot extends Vue {
       .on('mouseout', function () {
         tooltip.style('opacity', 0);
       });
-
-    let trendLine: d3.Selection<
-      SVGLineElement,
-      unknown,
-      null,
-      undefined
-    > | null = null;
-
-    if (this.showTrendLine && this.sortedData.length > 1) {
-      const regression = this.calculateLinearRegression(this.sortedData);
-      trendLine = chartGroup
-        .append('line')
-        .attr('x1', this.xScale(regression.x1))
-        .attr('y1', this.yScale(regression.y1))
-        .attr('x2', this.xScale(regression.x1)) // collapsed start
-        .attr('y2', this.yScale(regression.y1))
-        .style('stroke', '#8b5cf6')
-        .style('stroke-width', 3)
-        .style('stroke-dasharray', '20,5')
-        .style('opacity', 0);
-    }
 
     this.chartElements = {
       container,
