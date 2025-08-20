@@ -140,7 +140,7 @@ export default class About extends Vue {
 
       <ul class="other-pages">
         <li>
-          <g-link to="/citywide-stats"> City-wide Building Statistics </g-link>
+          <g-link to="/citywide-stats"> City Wide Statistics </g-link>
         </li>
         <li>
           <g-link to="/top-gas-users"> Top Gas Users </g-link>

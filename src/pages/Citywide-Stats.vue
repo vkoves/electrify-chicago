@@ -9,6 +9,16 @@
         improvements.
       </p>
 
+      <p>
+        <strong>Important Note!</strong> 2019 data is impacted by COVID, because
+        data is reported on a delay. A large number of buildings didn't report
+        their 2019 data, and so some statistics may have varied. To learn more,
+        see our article:
+        <g-link to="/blog/GHG-Intensity-Predict-Compliance">
+          Do High Emitting Buildings Report Emissions Less Often? </g-link
+        >, where we have a clear graph of the COVID reporting shifts.
+      </p>
+
       <div
         class="graphs-container"
         aria-label="citywide data and info for all buidings we track"
@@ -37,44 +47,56 @@
         </article>
       </div>
       <p>
-        * According to the Department of Energy, 
-        <a href="https://afdc.energy.gov/data/10310" 
-          target="_blank" 
+<<<<<<< Updated upstream
+        * According to the Department of Energy,
+        <a href="https://afdc.energy.gov/data/10310"
+          target="_blank"
+=======
+        * According to the Department of Energy,
+        <a
+          href="https://afdc.energy.gov/data/10310"
+          target="_blank"
+>>>>>>> Stashed changes
           aria-label="department of energy average fuel economy data - opens in a new tab"
         >
           the average car gets 24.4 MPG
         </a>
-        , which requires approximately 102.5 gallons of gas to travel 2,500 miles.
-        Using the
-        <a 
-          href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator" 
-          target="_blank" 
+        , which requires approximately 102.5 gallons of gas to travel 2,500
+        miles. Using the
+        <a
+          href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator"
+          target="_blank"
           aria-label="EPA  Greenhouse Gas Equivalencies Calculator - opens in a new tab"
         >
           EPA’s Greenhouse Gas Equivalencies Calculator
-        </a> 
-        , this corresponds to about 0.911 metric tons, or roughly 2,000 pounds of CO₂.
+        </a>
+        , this corresponds to about 0.911 metric tons, or roughly 2,000 pounds
+        of CO₂.
       </p>
     </div>
   </DefaultLayout>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
 import ScatterGraph from '@/components/graphs/ScatterGraph.vue';
-import { graphConfigs } from '../components/citywide-stats/graph-data';
+import { graphConfigs } from '../constants/citywide-stats-graph-data.vue';
+import { Component, Vue } from 'vue-property-decorator';
 
-export default defineComponent({
-  name: 'CitywideStatsPage',
+@Component<any>({
   components: {
     ScatterGraph,
   },
-  data() {
-    return {
-      graphConfigs: graphConfigs,
-    };
+  metaInfo() {
+    return { title: 'Citywide Stats' }
   },
-});
+})
+export default class CityWideStats extends Vue {
+  data(): any {
+    return {
+      graphConfigs,
+    };
+  }
+}
 </script>
 
 <style scoped lang="scss">
