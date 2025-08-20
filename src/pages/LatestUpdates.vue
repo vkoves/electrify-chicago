@@ -196,16 +196,18 @@ export default class LatestUpdates extends Vue {
       in {{ LatestDataYear }}).
     </p>
 
+    <h2>Want To See How Chicago Buildings Have Changed Over Time?</h2>
+
     <p class="constrained -wide">
-      Want to see how the overall set of buildings has changed over time? Check
-      out our new
-      <g-link to="/citywide-stats">City Wide Statistics Page</g-link>! You can
-      also view
+      Check out our new
+      <g-link to="/citywide-stats" class="bold"
+        >City Wide Statistics Page</g-link
+      >! or view
       <a
         href="https://www.chicago.gov/content/dam/city/depts/doe/Reports/43360-20250404-DOE-Sustainability%20Report_C.pdf"
+        class="bold"
+        >Chicago's 2022 - 2023 Chicago Energy Benchmarking Report</a
       >
-        Chicago's 2022 - 2023 Chicago Energy Benchmarking Report
-      </a>
       for more analysis.
     </p>
 
