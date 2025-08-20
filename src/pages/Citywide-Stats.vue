@@ -93,7 +93,6 @@ export default defineComponent({
     width: 100%;
 
     .graph-info {
-      max-width: 400px;
       padding: 1rem;
       h2 {
         font-size: 1.2rem;
