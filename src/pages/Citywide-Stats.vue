@@ -47,16 +47,10 @@
         </article>
       </div>
       <p>
-<<<<<<< Updated upstream
-        * According to the Department of Energy,
-        <a href="https://afdc.energy.gov/data/10310"
-          target="_blank"
-=======
         * According to the Department of Energy,
         <a
           href="https://afdc.energy.gov/data/10310"
           target="_blank"
->>>>>>> Stashed changes
           aria-label="department of energy average fuel economy data - opens in a new tab"
         >
           the average car gets 24.4 MPG
@@ -66,7 +60,7 @@
         <a
           href="https://www.epa.gov/energy/greenhouse-gas-equivalencies-calculator"
           target="_blank"
-          aria-label="EPA  Greenhouse Gas Equivalencies Calculator - opens in a new tab"
+          aria-label="EPA Greenhouse Gas Equivalencies Calculator - opens in a new tab"
         >
           EPA’s Greenhouse Gas Equivalencies Calculator
         </a>
@@ -87,7 +81,7 @@ import { Component, Vue } from 'vue-property-decorator';
     ScatterGraph,
   },
   metaInfo() {
-    return { title: 'Citywide Stats' }
+    return { title: 'Citywide Stats' };
   },
 })
 export default class CityWideStats extends Vue {

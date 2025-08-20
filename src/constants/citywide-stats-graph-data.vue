@@ -78,9 +78,9 @@ const graphConfigs = [
         'a critical piece of the climate puzzle. GHG intensity shows how much climate pollution ' +
         'a building produces per square foot of space (measured in kg CO2e/sq ft).',
       "Think of this as your building's carbon footprint per square foot. To put this in " +
-        'perspective, the annual emissions from each square foot of a typical commercial building ' +
-        'can be comparable to driving dozens of miles in a gas car — but that impact is happening ' +
-        'for every square foot of the building, every year.',
+        'perspective, the annual emissions from each square foot of a typical commercial ' +
+        'building can be comparable to driving dozens of miles in a gas car — but that impact ' +
+        'is happening for every square foot of the building, every year.',
       'Lower intensity means the building is either more energy-efficient or using cleaner ' +
         'energy sources. ' +
         'This metric helps level the playing field between a small café and a massive skyscraper.',
