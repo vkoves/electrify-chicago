@@ -36,7 +36,8 @@
           />
         </article>
       </div>
-      <p>* According to the Department of Energy, 
+      <p>
+        * According to the Department of Energy, 
         <a href="https://afdc.energy.gov/data/10310" 
           target="_blank" 
           aria-label="department of energy average fuel economy data - opens in a new tab"
@@ -52,7 +53,8 @@
         >
           EPA’s Greenhouse Gas Equivalencies Calculator
         </a> 
-        , this corresponds to about 0.911 metric tons, or roughly 2,000 pounds of CO₂.</p>
+        , this corresponds to about 0.911 metric tons, or roughly 2,000 pounds of CO₂.
+      </p>
     </div>
   </DefaultLayout>
 </template>

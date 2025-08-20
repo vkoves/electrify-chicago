@@ -208,4 +208,4 @@ const graphConfigs = [
   },
 ] as const;
 
-export { graphConfigs, extractMetricData }
+export { graphConfigs, extractMetricData };

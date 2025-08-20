@@ -5,7 +5,7 @@
   "repository": "git@github.com:vkoves/electrify-chicago.git",
   "author": "Viktor Köves <3187531+vkoves@users.noreply.github.com>",
   "engines": {
-    "node": ">=18.00 <= 23.0.0"
+    "node": ">=18.00 <= 24.6.0"
   },
   "license": "MIT",
   "scripts": {
