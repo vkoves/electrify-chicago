@@ -202,7 +202,8 @@ export default class LatestUpdates extends Vue {
       Check out our new
       <g-link to="/citywide-stats" class="bold"
         >City Wide Statistics Page</g-link
-      > or view
+      >
+      or view
       <a
         href="https://www.chicago.gov/content/dam/city/depts/doe/Reports/43360-20250404-DOE-Sustainability%20Report_C.pdf"
         class="bold"
