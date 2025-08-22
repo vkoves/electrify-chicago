@@ -17,9 +17,15 @@ export default class NotFound extends Vue {}
       <h1 id="main-content" tabindex="-1">Ope, We Can't Find That Page!</h1>
 
       <p class="large-text">
-        Sorry, the page you're looking for doesn't exist. It may have been
-        moved, deleted, or you may have typed the URL incorrectly.
+        Sorry, the page you're looking for doesn't exist! <br>
       </p>
+      <p>
+        You may have followed an outdated link or have mistyped the URL.
+      </p>
+
+      <g-link to="/" class="blue-link">
+        Go Back to Our Homepage
+      </g-link>
     </div>
   </DefaultLayout>
 </template>
@@ -41,5 +47,11 @@ export default class NotFound extends Vue {}
   @media (max-width: $mobile-max-width) {
     font-size: 4rem;
   }
+}
+
+.blue-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-size: 1.125rem;
 }
 </style>
