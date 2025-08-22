@@ -54,20 +54,20 @@ def test_record_count_per_building(processed_dataframe):
     df = processed_dataframe
 
     united_center_df = df[df['ID'] == 100856]
-    assert united_center_df.shape[0] == 8
+    assert united_center_df.shape[0] == 9
 
     crown_hall_df = df[df['ID'] == 256419]
-    assert crown_hall_df.shape[0] == 5
+    assert crown_hall_df.shape[0] == 6
 
     bldg_138730_df = df[df['ID'] == 138730]
-    assert bldg_138730_df.shape[0] == 6
+    assert bldg_138730_df.shape[0] == 7
 
 
 def test_total_record_count(processed_dataframe):
     '''confirm the processed dataframe has the correct number of records'''
 
     df = processed_dataframe
-    assert df.shape[0] == 43
+    assert df.shape[0] == 49
 
 
 def test_no_ghg_property_is_excluded(processed_dataframe):

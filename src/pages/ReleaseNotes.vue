@@ -23,6 +23,36 @@ export default class About extends Vue {}
       </div>
 
       <div class="layout-constrained">
+        <h2>August 22nd, 2025 - Data Update to 2023 & Citywide Stats</h2>
+
+        <p>
+          We updated the source data to the year 2023, bringing in the latest
+          building emissions and energy data. This update includes
+          <strong>61 new buildings</strong> that submitted data for the first
+          time and <strong>288 buildings that stopped reporting</strong> from
+          the previous year.
+        </p>
+
+        <p>
+          You can
+          <strong>
+            track building participation with our new
+            <g-link to="/latest-updates">Latest Updates Page</g-link>!</strong
+          >
+          discover which buildings joined or dropped out of Chicago's energy
+          benchmarking program between data years.
+        </p>
+
+        <p>
+          <strong
+            >Want to see the bigger picture? Check out our new
+            <g-link to="/citywide-stats">Citywide Stats Page</g-link>!</strong
+          >
+          We've got a variety of graphs that reveal citywide trends over time,
+          so you can see if Chicago buildings are getting cleaner or dirtier
+          year over year.
+        </p>
+
         <h2>August 5th, 2025 - Improved Printing for Buildings</h2>
 
         <p>

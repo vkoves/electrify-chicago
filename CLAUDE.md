@@ -19,8 +19,9 @@ This document contains important guidelines for Claude when working on this code
 1. **Reuse existing classes** from `global.scss` whenever possible
 2. **Use color variables** from `colors.scss` instead of hardcoding colors
 3. **Use spacing variables** from `spacing.scss` for consistent layout
-4. **Extract new reusable patterns** to global.scss with descriptive class names
-5. **NEVER use `!important`** - Fix specificity issues by using more specific selectors or restructuring CSS
+4. **Use media query variables** from `spacing.scss` instead of hardcoded breakpoints
+5. **Extract new reusable patterns** to global.scss with descriptive class names
+6. **NEVER use `!important`** - Fix specificity issues by using more specific selectors or restructuring CSS
 
 ## Examples
 
@@ -52,6 +53,26 @@ function formatNumber(value) { ... }
 
 ```javascript
 import { formatNumber } from '../common-functions.vue';
+```
+
+❌ **Wrong - Hardcoded media queries:**
+
+```scss
+.my-component {
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+```
+
+✅ **Right - Using spacing variables:**
+
+```scss
+.my-component {
+  @media (max-width: $mobile-max-width) {
+    grid-template-columns: 1fr;
+  }
+}
 ```
 
 ## When Adding New Shared Styles

@@ -26,6 +26,24 @@ export default class About extends Vue {
       <ul class="blogs-list">
         <li>
           <h2>
+            <g-link to="/blog/how-we-grade-buildings">
+              How We Grade Buildings, And Why
+            </g-link>
+          </h2>
+          <p class="publish-time">
+            Published <time datetime="2025-03-11">Mar. 11th, 2025</time>
+          </p>
+
+          <p>
+            Electrify Chicago gives buildings letter grades from A to F based on
+            their environmental performance. Learn how we calculate these
+            grades, what they mean, and why we think grading buildings helps
+            drive transparency and improvement in Chicago's building emissions.
+          </p>
+        </li>
+
+        <li>
+          <h2>
             <g-link to="/blog/GHG-Intensity-Predict-Compliance">
               Do High Emitting Buildings Report Emissions Less Often?
             </g-link>

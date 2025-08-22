@@ -31,7 +31,7 @@ export default class CleanestBuildings extends Vue {
   query {
     allBuilding(
       filter: {
-        DataYear: { eq: "2022" },
+        DataYear: { eq: "2023" },
         # Later on, we could filter to just larger buildings or ignore buildings flagged as
         # anomalous
         # DataAnomalies: { eq: "" },

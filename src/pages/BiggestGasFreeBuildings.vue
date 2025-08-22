@@ -26,9 +26,12 @@ export default class TopGasUsers extends Vue {}
   query {
     allBuilding(
       filter: {
-        DataYear: { eq: "2022" },
-        NaturalGasUse: { eq: 0 },
-        DistrictSteamUse: { eq: 0 }
+        DataYear: { eq: "2023" },
+        # Use lte: 0 to capture buildings with 0, null, or empty values for gas usage
+        NaturalGasUse: { lte: 0 },
+        DistrictSteamUse: { lte: 0 },
+        # Exclude buildings that previously used gas but now report zero
+        DataAnomalies: { nin: ["gasZeroWithPreviousUse"] }
       },
       sortBy: "GrossFloorArea", limit: 500
     ) {
@@ -42,6 +45,8 @@ export default class TopGasUsers extends Vue {}
           ZIPCode
           path
           GrossFloorArea
+          GrossFloorAreaRank
+          GrossFloorAreaPercentileRank
           PrimaryPropertyType
           GHGIntensity
           GHGIntensityRank

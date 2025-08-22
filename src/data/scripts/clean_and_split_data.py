@@ -82,12 +82,12 @@ replace_headers = {
     'Latitude': 'Latitude',
     'Longitude': 'Longitude',
     'Location': 'Location',
-    'Row_ID': 'Row_ID',
-    'Wards': 'Wards',
-    'Community Areas': 'CommunityAreas',
-    'Zip Codes': 'ZipCodes',
-    'Census Tracts': 'CensusTracts',
-    'Historical Wards 2003-2015': 'HistoricalWards2003-2015'
+    'Row_ID': 'Row_ID'
+    # 'Wards': 'Wards',
+    # 'Community Areas': 'CommunityAreas',
+    # 'Zip Codes': 'ZipCodes',
+    # 'Census Tracts': 'CensusTracts',
+    # 'Historical Wards 2003-2015': 'HistoricalWards2003-2015'
 }
 
 def rename_columns(building_data: pd.DataFrame) -> pd.DataFrame:

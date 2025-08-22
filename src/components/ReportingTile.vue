@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { IHistoricData } from '../common-functions.vue';
+import { IHistoricData, hasReportedData } from '../common-functions.vue';
 
 import { LatestDataYear } from '../constants/globals.vue';
 import LetterGrade from './LetterGrade.vue';
@@ -99,8 +99,8 @@ export default class ReportingTile extends Vue {
 
     return this.historicData.map((datum: IHistoricData) => {
       return {
-        year: parseInt(datum.DataYear),
-        isReported: typeof datum.GHGIntensity === 'number',
+        year: datum.DataYear,
+        isReported: hasReportedData(datum),
       };
     });
   }

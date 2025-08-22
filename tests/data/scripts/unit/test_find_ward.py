@@ -20,5 +20,5 @@ def test_sample_buildings_with_wards():
     # https://www.chicago.gov/city/en/depts/mayor/iframe/lookup_ward_and_alderman.html
     building_benchmarks_ordered = building_benchmarks.set_index('ID')
     test_data = building_benchmarks_ordered.loc[property_ids_to_include]
-    expected_wards = [27, 3, 42, 20, -1, 24]
+    expected_wards = [27, 3, 42, 20, 46, 24]
     assert test_data['Ward'].to_list() == expected_wards

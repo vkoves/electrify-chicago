@@ -22,7 +22,6 @@ query ($id: ID!, $ID: String) {
     SiteEUI
     SourceEUI
     TotalGHGEmissions
-    Wards
     YearBuilt
     ZIPCode
     Ward
@@ -281,7 +280,7 @@ query ($id: ID!, $ID: String) {
                 <div v-if="$page.building.ENERGYSTARScore">
                   <dt>
                     <a
-                      href="https://www.energystar.gov/buildings/benchmark/understand_metrics/how_score_calculated"
+                      href="https://www.energystar.gov/buildings/benchmark/understand-metrics/how-score-calculated"
                       target="_blank"
                       rel="noopener"
                     >

@@ -8,7 +8,6 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import { IBuilding, IBuildingNode } from '../common-functions.vue';
 import {
   BuildingsCustomInfo,
-  IBuildingCustomInfo,
   BuildingTags,
 } from '../constants/buildings-custom-info.constant.vue';
 
@@ -36,26 +35,48 @@ export default class ChicagoRetrofitParticipants extends Vue {
   buildingsFiltered: Array<IBuildingEdge> = [];
 
   created(): void {
-    this.filterBuildings();
+    this.validateRetrofitBuildings();
+    this.buildingsFiltered = this.$static.allBuilding.edges;
   }
 
-  filterBuildings(): void {
-    // Loop through BuildingsCustomInfo to get the IDs of buildings we are looking for
-    const retrofitBuildingSlugs: Array<string> = Object.entries(
-      BuildingsCustomInfo,
-    )
-      .filter(([, buildingInfo]: [string, IBuildingCustomInfo]) => {
-        return buildingInfo.tags?.includes(BuildingTags.hasRetrofitCaseStudy);
-      })
-      .map(([buildingID]: [string, IBuildingCustomInfo]) => buildingID);
+  /**
+   * IMPORTANT: This page uses a hard-coded GraphQL filter for performance optimization.
+   * The building IDs in the GraphQL query MUST match the IDs tagged with hasRetrofitCaseStudy
+   * in buildings-custom-info.constant.vue. This validation ensures they stay in sync.
+   *
+   * If you add/remove buildings with hasRetrofitCaseStudy tags, you MUST also update
+   * the GraphQL query filter in this file.
+   */
+  validateRetrofitBuildings(): void {
+    const expectedIds = Object.entries(BuildingsCustomInfo)
+      .filter(([, info]) =>
+        info.tags?.includes(BuildingTags.hasRetrofitCaseStudy),
+      )
+      .map(([id]) => id)
+      .sort();
 
-    this.buildingsFiltered = this.$static.allBuilding.edges.filter(
-      (buildingEdge: IBuildingEdge) => {
-        return retrofitBuildingSlugs.some(
-          (ownedBuildingID) => buildingEdge.node.ID === ownedBuildingID,
-        );
-      },
-    );
+    const actualIds = this.$static.allBuilding.edges
+      .map((edge) => edge.node.ID.toString())
+      .sort();
+
+    const missing = expectedIds.filter((id) => !actualIds.includes(id));
+    const extra = actualIds.filter((id) => !expectedIds.includes(id));
+
+    if (missing.length > 0 || extra.length > 0) {
+      const details = [
+        missing.length > 0 && `Missing: [${missing.join(', ')}]`,
+        extra.length > 0 && `Extra: [${extra.join(', ')}]`,
+      ]
+        .filter(Boolean)
+        .join(', ');
+
+      throw new Error(
+        `RetrofitChicagoParticipants: GraphQL query mismatch. ${details}. ` +
+          'Update GraphQL query to match hasRetrofitCaseStudy tags.',
+      );
+    }
+
+    console.log(`✅ Retrofit validation: ${actualIds.length} buildings`);
   }
 }
 </script>
@@ -66,7 +87,17 @@ export default class ChicagoRetrofitParticipants extends Vue {
 -->
 <static-query>
   query {
-    allBuilding(sortBy: "GHGIntensity") {
+    # PERFORMANCE OPTIMIZATION: Hard-coded filter for buildings with hasRetrofitCaseStudy tag
+    # These IDs MUST match buildings-custom-info.constant.vue (validated at runtime)
+    # When adding/removing retrofit buildings, update both this query AND the constant
+    allBuilding(
+      sortBy: "GHGIntensity",
+      filter: {
+        ID: {
+          in: ["103721", "101920", "102336", "101852", "251328", "252064", "256405", "252065"]
+        }
+      }
+    ) {
       edges {
         node {
           slugSource
@@ -74,7 +105,6 @@ export default class ChicagoRetrofitParticipants extends Vue {
           DataYear
           PropertyName
           Address
-          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity
@@ -83,12 +113,6 @@ export default class ChicagoRetrofitParticipants extends Vue {
           TotalGHGEmissions
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
-          ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
           DataAnomalies
         }

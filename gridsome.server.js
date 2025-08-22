@@ -194,6 +194,8 @@ function loadHistoricBenchmarkDat(actions) {
       benchmark[col] = parseFloat(benchmark[col]);
     });
 
+    benchmark.DataYear = parseInt(benchmark.DataYear);
+
     collection.addNode(benchmark);
   }
 }

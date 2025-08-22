@@ -5,7 +5,7 @@ numbers from the City of Chicago Geocoder
 City of Chicago Geocoder: https://gisapps.chicago.gov/geocoder/
 
 **Important!** Due to file pathing limitations, this file must be run from the electrify-chicago
-root directory (e.g. `python3 src/data/scripts/ward-numbers/unique_addresses.py`)
+root directory (e.g. `python3 src/data/scripts/city-geocodes/unique_addresses.py`)
 """
 
 import pandas as pd
@@ -20,4 +20,4 @@ building_benchmarks = pd.read_csv(building_path)
 result = getUniqueAddresses(building_benchmarks)
 
 # Save unique addresses
-result.to_excel('src/data/scripts/ward-numbers-by-city-geocoder/UniqueAddresses.xlsx', index=False)
+result.to_excel('src/data/scripts/city-geocodes/UniqueAddresses.xlsx', index=False)
