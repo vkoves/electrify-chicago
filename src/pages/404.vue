@@ -17,15 +17,11 @@ export default class NotFound extends Vue {}
       <h1 id="main-content" tabindex="-1">Ope, We Can't Find That Page!</h1>
 
       <p class="large-text">
-        Sorry, the page you're looking for doesn't exist! <br>
+        Sorry, the page you're looking for doesn't exist! <br />
       </p>
-      <p>
-        You may have followed an outdated link or have mistyped the URL.
-      </p>
+      <p>You may have followed an outdated link or have mistyped the URL.</p>
 
-      <g-link to="/" class="blue-link">
-        Go Back to Our Homepage
-      </g-link>
+      <g-link to="/" class="blue-link"> Go Back to Our Homepage </g-link>
     </div>
   </DefaultLayout>
 </template>
