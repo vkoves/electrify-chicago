@@ -23,7 +23,7 @@ export default class About extends Vue {}
       </div>
 
       <div class="layout-constrained">
-        <h2>August 20th, 2025 - Data Update to 2023</h2>
+        <h2>August 22nd, 2025 - Data Update to 2023 & Citywide Stats</h2>
 
         <p>
           Updated the source data to the year 2023, bringing in the latest
@@ -35,9 +35,17 @@ export default class About extends Vue {}
 
         <p>
           We've also added a new
-          <g-link to="/latest-updates">Latest Updates page</g-link>
+          <g-link to="/latest-updates">Latest Updates Page</g-link>
           that shows which buildings started or stopped reporting between years,
           helping track participation in Chicago's energy benchmarking program.
+        </p>
+
+        <p>
+          Lastly, we added a new
+          <g-link to="/citywide-stats">Citywide Stats Page</g-link>, which shows
+          trends over time for how the full set of benchmarked buildings are
+          changing over time - is the average building using more gas this year
+          than the last one? Now you can find out!
         </p>
 
         <h2>August 5th, 2025 - Improved Printing for Buildings</h2>
