@@ -211,8 +211,7 @@ export default class LatestUpdates extends Vue {
         rel="noopener"
         >Chicago's 2022 - 2023 Chicago Energy Benchmarking Report
         <NewTabIcon />
-        </a
-      >
+      </a>
       for more analysis!
     </p>
 
