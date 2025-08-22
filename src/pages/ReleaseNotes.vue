@@ -26,7 +26,7 @@ export default class About extends Vue {}
         <h2>August 22nd, 2025 - Data Update to 2023 & Citywide Stats</h2>
 
         <p>
-          Updated the source data to the year 2023, bringing in the latest
+          We updated the source data to the year 2023, bringing in the latest
           building emissions and energy data. This update includes
           <strong>61 new buildings</strong> that submitted data for the first
           time and <strong>288 buildings that stopped reporting</strong> from
@@ -34,18 +34,23 @@ export default class About extends Vue {}
         </p>
 
         <p>
-          We've also added a new
-          <g-link to="/latest-updates">Latest Updates Page</g-link>
-          that shows which buildings started or stopped reporting between years,
-          helping track participation in Chicago's energy benchmarking program.
+          You can
+          <strong>
+            track building participation with our new
+            <g-link to="/latest-updates">Latest Updates Page</g-link>!</strong
+          >
+          discover which buildings joined or dropped out of Chicago's energy
+          benchmarking program between data years.
         </p>
 
         <p>
-          Lastly, we added a new
-          <g-link to="/citywide-stats">Citywide Stats Page</g-link>, which shows
-          trends over time for how the full set of benchmarked buildings are
-          changing over time - is the average building using more gas this year
-          than the last one? Now you can find out!
+          <strong
+            >Want to see the bigger picture? Check out our new
+            <g-link to="/citywide-stats">Citywide Stats Page</g-link>!</strong
+          >
+          We've got a variety of graphs that reveal citywide trends over time,
+          so you can see if Chicago buildings are getting cleaner or dirtier
+          year over year.
         </p>
 
         <h2>August 5th, 2025 - Improved Printing for Buildings</h2>

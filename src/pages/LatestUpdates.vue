@@ -207,7 +207,11 @@ export default class LatestUpdates extends Vue {
       <a
         href="https://www.chicago.gov/content/dam/city/depts/doe/Reports/43360-20250404-DOE-Sustainability%20Report_C.pdf"
         class="bold"
-        >Chicago's 2022 - 2023 Chicago Energy Benchmarking Report</a
+        target="_blank"
+        rel="noopener"
+        >Chicago's 2022 - 2023 Chicago Energy Benchmarking Report
+        <NewTabIcon />
+        </a
       >
       for more analysis!
     </p>
