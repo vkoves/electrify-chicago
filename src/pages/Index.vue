@@ -135,7 +135,7 @@ export default class Index extends Vue {
             </div>
           </form>
 
-          <g-link class="map-link" to="/map">
+          <g-link class="blue-link map-link" to="/map">
             <img src="/icons/location.svg" alt="" width="32" height="32" />
             View Map
           </g-link>
@@ -348,24 +348,10 @@ export default class Index extends Vue {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
-      padding: 0.5rem 1rem;
-      border-radius: $brd-rad-medium;
       min-width: 10rem;
       width: 16rem;
       max-width: 60%;
-      color: $white;
-      background: $blue-dark;
-      text-decoration: none;
-      text-align: center;
       font-size: 1.25rem;
-      font-weight: bold;
-      outline-color: $chicago-blue;
-
-      &:hover,
-      &:focus {
-        background: $blue-very-dark;
-      }
     }
   }
 

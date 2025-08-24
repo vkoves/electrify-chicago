@@ -50,6 +50,23 @@ a.grey-link {
   }
 }
 
+a.blue-link {
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: $brd-rad-medium;
+  color: $white;
+  background: $blue-dark;
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+  outline-color: $chicago-blue;
+
+  &:hover,
+  &:focus {
+    background: $blue-very-dark;
+  }
+}
+
 // A generic back link variant that also handles the icon within
 a.back-link {
   display: inline-flex;
