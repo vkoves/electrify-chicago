@@ -141,6 +141,14 @@ query ($id: ID!, $ID: String) {
               <span class="icon">⚡</span>
               <span class="text">All Electric</span>
             </g-link>
+
+            <g-link
+              v-if="isNew"
+              class="pill -new"
+              to="/latest-updates#new-buildings"
+            >
+              <span class="text">New!</span>
+            </g-link>
           </div>
         </div>
 
@@ -647,6 +655,7 @@ import {
   IBuilding,
   IBuildingBenchmarkStats,
   IHistoricData,
+  isNewBuilding,
   parseAnomalies,
   UtilityCosts,
 } from '../common-functions.vue';
@@ -784,6 +793,10 @@ export default class BuildingDetails extends Vue {
 
   get fullyGasFree(): boolean {
     return fullyGasFree(this.building);
+  }
+
+  get isNew(): boolean {
+    return isNewBuilding(this.building, this.historicData);
   }
 
   /** Helper for property name with address fallback */

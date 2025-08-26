@@ -156,6 +156,37 @@ export function fullyGasFree(building: IBuilding): boolean {
 }
 
 /**
+ * Whether a building is "new" - meaning this is the first year it has reported data
+ */
+export function isNewBuilding(
+  building: IBuilding,
+  historicData: Array<IHistoricData>,
+): boolean {
+  if (!historicData) {
+    throw new Error('Missing historicData for isNewBuilding check!');
+  }
+  // No historic data = not reported (so not new)
+  else if (historicData.length === 0) {
+    return false;
+  }
+
+  const reportedYears = historicData
+    .filter((data) => hasReportedData(data))
+    .map((data) => data.DataYear)
+    .sort((a, b) => a - b);
+
+  // Non reporting isn't new
+  if (reportedYears.length === 0) {
+    return false;
+  }
+
+  const firstReportedYear = reportedYears[0];
+  const currentDataYear = parseInt(building.DataYear.toString(), 10);
+
+  return currentDataYear === firstReportedYear;
+}
+
+/**
  * Types for Citywide Stats
  */
 export interface DataPoint {

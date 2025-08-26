@@ -429,7 +429,8 @@ form.search-form {
 
 /** A container for little building pills, like All Electric */
 .pills-cont {
-  display: inline-block;
+  display: inline-flex;
+  gap: 0.5rem;
 
   &.-small {
     font-size: 0.875rem;
@@ -438,12 +439,36 @@ form.search-form {
   // When pills are links, add a border and highlight the text on hover or focus
   a.pill {
     text-decoration: none;
-    border: solid $border-thin $electric-brown;
+    border: solid $border-medium $grey;
+    transition:
+      color 0.3s,
+      background-color 0.3s,
+      border-color 0.3s;
+
+    &.-new {
+      border-color: $blue-very-dark;
+
+      &:hover,
+      &:focus {
+        background-color: $blue-very-dark;
+        color: $white;
+      }
+    }
+
+    &.-all-electric {
+      border-color: $electric-brown;
+
+      &:hover,
+      &:focus {
+        background-color: $electric-brown;
+        color: $white;
+      }
+    }
 
     &:hover,
     &:focus {
       .text {
-        text-decoration: underline;
+        text-decoration: none;
       }
     }
   }
@@ -459,9 +484,14 @@ form.search-form {
       color: $electric-brown;
     }
 
+    &.-new {
+      background: $blue-light;
+      color: $blue-very-dark;
+    }
+
     span.icon {
       text-shadow: 0.0625rem 0 0.0625rem $black;
-      margin-right: 0.25em;
+      margin-right: 0.5em;
     }
   }
 }
