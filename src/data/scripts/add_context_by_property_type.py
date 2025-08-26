@@ -7,42 +7,55 @@ import pandas as pd
 import json
 
 from typing import List
-from src.data.scripts.utils import get_data_file_path, log_step_completion, output_to_csv
-from src.data.scripts.building_utils import benchmarking_string_cols, benchmarking_int_cols
+from src.data.scripts.utils import (
+    get_data_file_path,
+    log_step_completion,
+    output_to_csv,
+)
+from src.data.scripts.building_utils import (
+    benchmarking_string_cols,
+    benchmarking_int_cols,
+)
 
-out_dir = 'dist'
+out_dir = "dist"
 
 # Input file path (also written to)
-input_benchmark_data_csv_path = get_data_file_path(out_dir, 'building-benchmarks.csv')
+input_benchmark_data_csv_path = get_data_file_path(out_dir, "building-benchmarks.csv")
 
 # Output file paths
-property_types_file_path = get_data_file_path(out_dir, 'property-types.json')
-property_stats_file_path = get_data_file_path(out_dir, 'building-statistics-by-property-type.json')
+property_types_file_path = get_data_file_path(out_dir, "property-types.json")
+property_stats_file_path = get_data_file_path(
+    out_dir, "building-statistics-by-property-type.json"
+)
 
 # Columns we want to rank for and append ranks to each building's data
 building_cols_to_rank = [
-    'GHGIntensity',
-    'TotalGHGEmissions',
-    'ElectricityUse',
-    'NaturalGasUse',
-    'GrossFloorArea',
-    'SourceEUI',
-    'SiteEUI',
+    "GHGIntensity",
+    "TotalGHGEmissions",
+    "ElectricityUse",
+    "NaturalGasUse",
+    "GrossFloorArea",
+    "SourceEUI",
+    "SiteEUI",
 ]
+
 
 def generate_property_types(property_types: List[str]) -> List[str]:
     """
-        Output property_types to a json file for use in the frontend (like the type filter).
-        Returns the file written to as an array
+    Output property_types to a json file for use in the frontend (like the type filter).
+    Returns the file written to as an array
     """
     property_types_json = {"propertyTypes": property_types}
 
-    with open(property_types_file_path, 'w', encoding='latin1') as json_file:
+    with open(property_types_file_path, "w", encoding="latin1") as json_file:
         json.dump(property_types_json, json_file)
 
-    return [ property_types_file_path ]
+    return [property_types_file_path]
 
-def calculate_building_stats(property_types: List[str], grouped_by_prop_type: pd.DataFrame) -> str:
+
+def calculate_building_stats(
+    property_types: List[str], grouped_by_prop_type: pd.DataFrame
+) -> str:
     """
     Calculates stats by property type (e.g. median GHG emissions) and writes them to JSON file
 
@@ -65,11 +78,14 @@ def calculate_building_stats(property_types: List[str], grouped_by_prop_type: pd
             cur_max = round(grouped_by_prop_type[col].max().iloc[i].item(), 3)
 
             cur_first_quartile = round(
-                grouped_by_prop_type[col].quantile(q=0.25).iloc[i].item(), 3)
+                grouped_by_prop_type[col].quantile(q=0.25).iloc[i].item(), 3
+            )
             cur_median = round(
-                grouped_by_prop_type[col].quantile(q=0.5).iloc[i].item(), 1)
+                grouped_by_prop_type[col].quantile(q=0.5).iloc[i].item(), 1
+            )
             cur_third_quartile = round(
-                grouped_by_prop_type[col].quantile(q=0.75).iloc[i].item(), 3)
+                grouped_by_prop_type[col].quantile(q=0.75).iloc[i].item(), 3
+            )
 
             cur_property_type_stats[col] = {
                 "count": cur_count,
@@ -77,7 +93,7 @@ def calculate_building_stats(property_types: List[str], grouped_by_prop_type: pd
                 "max": cur_max,
                 "twentyFifthPercentile": cur_first_quartile,
                 "median": cur_median,
-                "seventyFifthPercentile": cur_third_quartile
+                "seventyFifthPercentile": cur_third_quartile,
             }
 
         if cur_count == 0:
@@ -90,9 +106,12 @@ def calculate_building_stats(property_types: List[str], grouped_by_prop_type: pd
 
     property_stats_file_path
 
+
 def rank_buildings_by_property_type(
-        building_data: pd.DataFrame, property_types: List[str], grouped_by_prop_type: pd.DataFrame
-    ) -> List[str]:
+    building_data: pd.DataFrame,
+    property_types: List[str],
+    grouped_by_prop_type: pd.DataFrame,
+) -> List[str]:
     """
     Ranks buildings in relation to their property type, then re-exporting the file
 
@@ -107,18 +126,24 @@ def rank_buildings_by_property_type(
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9) and make sure missing data is output as a string
-    building_data[benchmarking_string_cols] = building_data[benchmarking_string_cols].fillna('').astype(str)
+    building_data[benchmarking_string_cols] = (
+        building_data[benchmarking_string_cols].fillna("").astype(str)
+    )
 
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-    building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
+    building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype(
+        "Int64"
+    )
 
     # use pandas to rank each value for each property and store as category+"RankByProperty"
     for col in building_cols_to_rank:
-        building_data[col + 'RankByPropertyType'] = grouped_by_prop_type[col].rank(ascending=False)
+        building_data[col + "RankByPropertyType"] = grouped_by_prop_type[col].rank(
+            ascending=False
+        )
 
     output_to_csv(building_data, input_benchmark_data_csv_path)
 
-    return [ building_stats_path, input_benchmark_data_csv_path ]
+    return [building_stats_path, input_benchmark_data_csv_path]
 
 
 ###
@@ -141,10 +166,13 @@ def main() -> None:
     property_types = list(grouped_by_prop_type.groups.keys())
 
     outputted_paths = []
-    outputted_paths += rank_buildings_by_property_type(building_data, property_types, grouped_by_prop_type)
+    outputted_paths += rank_buildings_by_property_type(
+        building_data, property_types, grouped_by_prop_type
+    )
     outputted_paths += generate_property_types(property_types)
 
     log_step_completion(3, outputted_paths)
+
 
 if __name__ == "__main__":
     main()

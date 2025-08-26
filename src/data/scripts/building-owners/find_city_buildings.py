@@ -17,13 +17,15 @@ import csv
 import os
 
 # Input filenames
-city_owned_filename = 'City-Owned-Land-Inventory.csv'
-energy_benchmarking_filepath = 'src/data/source/ChicagoEnergyBenchmarking.csv'
+city_owned_filename = "City-Owned-Land-Inventory.csv"
+energy_benchmarking_filepath = "src/data/source/ChicagoEnergyBenchmarking.csv"
 
 found = set()
 
+
 def clean_address(address):
     return address.lower().strip().replace(" ", "").replace(".", "")
+
 
 def find_addresses():
     print("Searching for city owned buildings in benchmark data...")
@@ -36,39 +38,45 @@ def find_addresses():
     benchmark_buildings = {}
 
     # Open the file using the absolute path
-    with open(city_inventory_path, 'r') as source_file:  # 'r' for reading
+    with open(city_inventory_path, "r") as source_file:  # 'r' for reading
         city_file = csv.DictReader(source_file)
         MAIN_FILE_ADDRESS_INDEX = 4
         MAIN_FILE_ID_INDEX = 1
 
         for i, line in enumerate(city_file):
-            if line["Property Status"] == "Owned by City" and line["Managing Organization"] == "AIS":
+            if (
+                line["Property Status"] == "Owned by City"
+                and line["Managing Organization"] == "AIS"
+            ):
                 benchmark_buildings[clean_address(line["Address"])] = 0
 
-    with open(energy_benchmarking_filepath, newline='') as all_data:
+    with open(energy_benchmarking_filepath, newline="") as all_data:
         whole_file = all_data.read().splitlines()
 
         for i, line in enumerate(whole_file):
             line_arr = line.split(",")
 
             # Skip broken rows (missing/not enough columns)
-            if (len(line_arr) > MAIN_FILE_ADDRESS_INDEX):
+            if len(line_arr) > MAIN_FILE_ADDRESS_INDEX:
                 address = line_arr[MAIN_FILE_ADDRESS_INDEX]
 
                 if clean_address(address) in benchmark_buildings:
                     found.add(line_arr[MAIN_FILE_ID_INDEX])
 
-        if i%50 == 49:
+        if i % 50 == 49:
             with open("temp.txt", "w") as f:
                 f.write(str(len(found)))
                 f.write("/n")
                 f.write(", ".join(found))
 
-        print(f"Found {len(found)} City Owned Addresses in Benchmarking Data Using \"{city_owned_filename}\"!")
+        print(
+            f'Found {len(found)} City Owned Addresses in Benchmarking Data Using "{city_owned_filename}"!'
+        )
         print(f"\nIDs were: {found.__str__()}")
 
+
 def print_tags():
-    with open('src/data/source/ChicagoEnergyBenchmarking.csv', newline='') as all_data:
+    with open("src/data/source/ChicagoEnergyBenchmarking.csv", newline="") as all_data:
         whole_dict = csv.DictReader(all_data)
 
         print("\nFormatted JS Data (copy into `buildings-custom-info.constant`):\n")
@@ -77,12 +85,18 @@ def print_tags():
         for line in whole_dict:
             if line["ID"] in found:
                 print("// " + line["Property Name"])
-                print("'" + line["ID"] + "'" + ": { owner: BuildingOwners.cityofchicago.key },")
+                print(
+                    "'"
+                    + line["ID"]
+                    + "'"
+                    + ": { owner: BuildingOwners.cityofchicago.key },"
+                )
                 found.remove(line["ID"])
 
-        print('------')
+        print("------")
+
 
 # Main
-if __name__ == '__main__':
+if __name__ == "__main__":
     find_addresses()
     print_tags()

@@ -1,0 +1,81 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: no-commit-to-branch # prevent direct commits to main branch
+      - id: check-yaml
+        args: ["--unsafe"]
+      - id: check-toml
+      - id: end-of-file-fixer
+        exclude: 'src/services/logfire-worker/logfire_worker/emails/templates/.*\.html$'
+      - id: trailing-whitespace
+
+  - repo: local
+    hooks:
+      - id: ruff
+        name: Ruff
+        entry: uv run ruff
+        args: ["check", "--fix"]
+        types: [python]
+        language: system
+        pass_filenames: false
+      - id: ruff-format
+        name: Ruff Format
+        entry: uv run ruff
+        args: [format]
+        language: system
+        types: [python]
+        pass_filenames: false
+      - id: pyright
+        name: pyright
+        entry: uv run pyright
+        args: [src]
+        language: system
+        types: [file]
+        pass_filenames: false
+        files: '^(uv\.lock|pyproject\.toml|.*\.py)$'
+      - id: lockfile
+        name: lockfile
+        entry: uv sync
+        args: [--locked]
+        language: system
+        pass_filenames: false
+        files: "pyproject.toml|uv.lock"
+      - id: update-requirements
+        name: update-requirements
+        entry: uv export
+        args: ["--format", "requirements-txt", "--output-file", "requirements.txt"]
+        language: system
+        pass_filenames: false
+        files: "pyproject.toml|uv.lock"
+      - id: typescript-format
+        name: typescript-format
+        files: '\\.(js|jsx|ts|tsx|vue|css|scss|json|md)$'
+        types: [file]
+        exclude: "(node_modules/.*|dist/.*|build/.*|\\.gridsome/.*|static/.*)$"
+        entry: yarn prettier-fix
+        language: system
+        pass_filenames: false
+      - id: typescript-lint
+        name: typescript-lint
+        files: '\\.(js|jsx|ts|tsx|vue|css|scss)$'
+        exclude: "(node_modules/.*|dist/.*|build/.*|\\.gridsome/.*|static/.*)$"
+        types: [file]
+        entry: yarn lint
+        require_serial: true
+        language: system
+        pass_filenames: false
+      - id: typescript-typecheck
+        name: typescript-typecheck
+        files: '\\.(ts|tsx|vue)$|tsconfig.*\\.json$|package\\.json$'
+        types: [file]
+        entry: npx tsc --noEmit
+        require_serial: true
+        pass_filenames: false
+        language: system
+      - id: yarn-lockfile
+        name: yarn-lockfile
+        entry: yarn install --frozen-lockfile
+        language: system
+        pass_filenames: false
+        files: "package\\.json|yarn\\.lock"
