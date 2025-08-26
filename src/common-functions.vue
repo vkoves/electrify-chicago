@@ -180,10 +180,20 @@ export function isNewBuilding(
     return false;
   }
 
-  const firstReportedYear = reportedYears[0];
   const currentDataYear = parseInt(building.DataYear.toString(), 10);
 
-  return currentDataYear === firstReportedYear;
+  // A building is "new" if:
+  // 1. It's currently reporting in the latest data year (2023)
+  // 2. AND this is the first year it has ever reported
+  // 3. AND it only has one year of reported data
+  const isReportingInLatestYear = currentDataYear === 2023; // TODO: use LatestDataYear constant
+  const hasOnlyOneYearOfData = reportedYears.length === 1;
+  const firstReportedYear = reportedYears[0];
+  const isFirstYearEqualToLatest = firstReportedYear === currentDataYear;
+
+  return (
+    isReportingInLatestYear && hasOnlyOneYearOfData && isFirstYearEqualToLatest
+  );
 }
 
 /**
