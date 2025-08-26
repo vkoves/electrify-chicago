@@ -119,6 +119,9 @@ function loadBuildingBenchmarkData(actions) {
       building[col] = parseFloat(building[col]);
     });
 
+    // TODO: Parse DataYear to int like we do for historic data
+    // building.DataYear = parseInt(building.DataYear);
+
     if (!building.slugSource || typeof building.slugSource !== 'string') {
       throw new Error('No building slug source (name or address)!', building);
     }

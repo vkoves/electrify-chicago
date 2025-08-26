@@ -3,9 +3,12 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import {
+  fullyGasFree,
   IBuilding,
   IBuildingBenchmarkStats,
   IBuildingNode,
+  IHistoricData,
+  isNewBuilding,
 } from '../common-functions.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
@@ -47,7 +50,10 @@ export default class Search extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $static!: {
+    allBuilding: { edges: Array<IBuildingNode> };
+    allBenchmark: { edges: Array<{ node: IHistoricData }> };
+  };
 
   /** The search query */
   searchFilter = '';
@@ -67,6 +73,12 @@ export default class Search extends Vue {
 
   gradeFilter = '';
   gradeQuintileFilter = '';
+
+  /** Filter for all electric buildings */
+  allElectricFilter = false;
+
+  /** Filter for new buildings */
+  newBuildingsFilter = false;
 
   propertyTypeOptions: Array<ISelectOption> = [
     { label: 'Select Property Type', value: '' },
@@ -156,7 +168,9 @@ export default class Search extends Vue {
       !query &&
       !this.propertyTypeFilter &&
       !this.gradeFilter &&
-      !this.gradeQuintileFilter
+      !this.gradeQuintileFilter &&
+      !this.allElectricFilter &&
+      !this.newBuildingsFilter
     ) {
       this.hasFilteredResults = false;
       this.setSearchResults(buildingsResults);
@@ -196,6 +210,26 @@ export default class Search extends Vue {
         this.gradeFilter,
       );
     }
+
+    // Apply electric and new building filters - can be combined
+    if (this.allElectricFilter || this.newBuildingsFilter) {
+      buildingsResults = buildingsResults.filter(
+        (buildingEdge: IBuildingEdge) => {
+          const meetsAllElectricCriteria = this.allElectricFilter
+            ? fullyGasFree(buildingEdge.node)
+            : true;
+          const meetsNewBuildingCriteria = this.newBuildingsFilter
+            ? isNewBuilding(
+                buildingEdge.node,
+                this.getHistoricalDataForBuilding(buildingEdge.node.ID),
+              )
+            : true;
+
+          return meetsAllElectricCriteria && meetsNewBuildingCriteria;
+        },
+      );
+    }
+
     this.hasFilteredResults = true;
 
     this.setSearchResults(buildingsResults);
@@ -268,6 +302,15 @@ export default class Search extends Vue {
   }
 
   /**
+   * Get historical data for a specific building ID
+   */
+  getHistoricalDataForBuilding(buildingId: string): Array<IHistoricData> {
+    return this.$static.allBenchmark.edges
+      .map((edge) => edge.node)
+      .filter((benchmark) => benchmark.ID === buildingId);
+  }
+
+  /**
    * Toggles DataDisclaimer open from the no-results message
    */
   openDataDisclaimer(): void {
@@ -302,6 +345,16 @@ export default class Search extends Vue {
           NaturalGasUse
           DistrictSteamUse
           DataAnomalies
+        }
+      }
+    }
+    # Get all historical data for new building detection
+    allBenchmark(sortBy: "DataYear", order: ASC) {
+      edges {
+        node {
+          ID
+          DataYear
+          GHGIntensity
         }
       }
     }
@@ -346,8 +399,8 @@ export default class Search extends Vue {
         </div>
 
         <div>
-          <label for="property-type">Grade</label>
-          <select id="property-type" v-model="gradeFilter">
+          <label for="grade-filter">Grade</label>
+          <select id="grade-filter" v-model="gradeFilter">
             <option
               v-for="gradeOpt in letterGradeOptions"
               :key="gradeOpt.value"
@@ -356,6 +409,26 @@ export default class Search extends Vue {
               {{ gradeOpt.label }}
             </option>
           </select>
+        </div>
+
+        <div class="checkbox-filters">
+          <div>
+            <input
+              id="all-electric-filter"
+              v-model="allElectricFilter"
+              type="checkbox"
+            />
+            <label for="all-electric-filter">⚡ All Electric</label>
+          </div>
+
+          <div>
+            <input
+              id="new-buildings-filter"
+              v-model="newBuildingsFilter"
+              type="checkbox"
+            />
+            <label for="new-buildings-filter">✨ New</label>
+          </div>
         </div>
 
         <button type="submit" class="-grey" @click="submitSearch">
@@ -438,6 +511,29 @@ export default class Search extends Vue {
 
     select {
       max-width: 12rem;
+    }
+
+    .checkbox-filters {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      input[type='checkbox'] {
+        margin: 0;
+        width: auto;
+      }
+
+      label {
+        margin: 0;
+        font-size: 0.875rem;
+        cursor: pointer;
+      }
     }
 
     /** Mobile Styling */

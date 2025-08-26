@@ -811,7 +811,7 @@ export default class BuildingDetails extends Vue {
 
   /** The year of the data for this specific building */
   get dataYear(): number {
-    return this.building.DataYear as number;
+    return parseInt(this.building.DataYear, 10);
   }
 
   /** The primary property type of the current building, URL encoded for a link */

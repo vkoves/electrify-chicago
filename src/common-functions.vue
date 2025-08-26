@@ -55,6 +55,8 @@ export enum DataAnomalies {
  * all of the parameter types
  */
 export interface IBuilding {
+  ID: string;
+  DataYear: string;
   PropertyName: string;
   Address: string;
   PrimaryPropertyType: string;
@@ -181,7 +183,7 @@ export function isNewBuilding(
   }
 
   const firstReportedYear = reportedYears[0];
-  const currentDataYear = parseInt(building.DataYear.toString(), 10);
+  const currentDataYear = parseInt(building.DataYear, 10);
 
   return currentDataYear === firstReportedYear;
 }
