@@ -119,15 +119,34 @@ export function isZeroOrNull(value: number | null): boolean {
 }
 
 /**
+ * Type guard to ensure required building properties exist for calculations
+ */
+export function validateBuildingProperties<T extends IBuilding>(
+  building: T,
+  properties: (keyof T)[],
+  functionName: string,
+): void {
+  for (const prop of properties) {
+    if (typeof building[prop] === 'undefined') {
+      throw new Error(
+        `Missing building.${String(prop)} for ${functionName} check!`,
+      );
+    }
+  }
+}
+
+/**
  * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
  * through a district heating system. That means it's all electric!
  *
  * We do not mark this as true if we have detected gas use in the past
  */
 export function fullyGasFree(building: IBuilding): boolean {
-  if (typeof building.DataAnomalies !== 'string') {
-    throw new Error('Missing building.DataAnomalies for fullyGasFree check!');
-  }
+  validateBuildingProperties(
+    building,
+    ['DataAnomalies', 'NaturalGasUse', 'DistrictSteamUse'],
+    'fullyGasFree',
+  );
 
   return (
     !building.DataAnomalies.includes(DataAnomalies.gasZeroWithPreviousUse) &&

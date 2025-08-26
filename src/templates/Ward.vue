@@ -129,34 +129,11 @@ query ($ward: String) {
             GHGIntensityPercentileRank
             TotalGHGEmissionsRank
             TotalGHGEmissionsPercentileRank
-            ElectricityUseRank
-            ElectricityUsePercentileRank
-            NaturalGasUseRank
-            NaturalGasUsePercentileRank
+            NaturalGasUse
+            DistrictSteamUse
             GrossFloorAreaRank
             GrossFloorAreaPercentileRank
-            SourceEUIRank
-            SourceEUIPercentileRank
-            SiteEUIRank
-            SiteEUIPercentileRank
-            GHGIntensityRankByPropertyType
-            TotalGHGEmissionsRankByPropertyType
-            ElectricityUseRankByPropertyType
-            NaturalGasUseRankByPropertyType
-            GrossFloorAreaRankByPropertyType
-            SourceEUIRankByPropertyType
-            SiteEUIRankByPropertyType
             DataAnomalies
-            Ward
-            # Grade data
-            GHGIntensityPercentileGrade,
-            GHGIntensityLetterGrade,
-            EnergyMixWeightedPctSum,
-            EnergyMixPercentileGrade,
-            EnergyMixLetterGrade,
-            MissingRecordsCount,
-            SubmittedRecordsPercentileGrade,
-            SubmittedRecordsLetterGrade,
             AvgPercentileGrade,
             AvgPercentileLetterGrade,
         }

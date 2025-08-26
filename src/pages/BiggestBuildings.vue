@@ -53,6 +53,7 @@ export default class BiggestBuildings extends Vue {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
+          DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
         }

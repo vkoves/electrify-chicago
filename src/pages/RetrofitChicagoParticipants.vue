@@ -62,6 +62,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
     const missing = expectedIds.filter((id) => !actualIds.includes(id));
     const extra = actualIds.filter((id) => !expectedIds.includes(id));
 
+    // If anything is off, throw an error
     if (missing.length > 0 || extra.length > 0) {
       const details = [
         missing.length > 0 && `Missing: [${missing.join(', ')}]`,
@@ -75,8 +76,6 @@ export default class ChicagoRetrofitParticipants extends Vue {
           'Update GraphQL query to match hasRetrofitCaseStudy tags.',
       );
     }
-
-    console.log(`✅ Retrofit validation: ${actualIds.length} buildings`);
   }
 }
 </script>
@@ -114,6 +113,8 @@ export default class ChicagoRetrofitParticipants extends Vue {
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
           AvgPercentileLetterGrade
+          NaturalGasUse
+          DistrictSteamUse
           DataAnomalies
         }
       }

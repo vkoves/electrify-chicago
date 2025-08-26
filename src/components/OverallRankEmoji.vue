@@ -63,6 +63,7 @@ import { LatestDataYear } from '../constants/globals.vue';
  * Requires columns
  *
  * - DataAnomalies
+ * - NaturalGasUse
  */
 @Component
 export default class OverallRankEmoji extends Vue {
@@ -102,8 +103,6 @@ export default class OverallRankEmoji extends Vue {
   }
 
   get isGasFree(): boolean {
-    console.log('building ' + this.building.PropertyName, this.building);
-
     return fullyGasFree(this.building);
   }
 }
@@ -114,8 +113,9 @@ export default class OverallRankEmoji extends Vue {
   display: inline;
 
   .emoji {
-    vertical-align: 0.2em;
+    vertical-align: 0.1em;
     cursor: help;
+    text-shadow: 0.0625rem 0.0625rem 0 rgba(0, 0, 0, 0.25);
   }
 
   .overall-rank-emoji {

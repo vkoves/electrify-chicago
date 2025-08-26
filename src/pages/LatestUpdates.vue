@@ -146,6 +146,8 @@ export default class LatestUpdates extends Vue {
           TotalGHGEmissions
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
+          NaturalGasUse
+          DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
         }
