@@ -51,7 +51,7 @@ export default class ReportCard extends Vue {
       :class="{ '-faded': !showingWarning }"
     >
       <div class="warning-inner">
-        <h2>Warning - Data Discrepencies Detected</h2>
+        <h2>Warning - Data Discrepancies Detected</h2>
 
         <p>
           We detected some issues with this building's data, so these grades may
