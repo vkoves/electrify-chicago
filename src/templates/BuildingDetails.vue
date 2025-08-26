@@ -1282,7 +1282,6 @@ export default class BuildingDetails extends Vue {
 
       .building-header-text {
         position: relative;
-        margin-bottom: 0;
 
         .address {
           font-size: 1rem;
@@ -1321,6 +1320,11 @@ export default class BuildingDetails extends Vue {
         // Constrain tall images on mobile so they don't take up the whole view height
         .building-img-cont.-tall {
           width: 75%;
+
+          img {
+            max-height: 25rem;
+            width: min-content;
+          }
         }
       }
 
