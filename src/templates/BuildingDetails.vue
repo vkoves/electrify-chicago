@@ -131,6 +131,17 @@ query ($id: ID!, $ID: String) {
           <p class="building-id -no-margin no-print">
             Chicago Building ID: {{ $page.building.ID }}
           </p>
+
+          <div class="pills-cont">
+            <g-link
+              v-if="fullyGasFree"
+              class="pill -all-electric"
+              to="/biggest-gas-free-buildings"
+            >
+              <span class="icon">⚡</span>
+              <span class="text">All Electric</span>
+            </g-link>
+          </div>
         </div>
 
         <div class="building-img-cont">
@@ -632,6 +643,7 @@ import {
 import {
   calculateEnergyBreakdown,
   DataAnomalies,
+  fullyGasFree,
   IBuilding,
   IBuildingBenchmarkStats,
   IHistoricData,
@@ -768,6 +780,10 @@ export default class BuildingDetails extends Vue {
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
     return this.$page.building;
+  }
+
+  get fullyGasFree(): boolean {
+    return fullyGasFree(this.building);
   }
 
   /** Helper for property name with address fallback */
@@ -1094,6 +1110,10 @@ export default class BuildingDetails extends Vue {
   .building-id {
     font-size: 0.75rem;
     margin-top: 0;
+  }
+
+  .pills-cont {
+    margin-top: 0.5rem;
   }
 
   .building-top-info {

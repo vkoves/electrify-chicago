@@ -43,9 +43,10 @@ export default class BuildingTile extends Vue {
     <g-link :to="path" class="tile-link" tabindex="-1">
       <div class="building-tile">
         <div class="img-cont">
-          <div class="pills-cont">
+          <div class="pills-cont -small">
             <div v-if="fullyGasFree" class="pill -all-electric">
-              <span>⚡</span> All Electric
+              <span class="icon">⚡</span>
+              <span class="text">All Electric</span>
             </div>
           </div>
 
@@ -55,7 +56,7 @@ export default class BuildingTile extends Vue {
           <img v-if="buildingImg" :src="buildingImg.imgUrl" alt="" />
         </div>
 
-        <div class="text">
+        <div class="main-text">
           <g-link :to="path">
             <div class="title">
               {{ building.PropertyName }}
@@ -165,22 +166,6 @@ export default class BuildingTile extends Vue {
       position: absolute;
       top: 0.5rem;
       right: 0.5rem;
-
-      .pill {
-        font-weight: bold;
-        padding: 0.125rem 1rem;
-        border-radius: 1rem;
-        font-size: 0.875rem;
-
-        &.-all-electric {
-          background: #fff6aa;
-          color: #9e5e00;
-        }
-
-        span {
-          text-shadow: 0.0625rem 0 0.0625rem $black;
-        }
-      }
     }
 
     img {
@@ -192,7 +177,7 @@ export default class BuildingTile extends Vue {
     }
   }
 
-  .text {
+  .main-text {
     padding: 0.75rem 1rem;
 
     a {

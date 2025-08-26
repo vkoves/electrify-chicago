@@ -427,6 +427,45 @@ form.search-form {
   }
 }
 
+/** A container for little building pills, like All Electric */
+.pills-cont {
+  display: inline-block;
+
+  &.-small {
+    font-size: 0.875rem;
+  }
+
+  // When pills are links, add a border and highlight the text on hover or focus
+  a.pill {
+    text-decoration: none;
+    border: solid $border-thin $electric-brown;
+
+    &:hover,
+    &:focus {
+      .text {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .pill {
+    display: inline-block;
+    font-weight: bold;
+    padding: 0.125rem 1rem;
+    border-radius: 1rem;
+
+    &.-all-electric {
+      background: $electric-yellow;
+      color: $electric-brown;
+    }
+
+    span.icon {
+      text-shadow: 0.0625rem 0 0.0625rem $black;
+      margin-right: 0.25em;
+    }
+  }
+}
+
 /**
  * Data update banner - global notice panel for announcing new data releases
  */
