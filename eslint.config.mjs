@@ -102,10 +102,13 @@ export default tseslint.config(
           ],
         },
       ],
-
-      semi: ['error', 'always'],
       'arrow-parens': ['error', 'always'],
       'comma-dangle': ['error', 'always-multiline'],
+
+      // Prevent console.log usage (but allow console.error)
+      'no-console': ['error', { allow: ['error'] }],
+      'semi': ['error', 'always'],
+
 
       '@typescript-eslint/explicit-function-return-type': [
         'error',

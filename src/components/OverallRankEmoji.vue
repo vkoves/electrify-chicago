@@ -19,6 +19,14 @@
     </span>
 
     <span
+      v-if="isGasFree && !largeView"
+      class="emoji has-img-emoji"
+      title="All Electric!"
+    >
+      ⚡
+    </span>
+
+    <span
       v-if="isOldData && !largeView"
       class="emoji has-img-emoji"
       title="Outdated data (did not submit in the latest year)"
@@ -40,6 +48,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import {
+  fullyGasFree,
   getOverallRankEmoji,
   IBuilding,
   IBuildingBenchmarkStats,
@@ -49,7 +58,7 @@ import { LatestDataYear } from '../constants/globals.vue';
 
 /**
  * A component that shows an emoji to summarize a building, showing the worse of the alarm or flag
- * emoji if those apply, or the trophy emoji if there's no flags and the building gets a trophy
+ * emoji if those apply, or the trophy emoji if there's no flags and the building gets a trophy.
  *
  * Requires columns
  *
@@ -90,6 +99,12 @@ export default class OverallRankEmoji extends Vue {
     }
 
     return this.building.DataAnomalies.length > 0;
+  }
+
+  get isGasFree(): boolean {
+    console.log('building ' + this.building.PropertyName, this.building);
+
+    return fullyGasFree(this.building);
   }
 }
 </script>

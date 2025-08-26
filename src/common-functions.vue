@@ -125,8 +125,6 @@ export function isZeroOrNull(value: number | null): boolean {
  * We do not mark this as true if we have detected gas use in the past
  */
 export function fullyGasFree(building: IBuilding): boolean {
-  console.log('building ' + building.PropertyName, building);
-
   if (typeof building.DataAnomalies !== 'string') {
     throw new Error('Missing building.DataAnomalies for fullyGasFree check!');
   }
