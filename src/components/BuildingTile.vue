@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import { IBuilding } from '../common-functions.vue';
+import { fullyGasFree, IBuilding } from '../common-functions.vue';
 import {
   getBuildingImage,
   IBuildingImage,
@@ -31,14 +31,9 @@ export default class BuildingTile extends Vue {
     return getBuildingImage(this.building);
   }
 
-  /**
-   * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
-   * through a district heating system.
-   */
+  /** Whether we know this building is all electric */
   get fullyGasFree(): boolean {
-    return (
-      this.building.NaturalGasUse === 0 && this.building.DistrictSteamUse === 0
-    );
+    return fullyGasFree(this.building);
   }
 }
 </script>

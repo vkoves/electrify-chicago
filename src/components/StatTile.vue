@@ -134,12 +134,10 @@
         >
         <span v-else>this</span>, so we don't currently have comparison data.
       </p>
-
-      <!-- Fossil Gas specific message -->
-      <div
-        v-if="statValueStr === '0' && statKey === 'NaturalGasUse'"
-        class="no-gas-msg"
-      >
+    </template>
+    <template v-else>
+      <!-- No Fossil Gas specific messaging, dependant on district heating and anomalies -->
+      <div v-if="statKey === 'NaturalGasUse'" class="no-gas-msg">
         <div v-if="fullyGasFree">
           <div class="bold">This Building Didn't Burn Any Fossil Gas! 🎉</div>
 
@@ -147,7 +145,7 @@
             This building burned no fossil gas on-site and isn't connected to a
             district heating system, meaning it's fully electric! View
             <g-link to="/biggest-gas-free-buildings">
-              Chicago's Biggest Gas Free Buildings </g-link
+              All of Chicago's Biggest Gas Free Buildings</g-link
             >.
           </p>
         </div>
@@ -174,14 +172,14 @@
           </p>
         </div>
       </div>
-    </template>
-    <template v-else>
-      Not Reported
+      <div v-else>
+        Not Reported
 
-      <p class="empty-notice">
-        This data was not reported for this building this year, which
-        <em>likely</em> means a value of zero for this field.
-      </p>
+        <p class="empty-notice">
+          This data was not reported for this building this year, which
+          <em>likely</em> means a value of zero for this field.
+        </p>
+      </div>
     </template>
   </div>
 </template>
@@ -189,10 +187,9 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import buildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
-import { roundUpLargeNumber } from '../common-functions.vue';
+import { fullyGasFree, roundUpLargeNumber } from '../common-functions.vue';
 
 import {
-  DataAnomalies,
   estimateUtilitySpend,
   getRankLabel,
   getRankLabelByProperty,
@@ -244,20 +241,8 @@ export default class StatTile extends Vue {
     return this.building['PrimaryPropertyType'];
   }
 
-  /**
-   * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
-   * through a district heating system.
-   *
-   * We do not mark this as true if we have detected gas use in the past
-   */
   get fullyGasFree(): boolean {
-    return (
-      !this.building.DataAnomalies.includes(
-        DataAnomalies.gasZeroWithPreviousUse,
-      ) &&
-      this.building.NaturalGasUse === 0 &&
-      this.building.DistrictSteamUse === 0
-    );
+    return fullyGasFree(this.building);
   }
 
   /** The estimated cost for the given utility */
@@ -394,11 +379,11 @@ export default class StatTile extends Vue {
     return this.medianMultipleMsg(median, statValueNum);
   }
 
-  // FIXED: ADD ROUNDING FOR BIG NUMBERS
   /** The stat value, as a string */
   get statValueStr(): string {
     const rawValue = parseFloat(this.building[this.statKey] as string);
     const roundedNumber = roundUpLargeNumber(rawValue);
+
     return roundedNumber.toLocaleString();
   }
 

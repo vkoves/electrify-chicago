@@ -35,9 +35,7 @@ export default class LatestUpdates extends Vue {
     allPreviousYearsBenchmarks: { edges: Array<{ node: IHistoricData }> };
   };
 
-  mounted(): void {
-    console.log(this.$static.allBuilding);
-  }
+  mounted(): void {}
 
   // Import the smooth scroll function from common-functions
   readonly smoothlyScrollToAnchor = smoothlyScrollToAnchor;

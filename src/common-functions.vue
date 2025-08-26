@@ -114,6 +114,30 @@ export function hasReportedData(historicData: IHistoricData): boolean {
   );
 }
 
+export function isZeroOrNull(value: number | null): boolean {
+  return value === 0 || value === null;
+}
+
+/**
+ * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
+ * through a district heating system. That means it's all electric!
+ *
+ * We do not mark this as true if we have detected gas use in the past
+ */
+export function fullyGasFree(building: IBuilding): boolean {
+  console.log('building ' + building.PropertyName, building);
+
+  if (typeof building.DataAnomalies !== 'string') {
+    throw new Error('Missing building.DataAnomalies for fullyGasFree check!');
+  }
+
+  return (
+    !building.DataAnomalies.includes(DataAnomalies.gasZeroWithPreviousUse) &&
+    isZeroOrNull(building.NaturalGasUse) &&
+    isZeroOrNull(building.DistrictSteamUse)
+  );
+}
+
 /**
  * Types for Citywide Stats
  */
