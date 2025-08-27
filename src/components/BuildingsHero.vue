@@ -87,11 +87,13 @@ export default class BuildingsHero extends Vue {
 .buildings-hero {
   margin: 2rem 0;
   position: relative;
+  border-radius: $brd-rad-medium;
+  overflow: hidden;
 
   .hero-images {
     display: flex;
     overflow: hidden;
-    height: 22.5rem; // Fixed height to match skyline
+    height: 18rem; // Fixed height to match skyline
 
     .hero-image {
       flex: 1;
@@ -101,8 +103,6 @@ export default class BuildingsHero extends Vue {
         height: 100%;
         min-width: 7.5rem; // 120px minimum
         aspect-ratio: 1/2;
-        object-fit: cover;
-        display: block;
       }
     }
 
@@ -114,10 +114,14 @@ export default class BuildingsHero extends Vue {
   .hero-skyline {
     img {
       width: 100%;
-      height: 22.5rem; // Same height as building images (aspect-ratio 1/2 * 11.25rem * 4)
-      object-fit: cover;
-      display: block;
+      height: 18rem; // Same height as building images (aspect-ratio 1/2 * 11.25rem * 4)
     }
+  }
+
+  img {
+    object-fit: cover;
+    display: block;
+    filter: brightness(80%);
   }
 
   .hero-overlay {

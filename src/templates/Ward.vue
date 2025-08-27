@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
@@ -23,6 +24,7 @@ interface IBuildingEdge {
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -150,7 +152,11 @@ query ($ward: String) {
         Back to All Wards
       </g-link>
 
-      <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
+      <BuildingsHero
+        :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
+      >
+        <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
+      </BuildingsHero>
 
       <p>
         This page shows all buildings identified as being in Ward

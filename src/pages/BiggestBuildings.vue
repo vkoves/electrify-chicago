@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
@@ -12,6 +13,7 @@ import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -64,9 +66,13 @@ export default class BiggestBuildings extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
-      Top {{ $static.allBuilding.edges.length }} Buildings By Square Footage
-    </h1>
+    <BuildingsHero
+      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+    >
+      <h1 id="main-content" tabindex="-1">
+        Top {{ $static.allBuilding.edges.length }} Buildings By Square Footage
+      </h1>
+    </BuildingsHero>
 
     <p class="constrained -wide">
       These are the biggest buildings in our dataset, which should encompass all

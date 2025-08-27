@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
@@ -13,6 +14,7 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     NewTabIcon,
     DataSourceFootnote,
@@ -77,10 +79,14 @@ export default class CleanestBuildings extends Vue {
 
 <template>
   <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
-      Cleanest {{ $static.allBuilding.edges.length }} Buildings by Greenhouse
-      Gas Intensity
-    </h1>
+    <BuildingsHero
+      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+    >
+      <h1 id="main-content" tabindex="-1">
+        Cleanest {{ $static.allBuilding.edges.length }} Buildings by Greenhouse
+        Gas Intensity
+      </h1>
+    </BuildingsHero>
 
     <p class="constrained">
       The median building in our dataset emits
