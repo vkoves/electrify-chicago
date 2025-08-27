@@ -169,50 +169,46 @@ export default class BiggestBuildings extends Vue {
         Back to All Owners
       </g-link>
 
-      <p class="constrained -wide">
-        These are buildings that we have manually tagged as being owned by
-        {{ currOwner.name }}, so this may not be a definitive list.
+      <section class="stats-overview -three-col-max">
+        <h2>Owner Portfolio Stats</h2>
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number">{{ buildingsFiltered.length }}</div>
+            <div class="stat-label">Tagged Buildings</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Total Emissions</div>
+            <div class="stat-number">{{ totalGHGEmissions }} tons</div>
+            <div class="stat-description">
+              metric tons CO<sub>2</sub> equivalent
+            </div>
+            <div class="stat-footnote">
+              {{ medianGHGEmissionsMultiple }}x the median building ({{
+                BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
+              }}
+              tons CO<sub>2</sub>e)
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Avg GHG Intensity</div>
+            <div class="stat-number">{{ avgGHGIntensity }}</div>
+            <div class="stat-description">kg CO<sub>2</sub>e/sqft</div>
+            <div class="stat-footnote">
+              {{ medianGHGIntensityMultiple }}x the median building ({{
+                BuildingBenchmarkStats.GHGIntensity.median
+              }}
+              kg CO<sub>2</sub>/sqft)
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <p class="constrained -wide smaller">
+        <strong>Note:</strong> Building owners are manually tagged, so this may
+        not be a definitive or perfect list.
       </p>
-
-      <h2>Building Stats</h2>
-
-      <ul class="stats">
-        <li class="bold">{{ buildingsFiltered.length }} Tagged Buildings</li>
-
-        <li>
-          <strong>
-            Total Emissions:
-            {{ totalGHGEmissions }} metric tons CO<sub>2</sub> equivalent
-          </strong>
-
-          <p class="footnote">
-            <strong>
-              Equivalent to {{ medianGHGEmissionsMultiple }} of the median
-              benchmarked building
-            </strong>
-            ({{
-              BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
-            }}
-            tons CO<sub>2</sub>e)
-          </p>
-        </li>
-
-        <li>
-          <strong>
-            Average GHG Intensity:
-            {{ avgGHGIntensity }} kg CO<sub>2</sub>e/sqft
-          </strong>
-
-          <p class="footnote">
-            <strong
-              >{{ medianGHGIntensityMultiple }}x the median benchmarked
-              building</strong
-            >
-            ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg
-            CO<sub>2</sub>/sqft)
-          </p>
-        </li>
-      </ul>
 
       <DataDisclaimer />
 
@@ -224,6 +220,8 @@ export default class BiggestBuildings extends Vue {
 </template>
 
 <style lang="scss">
+@import '../scss/stat-tiles.scss';
+
 .building-owner-page {
   h1 {
     font-size: 1.5rem;
@@ -243,25 +241,16 @@ export default class BiggestBuildings extends Vue {
     }
   }
 
-  .back-link {
-    margin-bottom: 1rem;
+  .stats-overview {
+    margin: 1rem 0;
+
+    .stat-description {
+      font-weight: 600;
+    }
   }
 
   h2 {
     margin-bottom: 0.5rem;
-  }
-
-  .stats {
-    margin-top: 0;
-    padding-left: 1.25rem;
-
-    li + li {
-      margin-top: 0.5rem;
-    }
-
-    .footnote {
-      margin: 0rem;
-    }
   }
 }
 </style>
