@@ -95,6 +95,7 @@ query ($id: ID!, $ID: String) {
 
 <template>
   <DefaultLayout>
+     
     <div class="building-details-page">
       <div
         class="building-header"

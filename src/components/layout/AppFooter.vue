@@ -30,7 +30,7 @@ export default class AppFooter extends Vue {}
           rel="noopener"
         >
           <img alt="" src="/github-mark.svg" height="16" />
-          Contribute on GitHub
+          Contribute To GitHub
         </a>
       </div>
 
@@ -42,7 +42,28 @@ export default class AppFooter extends Vue {}
           rel="noopener"
         >
           <img alt="" src="/bluesky.svg" height="16" />
-          Follow Us On Bluesky
+        </a>
+      </div>
+
+      <div>
+        <a
+          href="https://bsky.app/profile/electrifychicago.net"
+          class="youtube"
+          target="_blank"
+          rel="noopener"
+        >
+          <img class="yt-icon" alt="" src="/youtube-mark.svg" height="16" />
+        </a>
+      </div>
+
+      <div>
+        <a
+          href="https://bsky.app/profile/electrifychicago.net"
+          class="instagram"
+          target="_blank"
+          rel="noopener"
+        >
+          <img class="ig-icon" alt="" src="/instagram-mark.svg" height="16" />
         </a>
       </div>
 
@@ -78,12 +99,22 @@ footer {
   }
 
   a.github-link,
-  a.bluesky {
+  a.bluesky,
+  a.youtube,
+  a.instagram {
     text-decoration: none;
     padding: 0.3125rem 1rem;
     border-radius: $brd-rad-full;
     font-size: 0.825rem;
     line-height: 1;
+    //min-width: 150px;
+  }
+
+  a.bluesky,
+  a.youtube,
+  a.instagram {
+    border-radius: 10px;
+    padding: 0.3125rem;
   }
 
   a.github-link {
@@ -106,12 +137,37 @@ footer {
     }
   }
 
+  a.youtube {
+    background-color: #ff0000;
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: #016cd0;
+    }
+  }
+
+  a.instagram {
+    background-color: #8a3ab9; // Instagram
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: #016cd0;
+    }
+  }
+
   .heart {
     font-size: 1.5rem;
     vertical-align: -0.1rem;
     color: $chicago-red;
     line-height: 0;
     margin: 0 0.125rem;
+  }
+
+  .yt-icon,
+  .ig-icon {
+    
   }
 
   @media (max-width: $mobile-max-width) {
