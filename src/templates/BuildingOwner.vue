@@ -164,6 +164,11 @@ export default class BiggestBuildings extends Vue {
         </h1>
       </BuildingsHero>
 
+      <g-link to="/large-owners" class="back-link grey-link">
+        <img src="/icons/arrow-back.svg" />
+        Back to All Owners
+      </g-link>
+
       <p class="constrained -wide">
         These are buildings that we have manually tagged as being owned by
         {{ currOwner.name }}, so this may not be a definitive list.
@@ -236,6 +241,10 @@ export default class BiggestBuildings extends Vue {
       padding: 0.5rem;
       border-radius: $brd-rad-medium;
     }
+  }
+
+  .back-link {
+    margin-bottom: 1rem;
   }
 
   h2 {

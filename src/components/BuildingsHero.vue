@@ -85,10 +85,16 @@ export default class BuildingsHero extends Vue {
 @import '~/scss/global.scss';
 
 .buildings-hero {
-  margin: 2rem 0;
   position: relative;
   border-radius: $brd-rad-medium;
   overflow: hidden;
+
+  .hero-skyline img,
+  .hero-image img {
+    object-fit: cover;
+    display: block;
+    filter: brightness(80%);
+  }
 
   .hero-images {
     display: flex;
@@ -111,17 +117,9 @@ export default class BuildingsHero extends Vue {
     }
   }
 
-  .hero-skyline {
-    img {
-      width: 100%;
-      height: 18rem; // Same height as building images (aspect-ratio 1/2 * 11.25rem * 4)
-    }
-  }
-
-  img {
-    object-fit: cover;
-    display: block;
-    filter: brightness(80%);
+  .hero-skyline img {
+    width: 100%;
+    height: 18rem; // Same height as building images (aspect-ratio 1/2 * 11.25rem * 4)
   }
 
   .hero-overlay {
