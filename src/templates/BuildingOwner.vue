@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
@@ -28,6 +29,7 @@ interface IBuildingEdge {
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -152,13 +154,15 @@ export default class BiggestBuildings extends Vue {
 <template>
   <DefaultLayout>
     <div class="building-owner-page">
-      <h1 id="main-content" tabindex="-1">
-        <div class="top-title">Buildings Owned By</div>
+      <BuildingsHero :buildings="buildingsFiltered.map((edge) => edge.node)">
+        <h1 id="main-content" tabindex="-1">
+          <div class="top-title">Buildings Owned By</div>
 
-        <img :src="currOwner.logoLarge" alt="" />
+          <img :src="currOwner.logoLarge" alt="" />
 
-        {{ currOwner.name }}
-      </h1>
+          {{ currOwner.name }}
+        </h1>
+      </BuildingsHero>
 
       <p class="constrained -wide">
         These are buildings that we have manually tagged as being owned by
@@ -228,6 +232,9 @@ export default class BiggestBuildings extends Vue {
       display: block;
       width: 20rem;
       margin-bottom: 1rem;
+      background: $white;
+      padding: 0.5rem;
+      border-radius: $brd-rad-medium;
     }
   }
 

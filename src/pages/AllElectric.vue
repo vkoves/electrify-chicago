@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
@@ -17,6 +18,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -77,9 +79,13 @@ export default class AllElectric extends Vue {}
 
 <template>
   <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
-      Chicago's {{ $static.allBuilding.edges.length }} All Electric Buildings
-    </h1>
+    <BuildingsHero
+      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+    >
+      <h1 id="main-content" tabindex="-1">
+        Chicago's {{ $static.allBuilding.edges.length }} All Electric Buildings
+      </h1>
+    </BuildingsHero>
 
     <p class="constrained -wide">
       These buildings are already all-electric, and feature some of the most
