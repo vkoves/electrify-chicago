@@ -44,6 +44,9 @@ export default class Search extends Vue {
     BuildingBenchmarkStats;
   readonly MaxBuildings = 100;
 
+  /** Pre-computed index of building ID to historical data for performance */
+  private historicalDataIndex: Map<string, Array<IHistoricData>> = new Map();
+
   readonly QueryParamKeys = {
     search: 'q',
     propertyType: 'type',
@@ -105,6 +108,8 @@ export default class Search extends Vue {
   dataDisclaimer!: HTMLDetailsElement;
 
   created(): void {
+    // Initialize performance index for historical data
+    this.initializeHistoricalDataIndex();
     // Make sure on load we have some data
     this.setSearchResults(this.$static.allBuilding.edges);
   }
@@ -220,7 +225,6 @@ export default class Search extends Vue {
             : true;
           const meetsNewBuildingCriteria = this.newBuildingsFilter
             ? isNewBuilding(
-                buildingEdge.node,
                 this.getHistoricalDataForBuilding(buildingEdge.node.ID),
               )
             : true;
@@ -302,12 +306,25 @@ export default class Search extends Vue {
   }
 
   /**
-   * Get historical data for a specific building ID
+   * Initialize the historical data index for O(1) lookups
+   */
+  private initializeHistoricalDataIndex(): void {
+    this.historicalDataIndex.clear();
+
+    for (const edge of this.$static.allBenchmark.edges) {
+      const buildingId = edge.node.ID;
+      if (!this.historicalDataIndex.has(buildingId)) {
+        this.historicalDataIndex.set(buildingId, []);
+      }
+      this.historicalDataIndex.get(buildingId)!.push(edge.node);
+    }
+  }
+
+  /**
+   * Get historical data for a specific building ID (O(1) lookup)
    */
   getHistoricalDataForBuilding(buildingId: string): Array<IHistoricData> {
-    return this.$static.allBenchmark.edges
-      .map((edge) => edge.node)
-      .filter((benchmark) => benchmark.ID === buildingId);
+    return this.historicalDataIndex.get(buildingId) || [];
   }
 
   /**

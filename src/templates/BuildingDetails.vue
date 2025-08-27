@@ -796,7 +796,7 @@ export default class BuildingDetails extends Vue {
   }
 
   get isNew(): boolean {
-    return isNewBuilding(this.building, this.historicData);
+    return isNewBuilding(this.historicData);
   }
 
   /** Helper for property name with address fallback */
