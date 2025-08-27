@@ -112,8 +112,8 @@ footer {
   a.bluesky,
   a.youtube,
   a.instagram {
-    border-radius: 5px;
     padding: 0.3125rem;
+    border-radius: 4px;
   }
 
   a.github-link {
@@ -148,7 +148,7 @@ footer {
   }
 
   a.instagram {
-    background-color: #d62976; // Instagram
+    background-color: #e0257a; // Instagram
     color: $white;
 
     &:hover,
