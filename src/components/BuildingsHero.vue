@@ -11,6 +11,7 @@
         class="hero-image"
       >
         <img
+          loading="lazy"
           :src="getBuildingImage(building)?.imgUrl"
           :alt="`${building.PropertyName || building.Address}`"
         />
@@ -20,7 +21,9 @@
       <img src="/home/skyline-1920.webp" alt="Chicago skyline" />
     </div>
     <div class="hero-overlay">
-      <slot />
+      <div class="page-constrained">
+        <slot />
+      </div>
     </div>
   </div>
 </template>
@@ -86,8 +89,8 @@ export default class BuildingsHero extends Vue {
 
 .buildings-hero {
   position: relative;
-  border-radius: $brd-rad-medium;
   overflow: hidden;
+  margin-bottom: 1rem;
 
   .hero-skyline img,
   .hero-image img {
@@ -100,6 +103,10 @@ export default class BuildingsHero extends Vue {
     display: flex;
     overflow: hidden;
     height: 18rem; // Fixed height to match skyline
+    // Shift left a bit so the leftmost image starts a bit off screen, preventing a harsh edge
+    position: relative;
+    left: -5%;
+    width: 110%;
 
     .hero-image {
       flex: 1;
@@ -147,9 +154,16 @@ export default class BuildingsHero extends Vue {
   @media (max-width: $mobile-max-width) {
     .hero-images {
       height: 17.5rem; // Reduce height on mobile
+      left: -10%;
 
       .hero-image .image-link img {
         min-width: 6rem; // 96px minimum on mobile
+      }
+
+      // Hide last two images on large mobile
+      .hero-img:nth-child(7),
+      .hero-img:nth-child(8) {
+        display: none;
       }
     }
 
@@ -173,6 +187,11 @@ export default class BuildingsHero extends Vue {
 
       .hero-image .image-link img {
         min-width: 5rem; // 80px minimum on small mobile
+      }
+
+      // On very small mobile, only show first 4 images
+      .hero-image:not(:nth-child(1), :nth-child(2), :nth-child(3), :nth-child(4)) {
+        display: none;
       }
     }
 

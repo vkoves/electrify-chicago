@@ -65,7 +65,7 @@ export default class BiggestBuildings extends Vue {
 </static-query>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout main-class="layout -full-width">
     <BuildingsHero
       :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
     >
@@ -74,6 +74,7 @@ export default class BiggestBuildings extends Vue {
       </h1>
     </BuildingsHero>
 
+    <div class="page-constrained">
     <p class="constrained -wide">
       These are the biggest buildings in our dataset, which should encompass all
       of the largest buildings in the city that submitted their energy use for
@@ -91,6 +92,7 @@ export default class BiggestBuildings extends Vue {
     />
 
     <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 

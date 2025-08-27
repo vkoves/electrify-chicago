@@ -78,7 +78,7 @@ export default class CleanestBuildings extends Vue {
 </static-query>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout main-class="layout -full-width">
     <BuildingsHero
       :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
     >
@@ -88,6 +88,7 @@ export default class CleanestBuildings extends Vue {
       </h1>
     </BuildingsHero>
 
+    <div class="page-constrained">
     <p class="constrained">
       The median building in our dataset emits
       {{ BuildingBenchmarkStats.GHGIntensity.median }} CO<sub>2</sub> kg /
@@ -106,6 +107,7 @@ export default class CleanestBuildings extends Vue {
     <BuildingsTable :buildings="$static.allBuilding.edges" />
 
     <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 

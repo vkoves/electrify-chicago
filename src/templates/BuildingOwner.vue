@@ -225,7 +225,7 @@ export default class BiggestBuildings extends Vue {
 </static-query>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout main-class="layout -full-width">
     <div class="building-owner-page">
       <BuildingsHero :buildings="buildingsFiltered.map((edge) => edge.node)">
         <h1 id="main-content" tabindex="-1">
@@ -237,98 +237,100 @@ export default class BiggestBuildings extends Vue {
         </h1>
       </BuildingsHero>
 
-      <g-link to="/large-owners" class="back-link grey-link">
-        <img src="/icons/arrow-back.svg" />
-        Back to All Owners
-      </g-link>
+      <div class="page-constrained">
+        <g-link to="/large-owners" class="back-link grey-link">
+          <img src="/icons/arrow-back.svg" />
+          Back to All Owners
+        </g-link>
 
-      <section class="stats-overview -three-col-max">
-        <h2>{{ currOwner.name }} Quick Stats</h2>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-number">{{ buildingsFiltered.length }}</div>
-            <div class="stat-label">Tagged Buildings</div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-label">Total Emissions</div>
-            <div class="stat-number">{{ totalGHGEmissions }}</div>
-            <div class="stat-description">
-              metric tons CO<sub>2</sub> equivalent
+        <section class="stats-overview -three-col-max">
+          <h2>{{ currOwner.name }} Quick Stats</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">{{ buildingsFiltered.length }}</div>
+              <div class="stat-label">Tagged Buildings</div>
             </div>
-            <div class="stat-footnote">
-              {{ medianGHGEmissionsMultiple }}x the median building ({{
-                BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
-              }}
-              tons CO<sub>2</sub>e)
+
+            <div class="stat-card">
+              <div class="stat-label">Total Emissions</div>
+              <div class="stat-number">{{ totalGHGEmissions }}</div>
+              <div class="stat-description">
+                metric tons CO<sub>2</sub> equivalent
+              </div>
+              <div class="stat-footnote">
+                {{ medianGHGEmissionsMultiple }}x the median building ({{
+                  BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
+                }}
+                tons CO<sub>2</sub>e)
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Avg GHG Intensity</div>
+              <div class="stat-number">{{ avgGHGIntensity }}</div>
+              <div class="stat-description">kg CO<sub>2</sub>e/sqft</div>
+              <div class="stat-footnote">
+                {{ medianGHGIntensityMultiple }}x the median building ({{
+                  BuildingBenchmarkStats.GHGIntensity.median
+                }}
+                kg CO<sub>2</sub>/sqft)
+              </div>
             </div>
           </div>
+        </section>
 
-          <div class="stat-card">
-            <div class="stat-label">Avg GHG Intensity</div>
-            <div class="stat-number">{{ avgGHGIntensity }}</div>
-            <div class="stat-description">kg CO<sub>2</sub>e/sqft</div>
-            <div class="stat-footnote">
-              {{ medianGHGIntensityMultiple }}x the median building ({{
-                BuildingBenchmarkStats.GHGIntensity.median
-              }}
-              kg CO<sub>2</sub>/sqft)
+        <section
+          v-if="gradeDistributionPie.length > 0"
+          class="grade-distribution"
+        >
+          <div class="grade-content">
+            <div class="grade-chart-container">
+              <h3>Grade Distribution</h3>
+
+              <PieChart
+                :graph-data="gradeDistributionPie"
+                id-prefix="grade-distribution"
+                :show-labels="true"
+                :sort-by-largest="false"
+              />
             </div>
-          </div>
-        </div>
-      </section>
+            <div class="supplementary-stats stats-overview">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-label">Total Square Footage</div>
+                  <div class="stat-number">{{ totalSquareFootage }}M</div>
+                  <div class="stat-description">
+                    million sq ft under management
+                  </div>
+                </div>
 
-      <section
-        v-if="gradeDistributionPie.length > 0"
-        class="grade-distribution"
-      >
-        <div class="grade-content">
-          <div class="grade-chart-container">
-            <h3>Grade Distribution</h3>
-
-            <PieChart
-              :graph-data="gradeDistributionPie"
-              id-prefix="grade-distribution"
-              :show-labels="true"
-              :sort-by-largest="false"
-            />
-          </div>
-          <div class="supplementary-stats stats-overview">
-            <div class="stats-grid">
-              <div class="stat-card">
-                <div class="stat-label">Total Square Footage</div>
-                <div class="stat-number">{{ totalSquareFootage }}M</div>
-                <div class="stat-description">
-                  million sq ft under management
+                <div class="stat-card">
+                  <div class="stat-label">Avg Building Age</div>
+                  <div class="stat-number">{{ avgBuildingAge }}</div>
+                  <div class="stat-description">years old</div>
                 </div>
               </div>
-
-              <div class="stat-card">
-                <div class="stat-label">Avg Building Age</div>
-                <div class="stat-number">{{ avgBuildingAge }}</div>
-                <div class="stat-description">years old</div>
-              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <h2>{{ currOwner.name }} Buildings List</h2>
+        <h2>{{ currOwner.name }} Buildings List</h2>
 
-      <p class="constrained -wide smaller">
-        <strong>Note:</strong> Building owners are manually tagged, so this may
-        not be a definitive or perfect list.
-      </p>
+        <p class="constrained -wide smaller">
+          <strong>Note:</strong> Building owners are manually tagged, so this may
+          not be a definitive or perfect list.
+        </p>
 
-      <DataDisclaimer />
+        <DataDisclaimer />
 
-      <BuildingsTable
-        :buildings="buildingsFiltered"
-        :show-year-built="true"
-        :show-square-footage="true"
-      />
+        <BuildingsTable
+          :buildings="buildingsFiltered"
+          :show-year-built="true"
+          :show-square-footage="true"
+        />
 
-      <DataSourceFootnote />
+        <DataSourceFootnote />
+      </div>
     </div>
   </DefaultLayout>
 </template>

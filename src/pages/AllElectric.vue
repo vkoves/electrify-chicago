@@ -78,7 +78,7 @@ export default class AllElectric extends Vue {}
 </static-query>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout main-class="layout -full-width">
     <BuildingsHero
       :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
     >
@@ -87,27 +87,29 @@ export default class AllElectric extends Vue {}
       </h1>
     </BuildingsHero>
 
-    <p class="constrained -wide">
-      These buildings are already all-electric, and feature some of the most
-      famous buildings in the city! If even the John Hancock center or Marina
-      Towers can run off of only electricity, your building can too.
-    </p>
+    <div class="page-constrained">
+      <p class="constrained -wide">
+        These buildings are already all-electric, and feature some of the most
+        famous buildings in the city! If even the John Hancock center or Marina
+        Towers can run off of only electricity, your building can too.
+      </p>
 
-    <p class="constrained -wide">
-      <strong>Note:</strong> This list is of buildings that use neither fossil
-      gas nor a district steam system, since all district steam systems in the
-      city are currently powered by burning fossil gas (to the best of our
-      knowledge).
-    </p>
+      <p class="constrained -wide">
+        <strong>Note:</strong> This list is of buildings that use neither fossil
+        gas nor a district steam system, since all district steam systems in the
+        city are currently powered by burning fossil gas (to the best of our
+        knowledge).
+      </p>
 
-    <DataDisclaimer />
+      <DataDisclaimer />
 
-    <BuildingsTable
-      :buildings="$static.allBuilding.edges"
-      :show-square-footage="true"
-    />
+      <BuildingsTable
+        :buildings="$static.allBuilding.edges"
+        :show-square-footage="true"
+      />
 
-    <DataSourceFootnote />
+      <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 

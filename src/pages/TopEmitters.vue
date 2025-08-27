@@ -59,7 +59,7 @@ export default class TopEmitters extends Vue {}
 </static-query>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout main-class="layout -full-width">
     <BuildingsHero
       :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
     >
@@ -69,6 +69,7 @@ export default class TopEmitters extends Vue {}
       </h1>
     </BuildingsHero>
 
+    <div class="page-constrained">
     <p class="constrained -wide">
       These buildings are the biggest emitters of greenhouse gases in Chicago,
       both directly (like by burning fossil gas on site for heating) and
@@ -95,6 +96,7 @@ export default class TopEmitters extends Vue {}
     <BuildingsTable :buildings="$static.allBuilding.edges" />
 
     <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 
