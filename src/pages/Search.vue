@@ -328,6 +328,25 @@ export default class Search extends Vue {
   }
 
   /**
+   * Apply current filters and run search
+   */
+  applyFilters(): void {
+    this.submitSearch();
+  }
+
+  /**
+   * Clear all filters and reset to default search
+   */
+  clearFilters(): void {
+    this.propertyTypeFilter = '';
+    this.gradeFilter = '';
+    this.gradeQuintileFilter = '';
+    this.allElectricFilter = false;
+    this.newBuildingsFilter = false;
+    this.submitSearch();
+  }
+
+  /**
    * Toggles DataDisclaimer open from the no-results message
    */
   openDataDisclaimer(): void {
@@ -390,69 +409,84 @@ export default class Search extends Vue {
 
       <DataDisclaimer id="data-disclaimer" />
 
-      <form>
+      <form class="search-form">
         <div>
           <label for="page-search"> Building Name </label>
-          <input
-            id="page-search"
-            v-model="searchFilter"
-            type="text"
-            name="search"
-            placeholder="Search property name, type, or address"
-          />
-        </div>
-
-        <div>
-          <label for="property-type">Property Type</label>
-          <select id="property-type" v-model="propertyTypeFilter">
-            <option
-              v-for="propertyType in propertyTypeOptions"
-              :key="propertyType.value ?? propertyType"
-              :value="propertyType.value ?? propertyType"
-            >
-              {{ propertyType.label || propertyType }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label for="grade-filter">Grade</label>
-          <select id="grade-filter" v-model="gradeFilter">
-            <option
-              v-for="gradeOpt in letterGradeOptions"
-              :key="gradeOpt.value"
-              :value="gradeOpt.value"
-            >
-              {{ gradeOpt.label }}
-            </option>
-          </select>
-        </div>
-
-        <div class="checkbox-filters">
-          <div>
+          <div class="input-cont">
             <input
-              id="all-electric-filter"
-              v-model="allElectricFilter"
-              type="checkbox"
+              id="page-search"
+              v-model="searchFilter"
+              type="text"
+              name="search"
+              placeholder="Search property name, type, or address"
             />
-            <label for="all-electric-filter">⚡ All Electric</label>
-          </div>
-
-          <div>
-            <input
-              id="new-buildings-filter"
-              v-model="newBuildingsFilter"
-              type="checkbox"
-            />
-            <label for="new-buildings-filter">✨ New</label>
+            <button type="submit" class="-grey" @click="submitSearch">
+              <img src="/search.svg" alt="" width="15" height="15" />
+              Search
+            </button>
           </div>
         </div>
-
-        <button type="submit" class="-grey" @click="submitSearch">
-          <img src="/search.svg" alt="" width="15" height="15" />
-          Search
-        </button>
       </form>
+
+      <details class="filters-section">
+        <summary>Advanced Filters</summary>
+        <div class="details-content">
+          <div class="filter-grid">
+            <div class="select-row">
+              <div>
+                <label for="property-type">Property Type</label>
+                <select id="property-type" v-model="propertyTypeFilter">
+                  <option
+                    v-for="propertyType in propertyTypeOptions"
+                    :key="propertyType.value ?? propertyType"
+                    :value="propertyType.value ?? propertyType"
+                  >
+                    {{ propertyType.label || propertyType }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label for="grade-filter">Grade</label>
+                <select id="grade-filter" v-model="gradeFilter">
+                  <option
+                    v-for="gradeOpt in letterGradeOptions"
+                    :key="gradeOpt.value"
+                    :value="gradeOpt.value"
+                  >
+                    {{ gradeOpt.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="checkbox-row">
+              <div>
+                <input
+                  id="all-electric-filter"
+                  v-model="allElectricFilter"
+                  type="checkbox"
+                />
+                <label for="all-electric-filter">⚡ All Electric</label>
+              </div>
+
+              <div>
+                <input
+                  id="new-buildings-filter"
+                  v-model="newBuildingsFilter"
+                  type="checkbox"
+                />
+                <label for="new-buildings-filter">New</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button type="button" @click="applyFilters">Apply Filters</button>
+            <button type="button" @click="clearFilters">Clear Filters</button>
+          </div>
+        </div>
+      </details>
 
       <BuildingsTable
         :buildings="searchResults"
@@ -510,47 +544,13 @@ export default class Search extends Vue {
       font-weight: 500;
     }
 
-    input,
+    input {
+      width: 20rem;
+    }
+
     select {
       padding: 0.5rem;
-    }
-
-    input[type='text'] {
-      width: 16rem;
-    }
-
-    button {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-    }
-
-    select {
       max-width: 12rem;
-    }
-
-    .checkbox-filters {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      > div {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-
-      input[type='checkbox'] {
-        margin: 0;
-        width: auto;
-      }
-
-      label {
-        margin: 0;
-        font-size: 0.875rem;
-        cursor: pointer;
-      }
     }
 
     /** Mobile Styling */
@@ -559,6 +559,74 @@ export default class Search extends Vue {
       flex-direction: column;
       align-items: flex-start;
       gap: 1rem;
+    }
+  }
+
+  .filters-section {
+    margin: 1rem 0;
+
+    summary {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    .filter-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .select-row,
+    .checkbox-row {
+      display: flex;
+      gap: 0 1rem;
+      flex-wrap: wrap;
+    }
+
+    .select-row {
+      margin-bottom: 1rem;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+      }
+
+      select {
+        padding: 0.5rem;
+        max-width: 12rem;
+      }
+
+      label {
+        font-size: 0.75rem;
+      }
+    }
+
+    .checkbox-row {
+      > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      input[type='checkbox'] {
+        margin: 0;
+        width: 1rem;
+        height: 1rem;
+      }
+
+      label {
+        margin: 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
   }
 
