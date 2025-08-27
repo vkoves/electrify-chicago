@@ -144,8 +144,8 @@
           <p class="smaller">
             This building burned no fossil gas on-site and isn't connected to a
             district heating system, meaning it's fully electric! View
-            <g-link to="/biggest-gas-free-buildings">
-              All of Chicago's Biggest Gas Free Buildings</g-link
+            <g-link to="/all-electric">
+              All of Chicago's All Electric Buildings</g-link
             >.
           </p>
         </div>

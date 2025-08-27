@@ -149,9 +149,7 @@ export default class About extends Vue {
           <g-link to="/top-electricity-users"> Top Electricity Users </g-link>
         </li>
         <li>
-          <g-link to="/biggest-gas-free-buildings">
-            Biggest Gas Free Buildings
-          </g-link>
+          <g-link to="/all-electric"> All Electric Buildings </g-link>
         </li>
         <li>
           <g-link to="/retrofit-chicago-participants">
