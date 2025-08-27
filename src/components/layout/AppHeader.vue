@@ -65,7 +65,7 @@ export default class AppHeader extends Vue {
         :aria-expanded="mobileMenuOpen.toString()"
         @click="toggleMobileMenu"
       >
-        <img src="/menu.svg" alt="Menu" width="30" height="30" />
+        <img src="/menu.svg" alt="Menu" width="25" height="25" />
       </button>
     </div>
 
@@ -171,6 +171,9 @@ header.header {
     display: none;
   }
 
+  /**
+   * Mobile Styling
+   */
   @media (max-width: $mobile-max-width) {
     position: relative;
     flex-wrap: wrap;
@@ -185,7 +188,7 @@ header.header {
 
     .header-primary,
     .top-nav {
-      padding: 1rem;
+      padding: 0.5rem 0.75rem;
     }
 
     .header-primary {
@@ -211,7 +214,7 @@ header.header {
 
     .logo-link {
       flex-shrink: initial;
-      width: 70%;
+      width: 60%;
       max-width: 22rem;
 
       .site-logo {

@@ -131,6 +131,25 @@ query ($id: ID!, $ID: String) {
           <p class="building-id -no-margin no-print">
             Chicago Building ID: {{ $page.building.ID }}
           </p>
+
+          <div class="pills-cont">
+            <g-link
+              v-if="fullyGasFree"
+              class="pill -all-electric"
+              to="/biggest-gas-free-buildings"
+            >
+              <span class="icon">⚡</span>
+              <span class="text">All Electric</span>
+            </g-link>
+
+            <g-link
+              v-if="isNew"
+              class="pill -new"
+              to="/latest-updates#new-buildings"
+            >
+              <span class="text">New!</span>
+            </g-link>
+          </div>
         </div>
 
         <div class="building-img-cont">
@@ -632,9 +651,11 @@ import {
 import {
   calculateEnergyBreakdown,
   DataAnomalies,
+  fullyGasFree,
   IBuilding,
   IBuildingBenchmarkStats,
   IHistoricData,
+  isNewBuilding,
   parseAnomalies,
   UtilityCosts,
 } from '../common-functions.vue';
@@ -768,6 +789,14 @@ export default class BuildingDetails extends Vue {
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
     return this.$page.building;
+  }
+
+  get fullyGasFree(): boolean {
+    return fullyGasFree(this.building);
+  }
+
+  get isNew(): boolean {
+    return isNewBuilding(this.building, this.historicData);
   }
 
   /** Helper for property name with address fallback */
@@ -1096,6 +1125,10 @@ export default class BuildingDetails extends Vue {
     margin-top: 0;
   }
 
+  .pills-cont {
+    margin-top: 0.5rem;
+  }
+
   .building-top-info {
     background: $off-white;
     border-radius: $brd-rad-medium;
@@ -1262,7 +1295,6 @@ export default class BuildingDetails extends Vue {
 
       .building-header-text {
         position: relative;
-        margin-bottom: 0;
 
         .address {
           font-size: 1rem;
@@ -1301,6 +1333,11 @@ export default class BuildingDetails extends Vue {
         // Constrain tall images on mobile so they don't take up the whole view height
         .building-img-cont.-tall {
           width: 75%;
+
+          img {
+            max-height: 25rem;
+            width: min-content;
+          }
         }
       }
 
