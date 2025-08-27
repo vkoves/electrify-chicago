@@ -3,6 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
+import PieChart, { IPieSlice } from '~/components/graphs/PieChart.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
@@ -30,6 +31,7 @@ interface IBuildingEdge {
   components: {
     BuildingsTable,
     BuildingsHero,
+    PieChart,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -60,6 +62,10 @@ export default class BiggestBuildings extends Vue {
 
   totalGHGEmissions?: string;
   medianGHGEmissionsMultiple?: string;
+
+  totalSquareFootage?: string;
+  avgBuildingAge?: string;
+  gradeDistributionPie: Array<IPieSlice> = [];
 
   created(): void {
     // Pull owner ID from the context provided in the gridsome.server page creation
@@ -95,14 +101,45 @@ export default class BiggestBuildings extends Vue {
   calculateOwnedBuildingStats(): void {
     let totalGHGEmissions = 0;
     let totalGHGIntensity = 0;
+    let totalSquareFootage = 0;
+    let totalYearBuilt = 0;
+    let buildingsWithYear = 0;
+    const gradeCounts: Record<string, number> = {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+      F: 0,
+    };
 
     this.buildingsFiltered.forEach((buildingEdge: IBuildingEdge) => {
       const building: IBuilding = buildingEdge.node;
 
       totalGHGIntensity += building.GHGIntensity;
       totalGHGEmissions += building.TotalGHGEmissions;
+      totalSquareFootage += building.GrossFloorArea || 0;
+
+      // Calculate average building age
+      if (building.YearBuilt) {
+        const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
+        if (
+          !isNaN(yearBuilt) &&
+          yearBuilt > 1800 &&
+          yearBuilt <= new Date().getFullYear()
+        ) {
+          totalYearBuilt += yearBuilt;
+          buildingsWithYear++;
+        }
+      }
+
+      // Count grade distribution
+      const grade = building.AvgPercentileLetterGrade;
+      if (grade && typeof grade === 'string' && grade in gradeCounts) {
+        gradeCounts[grade]++;
+      }
     });
 
+    // Existing calculations
     this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
     const avgGHGIntensity: number =
       totalGHGIntensity / this.buildingsFiltered.length;
@@ -114,6 +151,38 @@ export default class BiggestBuildings extends Vue {
     this.medianGHGEmissionsMultiple = (
       totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
     ).toFixed(0);
+
+    // New calculations
+    this.totalSquareFootage = (totalSquareFootage / 1000000).toFixed(1); // Convert to millions
+
+    if (buildingsWithYear > 0) {
+      const avgYearBuilt = totalYearBuilt / buildingsWithYear;
+      const currentYear = new Date().getFullYear();
+      this.avgBuildingAge = Math.round(currentYear - avgYearBuilt).toString();
+    } else {
+      this.avgBuildingAge = 'N/A';
+    }
+
+    // Grade distribution for pie chart
+    const gradeColors: Record<string, string> = {
+      A: '#009f49', // $grade-a-green
+      B: '#7fa52e', // $grade-b-green
+      C: '#b36a15', // $grade-c-orange
+      D: '#972222', // $grade-d-red
+      F: '#d60101', // $grade-f-red
+    };
+
+    this.gradeDistributionPie = Object.entries(gradeCounts)
+      .filter(([, count]) => count > 0) // Only include grades that exist
+      .sort(([a], [b]) => {
+        const gradeOrder = ['A', 'B', 'C', 'D', 'F'];
+        return gradeOrder.indexOf(a) - gradeOrder.indexOf(b);
+      })
+      .map(([grade, count]) => ({
+        label: `Grade ${grade}`,
+        value: count,
+        color: gradeColors[grade] || '#999999',
+      }));
   }
 }
 </script>
@@ -145,6 +214,10 @@ export default class BiggestBuildings extends Vue {
           NaturalGasUse
           DistrictSteamUse
           DataAnomalies
+          GrossFloorArea
+          GrossFloorAreaRank
+          GrossFloorAreaPercentileRank
+          YearBuilt
         }
       }
     }
@@ -178,6 +251,18 @@ export default class BiggestBuildings extends Vue {
           </div>
 
           <div class="stat-card">
+            <div class="stat-number">{{ totalSquareFootage }}M</div>
+            <div class="stat-label">Total Square Footage</div>
+            <div class="stat-description">million sq ft under management</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-number">{{ avgBuildingAge }}</div>
+            <div class="stat-label">Avg Building Age</div>
+            <div class="stat-description">years old</div>
+          </div>
+
+          <div class="stat-card">
             <div class="stat-label">Total Emissions</div>
             <div class="stat-number">{{ totalGHGEmissions }} tons</div>
             <div class="stat-description">
@@ -205,6 +290,21 @@ export default class BiggestBuildings extends Vue {
         </div>
       </section>
 
+      <section
+        v-if="gradeDistributionPie.length > 0"
+        class="grade-distribution"
+      >
+        <h2>Grade Distribution</h2>
+        <div class="grade-chart-container">
+          <PieChart
+            :graph-data="gradeDistributionPie"
+            id-prefix="grade-distribution"
+            :show-labels="true"
+            :sort-by-largest="false"
+          />
+        </div>
+      </section>
+
       <p class="constrained -wide smaller">
         <strong>Note:</strong> Building owners are manually tagged, so this may
         not be a definitive or perfect list.
@@ -212,7 +312,11 @@ export default class BiggestBuildings extends Vue {
 
       <DataDisclaimer />
 
-      <BuildingsTable :buildings="buildingsFiltered" />
+      <BuildingsTable
+        :buildings="buildingsFiltered"
+        :show-year-built="true"
+        :show-square-footage="true"
+      />
 
       <DataSourceFootnote />
     </div>
@@ -246,6 +350,36 @@ export default class BiggestBuildings extends Vue {
 
     .stat-description {
       font-weight: 600;
+    }
+
+    // Override grid for 5 cards layout
+    &.-three-col-max .stats-grid {
+      // Mobile: 2 columns
+      grid-template-columns: repeat(2, 1fr);
+
+      // Desktop: 3 columns (will wrap to 2 rows with 5 cards)
+      @media (min-width: $desktop-min-width) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      // Large desktop: 5 columns (one row)
+      @media (min-width: $large-desktop-min-width) {
+        grid-template-columns: repeat(5, 1fr);
+      }
+    }
+  }
+
+  .grade-distribution {
+    margin: 2rem 0;
+
+    h2 {
+      margin-bottom: 1rem;
+    }
+
+    .grade-chart-container {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
     }
   }
 
