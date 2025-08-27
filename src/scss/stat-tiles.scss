@@ -6,6 +6,23 @@
 .stats-overview {
   margin: 2rem 0;
 
+  // Variant for single column on mobile, 2 cols on desktop, 3 on large desktop
+  &.-three-col-max {
+    .stats-grid {
+      grid-template-columns: repeat(1, 1fr); // Mobile first - single column
+
+      // Desktop and up - two columns
+      @media (min-width: $desktop-min-width) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      // Large desktop - three columns
+      @media (min-width: $large-desktop-min-width) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+  }
+
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(
@@ -131,26 +148,6 @@
 
       .stat-footnote {
         font-size: 0.7rem;
-      }
-    }
-  }
-}
-
-// Grid layout variations for different use cases
-.stats-overview {
-  // Single column on mobile, 2 cols on desktop, 3 on large desktop
-  &.-three-col-max {
-    .stats-grid {
-      grid-template-columns: repeat(1, 1fr); // Mobile first - single column
-
-      // Desktop and up - two columns
-      @media (min-width: $desktop-min-width) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      // Large desktop - three columns
-      @media (min-width: $large-desktop-min-width) {
-        grid-template-columns: repeat(3, 1fr);
       }
     }
   }

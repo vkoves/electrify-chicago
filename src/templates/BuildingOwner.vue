@@ -243,7 +243,7 @@ export default class BiggestBuildings extends Vue {
       </g-link>
 
       <section class="stats-overview -three-col-max">
-        <h2>Owner Portfolio Stats</h2>
+        <h2>{{ currOwner.name }} Quick Stats</h2>
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-number">{{ buildingsFiltered.length }}</div>
@@ -251,20 +251,8 @@ export default class BiggestBuildings extends Vue {
           </div>
 
           <div class="stat-card">
-            <div class="stat-number">{{ totalSquareFootage }}M</div>
-            <div class="stat-label">Total Square Footage</div>
-            <div class="stat-description">million sq ft under management</div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-number">{{ avgBuildingAge }}</div>
-            <div class="stat-label">Avg Building Age</div>
-            <div class="stat-description">years old</div>
-          </div>
-
-          <div class="stat-card">
             <div class="stat-label">Total Emissions</div>
-            <div class="stat-number">{{ totalGHGEmissions }} tons</div>
+            <div class="stat-number">{{ totalGHGEmissions }}</div>
             <div class="stat-description">
               metric tons CO<sub>2</sub> equivalent
             </div>
@@ -294,16 +282,38 @@ export default class BiggestBuildings extends Vue {
         v-if="gradeDistributionPie.length > 0"
         class="grade-distribution"
       >
-        <h2>Grade Distribution</h2>
-        <div class="grade-chart-container">
-          <PieChart
-            :graph-data="gradeDistributionPie"
-            id-prefix="grade-distribution"
-            :show-labels="true"
-            :sort-by-largest="false"
-          />
+        <div class="grade-content">
+          <div class="grade-chart-container">
+            <h3>Grade Distribution</h3>
+
+            <PieChart
+              :graph-data="gradeDistributionPie"
+              id-prefix="grade-distribution"
+              :show-labels="true"
+              :sort-by-largest="false"
+            />
+          </div>
+          <div class="supplementary-stats stats-overview">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-label">Total Square Footage</div>
+                <div class="stat-number">{{ totalSquareFootage }}M</div>
+                <div class="stat-description">
+                  million sq ft under management
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Avg Building Age</div>
+                <div class="stat-number">{{ avgBuildingAge }}</div>
+                <div class="stat-description">years old</div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
+
+      <h2>{{ currOwner.name }} Buildings List</h2>
 
       <p class="constrained -wide smaller">
         <strong>Note:</strong> Building owners are manually tagged, so this may
@@ -350,21 +360,22 @@ export default class BiggestBuildings extends Vue {
 
     .stat-description {
       font-weight: 600;
+      font-size: 1rem;
+      line-height: 1;
     }
 
-    // Override grid for 5 cards layout
+    .stat-number {
+      margin-top: 0.5rem;
+    }
+
+    // Override grid for 3 cards layout
     &.-three-col-max .stats-grid {
       // Mobile: 2 columns
       grid-template-columns: repeat(2, 1fr);
 
-      // Desktop: 3 columns (will wrap to 2 rows with 5 cards)
+      // Desktop: 3 columns (one row with 3 cards)
       @media (min-width: $desktop-min-width) {
         grid-template-columns: repeat(3, 1fr);
-      }
-
-      // Large desktop: 5 columns (one row)
-      @media (min-width: $large-desktop-min-width) {
-        grid-template-columns: repeat(5, 1fr);
       }
     }
   }
@@ -373,13 +384,39 @@ export default class BiggestBuildings extends Vue {
     margin: 2rem 0;
 
     h2 {
-      margin-bottom: 1rem;
+      font-size: 1rem;
+      margin: 0;
     }
 
-    .grade-chart-container {
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
+    .grade-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+
+      @media (min-width: $desktop-min-width) {
+        grid-template-columns: 1fr 3fr;
+        align-items: flex-start;
+      }
+    }
+
+    .supplementary-stats {
+      // Override the default margin from stats-overview
+      margin: 0;
+
+      .stats-grid {
+        // Override default 4-column layout for our 2 stats
+        grid-template-columns: 1fr;
+
+        @media (min-width: $mobile-max-width) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        // Keep it at 2 columns even on large desktop
+        @media (min-width: $large-desktop-min-width) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
     }
   }
 
