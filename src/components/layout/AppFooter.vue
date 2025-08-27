@@ -87,7 +87,7 @@ footer {
     justify-content: center;
     align-items: center;
     margin: auto;
-    gap: 2rem;
+    gap: 1rem;
   }
 
   a {
@@ -104,20 +104,20 @@ footer {
   a.instagram {
     text-decoration: none;
     padding: 0.3125rem 1rem;
-    border-radius: $brd-rad-full;
+
     font-size: 0.825rem;
     line-height: 1;
-    //min-width: 150px;
   }
 
   a.bluesky,
   a.youtube,
   a.instagram {
-    border-radius: 10px;
+    border-radius: 5px;
     padding: 0.3125rem;
   }
 
   a.github-link {
+    border-radius: $brd-rad-full;
     background-color: $off-white;
     border: none;
 
@@ -143,17 +143,17 @@ footer {
 
     &:hover,
     &:focus {
-      background-color: #016cd0;
+      background-color: #cc0000;
     }
   }
 
   a.instagram {
-    background-color: #8a3ab9; // Instagram
+    background-color: #d62976; // Instagram
     color: $white;
 
     &:hover,
     &:focus {
-      background-color: #016cd0;
+      background-color: #d12342;
     }
   }
 
@@ -163,11 +163,6 @@ footer {
     color: $chicago-red;
     line-height: 0;
     margin: 0 0.125rem;
-  }
-
-  .yt-icon,
-  .ig-icon {
-    
   }
 
   @media (max-width: $mobile-max-width) {
