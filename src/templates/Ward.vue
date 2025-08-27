@@ -145,90 +145,96 @@ query ($ward: String) {
 </page-query>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout main-class="layout -full-width">
     <div class="ward-page">
-      <g-link to="/wards" class="grey-link back-link">
-        <img src="/icons/arrow-back.svg" />
-        Back to All Wards
-      </g-link>
-
       <BuildingsHero
         :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
       >
         <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
       </BuildingsHero>
 
-      <p>
-        This page shows all buildings identified as being in Ward
-        {{ $context.ward }} that submitted building benchmarking data.
-      </p>
-      <p>
-        Learn more at
-        <a
-          :href="`https://www.chicago.gov/city/en/about/wards/${wardZeroed}.html`"
-          target="_blank"
-          rel="noopener"
-        >
-          The City of Chicago - Ward {{ $context.ward }}
+      <div class="page-constrained">
+        <g-link to="/wards" class="grey-link back-link">
+          <img src="/icons/arrow-back.svg" />
+          Back to All Wards
+        </g-link>
 
-          <NewTabIcon />
-        </a>
-      </p>
+        <p>
+          This page shows all buildings identified as being in Ward
+          {{ $context.ward }} that submitted building benchmarking data.
+        </p>
+        <p>
+          Learn more at
+          <a
+            :href="`https://www.chicago.gov/city/en/about/wards/${wardZeroed}.html`"
+            target="_blank"
+            rel="noopener"
+          >
+            The City of Chicago - Ward {{ $context.ward }}
 
-      <h2>Ward Stats</h2>
+            <NewTabIcon />
+          </a>
+        </p>
 
-      <ul class="stats">
-        <li class="bold">{{ $page.allBuilding.edges.length }} Buildings</li>
+        <h2>Ward Stats</h2>
 
-        <li>
-          <strong>
-            Total Emissions:
-            {{ totalGHGEmissions }} metric tons CO<sub>2</sub> equivalent
-          </strong>
+        <ul class="stats">
+          <li class="bold">{{ $page.allBuilding.edges.length }} Buildings</li>
 
-          <p class="footnote">
+          <li>
             <strong>
-              Equivalent to {{ medianGHGEmissionsMultiple }} of the median
-              benchmarked building
+              Total Emissions:
+              {{ totalGHGEmissions }} metric tons CO<sub>2</sub> equivalent
             </strong>
-            ({{
-              BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
-            }}
-            tons CO<sub>2</sub>e)
-          </p>
-        </li>
 
-        <li>
-          <strong>
-            Average GHG Intensity:
-            {{ avgGHGIntensity }} kg CO<sub>2</sub>e/sqft
-          </strong>
+            <p class="footnote">
+              <strong>
+                Equivalent to {{ medianGHGEmissionsMultiple }} of the median
+                benchmarked building
+              </strong>
+              ({{
+                BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
+              }}
+              tons CO<sub>2</sub>e)
+            </p>
+          </li>
 
-          <p class="footnote">
-            <strong
-              >{{ medianGHGIntensityMultiple }}x the median benchmarked
-              building</strong
-            >
-            ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg
-            CO<sub>2</sub>/sqft)
-          </p>
-        </li>
-      </ul>
+          <li>
+            <strong>
+              Average GHG Intensity:
+              {{ avgGHGIntensity }} kg CO<sub>2</sub>e/sqft
+            </strong>
 
-      <DataDisclaimer />
+            <p class="footnote">
+              <strong
+                >{{ medianGHGIntensityMultiple }}x the median benchmarked
+                building</strong
+              >
+              ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg
+              CO<sub>2</sub>/sqft)
+            </p>
+          </li>
+        </ul>
 
-      <BuildingsTable
-        :buildings="$page.allBuilding.edges"
-        :show-square-footage="true"
-      />
+        <DataDisclaimer />
 
-      <DataSourceFootnote />
+        <BuildingsTable
+          :buildings="$page.allBuilding.edges"
+          :show-square-footage="true"
+        />
+
+        <DataSourceFootnote />
+      </div>
     </div>
   </DefaultLayout>
 </template>
 
 <style lang="scss">
 .ward-page {
+  .back-link {
+    margin-bottom: 1rem;
+  }
+
   h2 {
     margin-bottom: 0.5rem;
   }

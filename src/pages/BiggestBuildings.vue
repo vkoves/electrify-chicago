@@ -75,23 +75,24 @@ export default class BiggestBuildings extends Vue {
     </BuildingsHero>
 
     <div class="page-constrained">
-    <p class="constrained -wide">
-      These are the biggest buildings in our dataset, which should encompass all
-      of the largest buildings in the city that submitted their energy use for
-      {{ LatestDataYear }}. Being a big building does basically guarantee that
-      you use a lot of energy (and emit a lot of CO<sub>2</sub>), but a lot of
-      big buildings are very energy efficient and use less energy per square
-      foot than much smaller buildings!
-    </p>
+      <p class="constrained -wide">
+        These are the biggest buildings in our dataset, which should encompass
+        all of the largest buildings in the city that submitted their energy use
+        for
+        {{ LatestDataYear }}. Being a big building does basically guarantee that
+        you use a lot of energy (and emit a lot of CO<sub>2</sub>), but a lot of
+        big buildings are very energy efficient and use less energy per square
+        foot than much smaller buildings!
+      </p>
 
-    <DataDisclaimer />
+      <DataDisclaimer />
 
-    <BuildingsTable
-      :buildings="$static.allBuilding.edges"
-      :show-square-footage="true"
-    />
+      <BuildingsTable
+        :buildings="$static.allBuilding.edges"
+        :show-square-footage="true"
+      />
 
-    <DataSourceFootnote />
+      <DataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>

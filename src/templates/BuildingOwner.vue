@@ -317,8 +317,8 @@ export default class BiggestBuildings extends Vue {
         <h2>{{ currOwner.name }} Buildings List</h2>
 
         <p class="constrained -wide smaller">
-          <strong>Note:</strong> Building owners are manually tagged, so this may
-          not be a definitive or perfect list.
+          <strong>Note:</strong> Building owners are manually tagged, so this
+          may not be a definitive or perfect list.
         </p>
 
         <DataDisclaimer />
