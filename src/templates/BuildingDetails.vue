@@ -136,7 +136,7 @@ query ($id: ID!, $ID: String) {
             <g-link
               v-if="fullyGasFree"
               class="pill -all-electric"
-              to="/biggest-gas-free-buildings"
+              to="/all-electric"
             >
               <span class="icon">⚡</span>
               <span class="text">All Electric</span>
