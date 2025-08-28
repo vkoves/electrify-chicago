@@ -1,5 +1,4 @@
 <script lang="ts">
-/* global process */
 import { Component, Vue } from 'vue-property-decorator';
 
 import DataDisclaimer from '~/components/DataDisclaimer.vue';

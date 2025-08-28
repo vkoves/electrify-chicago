@@ -944,6 +944,14 @@ export const BuildingImages: IBuildingImages = {
   },
 
   /**
+   * Northwestern
+   */
+  '103748': {
+    imgUrl: BuildingImagesBase + 'northwestern/103748-710_N_Fairbanks_Ct.webp',
+    fromGoogleMaps: true,
+  },
+
+  /**
    * Misc. High Emitters
    */
   //

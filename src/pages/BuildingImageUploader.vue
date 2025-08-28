@@ -9,7 +9,8 @@
       </p>
 
       <div class="panel -warning text-center">
-        <strong>⚠️ Development Only:</strong> Images are saved to
+        <strong>⚠️ Manual Process:</strong> Images are downloaded to your
+        Downloads folder. You must manually move them to
         static/building-imgs/manual/
       </div>
 
@@ -33,51 +34,30 @@
             />
           </div>
 
-          <div class="form-group">
-            <label for="address">
-              Address <span class="required">*</span>
-            </label>
-            <input
-              id="address"
-              v-model="form.address"
-              type="text"
-              placeholder="e.g. 10 W 31st Street"
-              required
-            />
-            <small class="help-text">
-              Street address only (no Chicago IL needed)
-            </small>
+          <!-- Building Info Display -->
+          <div v-if="selectedBuilding" class="building-info">
+            <h3>Building Found:</h3>
+            <div class="building-details">
+              <p>
+                <strong>Name:</strong>
+                {{ selectedBuilding.PropertyName || '[No Name Available]' }}
+              </p>
+              <p><strong>Address:</strong> {{ selectedBuilding.Address }}</p>
+              <p>
+                <strong>Type:</strong>
+                {{ selectedBuilding.PrimaryPropertyType }}
+              </p>
+              <p v-if="selectedBuilding.YearBuilt">
+                <strong>Year Built:</strong> {{ selectedBuilding.YearBuilt }}
+              </p>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="subfolder">Subfolder</label>
-            <div class="subfolder-input">
-              <select
-                id="subfolderSelect"
-                v-model="selectedExistingFolder"
-                @change="onExistingFolderChange"
-              >
-                <option value="">Select existing folder...</option>
-                <option
-                  v-for="folder in existingFolders"
-                  :key="folder"
-                  :value="folder"
-                >
-                  {{ folder }}
-                </option>
-              </select>
-              <span class="or-text">or</span>
-              <input
-                id="subfolder"
-                v-model="form.subfolder"
-                type="text"
-                placeholder="new-folder-name"
-                @input="onCustomFolderInput"
-              />
-            </div>
-            <small class="help-text">
-              Leave empty to save directly in /manual/
-            </small>
+          <div
+            v-else-if="form.buildingId && !selectedBuilding"
+            class="building-not-found"
+          >
+            <p>⚠️ Building ID "{{ form.buildingId }}" not found in database</p>
           </div>
 
           <div class="form-group">
@@ -166,8 +146,23 @@
               v-if="!result.error && result.codeSnippet"
               class="code-snippet"
             >
-              <h4>Add to building-images.constant.vue:</h4>
-              <pre><code>{{ result.codeSnippet }}</code></pre>
+              <h4>Next Steps:</h4>
+              <ol class="next-steps">
+                <li>
+                  Move the downloaded file to: <code>{{ result.path }}</code>
+                </li>
+                <li>
+                  Add this code to building-images.constant.vue:
+
+                  <pre><code>{{ result.codeSnippet }}</code></pre>
+                </li>
+                <li>
+                  <g-link :to="`/building-id/${result.buildingId}`"
+                    >View Building Page</g-link
+                  >
+                  (to confirm image displays correctly)
+                </li>
+              </ol>
               <button
                 class="button -small"
                 @click="copyToClipboard(result.codeSnippet)"
@@ -207,13 +202,28 @@
   </DefaultLayout>
 </template>
 
+<static-query>
+  query {
+    allBuilding {
+      edges {
+        node {
+          ID
+          PropertyName
+          Address
+          PrimaryPropertyType
+          YearBuilt
+        }
+      }
+    }
+  }
+</static-query>
+
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { IBuilding } from '../common-functions.vue';
 
 interface UploadForm {
   buildingId: string;
-  address: string;
-  subfolder: string;
 }
 
 interface PreviewData {
@@ -244,8 +254,11 @@ interface UploadResult {
 export default class BuildingImageUploader extends Vue {
   form: UploadForm = {
     buildingId: '',
-    address: '',
-    subfolder: '',
+  };
+
+  /** Set by Gridsome to results of GraphQL query */
+  readonly $static!: {
+    allBuilding: { edges: Array<{ node: IBuilding }> };
   };
 
   preview: PreviewData = {
@@ -257,17 +270,6 @@ export default class BuildingImageUploader extends Vue {
 
   processing = false;
   results: UploadResult[] = [];
-  selectedExistingFolder = '';
-
-  // Known existing subfolders from auto-streetview
-  existingFolders = [
-    'new-buildings-2023',
-    'biggest',
-    'cleanest',
-    'depaul',
-    'iit',
-    'uchicago',
-  ];
 
   get isDevelopment(): boolean {
     return (
@@ -279,10 +281,20 @@ export default class BuildingImageUploader extends Vue {
     );
   }
 
+  get selectedBuilding(): IBuilding | null {
+    if (!this.form.buildingId.trim() || !this.$static?.allBuilding) return null;
+
+    const building = this.$static.allBuilding.edges.find(
+      (edge) => edge.node.ID.toString() === this.form.buildingId.trim(),
+    );
+
+    return building ? building.node : null;
+  }
+
   get canSubmit(): boolean {
     return (
       this.form.buildingId.trim() !== '' &&
-      this.form.address.trim() !== '' &&
+      this.selectedBuilding !== null &&
       this.preview.url !== ''
     );
   }
@@ -303,26 +315,15 @@ export default class BuildingImageUploader extends Vue {
   }
 
   get generatedFilename(): string {
-    if (!this.form.buildingId || !this.form.address) return '';
+    if (!this.form.buildingId || !this.selectedBuilding) return '';
 
-    // Create filename: ID-address.webp (e.g. 256419-10_W_31st_Street.webp)
-    const cleanAddress = this.form.address
-      .replace(/[^\w\s]/g, '') // Remove special characters
+    // Create filename: ID-address.webp (e.g. 256419-10_W_31st_Street.webp) and remove
+    // characters
+    const cleanAddress = this.selectedBuilding.Address.replace(/[^\w\s]/g, '')
       .replace(/\s+/g, '_') // Replace spaces with underscores
       .trim();
 
     return `${this.form.buildingId}-${cleanAddress}.webp`;
-  }
-
-  onExistingFolderChange(): void {
-    if (this.selectedExistingFolder) {
-      this.form.subfolder = this.selectedExistingFolder;
-    }
-  }
-
-  onCustomFolderInput(): void {
-    // Clear the dropdown selection when typing custom folder
-    this.selectedExistingFolder = '';
   }
 
   handleFileSelect(event: Event): void {
@@ -368,11 +369,8 @@ export default class BuildingImageUploader extends Vue {
       const processedBlob = await this.processImage(file);
 
       // Create path
-      const subfolder = this.form.subfolder.trim();
       const filename = this.generatedFilename;
-      const relativePath = subfolder
-        ? `manual/${subfolder}/${filename}`
-        : `manual/${filename}`;
+      const relativePath = `manual/${filename}`;
 
       const result: UploadResult = {
         timestamp: Date.now(),
@@ -452,7 +450,7 @@ export default class BuildingImageUploader extends Vue {
   generateCodeSnippet(buildingId: string, relativePath: string): string {
     return `'${buildingId}': {
   imgUrl: BuildingImagesBase + '${relativePath}',
-  fromGoogleMaps: false,
+  fromGoogleMaps: true,
 },`;
   }
 
@@ -467,8 +465,7 @@ export default class BuildingImageUploader extends Vue {
   }
 
   resetForm(): void {
-    this.form = { buildingId: '', address: '', subfolder: '' };
-    this.selectedExistingFolder = '';
+    this.form = { buildingId: '' };
     this.clearPreview();
     const fileInput = this.$refs.fileInput as HTMLInputElement;
     if (fileInput) fileInput.value = '';
@@ -493,6 +490,10 @@ export default class BuildingImageUploader extends Vue {
   padding: 2rem;
   border-radius: $brd-rad-medium;
   margin-bottom: 2rem;
+}
+
+.panel.-warning {
+  margin-top: 1rem;
 }
 
 .form-group {
@@ -529,37 +530,45 @@ export default class BuildingImageUploader extends Vue {
   }
 }
 
-.subfolder-input {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
+.required {
+  color: $chicago-red;
+}
 
-  select,
-  input {
-    flex: 1;
-    min-width: 150px;
+.building-info {
+  background-color: $off-white;
+  border: $border-thin solid $green;
+  border-radius: $brd-rad-medium;
+  padding: 1.5rem;
+  margin: 1rem 0;
+
+  h3 {
+    color: $green;
+    margin-bottom: 1rem;
   }
 
-  .or-text {
-    color: $text-mid-light;
-    font-weight: 600;
-    white-space: nowrap;
-  }
+  .building-details {
+    p {
+      margin-bottom: 0.5rem;
 
-  @media (max-width: $mobile-max-width) {
-    flex-direction: column;
-    align-items: stretch;
-
-    .or-text {
-      text-align: center;
-      margin: 0.5rem 0;
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
   }
 }
 
-.required {
-  color: $chicago-red;
+.building-not-found {
+  background-color: $concern-very-bad-background;
+  border: $border-thin solid $red;
+  border-radius: $brd-rad-medium;
+  padding: 1rem;
+  margin: 1rem 0;
+
+  p {
+    color: $chicago-red;
+    font-weight: 600;
+    margin: 0;
+  }
 }
 
 .preview-section {
@@ -663,6 +672,21 @@ export default class BuildingImageUploader extends Vue {
   .button.-small {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
+  }
+
+  .next-steps {
+    margin: 1rem 0;
+
+    li {
+      margin-bottom: 0.5rem;
+    }
+
+    code {
+      background-color: $grey-light;
+      padding: 0.2rem 0.4rem;
+      border-radius: $brd-rad-small;
+      font-size: 0.8rem;
+    }
   }
 }
 
