@@ -272,7 +272,6 @@ export default class BuildingImageUploader extends Vue {
   get isDevelopment(): boolean {
     return (
       process.env.NODE_ENV === 'development' ||
-      /* eslint-disable-next-line no-undef */
       process.env.GRIDSOME_MODE === 'development' ||
       (typeof window !== 'undefined' &&
         (window.location.hostname === 'localhost' ||
