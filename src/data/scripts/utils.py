@@ -5,24 +5,26 @@ data being processed
 
 import pandas as pd
 import pathlib
-import pathlib
 
 from typing import List
 
 # ANSI color codes for output
-RED = '\033[0;31m'
-GREEN = '\033[0;32m'
-YELLOW = '\033[0;33m'
-LIGHT_BLUE = '\033[0;34m'
-NC = '\033[0m'  # No Color
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"
+YELLOW = "\033[0;33m"
+LIGHT_BLUE = "\033[0;34m"
+NC = "\033[0m"  # No Color
+
 
 def print_red(msg: str) -> None:
     """Print to the console with red text"""
     print(f"{RED}{msg}{NC}")
 
+
 def print_yellow(msg: str) -> None:
     """Print to the console with yellow text"""
     print(f"{YELLOW}{msg}{NC}")
+
 
 def print_green(msg: str) -> None:
     """Print to the console with green text"""
@@ -35,7 +37,8 @@ def get_data_file_path(dir: str, f: str) -> str:
     curr_path = pathlib.Path(".")
     path = curr_path.parent.absolute() / "src" / "data" / dir / f
 
-    return path
+    return str(path)
+
 
 def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pd.DataFrame:
     """Fetch a building benchmarking CSV in Pandas, keeping the cols_to_keep (if specified)"""
@@ -44,26 +47,28 @@ def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pd.DataFrame:
     data_types = {
         # Specify that "Exempt From Chicago Energy Rating" column is a string, preventing default
         # boolean parsing and warning of mixed types
-        7: 'string',
+        7: "string",
     }
 
-    df = pd.read_csv(path_to_csv, dtype=data_types)
+    df = pd.read_csv(path_to_csv, dtype=data_types)  # type: ignore
 
     if cols_to_keep is None:
         return df
     else:
         return df[cols_to_keep]
 
+
 def output_to_csv(building_data: pd.DataFrame, output_path: str) -> None:
     """Output a Pandas dataframe to a CSV file"""
-    building_data.to_csv(output_path, sep=',', encoding='utf-8', index=False)
+    building_data.to_csv(output_path, sep=",", encoding="utf-8", index=False)
+
 
 def json_data_builder(
     dataframe, outer_tag="default", is_array=True, array_key="emissionsByYear"
 ) -> List[str]:
     """Process the a CSV dataframe into a JSON object"""
 
-    uniqueColKey = 'ID'
+    uniqueColKey = "ID"
 
     dataframe = dataframe.map(lambda x: "" if pd.isnull(x) else x)
 
@@ -81,11 +86,12 @@ def json_data_builder(
         #     building_json = building_df.to_dict('records')
         #     json_object.append({"building": building, array_key: building_json})
         # else:
-        building_json = building_df.to_dict('records')[0]
+        building_json = building_df.to_dict("records")[0]
         json_object.append(building_json)
 
     # Return outer tag output object
     return json_object
+
 
 def log_step_completion(step_num, outputted_paths):
     """Logs the completion of a data processing step and the paths of exported files.
