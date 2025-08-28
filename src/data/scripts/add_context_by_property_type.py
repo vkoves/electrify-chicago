@@ -6,7 +6,7 @@ buildings)
 import pandas as pd
 import json
 
-from typing import List, Union, Any, cast
+from typing import List, Any, cast
 from pandas.core.groupby.generic import DataFrameGroupBy
 from src.data.scripts.utils import (
     get_data_file_path,
@@ -78,9 +78,15 @@ def calculate_building_stats(
                 cur_count = int(grouped_by_prop_type[col].count().iloc[i])
                 cur_min = round(float(grouped_by_prop_type[col].min().iloc[i]), 3)
                 cur_max = round(float(grouped_by_prop_type[col].max().iloc[i]), 3)
-                cur_first_quartile = round(float(grouped_by_prop_type[col].quantile(q=0.25).iloc[i]), 3)
-                cur_median = round(float(grouped_by_prop_type[col].quantile(q=0.5).iloc[i]), 1)
-                cur_third_quartile = round(float(grouped_by_prop_type[col].quantile(q=0.75).iloc[i]), 3)
+                cur_first_quartile = round(
+                    float(grouped_by_prop_type[col].quantile(q=0.25).iloc[i]), 3
+                )
+                cur_median = round(
+                    float(grouped_by_prop_type[col].quantile(q=0.5).iloc[i]), 1
+                )
+                cur_third_quartile = round(
+                    float(grouped_by_prop_type[col].quantile(q=0.75).iloc[i]), 3
+                )
             except (IndexError, AttributeError, ValueError):
                 # Skip this property type/column combination if data is not available
                 continue
@@ -158,7 +164,9 @@ def main() -> None:
     latest_building_data = building_data[building_data["DataYear"] == latest_year]
 
     # sorted data based on each property type: the order is alphabetical
-    grouped_by_prop_type = cast(DataFrameGroupBy, latest_building_data.groupby("PrimaryPropertyType"))
+    grouped_by_prop_type = cast(
+        DataFrameGroupBy, latest_building_data.groupby("PrimaryPropertyType")
+    )
 
     # get a list of all unique property types
     property_types = [str(key) for key in grouped_by_prop_type.groups.keys()]

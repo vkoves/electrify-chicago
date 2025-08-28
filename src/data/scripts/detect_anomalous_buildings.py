@@ -110,14 +110,13 @@ def detect_large_gas_swing_buildings(
     gas_users = detect_gas_users(historic_data)
 
     gas_grouped = gas_users.groupby("ID").agg({"NaturalGasUse": determine_abs_delta})
-    
+
     # Ensure we have a DataFrame and reset index
     gas_df = pd.DataFrame(gas_grouped).reset_index()
-    
+
     # Sort and filter
     anom_gas_usage = (
-        gas_df
-        .sort_values("NaturalGasUse", ascending=False)
+        gas_df.sort_values("NaturalGasUse", ascending=False)
         .dropna()
         .rename(columns={"NaturalGasUse": "NaturalGasChange"})
     )
