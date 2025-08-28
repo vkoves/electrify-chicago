@@ -41,13 +41,6 @@ repos:
         language: system
         pass_filenames: false
         files: "pyproject.toml|uv.lock"
-      - id: update-requirements
-        name: update-requirements
-        entry: uv export
-        args: ["--format", "requirements-txt", "--output-file", "requirements.txt"]
-        language: system
-        pass_filenames: false
-        files: "pyproject.toml|uv.lock"
       - id: typescript-format
         name: typescript-format
         files: '\\.(js|jsx|ts|tsx|vue|css|scss|json|md)$'
