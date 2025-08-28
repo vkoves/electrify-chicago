@@ -11,7 +11,6 @@
         class="hero-image"
       >
         <img
-          loading="lazy"
           :src="getBuildingImage(building)?.imgUrl"
           :alt="`${building.PropertyName || building.Address}`"
         />
