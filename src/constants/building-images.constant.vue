@@ -1223,6 +1223,16 @@ export const BuildingImages: IBuildingImages = {
       'auto-streetview/cleanest/104431-5948_5958_N_BROADWAY_60660.webp',
     fromGoogleMaps: true,
   },
+
+  /**
+   * New 2023 Buildings
+   */
+  '256808': {
+    imgUrl:
+      BuildingImagesBase +
+      'manual/new-buildings-2023/256808-205_South_Peoria_Street.webp',
+    fromGoogleMaps: true,
+  },
 };
 
 /**

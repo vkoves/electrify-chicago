@@ -23,12 +23,14 @@
             >
           </div>
 
-          <div class="admin-card -coming-soon">
-            <h3>Streetview Image Manager</h3>
+          <div class="admin-card">
+            <h3>Building Image Uploader</h3>
             <p>
-              Upload, review, and manage building images from Google Streetview.
+              Upload, review, and manage building images with auto-processing.
             </p>
-            <button class="button" disabled>Coming Soon</button>
+            <g-link to="/building-image-uploader" class="button -primary"
+              >Open Uploader</g-link
+            >
           </div>
         </div>
       </section>
