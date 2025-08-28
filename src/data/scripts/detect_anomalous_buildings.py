@@ -109,20 +109,21 @@ def detect_large_gas_swing_buildings(
     # Ignore buildings with a very small share of gas use
     gas_users = detect_gas_users(historic_data)
 
+    gas_grouped = gas_users.groupby("ID").agg({"NaturalGasUse": determine_abs_delta})
+    
+    # Ensure we have a DataFrame and reset index
+    gas_df = pd.DataFrame(gas_grouped).reset_index()
+    
+    # Sort and filter
     anom_gas_usage = (
-        gas_users.groupby("ID")
-        .agg({"NaturalGasUse": determine_abs_delta})
+        gas_df
         .sort_values("NaturalGasUse", ascending=False)
         .dropna()
         .rename(columns={"NaturalGasUse": "NaturalGasChange"})
-        .reset_index()
     )
 
-    anom_ids = (
-        anom_gas_usage[anom_gas_usage.NaturalGasChange > threshold]["ID"]
-        .unique()
-        .tolist()
-    )
+    filtered_data = anom_gas_usage[anom_gas_usage.NaturalGasChange > threshold]
+    anom_ids = pd.Series(filtered_data["ID"]).unique().tolist()
 
     thresh_prcnt = round(threshold * 100)
     print(

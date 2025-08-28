@@ -53,6 +53,7 @@ def find_addresses():
     with open(energy_benchmarking_filepath, newline="") as all_data:
         whole_file = all_data.read().splitlines()
 
+        i = 0  # Initialize i outside the loop
         for i, line in enumerate(whole_file):
             line_arr = line.split(",")
 
@@ -63,11 +64,11 @@ def find_addresses():
                 if clean_address(address) in benchmark_buildings:
                     found.add(line_arr[MAIN_FILE_ID_INDEX])
 
-        if i % 50 == 49:
-            with open("temp.txt", "w") as f:
-                f.write(str(len(found)))
-                f.write("/n")
-                f.write(", ".join(found))
+            if i % 50 == 49:
+                with open("temp.txt", "w") as f:
+                    f.write(str(len(found)))
+                    f.write("/n")
+                    f.write(", ".join(found))
 
         print(
             f'Found {len(found)} City Owned Addresses in Benchmarking Data Using "{city_owned_filename}"!'

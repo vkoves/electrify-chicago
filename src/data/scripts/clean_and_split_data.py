@@ -132,7 +132,11 @@ def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame:
 def filter_cols_historic(building_data: pd.DataFrame) -> pd.DataFrame:
     """Filter down the reporting entries to only columns relevant to our historical data CSV"""
 
-    return building_data[columns_to_track_over_time]
+    filtered_data = building_data[columns_to_track_over_time]
+    # Ensure we always return a DataFrame, not a Series
+    if isinstance(filtered_data, pd.Series):
+        return filtered_data.to_frame().T
+    return filtered_data
 
 
 def fix_str_cols(

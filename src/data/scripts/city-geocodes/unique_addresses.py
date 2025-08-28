@@ -12,9 +12,8 @@ import pandas as pd
 
 
 def getUniqueAddresses(benchmarking_data: pd.DataFrame) -> pd.DataFrame:
-    unique_addresses = pd.DataFrame(
-        benchmarking_data["Address"].dropna().unique(), columns=["Address"]
-    )
+    unique_address_values = benchmarking_data["Address"].dropna().unique()
+    unique_addresses = pd.DataFrame({"Address": unique_address_values})
     return unique_addresses
 
 

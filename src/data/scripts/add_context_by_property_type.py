@@ -6,7 +6,8 @@ buildings)
 import pandas as pd
 import json
 
-from typing import List
+from typing import List, Union, Any, cast
+from pandas.core.groupby.generic import DataFrameGroupBy
 from src.data.scripts.utils import (
     get_data_file_path,
     log_step_completion,
@@ -40,7 +41,7 @@ building_cols_to_rank = [
 ]
 
 
-def generate_property_types(property_types: List[str]) -> List[str]:
+def generate_property_types(property_types: List[Any]) -> List[str]:
     """
     Output property_types to a json file for use in the frontend (like the type filter).
     Returns the file written to as an array
@@ -54,7 +55,7 @@ def generate_property_types(property_types: List[str]) -> List[str]:
 
 
 def calculate_building_stats(
-    property_types: List[str], grouped_by_prop_type: pd.DataFrame
+    property_types: List[str], grouped_by_prop_type: DataFrameGroupBy
 ) -> str:
     """
     Calculates stats by property type (e.g. median GHG emissions) and writes them to JSON file
@@ -69,23 +70,20 @@ def calculate_building_stats(
     # looping through both all the property types and all the columns we want to get data on
     for i, property in enumerate(property_types):
         cur_property_type_stats = {}
+        cur_count = 0
 
         for col in building_cols_to_rank:
             # finding the mean, count, min, max, and quartiles of each category for each building type
-            cur_count = grouped_by_prop_type[col].count().iloc[i].item()
-
-            cur_min = round(grouped_by_prop_type[col].min().iloc[i].item(), 3)
-            cur_max = round(grouped_by_prop_type[col].max().iloc[i].item(), 3)
-
-            cur_first_quartile = round(
-                grouped_by_prop_type[col].quantile(q=0.25).iloc[i].item(), 3
-            )
-            cur_median = round(
-                grouped_by_prop_type[col].quantile(q=0.5).iloc[i].item(), 1
-            )
-            cur_third_quartile = round(
-                grouped_by_prop_type[col].quantile(q=0.75).iloc[i].item(), 3
-            )
+            try:
+                cur_count = int(grouped_by_prop_type[col].count().iloc[i])
+                cur_min = round(float(grouped_by_prop_type[col].min().iloc[i]), 3)
+                cur_max = round(float(grouped_by_prop_type[col].max().iloc[i]), 3)
+                cur_first_quartile = round(float(grouped_by_prop_type[col].quantile(q=0.25).iloc[i]), 3)
+                cur_median = round(float(grouped_by_prop_type[col].quantile(q=0.5).iloc[i]), 1)
+                cur_third_quartile = round(float(grouped_by_prop_type[col].quantile(q=0.75).iloc[i]), 3)
+            except (IndexError, AttributeError, ValueError):
+                # Skip this property type/column combination if data is not available
+                continue
 
             cur_property_type_stats[col] = {
                 "count": cur_count,
@@ -104,13 +102,13 @@ def calculate_building_stats(
     with open(property_stats_file_path, "w") as property_stats_file:
         json.dump(stats_by_property_type, property_stats_file)
 
-    property_stats_file_path
+    return property_stats_file_path
 
 
 def rank_buildings_by_property_type(
     building_data: pd.DataFrame,
     property_types: List[str],
-    grouped_by_prop_type: pd.DataFrame,
+    grouped_by_prop_type: DataFrameGroupBy,
 ) -> List[str]:
     """
     Ranks buildings in relation to their property type, then re-exporting the file
@@ -160,10 +158,10 @@ def main() -> None:
     latest_building_data = building_data[building_data["DataYear"] == latest_year]
 
     # sorted data based on each property type: the order is alphabetical
-    grouped_by_prop_type = latest_building_data.groupby("PrimaryPropertyType")
+    grouped_by_prop_type = cast(DataFrameGroupBy, latest_building_data.groupby("PrimaryPropertyType"))
 
     # get a list of all unique property types
-    property_types = list(grouped_by_prop_type.groups.keys())
+    property_types = [str(key) for key in grouped_by_prop_type.groups.keys()]
 
     outputted_paths = []
     outputted_paths += rank_buildings_by_property_type(

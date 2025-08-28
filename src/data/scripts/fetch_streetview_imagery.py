@@ -110,8 +110,8 @@ def get_and_store_building_streetview_images(
     images_count = 0
 
     for index, row in buildings.iterrows():
-        building_id = row[id_col]
-        address = row[address_col]
+        building_id = str(row[id_col])
+        address = str(row[address_col])
 
         filename = os.path.join(
             output_dir, f"{create_img_filename(building_id, address)}.webp"
@@ -147,7 +147,7 @@ def load_buildings_from_csv(csv_filepath: str) -> pd.DataFrame | None:
         return df
     except FileNotFoundError:
         print_red(f"Error: CSV file '{csv_filepath}' not found.")
-        return []
+        return None
 
 
 def main():
