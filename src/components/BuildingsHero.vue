@@ -41,7 +41,10 @@ import { getBuildingImage } from '../constants/building-images.constant.vue';
  */
 @Component({})
 export default class BuildingsHero extends Vue {
+  /** The buildings to fetch images from - shows in order */
   @Prop({ required: true }) buildings!: Array<IBuilding>;
+
+  /** THe number of buildings we should show */
   @Prop({ default: 8 }) buildingsCount!: number;
 
   /**

@@ -12,6 +12,7 @@
 const { readFileSync } = require('fs');
 const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
+const { getAvailablePageIds } = require('./src/constants/page-social-configs');
 
 const DataDirectory = './src/data/dist/';
 
@@ -68,6 +69,21 @@ module.exports = function (api) {
         component: './src/templates/Ward.vue',
         // In the CSV the ward is a string, so we pass that to the context as well for GraphQL
         context: { ward: ward.toString() },
+      });
+    }
+
+    // Create page social card routes (only in development)
+    if (process.env.NODE_ENV !== 'production') {
+      const pageIds = getAvailablePageIds();
+
+      pageIds.forEach(pageId => {
+        createPage({
+          path: `/page-social-card/${pageId}`,
+          component: './src/templates/PageSocialCard.vue',
+          context: {
+            pageId: pageId
+          }
+        });
       });
     }
   });
