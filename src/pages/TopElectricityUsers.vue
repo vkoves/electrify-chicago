@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
@@ -11,6 +12,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -57,19 +59,25 @@ export default class TopElectricityUsers extends Vue {}
 </static-query>
 
 <template>
-  <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
-      Top {{ $static.allBuilding.edges.length }} Electricity Users
-    </h1>
+  <DefaultLayout main-class="layout -full-width">
+    <BuildingsHero
+      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+    >
+      <h1 id="main-content" tabindex="-1">
+        Top {{ $static.allBuilding.edges.length }} Electricity Users
+      </h1>
+    </BuildingsHero>
 
-    <DataDisclaimer />
+    <div class="page-constrained">
+      <DataDisclaimer />
 
-    <BuildingsTable
-      :buildings="$static.allBuilding.edges"
-      :show-electricity-use="true"
-    />
+      <BuildingsTable
+        :buildings="$static.allBuilding.edges"
+        :show-electricity-use="true"
+      />
 
-    <DataSourceFootnote />
+      <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 

@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
@@ -11,6 +12,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -57,26 +59,32 @@ export default class TopGasUsers extends Vue {}
 </static-query>
 
 <template>
-  <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
-      Top {{ $static.allBuilding.edges.length }} Buildings by Fossil Gas Use
-    </h1>
+  <DefaultLayout main-class="layout -full-width">
+    <BuildingsHero
+      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+    >
+      <h1 id="main-content" tabindex="-1">
+        Top {{ $static.allBuilding.edges.length }} Buildings by Fossil Gas Use
+      </h1>
+    </BuildingsHero>
 
-    <p class="constrained -wide">
-      These buildings are the largest consumers of fossil gas (methane) in the
-      city. Fossil gas in these buildings is typically used for heating gas and
-      water, and since electrifying the grid won't clean up these emissions it's
-      an important set of buildings to focus on!
-    </p>
+    <div class="page-constrained">
+      <p class="constrained -wide">
+        These buildings are the largest consumers of fossil gas (methane) in the
+        city. Fossil gas in these buildings is typically used for heating gas
+        and water, and since electrifying the grid won't clean up these
+        emissions it's an important set of buildings to focus on!
+      </p>
 
-    <DataDisclaimer />
+      <DataDisclaimer />
 
-    <BuildingsTable
-      :buildings="$static.allBuilding.edges"
-      :show-gas-use="true"
-    />
+      <BuildingsTable
+        :buildings="$static.allBuilding.edges"
+        :show-gas-use="true"
+      />
 
-    <DataSourceFootnote />
+      <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 
