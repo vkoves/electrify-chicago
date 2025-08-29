@@ -6,6 +6,7 @@ import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { generatePageSocialMeta } from '../constants/page-social-meta';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -18,7 +19,12 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title: 'Top Electricity Users' };
+    return generatePageSocialMeta(
+      'top-electricity-users',
+      'Top Electricity Users',
+      "Chicago's biggest consumers of electricity - these buildings use the " +
+        'most power and offer the greatest potential for renewable energy adoption.',
+    );
   },
 })
 export default class TopElectricityUsers extends Vue {}

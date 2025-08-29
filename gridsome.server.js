@@ -12,7 +12,7 @@
 const { readFileSync } = require('fs');
 const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
-const { getAvailablePageIds } = require('./src/constants/page-social-configs');
+const { getAvailablePageIds } = require('./src/constants/page-social-configs-server');
 
 const DataDirectory = './src/data/dist/';
 

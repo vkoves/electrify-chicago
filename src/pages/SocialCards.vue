@@ -133,8 +133,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-// @ts-ignore - importing JS module
-const { pageSocialConfigs } = require('../constants/page-social-configs');
+import {
+  pageSocialConfigs,
+  IPageSocialConfig,
+} from '../constants/page-social-configs';
 
 /**
  * TODO: Add this to footer in local dev
@@ -151,7 +153,7 @@ const { pageSocialConfigs } = require('../constants/page-social-configs');
 })
 export default class SocialCards extends Vue {
   /** Get all page social configurations for the template */
-  get pageConfigs() {
+  get pageConfigs(): IPageSocialConfig[] {
     return Object.values(pageSocialConfigs);
   }
 }

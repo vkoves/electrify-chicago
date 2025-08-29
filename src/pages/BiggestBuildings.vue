@@ -7,6 +7,7 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
+import { generatePageSocialMeta } from '../constants/page-social-meta';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -19,7 +20,12 @@ import DataSourceFootnote from '../components/DataSourceFootnote.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title: 'Biggest Buildings' };
+    return generatePageSocialMeta(
+      'biggest-buildings',
+      'Biggest Buildings',
+      "Chicago's largest buildings by floor area - discover which massive " +
+        'buildings are leading or lagging on energy efficiency in the Windy City.',
+    );
   },
 })
 export default class BiggestBuildings extends Vue {

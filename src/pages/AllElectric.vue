@@ -6,6 +6,7 @@ import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { generatePageSocialMeta } from '../constants/page-social-meta';
 
 /**
  * All Electric Buildings page - shows the largest all-electric buildings in Chicago
@@ -24,7 +25,16 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title: 'All Electric Buildings' };
+    const description =
+      'Chicago buildings that are already all-electric! These innovative buildings show ' +
+      'the path forward - if the John Hancock Center can run on electricity alone, ' +
+      'so can your building.';
+
+    return generatePageSocialMeta(
+      'all-electric',
+      'All Electric Buildings',
+      description,
+    );
   },
 })
 export default class AllElectric extends Vue {}

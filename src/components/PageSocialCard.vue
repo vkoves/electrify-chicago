@@ -24,14 +24,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { IBuilding } from '../common-functions.vue';
+import { IPageSocialConfig } from '../constants/page-social-configs';
 import BuildingsHero from './BuildingsHero.vue';
-
-interface IPageSocialConfig {
-  id: string;
-  title: string;
-  description?: string;
-  filter?: 'best' | 'worst' | 'largest';
-}
 
 @Component({
   components: {
@@ -155,13 +149,36 @@ export default class PageSocialCard extends Vue {
 .hero-section {
   flex: 1;
   position: relative;
+  height: 100%;
 
   // Override BuildingsHero styles for social card dimensions
   :deep(.buildings-hero) {
     margin-bottom: 0;
     height: 100%;
 
-    .hero-images,
+    .hero-images {
+      height: 100%;
+      display: flex !important;
+      flex-wrap: wrap;
+      gap: 0;
+      left: 0;
+      width: 100%;
+
+      .hero-image {
+        flex: 1 1 25% !important; // Each image takes 25% width (4 per row)
+        min-width: 0;
+
+        img {
+          width: 100%;
+          height: 100%;
+          aspect-ratio: 1 !important;
+          object-fit: cover;
+          // Make sure tall buildings show their tops
+          object-position: 50% 10%;
+        }
+      }
+    }
+
     .hero-skyline img {
       height: 100%;
     }

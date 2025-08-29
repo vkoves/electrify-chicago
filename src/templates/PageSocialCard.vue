@@ -32,15 +32,10 @@ query {
 import { Component, Vue } from 'vue-property-decorator';
 import PageSocialCard from '../components/PageSocialCard.vue';
 
-// @ts-ignore - importing JS module
-const { getPageSocialConfig } = require('../constants/page-social-configs');
-
-interface IPageSocialConfig {
-  id: string;
-  title: string;
-  description?: string;
-  filter?: 'best' | 'worst' | 'largest';
-}
+import {
+  getPageSocialConfig,
+  IPageSocialConfig,
+} from '../constants/page-social-configs';
 
 /**
  * The page for page social cards, found at `/page-social-card/:pageId`
