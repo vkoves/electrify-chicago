@@ -12,6 +12,8 @@ interface PageSocialMetaResult {
 
 /**
  * Utility function to generate social media meta tags for page social cards
+ *
+ * @param pageId - the page ID to find the related page social image
  */
 export default function generatePageSocialMeta(
   pageId: string,
