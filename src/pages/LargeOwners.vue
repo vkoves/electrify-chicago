@@ -19,7 +19,7 @@ import generatePageSocialMeta from '../constants/page-social-meta';
     return generatePageSocialMeta(
       'Large Owners',
       'Explore buildings by major property owners in Chicago - ' +
-      'universities, the city, and other large organizations',
+        'universities, the city, and other large organizations',
     );
   },
 })

@@ -222,7 +222,9 @@ export async function generateOwnerSocialImages(
       try {
         // Skip if image already exists and we're not deleting existing ones
         if (!deleteExisting && (await ownerImageExists(ownerId))) {
-          console.log(`⏭️  Owner ${ownerId} already has social image, skipping`);
+          console.log(
+            `⏭️  Owner ${ownerId} already has social image, skipping`,
+          );
           continue;
         }
 

@@ -31,7 +31,10 @@ query {
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import OwnerSocialCard from '../../components/social-cards/OwnerSocialCard.vue';
-import { BuildingOwners, IBuildingOwner } from '../../constants/buildings-custom-info.constant.vue';
+import {
+  BuildingOwners,
+  IBuildingOwner,
+} from '../../constants/buildings-custom-info.constant.vue';
 
 /**
  * The template for owner social cards, found at `/owner-social-card/:ownerId`

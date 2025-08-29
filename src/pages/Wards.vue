@@ -12,7 +12,8 @@ import generatePageSocialMeta from '../constants/page-social-meta';
   metaInfo() {
     return generatePageSocialMeta(
       'Buildings By Ward',
-      'Browse Chicago buildings organized by ward - find energy performance data for your neighborhood!',
+      'Browse Chicago buildings organized by ward - find energy performance ' +
+        'data for your neighborhood!',
     );
   },
 })

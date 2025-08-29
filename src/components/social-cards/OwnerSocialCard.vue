@@ -2,11 +2,7 @@
   <BaseSocialCard :buildings="buildings">
     <template #hero-content>
       <div class="owner-info">
-        <div class="top-title"
-        >
-          Emissions for
-          Buildings Owned By
-        </div>
+        <div class="top-title">Emissions for Buildings Owned By</div>
         <img
           v-if="owner.logoLarge"
           :src="owner.logoLarge"
@@ -44,12 +40,14 @@ export default class OwnerSocialCard extends Vue {
 
   /** Get the current owner from parent context */
   get owner(): IBuildingOwner {
-    return (this.$parent as any).owner || {
-      key: 'default',
-      name: 'Building Owner',
-      nameShort: 'Owner',
-      logoLarge: '',
-    };
+    return (
+      (this.$parent as any).owner || {
+        key: 'default',
+        name: 'Building Owner',
+        nameShort: 'Owner',
+        logoLarge: '',
+      }
+    );
   }
 
   /** Get buildings for the hero section */

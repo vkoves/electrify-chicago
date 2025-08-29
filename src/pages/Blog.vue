@@ -14,7 +14,8 @@ import generatePageSocialMeta from '../constants/page-social-meta';
   metaInfo() {
     return generatePageSocialMeta(
       'Blog',
-      'Read our latest insights on building decarbonization, energy policy, and climate action in Chicago',
+      'Read our latest insights on building decarbonization, energy policy, ' +
+        'and climate action in Chicago',
     );
   },
 })

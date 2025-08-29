@@ -40,12 +40,9 @@ interface IBuildingEdge {
   metaInfo() {
     const ownerId: string = this.$context.ownerId;
     const owner = BuildingOwners[ownerId];
-    
+
     if (owner) {
-      return generateOwnerSocialMeta(
-        owner.key,
-        owner.name,
-      );
+      return generateOwnerSocialMeta(owner.key, owner.name);
     }
     return {
       title: 'Building Owner',

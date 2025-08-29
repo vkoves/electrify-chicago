@@ -17,7 +17,7 @@ import generatePageSocialMeta from '../constants/page-social-meta';
     return generatePageSocialMeta(
       'About Us',
       'Learn about Electrify Chicago, and our mission to decarbonize buildings ' +
-      'and fight climate change through data transparency',
+        'and fight climate change through data transparency',
     );
   },
 })

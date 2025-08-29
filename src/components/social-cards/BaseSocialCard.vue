@@ -90,7 +90,7 @@ export default class BaseSocialCard extends Vue {
 
     .hero-skyline {
       height: 100% !important;
-      
+
       img {
         height: 100% !important;
         width: 100% !important;

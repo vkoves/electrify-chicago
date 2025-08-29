@@ -127,8 +127,13 @@ export default class MetaInfoPanel extends Vue {
     }
 
     // Page social cards: check if this page has a custom social image
-    if (this.socialImageUrl && this.socialImageUrl.includes('/social-images/page-')) {
-      const match = this.socialImageUrl.match(/\/social-images\/page-(.+)\.webp/);
+    if (
+      this.socialImageUrl &&
+      this.socialImageUrl.includes('/social-images/page-')
+    ) {
+      const match = this.socialImageUrl.match(
+        /\/social-images\/page-(.+)\.webp/,
+      );
       if (match) {
         const pageId = match[1];
         return `/page-social-card/${pageId}`;

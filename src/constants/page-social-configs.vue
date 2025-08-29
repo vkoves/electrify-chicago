@@ -13,7 +13,7 @@ export interface IPageSocialConfig {
   filter?: 'best' | 'worst' | 'largest';
 }
 
-export const pageSocialConfigs: Record<string, IPageSocialConfig> = 
+export const pageSocialConfigs: Record<string, IPageSocialConfig> =
   pageSocialConfigsData as Record<string, IPageSocialConfig>;
 
 /**

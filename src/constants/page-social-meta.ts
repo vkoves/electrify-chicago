@@ -42,7 +42,11 @@ function generatePageSocialMeta(
     { property: 'og:description', content: description, key: 'og:description' },
     { property: 'og:type', content: 'website', key: 'og:type' },
     { name: 'twitter:title', content: title, key: 'twitter:title' },
-    { name: 'twitter:description', content: description, key: 'twitter:description' },
+    {
+      name: 'twitter:description',
+      content: description,
+      key: 'twitter:description',
+    },
   ];
 
   // Add social image meta tags only if socialImageUrl is provided
@@ -51,11 +55,19 @@ function generatePageSocialMeta(
       { property: 'og:image', content: socialImageUrl, key: 'og:image' },
       { property: 'og:image:width', content: '1200', key: 'og:image:width' },
       { property: 'og:image:height', content: '630', key: 'og:image:height' },
-      { name: 'twitter:card', content: 'summary_large_image', key: 'twitter:card' },
+      {
+        name: 'twitter:card',
+        content: 'summary_large_image',
+        key: 'twitter:card',
+      },
       { name: 'twitter:image', content: socialImageUrl, key: 'twitter:image' },
     );
   } else {
-    baseMeta.push({ name: 'twitter:card', content: 'summary', key: 'twitter:card' });
+    baseMeta.push({
+      name: 'twitter:card',
+      content: 'summary',
+      key: 'twitter:card',
+    });
   }
 
   return {
@@ -76,8 +88,7 @@ export function generateOwnerSocialMeta(
   description?: string,
 ): PageSocialMetaResult {
   const title = `${ownerName} Buildings`;
-  const defaultDescription =
-    `Explore emissions and energy efficiency data for buildings owned by ${ownerName}.`;
+  const defaultDescription = `Explore emissions and energy efficiency data for buildings owned by ${ownerName}.`;
   const socialImageUrl = `/social-images/owner-${ownerId}.webp`;
 
   const baseMeta = [
@@ -102,7 +113,11 @@ export function generateOwnerSocialMeta(
       content: description || defaultDescription,
       key: 'twitter:description',
     },
-    { name: 'twitter:card', content: 'summary_large_image', key: 'twitter:card' },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+      key: 'twitter:card',
+    },
     { name: 'twitter:image', content: socialImageUrl, key: 'twitter:image' },
   ];
 
