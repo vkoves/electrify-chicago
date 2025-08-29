@@ -72,16 +72,27 @@ module.exports = function (api) {
       });
     }
 
-    // Create page social card routes (only in development)
+    // Create social card routes (only in development)
     if (process.env.NODE_ENV !== 'production') {
+      // Create page social card routes
       const pageIds = getAvailablePageIds();
-
       pageIds.forEach(pageId => {
         createPage({
           path: `/page-social-card/${pageId}`,
-          component: './src/templates/PageSocialCard.vue',
+          component: './src/templates/social-cards/PageSocialCard.vue',
           context: {
             pageId: pageId
+          }
+        });
+      });
+
+      // Create owner social card routes
+      BuildingOwnerIds.forEach(ownerId => {
+        createPage({
+          path: `/owner-social-card/${ownerId}`,
+          component: './src/templates/social-cards/OwnerSocialCard.vue',
+          context: {
+            ownerId: ownerId
           }
         });
       });

@@ -1,7 +1,10 @@
+<script lang="ts">
 /**
  * TypeScript utilities for page social configs
  */
-import pageSocialConfigsData from './page-social-configs.json';
+const pageSocialConfigsData = require('./page-social-configs.json');
+
+export default {};
 
 export interface IPageSocialConfig {
   id: string;
@@ -10,7 +13,7 @@ export interface IPageSocialConfig {
   filter?: 'best' | 'worst' | 'largest';
 }
 
-export const pageSocialConfigs: Record<string, IPageSocialConfig> =
+export const pageSocialConfigs: Record<string, IPageSocialConfig> = 
   pageSocialConfigsData as Record<string, IPageSocialConfig>;
 
 /**
@@ -26,3 +29,4 @@ export function getPageSocialConfig(pageId: string): IPageSocialConfig | null {
 export function getAvailablePageIds(): string[] {
   return Object.keys(pageSocialConfigs);
 }
+</script>

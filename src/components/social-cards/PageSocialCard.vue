@@ -1,35 +1,23 @@
 <template>
-  <div class="page-social-card">
-    <div class="page-social-card-content">
-      <!-- Hero section with buildings -->
-      <div class="hero-section">
-        <BuildingsHero :buildings="buildings" :buildings-count="8">
-          <div class="hero-content">
-            <h1 class="page-title">{{ pageTitle }}</h1>
-            <p v-if="pageDescription" class="page-description">
-              {{ pageDescription }}
-            </p>
-          </div>
-        </BuildingsHero>
-      </div>
-
-      <!-- Logo section -->
-      <div class="logo-section">
-        <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
-      </div>
-    </div>
-  </div>
+  <BaseSocialCard :buildings="buildings">
+    <template #hero-content>
+      <h1 class="page-title">{{ pageTitle }}</h1>
+      <p v-if="pageDescription" class="page-description">
+        {{ pageDescription }}
+      </p>
+    </template>
+  </BaseSocialCard>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { IBuilding } from '../common-functions.vue';
-import { IPageSocialConfig } from '../constants/page-social-configs';
-import BuildingsHero from './BuildingsHero.vue';
+import { IBuilding } from '../../common-functions.vue';
+import type { IPageSocialConfig } from '../../constants/page-social-configs.vue';
+import BaseSocialCard from './BaseSocialCard.vue';
 
 @Component({
   components: {
-    BuildingsHero,
+    BaseSocialCard,
   },
 })
 export default class PageSocialCard extends Vue {
@@ -125,106 +113,16 @@ export default class PageSocialCard extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.page-social-card {
-  position: relative;
-  width: 75rem;
-  height: 39.375rem;
-  background: $white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.page-title {
+  font-size: 6rem !important;
+  font-weight: bold;
+  line-height: 1;
   margin: 0;
-  padding: 0;
-  overflow: hidden;
 }
 
-.page-social-card-content {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-}
-
-.hero-section {
-  flex: 1;
-  position: relative;
-  height: 100%;
-
-  // Override BuildingsHero styles for social card dimensions
-  :deep(.buildings-hero) {
-    margin-bottom: 0;
-    height: 100%;
-
-    .hero-images {
-      height: 100%;
-      display: flex !important;
-      flex-wrap: wrap;
-      gap: 0;
-      left: 0;
-      width: 100%;
-
-      .hero-image {
-        flex: 1 1 25% !important; // Each image takes 25% width (4 per row)
-        min-width: 0;
-
-        img {
-          width: 100%;
-          height: 100%;
-          aspect-ratio: 1 !important;
-          object-fit: cover;
-          // Make sure tall buildings show their tops
-          object-position: 50% 10%;
-        }
-      }
-    }
-
-    .hero-skyline img {
-      height: 100%;
-    }
-
-    .hero-overlay {
-      padding: 4rem 4rem 8rem 4rem;
-
-      .page-constrained {
-        max-width: none;
-        width: 100%;
-      }
-    }
-  }
-}
-
-.hero-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
-  .page-title {
-    font-size: 6rem !important;
-    font-weight: bold;
-    line-height: 1;
-    margin: 0;
-  }
-
-  .page-description {
-    font-size: 2.5rem;
-    margin: 0;
-    line-height: 1;
-  }
-}
-
-.logo-section {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  padding: 1rem;
-  border-top-left-radius: 1rem;
-  z-index: 10;
-  background-color: $white;
-
-  img {
-    display: block;
-    height: 3rem;
-  }
+.page-description {
+  font-size: 2.5rem;
+  margin: 0;
+  line-height: 1;
 }
 </style>

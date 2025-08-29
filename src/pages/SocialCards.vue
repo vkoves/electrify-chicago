@@ -133,10 +133,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import {
+import { 
   pageSocialConfigs,
-  IPageSocialConfig,
-} from '../constants/page-social-configs';
+  type IPageSocialConfig,
+} from '../constants/page-social-configs.vue';
 
 /**
  * TODO: Add this to footer in local dev

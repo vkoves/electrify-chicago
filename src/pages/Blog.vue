@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
-import { generatePageSocialMeta } from '../constants/page-social-meta';
+import generatePageSocialMeta from '../constants/page-social-meta';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37

@@ -20,6 +20,7 @@ import {
 } from '../constants/buildings-custom-info.constant.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import { generateOwnerSocialMeta } from '../constants/page-social-meta';
 
 interface IBuildingEdge {
   node: IBuilding;
@@ -37,8 +38,17 @@ interface IBuildingEdge {
     NewTabIcon,
   },
   metaInfo() {
+    const ownerId: string = this.$context.ownerId;
+    const owner = BuildingOwners[ownerId];
+    
+    if (owner) {
+      return generateOwnerSocialMeta(
+        owner.key,
+        owner.name,
+      );
+    }
     return {
-      title: this.currOwner?.nameShort + ' Buildings' || 'Building Owner',
+      title: 'Building Owner',
     };
   },
 })

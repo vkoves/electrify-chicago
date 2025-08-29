@@ -12,27 +12,8 @@ interface PageSocialMetaResult {
 
 /**
  * Utility function to generate social media meta tags for page social cards
- *
- * Overload 1: With pageId for custom social images
  */
-export default function generatePageSocialMeta(
-  pageId: string,
-  title: string,
-  description: string,
-): PageSocialMetaResult;
-
-/**
- * Overload 2: Without pageId for pages with just meta descriptions
- */
-export default function generatePageSocialMeta(
-  title: string,
-  description: string,
-): PageSocialMetaResult;
-
-/**
- * Implementation
- */
-export default function generatePageSocialMeta(
+function generatePageSocialMeta(
   pageIdOrTitle: string,
   titleOrDescription?: string,
   descriptionOnly?: string,
@@ -83,5 +64,54 @@ export default function generatePageSocialMeta(
   };
 }
 
-// Also export as named export for backwards compatibility
+/**
+ * Generate social media meta tags for owner pages
+ * @param ownerId - The owner ID (e.g., 'depaul', 'uchicago')
+ * @param ownerName - The display name of the owner (e.g., 'DePaul University')
+ * @param description - Description for the owner
+ */
+export function generateOwnerSocialMeta(
+  ownerId: string,
+  ownerName: string,
+  description?: string,
+): PageSocialMetaResult {
+  const title = `${ownerName} Buildings`;
+  const defaultDescription =
+    `Explore emissions and energy efficiency data for buildings owned by ${ownerName}.`;
+  const socialImageUrl = `/social-images/owner-${ownerId}.webp`;
+
+  const baseMeta = [
+    {
+      name: 'description',
+      content: description || defaultDescription,
+      key: 'description',
+    },
+    { property: 'og:title', content: title, key: 'og:title' },
+    {
+      property: 'og:description',
+      content: description || defaultDescription,
+      key: 'og:description',
+    },
+    { property: 'og:type', content: 'website', key: 'og:type' },
+    { property: 'og:image', content: socialImageUrl, key: 'og:image' },
+    { property: 'og:image:width', content: '1200', key: 'og:image:width' },
+    { property: 'og:image:height', content: '630', key: 'og:image:height' },
+    { name: 'twitter:title', content: title, key: 'twitter:title' },
+    {
+      name: 'twitter:description',
+      content: description || defaultDescription,
+      key: 'twitter:description',
+    },
+    { name: 'twitter:card', content: 'summary_large_image', key: 'twitter:card' },
+    { name: 'twitter:image', content: socialImageUrl, key: 'twitter:image' },
+  ];
+
+  return {
+    title: title,
+    meta: baseMeta,
+  };
+}
+
+// Export as default and named export for backwards compatibility
+export default generatePageSocialMeta;
 export { generatePageSocialMeta };

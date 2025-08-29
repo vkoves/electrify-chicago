@@ -8,8 +8,11 @@ import {
   ensureSocialImagesDirectory,
   getSocialImagePath,
   getPageSocialImagePath,
+  getOwnerSocialImagePath,
   getAvailablePageIdsFromConfig,
+  getAvailableOwnerIds,
   pageImageExists,
+  ownerImageExists,
 } from './social-images-helpers';
 
 type Browser = puppeteer.Browser;
@@ -197,6 +200,52 @@ export async function generatePageSocialImages(
 }
 
 /**
+ * Generate owner social images for all configured owners
+ */
+export async function generateOwnerSocialImages(
+  deleteExisting: boolean = true,
+): Promise<void> {
+  console.log('🏢 Starting owner social image generation...');
+
+  await ensureSocialImagesDirectory();
+
+  const ownerIds = getAvailableOwnerIds();
+  console.log(
+    `📊 Found ${ownerIds.length} owners to process: ${ownerIds.join(', ')}`,
+  );
+
+  const browser = await setupBrowser();
+
+  try {
+    let processed = 0;
+    for (const ownerId of ownerIds) {
+      try {
+        // Skip if image already exists and we're not deleting existing ones
+        if (!deleteExisting && (await ownerImageExists(ownerId))) {
+          console.log(`⏭️  Owner ${ownerId} already has social image, skipping`);
+          continue;
+        }
+
+        await generateSingleOwnerImage(browser, ownerId);
+        processed++;
+        console.log(
+          `✅ Generated owner social image for ${ownerId} (${processed}/${ownerIds.length})`,
+        );
+      } catch (error) {
+        console.error(
+          `❌ Failed to generate owner image for ${ownerId}:`,
+          (error as Error).message,
+        );
+      }
+    }
+
+    console.log(`🎉 Completed generating ${processed} owner social images!`);
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
  * Generate social images for specific building IDs or all buildings
  * @param reqBuildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
  * @param deleteExisting - Whether to delete existing images before generating new ones. Defaults to true.
@@ -224,20 +273,23 @@ export async function generateSocialImages(
 }
 
 /**
- * Generate both building and page social images
+ * Generate building, page, and owner social images
  */
 export async function generateAllSocialImages(
   reqBuildingIds: string[] | null = null,
   deleteExisting: boolean = true,
 ): Promise<void> {
   console.log(
-    '🎨 Starting complete social image generation (buildings + pages)...',
+    '🎨 Starting complete social image generation (buildings + pages + owners)...',
   );
 
   // Generate page social images first (they're faster)
   await generatePageSocialImages(deleteExisting);
 
-  // Then generate building social images
+  // Generate owner social images (also fast)
+  await generateOwnerSocialImages(false); // Don't delete again
+
+  // Then generate building social images (slowest)
   await generateSocialImages(reqBuildingIds, false); // Don't delete again
 }
 
@@ -332,6 +384,51 @@ export async function generateSinglePageImage(
 }
 
 /**
+ * Generate a social image for a single owner
+ */
+export async function generateSingleOwnerImage(
+  browser: Browser,
+  ownerId: string,
+): Promise<void> {
+  const outputPath = getOwnerSocialImagePath(ownerId) as `${string}.webp`;
+  const url = `${BASE_URL}/owner-social-card/${ownerId}`;
+
+  // Skip if image already exists (for incremental builds)
+  if (await fs.pathExists(outputPath)) {
+    return;
+  }
+
+  const page: Page = await browser.newPage();
+
+  try {
+    // Set viewport to social media dimensions
+    await page.setViewport({ width: 1200, height: 630 });
+
+    // Navigate to owner social card page
+    await page.goto(url, {
+      waitUntil: 'networkidle2',
+      timeout: 5_000, // Longer timeout for owner cards with more content
+    });
+
+    // Take screenshot
+    await page.screenshot({
+      path: outputPath,
+      type: 'webp',
+      quality: 70,
+      omitBackground: false,
+    });
+  } catch (error) {
+    console.error(
+      `❌ Failed to generate owner image for ${ownerId} at URL: ${url}\n` +
+        `   Error: ${(error as Error).message}`,
+    );
+    throw error;
+  } finally {
+    await page.close();
+  }
+}
+
+/**
  * Clean up old social images (optional - for when buildings are removed)
  */
 export async function cleanupOldImages(): Promise<void> {
@@ -365,10 +462,12 @@ if (require.main === module) {
     cleanupOldImages().catch(console.error);
   } else if (command === 'pages') {
     generatePageSocialImages().catch(console.error);
+  } else if (command === 'owners') {
+    generateOwnerSocialImages().catch(console.error);
   } else if (command === 'buildings') {
     generateSocialImages().catch(console.error);
   } else {
-    // Default to generating all images (both buildings and pages)
+    // Default to generating all images (buildings + pages + owners)
     generateAllSocialImages().catch(console.error);
   }
 }

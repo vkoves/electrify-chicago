@@ -1,7 +1,7 @@
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
-import { getAvailablePageIds } from '../src/constants/page-social-configs';
+import { getAvailablePageIds } from '../src/constants/page-social-configs-server';
 
 // Shared constants
 export const SOCIAL_IMAGES_DIR = './static/social-images';
@@ -81,4 +81,37 @@ export async function removeImages(buildingIds: string[]): Promise<void> {
       console.log(`   🗑️  Removed building-${buildingId}.webp`);
     }
   }
+}
+
+// Owner social image utilities
+export function getOwnerSocialImagePath(ownerId: string): string {
+  return path.join(SOCIAL_IMAGES_DIR, `owner-${ownerId}.webp`);
+}
+
+export async function ownerImageExists(ownerId: string): Promise<boolean> {
+  const imagePath = getOwnerSocialImagePath(ownerId);
+  return await fs.pathExists(imagePath);
+}
+
+export function getAvailableOwnerIds(): string[] {
+  // Import owners data
+  // Note: We can't import the BuildingOwners directly due to .vue extension
+  // So we'll hardcode the keys here - they change very rarely
+  // TODO: Move to a JSON, this is also duplicated in gridsome.server.js :/
+  return [
+    'depaul',
+    'iit',
+    'uchicago',
+    'northwestern',
+    'loyola',
+    'cps',
+    'cha',
+    'cityofchicago',
+    'columbia',
+    'ccc',
+    'moody',
+    'saic',
+    'npu',
+    'uic',
+  ];
 }

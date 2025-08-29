@@ -42,6 +42,19 @@
             <strong>URL:</strong> {{ socialImageUrl }}
           </div>
         </div>
+
+        <div class="meta-section -row">
+          <div class="meta-item">
+            <g-link to="/social-cards" class="grey-link">
+              All Social Cards Debug Page
+            </g-link>
+          </div>
+          <div v-if="specificSocialCardUrl" class="meta-item">
+            <a :href="specificSocialCardUrl" class="grey-link" target="_blank">
+              This Page's Social Card Page
+            </a>
+          </div>
+        </div>
       </div>
     </details>
   </div>
@@ -98,6 +111,33 @@ export default class MetaInfoPanel extends Vue {
     );
   }
 
+  get specificSocialCardUrl(): string | null {
+    const currentPath = window.location.pathname;
+
+    // Building detail pages: /building-id/123456 -> /social-card/123456
+    if (currentPath.startsWith('/building-id/')) {
+      const buildingId = currentPath.replace('/building-id/', '');
+      return `/social-card/${buildingId}`;
+    }
+
+    // Owner pages: /owner/depaul -> /owner-social-card/depaul
+    if (currentPath.startsWith('/owner/')) {
+      const ownerId = currentPath.replace('/owner/', '');
+      return `/owner-social-card/${ownerId}`;
+    }
+
+    // Page social cards: check if this page has a custom social image
+    if (this.socialImageUrl && this.socialImageUrl.includes('/social-images/page-')) {
+      const match = this.socialImageUrl.match(/\/social-images\/page-(.+)\.webp/);
+      if (match) {
+        const pageId = match[1];
+        return `/page-social-card/${pageId}`;
+      }
+    }
+
+    return null;
+  }
+
   updateMetaInfo(): void {
     this.pageTitle = document?.title || 'No title';
 
@@ -149,14 +189,22 @@ div.meta-cont {
 }
 
 .meta-section {
-  margin-bottom: 1.5rem;
+  &.-row {
+    display: flex;
+    gap: 1rem;
+  }
 
-  &:last-child {
-    margin-bottom: 0;
+  + .meta-section {
+    margin-top: 0.5rem;
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
   }
 
   h4 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.25rem 0;
     font-size: 1rem;
     color: $blue-dark;
   }

@@ -30,12 +30,10 @@ query {
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import PageSocialCard from '../components/PageSocialCard.vue';
+import PageSocialCard from '../../components/social-cards/PageSocialCard.vue';
 
-import {
-  getPageSocialConfig,
-  IPageSocialConfig,
-} from '../constants/page-social-configs';
+import { getPageSocialConfig } from '../../constants/page-social-configs.vue';
+import type { IPageSocialConfig } from '../../constants/page-social-configs.vue';
 
 /**
  * The page for page social cards, found at `/page-social-card/:pageId`

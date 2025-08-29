@@ -6,7 +6,7 @@ import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
-import { generatePageSocialMeta } from '../constants/page-social-meta';
+import generatePageSocialMeta from '../constants/page-social-meta';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
