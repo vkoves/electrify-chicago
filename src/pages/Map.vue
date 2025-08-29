@@ -9,6 +9,7 @@ import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import { generatePageSocialMeta } from '../constants/page-social-meta';
 
 import {
   IBuildingBenchmarkStats,
@@ -37,7 +38,10 @@ const GoogleMapsScriptId = 'google-maps-script';
   },
   metaInfo() {
     return {
-      title: 'Map',
+      ...generatePageSocialMeta(
+        'Map',
+        'Interactive map of Chicago buildings showing energy performance and emissions data',
+      ),
       link: [
         {
           // Leaflet CSS

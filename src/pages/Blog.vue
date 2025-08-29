@@ -3,6 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
+import { generatePageSocialMeta } from '../constants/page-social-meta';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -11,7 +12,10 @@ import { LatestDataYear } from '../constants/globals.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title: 'Blog' };
+    return generatePageSocialMeta(
+      'Blog',
+      'Read our latest insights on building decarbonization, energy policy, and climate action in Chicago',
+    );
   },
 })
 export default class About extends Vue {
