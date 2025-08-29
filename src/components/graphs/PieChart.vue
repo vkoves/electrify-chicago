@@ -30,6 +30,9 @@ export default class PieChart extends Vue {
   /** Whether we want to show labels */
   @Prop({ default: true }) showLabels!: boolean;
 
+  /** Whether to sort slices by largest first (D3 default) or preserve data order */
+  @Prop({ default: true }) sortByLargest!: boolean;
+
   @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
@@ -78,6 +81,9 @@ export default class PieChart extends Vue {
 
     // Compute the position of each group on the pie:
     var pie = d3.pie().value((d: any) => d.value);
+    if (!this.sortByLargest) {
+      pie = pie.sort(null);
+    }
     var dataReady = pie(this.graphData as any);
 
     // shape helper to build arcs:
