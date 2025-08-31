@@ -47,7 +47,7 @@ export default class AppFooter extends Vue {}
 
       <div>
         <a
-          href="https://bsky.app/profile/electrifychicago.net"
+          href="https://www.youtube.com/@electrifychicago"
           class="youtube"
           target="_blank"
           rel="noopener"
@@ -58,7 +58,7 @@ export default class AppFooter extends Vue {}
 
       <div>
         <a
-          href="https://bsky.app/profile/electrifychicago.net"
+          href="https://www.instagram.com/electrify.chicago"
           class="instagram"
           target="_blank"
           rel="noopener"
