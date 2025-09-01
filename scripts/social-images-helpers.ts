@@ -57,7 +57,7 @@ export async function pageImageExists(pageId: string): Promise<boolean> {
 
 // Page data utilities
 export function getAvailablePageIdsFromConfig(): string[] {
- return Object.keys(pageSocialConfigs);
+  return Object.keys(pageSocialConfigs);
 }
 
 export function getAvailableOwnerIds(): string[] {

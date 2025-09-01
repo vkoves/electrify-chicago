@@ -37,7 +37,7 @@ async function loadBuildingIds(
 }
 
 /**
- * Clean existing social images directory
+ * Clean existing social images directory - deletes ALL social images
  */
 async function cleanupExistingImages(): Promise<void> {
   console.log(
@@ -154,49 +154,72 @@ async function processBuildingBatch(
 }
 
 /**
- * Generate page social images for all configured pages
+ * Generic function to process social images for a list of entities
  */
-export async function generatePageSocialImages(
+async function processEntityImages<T>(
+  entityIds: T[],
+  entityType: string,
+  generateFunction: (browser: Browser, entityId: T) => Promise<void>,
+  existsFunction: (entityId: T) => Promise<boolean>,
   deleteExisting: boolean = true,
 ): Promise<void> {
-  console.log('🎨 Starting page social image generation...');
+  console.log(`🎨 Starting ${entityType} social image generation...`);
 
   await ensureSocialImagesDirectory();
 
-  const pageIds = getAvailablePageIdsFromConfig();
   console.log(
-    `📊 Found ${pageIds.length} pages to process: ${pageIds.join(', ')}`,
+    `📊 Found ${entityIds.length} ${entityType}s to process: ${entityIds.join(', ')}`,
   );
 
   const browser = await setupBrowser();
 
   try {
     let processed = 0;
-    for (const pageId of pageIds) {
+    for (const entityId of entityIds) {
       try {
         // Skip if image already exists and we're not deleting existing ones
-        if (!deleteExisting && (await pageImageExists(pageId))) {
-          console.log(`⏭️  Page ${pageId} already has social image, skipping`);
+        if (!deleteExisting && (await existsFunction(entityId))) {
+          console.log(
+            `⏭️  ${entityType} ${entityId} already has social image, skipping`,
+          );
           continue;
         }
 
-        await generateSinglePageImage(browser, pageId);
+        await generateFunction(browser, entityId);
         processed++;
         console.log(
-          `✅ Generated page social image for ${pageId} (${processed}/${pageIds.length})`,
+          `✅ Generated ${entityType} social image for ${entityId} (${processed}/${entityIds.length})`,
         );
       } catch (error) {
         console.error(
-          `❌ Failed to generate page image for ${pageId}:`,
+          `❌ Failed to generate ${entityType} image for ${entityId}:`,
           (error as Error).message,
         );
       }
     }
 
-    console.log(`🎉 Completed generating ${processed} page social images!`);
+    console.log(
+      `🎉 Completed generating ${processed} ${entityType} social images!`,
+    );
   } finally {
     await browser.close();
   }
+}
+
+/**
+ * Generate page social images for all configured pages
+ */
+export async function generatePageSocialImages(
+  deleteExisting: boolean = true,
+): Promise<void> {
+  const pageIds = getAvailablePageIdsFromConfig();
+  await processEntityImages(
+    pageIds,
+    'page',
+    generateSinglePageImage,
+    pageImageExists,
+    deleteExisting,
+  );
 }
 
 /**
@@ -205,46 +228,14 @@ export async function generatePageSocialImages(
 export async function generateOwnerSocialImages(
   deleteExisting: boolean = true,
 ): Promise<void> {
-  console.log('🏢 Starting owner social image generation...');
-
-  await ensureSocialImagesDirectory();
-
   const ownerIds = getAvailableOwnerIds();
-  console.log(
-    `📊 Found ${ownerIds.length} owners to process: ${ownerIds.join(', ')}`,
+  await processEntityImages(
+    ownerIds,
+    'owner',
+    generateSingleOwnerImage,
+    ownerImageExists,
+    deleteExisting,
   );
-
-  const browser = await setupBrowser();
-
-  try {
-    let processed = 0;
-    for (const ownerId of ownerIds) {
-      try {
-        // Skip if image already exists and we're not deleting existing ones
-        if (!deleteExisting && (await ownerImageExists(ownerId))) {
-          console.log(
-            `⏭️  Owner ${ownerId} already has social image, skipping`,
-          );
-          continue;
-        }
-
-        await generateSingleOwnerImage(browser, ownerId);
-        processed++;
-        console.log(
-          `✅ Generated owner social image for ${ownerId} (${processed}/${ownerIds.length})`,
-        );
-      } catch (error) {
-        console.error(
-          `❌ Failed to generate owner image for ${ownerId}:`,
-          (error as Error).message,
-        );
-      }
-    }
-
-    console.log(`🎉 Completed generating ${processed} owner social images!`);
-  } finally {
-    await browser.close();
-  }
 }
 
 /**
@@ -297,15 +288,15 @@ export async function generateAllSocialImages(
 }
 
 /**
- * Generate a social image for a single building
+ * Generate a screenshot for a social card URL
  */
-export async function generateSingleImage(
+async function generateScreenshot(
   browser: Browser,
-  buildingId: string,
+  url: string,
+  outputPath: `${string}.webp`,
+  entityType: string,
+  entityId: string,
 ): Promise<void> {
-  const outputPath = getSocialImagePath(buildingId) as `${string}.webp`;
-  const url = `${BASE_URL}/social-card/${buildingId}`;
-
   // Skip if image already exists (for incremental builds)
   if (await fs.pathExists(outputPath)) {
     return;
@@ -320,7 +311,7 @@ export async function generateSingleImage(
     // Navigate to social card page
     await page.goto(url, {
       waitUntil: 'networkidle2',
-      timeout: 3_000, // Increased timeout for slower systems
+      timeout: 5_000,
     });
 
     // Take screenshot
@@ -332,13 +323,26 @@ export async function generateSingleImage(
     });
   } catch (error) {
     console.error(
-      `❌ Failed to generate image for building ${buildingId} at URL: ${url}\n` +
+      `❌ Failed to generate ${entityType} image for ${entityId} at URL: ${url}\n` +
         `   Error: ${(error as Error).message}`,
     );
     throw error;
   } finally {
     await page.close();
   }
+}
+
+/**
+ * Generate a social image for a single building
+ */
+export async function generateSingleImage(
+  browser: Browser,
+  buildingId: string,
+): Promise<void> {
+  const outputPath = getSocialImagePath(buildingId) as `${string}.webp`;
+  const url = `${BASE_URL}/social-card/${buildingId}`;
+
+  await generateScreenshot(browser, url, outputPath, 'building', buildingId);
 }
 
 /**
@@ -351,39 +355,7 @@ export async function generateSinglePageImage(
   const outputPath = getPageSocialImagePath(pageId) as `${string}.webp`;
   const url = `${BASE_URL}/page-social-card/${pageId}`;
 
-  // Skip if image already exists (for incremental builds)
-  if (await fs.pathExists(outputPath)) {
-    return;
-  }
-
-  const page: Page = await browser.newPage();
-
-  try {
-    // Set viewport to social media dimensions
-    await page.setViewport({ width: 1200, height: 630 });
-
-    // Navigate to page social card page
-    await page.goto(url, {
-      waitUntil: 'networkidle2',
-      timeout: 5_000, // Longer timeout for page cards with more content
-    });
-
-    // Take screenshot
-    await page.screenshot({
-      path: outputPath,
-      type: 'webp',
-      quality: 70,
-      omitBackground: false,
-    });
-  } catch (error) {
-    console.error(
-      `❌ Failed to generate page image for ${pageId} at URL: ${url}\n` +
-        `   Error: ${(error as Error).message}`,
-    );
-    throw error;
-  } finally {
-    await page.close();
-  }
+  await generateScreenshot(browser, url, outputPath, 'page', pageId);
 }
 
 /**
@@ -396,39 +368,7 @@ export async function generateSingleOwnerImage(
   const outputPath = getOwnerSocialImagePath(ownerId) as `${string}.webp`;
   const url = `${BASE_URL}/owner-social-card/${ownerId}`;
 
-  // Skip if image already exists (for incremental builds)
-  if (await fs.pathExists(outputPath)) {
-    return;
-  }
-
-  const page: Page = await browser.newPage();
-
-  try {
-    // Set viewport to social media dimensions
-    await page.setViewport({ width: 1200, height: 630 });
-
-    // Navigate to owner social card page
-    await page.goto(url, {
-      waitUntil: 'networkidle2',
-      timeout: 5_000, // Longer timeout for owner cards with more content
-    });
-
-    // Take screenshot
-    await page.screenshot({
-      path: outputPath,
-      type: 'webp',
-      quality: 70,
-      omitBackground: false,
-    });
-  } catch (error) {
-    console.error(
-      `❌ Failed to generate owner image for ${ownerId} at URL: ${url}\n` +
-        `   Error: ${(error as Error).message}`,
-    );
-    throw error;
-  } finally {
-    await page.close();
-  }
+  await generateScreenshot(browser, url, outputPath, 'owner', ownerId);
 }
 
 /**

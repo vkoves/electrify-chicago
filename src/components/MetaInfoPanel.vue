@@ -117,7 +117,9 @@ export default class MetaInfoPanel extends Vue {
     // Building detail pages: /building-id/123456 -> /social-card/123456
     if (currentPath.startsWith('/building/') && this.socialImageUrl) {
       // Grab the ID from the social image, e.g. `/social-images/building-101185.webp` -> `101185`
-      const buildingId = this.socialImageUrl.split('building-')[1].split('.webp')[0];
+      const buildingId = this.socialImageUrl
+        .split('building-')[1]
+        .split('.webp')[0];
 
       return `/social-card/${buildingId}`;
     }
