@@ -8,19 +8,19 @@ interface MetaTag {
   key: string;
 }
 
-interface PageSocialMetaResult {
+interface PageMetaData {
   title: string;
   meta: MetaTag[];
 }
 
 /**
- * Utility function to generate social media meta tags for page social cards
+ * Utility function to generate meta tags for pages with title, description, and social images
  */
-export function generatePageSocialMeta(
+export function generatePageMeta(
   pageIdOrTitle: string,
   titleOrDescription?: string,
   descriptionOnly?: string,
-): PageSocialMetaResult {
+): PageMetaData {
   // Handle both signatures: (pageId, title, description) and (title, description)
   let title: string;
   let description: string;
@@ -86,11 +86,11 @@ export function generatePageSocialMeta(
  * @param ownerName - The display name of the owner (e.g., 'DePaul University')
  * @param description - Description for the owner
  */
-export function generateOwnerSocialMeta(
+export function generateOwnerMeta(
   ownerId: string,
   ownerName: string,
   description?: string,
-): PageSocialMetaResult {
+): PageMetaData {
   const title = `${ownerName} Buildings`;
   const defaultDescription = `Explore emissions and energy efficiency data for buildings owned by
     ${ownerName}.`;

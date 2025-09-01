@@ -20,7 +20,7 @@ import {
 } from '../constants/buildings-custom-info.constant.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
-import { generateOwnerSocialMeta } from '../constants/page-social-meta.vue';
+import { generateOwnerMeta } from '../constants/meta-helpers.vue';
 
 interface IBuildingEdge {
   node: IBuilding;
@@ -42,7 +42,7 @@ interface IBuildingEdge {
     const owner = BuildingOwners[ownerId];
 
     if (owner) {
-      return generateOwnerSocialMeta(owner.key, owner.name);
+      return generateOwnerMeta(owner.key, owner.name);
     }
     return {
       title: 'Building Owner',

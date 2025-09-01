@@ -5,7 +5,7 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { BuildingOwners } from '../constants/buildings-custom-info.constant.vue';
-import { generatePageSocialMeta } from '../constants/page-social-meta.vue';
+import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -16,7 +16,7 @@ import { generatePageSocialMeta } from '../constants/page-social-meta.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return generatePageSocialMeta(
+    return generatePageMeta(
       'Large Owners',
       'Explore buildings by major property owners in Chicago - ' +
         'universities, the city, and other large organizations',

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import { generatePageSocialMeta } from '../constants/page-social-meta.vue';
+import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -10,7 +10,7 @@ import { generatePageSocialMeta } from '../constants/page-social-meta.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return generatePageSocialMeta(
+    return generatePageMeta(
       'Buildings By Ward',
       'Browse Chicago buildings organized by ward - find energy performance ' +
         'data for your neighborhood!',
