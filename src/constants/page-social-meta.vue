@@ -1,3 +1,6 @@
+<script lang="ts">
+export default {};
+
 interface MetaTag {
   name?: string;
   property?: string;
@@ -13,7 +16,7 @@ interface PageSocialMetaResult {
 /**
  * Utility function to generate social media meta tags for page social cards
  */
-function generatePageSocialMeta(
+export function generatePageSocialMeta(
   pageIdOrTitle: string,
   titleOrDescription?: string,
   descriptionOnly?: string,
@@ -78,11 +81,12 @@ function generatePageSocialMeta(
 
 /**
  * Generate social media meta tags for owner pages
+ *
  * @param ownerId - The owner ID (e.g., 'depaul', 'uchicago')
  * @param ownerName - The display name of the owner (e.g., 'DePaul University')
  * @param description - Description for the owner
  */
-function generateOwnerSocialMeta(
+export function generateOwnerSocialMeta(
   ownerId: string,
   ownerName: string,
   description?: string,
@@ -127,6 +131,4 @@ function generateOwnerSocialMeta(
     meta: baseMeta,
   };
 }
-
-export { generateOwnerSocialMeta };
-export default generatePageSocialMeta;
+</script>

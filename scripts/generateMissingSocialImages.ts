@@ -1,4 +1,4 @@
-import { generateSocialImages } from './generateSocialImages';
+import { generateSocialImages } from './generateSocialImages.vue';
 import {
   loadAllBuildingData,
   ensureSocialImagesDirectory,

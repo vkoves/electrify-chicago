@@ -81,6 +81,22 @@ docker compose run --rm electrify-chicago yarn build
 
 ```
 
+### Weird Errors With Constants Files
+
+**Tip!** For some strange reason, our Gridsome setup doesn't like separate `.ts` files, only `.vue`
+files. If you need to setup some shared constants or interfaces, put them in a `.vue` file, like
+so:
+
+```html
+<!-- my-constants.vue -->
+<script lang="ts">
+export default {}
+
+export const MyConst = { /* ... */};
+export interface IMyInterface { /* ... */ }
+</script>
+```
+
 ## Social Images
 
 You can also run scripts to generate social images, which require

@@ -20,7 +20,7 @@ import {
 } from '../constants/buildings-custom-info.constant.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
-import { generateOwnerSocialMeta } from '../constants/page-social-meta';
+import { generateOwnerSocialMeta } from '../constants/page-social-meta.vue';
 
 interface IBuildingEdge {
   node: IBuilding;
