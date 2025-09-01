@@ -13,30 +13,15 @@ const { readFileSync } = require('fs');
 const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
 const pageSocialConfigsData = require('./src/constants/page-social-images/page-social-configs.json');
+const buildingOwnersData = require('./src/constants/building-owners.json');
 
 const DataDirectory = './src/data/dist/';
 
 const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 const HistoricBenchmarkingDataFile = 'benchmarking-all-years.csv';
 
-// This is an array equivalent of Object.keys(BuildingOwners) but this file can't use Typescript and
-// import that file
-const BuildingOwnerIds = [
-  'depaul',
-  'uchicago',
-  'uic',
-  'iit',
-  'northwestern',
-  'loyola',
-  'cps',
-  'cha',
-  'cityofchicago',
-  'columbia',
-  'ccc',
-  'moody',
-  'saic',
-  'npu',
-];
+// Get building owner IDs from the centralized JSON file
+const BuildingOwnerIds = Object.keys(buildingOwnersData);
 
 module.exports = function (api) {
   // Use the Data Store API here: https://gridsome.org/docs/data-store-api/

@@ -10,10 +10,11 @@ import {
   getPageSocialImagePath,
   getOwnerSocialImagePath,
   getAvailablePageIdsFromConfig,
-  getAvailableOwnerIds,
   pageImageExists,
   ownerImageExists,
 } from './social-images-helpers';
+
+import { getAvailableOwnerIds } from './src/constants/buildings-custom-info.constant.vue';
 
 type Browser = puppeteer.Browser;
 type Page = puppeteer.Page;

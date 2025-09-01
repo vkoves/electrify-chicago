@@ -92,26 +92,3 @@ export async function ownerImageExists(ownerId: string): Promise<boolean> {
   const imagePath = getOwnerSocialImagePath(ownerId);
   return await fs.pathExists(imagePath);
 }
-
-export function getAvailableOwnerIds(): string[] {
-  // Import owners data
-  // Note: We can't import the BuildingOwners directly due to .vue extension
-  // So we'll hardcode the keys here - they change very rarely
-  // TODO: Move to a JSON, this is also duplicated in gridsome.server.js :/
-  return [
-    'depaul',
-    'iit',
-    'uchicago',
-    'northwestern',
-    'loyola',
-    'cps',
-    'cha',
-    'cityofchicago',
-    'columbia',
-    'ccc',
-    'moody',
-    'saic',
-    'npu',
-    'uic',
-  ];
-}
