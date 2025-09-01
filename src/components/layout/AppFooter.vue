@@ -30,7 +30,7 @@ export default class AppFooter extends Vue {}
           rel="noopener"
         >
           <img alt="" src="/github-mark.svg" height="16" />
-          Contribute on GitHub
+          Contribute To GitHub
         </a>
       </div>
 
@@ -42,7 +42,28 @@ export default class AppFooter extends Vue {}
           rel="noopener"
         >
           <img alt="" src="/bluesky.svg" height="16" />
-          Follow Us On Bluesky
+        </a>
+      </div>
+
+      <div>
+        <a
+          href="https://www.youtube.com/@electrifychicago"
+          class="youtube"
+          target="_blank"
+          rel="noopener"
+        >
+          <img class="yt-icon" alt="" src="/youtube-mark.svg" height="16" />
+        </a>
+      </div>
+
+      <div>
+        <a
+          href="https://www.instagram.com/electrify.chicago"
+          class="instagram"
+          target="_blank"
+          rel="noopener"
+        >
+          <img class="ig-icon" alt="" src="/instagram-mark.svg" height="16" />
         </a>
       </div>
 
@@ -66,7 +87,7 @@ footer {
     justify-content: center;
     align-items: center;
     margin: auto;
-    gap: 2rem;
+    gap: 1rem;
   }
 
   a {
@@ -78,15 +99,25 @@ footer {
   }
 
   a.github-link,
-  a.bluesky {
+  a.bluesky,
+  a.youtube,
+  a.instagram {
     text-decoration: none;
     padding: 0.3125rem 1rem;
-    border-radius: $brd-rad-full;
+
     font-size: 0.825rem;
     line-height: 1;
   }
 
+  a.bluesky,
+  a.youtube,
+  a.instagram {
+    padding: 0.3125rem;
+    border-radius: 4px;
+  }
+
   a.github-link {
+    border-radius: $brd-rad-full;
     background-color: $off-white;
     border: none;
 
@@ -103,6 +134,26 @@ footer {
     &:hover,
     &:focus {
       background-color: #016cd0;
+    }
+  }
+
+  a.youtube {
+    background-color: #ff0000;
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: #cc0000;
+    }
+  }
+
+  a.instagram {
+    background-color: #e0257a; // Instagram
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: #d12342;
     }
   }
 
