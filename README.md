@@ -90,10 +90,14 @@ so:
 ```html
 <!-- my-constants.vue -->
 <script lang="ts">
-export default {}
+  export default {};
 
-export const MyConst = { /* ... */};
-export interface IMyInterface { /* ... */ }
+  export const MyConst = {
+    /* ... */
+  };
+  export interface IMyInterface {
+    /* ... */
+  }
 </script>
 ```
 
