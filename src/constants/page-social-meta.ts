@@ -82,13 +82,14 @@ function generatePageSocialMeta(
  * @param ownerName - The display name of the owner (e.g., 'DePaul University')
  * @param description - Description for the owner
  */
-export function generateOwnerSocialMeta(
+function generateOwnerSocialMeta(
   ownerId: string,
   ownerName: string,
   description?: string,
 ): PageSocialMetaResult {
   const title = `${ownerName} Buildings`;
-  const defaultDescription = `Explore emissions and energy efficiency data for buildings owned by ${ownerName}.`;
+  const defaultDescription = `Explore emissions and energy efficiency data for buildings owned by
+    ${ownerName}.`;
   const socialImageUrl = `/social-images/owner-${ownerId}.webp`;
 
   const baseMeta = [
@@ -127,6 +128,5 @@ export function generateOwnerSocialMeta(
   };
 }
 
-// Export as default and named export for backwards compatibility
+export { generateOwnerSocialMeta };
 export default generatePageSocialMeta;
-export { generatePageSocialMeta };
