@@ -12,7 +12,7 @@
 const { readFileSync } = require('fs');
 const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
-const { getAvailablePageIds } = require('./src/constants/page-social-configs-server');
+const pageSocialConfigsData = require('./src/constants/page-social-images/page-social-configs.json');
 
 const DataDirectory = './src/data/dist/';
 
@@ -75,7 +75,8 @@ module.exports = function (api) {
     // Create social card routes (only in development)
     if (process.env.NODE_ENV !== 'production') {
       // Create page social card routes
-      const pageIds = getAvailablePageIds();
+      const pageIds = Object.keys(pageSocialConfigsData);
+
       pageIds.forEach(pageId => {
         createPage({
           path: `/page-social-card/${pageId}`,

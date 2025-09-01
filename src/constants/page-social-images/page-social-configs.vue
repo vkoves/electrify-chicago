@@ -1,6 +1,7 @@
 <script lang="ts">
 /**
- * TypeScript utilities for page social configs
+ * TypeScript utilities for SocialCardPage configs, which generates pages we screenshot
+ * to generate dynamic social meta images
  */
 const pageSocialConfigsData = require('./page-social-configs.json');
 

@@ -32,8 +32,8 @@ query {
 import { Component, Vue } from 'vue-property-decorator';
 import PageSocialCard from '../../components/social-cards/PageSocialCard.vue';
 
-import { getPageSocialConfig } from '../../constants/page-social-configs.vue';
-import type { IPageSocialConfig } from '../../constants/page-social-configs.vue';
+import { getPageSocialConfig } from '../../constants/page-social-images/page-social-configs.vue';
+import type { IPageSocialConfig } from '../../constants/page-social-images/page-social-configs.vue';
 
 /**
  * The page for page social cards, found at `/page-social-card/:pageId`

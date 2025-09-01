@@ -136,7 +136,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import {
   pageSocialConfigs,
   type IPageSocialConfig,
-} from '../constants/page-social-configs.vue';
+} from '../constants/page-social-images/page-social-configs.vue';
 
 /**
  * TODO: Add this to footer in local dev

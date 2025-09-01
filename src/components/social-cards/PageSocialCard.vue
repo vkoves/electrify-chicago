@@ -12,7 +12,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { IBuilding } from '../../common-functions.vue';
-import type { IPageSocialConfig } from '../../constants/page-social-configs.vue';
+import type { IPageSocialConfig } from '../../constants/page-social-images/page-social-configs.vue';
 import BaseSocialCard from './BaseSocialCard.vue';
 
 @Component({
