@@ -12,9 +12,8 @@ import {
   getAvailablePageIdsFromConfig,
   pageImageExists,
   ownerImageExists,
+  getAvailableOwnerIds,
 } from './social-images-helpers';
-
-import { getAvailableOwnerIds } from './src/constants/buildings-custom-info.constant.vue';
 
 type Browser = puppeteer.Browser;
 type Page = puppeteer.Page;
@@ -250,10 +249,11 @@ export async function generateOwnerSocialImages(
 
 /**
  * Generate social images for specific building IDs or all buildings
+ *
  * @param reqBuildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
  * @param deleteExisting - Whether to delete existing images before generating new ones. Defaults to true.
  */
-export async function generateSocialImages(
+export async function generateBuildingSocialImages(
   reqBuildingIds: string[] | null = null,
   deleteExisting: boolean = true,
 ): Promise<void> {
@@ -276,7 +276,7 @@ export async function generateSocialImages(
 }
 
 /**
- * Generate building, page, and owner social images
+ * Generate building, page, and owner social images from scratch
  */
 export async function generateAllSocialImages(
   reqBuildingIds: string[] | null = null,
@@ -290,10 +290,10 @@ export async function generateAllSocialImages(
   await generatePageSocialImages(deleteExisting);
 
   // Generate owner social images (also fast)
-  await generateOwnerSocialImages(false); // Don't delete again
+  await generateOwnerSocialImages(deleteExisting);
 
-  // Then generate building social images (slowest)
-  await generateSocialImages(reqBuildingIds, false); // Don't delete again
+  // Then generate building social images (slowest, since 6k records)
+  await generateBuildingSocialImages(reqBuildingIds, false); // Don't delete again
 }
 
 /**
@@ -468,7 +468,7 @@ if (require.main === module) {
   } else if (command === 'owners') {
     generateOwnerSocialImages().catch(console.error);
   } else if (command === 'buildings') {
-    generateSocialImages().catch(console.error);
+    generateBuildingSocialImages().catch(console.error);
   } else {
     // Default to generating all images (buildings + pages + owners)
     generateAllSocialImages().catch(console.error);

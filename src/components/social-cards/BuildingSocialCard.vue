@@ -123,14 +123,14 @@ import {
   IBuildingBenchmarkStats,
   getConcernLevel,
   getMedianMultipleMsg,
-} from '../common-functions.vue';
+} from '../../common-functions.vue';
 import {
   getBuildingImage,
   IBuildingImage,
-} from '../constants/building-images.constant.vue';
-import buildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
-import LetterGrade from './LetterGrade.vue';
-import PieChart, { IPieSlice } from './graphs/PieChart.vue';
+} from '../../constants/building-images.constant.vue';
+import buildingBenchmarkStats from '../../data/dist/building-benchmark-stats.json';
+import LetterGrade from '../LetterGrade.vue';
+import PieChart, { IPieSlice } from '../graphs/PieChart.vue';
 
 @Component({
   components: {
@@ -138,7 +138,7 @@ import PieChart, { IPieSlice } from './graphs/PieChart.vue';
     PieChart,
   },
 })
-export default class SocialCard extends Vue {
+export default class BuildingSocialCard extends Vue {
   /** Set by Gridsome to results of GraphQL query */
   $page!: {
     building: IBuilding;

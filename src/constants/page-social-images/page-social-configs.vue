@@ -3,7 +3,7 @@
  * TypeScript utilities for SocialCardPage configs, which generates pages we screenshot
  * to generate dynamic social meta images
  */
-const pageSocialConfigsData = require('./page-social-configs.json');
+import pageSocialConfigsData from './page-social-configs.json';
 
 export default {};
 

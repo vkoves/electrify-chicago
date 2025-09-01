@@ -25,6 +25,10 @@ import {
 } from '../../constants/buildings-custom-info.constant.vue';
 import BaseSocialCard from './BaseSocialCard.vue';
 
+/**
+ * Our social card page for generating meta imagery for building owners, showing the images for the
+ * some of the buildings they own plus their logo
+ */
 @Component({
   components: {
     BaseSocialCard,

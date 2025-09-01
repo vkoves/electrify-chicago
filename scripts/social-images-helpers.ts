@@ -1,7 +1,13 @@
+/**
+ * A set of Typescript helper functions for our social image generation
+ */
+
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
-import { getAvailablePageIds } from '../src/constants/page-social-configs-server';
+
+import pageSocialConfigs from '../src/constants/page-social-images/page-social-configs.json';
+import buildingOwnersData from '../src/constants/building-owners.json';
 
 // Shared constants
 export const SOCIAL_IMAGES_DIR = './static/social-images';
@@ -51,7 +57,11 @@ export async function pageImageExists(pageId: string): Promise<boolean> {
 
 // Page data utilities
 export function getAvailablePageIdsFromConfig(): string[] {
-  return getAvailablePageIds();
+ return Object.keys(pageSocialConfigs);
+}
+
+export function getAvailableOwnerIds(): string[] {
+  return Object.keys(buildingOwnersData);
 }
 
 export async function ensureSocialImagesDirectory(): Promise<void> {
