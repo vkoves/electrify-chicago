@@ -7,6 +7,7 @@
 </static-query>
 
 <script lang="ts">
+/* global process */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppFooter from '../components/layout/AppFooter.vue';
 import AppHeader from '../components/layout/AppHeader.vue';
@@ -41,7 +42,6 @@ export default class Default extends Vue {
   @Prop() mainClass?: string;
 
   get isDevelopment(): boolean {
-    // eslint-disable-next-line no-undef -- Node.js environment variable
     return process.env.NODE_ENV === 'development';
   }
 }
