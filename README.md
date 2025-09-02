@@ -128,13 +128,13 @@ docker compose run --rm electrify-chicago yarn lint-fix
 3. To then process a new CSV file (at `src/data/source/ChicagoEnergyBenchmarking.csv`), you need to run the following command:
 
 ```bash
-docker compose run --rm electrify-chicago python3 run_all.py
+docker compose run --rm electrify-chicago uv run python run_all.py
 ```
 
 4. If you would prefer to process an individual python script, you can do so like this:
 
 ```bash
-docker compose run --rm electrify-chicago python3 -m src.data.scripts.name_of_your_script
+docker compose run --rm electrify-chicago uv run python -m src.data.scripts.name_of_your_script
 ```
 
 ### Run Data Processing Tests
@@ -148,14 +148,14 @@ docker compose run --rm electrify-chicago bash create_test_data.sh
 2. To run all tests in the project directory, enter the following command:
 
 ```bash
-docker compose run --rm electrify-chicago python -m pytest
+docker compose run --rm electrify-chicago uv run python -m pytest
 ```
 
 3. Run the following command for individual unit test suite (where YOUR_FILE_NAME is something like
    `test_clean_all_years`):
 
 ```bash
-docker compose run --rm electrify-chicago python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
+docker compose run --rm electrify-chicago uv run python -m pytest tests/data/scripts/unit/YOUR_FILE_NAME.py
 ```
 
 ### Code Coverage
@@ -171,13 +171,13 @@ docker compose run --rm electrify-chicago coverage run --source=src/data/scripts
 2. View the coverage report in the terminal:
 
 ```bash
-docker compose run --rm electrify-chicago coverage report
+docker compose run --rm electrify-chicago uv run coverage report
 ```
 
 3. Generate an HTML coverage report (results will be in the htmlcov/ directory):
 
 ```bash
-docker compose run --rm electrify-chicago coverage html
+docker compose run --rm electrify-chicago uv run coverage html
 ```
 
 The `--source` parameter ensures that files without tests are still included in the coverage report, giving a more accurate picture of overall code coverage.
@@ -289,7 +289,7 @@ and so this is still a pretty manual process.
    addresses CSV, like so:
 
    ```sh
-   python3 -m src.data.scripts.fetch_streetview_imagery API_KEY ../addresses_to_img.csv
+   uv run python -m src.data.scripts.fetch_streetview_imagery API_KEY ../addresses_to_img.csv
    ```
 
    This will save images to `/tmp_streetview_images`, which is git ignored so you can't accidentally

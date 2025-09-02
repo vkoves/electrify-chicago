@@ -6,7 +6,7 @@ This script will then log the correctly formatted data, and you can copy that in
 buildings-custom-info.constant
 
 **Important!** Due to file pathing limitations, this file must be run from the electrify-chicago
-root directory (e.g. `python3 src/data/scripts/building-owners/find_cha_buildings.py`)
+root directory (e.g. `uv run python src/data/scripts/building-owners/find_cha_buildings.py`)
 """
 
 import csv
