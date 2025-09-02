@@ -30,7 +30,7 @@ export default class AppFooter extends Vue {}
           rel="noopener"
         >
           <img alt="" src="/github-mark.svg" height="16" />
-          Contribute To GitHub
+          Contribute On GitHub
         </a>
       </div>
 
