@@ -12,6 +12,10 @@
     "build": "gridsome build",
     "develop": "gridsome develop",
     "explore": "gridsome explore",
+    "gen-social-imgs": "npx tsx scripts/generateSocialImages.ts all",
+    "gen-social-imgs-buildings": "npx tsx scripts/generateSocialImages.ts buildings",
+    "gen-social-imgs-pages": "npx tsx scripts/generateSocialImages.ts pages",
+    "gen-social-imgs-owners": "npx tsx scripts/generateSocialImages.ts owners",
     "gen-fresh-social-imgs": "npx tsx scripts/generateSocialImages.ts",
     "gen-missing-social-imgs": "npx tsx scripts/generateMissingSocialImages.ts",
     "gen-test-social-imgs": "npx tsx scripts/generateTestSocialImages.ts",
@@ -22,8 +26,8 @@
     "prettier-base": "npx prettier ./**/*{.ts,.vue,.md,.scss}",
     "prettier-fix": "yarn prettier-base --write",
     "lint": "yarn eslint-base && yarn stylelint-base && yarn prettier-base --check",
-    "lint-fix": "yarn eslint-base --fix; yarn stylelint-base --fix; yarn prettier-base --write --log-level warn",
-    "lint-fix-quiet": "yarn eslint-base --fix --quiet; yarn stylelint-base --fix --quiet; yarn prettier-base --write --log-level error"
+    "lint-fix": "yarn eslint-base --fix && yarn stylelint-base --fix && yarn prettier-base --write --log-level warn",
+    "lint-fix-quiet": "yarn eslint-base --fix --quiet && yarn stylelint-base --fix --quiet && yarn prettier-base --write --log-level error"
   },
   "dependencies": {
     "@gridsome/plugin-sitemap": "^0.4.0",

@@ -1,4 +1,4 @@
-import { generateSocialImages } from './generateSocialImages.js';
+import { generateSocialImages } from './generateSocialImages.vue';
 import * as fs from 'fs-extra';
 import { getSocialImagePath, removeImages } from './social-images-helpers';
 

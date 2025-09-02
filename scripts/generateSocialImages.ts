@@ -7,6 +7,12 @@ import {
   loadBuildingIds as loadAllBuildingIds,
   ensureSocialImagesDirectory,
   getSocialImagePath,
+  getPageSocialImagePath,
+  getOwnerSocialImagePath,
+  getAvailablePageIdsFromConfig,
+  pageImageExists,
+  ownerImageExists,
+  getAvailableOwnerIds,
 } from './social-images-helpers';
 
 type Browser = puppeteer.Browser;
@@ -31,7 +37,7 @@ async function loadBuildingIds(
 }
 
 /**
- * Clean existing social images directory
+ * Clean existing social images directory - deletes ALL social images
  */
 async function cleanupExistingImages(): Promise<void> {
   console.log(
@@ -148,11 +154,97 @@ async function processBuildingBatch(
 }
 
 /**
+ * Generic function to process social images for a list of entities
+ */
+async function processEntityImages<T>(
+  entityIds: T[],
+  entityType: string,
+  generateFunction: (browser: Browser, entityId: T) => Promise<void>,
+  existsFunction: (entityId: T) => Promise<boolean>,
+  deleteExisting: boolean = true,
+): Promise<void> {
+  console.log(`🎨 Starting ${entityType} social image generation...`);
+
+  await ensureSocialImagesDirectory();
+
+  console.log(
+    `📊 Found ${entityIds.length} ${entityType}s to process: ${entityIds.join(', ')}`,
+  );
+
+  const browser = await setupBrowser();
+
+  try {
+    let processed = 0;
+    for (const entityId of entityIds) {
+      try {
+        // Skip if image already exists and we're not deleting existing ones
+        if (!deleteExisting && (await existsFunction(entityId))) {
+          console.log(
+            `⏭️  ${entityType} ${entityId} already has social image, skipping`,
+          );
+          continue;
+        }
+
+        await generateFunction(browser, entityId);
+        processed++;
+        console.log(
+          `✅ Generated ${entityType} social image for ${entityId} (${processed}/${entityIds.length})`,
+        );
+      } catch (error) {
+        console.error(
+          `❌ Failed to generate ${entityType} image for ${entityId}:`,
+          (error as Error).message,
+        );
+      }
+    }
+
+    console.log(
+      `🎉 Completed generating ${processed} ${entityType} social images!`,
+    );
+  } finally {
+    await browser.close();
+  }
+}
+
+/**
+ * Generate page social images for all configured pages
+ */
+export async function generatePageSocialImages(
+  deleteExisting: boolean = true,
+): Promise<void> {
+  const pageIds = getAvailablePageIdsFromConfig();
+  await processEntityImages(
+    pageIds,
+    'page',
+    generateSinglePageImage,
+    pageImageExists,
+    deleteExisting,
+  );
+}
+
+/**
+ * Generate owner social images for all configured owners
+ */
+export async function generateOwnerSocialImages(
+  deleteExisting: boolean = true,
+): Promise<void> {
+  const ownerIds = getAvailableOwnerIds();
+  await processEntityImages(
+    ownerIds,
+    'owner',
+    generateSingleOwnerImage,
+    ownerImageExists,
+    deleteExisting,
+  );
+}
+
+/**
  * Generate social images for specific building IDs or all buildings
+ *
  * @param reqBuildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
  * @param deleteExisting - Whether to delete existing images before generating new ones. Defaults to true.
  */
-export async function generateSocialImages(
+export async function generateBuildingSocialImages(
   reqBuildingIds: string[] | null = null,
   deleteExisting: boolean = true,
 ): Promise<void> {
@@ -175,15 +267,36 @@ export async function generateSocialImages(
 }
 
 /**
- * Generate a social image for a single building
+ * Generate building, page, and owner social images from scratch
  */
-export async function generateSingleImage(
-  browser: Browser,
-  buildingId: string,
+export async function generateAllSocialImages(
+  reqBuildingIds: string[] | null = null,
+  deleteExisting: boolean = true,
 ): Promise<void> {
-  const outputPath = getSocialImagePath(buildingId) as `${string}.webp`;
-  const url = `${BASE_URL}/social-card/${buildingId}`;
+  console.log(
+    '🎨 Starting complete social image generation (buildings + pages + owners)...',
+  );
 
+  // Generate page social images first (they're faster)
+  await generatePageSocialImages(deleteExisting);
+
+  // Generate owner social images (also fast)
+  await generateOwnerSocialImages(deleteExisting);
+
+  // Then generate building social images (slowest, since 6k records)
+  await generateBuildingSocialImages(reqBuildingIds, false); // Don't delete again
+}
+
+/**
+ * Generate a screenshot for a social card URL
+ */
+async function generateScreenshot(
+  browser: Browser,
+  url: string,
+  outputPath: `${string}.webp`,
+  entityType: string,
+  entityId: string,
+): Promise<void> {
   // Skip if image already exists (for incremental builds)
   if (await fs.pathExists(outputPath)) {
     return;
@@ -198,7 +311,7 @@ export async function generateSingleImage(
     // Navigate to social card page
     await page.goto(url, {
       waitUntil: 'networkidle2',
-      timeout: 3_000, // Increased timeout for slower systems
+      timeout: 5_000,
     });
 
     // Take screenshot
@@ -210,13 +323,52 @@ export async function generateSingleImage(
     });
   } catch (error) {
     console.error(
-      `❌ Failed to generate image for building ${buildingId} at URL: ${url}\n` +
+      `❌ Failed to generate ${entityType} image for ${entityId} at URL: ${url}\n` +
         `   Error: ${(error as Error).message}`,
     );
     throw error;
   } finally {
     await page.close();
   }
+}
+
+/**
+ * Generate a social image for a single building
+ */
+export async function generateSingleImage(
+  browser: Browser,
+  buildingId: string,
+): Promise<void> {
+  const outputPath = getSocialImagePath(buildingId) as `${string}.webp`;
+  const url = `${BASE_URL}/social-card/${buildingId}`;
+
+  await generateScreenshot(browser, url, outputPath, 'building', buildingId);
+}
+
+/**
+ * Generate a social image for a single page
+ */
+export async function generateSinglePageImage(
+  browser: Browser,
+  pageId: string,
+): Promise<void> {
+  const outputPath = getPageSocialImagePath(pageId) as `${string}.webp`;
+  const url = `${BASE_URL}/page-social-card/${pageId}`;
+
+  await generateScreenshot(browser, url, outputPath, 'page', pageId);
+}
+
+/**
+ * Generate a social image for a single owner
+ */
+export async function generateSingleOwnerImage(
+  browser: Browser,
+  ownerId: string,
+): Promise<void> {
+  const outputPath = getOwnerSocialImagePath(ownerId) as `${string}.webp`;
+  const url = `${BASE_URL}/owner-social-card/${ownerId}`;
+
+  await generateScreenshot(browser, url, outputPath, 'owner', ownerId);
 }
 
 /**
@@ -251,7 +403,14 @@ if (require.main === module) {
 
   if (command === 'clean') {
     cleanupOldImages().catch(console.error);
+  } else if (command === 'pages') {
+    generatePageSocialImages().catch(console.error);
+  } else if (command === 'owners') {
+    generateOwnerSocialImages().catch(console.error);
+  } else if (command === 'buildings') {
+    generateBuildingSocialImages().catch(console.error);
   } else {
-    generateSocialImages().catch(console.error);
+    // Default to generating all images (buildings + pages + owners)
+    generateAllSocialImages().catch(console.error);
   }
 }

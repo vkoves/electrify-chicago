@@ -381,7 +381,7 @@ export const BuildingImages: IBuildingImages = {
   '256435': {
     imgUrl:
       BuildingImagesBase +
-      'auto-streetview/iit/256435-55_W_34th_Street_60616.web',
+      'auto-streetview/iit/256435-55_W_34th_Street_60616.webp',
     fromGoogleMaps: true,
   },
 
@@ -729,7 +729,7 @@ export const BuildingImages: IBuildingImages = {
   '254989': {
     imgUrl:
       BuildingImagesBase +
-      'auto-streetview/depaul/254989-2330_N_HALSTED_ST_60614.web',
+      'auto-streetview/depaul/254989-2330_N_HALSTED_ST_60614.webp',
     fromGoogleMaps: true,
   },
   '251330': {
@@ -939,7 +939,7 @@ export const BuildingImages: IBuildingImages = {
   '256502': {
     imgUrl:
       BuildingImagesBase +
-      'auto-streetview/uchicago/256502-1442_E__59th_Street_60637.web',
+      'auto-streetview/uchicago/256502-1442_E__59th_Street_60637.webp',
     fromGoogleMaps: true,
   },
 
