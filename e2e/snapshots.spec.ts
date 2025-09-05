@@ -8,18 +8,20 @@ async function waitForFontsLoaded(page: Page) {
   await page.waitForFunction(() => document.fonts.ready);
 
   // Check whether robot is already loaded
-  const robotoLoaded = await page.evaluate(() => document.fonts.check('1em Roboto'));
+  const robotoLoaded = await page.evaluate(() =>
+    document.fonts.check('1em Roboto'),
+  );
 
   if (!robotoLoaded) {
     // Wait specifically for Roboto font variants to load (up to 2 seconds each)
     await page.waitForFunction(
-      () => document.fonts.check('1em Roboto') &&
-            document.fonts.check('400 1em Roboto') &&
-            document.fonts.check('bold 1em Roboto'),
-      { timeout: 2000 }
+      () =>
+        document.fonts.check('1em Roboto') &&
+        document.fonts.check('400 1em Roboto') &&
+        document.fonts.check('bold 1em Roboto'),
+      { timeout: 2000 },
     );
   }
-
 
   // Give an extra moment for font rendering to stabilize
   await page.waitForTimeout(100);
