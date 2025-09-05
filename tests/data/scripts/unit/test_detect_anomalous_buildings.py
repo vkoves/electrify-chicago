@@ -77,6 +77,25 @@ def test_detect_anomalous_zero_gas_buildings():
     assert len(anomalous_ids2) == 0
 
 
+def test_detect_anomalous_zero_gas_buildings_with_empty_values():
+    # Test case for building ID 231271 and similar cases where NaturalGasUse is NaN/empty
+    # Building 231271 should be flagged because it has empty gas use in latest year but used gas before
+    import numpy as np
+    data = {
+        'ID':            [231271, 231271, 231271,  5, 5, 5,      6, 6, 6],
+        'DataYear':      [2020, 2021, 2022,       2020, 2021, 2022, 2020, 2021, 2022],
+        'NaturalGasUse': [100, 110, np.nan,       50, 60, np.nan, 3, 4, np.nan],
+        'ElectricityUse': [100, 110, 120,         50, 60, 55,     150, 140, 135],
+    }
+    historic_data = pd.DataFrame(data)
+
+    anomalous_ids = detect_anomalous_zero_gas_buildings(historic_data)
+    # Building 231271 and 5 should be flagged (had significant gas use before), but not 6 (minimal gas use)
+    assert 231271 in anomalous_ids
+    assert 5 in anomalous_ids
+    assert 6 not in anomalous_ids
+
+
 # Mock detect_anomalous_zero_gas_buildings and detect_large_gas_swing_buildings to control the returned IDs
 @pytest.fixture
 def mock_detect_anomalous_zero_gas_buildings(mocker):
