@@ -40,8 +40,6 @@ export default defineConfig({
     /* Threshold for screenshot comparisons (0-1, where 1 is identical) */
     toHaveScreenshot: {
       threshold: 0.2,
-      // Allow an up to 2% difference, since the screenshots are huge
-      maxDiffPixelRatio: 0.02,
     },
   },
 
