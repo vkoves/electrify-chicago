@@ -29,13 +29,13 @@ def clean_dist_directory():
 
 def run_python_script(module):
     try:
-        subprocess.run(["python3", "-m", module], check=True)
+        subprocess.run(["uv", "run", "python", "-m", module], check=True)
         return True
     except subprocess.CalledProcessError as e:
         print(f"{RED}Error running {module}: {e}{NC}")
         return False
     except FileNotFoundError:
-        print(f"{RED}Error: python3 not found. Is Python 3 installed?{NC}")
+        print(f"{RED}Error: uv not found. Is uv installed?{NC}")
         return False
 
 

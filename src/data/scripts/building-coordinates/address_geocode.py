@@ -5,7 +5,7 @@ the Google Maps Geocoding API
 Google Maps Geocoding API: https://developers.google.com/maps/documentation/geocoding/overview
 
 **Important!** Due to file pathing limitations, this file must be run from the electrify-chicago
-root directory (e.g. `python3 src/data/scripts/building-owners/find_city_buildings.py`)
+root directory (e.g. `uv run python src/data/scripts/building-owners/find_city_buildings.py`)
 """
 
 import pandas as pd

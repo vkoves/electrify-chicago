@@ -4,7 +4,7 @@ Functions to automatically fetch images from the Google Maps API
 WIP - not integrated into data pipeline, call from root with with:
 
 ```
-python3 -m src.data.scripts.fetch_streetview_imagery API_KEY addresses.csv
+uv run python -m src.data.scripts.fetch_streetview_imagery API_KEY addresses.csv
 ```
 
 Viktor has a Google Maps API key, or you can create your own!
