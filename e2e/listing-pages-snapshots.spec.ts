@@ -3,7 +3,7 @@ import { waitForPageReady, pageNameToFileName } from './test-utils';
 
 const LISTING_PAGES = [
   { name: 'All Electric Page', url: '/all-electric' },
-    { name: 'Ward 47', url: '/ward/47' },
+  { name: 'Ward 47', url: '/ward/47' },
 ];
 
 test.describe('Listing Page Snapshots', () => {
@@ -13,10 +13,9 @@ test.describe('Listing Page Snapshots', () => {
       await waitForPageReady(page);
 
       // Take a full screenshot
-      await expect(page).toHaveScreenshot(
-        `${pageNameToFileName(name)}.png`,
-        { fullPage: true },
-      );
+      await expect(page).toHaveScreenshot(`${pageNameToFileName(name)}.png`, {
+        fullPage: true,
+      });
     });
   });
 });

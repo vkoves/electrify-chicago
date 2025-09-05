@@ -15,10 +15,9 @@ test.describe('Core Page Snapshots', () => {
       await waitForPageReady(page);
 
       // Take a full screenshot
-      await expect(page).toHaveScreenshot(
-        `${pageNameToFileName(name)}.png`,
-        { fullPage: true },
-      );
+      await expect(page).toHaveScreenshot(`${pageNameToFileName(name)}.png`, {
+        fullPage: true,
+      });
     });
   });
 });
