@@ -13,6 +13,8 @@ body {
 
   &,
   * {
+    // Tip: for font debugging, try "Roboto, 'Times New Roman'", which makes it very obvious if
+    // fonts fail to load
     font-family: Roboto, sans-serif;
     box-sizing: border-box;
   }
