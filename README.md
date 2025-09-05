@@ -165,7 +165,6 @@ yarn playwright show-report
 
 **Development Tools:**
 
-
 ```bash
 # Record new tests interactively
 npx playwright codegen
@@ -177,7 +176,6 @@ yarn playwright test --debug
 **Tip - Made Visual Updates?**
 
 Run Playwright with update snapshots to overwrite the existing snapshots.
-
 
 ```
 yarn playwright test --update-snapshots

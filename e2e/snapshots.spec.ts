@@ -30,7 +30,7 @@ test.describe('Snapshots', () => {
       // Take a full screenshot
       await expect(page).toHaveScreenshot(
         `${name.toLowerCase().replace(/\s+/g, '-')}-desktop.png`,
-        { fullPage: true }
+        { fullPage: true },
       );
     });
   });

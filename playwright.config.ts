@@ -69,10 +69,13 @@ export default defineConfig({
     // },
   ],
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  /* Run the dev server before starting the tests */
+  webServer: {
+    command: 'yarn develop',
+    url: 'http://localhost:8080',
+    // Reuse existing server when running locally (e.g. docker compose up is already running)
+    // but always start fresh server in CI environments
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
 });
