@@ -38,35 +38,25 @@ export default defineConfig({
   /* Expect options for snapshots */
   expect: {
     /* Threshold for screenshot comparisons (0-1, where 1 is identical) */
-    toHaveScreenshot: { threshold: 0.2 },
+    toHaveScreenshot: {
+      threshold: 0.2,
+      // Allow an up to 2% difference, since the screenshots are huge
+      maxDiffPixelRatio: 0.02,
+    },
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
+      name: 'Desktop Chrome',
       use: { ...devices['Desktop Chrome'] },
     },
 
-    /* Test against mobile viewports. */
+    /* Test against a larger mobile viewports */
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      use: { ...devices['iPhone 15 Plus'] },
     },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
 
   /* Run the dev server before starting the tests */

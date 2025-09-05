@@ -41,9 +41,9 @@ async function waitForPageReady(page: Page) {
 const IMPORTANT_PAGES = [
   { name: 'Home', url: '/' },
   // Buildings
-  // { name: 'All Electric Building', url: '/building-id/239096' },
-  // { name: 'Mix Building (Merch Mart)', url: '/building-id/103656' },
-  // { name: 'No Image Building', url: '/building-id/103727' },
+  { name: 'All Electric Building', url: '/building-id/239096' },
+  { name: 'Mixed Building | Merch Mart', url: '/building-id/103656' },
+  { name: 'No Image Building', url: '/building-id/103727' },
   // Other Pages
   // { name: 'Ward 47', url: '/ward/47' },
   // { name: 'Building Owner (IIT)', url: '/owner/iit' },
@@ -55,13 +55,13 @@ const IMPORTANT_PAGES = [
 // These take desktop and mobile snapshots through our projects config in `playwright.config.ts`
 test.describe('Snapshots', () => {
   IMPORTANT_PAGES.forEach(({ name, url }) => {
-    test(`${name} - Desktop`, async ({ page }) => {
+    test(`${name}`, async ({ page }) => {
       await page.goto(url);
       await waitForPageReady(page);
 
       // Take a full screenshot
       await expect(page).toHaveScreenshot(
-        `${name.toLowerCase().replace(/\s+/g, '-')}-desktop.png`,
+        `${name.toLowerCase().replace(/\s+/g, '-')}.png`,
         { fullPage: true },
       );
     });
