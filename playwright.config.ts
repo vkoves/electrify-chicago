@@ -40,6 +40,9 @@ export default defineConfig({
     /* Threshold for screenshot comparisons (0-1, where 1 is identical) */
     toHaveScreenshot: {
       threshold: 0.2,
+      // Allow a 0.3% diff to account for CI font mismatch - ideally this should be higher on
+      // desktop and lower on mobile, where, probably 0.0002 would be fine
+      maxDiffPixelRatio: 0.003,
     },
   },
 
