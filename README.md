@@ -177,7 +177,7 @@ yarn playwright test --debug
 
 Run Playwright with update snapshots to overwrite the existing snapshots.
 
-```
+```bash
 yarn playwright test --update-snapshots
 ```
 

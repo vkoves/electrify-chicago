@@ -47,7 +47,16 @@ export default defineConfig({
   projects: [
     {
       name: 'Desktop Chrome',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        // Fix tiny text shifts
+        launchOptions: {
+          args: [
+            '--disable-font-subpixel-positioning',
+          ],
+        },
+      },
+
     },
 
     /* Test against a larger mobile viewports */
