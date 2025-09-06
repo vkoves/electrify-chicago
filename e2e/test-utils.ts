@@ -35,7 +35,7 @@ export async function waitForPageReady(page: Page) {
   await page.waitForLoadState('load');
   await page.waitForSelector('header img');
 
-  await waitForFontsLoaded(page);
+  // await waitForFontsLoaded(page);
 }
 
 /**

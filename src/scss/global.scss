@@ -67,7 +67,8 @@ body {
   * {
     // Tip: for font debugging, try "Roboto, 'Times New Roman'", which makes it very obvious if
     // fonts fail to load
-    font-family: Roboto, sans-serif;
+    // font-family: Roboto, sans-serif;
+    font-family: Arial, sans-serif;
     box-sizing: border-box;
   }
 
@@ -326,7 +327,6 @@ code {
  * Styling for our building letter grades (A-F) with colors for each for emphasis
  */
 .letter-grade {
-  font-family: Roboto, sans-serif;
   font-weight: 900;
   line-height: 1;
 
