@@ -20,22 +20,22 @@ query ($id: ID!) {
 </page-query>
 
 <template>
-  <SocialCard />
+  <BuildingSocialCard />
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import SocialCard from '../components/SocialCard.vue';
+import BuildingSocialCard from '../../components/social-cards/BuildingSocialCard.vue';
 
 /**
  * The page for building's social cards, found at `/social-card/:buildingId`
  */
 @Component({
   components: {
-    SocialCard,
+    BuildingSocialCard,
   },
 })
-export default class SocialCardPage extends Vue {}
+export default class BuildingSocialCardPage extends Vue {}
 </script>
 
 <style></style>

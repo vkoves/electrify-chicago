@@ -2,9 +2,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 /**
  * All Electric Buildings page - shows the largest all-electric buildings in Chicago
@@ -17,12 +19,22 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
   },
   metaInfo() {
-    return { title: 'All Electric Buildings' };
+    const description =
+      'Chicago buildings that are already all-electric! These innovative buildings show ' +
+      'the path forward - if the John Hancock Center can run on electricity alone, ' +
+      'so can your building.';
+
+    return generatePageMeta(
+      'all-electric',
+      'All Electric Buildings',
+      description,
+    );
   },
 })
 export default class AllElectric extends Vue {}
@@ -77,32 +89,38 @@ export default class AllElectric extends Vue {}
 </static-query>
 
 <template>
-  <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
-      Chicago's {{ $static.allBuilding.edges.length }} All Electric Buildings
-    </h1>
+  <DefaultLayout main-class="layout -full-width">
+    <BuildingsHero
+      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+    >
+      <h1 id="main-content" tabindex="-1">
+        Chicago's {{ $static.allBuilding.edges.length }} All Electric Buildings
+      </h1>
+    </BuildingsHero>
 
-    <p class="constrained -wide">
-      These buildings are already all-electric, and feature some of the most
-      famous buildings in the city! If even the John Hancock center or Marina
-      Towers can run off of only electricity, your building can too.
-    </p>
+    <div class="page-constrained">
+      <p class="constrained -wide">
+        These buildings are already all-electric, and feature some of the most
+        famous buildings in the city! If even the John Hancock center or Marina
+        Towers can run off of only electricity, your building can too.
+      </p>
 
-    <p class="constrained -wide">
-      <strong>Note:</strong> This list is of buildings that use neither fossil
-      gas nor a district steam system, since all district steam systems in the
-      city are currently powered by burning fossil gas (to the best of our
-      knowledge).
-    </p>
+      <p class="constrained -wide">
+        <strong>Note:</strong> This list is of buildings that use neither fossil
+        gas nor a district steam system, since all district steam systems in the
+        city are currently powered by burning fossil gas (to the best of our
+        knowledge).
+      </p>
 
-    <DataDisclaimer />
+      <DataDisclaimer />
 
-    <BuildingsTable
-      :buildings="$static.allBuilding.edges"
-      :show-square-footage="true"
-    />
+      <BuildingsTable
+        :buildings="$static.allBuilding.edges"
+        :show-square-footage="true"
+      />
 
-    <DataSourceFootnote />
+      <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 

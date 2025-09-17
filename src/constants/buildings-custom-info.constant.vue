@@ -2,6 +2,7 @@
 // The function Gridsome uses to make slugs, so it should match
 import slugify from '@sindresorhus/slugify';
 import { IBuilding } from '../common-functions.vue';
+import buildingOwnersData from './building-owners.json';
 
 export default {};
 
@@ -10,7 +11,6 @@ export default {};
  * for things like adding custom images, notes, or building owners to very important buildings
  * (e.g. the top 10 worst or best).
  */
-
 export interface IBuildingOwner {
   key: string;
   name: string;
@@ -24,131 +24,15 @@ export interface IBuildingOwners {
 }
 
 /**
- * An object containing the name and logos of custom flagged building owners
+ * Building owners data loaded from centralized JSON file
  *
- * Order maps to large-owners page
+ * To add new building owners, update src/constants/building-owners.json
  */
-export const BuildingOwners: IBuildingOwners = {
-  depaul: {
-    key: 'depaul',
-    name: 'DePaul University',
-    nameShort: 'DePaul',
-    logoSmall: '/building-owners/depaul/logo-small.jpg',
-    logoLarge: '/building-owners/depaul/logo-large.png',
-  },
+export const BuildingOwners: IBuildingOwners = buildingOwnersData;
 
-  iit: {
-    key: 'iit',
-    name: 'Illinois Institute of Technology',
-    nameShort: 'Illinois Tech',
-    logoSmall: '/building-owners/iit/logo-small.png',
-    logoLarge: '/building-owners/iit/logo-large.svg',
-  },
-
-  uchicago: {
-    key: 'uchicago',
-    name: 'University of Chicago',
-    nameShort: 'UChicago',
-    logoSmall: '/building-owners/uchicago/uchicago-small.jpg',
-    logoLarge: '/building-owners/uchicago/uchicago-large.png',
-  },
-
-  northwestern: {
-    key: 'northwestern',
-    name: 'Northwestern University',
-    nameShort: 'Northwestern',
-    logoSmall: '/building-owners/northwestern/northwestern-large.png',
-    logoLarge: '/building-owners/northwestern/northwestern-large.png',
-  },
-
-  loyola: {
-    key: 'loyola',
-    name: 'Loyola University Chicago',
-    nameShort: 'Loyola',
-    logoSmall: '/building-owners/loyola/loyola-small.png',
-    logoLarge: '/building-owners/loyola/loyola-large.png',
-  },
-
-  /**
-   * TODO: Change logoSmall and logoLarge for the following municipalities
-   */
-  cps: {
-    key: 'cps',
-    name: 'Chicago Public Schools',
-    nameShort: 'CPS',
-    logoSmall: '/building-owners/cps/cps-small.png',
-    logoLarge: '/building-owners/cps/cps-large.png',
-  },
-
-  cha: {
-    key: 'cha',
-    name: 'Chicago Housing Authority',
-    nameShort: 'CHA',
-    logoSmall: '/building-owners/cha/cha-small.png',
-    logoLarge: '/building-owners/cha/cha-large.png',
-  },
-
-  cityofchicago: {
-    key: 'cityofchicago',
-    name: 'City of Chicago',
-    nameShort: 'Chicago',
-    logoSmall: '/building-owners/cityofchicago/cityofchicago-small.png',
-    logoLarge: '/building-owners/cityofchicago/cityofchicago-large.png',
-  },
-
-  columbia: {
-    key: 'columbia',
-    name: 'Columbia College Chicago',
-    nameShort: 'Columbia',
-    logoSmall: '/building-owners/columbia/columbia-large.png',
-    logoLarge: '/building-owners/columbia/columbia-large.png',
-  },
-
-  ccc: {
-    key: 'ccc',
-    name: 'City Colleges of Chicago',
-    nameShort: 'City Colleges',
-    logoSmall: '/building-owners/ccc/ccc-large.png',
-    logoLarge: '/building-owners/ccc/ccc-large.png',
-  },
-
-  moody: {
-    key: 'moody',
-    name: 'Moody Bible Institute',
-    nameShort: 'Moody Bible',
-    logoSmall: '/building-owners/moody/moody-large.png',
-    logoLarge: '/building-owners/moody/moody-large.png',
-  },
-
-  saic: {
-    key: 'saic',
-    name: 'School of the Art Institute of Chicago',
-    nameShort: 'SAIC',
-    logoSmall: '/building-owners/saic/saic-small.png',
-    logoLarge: '/building-owners/saic/saic-large.png',
-  },
-
-  npu: {
-    key: 'npu',
-    name: 'North Park University',
-    nameShort: 'North Park',
-    logoSmall: '/building-owners/npu/npu-large.png',
-    logoLarge: '/building-owners/npu/npu-large.png',
-  },
-
-  uic: {
-    key: 'uic',
-    name: 'University of Illinois Chicago',
-    nameShort: 'UIC',
-    logoSmall: '/building-owners/uic/uic-large.jpg',
-    logoLarge: '/building-owners/uic/uic-large.png',
-  },
-
-  /**
-   * IMPORTANT! If you add a new building owner, make sure to add it to the gridsome.server.js to
-   * register the owner page, since it cannot import this file.
-   */
-};
+export function getAvailableOwnerIds(): string[] {
+  return Object.keys(BuildingOwners);
+}
 
 export interface IBuildingCustomInfo {
   owner?: string; // key from BuildingOwners
