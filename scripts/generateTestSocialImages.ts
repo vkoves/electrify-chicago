@@ -1,6 +1,6 @@
-import { generateSocialImages } from './generateSocialImages.vue';
 import * as fs from 'fs-extra';
 import { getSocialImagePath, removeImages } from './social-images-helpers';
+import { generateBuildingSocialImages } from './generateSocialImages';
 
 // Test building IDs from the SocialCards debug page
 const TEST_BUILDING_IDS: string[] = [
@@ -21,9 +21,9 @@ export async function generateTestSocialImages(): Promise<void> {
   await removeImages(TEST_BUILDING_IDS);
 
   try {
-    // Use the main generateSocialImages function with specific building IDs
+    // Use the main generateBuildingSocialImages function with specific building IDs
     // Pass false to preserve existing images
-    await generateSocialImages(TEST_BUILDING_IDS, false);
+    await generateBuildingSocialImages(TEST_BUILDING_IDS, false);
 
     console.log(`\n📋 Generated files:`);
 

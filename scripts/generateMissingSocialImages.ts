@@ -1,4 +1,4 @@
-import { generateSocialImages } from './generateSocialImages.vue';
+import { generateBuildingSocialImages } from './generateSocialImages';
 import {
   loadAllBuildingData,
   ensureSocialImagesDirectory,
@@ -7,7 +7,7 @@ import {
 
 /**
  * Generate social images only for buildings that don't already have images
- * Uses the existing generateSocialImages function with deleteExisting: false
+ * Uses the existing generateBuildingSocialImages function with deleteExisting: false
  */
 async function generateMissingSocialImages(): Promise<void> {
   console.log('🔍 Checking for missing social images...');
@@ -27,7 +27,7 @@ async function generateMissingSocialImages(): Promise<void> {
     return;
   }
 
-  await generateSocialImages(null, false);
+  await generateBuildingSocialImages(null, false);
 }
 
 // CLI usage
