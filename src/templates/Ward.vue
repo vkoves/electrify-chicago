@@ -26,6 +26,7 @@ interface IBuildingEdge {
   components: {
     BuildingsTable,
     BuildingsHero,
+    PieChart,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -133,6 +134,7 @@ export default class BiggestBuildings extends Vue {
       totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
     ).toFixed(0);
 
+    // Build data for Pie Chart
     this.gradeDistributionPie = Object.entries(gradeCounts)
       .filter(([, count]) => count > 0) // Only include grades that exist
       .sort(([a], [b]) => {
