@@ -214,6 +214,79 @@ query ($ward: String) {
           Back to All Wards
         </g-link>
 
+        <section class="stats-overview -three-col-max">
+          <h2>Ward {{ $context.ward }} Quick Stats</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">
+                {{ $page.allBuilding.edges.length }}
+              </div>
+              <div class="stat-label">Tagged Buildings</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Total Emissions</div>
+              <div class="stat-number">{{ totalGHGEmissions }}</div>
+              <div class="stat-description">
+                metric tons CO<sub>2</sub> equivalent
+              </div>
+              <div class="stat-footnote">
+                {{ medianGHGEmissionsMultiple }}x the median building ({{
+                  BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
+                }}
+                tons CO<sub>2</sub>e)
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Avg GHG Intensity</div>
+              <div class="stat-number">{{ avgGHGIntensity }}</div>
+              <div class="stat-description">kg CO<sub>2</sub>e/sqft</div>
+              <div class="stat-footnote">
+                {{ medianGHGIntensityMultiple }}x the median building ({{
+                  BuildingBenchmarkStats.GHGIntensity.median
+                }}
+                kg CO<sub>2</sub>/sqft)
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          v-if="gradeDistributionPie.length > 0"
+          class="grade-distribution"
+        >
+          <div class="grade-content">
+            <div class="grade-chart-container">
+              <h3>Grade Distribution</h3>
+
+              <PieChart
+                :graph-data="gradeDistributionPie"
+                id-prefix="grade-distribution"
+                :show-labels="true"
+                :sort-by-largest="false"
+              />
+            </div>
+            <div class="supplementary-stats stats-overview">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-label">Total Square Footage</div>
+                  <div class="stat-number">{{ totalSquareFootage }}M</div>
+                  <div class="stat-description">
+                    million sq ft under management
+                  </div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-label">Avg Building Age</div>
+                  <div class="stat-number">{{ avgBuildingAge }}</div>
+                  <div class="stat-description">years old</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <p>
           This page shows all buildings identified as being in Ward
           {{ $context.ward }} that submitted building benchmarking data.
@@ -230,46 +303,6 @@ query ($ward: String) {
             <NewTabIcon />
           </a>
         </p>
-
-        <h2>Ward Stats</h2>
-
-        <ul class="stats">
-          <li class="bold">{{ $page.allBuilding.edges.length }} Buildings</li>
-
-          <li>
-            <strong>
-              Total Emissions:
-              {{ totalGHGEmissions }} metric tons CO<sub>2</sub> equivalent
-            </strong>
-
-            <p class="footnote">
-              <strong>
-                Equivalent to {{ medianGHGEmissionsMultiple }} of the median
-                benchmarked building
-              </strong>
-              ({{
-                BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
-              }}
-              tons CO<sub>2</sub>e)
-            </p>
-          </li>
-
-          <li>
-            <strong>
-              Average GHG Intensity:
-              {{ avgGHGIntensity }} kg CO<sub>2</sub>e/sqft
-            </strong>
-
-            <p class="footnote">
-              <strong
-                >{{ medianGHGIntensityMultiple }}x the median benchmarked
-                building</strong
-              >
-              ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg
-              CO<sub>2</sub>/sqft)
-            </p>
-          </li>
-        </ul>
 
         <DataDisclaimer />
 
@@ -304,6 +337,57 @@ query ($ward: String) {
 
     .footnote {
       margin: 0rem;
+    }
+  }
+
+  // Override grid for 3 cards layout
+  &.-three-col-max .stats-grid {
+    // Mobile: 2 columns
+    grid-template-columns: repeat(2, 1fr);
+
+    // Desktop: 3 columns (one row with 3 cards)
+    @media (min-width: $desktop-min-width) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .grade-distribution {
+    margin: 2rem 0;
+
+    h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .grade-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+
+      @media (min-width: $desktop-min-width) {
+        grid-template-columns: 1fr 3fr;
+        align-items: flex-start;
+      }
+    }
+
+    .supplementary-stats {
+      // Override the default margin from stats-overview
+      margin: 0;
+
+      .stats-grid {
+        // Override default 4-column layout for our 2 stats
+        grid-template-columns: 1fr;
+
+        @media (min-width: $mobile-max-width) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        // Keep it at 2 columns even on large desktop
+        @media (min-width: $large-desktop-min-width) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
     }
   }
 }
