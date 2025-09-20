@@ -3,6 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
+import PieChart, { IPieSlice } from '~/components/graphs/PieChart.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
@@ -52,16 +53,9 @@ export default class BiggestBuildings extends Vue {
   totalGHGEmissions?: string;
   medianGHGEmissionsMultiple?: string;
 
-  /** Chicago.gov uses a two digit number for wards, so 3 becomes wards/03.html */
-  get wardZeroed(): string {
-    const ward = this.$context.ward;
-
-    if (parseInt(ward) < 10) {
-      return `0${ward}`;
-    } else {
-      return ward;
-    }
-  }
+  totalSquareFootage?: string;
+  avgBuildingAge?: string;
+  gradeDistributionPie: Array<IPieSlice> = [];
 
   created(): void {
     this.calculateWardStats();
@@ -70,14 +64,63 @@ export default class BiggestBuildings extends Vue {
   calculateWardStats(): void {
     let totalGHGEmissions = 0;
     let totalGHGIntensity = 0;
+    let totalSquareFootage = 0;
+    let totalYearBuilt = 0;
+    let buildingsWithYear = 0;
+    const gradeCounts: Record<string, number> = {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+      F: 0,
+    };
+    // Grade distribution for pie chart
+    const gradeColors: Record<string, string> = {
+      A: '#009f49', // $grade-a-green
+      B: '#7fa52e', // $grade-b-green
+      C: '#b36a15', // $grade-c-orange
+      D: '#972222', // $grade-d-red
+      F: '#d60101', // $grade-f-red
+    };
 
+    // Aggregate Ward stats for calculations
     this.$page.allBuilding.edges.forEach((buildingEdge: IBuildingEdge) => {
       const building: IBuilding = buildingEdge.node;
 
       totalGHGIntensity += building.GHGIntensity;
       totalGHGEmissions += building.TotalGHGEmissions;
+      totalSquareFootage += building.GrossFloorArea || 0;
+
+      // Calculate average building age
+      if (building.YearBuilt) {
+        const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
+        if (
+          !isNaN(yearBuilt) &&
+          yearBuilt > 1800 &&
+          yearBuilt <= new Date().getFullYear()
+        ) {
+          totalYearBuilt += yearBuilt;
+          buildingsWithYear++;
+        }
+      }
+
+      // Count grade distribution
+      const grade = building.AvgPercentileLetterGrade;
+      if (grade && typeof grade === 'string' && grade in gradeCounts) {
+        gradeCounts[grade]++;
+      }
     });
 
+    // Finish calculations from aggregated ward stats
+    this.totalSquareFootage = (totalSquareFootage / 1000000).toFixed(1); // Convert to millions
+
+    if (buildingsWithYear > 0) {
+      const avgYearBuilt = totalYearBuilt / buildingsWithYear;
+      const currentYear = new Date().getFullYear();
+      this.avgBuildingAge = Math.round(currentYear - avgYearBuilt).toString();
+    } else {
+      this.avgBuildingAge = 'N/A';
+    }
     this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
     const avgGHGIntensity: number =
       totalGHGIntensity / this.$page.allBuilding.edges.length;
@@ -89,6 +132,18 @@ export default class BiggestBuildings extends Vue {
     this.medianGHGEmissionsMultiple = (
       totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
     ).toFixed(0);
+
+    this.gradeDistributionPie = Object.entries(gradeCounts)
+      .filter(([, count]) => count > 0) // Only include grades that exist
+      .sort(([a], [b]) => {
+        const gradeOrder = ['A', 'B', 'C', 'D', 'F'];
+        return gradeOrder.indexOf(a) - gradeOrder.indexOf(b);
+      })
+      .map(([grade, count]) => ({
+        label: `Grade ${grade}`,
+        value: count,
+        color: gradeColors[grade] || '#999999',
+      }));
   }
 }
 </script>
@@ -166,7 +221,7 @@ query ($ward: String) {
         <p>
           Learn more at
           <a
-            :href="`https://www.chicago.gov/city/en/about/wards/${wardZeroed}.html`"
+            :href="`https://www.chicago.gov/city/en/about/wards/${$context.ward.padStart(2, '0')}.html`"
             target="_blank"
             rel="noopener"
           >
