@@ -50,8 +50,9 @@ export default class AllElectric extends Vue {}
         # Use lte: 0 to capture buildings with 0, null, or empty values for gas usage
         NaturalGasUse: { lte: 0 },
         DistrictSteamUse: { lte: 0 },
-        # Exclude buildings that previously used gas but now report zero
-        DataAnomalies: { nin: ["gasZeroWithPreviousUse"] }
+        # Exclude buildings that previously used gas but now report zero, see DataAnomalies in
+        # common-functions
+        DataAnomalies: { nin: ["gas:zero-with-prev-use"] }
       },
       sortBy: "GrossFloorArea", limit: 500
     ) {
