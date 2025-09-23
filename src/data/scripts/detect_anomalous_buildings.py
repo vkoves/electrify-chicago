@@ -142,9 +142,11 @@ def detect_anomalous_zero_gas_buildings(historic_data: pd.DataFrame) -> List[int
     latest_year = historic_data["DataYear"].max()
 
     no_gas_use_ids = (
-        historic_data[(historic_data["NaturalGasUse"] == 0) | historic_data["NaturalGasUse"].isna()]
-        .loc[historic_data["DataYear"] == latest_year]
-    )['ID']
+        historic_data[
+            (historic_data["NaturalGasUse"] == 0)
+            | historic_data["NaturalGasUse"].isna()
+        ].loc[historic_data["DataYear"] == latest_year]
+    )["ID"]
 
     # If a building used a noticeable amount of gas relative to its total energy use (for
     # simplicity, > 5% of their electric use), we flag it as having used gas. This prevents us

@@ -102,11 +102,12 @@ def test_detect_anomalous_zero_gas_buildings_with_empty_values():
     # Test case for building ID 231271 and similar cases where NaturalGasUse is NaN/empty
     # Building 231271 should be flagged because it has empty gas use in latest year but used gas before
     import numpy as np
+
     data = {
-        'ID':            [231271, 231271, 231271,  5, 5, 5,      6, 6, 6],
-        'DataYear':      [2020, 2021, 2022,       2020, 2021, 2022, 2020, 2021, 2022],
-        'NaturalGasUse': [100, 110, np.nan,       50, 60, np.nan, 3, 4, np.nan],
-        'ElectricityUse': [100, 110, 120,         50, 60, 55,     150, 140, 135],
+        "ID": [231271, 231271, 231271, 5, 5, 5, 6, 6, 6],
+        "DataYear": [2020, 2021, 2022, 2020, 2021, 2022, 2020, 2021, 2022],
+        "NaturalGasUse": [100, 110, np.nan, 50, 60, np.nan, 3, 4, np.nan],
+        "ElectricityUse": [100, 110, 120, 50, 60, 55, 150, 140, 135],
     }
     historic_data = pd.DataFrame(data)
 
