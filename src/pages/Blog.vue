@@ -15,7 +15,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
     return generatePageMeta(
       'Blog',
       'Read our latest insights on building decarbonization, energy policy, ' +
-        'and climate action in Chicago',
+        'and climate action in Chicago/',
     );
   },
 })

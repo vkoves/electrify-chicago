@@ -34,6 +34,7 @@ export default class CleanestBuildings extends Vue {
 }
 </script>
 
+<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <static-query>
   query {
     allBuilding(

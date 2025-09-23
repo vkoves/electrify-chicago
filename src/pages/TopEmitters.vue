@@ -22,13 +22,14 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
     return generatePageMeta(
       'top-emitters',
       'Top Emitters',
-      "Chicago's highest greenhouse gas emitting buildings",
+      "Learn more about Chicago's buildings that emit the most greenhouse gasses!",
     );
   },
 })
 export default class TopEmitters extends Vue {}
 </script>
 
+<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <static-query>
   query {
     allBuilding(sortBy: "TotalGHGEmissions", limit: 50) {

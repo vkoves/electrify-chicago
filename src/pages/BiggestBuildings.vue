@@ -33,6 +33,7 @@ export default class BiggestBuildings extends Vue {
 }
 </script>
 
+<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <static-query>
   query {
     allBuilding(sortBy: "GrossFloorArea", limit: 50) {

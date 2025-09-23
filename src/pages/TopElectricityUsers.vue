@@ -30,6 +30,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
 export default class TopElectricityUsers extends Vue {}
 </script>
 
+<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <static-query>
   query {
     allBuilding(sortBy: "ElectricityUse", limit: 50) {

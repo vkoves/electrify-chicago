@@ -30,6 +30,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
 export default class TopGasUsers extends Vue {}
 </script>
 
+<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <static-query>
   query {
     allBuilding(sortBy: "NaturalGasUse", limit: 50) {

@@ -37,8 +37,8 @@ export default class About extends Vue {}
         </p>
 
         <p>
-          Building owner pages now also include additional statistics and
-          graphs to help you better understand each owner's environmental impact,
+          Building owner pages now also include additional statistics and graphs
+          to help you better understand each owner's environmental impact,
           including total square footage, total emissions, average greenhouse
           gas intensity, and a breakdown of their buildings' grades.
         </p>
