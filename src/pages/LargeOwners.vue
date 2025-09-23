@@ -19,7 +19,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
     return generatePageMeta(
       'Large Owners',
       'Explore buildings by major property owners in Chicago - ' +
-        'universities, the city, and other large organizations',
+        'universities, the city, and other large organizations.',
     );
   },
 })

@@ -27,6 +27,7 @@ export default class Wards extends Vue {
 }
 </script>
 
+<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <template>
   <DefaultLayout>
     <div class="wards-page layout-constrained">

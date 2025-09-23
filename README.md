@@ -160,6 +160,28 @@ To run linting with auto-fixing (ESLint + Prettier), run the following command:
 docker compose run --rm electrify-chicago yarn lint-fix
 ```
 
+### Run Python Linting
+
+The project uses Ruff for Python linting and formatting, and Pyright for type checking. These tools are configured in `.pre-commit-config.yaml` and can be run manually:
+
+**Ruff Check** - Identifies and fixes code quality issues (unused imports, undefined variables, etc.):
+
+```bash
+docker compose run --rm electrify-chicago uv run ruff check --fix
+```
+
+**Ruff Format** - Automatically formats code style (indentation, line length, quotes, etc.):
+
+```bash
+docker compose run --rm electrify-chicago uv run ruff format
+```
+
+**Pyright** - Performs static type checking to catch type-related errors:
+
+```bash
+docker compose run --rm electrify-chicago uv run pyright src
+```
+
 ### Run Data Processing
 
 1. If you update the raw data CSVs or the data scripts that post-process them (like if you are adding

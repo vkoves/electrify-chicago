@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 from scipy.stats import percentileofscore
 from typing import List
@@ -31,16 +30,16 @@ overall_grade_weights = {
 
 # The final output grading columns that get made
 grade_cols = [
-  'GHGIntensityPercentileGrade',
-  'GHGIntensityLetterGrade',
-  'EnergyMixWeightedPctSum',
-  'EnergyMixPercentileGrade',
-  'EnergyMixLetterGrade',
-  'SubmittedRecordsPercentileGrade',
-  'MissingRecordsCount',
-  'SubmittedRecordsLetterGrade',
-  'AvgPercentileGrade',
-  'AvgPercentileLetterGrade'
+    "GHGIntensityPercentileGrade",
+    "GHGIntensityLetterGrade",
+    "EnergyMixWeightedPctSum",
+    "EnergyMixPercentileGrade",
+    "EnergyMixLetterGrade",
+    "SubmittedRecordsPercentileGrade",
+    "MissingRecordsCount",
+    "SubmittedRecordsLetterGrade",
+    "AvgPercentileGrade",
+    "AvgPercentileLetterGrade",
 ]
 
 # Default weights for each energy source in the energy mix grade, from 0 - 1, where 1 is totally
@@ -60,6 +59,7 @@ energy_mix_grade_weights = {
     # Assume Other is fossil, quite rare
     "AllOtherFuelUse": 0,
 }
+
 
 def generate_percentile_grade(
     vals: pd.Series,
@@ -100,17 +100,19 @@ def generate_percentile_grade(
 
     # Calculate percentile-based score out 100, ignoring NaN values
     if reverse:
+
         def calc_func(x):
             return 100 - percentileofscore(vals, x, kind="weak", nan_policy="omit")
     else:
+
         def calc_func(x):
             return percentileofscore(vals, x, kind="weak", nan_policy="omit")
 
-    percent_scores: pd.Series = vals.apply(calc_func)
+    percent_scores: pd.Series = vals.apply(calc_func)  # type: ignore
     grades[f"{col_base_name}PercentileGrade"] = percent_scores
 
     # Calculate letter grades (right threshold is included):
-    letter_grades = pd.cut(
+    letter_grades = pd.cut(  # type: ignore
         percent_scores,
         bins=bins,
         labels=letter_grades,
@@ -163,7 +165,7 @@ def generate_energy_int_grade(
 
     ghg_intensity_grades_df: pd.DataFrame = generate_percentile_grade(
         vals=ghg_intensity,
-        col_base_name='GHGIntensity',
+        col_base_name="GHGIntensity",
         reverse=True,
         bins=bins,
         letter_grades=letter_grades,
@@ -199,15 +201,11 @@ def apply_grade_func_all_years(df, func):
     grades_all_years = []
 
     for year in all_years:
-        grades_df = func(
-            df=df, year=year
-        )
+        grades_df = func(df=df, year=year)
 
         grades_all_years.append(grades_df)
 
-    grades_all_years_df = pd.concat(
-        grades_all_years
-    )
+    grades_all_years_df = pd.concat(grades_all_years)
 
     return grades_all_years_df
 
@@ -259,7 +257,7 @@ def generate_energymix_grade(
         "NaturalGasUse",
         "DistrictSteamUse",
         "DistrictChilledWaterUse",
-        "AllOtherFuelUse"
+        "AllOtherFuelUse",
     ]
     energy_use_df: pd.DataFrame = df.loc[
         df["DataYear"] == year,
@@ -269,10 +267,7 @@ def generate_energymix_grade(
     total_energy_use_per_bldg: pd.Series = energy_use_df.sum(1)
 
     # Energy use kBtu percentage within each building for this year:
-    energy_use_pct_df = energy_use_df.div(
-        total_energy_use_per_bldg,
-        axis="index"
-    ) * 100
+    energy_use_pct_df = energy_use_df.div(total_energy_use_per_bldg, axis="index") * 100
 
     # Calculate weighted energy mix grade:
     weighted_pct_scores: pd.Series = energy_use_pct_df.mul(
@@ -326,7 +321,7 @@ def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
     def calculate_metrics(group):
         total_years = len(group)
         # TODO: Refactor not submitted to be no GHG Intensity, since that's our true count
-        not_submitted_count = (group['ReportingStatus'] == 'Not Submitted').sum()
+        not_submitted_count = (group["ReportingStatus"] == "Not Submitted").sum()
         submitted_years = total_years - not_submitted_count
 
         if total_years == 0:
@@ -334,9 +329,14 @@ def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
         else:
             submission_rate = (submitted_years / total_years) * 100
 
-        return pd.Series({'submission_rate': submission_rate, 'not_submitted_count': not_submitted_count})
+        return pd.Series(
+            {
+                "submission_rate": submission_rate,
+                "not_submitted_count": not_submitted_count,
+            }
+        )
 
-    submission_rates = df.groupby('ID').apply(calculate_metrics).reset_index()
+    submission_rates = df.groupby("ID").apply(calculate_metrics).reset_index()
 
     return submission_rates
 
@@ -377,8 +377,8 @@ def generate_consistent_reporting_grade(
     submission_rates_df = calculate_building_submission_rate(df)
 
     # Calculate grades based on how many records are missing for each building:
-    submission_rates_df['SubmittedRecordsLetterGrade'] = pd.cut(
-        submission_rates_df['submission_rate'],
+    submission_rates_df["SubmittedRecordsLetterGrade"] = pd.cut(
+        submission_rates_df["submission_rate"],
         bins=bins,
         include_lowest=True,
         labels=letter_grades,
@@ -388,9 +388,10 @@ def generate_consistent_reporting_grade(
     # Rename for consistent format:
     submission_rates_df.rename(
         columns={
-            'not_submitted_count': 'MissingRecordsCount',
-            'submission_rate': 'SubmittedRecordsPercentileGrade'
-        }, inplace=True
+            "not_submitted_count": "MissingRecordsCount",
+            "submission_rate": "SubmittedRecordsPercentileGrade",
+        },
+        inplace=True,
     )
 
     submission_rates_df.reset_index(inplace=True)
@@ -456,12 +457,15 @@ def calculate_weighted_average(graded_df: pd.DataFrame) -> pd.Series:
     """
 
     weighted_average = (
-        graded_df["GHGIntensityPercentileGrade"] * overall_grade_weights['ghg_intensity']
-        + graded_df["EnergyMixPercentileGrade"] * overall_grade_weights['energy_mix']
-        + graded_df["SubmittedRecordsPercentileGrade"] * overall_grade_weights['consistent_reporting']
+        graded_df["GHGIntensityPercentileGrade"]
+        * overall_grade_weights["ghg_intensity"]
+        + graded_df["EnergyMixPercentileGrade"] * overall_grade_weights["energy_mix"]
+        + graded_df["SubmittedRecordsPercentileGrade"]
+        * overall_grade_weights["consistent_reporting"]
     )
 
     return weighted_average
+
 
 def grade_buildings():
     df_historical = pd.read_csv(data_in_file_historical_path)
@@ -485,10 +489,7 @@ def grade_buildings():
 
     # Overall letter grade:
     graded_df["AvgPercentileLetterGrade"] = pd.cut(
-        graded_df["AvgPercentileGrade"],
-        bins=bins,
-        labels=letter_grades,
-        right=True
+        graded_df["AvgPercentileGrade"], bins=bins, labels=letter_grades, right=True
     )
 
     return graded_df

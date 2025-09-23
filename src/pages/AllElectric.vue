@@ -30,6 +30,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
       'the path forward - if the John Hancock Center can run on electricity alone, ' +
       'so can your building.';
 
+    // Tie this page to it's PageSocialCard
     return generatePageMeta(
       'all-electric',
       'All Electric Buildings',
@@ -40,6 +41,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
 export default class AllElectric extends Vue {}
 </script>
 
+<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <static-query>
   query {
     allBuilding(

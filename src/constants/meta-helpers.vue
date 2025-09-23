@@ -14,7 +14,8 @@ interface PageMetaData {
 }
 
 /**
- * Utility function to generate meta tags for pages with title, description, and social images
+ * Utility function to generate meta tags for general pages with title, description, and social
+ * images from PageSocialCard
  */
 export function generatePageMeta(
   pageIdOrTitle: string,

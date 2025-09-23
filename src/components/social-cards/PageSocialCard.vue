@@ -57,6 +57,10 @@ export default class PageSocialCard extends Vue {
     // Apply filtering based on page ID
     const pageId = this.pageConfig.id;
 
+    /**
+     * TODO: We should write some tests for this, or figure out a less brittle way to tie this into
+     * social pages
+     */
     switch (pageId) {
       case 'top-emitters':
         return allBuildings

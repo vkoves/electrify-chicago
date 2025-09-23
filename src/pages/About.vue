@@ -17,7 +17,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
     return generatePageMeta(
       'About Us',
       'Learn about Electrify Chicago, and our mission to decarbonize buildings ' +
-        'and fight climate change through data transparency',
+        'and fight climate change through data transparency!',
     );
   },
 })
