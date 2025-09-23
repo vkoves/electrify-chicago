@@ -65,7 +65,7 @@ module.exports = function (api) {
       pageIds.forEach(pageId => {
         createPage({
           path: `/page-social-card/${pageId}`,
-          component: './src/templates/social-cards/PageSocialCard.vue',
+          component: './src/templates/social-cards/PageSocialCardPage.vue',
           context: {
             pageId: pageId
           }
@@ -76,7 +76,7 @@ module.exports = function (api) {
       BuildingOwnerIds.forEach(ownerId => {
         createPage({
           path: `/owner-social-card/${ownerId}`,
-          component: './src/templates/social-cards/OwnerSocialCard.vue',
+          component: './src/templates/social-cards/OwnerSocialCardPage.vue',
           context: {
             ownerId: ownerId
           }

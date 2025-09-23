@@ -24,7 +24,7 @@ export default class About extends Vue {}
 
       <div class="layout-constrained">
         <h2>
-          September 2nd, 2025 - Enhanced Building Owner Pages & Hero Imagery
+          September 22nd, 2025 - Enhanced Building Owner Pages & Hero Imagery
         </h2>
 
         <p>
@@ -38,7 +38,7 @@ export default class About extends Vue {}
 
         <p>
           Building owner pages now also include additional statistics and
-          graphsto help you better understand each owner's environmental impact,
+          graphs to help you better understand each owner's environmental impact,
           including total square footage, total emissions, average greenhouse
           gas intensity, and a breakdown of their buildings' grades.
         </p>
