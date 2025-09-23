@@ -120,6 +120,9 @@ export default class BuildingsTable extends Vue {
       'AvgPercentileLetterGrade',
       'DataYear',
       'DataAnomalies',
+      // For gas free check
+      'NaturalGasUse',
+      'DistrictSteamUse',
     ];
 
     const conditionalFields = [

@@ -31,15 +31,12 @@ export default class MillionsInMissedFine extends Vue {
     const jsonFilePath =
       '/blog/GHGIntensityPredictCompliance/regression_results_w_covid.json';
 
-    console.log('Fetching JSON from:', jsonFilePath);
-
     try {
       const response = await fetch(jsonFilePath);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       this.results = await response.json();
-      console.log('Loaded regression results:', this.results);
     } catch (error) {
       console.error('Error loading regression results:', error);
     } finally {

@@ -299,6 +299,8 @@ export default class Search extends Vue {
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
           AvgPercentileLetterGrade
+          NaturalGasUse
+          DistrictSteamUse
           DataAnomalies
         }
       }

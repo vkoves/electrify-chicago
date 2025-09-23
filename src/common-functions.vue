@@ -1,5 +1,6 @@
 <script lang="ts">
 import { IPieSlice } from './components/graphs/PieChart.vue';
+import { LatestDataYear } from './constants/globals.vue';
 
 export default {};
 
@@ -111,6 +112,88 @@ export function hasReportedData(historicData: IHistoricData): boolean {
   return (
     typeof historicData.GHGIntensity === 'number' &&
     historicData.GHGIntensity > 0
+  );
+}
+
+export function isZeroOrNull(value: number | null): boolean {
+  return value === 0 || value === null;
+}
+
+/**
+ * Type guard to ensure required building properties exist for calculations
+ */
+export function validateBuildingProperties<T extends IBuilding>(
+  building: T,
+  properties: (keyof T)[],
+  functionName: string,
+): void {
+  for (const prop of properties) {
+    if (typeof building[prop] === 'undefined') {
+      throw new Error(
+        `Missing building.${String(prop)} for ${functionName} check!`,
+      );
+    }
+  }
+}
+
+/**
+ * Whether a building is _fully_ gas free, meaning no gas burned on-site or to heat it
+ * through a district heating system. That means it's all electric!
+ *
+ * We do not mark this as true if we have detected gas use in the past
+ */
+export function fullyGasFree(building: IBuilding): boolean {
+  validateBuildingProperties(
+    building,
+    ['DataAnomalies', 'NaturalGasUse', 'DistrictSteamUse'],
+    'fullyGasFree',
+  );
+
+  return (
+    !building.DataAnomalies.includes(DataAnomalies.gasZeroWithPreviousUse) &&
+    isZeroOrNull(building.NaturalGasUse) &&
+    isZeroOrNull(building.DistrictSteamUse)
+  );
+}
+
+/**
+ * Whether a building is "new" - meaning this is the first year it has reported data
+ */
+export function isNewBuilding(
+  building: IBuilding,
+  historicData: Array<IHistoricData>,
+): boolean {
+  if (!historicData) {
+    throw new Error('Missing historicData for isNewBuilding check!');
+  }
+  // No historic data = not reported (so not new)
+  else if (historicData.length === 0) {
+    return false;
+  }
+
+  const reportedYears = historicData
+    .filter((data) => hasReportedData(data))
+    .map((data) => data.DataYear)
+    .sort((a, b) => a - b);
+
+  // Non reporting isn't new
+  if (reportedYears.length === 0) {
+    return false;
+  }
+
+  const currentDataYear = parseInt(building.DataYear.toString(), 10);
+
+  // A building is "new" if:
+  // 1. It's currently reporting in the latest data year (2023)
+  // 2. AND this is the first year it has ever reported
+  // 3. AND it only has one year of reported data
+  const isReportingInLatestYear = currentDataYear === LatestDataYear;
+  const hasOnlyOneYearOfData = reportedYears.length === 1;
+  const firstReportedYear = reportedYears[0];
+  const isFirstYearEqualToLatest = firstReportedYear === currentDataYear;
+
+  return (
+    isReportingInLatestYear && hasOnlyOneYearOfData && isFirstYearEqualToLatest
   );
 }
 

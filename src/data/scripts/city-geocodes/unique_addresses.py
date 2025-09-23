@@ -5,7 +5,7 @@ numbers from the City of Chicago Geocoder
 City of Chicago Geocoder: https://gisapps.chicago.gov/geocoder/
 
 **Important!** Due to file pathing limitations, this file must be run from the electrify-chicago
-root directory (e.g. `python3 src/data/scripts/city-geocodes/unique_addresses.py`)
+root directory (e.g. `uv run python src/data/scripts/city-geocodes/unique_addresses.py`)
 """
 
 import pandas as pd

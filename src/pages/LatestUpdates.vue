@@ -35,9 +35,7 @@ export default class LatestUpdates extends Vue {
     allPreviousYearsBenchmarks: { edges: Array<{ node: IHistoricData }> };
   };
 
-  mounted(): void {
-    console.log(this.$static.allBuilding);
-  }
+  mounted(): void {}
 
   // Import the smooth scroll function from common-functions
   readonly smoothlyScrollToAnchor = smoothlyScrollToAnchor;
@@ -148,6 +146,8 @@ export default class LatestUpdates extends Vue {
           TotalGHGEmissions
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
+          NaturalGasUse
+          DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
         }
@@ -291,7 +291,7 @@ export default class LatestUpdates extends Vue {
     <!-- New Buildings Section -->
     <section>
       <h2 id="new-buildings" tabindex="-1">
-        New Buildings ({{ newBuildings.length }})
+        New Buildings In {{ LatestDataYear }} ({{ newBuildings.length }})
       </h2>
       <p>
         These buildings first submitted data in {{ LatestDataYear }} - they may
@@ -315,11 +315,14 @@ export default class LatestUpdates extends Vue {
     <!-- Stopped Reporting Section -->
     <section>
       <h2 id="stopped-reporting" tabindex="-1">
-        Stopped Reporting ({{ stoppedReportingBuildings.length }})
+        Stopped Reporting In {{ LatestDataYear }} ({{
+          stoppedReportingBuildings.length
+        }})
       </h2>
       <p>
-        Submitted data in {{ PreviousDataYear }} but not {{ LatestDataYear }},
-        sorted by square footage (largest first)
+        These buildings submitted data in {{ PreviousDataYear }} but not
+        {{ LatestDataYear }}, meaning they either fell into non-compliance or
+        were demolished. Sorted by square footage (largest first).
       </p>
 
       <p v-if="stoppedReportingBuildings.length === 0" class="no-results">

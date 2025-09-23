@@ -82,6 +82,7 @@ export default class HighestEmissionsIntensity extends Vue {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
+          DistrictSteamUse
           DataAnomalies
         }
       }
