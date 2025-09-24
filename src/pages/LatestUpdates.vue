@@ -351,6 +351,7 @@ export default class LatestUpdates extends Vue {
 
 <style lang="scss">
 @import '../scss/global';
+@import '../scss/stat-tiles.scss';
 
 .no-results {
   padding: 2rem;
@@ -370,125 +371,6 @@ export default class LatestUpdates extends Vue {
   p {
     margin: 0;
     font-size: 0.9rem;
-  }
-}
-
-.stats-overview {
-  margin: 2rem 0;
-
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(
-      2,
-      1fr
-    ); // default to 2x2 grid (mobile layout)
-    gap: 1.5rem;
-    margin-top: 1rem;
-    align-items: stretch; // Ensures all grid items have equal height
-
-    /** Large Desktop - one row of cards */
-    @media (min-width: $large-desktop-min-width) {
-      grid-template-columns: repeat(4, 1fr);
-    }
-
-    /** Small mobile */
-    @media (max-width: $small-mobile-max-width) {
-      gap: 1rem;
-    }
-  }
-
-  .stat-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    height: 100%; // Fill the full grid cell height
-
-    &:hover,
-    &:focus {
-      .stat-card.-clickable {
-        box-shadow: 0.125rem 0.125rem 0.75rem $box-shadow-main;
-        border-color: $blue-dark;
-
-        .stat-label {
-          color: $blue-dark;
-        }
-      }
-    }
-  }
-
-  .stat-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    background-color: $off-white;
-    border-radius: $brd-rad-medium;
-    padding: 1.5rem;
-    text-align: center;
-    border: $border-thin solid $grey-light;
-    transition: box-shadow 0.2s ease-in-out;
-    height: 100%; // Fill the full link height
-    min-height: 8.75rem; //1 140px Minimum height to prevent cards from being too short
-
-    &.-clickable {
-      cursor: pointer;
-      position: relative;
-      border: $border-medium solid $blue-dark;
-      background-color: $white;
-
-      .stat-label {
-        color: $blue-dark;
-      }
-    }
-
-    &.net-zero .stat-number {
-      color: $grey;
-    }
-
-    &.positive .stat-number {
-      color: $green;
-    }
-
-    &.negative .stat-number {
-      color: $chicago-red;
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: $text-mid-light;
-      line-height: 1;
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-description {
-      font-size: 0.75rem;
-      line-height: 1.5;
-    }
-
-    .stat-label {
-      font-size: 1.1rem;
-      line-height: 1.25;
-      font-weight: bold;
-      transition: color 0.2s ease-in-out;
-    }
-
-    /** Mobile styling */
-    @media (max-width: $small-mobile-max-width) {
-      padding: 1rem;
-      min-height: 7.5rem; // Smaller 120px minimum height on mobile
-
-      .stat-description {
-        font-size: 0.7rem;
-      }
-
-      .stat-label {
-        font-size: 1rem;
-      }
-
-      .stat-number {
-        font-size: 2rem;
-      }
-    }
   }
 }
 
