@@ -3,6 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
+import PieChart, { IPieSlice } from '~/components/graphs/PieChart.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
@@ -25,6 +26,7 @@ interface IBuildingEdge {
   components: {
     BuildingsTable,
     BuildingsHero,
+    PieChart,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -52,16 +54,9 @@ export default class BiggestBuildings extends Vue {
   totalGHGEmissions?: string;
   medianGHGEmissionsMultiple?: string;
 
-  /** Chicago.gov uses a two digit number for wards, so 3 becomes wards/03.html */
-  get wardZeroed(): string {
-    const ward = this.$context.ward;
-
-    if (parseInt(ward) < 10) {
-      return `0${ward}`;
-    } else {
-      return ward;
-    }
-  }
+  totalSquareFootage?: string;
+  avgBuildingAge?: string;
+  gradeDistributionPie: Array<IPieSlice> = [];
 
   created(): void {
     this.calculateWardStats();
@@ -70,14 +65,63 @@ export default class BiggestBuildings extends Vue {
   calculateWardStats(): void {
     let totalGHGEmissions = 0;
     let totalGHGIntensity = 0;
+    let totalSquareFootage = 0;
+    let totalYearBuilt = 0;
+    let buildingsWithYear = 0;
+    const gradeCounts: Record<string, number> = {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+      F: 0,
+    };
+    // Grade distribution for pie chart
+    const gradeColors: Record<string, string> = {
+      A: '#009f49', // $grade-a-green
+      B: '#7fa52e', // $grade-b-green
+      C: '#b36a15', // $grade-c-orange
+      D: '#972222', // $grade-d-red
+      F: '#d60101', // $grade-f-red
+    };
 
+    // Aggregate Ward stats for calculations
     this.$page.allBuilding.edges.forEach((buildingEdge: IBuildingEdge) => {
       const building: IBuilding = buildingEdge.node;
 
       totalGHGIntensity += building.GHGIntensity;
       totalGHGEmissions += building.TotalGHGEmissions;
+      totalSquareFootage += building.GrossFloorArea || 0;
+
+      // Calculate average building age
+      if (building.YearBuilt) {
+        const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
+        if (
+          !isNaN(yearBuilt) &&
+          yearBuilt > 1800 &&
+          yearBuilt <= new Date().getFullYear()
+        ) {
+          totalYearBuilt += yearBuilt;
+          buildingsWithYear++;
+        }
+      }
+
+      // Count grade distribution
+      const grade = building.AvgPercentileLetterGrade;
+      if (grade && typeof grade === 'string' && grade in gradeCounts) {
+        gradeCounts[grade]++;
+      }
     });
 
+    // Finish calculations from aggregated ward stats
+    this.totalSquareFootage = (totalSquareFootage / 1000000).toFixed(1); // Convert to millions
+
+    if (buildingsWithYear > 0) {
+      const avgYearBuilt = totalYearBuilt / buildingsWithYear;
+      const currentYear = new Date().getFullYear();
+      this.avgBuildingAge = Math.round(currentYear - avgYearBuilt).toString();
+    } else {
+      this.avgBuildingAge = 'N/A';
+    }
     this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
     const avgGHGIntensity: number =
       totalGHGIntensity / this.$page.allBuilding.edges.length;
@@ -89,6 +133,19 @@ export default class BiggestBuildings extends Vue {
     this.medianGHGEmissionsMultiple = (
       totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
     ).toFixed(0);
+
+    // Build data for Pie Chart
+    this.gradeDistributionPie = Object.entries(gradeCounts)
+      .filter(([, count]) => count > 0) // Only include grades that exist
+      .sort(([a], [b]) => {
+        const gradeOrder = ['A', 'B', 'C', 'D', 'F'];
+        return gradeOrder.indexOf(a) - gradeOrder.indexOf(b);
+      })
+      .map(([grade, count]) => ({
+        label: `Grade ${grade}`,
+        value: count,
+        color: gradeColors[grade] || '#999999',
+      }));
   }
 }
 </script>
@@ -159,6 +216,79 @@ query ($ward: String) {
           Back to All Wards
         </g-link>
 
+        <section class="stats-overview -three-col-max">
+          <h2>Ward {{ $context.ward }} Quick Stats</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">
+                {{ $page.allBuilding.edges.length }}
+              </div>
+              <div class="stat-label">Tagged Buildings</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Total Emissions</div>
+              <div class="stat-number">{{ totalGHGEmissions }}</div>
+              <div class="stat-description">
+                metric tons CO<sub>2</sub> equivalent
+              </div>
+              <div class="stat-footnote">
+                {{ medianGHGEmissionsMultiple }}x the median building ({{
+                  BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
+                }}
+                tons CO<sub>2</sub>e)
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Avg GHG Intensity</div>
+              <div class="stat-number">{{ avgGHGIntensity }}</div>
+              <div class="stat-description">kg CO<sub>2</sub>e/sqft</div>
+              <div class="stat-footnote">
+                {{ medianGHGIntensityMultiple }}x the median building ({{
+                  BuildingBenchmarkStats.GHGIntensity.median
+                }}
+                kg CO<sub>2</sub>/sqft)
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          v-if="gradeDistributionPie.length > 0"
+          class="grade-distribution"
+        >
+          <div class="grade-content">
+            <div class="grade-chart-container">
+              <h3>Grade Distribution</h3>
+
+              <PieChart
+                :graph-data="gradeDistributionPie"
+                id-prefix="grade-distribution"
+                :show-labels="true"
+                :sort-by-largest="false"
+              />
+            </div>
+            <div class="supplementary-stats stats-overview">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-label">Total Square Footage</div>
+                  <div class="stat-number">{{ totalSquareFootage }}M</div>
+                  <div class="stat-description">
+                    million sq ft under management
+                  </div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-label">Avg Building Age</div>
+                  <div class="stat-number">{{ avgBuildingAge }}</div>
+                  <div class="stat-description">years old</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <p>
           This page shows all buildings identified as being in Ward
           {{ $context.ward }} that submitted building benchmarking data.
@@ -166,7 +296,7 @@ query ($ward: String) {
         <p>
           Learn more at
           <a
-            :href="`https://www.chicago.gov/city/en/about/wards/${wardZeroed}.html`"
+            :href="`https://www.chicago.gov/city/en/about/wards/${$context.ward.padStart(2, '0')}.html`"
             target="_blank"
             rel="noopener"
           >
@@ -175,46 +305,6 @@ query ($ward: String) {
             <NewTabIcon />
           </a>
         </p>
-
-        <h2>Ward Stats</h2>
-
-        <ul class="stats">
-          <li class="bold">{{ $page.allBuilding.edges.length }} Buildings</li>
-
-          <li>
-            <strong>
-              Total Emissions:
-              {{ totalGHGEmissions }} metric tons CO<sub>2</sub> equivalent
-            </strong>
-
-            <p class="footnote">
-              <strong>
-                Equivalent to {{ medianGHGEmissionsMultiple }} of the median
-                benchmarked building
-              </strong>
-              ({{
-                BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
-              }}
-              tons CO<sub>2</sub>e)
-            </p>
-          </li>
-
-          <li>
-            <strong>
-              Average GHG Intensity:
-              {{ avgGHGIntensity }} kg CO<sub>2</sub>e/sqft
-            </strong>
-
-            <p class="footnote">
-              <strong
-                >{{ medianGHGIntensityMultiple }}x the median benchmarked
-                building</strong
-              >
-              ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg
-              CO<sub>2</sub>/sqft)
-            </p>
-          </li>
-        </ul>
 
         <DataDisclaimer />
 
@@ -249,6 +339,57 @@ query ($ward: String) {
 
     .footnote {
       margin: 0rem;
+    }
+  }
+
+  // Override grid for 3 cards layout
+  &.-three-col-max .stats-grid {
+    // Mobile: 2 columns
+    grid-template-columns: repeat(2, 1fr);
+
+    // Desktop: 3 columns (one row with 3 cards)
+    @media (min-width: $desktop-min-width) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .grade-distribution {
+    margin: 2rem 0;
+
+    h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .grade-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+
+      @media (min-width: $desktop-min-width) {
+        grid-template-columns: 1fr 3fr;
+        align-items: flex-start;
+      }
+    }
+
+    .supplementary-stats {
+      // Override the default margin from stats-overview
+      margin: 0;
+
+      .stats-grid {
+        // Override default 4-column layout for our 2 stats
+        grid-template-columns: 1fr;
+
+        @media (min-width: $mobile-max-width) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        // Keep it at 2 columns even on large desktop
+        @media (min-width: $large-desktop-min-width) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
     }
   }
 }
