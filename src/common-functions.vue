@@ -77,8 +77,9 @@ export interface IBuilding {
 
   FirstYearReported: number | null;
   LastYearReported: number | null;
+  Owner?: string; // Building owner key (e.g., 'depaul', 'uchicago')
 
-  [buildingKey: string]: string | number | boolean | null;
+  [buildingKey: string]: string | number | boolean | null | undefined;
 }
 
 /** How GraphQL passes back a building */
