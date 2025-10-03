@@ -18,12 +18,14 @@ from src.data.scripts.utils import (
     get_data_file_path,
     log_step_completion,
     output_to_csv,
+    write_json_with_newline,
 )
 from src.data.scripts.building_utils import (
     clean_property_name,
     benchmarking_string_cols,
     benchmarking_int_cols,
 )
+from src.data.scripts.generate_historic_stats import calculateFirstAndLastYearReported
 
 # Assume run in /data
 data_directory = "source"
@@ -41,6 +43,9 @@ building_emissions_file_out_name = "building-benchmarks"
 
 out_file_dir = "dist"
 historic_data_filename = "benchmarking-all-years.csv"
+
+# Debug flag for development
+debug = False
 
 # Columns we want to run statistical analysis and ranking on - order matters here
 building_cols_to_analyze = [
@@ -118,8 +123,10 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> List[str]:
     # list_of_types = building_data.PrimaryPropertyType.unique()  # noqa: F841
 
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
-    benchmark_stats_df.to_json(stats_dist_output_path)
-    benchmark_stats_df.to_json(stats_debug_output_path, indent=4)
+    # Convert DataFrame to dict for JSON output
+    json_data = benchmark_stats_df.to_dict()
+    write_json_with_newline(json_data, stats_dist_output_path)
+    write_json_with_newline(json_data, stats_debug_output_path, indent=4)
 
     return [stats_dist_output_path, stats_debug_output_path]
 
@@ -221,6 +228,32 @@ def processBuildingData() -> List[str]:
     output_to_csv(historic_data_graded, historic_data_path)
     outputted_paths.append(historic_data_path)
 
+    # Add FirstYearReported and LastYearReported to building data
+    # Read historic data to calculate reporting years
+    historic_data_path = get_data_file_path(out_file_dir, historic_data_filename)
+    historic_data = get_and_clean_csv(historic_data_path)
+
+    # Calculate reporting years from historic data
+    reporting_years = calculateFirstAndLastYearReported(historic_data)
+
+    # Add FirstYearReported and LastYearReported columns to building_data
+    building_data["FirstYearReported"] = (
+        building_data["ID"]
+        .astype(str)
+        .map(lambda x: reporting_years.get(x, {}).get("FirstYearReported", None))
+    )
+    building_data["LastYearReported"] = (
+        building_data["ID"]
+        .astype(str)
+        .map(lambda x: reporting_years.get(x, {}).get("LastYearReported", None))
+    )
+
+    if debug:
+        matched_count = building_data["FirstYearReported"].notna().sum()
+        print(
+            f"Successfully added reporting years to {matched_count} of {len(building_data)} buildings"
+        )
+
     # Add building ward numbers under col: "Ward"
     building_data = add_ward_numbers(building_data)
 
@@ -249,6 +282,7 @@ def processBuildingData() -> List[str]:
     # make it readable but to not have to store giant files
     with open(debug_benchmarks_path, "w", encoding="utf-8") as f:
         json.dump(debug_json_data, f, ensure_ascii=True, indent=4)
+        f.write("\n")  # Add EOF newline
 
     outputted_paths.append(debug_benchmarks_path)
 

@@ -132,6 +132,20 @@ function loadBuildingBenchmarkData(actions) {
       building[col] = parseFloat(building[col]);
     });
 
+    // Parse integer columns for GraphQL filtering
+    const buildingIntCols = [
+      'FirstYearReported',
+      'LastYearReported',
+    ];
+
+    buildingIntCols.forEach((col) => {
+      if (building[col] && building[col] !== '') {
+        building[col] = parseInt(building[col], 10);
+      } else {
+        building[col] = null;
+      }
+    });
+
     if (!building.slugSource || typeof building.slugSource !== 'string') {
       throw new Error('No building slug source (name or address)!', building);
     }
