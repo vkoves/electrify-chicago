@@ -27,7 +27,9 @@ export default class LatestUpdates extends Vue {
 
   /** Set by Gridsome to results of GraphQL query */
   readonly $static!: {
-    allBuilding: { edges: Array<IBuildingNode> };
+    newBuildings: { edges: Array<IBuildingNode> };
+    stoppedReporting: { edges: Array<IBuildingNode> };
+    consistentReporters: { totalCount: number };
   };
 
   mounted(): void {}
@@ -36,23 +38,15 @@ export default class LatestUpdates extends Vue {
   readonly smoothlyScrollToAnchor = smoothlyScrollToAnchor;
 
   get newBuildings(): Array<{ node: IBuilding }> {
-    // New buildings are those where FirstYearReported equals the latest data year
-    return this.$static.allBuilding.edges
-      .filter((edge: { node: IBuilding }) =>
-        edge.node.FirstYearReported === this.LatestDataYear
-      )
+    // Already filtered by GraphQL, just sort by square footage
+    return this.$static.newBuildings.edges
+      .slice()
       .sort((a, b) => b.node.GrossFloorArea - a.node.GrossFloorArea);
   }
 
   get consistentReportersCount(): number {
-    // Buildings that reported in both years: FirstYearReported <= PreviousDataYear AND LastYearReported >= LatestDataYear
-    return this.$static.allBuilding.edges
-      .filter((edge: { node: IBuilding }) =>
-        edge.node.FirstYearReported !== null &&
-        edge.node.LastYearReported !== null &&
-        edge.node.FirstYearReported <= this.PreviousDataYear &&
-        edge.node.LastYearReported >= this.LatestDataYear
-      ).length;
+    // Already calculated by GraphQL totalCount
+    return this.$static.consistentReporters.totalCount;
   }
 
   get netChangeInReporting(): number {
@@ -60,11 +54,9 @@ export default class LatestUpdates extends Vue {
   }
 
   get stoppedReportingBuildings(): Array<{ node: IBuilding }> {
-    // Stopped reporting buildings are those where LastYearReported equals the previous data year
-    return this.$static.allBuilding.edges
-      .filter((edge: { node: IBuilding }) =>
-        edge.node.LastYearReported === this.PreviousDataYear
-      )
+    // Already filtered by GraphQL, just sort by square footage
+    return this.$static.stoppedReporting.edges
+      .slice()
       .sort((a, b) => b.node.GrossFloorArea - a.node.GrossFloorArea);
   }
 }
@@ -72,36 +64,59 @@ export default class LatestUpdates extends Vue {
 
 <static-query>
   query {
-    # Building details for display in tables (name, address, rankings, grades)
-    allBuilding {
+    # New buildings: FirstYearReported equals latest year (2023)
+    newBuildings: allBuilding(filter: { FirstYearReported: { eq: 2023 } }) {
       edges {
         node {
-          slugSource
-          ID
-          DataYear
-          PropertyName
-          Address
-          path
-          PrimaryPropertyType
-          YearBuilt
-          GrossFloorArea
-          GrossFloorAreaRank
-          GrossFloorAreaPercentileRank
-          GHGIntensity
-          GHGIntensityRank
-          GHGIntensityPercentileRank
-          TotalGHGEmissions
-          TotalGHGEmissionsRank
-          TotalGHGEmissionsPercentileRank
-          NaturalGasUse
-          DistrictSteamUse
-          AvgPercentileLetterGrade
-          DataAnomalies
-          FirstYearReported
-          LastYearReported
+          ...BuildingFields
         }
       }
     }
+
+    # Stopped reporting: LastYearReported equals previous year (2022)
+    stoppedReporting: allBuilding(filter: { LastYearReported: { eq: 2022 } }) {
+      edges {
+        node {
+          ...BuildingFields
+        }
+      }
+    }
+
+    # Count of consistent reporters: FirstYearReported <= 2022 AND LastYearReported >= 2023
+    consistentReporters: allBuilding(
+      filter: {
+        FirstYearReported: { lte: 2022 }
+        LastYearReported: { gte: 2023 }
+      }
+    ) {
+      totalCount
+    }
+  }
+
+  fragment BuildingFields on Building {
+    slugSource
+    ID
+    DataYear
+    PropertyName
+    Address
+    path
+    PrimaryPropertyType
+    YearBuilt
+    GrossFloorArea
+    GrossFloorAreaRank
+    GrossFloorAreaPercentileRank
+    GHGIntensity
+    GHGIntensityRank
+    GHGIntensityPercentileRank
+    TotalGHGEmissions
+    TotalGHGEmissionsRank
+    TotalGHGEmissionsPercentileRank
+    NaturalGasUse
+    DistrictSteamUse
+    AvgPercentileLetterGrade
+    DataAnomalies
+    FirstYearReported
+    LastYearReported
   }
 </static-query>
 
