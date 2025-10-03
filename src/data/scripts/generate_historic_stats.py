@@ -5,13 +5,13 @@ comprehensive statistical summaries.  It transforms raw building energy data
 into year-over-year statistical insights used for analysis and visualization.
 """
 
-import json
 import pandas
 from typing import List, Dict
 from src.data.scripts.utils import (
     get_and_clean_csv,
     get_data_file_path,
     log_step_completion,
+    write_json_with_newline,
 )
 
 # DO NOT LEAVE TRUE ON `master`
@@ -53,13 +53,15 @@ def hasReportedData(ghg_intensity) -> bool:
     Matches the logic in common-functions.vue hasReportedData function.
     """
     return (
-        pandas.notna(ghg_intensity) and
-        isinstance(ghg_intensity, (int, float)) and
-        ghg_intensity > 0
+        pandas.notna(ghg_intensity)
+        and isinstance(ghg_intensity, (int, float))
+        and ghg_intensity > 0
     )
 
 
-def calculateFirstAndLastYearReported(building_data: pandas.DataFrame) -> Dict[str, Dict[str, int]]:
+def calculateFirstAndLastYearReported(
+    building_data: pandas.DataFrame,
+) -> Dict[str, Dict[str, int]]:
     """
     Calculate FirstYearReported and LastYearReported for each building ID.
 
@@ -68,17 +70,17 @@ def calculateFirstAndLastYearReported(building_data: pandas.DataFrame) -> Dict[s
     reporting_years = {}
 
     # Group by ID and process each building
-    for building_id, building_group in building_data.groupby('ID'):
+    for building_id, building_group in building_data.groupby("ID"):
         # Filter to rows with valid reported data
         reported_data = building_group[
-            building_group['GHGIntensity'].apply(hasReportedData)
+            building_group["GHGIntensity"].apply(hasReportedData)
         ]
 
         if len(reported_data) > 0:
-            years = sorted(reported_data['DataYear'].tolist())
+            years = sorted(reported_data["DataYear"].tolist())
             reporting_years[str(building_id)] = {
-                'FirstYearReported': years[0],
-                'LastYearReported': years[-1]
+                "FirstYearReported": years[0],
+                "LastYearReported": years[-1],
             }
         # If no valid data, we don't include this building in the output
 
@@ -86,7 +88,9 @@ def calculateFirstAndLastYearReported(building_data: pandas.DataFrame) -> Dict[s
         print(f"Calculated reporting years for {len(reporting_years)} buildings")
         # Show some examples
         for bid, years in list(reporting_years.items())[:5]:
-            print(f"  Building {bid}: {years['FirstYearReported']} - {years['LastYearReported']}")
+            print(
+                f"  Building {bid}: {years['FirstYearReported']} - {years['LastYearReported']}"
+            )
 
     return reporting_years
 
@@ -179,11 +183,8 @@ def calculateBuildingStatsByYear(building_data_in: pandas.DataFrame) -> List[str
     )
 
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
-    with open(stats_dist_output_path, "w") as f:
-        json.dump(yearly_stats, f, separators=(",", ":"))
-
-    with open(stats_debug_output_path, "w") as f:
-        json.dump(yearly_stats, f, indent=4)
+    write_json_with_newline(yearly_stats, stats_dist_output_path)
+    write_json_with_newline(yearly_stats, stats_debug_output_path, indent=4)
 
     return [stats_dist_output_path, stats_debug_output_path]
 
