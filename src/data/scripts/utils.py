@@ -17,7 +17,7 @@ LIGHT_BLUE = "\033[0;34m"
 NC = "\033[0m"  # No Color
 
 
-def write_json_with_newline(data: Any, file_path: str, indent: int = None) -> None:
+def write_json_with_newline(data: Any, file_path: str, indent: int | None = None) -> None:
     """
     Write JSON data to a file with proper EOF newline for linting consistency.
 
