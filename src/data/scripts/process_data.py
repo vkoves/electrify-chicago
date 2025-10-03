@@ -24,6 +24,7 @@ from src.data.scripts.building_utils import (
     benchmarking_string_cols,
     benchmarking_int_cols,
 )
+from src.data.scripts.generate_historic_stats import calculateFirstAndLastYearReported
 
 # Assume run in /data
 data_directory = "source"
@@ -41,6 +42,9 @@ building_emissions_file_out_name = "building-benchmarks"
 
 out_file_dir = "dist"
 historic_data_filename = "benchmarking-all-years.csv"
+
+# Debug flag for development
+debug = False
 
 # Columns we want to run statistical analysis and ranking on - order matters here
 building_cols_to_analyze = [
@@ -220,6 +224,26 @@ def processBuildingData() -> List[str]:
     # The all years data is in it's final form already, we don't do ranks or stats off of it (yet)
     output_to_csv(historic_data_graded, historic_data_path)
     outputted_paths.append(historic_data_path)
+
+    # Add FirstYearReported and LastYearReported to building data
+    # Read historic data to calculate reporting years
+    historic_data_path = get_data_file_path(out_file_dir, historic_data_filename)
+    historic_data = get_and_clean_csv(historic_data_path)
+
+    # Calculate reporting years from historic data
+    reporting_years = calculateFirstAndLastYearReported(historic_data)
+
+    # Add FirstYearReported and LastYearReported columns to building_data
+    building_data['FirstYearReported'] = building_data['ID'].astype(str).map(
+        lambda x: reporting_years.get(x, {}).get('FirstYearReported', None)
+    )
+    building_data['LastYearReported'] = building_data['ID'].astype(str).map(
+        lambda x: reporting_years.get(x, {}).get('LastYearReported', None)
+    )
+
+    if debug:
+        matched_count = building_data['FirstYearReported'].notna().sum()
+        print(f"Successfully added reporting years to {matched_count} of {len(building_data)} buildings")
 
     # Add building ward numbers under col: "Ward"
     building_data = add_ward_numbers(building_data)

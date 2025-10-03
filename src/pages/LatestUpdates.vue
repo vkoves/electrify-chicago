@@ -8,8 +8,6 @@ import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 import {
   IBuilding,
   IBuildingNode,
-  IHistoricData,
-  hasReportedData,
   smoothlyScrollToAnchor,
 } from '../common-functions.vue';
 
@@ -30,9 +28,6 @@ export default class LatestUpdates extends Vue {
   /** Set by Gridsome to results of GraphQL query */
   readonly $static!: {
     allBuilding: { edges: Array<IBuildingNode> };
-    latestYearBenchmarks: { edges: Array<{ node: IHistoricData }> };
-    previousYearBenchmarks: { edges: Array<{ node: IHistoricData }> };
-    allPreviousYearsBenchmarks: { edges: Array<{ node: IHistoricData }> };
   };
 
   mounted(): void {}
@@ -41,51 +36,23 @@ export default class LatestUpdates extends Vue {
   readonly smoothlyScrollToAnchor = smoothlyScrollToAnchor;
 
   get newBuildings(): Array<{ node: IBuilding }> {
-    // Get all buildings that submitted in the latest year (already filtered by GraphQL)
-    const latestYearSubmitted = new Set(
-      this.$static.latestYearBenchmarks.edges
-        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
-        .map((edge: { node: IHistoricData }) => edge.node.ID),
-    );
-
-    // Get all buildings that submitted in any previous year (already filtered by GraphQL)
-    const previousYearsSubmitted = new Set(
-      this.$static.allPreviousYearsBenchmarks.edges
-        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
-        .map((edge: { node: IHistoricData }) => edge.node.ID),
-    );
-
-    // New buildings are those that submitted in latest year but never before
-    const newBuildingIds = Array.from(latestYearSubmitted).filter(
-      (id) => !previousYearsSubmitted.has(id),
-    );
-
-    // Return building details for new buildings, sorted by square footage
+    // New buildings are those where FirstYearReported equals the latest data year
     return this.$static.allBuilding.edges
       .filter((edge: { node: IBuilding }) =>
-        newBuildingIds.includes(edge.node.ID.toString()),
+        edge.node.FirstYearReported === this.LatestDataYear
       )
       .sort((a, b) => b.node.GrossFloorArea - a.node.GrossFloorArea);
   }
 
   get consistentReportersCount(): number {
-    // Get buildings that reported in both years (already filtered by GraphQL)
-    const latestYearSubmitted = new Set(
-      this.$static.latestYearBenchmarks.edges
-        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
-        .map((edge: { node: IHistoricData }) => edge.node.ID),
-    );
-
-    const previousYearSubmitted = new Set(
-      this.$static.previousYearBenchmarks.edges
-        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
-        .map((edge: { node: IHistoricData }) => edge.node.ID),
-    );
-
-    // Count buildings that reported in BOTH years
-    return Array.from(latestYearSubmitted).filter((id) =>
-      previousYearSubmitted.has(id),
-    ).length;
+    // Buildings that reported in both years: FirstYearReported <= PreviousDataYear AND LastYearReported >= LatestDataYear
+    return this.$static.allBuilding.edges
+      .filter((edge: { node: IBuilding }) =>
+        edge.node.FirstYearReported !== null &&
+        edge.node.LastYearReported !== null &&
+        edge.node.FirstYearReported <= this.PreviousDataYear &&
+        edge.node.LastYearReported >= this.LatestDataYear
+      ).length;
   }
 
   get netChangeInReporting(): number {
@@ -93,30 +60,10 @@ export default class LatestUpdates extends Vue {
   }
 
   get stoppedReportingBuildings(): Array<{ node: IBuilding }> {
-    // Get buildings that submitted in the previous year (already filtered by GraphQL)
-    const previousYearSubmitted = new Set(
-      this.$static.previousYearBenchmarks.edges
-        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
-        .map((edge: { node: IHistoricData }) => edge.node.ID),
-    );
-
-    // Get buildings that submitted in the latest year (already filtered by GraphQL)
-    const latestYearSubmitted = new Set(
-      this.$static.latestYearBenchmarks.edges
-        .filter((edge: { node: IHistoricData }) => hasReportedData(edge.node))
-        .map((edge: { node: IHistoricData }) => edge.node.ID),
-    );
-
-    // Stopped reporting are those that submitted in previous year but not latest
-    const stoppedBuildingIds = Array.from(previousYearSubmitted).filter(
-      (id) => !latestYearSubmitted.has(id),
-    );
-
-    // Get building details from the current building dataset (which includes their names/addresses)
-    // Most non-reporting buildings are still in the current dataset with their latest submission
+    // Stopped reporting buildings are those where LastYearReported equals the previous data year
     return this.$static.allBuilding.edges
       .filter((edge: { node: IBuilding }) =>
-        stoppedBuildingIds.includes(edge.node.ID.toString()),
+        edge.node.LastYearReported === this.PreviousDataYear
       )
       .sort((a, b) => b.node.GrossFloorArea - a.node.GrossFloorArea);
   }
@@ -150,33 +97,8 @@ export default class LatestUpdates extends Vue {
           DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
-        }
-      }
-    }
-    # Latest year (2023) benchmark data for identifying current reporters
-    latestYearBenchmarks: allBenchmark(filter: { DataYear: { eq: 2023 } }) {
-      edges {
-        node {
-          ID
-          GHGIntensity
-        }
-      }
-    }
-    # Previous year (2022) benchmark data for consistent reporter count
-    previousYearBenchmarks: allBenchmark(filter: { DataYear: { eq: 2022 } }) {
-      edges {
-        node {
-          ID
-          GHGIntensity
-        }
-      }
-    }
-    # All pre-2023 benchmark data for identifying truly new buildings
-    allPreviousYearsBenchmarks: allBenchmark(filter: { DataYear: { lt: 2023 } }) {
-      edges {
-        node {
-          ID
-          GHGIntensity
+          FirstYearReported
+          LastYearReported
         }
       }
     }

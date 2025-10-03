@@ -56,6 +56,8 @@ export enum DataAnomalies {
  * all of the parameter types
  */
 export interface IBuilding {
+  ID: string | number;
+  DataYear: number;
   PropertyName: string;
   Address: string;
   PrimaryPropertyType: string;
@@ -73,7 +75,10 @@ export interface IBuilding {
   TotalGHGEmissions: number;
   YearBuilt: number;
 
-  [buildingKey: string]: string | number | boolean;
+  FirstYearReported: number | null;
+  LastYearReported: number | null;
+
+  [buildingKey: string]: string | number | boolean | null;
 }
 
 /** How GraphQL passes back a building */
