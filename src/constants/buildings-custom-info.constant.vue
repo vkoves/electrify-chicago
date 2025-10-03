@@ -59,7 +59,8 @@ export enum BuildingTags {
 
 /**
  * An object containing our custom details about buildings. These are hand coded based on the
- * building ID, which is stable as the data updates (while names can change YoY)
+ *
+ * TODO: Cleanup owner data, which is now in building-owners-mapping.json
  */
 export const BuildingsCustomInfo: {
   [buildingId: string]: IBuildingCustomInfo;
