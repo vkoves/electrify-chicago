@@ -24,7 +24,7 @@ output_filename = "fines-by-year.json"
 data_out_directory = "dist"
 
 
-def calculate_fines() -> str:
+def calculate_fines() -> list[str]:
     """
     Calculates fines that could have been collected
 
