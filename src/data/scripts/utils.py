@@ -3,10 +3,11 @@ Utils - Basic utilities for file processing that are agnostic to the specific
 data being processed
 """
 
+import json
 import pandas as pd
 import pathlib
 
-from typing import List
+from typing import Any, List
 
 # ANSI color codes for output
 RED = "\033[0;31m"
@@ -14,6 +15,25 @@ GREEN = "\033[0;32m"
 YELLOW = "\033[0;33m"
 LIGHT_BLUE = "\033[0;34m"
 NC = "\033[0m"  # No Color
+
+
+def write_json_with_newline(
+    data: Any, file_path: str, indent: int | None = None
+) -> None:
+    """
+    Write JSON data to a file with proper EOF newline for linting consistency.
+
+    Args:
+        data: The data to write as JSON
+        file_path: Path to the output file
+        indent: Optional indentation level (None for minified JSON)
+    """
+    with open(file_path, "w") as f:
+        if indent is not None:
+            json.dump(data, f, indent=indent)
+        else:
+            json.dump(data, f, separators=(",", ":"))
+        f.write("\n")  # Add EOF newline
 
 
 def print_red(msg: str) -> None:

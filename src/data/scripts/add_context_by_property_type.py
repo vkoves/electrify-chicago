@@ -4,7 +4,6 @@ buildings)
 """
 
 import pandas as pd
-import json
 
 from typing import List, Any, cast
 from pandas.core.groupby.generic import DataFrameGroupBy
@@ -12,6 +11,7 @@ from src.data.scripts.utils import (
     get_data_file_path,
     log_step_completion,
     output_to_csv,
+    write_json_with_newline,
 )
 from src.data.scripts.building_utils import (
     benchmarking_string_cols,
@@ -48,8 +48,7 @@ def generate_property_types(property_types: List[Any]) -> List[str]:
     """
     property_types_json = {"propertyTypes": property_types}
 
-    with open(property_types_file_path, "w", encoding="latin1") as json_file:
-        json.dump(property_types_json, json_file)
+    write_json_with_newline(property_types_json, str(property_types_file_path))
 
     return [property_types_file_path]
 
@@ -105,8 +104,7 @@ def calculate_building_stats(
 
         stats_by_property_type[property] = cur_property_type_stats
 
-    with open(property_stats_file_path, "w") as property_stats_file:
-        json.dump(stats_by_property_type, property_stats_file)
+    write_json_with_newline(stats_by_property_type, str(property_stats_file_path))
 
     return property_stats_file_path
 
