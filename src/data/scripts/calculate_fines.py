@@ -5,11 +5,11 @@ the assumption the buildings that didn't comply would have not complied that who
 The fines by year and total get written to fines-by-year.json
 """
 
-import json
 from src.data.scripts.utils import (
     get_and_clean_csv,
     get_data_file_path,
     log_step_completion,
+    write_json_with_newline,
 )
 
 # THe maximum fine a building would get from not complying in a year, from the official ordinance
@@ -47,10 +47,7 @@ def calculate_fines() -> list[str]:
 
     fines_output_path = get_data_file_path(data_out_directory, output_filename)
 
-    # TODO: Move to write_json_with_newline once that's merged
-    with open(fines_output_path, "w") as f:
-        json.dump(fines_dict, f, indent=2)
-        f.write("\n")  # Add EOF newline
+    write_json_with_newline(fines_dict, fines_output_path, indent=2)
 
     return [fines_output_path]
 
