@@ -7,7 +7,7 @@ into year-over-year statistical insights used for analysis and visualization.
 
 import json
 import pandas
-from src.data.scripts.utils import get_and_clean_csv, get_data_file_path, log_step_completion, output_to_csv
+from src.data.scripts.utils import get_and_clean_csv, get_data_file_path, log_step_completion
 
 # DO NOT LEAVE TRUE ON `master`
 debug = False
