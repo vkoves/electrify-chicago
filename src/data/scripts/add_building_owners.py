@@ -7,7 +7,6 @@ client-side filtering.
 """
 
 import json
-import pandas as pd
 from typing import Dict
 from src.data.scripts.utils import (
     get_and_clean_csv,
@@ -66,7 +65,9 @@ def add_owners_to_buildings() -> str:
     )
 
     # Add Owner column - map building ID to owner key
-    building_data["Owner"] = building_data["ID"].astype(str).map(owner_map)
+    building_data["Owner"] = (
+        building_data["ID"].astype(str).map(lambda x: owner_map.get(x))
+    )
 
     if debug:
         matched_count = building_data["Owner"].notna().sum()

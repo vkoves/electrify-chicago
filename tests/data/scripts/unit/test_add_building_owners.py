@@ -12,7 +12,7 @@ def sample_json_content(tmp_path):
         "cityofchicago": ["101920"],
         "depaul": ["251330", "119808", "101562"],
         "iit": ["256419", "256434"],
-        "uchicago": ["252064", "136212"]
+        "uchicago": ["252064", "136212"],
     }
     test_file = tmp_path / "test_owners.json"
     test_file.write_text(json.dumps(content, indent=2))
@@ -89,10 +89,7 @@ def test_parse_empty_json(tmp_path):
 
 def test_parse_json_with_empty_arrays(tmp_path):
     """Handle JSON with empty owner arrays"""
-    content = {
-        "depaul": [],
-        "iit": ["256419"]
-    }
+    content = {"depaul": [], "iit": ["256419"]}
     test_file = tmp_path / "partial.json"
     test_file.write_text(json.dumps(content))
 
