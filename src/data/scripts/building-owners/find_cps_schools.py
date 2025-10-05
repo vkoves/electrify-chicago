@@ -12,19 +12,22 @@ root directory (e.g. `uv run python src/data/scripts/building-owners/find_cps_bu
 """
 
 import csv
+from typing import Dict
 
-energy_benchmarking_filepath = 'src/data/source/ChicagoEnergyBenchmarking.csv'
+energy_benchmarking_filepath = "src/data/source/ChicagoEnergyBenchmarking.csv"
 
-cps_schools:[str, str] = {}
+cps_schools: Dict[str, str] = {}
 
-with open(energy_benchmarking_filepath, newline='') as csvfile:
+with open(energy_benchmarking_filepath, newline="") as csvfile:
     whole_file = csv.DictReader(csvfile)
 
     for row in whole_file:
         if "CPS" in row["Property Name"]:
             cps_schools[row["ID"]] = row["Property Name"]
 
-    print(f"Found {len(cps_schools)} CPS Addresses in Benchmarking Data Using search for 'CPS' in Property Name!")
+    print(
+        f"Found {len(cps_schools)} CPS Addresses in Benchmarking Data Using search for 'CPS' in Property Name!"
+    )
 
     print("\nFormatted JS Data (copy into `buildings-custom-info.constant`):\n")
     print("-------")

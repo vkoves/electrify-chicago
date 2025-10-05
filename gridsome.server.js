@@ -12,30 +12,16 @@
 const { readFileSync } = require('fs');
 const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
+const pageSocialConfigsData = require('./src/constants/page-social-images/page-social-configs.json');
+const buildingOwnersData = require('./src/constants/building-owners.json');
 
 const DataDirectory = './src/data/dist/';
 
 const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 const HistoricBenchmarkingDataFile = 'benchmarking-all-years.csv';
 
-// This is an array equivalent of Object.keys(BuildingOwners) but this file can't use Typescript and
-// import that file
-const BuildingOwnerIds = [
-  'depaul',
-  'uchicago',
-  'uic',
-  'iit',
-  'northwestern',
-  'loyola',
-  'cps',
-  'cha',
-  'cityofchicago',
-  'columbia',
-  'ccc',
-  'moody',
-  'saic',
-  'npu',
-];
+// Get building owner IDs from the centralized JSON file
+const BuildingOwnerIds = Object.keys(buildingOwnersData);
 
 module.exports = function (api) {
   // Use the Data Store API here: https://gridsome.org/docs/data-store-api/
@@ -68,6 +54,33 @@ module.exports = function (api) {
         component: './src/templates/Ward.vue',
         // In the CSV the ward is a string, so we pass that to the context as well for GraphQL
         context: { ward: ward.toString() },
+      });
+    }
+
+    // Create social card routes (only in development)
+    if (process.env.NODE_ENV !== 'production') {
+      // Create page social card routes
+      const pageIds = Object.keys(pageSocialConfigsData);
+
+      pageIds.forEach(pageId => {
+        createPage({
+          path: `/page-social-card/${pageId}`,
+          component: './src/templates/social-cards/PageSocialCardPage.vue',
+          context: {
+            pageId: pageId
+          }
+        });
+      });
+
+      // Create owner social card routes
+      BuildingOwnerIds.forEach(ownerId => {
+        createPage({
+          path: `/owner-social-card/${ownerId}`,
+          component: './src/templates/social-cards/OwnerSocialCardPage.vue',
+          context: {
+            ownerId: ownerId
+          }
+        });
       });
     }
   });

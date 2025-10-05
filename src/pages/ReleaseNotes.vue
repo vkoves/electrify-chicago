@@ -23,6 +23,84 @@ export default class About extends Vue {}
       </div>
 
       <div class="layout-constrained">
+        <h2>
+          September 22nd, 2025 - Enhanced Building Owner Pages & Hero Imagery
+        </h2>
+
+        <p>
+          We made significant improvements to building owner pages to make them
+          more compelling and informative. Each owner page now features a hero
+          that showcases images of the buildings they own, showing a quick
+          preview of some of their properties. We've added this hero imagery to
+          other pages, like our <g-link to="/all-electric">all electric</g-link>
+          page!
+        </p>
+
+        <p>
+          Building owner pages now also include additional statistics and graphs
+          to help you better understand each owner's environmental impact,
+          including total square footage, total emissions, average greenhouse
+          gas intensity, and a breakdown of their buildings' grades.
+        </p>
+
+        <p>
+          Additionally, we've improved meta imagery across the site - pages now
+          have proper social media preview images, making them look better when
+          shared on social platforms!
+        </p>
+      </div>
+
+      <div class="two-cols">
+        <div>
+          <a href="/release-notes/2025/biggest-before.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/biggest-before.webp"
+              alt="Building owner page showing basic layout without hero images"
+            />
+          </a>
+
+          <p class="bold">Before</p>
+        </div>
+        <div>
+          <a href="/release-notes/2025/biggest-after.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/biggest-after.webp"
+              alt="Enhanced building owner page with building hero images and improved stats"
+            />
+          </a>
+
+          <p class="bold">After</p>
+        </div>
+      </div>
+
+      <div class="two-cols">
+        <div>
+          <a href="/release-notes/2025/iit-before.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/iit-before.webp"
+              alt="IIT owner page before improvements"
+            />
+          </a>
+
+          <p class="bold">IIT Before</p>
+        </div>
+        <div>
+          <a href="/release-notes/2025/iit-after.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/iit-after.webp"
+              alt="IIT owner page with new building hero and enhanced statistics"
+            />
+          </a>
+
+          <p class="bold">IIT After</p>
+        </div>
+      </div>
+
+      <div class="layout-constrained">
         <h2>August 22nd, 2025 - Data Update to 2023 & Citywide Stats</h2>
 
         <p>
