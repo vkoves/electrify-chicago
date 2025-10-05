@@ -161,6 +161,9 @@ export default class About extends Vue {
             Retrofit Chicago Case Studies
           </g-link>
         </li>
+        <li>
+          <g-link to="/fines-breakdown"> Year by Year Predicted Fines </g-link>
+        </li>
       </ul>
 
       <h2>Authors</h2>
