@@ -217,9 +217,10 @@ export default class LatestUpdates extends Vue {
           <div class="stat-number">
             {{ consistentReportersCount.toLocaleString() }}
           </div>
-          <div class="stat-label">Consistent Reporters</div>
+          <div class="stat-label">Continuing Reporters</div>
           <div class="stat-description">
-            Reported in both {{ PreviousDataYear }} and {{ LatestDataYear }}
+            Reported before {{ LatestDataYear }} and continued in
+            {{ LatestDataYear }}
           </div>
         </div>
       </div>

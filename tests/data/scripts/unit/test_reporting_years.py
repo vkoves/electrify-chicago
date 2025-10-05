@@ -1,6 +1,5 @@
 """Tests for FirstYearReported and LastYearReported calculation logic"""
 
-import pytest
 import pandas as pd
 from src.data.scripts.generate_historic_stats import calculateFirstAndLastYearReported
 
