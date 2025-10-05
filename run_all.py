@@ -77,7 +77,7 @@ def main():
         },
         {
             "module": "src.data.scripts.calculate_fines",
-            "description": "calculate_fines"
+            "description": "calculate_fines",
         },
     ]
 
