@@ -3,6 +3,7 @@
 ## Problem
 
 The `BuildingOwner.vue` template currently has a performance issue:
+
 - It pulls **all ~3000 buildings** via GraphQL (lines 201-232)
 - Then filters them **client-side** in JavaScript (lines 89-106) using the `BuildingsCustomInfo` constant
 - This loads unnecessary data and performs filtering in the browser instead of at build time
@@ -25,6 +26,7 @@ Add a new data pipeline step that bakes owner information into the building data
 **File:** `src/data/scripts/add_building_owners.py`
 
 This script should:
+
 - Parse `src/constants/buildings-custom-info.constant.vue` to extract the owner mappings
   - Look for lines like `'251330': { owner: BuildingOwners.depaul.key }`
   - Extract the building ID and owner key
@@ -33,6 +35,7 @@ This script should:
 - Output the updated CSV for the next pipeline step
 
 **Parsing Strategy:**
+
 - Use regex to find patterns like `'buildingId': { owner: BuildingOwners.ownerKey.key }`
 - Build a dictionary mapping building IDs to owner keys
 - Handle both simple owner assignments and complex objects with tags/links
@@ -144,6 +147,7 @@ created(): void {
 ## Implementation Complexity
 
 **Medium** - Requires:
+
 - Python script to parse TypeScript constant file (regex-based)
 - CSV data manipulation
 - GraphQL query updates
