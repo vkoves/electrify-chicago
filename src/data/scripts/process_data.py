@@ -12,55 +12,71 @@ import pandas
 from typing import List
 from src.data.scripts.grade_buildings import grade_buildings, grade_cols
 from src.data.scripts.add_ward_numbers import add_ward_numbers
-from src.data.scripts.utils import get_and_clean_csv, json_data_builder, get_data_file_path, log_step_completion, output_to_csv
-from src.data.scripts.building_utils import clean_property_name, benchmarking_string_cols, benchmarking_int_cols
+from src.data.scripts.utils import (
+    get_and_clean_csv,
+    json_data_builder,
+    get_data_file_path,
+    log_step_completion,
+    output_to_csv,
+    write_json_with_newline,
+)
+from src.data.scripts.building_utils import (
+    clean_property_name,
+    benchmarking_string_cols,
+    benchmarking_int_cols,
+)
+from src.data.scripts.generate_historic_stats import calculateFirstAndLastYearReported
 
 # Assume run in /data
-data_directory = 'source'
-data_out_directory = 'dist'
+data_directory = "source"
+data_out_directory = "dist"
 
 # The /debug directory is to have a well formatted JSON for reading
-data_debug_directory = 'debug'
+data_debug_directory = "debug"
 
 # The input file from the previous step. Gatsby doesn't like spaces so we use a CSV with renamed
 # headers with no units
-building_emissions_file = 'benchmarking-all-newest-temp.csv'
+building_emissions_file = "benchmarking-all-newest-temp.csv"
 
 # The final output file name
-building_emissions_file_out_name = 'building-benchmarks'
+building_emissions_file_out_name = "building-benchmarks"
 
-out_file_dir = 'dist'
-historic_data_filename = 'benchmarking-all-years.csv'
+out_file_dir = "dist"
+historic_data_filename = "benchmarking-all-years.csv"
+
+# Debug flag for development
+debug = False
 
 # Columns we want to run statistical analysis and ranking on - order matters here
 building_cols_to_analyze = [
-    'GHGIntensity',
-    'TotalGHGEmissions',
-    'ElectricityUse',
-    'NaturalGasUse',
-    'SourceEUI',
-    'SiteEUI',
-    'YearBuilt',
-    'GrossFloorArea',
-    'DistrictSteamUse',
-    'DistrictChilledWaterUse'
+    "GHGIntensity",
+    "TotalGHGEmissions",
+    "ElectricityUse",
+    "NaturalGasUse",
+    "SourceEUI",
+    "SiteEUI",
+    "YearBuilt",
+    "GrossFloorArea",
+    "DistrictSteamUse",
+    "DistrictChilledWaterUse",
 ]
 
 # Columns we want to rank for and append ranks to each building's data
 building_cols_to_rank = [
-    'GHGIntensity',
-    'TotalGHGEmissions',
-    'ElectricityUse',
-    'NaturalGasUse',
-    'GrossFloorArea',
-    'SourceEUI',
-    'SiteEUI',
+    "GHGIntensity",
+    "TotalGHGEmissions",
+    "ElectricityUse",
+    "NaturalGasUse",
+    "GrossFloorArea",
+    "SourceEUI",
+    "SiteEUI",
 ]
+
 
 # Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
 # median values for fields
 # Returns the output file if succeeds
-def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
+def calculateBuildingStats(building_data_in: pandas.DataFrame) -> List[str]:
     """
     Calculates overall stats for all buildings and outputs them into a keyed JSON file. Used to show
     median values for fields
@@ -76,10 +92,11 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
     benchmark_stats_df = pandas.DataFrame()
 
     # The details columns we want to keep. Note that 50% = median
-    detail_cols_to_keep = ['count', 'mean', 'std', 'min', 'max', '25%', '50%', '75%']
+    detail_cols_to_keep = ["count", "mean", "std", "min", "max", "25%", "50%", "75%"]
 
-    benchmark_stats_df = building_data[building_cols_to_analyze].describe(
-    ).loc[detail_cols_to_keep]
+    benchmark_stats_df = (
+        building_data[building_cols_to_analyze].describe().loc[detail_cols_to_keep]
+    )
 
     # Round all data to an int, all of the building data is pretty large values so the precision
     # isn't reasonable for statistical analysis
@@ -87,26 +104,31 @@ def calculateBuildingStats(building_data_in: pandas.DataFrame) -> str:
 
     # Rename columns to work with GraphQL (no numbers like '25%')
     # Rename 50% to median since those tqo are equivalent
-    benchmark_stats_df.rename(index={
-        '25%': 'twentyFifthPercentile',
-        '50%': 'median',
-        '75%': 'seventyFifthPercentile',
-    }, inplace=True)
+    benchmark_stats_df.rename(
+        index={
+            "25%": "twentyFifthPercentile",
+            "50%": "median",
+            "75%": "seventyFifthPercentile",
+        },
+        inplace=True,
+    )
 
     # Write out the data
-    filename = 'building-benchmark-stats.json'
+    filename = "building-benchmark-stats.json"
 
     stats_dist_output_path = get_data_file_path(data_out_directory, filename)
     stats_debug_output_path = str(get_data_file_path(data_debug_directory, filename))
 
     # Get the unique primary property types, so the FE can show it as a filter
-    list_of_types = building_data.PrimaryPropertyType.unique()
+    # list_of_types = building_data.PrimaryPropertyType.unique()  # noqa: F841
 
     # Write the minified JSON to the dist directory and indented JSON to the debug directory
-    benchmark_stats_df.to_json(stats_dist_output_path)
-    benchmark_stats_df.to_json(stats_debug_output_path, indent=4)
+    # Convert DataFrame to dict for JSON output
+    json_data = benchmark_stats_df.to_dict()
+    write_json_with_newline(json_data, stats_dist_output_path)
+    write_json_with_newline(json_data, stats_debug_output_path, indent=4)
 
-    return [ stats_dist_output_path, stats_debug_output_path ]
+    return [stats_dist_output_path, stats_debug_output_path]
 
 
 # Returns the output file path if it succeeds
@@ -115,29 +137,40 @@ def processBuildingData() -> List[str]:
     outputted_paths = []
 
     # Read in the newest buildings data CSV from the previous pipeline step
-    building_data = get_and_clean_csv(get_data_file_path(data_debug_directory, building_emissions_file))
+    building_data = get_and_clean_csv(
+        get_data_file_path(data_debug_directory, building_emissions_file)
+    )
 
     # Convert our columns to analyze to numeric data by stripping commas, otherwise the rankings
     # are junk
-    building_data[building_cols_to_analyze] = building_data[building_cols_to_analyze].apply(
-        lambda x: pandas.to_numeric(x.astype(str).str.replace(',', ''), errors='coerce'))
+    building_data[building_cols_to_analyze] = building_data[
+        building_cols_to_analyze
+    ].apply(
+        lambda x: pandas.to_numeric(x.astype(str).str.replace(",", ""), errors="coerce")
+    )
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9)
-    building_data[benchmarking_string_cols] = building_data[benchmarking_string_cols].astype(str)
+    building_data[benchmarking_string_cols] = building_data[
+        benchmarking_string_cols
+    ].astype(str)
 
     # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-    building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype('Int64')
+    building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype(
+        "Int64"
+    )
 
-    building_data['PropertyName'] = building_data['PropertyName'].fillna('').map(clean_property_name)
+    building_data["PropertyName"] = (
+        building_data["PropertyName"].fillna("").map(clean_property_name)
+    )
 
     # find the latest year in the data
-    latest_year = building_data['DataYear'].max()
+    latest_year = building_data["DataYear"].max()
 
     # filter out all buildings that aren't the latest year
-    latest_building_data = building_data[building_data['DataYear'] == latest_year]
+    latest_building_data = building_data[building_data["DataYear"] == latest_year]
 
-    outputted_paths += calculateBuildingStats(latest_building_data)
+    outputted_paths += calculateBuildingStats(latest_building_data)  # type: ignore
 
     # Loop through building_cols_to_rank and calculate both a numeric rank (e.g. #1 highest GHG
     # Intensity) and a percentage (e.g. top 95% of total GHG emissions)
@@ -145,10 +178,16 @@ def processBuildingData() -> List[str]:
     # for descending ranks
     # E.g Keating Hall is the #1 building by GHG Intensity, and lowest 25th percentile in footprint
     for col in building_cols_to_rank:
-        building_data[col + 'Rank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(ascending=False)
+        building_data[col + "Rank"] = building_data.where(
+            building_data["DataYear"] == latest_year
+        )[col].rank(ascending=False)
 
         # The percentile rank can be ascending, we want to say this building is worse than X% of buildings
-        building_data[col + 'PercentileRank'] = building_data.where(building_data['DataYear'] == latest_year)[col].rank(pct=True).round(3)
+        building_data[col + "PercentileRank"] = (
+            building_data.where(building_data["DataYear"] == latest_year)[col]
+            .rank(pct=True)
+            .round(3)
+        )
 
     ###
     ### Grade Buildings Across All Years, Outputting to Both Files
@@ -163,7 +202,7 @@ def processBuildingData() -> List[str]:
     # Copy the grade_cols from latest_historical_data into building_data DataFrame
     # building_data = pandas.merge(building_data, latest_historical_data[grade_cols + ['ID']], on='ID', how='left')
 
-    columns_to_merge = ['ID', 'DataYear'] + grade_cols
+    columns_to_merge = ["ID", "DataYear"] + grade_cols
     historic_grades_for_merge = historic_data_graded[columns_to_merge]
 
     # 2. Perform the merge operation
@@ -176,10 +215,7 @@ def processBuildingData() -> List[str]:
     #    'historic_grades_for_merge' for a row in 'building_data', the
     #    'grade_cols' for that row in 'building_data' will be filled with NaN.
     building_data = pandas.merge(
-        building_data,
-        historic_grades_for_merge,
-        on=['ID', 'DataYear'],
-        how='left'
+        building_data, historic_grades_for_merge, on=["ID", "DataYear"], how="left"
     )
 
     ###
@@ -192,11 +228,39 @@ def processBuildingData() -> List[str]:
     output_to_csv(historic_data_graded, historic_data_path)
     outputted_paths.append(historic_data_path)
 
+    # Add FirstYearReported and LastYearReported to building data
+    # Read historic data to calculate reporting years
+    historic_data_path = get_data_file_path(out_file_dir, historic_data_filename)
+    historic_data = get_and_clean_csv(historic_data_path)
+
+    # Calculate reporting years from historic data
+    reporting_years = calculateFirstAndLastYearReported(historic_data)
+
+    # Add FirstYearReported and LastYearReported columns to building_data
+    building_data["FirstYearReported"] = (
+        building_data["ID"]
+        .astype(str)
+        .map(lambda x: reporting_years.get(x, {}).get("FirstYearReported", None))
+    )
+    building_data["LastYearReported"] = (
+        building_data["ID"]
+        .astype(str)
+        .map(lambda x: reporting_years.get(x, {}).get("LastYearReported", None))
+    )
+
+    if debug:
+        matched_count = building_data["FirstYearReported"].notna().sum()
+        print(
+            f"Successfully added reporting years to {matched_count} of {len(building_data)} buildings"
+        )
+
     # Add building ward numbers under col: "Ward"
     building_data = add_ward_numbers(building_data)
 
     # Export the data
-    building_emissions_output_path = get_data_file_path(data_out_directory, building_emissions_file_out_name + '.csv')
+    building_emissions_output_path = get_data_file_path(
+        data_out_directory, building_emissions_file_out_name + ".csv"
+    )
 
     output_to_csv(building_data, building_emissions_output_path)
 
@@ -204,14 +268,21 @@ def processBuildingData() -> List[str]:
 
     # Convert the building benchmarks CSV to a JSON for debugging
     debug_json_data = json_data_builder(
-        building_data, 'building_benchmarks', is_array=True, array_key="building_benchmarks")
+        building_data,
+        "building_benchmarks",
+        is_array=True,
+        array_key="building_benchmarks",
+    )
 
-    debug_benchmarks_path = get_data_file_path(data_debug_directory, building_emissions_file_out_name + '.json')
+    debug_benchmarks_path = get_data_file_path(
+        data_debug_directory, building_emissions_file_out_name + ".json"
+    )
 
     # We write out files to a /debug directory that is .gitignored with indentation to
     # make it readable but to not have to store giant files
-    with open(debug_benchmarks_path, 'w', encoding='utf-8') as f:
+    with open(debug_benchmarks_path, "w", encoding="utf-8") as f:
         json.dump(debug_json_data, f, ensure_ascii=True, indent=4)
+        f.write("\n")  # Add EOF newline
 
     outputted_paths.append(debug_benchmarks_path)
 
@@ -223,5 +294,6 @@ def main() -> None:
 
     log_step_completion(2, outputted_paths)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()
