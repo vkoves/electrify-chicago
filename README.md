@@ -284,7 +284,25 @@ Example:
 '256434': {owner: BuildingOwners.iit.key},
 ```
 
-3. **Setup their route by adding the new owner's ID (key) to `BuildingOwnerIds`** (in
+3. **Add the building IDs to the JSON mapping file** (`src/constants/building-owners-mapping.json`):
+
+```json
+{
+  "iit": ["256419", "256434"]
+}
+```
+
+4. **Re-run the data pipeline** to add the owner information to the building CSV:
+
+```bash
+docker compose run --rm electrify-chicago uv run python run_all.py
+```
+
+The `add_building_owners.py` script (step 3 of 6 in the pipeline) reads the JSON mapping
+file and adds an `Owner` column to the building data, allowing GraphQL to filter buildings by
+owner at query time.
+
+5. **Setup their route by adding the new owner's ID (key) to `BuildingOwnerIds`** (in
    `gridsome.server.js`) - this tells Gridsome to create a route for this given slug
 
 Example:
@@ -296,7 +314,7 @@ const BuildingOwnerIds = [
 ];
 ```
 
-**Note:** You'll have to restart your `yarn develop` after step 3 to see changes, since
+**Note:** You'll have to restart your `yarn develop` after step 5 to see changes, since
 `gridsome.server.js` just runs once.
 
 ### Adding Building Images
