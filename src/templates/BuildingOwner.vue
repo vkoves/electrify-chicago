@@ -8,6 +8,8 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import {
+  BuildingsStats,
+  calculateBuildingsStats,
   IBuildingBenchmarkStats,
   IBuilding,
   IBuildingNode,
@@ -106,66 +108,29 @@ export default class BiggestBuildings extends Vue {
   }
 
   calculateOwnedBuildingStats(): void {
-    let totalGHGEmissions = 0;
-    let totalGHGIntensity = 0;
-    let totalSquareFootage = 0;
-    let totalYearBuilt = 0;
-    let buildingsWithYear = 0;
-    const gradeCounts: Record<string, number> = {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0,
-      F: 0,
-    };
+    const stats = calculateBuildingsStats(this.buildingsFiltered);
 
-    this.buildingsFiltered.forEach((buildingEdge: IBuildingEdge) => {
-      const building: IBuilding = buildingEdge.node;
-
-      totalGHGIntensity += building.GHGIntensity;
-      totalGHGEmissions += building.TotalGHGEmissions;
-      totalSquareFootage += building.GrossFloorArea || 0;
-
-      // Calculate average building age
-      if (building.YearBuilt) {
-        const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
-        if (
-          !isNaN(yearBuilt) &&
-          yearBuilt > 1800 &&
-          yearBuilt <= new Date().getFullYear()
-        ) {
-          totalYearBuilt += yearBuilt;
-          buildingsWithYear++;
-        }
-      }
-
-      // Count grade distribution
-      const grade = building.AvgPercentileLetterGrade;
-      if (grade && typeof grade === 'string' && grade in gradeCounts) {
-        gradeCounts[grade]++;
-      }
-    });
-
-    // Existing calculations
-    this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
-    const avgGHGIntensity: number =
-      totalGHGIntensity / this.buildingsFiltered.length;
+    // Calculations
+    this.totalGHGEmissions = Math.round(
+      stats.totalGHGEmissions,
+    ).toLocaleString();
+    const avgGHGIntensity: number = stats.avgGHGIntensity;
     this.avgGHGIntensity = avgGHGIntensity.toFixed(1);
 
     this.medianGHGIntensityMultiple = (
       avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median
     ).toFixed(0);
     this.medianGHGEmissionsMultiple = (
-      totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
+      stats.totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
     ).toFixed(0);
 
-    // New calculations
-    this.totalSquareFootage = (totalSquareFootage / 1000000).toFixed(1); // Convert to millions
+    this.totalSquareFootage = (stats.totalSquareFootage / 1000000).toFixed(1); // Convert to millions
 
-    if (buildingsWithYear > 0) {
-      const avgYearBuilt = totalYearBuilt / buildingsWithYear;
+    if (stats.buildingsWithYear > 0) {
       const currentYear = new Date().getFullYear();
-      this.avgBuildingAge = Math.round(currentYear - avgYearBuilt).toString();
+      this.avgBuildingAge = Math.round(
+        currentYear - stats.avgYearBuilt,
+      ).toString();
     } else {
       this.avgBuildingAge = 'N/A';
     }
@@ -179,7 +144,7 @@ export default class BiggestBuildings extends Vue {
       F: '#d60101', // $grade-f-red
     };
 
-    this.gradeDistributionPie = Object.entries(gradeCounts)
+    this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
       .filter(([, count]) => count > 0) // Only include grades that exist
       .sort(([a], [b]) => {
         const gradeOrder = ['A', 'B', 'C', 'D', 'F'];
