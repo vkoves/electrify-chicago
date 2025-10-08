@@ -81,6 +81,9 @@ export interface IBuildingNode {
   node: IBuilding;
 }
 
+export interface IBuildingEdge {
+  node: IBuilding;
+}
 /**
  * A year of benchmark data, with columns we parse by
  */
@@ -644,5 +647,62 @@ export function smoothlyScrollToAnchor(event: MouseEvent): void {
       window.history.pushState(null, '', `#${targetId}`);
     }
   }
+}
+
+type BuildingsStats = {
+  totalGHGEmissions: number,
+  avgGHGIntensity: number,
+  totalSquareFootage: number,
+  avgBuildingAge: number,
+  gradeDistribution: Record<string, number>
+}
+/**
+ * Calculate statistics for a group of buildings based off of a
+ * filter, primarily for the stats pages for buildings grouped
+ * by building owners or based off of ward. 
+ */
+export function calculateBuildingsStats(buildings: Array<IBuildingEdge>): BuildingsStats {
+  let stats: BuildingsStats = {
+    totalGHGEmissions: 0,
+    avgGHGIntensity: 0,
+    totalSquareFootage: 0,
+    avgBuildingAge: 0,
+    gradeDistribution:  {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+      F: 0,
+    }
+  }
+  let buildingsWithYear = 0;
+  buildings.forEach((node: IBuildingEdge) => {
+    const building: IBuilding = node.node;
+    
+    stats.totalGHGEmissions += building.TotalGHGEmissions;
+    stats.avgGHGIntensity += building.GrossFloorArea || 0;
+    
+    // Calculate average building age
+    if (building.YearBuilt) {
+      const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
+      if (
+          !isNaN(yearBuilt) &&
+          yearBuilt > 1800 &&
+          yearBuilt <= new Date().getFullYear()
+        ) {
+          stats.avgBuildingAge += yearBuilt;
+          buildingsWithYear++;
+        }
+    }
+
+    // Count grade distribution
+    const grade = building.AvgPercentileLetterGrade;
+    if (grade && typeof grade === 'string' && grade in stats.gradeDistribution) {
+      stats.gradeDistribution[grade]++;
+    }
+  })
+  stats.avgGHGIntensity /= buildings.length;
+  stats.avgBuildingAge /= buildingsWithYear;
+  return stats;
 }
 </script>
