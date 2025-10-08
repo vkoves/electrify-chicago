@@ -8,7 +8,6 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import {
-  BuildingsStats,
   calculateBuildingsStats,
   IBuildingBenchmarkStats,
   IBuilding,
@@ -124,7 +123,8 @@ export default class BiggestBuildings extends Vue {
       stats.totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
     ).toFixed(0);
 
-    this.totalSquareFootage = (stats.totalSquareFootage / 1000000).toFixed(1); // Convert to millions
+    // Convert millions
+    this.totalSquareFootage = (stats.totalSquareFootage / 1000000).toFixed(1);
 
     if (stats.buildingsWithYear > 0) {
       const currentYear = new Date().getFullYear();
@@ -144,6 +144,7 @@ export default class BiggestBuildings extends Vue {
       F: '#d60101', // $grade-f-red
     };
 
+    // Build data for Pie Chart
     this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
       .filter(([, count]) => count > 0) // Only include grades that exist
       .sort(([a], [b]) => {

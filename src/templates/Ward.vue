@@ -7,18 +7,14 @@ import PieChart, { IPieSlice } from '~/components/graphs/PieChart.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
+  calculateBuildingsStats,
   IBuildingBenchmarkStats,
-  IBuilding,
   IBuildingNode,
 } from '../common-functions.vue';
 import { BuildingOwners } from '../constants/buildings-custom-info.constant.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import NewTabIcon from '../components/NewTabIcon.vue';
-
-interface IBuildingEdge {
-  node: IBuilding;
-}
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -63,18 +59,34 @@ export default class BiggestBuildings extends Vue {
   }
 
   calculateWardStats(): void {
-    let totalGHGEmissions = 0;
-    let totalGHGIntensity = 0;
-    let totalSquareFootage = 0;
-    let totalYearBuilt = 0;
-    let buildingsWithYear = 0;
-    const gradeCounts: Record<string, number> = {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0,
-      F: 0,
-    };
+    const stats = calculateBuildingsStats(this.$page.allBuilding.edges);
+
+    // Calculations
+    this.totalGHGEmissions = Math.round(
+      stats.totalGHGEmissions,
+    ).toLocaleString();
+    const avgGHGIntensity: number = stats.avgGHGIntensity;
+    this.avgGHGIntensity = avgGHGIntensity.toFixed(1);
+
+    this.medianGHGIntensityMultiple = (
+      avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median
+    ).toFixed(0);
+    this.medianGHGEmissionsMultiple = (
+      stats.totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
+    ).toFixed(0);
+
+    // Convert to millions
+    this.totalSquareFootage = (stats.totalSquareFootage / 1000000).toFixed(1);
+
+    if (stats.buildingsWithYear > 0) {
+      const currentYear = new Date().getFullYear();
+      this.avgBuildingAge = Math.round(
+        currentYear - stats.avgYearBuilt,
+      ).toString();
+    } else {
+      this.avgBuildingAge = 'N/A';
+    }
+
     // Grade distribution for pie chart
     const gradeColors: Record<string, string> = {
       A: '#009f49', // $grade-a-green
@@ -84,58 +96,8 @@ export default class BiggestBuildings extends Vue {
       F: '#d60101', // $grade-f-red
     };
 
-    // Aggregate Ward stats for calculations
-    this.$page.allBuilding.edges.forEach((buildingEdge: IBuildingEdge) => {
-      const building: IBuilding = buildingEdge.node;
-
-      totalGHGIntensity += building.GHGIntensity;
-      totalGHGEmissions += building.TotalGHGEmissions;
-      totalSquareFootage += building.GrossFloorArea || 0;
-
-      // Calculate average building age
-      if (building.YearBuilt) {
-        const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
-        if (
-          !isNaN(yearBuilt) &&
-          yearBuilt > 1800 &&
-          yearBuilt <= new Date().getFullYear()
-        ) {
-          totalYearBuilt += yearBuilt;
-          buildingsWithYear++;
-        }
-      }
-
-      // Count grade distribution
-      const grade = building.AvgPercentileLetterGrade;
-      if (grade && typeof grade === 'string' && grade in gradeCounts) {
-        gradeCounts[grade]++;
-      }
-    });
-
-    // Finish calculations from aggregated ward stats
-    this.totalSquareFootage = (totalSquareFootage / 1000000).toFixed(1); // Convert to millions
-
-    if (buildingsWithYear > 0) {
-      const avgYearBuilt = totalYearBuilt / buildingsWithYear;
-      const currentYear = new Date().getFullYear();
-      this.avgBuildingAge = Math.round(currentYear - avgYearBuilt).toString();
-    } else {
-      this.avgBuildingAge = 'N/A';
-    }
-    this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
-    const avgGHGIntensity: number =
-      totalGHGIntensity / this.$page.allBuilding.edges.length;
-    this.avgGHGIntensity = avgGHGIntensity.toFixed(1);
-
-    this.medianGHGIntensityMultiple = (
-      avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median
-    ).toFixed(0);
-    this.medianGHGEmissionsMultiple = (
-      totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
-    ).toFixed(0);
-
     // Build data for Pie Chart
-    this.gradeDistributionPie = Object.entries(gradeCounts)
+    this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
       .filter(([, count]) => count > 0) // Only include grades that exist
       .sort(([a], [b]) => {
         const gradeOrder = ['A', 'B', 'C', 'D', 'F'];

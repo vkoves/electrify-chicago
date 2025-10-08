@@ -649,60 +649,73 @@ export function smoothlyScrollToAnchor(event: MouseEvent): void {
   }
 }
 
-type BuildingsStats = {
-  totalGHGEmissions: number,
-  avgGHGIntensity: number,
-  totalSquareFootage: number,
-  avgBuildingAge: number,
-  gradeDistribution: Record<string, number>
-}
+export type BuildingsStats = {
+  buildingsWithYear: number;
+  totalGHGEmissions: number;
+  totalGHGIntensity: number;
+  avgGHGIntensity: number;
+  totalSquareFootage: number;
+  avgYearBuilt: number;
+  gradeDistribution: Record<string, number>;
+};
 /**
  * Calculate statistics for a group of buildings based off of a
  * filter, primarily for the stats pages for buildings grouped
- * by building owners or based off of ward. 
+ * by building owners or based off of ward.
  */
-export function calculateBuildingsStats(buildings: Array<IBuildingEdge>): BuildingsStats {
+export function calculateBuildingsStats(
+  buildings: Array<IBuildingEdge>,
+): BuildingsStats {
   let stats: BuildingsStats = {
+    buildingsWithYear: 0,
     totalGHGEmissions: 0,
+    totalGHGIntensity: 0,
     avgGHGIntensity: 0,
     totalSquareFootage: 0,
-    avgBuildingAge: 0,
-    gradeDistribution:  {
+    avgYearBuilt: 0,
+    gradeDistribution: {
       A: 0,
       B: 0,
       C: 0,
       D: 0,
       F: 0,
-    }
-  }
-  let buildingsWithYear = 0;
+    },
+  };
+
   buildings.forEach((node: IBuildingEdge) => {
     const building: IBuilding = node.node;
-    
+
+    stats.totalGHGIntensity += building.GHGIntensity;
     stats.totalGHGEmissions += building.TotalGHGEmissions;
-    stats.avgGHGIntensity += building.GrossFloorArea || 0;
-    
+    stats.totalSquareFootage += building.GrossFloorArea || 0;
+
     // Calculate average building age
     if (building.YearBuilt) {
       const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
       if (
-          !isNaN(yearBuilt) &&
-          yearBuilt > 1800 &&
-          yearBuilt <= new Date().getFullYear()
-        ) {
-          stats.avgBuildingAge += yearBuilt;
-          buildingsWithYear++;
-        }
+        !isNaN(yearBuilt) &&
+        yearBuilt > 1800 &&
+        yearBuilt <= new Date().getFullYear()
+      ) {
+        stats.avgYearBuilt += yearBuilt;
+        stats.buildingsWithYear++;
+      }
     }
 
     // Count grade distribution
     const grade = building.AvgPercentileLetterGrade;
-    if (grade && typeof grade === 'string' && grade in stats.gradeDistribution) {
+    if (
+      grade &&
+      typeof grade === 'string' &&
+      grade in stats.gradeDistribution
+    ) {
       stats.gradeDistribution[grade]++;
     }
-  })
-  stats.avgGHGIntensity /= buildings.length;
-  stats.avgBuildingAge /= buildingsWithYear;
+  });
+
+  stats.avgGHGIntensity = stats.totalGHGIntensity / buildings.length;
+  stats.avgYearBuilt /= stats.buildingsWithYear;
+
   return stats;
 }
 </script>
