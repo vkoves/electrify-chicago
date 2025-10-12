@@ -649,6 +649,7 @@ export function smoothlyScrollToAnchor(event: MouseEvent): void {
   }
 }
 
+/** Common stats for groups of buildings, like for ward pages & owner pages */
 export type BuildingsStats = {
   buildingsWithYear: number;
   totalGHGEmissions: number;
@@ -658,6 +659,7 @@ export type BuildingsStats = {
   avgYearBuilt: number;
   gradeDistribution: Record<string, number>;
 };
+
 /**
  * Calculate statistics for a group of buildings based off of a
  * filter, primarily for the stats pages for buildings grouped
