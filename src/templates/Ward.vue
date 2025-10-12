@@ -174,7 +174,7 @@ query ($ward: String) {
 
       <div class="page-constrained">
         <g-link to="/wards" class="grey-link back-link">
-          <img src="/icons/arrow-back.svg" />
+          <img src="/icons/arrow-back.svg" alt="" />
           Back to All Wards
         </g-link>
 

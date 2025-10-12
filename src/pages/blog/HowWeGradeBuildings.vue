@@ -33,7 +33,7 @@ export default class HowWeGradeBuildings extends Vue {}
     <div class="how-we-grade-page">
       <div class="layout-constrained">
         <g-link to="/blog" class="back-link grey-link">
-          <img src="/icons/arrow-back.svg" />
+          <img src="/icons/arrow-back.svg" alt="" />
           Back to Blog
         </g-link>
 

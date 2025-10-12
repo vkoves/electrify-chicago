@@ -212,7 +212,7 @@ export default class BiggestBuildings extends Vue {
 
       <div class="page-constrained">
         <g-link to="/large-owners" class="back-link grey-link">
-          <img src="/icons/arrow-back.svg" />
+          <img src="/icons/arrow-back.svg" alt="" />
           Back to All Owners
         </g-link>
 
