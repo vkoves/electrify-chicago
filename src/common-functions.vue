@@ -86,6 +86,9 @@ export interface IBuildingNode {
   node: IBuilding;
 }
 
+export interface IBuildingEdge {
+  node: IBuilding;
+}
 /**
  * A year of benchmark data, with columns we parse by
  */
@@ -649,5 +652,77 @@ export function smoothlyScrollToAnchor(event: MouseEvent): void {
       window.history.pushState(null, '', `#${targetId}`);
     }
   }
+}
+
+/** Common stats for groups of buildings, like for ward pages & owner pages */
+export type BuildingsStats = {
+  buildingsWithYear: number;
+  totalGHGEmissions: number;
+  totalGHGIntensity: number;
+  avgGHGIntensity: number;
+  totalSquareFootage: number;
+  avgYearBuilt: number;
+  gradeDistribution: Record<string, number>;
+};
+
+/**
+ * Calculate statistics for a group of buildings based off of a
+ * filter, primarily for the stats pages for buildings grouped
+ * by building owners or based off of ward.
+ */
+export function calculateBuildingsStats(
+  buildings: Array<IBuildingEdge>,
+): BuildingsStats {
+  let stats: BuildingsStats = {
+    buildingsWithYear: 0,
+    totalGHGEmissions: 0,
+    totalGHGIntensity: 0,
+    avgGHGIntensity: 0,
+    totalSquareFootage: 0,
+    avgYearBuilt: 0,
+    gradeDistribution: {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+      F: 0,
+    },
+  };
+
+  buildings.forEach((node: IBuildingEdge) => {
+    const building: IBuilding = node.node;
+
+    stats.totalGHGIntensity += building.GHGIntensity;
+    stats.totalGHGEmissions += building.TotalGHGEmissions;
+    stats.totalSquareFootage += building.GrossFloorArea || 0;
+
+    // Calculate average building age
+    if (building.YearBuilt) {
+      const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
+      if (
+        !isNaN(yearBuilt) &&
+        yearBuilt > 1800 &&
+        yearBuilt <= new Date().getFullYear()
+      ) {
+        stats.avgYearBuilt += yearBuilt;
+        stats.buildingsWithYear++;
+      }
+    }
+
+    // Count grade distribution
+    const grade = building.AvgPercentileLetterGrade;
+    if (
+      grade &&
+      typeof grade === 'string' &&
+      grade in stats.gradeDistribution
+    ) {
+      stats.gradeDistribution[grade]++;
+    }
+  });
+
+  stats.avgGHGIntensity = stats.totalGHGIntensity / buildings.length;
+  stats.avgYearBuilt /= stats.buildingsWithYear;
+
+  return stats;
 }
 </script>

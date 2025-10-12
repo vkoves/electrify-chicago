@@ -48,6 +48,11 @@ export default class About extends Vue {}
           have proper social media preview images, making them look better when
           shared on social platforms!
         </p>
+
+        <p>
+          <strong>Update Oct. 2025:</strong> We've now added these same stats
+          and graphs to the ward pages as well!
+        </p>
       </div>
 
       <div class="two-cols">
