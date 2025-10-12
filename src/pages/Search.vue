@@ -148,13 +148,67 @@ export default class Search extends Vue {
     return matchScore;
   }
 
+  /**
+   * Get all active filter configurations
+   */
+  private getActiveFilters() {
+    const query = this.searchFilter.toLowerCase().trim();
+
+    return [
+      // Text search filter
+      {
+        isActive: Boolean(query),
+        apply: (buildings: Array<IBuildingEdge>) => {
+          const filtered = buildings.filter((buildingEdge: IBuildingEdge) => {
+            return (
+              buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
+              buildingEdge.node.Address.toLowerCase().includes(query) ||
+              buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
+            );
+          });
+
+          // Sort by relevance
+          return filtered.sort(
+            (a: IBuildingEdge, b: IBuildingEdge) =>
+              this.searchRank(b, query) - this.searchRank(a, query),
+          );
+        },
+      },
+      // Property type filter
+      {
+        isActive: Boolean(this.propertyTypeFilter),
+        apply: (buildings: Array<IBuildingEdge>) =>
+          this.filterResults(buildings, 'PrimaryPropertyType', this.propertyTypeFilter),
+      },
+      // Grade filter
+      {
+        isActive: Boolean(this.gradeFilter),
+        apply: (buildings: Array<IBuildingEdge>) =>
+          this.filterResults(buildings, 'AvgPercentileLetterGrade', this.gradeFilter),
+      },
+      // All electric filter
+      {
+        isActive: this.allElectricFilter,
+        apply: (buildings: Array<IBuildingEdge>) =>
+          buildings.filter((edge) => fullyGasFree(edge.node)),
+      },
+      // New buildings filter
+      {
+        isActive: this.newBuildingsFilter,
+        apply: (buildings: Array<IBuildingEdge>) =>
+          buildings.filter((edge) =>
+            isNewBuilding(this.getHistoricalDataForBuilding(edge.node.ID)),
+          ),
+      },
+    ];
+  }
+
   submitSearch(event?: Event): void {
     if (event) {
       event.preventDefault();
     }
 
     const query = this.searchFilter.toLowerCase().trim();
-
     const propertyFilterEncoded = encodeURIComponent(this.propertyTypeFilter);
 
     // Update URL bar with search query so refresh persists search
@@ -166,76 +220,23 @@ export default class Search extends Vue {
 
     window.history.pushState(null, '', newUrl);
 
-    let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
+    const filters = this.getActiveFilters();
+    const activeFilters = filters.filter((f) => f.isActive);
 
-    // If no filters are provided, return our max number
-    if (
-      !query &&
-      !this.propertyTypeFilter &&
-      !this.gradeFilter &&
-      !this.gradeQuintileFilter &&
-      !this.allElectricFilter &&
-      !this.newBuildingsFilter
-    ) {
+    // If no filters are active, return all results
+    if (activeFilters.length === 0) {
       this.hasFilteredResults = false;
-      this.setSearchResults(buildingsResults);
+      this.setSearchResults(this.$static.allBuilding.edges);
       return;
     }
 
-    buildingsResults = buildingsResults.filter(
-      (buildingEdge: IBuildingEdge) => {
-        return (
-          buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
-          buildingEdge.node.Address.toLowerCase().includes(query) ||
-          buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
-        );
-      },
-    );
-
-    // Sort by name matches, then address, then property type
-    buildingsResults = buildingsResults.sort(
-      (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
-        this.searchRank(buildingEdgeB, query) -
-        this.searchRank(buildingEdgeA, query),
-    );
-
-    // If property type filter is specified, filter down by that
-    if (this.propertyTypeFilter) {
-      buildingsResults = this.filterResults(
-        buildingsResults,
-        'PrimaryPropertyType',
-        this.propertyTypeFilter,
-      );
-    }
-
-    if (this.gradeFilter) {
-      buildingsResults = this.filterResults(
-        buildingsResults,
-        'AvgPercentileLetterGrade',
-        this.gradeFilter,
-      );
-    }
-
-    // Apply electric and new building filters - can be combined
-    if (this.allElectricFilter || this.newBuildingsFilter) {
-      buildingsResults = buildingsResults.filter(
-        (buildingEdge: IBuildingEdge) => {
-          const meetsAllElectricCriteria = this.allElectricFilter
-            ? fullyGasFree(buildingEdge.node)
-            : true;
-          const meetsNewBuildingCriteria = this.newBuildingsFilter
-            ? isNewBuilding(
-                this.getHistoricalDataForBuilding(buildingEdge.node.ID),
-              )
-            : true;
-
-          return meetsAllElectricCriteria && meetsNewBuildingCriteria;
-        },
-      );
+    // Apply all active filters in sequence
+    let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
+    for (const filter of activeFilters) {
+      buildingsResults = filter.apply(buildingsResults);
     }
 
     this.hasFilteredResults = true;
-
     this.setSearchResults(buildingsResults);
   }
 
