@@ -37,9 +37,8 @@ export default defineConfig({
 
   /* Expect options for snapshots */
   expect: {
-    /* Threshold for screenshot comparisons (0-1, where 1 is identical) */
+    // @see https://playwright.dev/docs/api/class-pageassertions#page-assertions-to-have-screenshot-2
     toHaveScreenshot: {
-      threshold: 0.2,
       // Allow a 0.3% diff to account for CI font mismatch - ideally this should be higher on
       // desktop and lower on mobile, where, probably 0.0002 would be fine
       maxDiffPixelRatio: 0.003,
