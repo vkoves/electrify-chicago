@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import WardLookup from '~/components/WardLookup.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
@@ -10,6 +11,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
   components: {
     NewTabIcon,
     WardLookup,
+    BuildingsHero,
   },
   metaInfo() {
     return generatePageMeta(
@@ -31,27 +33,34 @@ export default class Wards extends Vue {
 
 <!-- If this query is updated, make sure to update PageSocialCard as well -->
 <template>
-  <DefaultLayout>
-    <div class="wards-page layout-constrained">
-      <h1 id="main-content" and tabindex="-1">Buildings By Ward</h1>
-      <p class="subtitle">
-        Looking for the buildings in a specific Chicago aldermanic ward? Just
-        find your ward in the list below!
-      </p>
+  <DefaultLayout main-class="layout -full-width">
+    <div class="wards-page">
+      <BuildingsHero :buildings="[]">
+        <div class="layout-constrained">
+          <h1 id="main-content" tabindex="-1">Buildings By Ward</h1>
 
-      <section class="ward-lookup-section">
-        <h2>Don't Know Your Ward?</h2>
-        <p>Enter your Chicago address to find your ward and alder:</p>
-        <WardLookup :show-contact-info="false" />
-      </section>
+          <p class="subtitle">
+            Looking for the buildings in a specific Chicago aldermanic ward?
+            Just find your ward in the list below!
+          </p>
+        </div>
+      </BuildingsHero>
 
-      <ol>
-        <li v-for="ward in wards" :key="ward">
-          <g-link class="grey-link" :to="`/ward/${ward}`">
-            Ward {{ ward }}
-          </g-link>
-        </li>
-      </ol>
+      <div class="layout-constrained">
+        <section class="ward-lookup-section">
+          <h2>Don't Know Your Ward?</h2>
+          <p>Enter your Chicago address to find your ward and alder:</p>
+          <WardLookup :show-contact-info="false" />
+        </section>
+
+        <ol>
+          <li v-for="ward in wards" :key="ward">
+            <g-link class="grey-link" :to="`/ward/${ward}`">
+              Ward {{ ward }}
+            </g-link>
+          </li>
+        </ol>
+      </div>
     </div>
   </DefaultLayout>
 </template>
