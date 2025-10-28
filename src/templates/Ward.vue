@@ -119,7 +119,8 @@ export default class BiggestBuildings extends Vue {
 
       // Find the ward that matches the current context
       const wardFeature = wardsData.features.find(
-        (feature) => feature.properties.district === `Ward ${this.$context.ward}`,
+        (feature) =>
+          feature.properties.district === `Ward ${this.$context.ward}`,
       );
 
       if (wardFeature) {

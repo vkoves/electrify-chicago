@@ -9,9 +9,7 @@
       />
     </div>
 
-    <div v-if="loading" class="loading">
-      Searching...
-    </div>
+    <div v-if="loading" class="loading">Searching...</div>
 
     <div v-if="error" class="panel -warning">
       {{ error }}
@@ -171,6 +169,7 @@ export default class WardLookup extends Vue {
   private async loadGoogleMaps(): Promise<void> {
     // In Gridsome, client-side env vars must be prefixed with GRIDSOME_
     // Access via process.env which gets compiled at build time
+    // eslint-disable-next-line no-undef
     const apiKey = process.env.GRIDSOME_GOOGLE_MAPS_API_KEY || '';
 
     if (!apiKey) {
@@ -330,7 +329,8 @@ export default class WardLookup extends Vue {
       this.loading = false;
     } catch (err) {
       console.error('Error finding ward:', err);
-      this.error = 'An error occurred while finding your ward. Please try again.';
+      this.error =
+        'An error occurred while finding your ward. Please try again.';
       this.loading = false;
     }
   }

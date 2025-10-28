@@ -63,10 +63,13 @@ function injectGoogleMapsLoader(apiKey: string): void {
       params.set('callback', 'google.maps.__ib__');
 
       script.src = `https://maps.googleapis.com/maps/api/js?${params}`;
-      script.onerror = () => reject(new Error('Google Maps JavaScript API could not load'));
+      script.onerror = () =>
+        reject(new Error('Google Maps JavaScript API could not load'));
 
       // Preserve nonce for Content Security Policy if present
-      const existingScript = document.querySelector('script[nonce]') as HTMLScriptElement | null;
+      const existingScript = document.querySelector(
+        'script[nonce]',
+      ) as HTMLScriptElement | null;
       if (existingScript?.nonce) {
         script.nonce = existingScript.nonce;
       }
