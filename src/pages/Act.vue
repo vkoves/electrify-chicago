@@ -15,7 +15,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
     return generatePageMeta(
       'Take Action to Get Chicago Buildings Reporting Their Energy Use',
       "Support enforcement of Chicago's Building Energy Benchmarking Ordinance by contacting " +
-        'your alderman about funding an inspector position.',
+        'your alderperson about funding an inspector position.',
     );
   },
 })
@@ -37,9 +37,9 @@ export default class Act extends Vue {}
           </p>
         </div>
         <ShareButton
-          title="Take Action - Contact Your Alderman"
+          title="Take Action - Contact Your Alderperson"
           text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
-            by contacting your alderman about funding an inspector position."
+            by contacting your alderperson about funding an inspector position."
           :show-text="true"
         />
       </div>
@@ -80,11 +80,11 @@ export default class Act extends Vue {}
         accountability and supporting climate action.
       </p>
 
-      <h2>How You Can Help - Contact Your Alderman</h2>
+      <h2>How You Can Help - Contact Your Alderperson</h2>
 
       <ol class="action-steps">
         <li>
-          <strong>Find your alderman</strong> by entering your address below:
+          <strong>Find your alderperson</strong> by entering your address below:
 
           <WardLookup />
         </li>
@@ -114,9 +114,9 @@ export default class Act extends Vue {}
           community groups <br />
 
           <ShareButton
-            title="Take Action - Contact Your Alderman"
+            title="Take Action - Contact Your Alderperson"
             text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
-              by contacting your alderman about funding an inspector position."
+              by contacting your alderperson about funding an inspector position."
             :show-text="true"
           />
         </li>

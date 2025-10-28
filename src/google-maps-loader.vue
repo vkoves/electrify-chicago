@@ -1,3 +1,7 @@
+<script lang="ts">
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export default {};
+
 /**
  * Utility for dynamically loading the Google Maps JavaScript API
  * Based on: https://developers.google.com/maps/documentation/javascript/load-maps-js-api
@@ -82,3 +86,4 @@ function injectGoogleMapsLoader(apiKey: string): void {
     };
   }
 }
+</script>

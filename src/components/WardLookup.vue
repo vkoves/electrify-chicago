@@ -18,19 +18,19 @@
     </div>
 
     <div v-if="wardInfo" class="ward-result">
-      <h3>Your Alderman</h3>
+      <h3>Your Alderperson</h3>
       <div class="result-content">
         <img
           v-if="alderImagePath"
           :src="alderImagePath"
-          :alt="wardInfo.council_member"
+          :alt="alderFormattedName"
           class="alder-photo"
         />
         <div class="ward-info">
           <p class="ward-number">{{ wardInfo.district }}</p>
-          <p class="alderman-name">{{ wardInfo.council_member }}</p>
+          <p class="alder-name">{{ alderFormattedName }}</p>
 
-          <div v-if="alderInfo" class="contact-info">
+          <div v-if="alderInfo && showContactInfo" class="contact-info">
             <p v-if="alderInfo.email" class="email">
               <strong>Email:</strong>
               <a :href="`mailto:${alderInfo.email}`">{{ alderInfo.email }}</a>
@@ -50,7 +50,8 @@
             rel="noopener"
             class="blue-link"
           >
-            View Full Profile
+            Full Profile On Councilmatic
+            <NewTabIcon :white="true" />
           </a>
         </div>
       </div>
@@ -60,11 +61,12 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Prop, Vue } from 'vue-property-decorator';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
-import { loadGoogleMaps } from '~/google-maps-loader';
+import { loadGoogleMaps } from '~/google-maps-loader.vue';
 import { AlderImages } from '~/components/alder-images.constant.vue';
+import NewTabIcon from '~/components/NewTabIcon.vue';
 
 interface WardProperties {
   district: string;
@@ -100,8 +102,16 @@ const CHICAGO_BOUNDS = {
   west: -87.940267,
 };
 
-@Component
+@Component({
+  components: {
+    NewTabIcon,
+  },
+})
 export default class WardLookup extends Vue {
+  /** Whether to show contact information (email/phone) */
+  @Prop({ default: true })
+  showContactInfo!: boolean;
+
   public loading = false;
   public error = '';
   public wardInfo: WardProperties | null = null;
@@ -111,7 +121,7 @@ export default class WardLookup extends Vue {
   private wardsData: WardsGeoJSON | null = null;
   private aldersData: Map<string, AlderInfo> = new Map();
 
-  /** Get the image path for the current alderman based on ward number */
+  /** Get the image path for the current alder based on ward number */
   get alderImagePath(): string | null {
     if (!this.wardInfo) return null;
 
@@ -133,6 +143,19 @@ export default class WardLookup extends Vue {
     if (!wardMatch) return null;
 
     return `/ward/${wardMatch[0]}`;
+  }
+
+  /** Format alder name from "Last, First" to "First Last" */
+  get alderFormattedName(): string | null {
+    if (!this.wardInfo) return null;
+
+    const name = this.wardInfo.council_member;
+    // Split by comma and reverse the order
+    const parts = name.split(',').map((part) => part.trim());
+    if (parts.length === 2) {
+      return `${parts[1]} ${parts[0]}`;
+    }
+    return name; // Return as-is if format is unexpected
   }
 
   /** Initialize the component by loading all required data */
@@ -194,7 +217,7 @@ export default class WardLookup extends Vue {
     }
   }
 
-  /** Load alderman contact information from CSV */
+  /** Load alder contact information from CSV */
   private async loadAldersData(): Promise<void> {
     try {
       const response = await fetch('/alders-info.csv');
@@ -223,7 +246,7 @@ export default class WardLookup extends Vue {
         });
       }
     } catch (err) {
-      console.error('Failed to load alderman info:', err);
+      console.error('Failed to load alder info:', err);
     }
   }
 
@@ -292,7 +315,7 @@ export default class WardLookup extends Vue {
           const wardMatch = feature.properties.district.match(/\d+/);
           if (wardMatch) {
             const wardNumber = wardMatch[0];
-            // Look up alderman info
+            // Look up alder info
             this.alderInfo = this.aldersData.get(wardNumber) || null;
           }
 
@@ -418,7 +441,7 @@ export default class WardLookup extends Vue {
         color: $blue-very-dark;
       }
 
-      .alderman-name {
+      .alder-name {
         font-size: 1rem;
         color: $text-main;
         margin-bottom: 0.75rem;

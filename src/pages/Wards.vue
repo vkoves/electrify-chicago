@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import WardLookup from '~/components/WardLookup.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
@@ -8,6 +9,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
 @Component<any>({
   components: {
     NewTabIcon,
+    WardLookup,
   },
   metaInfo() {
     return generatePageMeta(
@@ -37,6 +39,12 @@ export default class Wards extends Vue {
         find your ward in the list below!
       </p>
 
+      <section class="ward-lookup-section">
+        <h2>Don't Know Your Ward?</h2>
+        <p>Enter your Chicago address to find your ward and alder:</p>
+        <WardLookup :show-contact-info="false" />
+      </section>
+
       <ol>
         <li v-for="ward in wards" :key="ward">
           <g-link class="grey-link" :to="`/ward/${ward}`">
@@ -56,6 +64,23 @@ export default class Wards extends Vue {
 
   .subtitle {
     margin-top: 0;
+  }
+
+  .ward-lookup-section {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: $off-white;
+    border: solid $border-medium $chicago-blue;
+    border-radius: $brd-rad-medium;
+
+    h2 {
+      margin-top: 0;
+      color: $blue-very-dark;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
   }
 
   ol {

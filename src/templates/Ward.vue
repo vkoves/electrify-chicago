@@ -12,9 +12,28 @@ import {
   IBuildingNode,
 } from '../common-functions.vue';
 import { BuildingOwners } from '../constants/buildings-custom-info.constant.vue';
+import { AlderImages } from '~/components/alder-images.constant.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import NewTabIcon from '../components/NewTabIcon.vue';
+
+interface WardProperties {
+  district: string;
+  council_member: string;
+  detail_link: string;
+  select_id: string;
+}
+
+interface WardFeature {
+  type: 'Feature';
+  properties: WardProperties;
+  geometry: any;
+}
+
+interface WardsGeoJSON {
+  type: 'FeatureCollection';
+  features: WardFeature[];
+}
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -54,8 +73,61 @@ export default class BiggestBuildings extends Vue {
   avgBuildingAge?: string;
   gradeDistributionPie: Array<IPieSlice> = [];
 
+  wardInfo: WardProperties | null = null;
+
+  /** Get the image path for the current alderperson */
+  get alderImagePath(): string | null {
+    if (!this.wardInfo) return null;
+
+    const wardNumber = this.$context.ward;
+    const filename = AlderImages[wardNumber];
+    return filename ? `/alders/${filename}` : null;
+  }
+
+  /** Get the full Councilmatic URL for the alderperson */
+  get alderCouncilmaticUrl(): string | null {
+    if (!this.wardInfo) return null;
+    return `https://chicago.councilmatic.org${this.wardInfo.detail_link}`;
+  }
+
+  /** Format alder name from "Last, First" to "First Last" */
+  get alderFormattedName(): string | null {
+    if (!this.wardInfo) return null;
+
+    const name = this.wardInfo.council_member;
+    // Split by comma and reverse the order
+    const parts = name.split(',').map((part) => part.trim());
+    if (parts.length === 2) {
+      return `${parts[1]} ${parts[0]}`;
+    }
+    return name; // Return as-is if format is unexpected
+  }
+
   created(): void {
     this.calculateWardStats();
+  }
+
+  async mounted(): Promise<void> {
+    await this.loadWardInfo();
+  }
+
+  /** Load ward and alder information from GeoJSON */
+  async loadWardInfo(): Promise<void> {
+    try {
+      const response = await fetch('/chicago-wards-2025.geojson');
+      const wardsData = (await response.json()) as WardsGeoJSON;
+
+      // Find the ward that matches the current context
+      const wardFeature = wardsData.features.find(
+        (feature) => feature.properties.district === `Ward ${this.$context.ward}`,
+      );
+
+      if (wardFeature) {
+        this.wardInfo = wardFeature.properties;
+      }
+    } catch (err) {
+      console.error('Failed to load ward information:', err);
+    }
   }
 
   calculateWardStats(): void {
@@ -178,6 +250,31 @@ query ($ward: String) {
           Back to All Wards
         </g-link>
 
+        <section v-if="wardInfo" class="alder-info">
+          <h2>Your Alderperson</h2>
+
+          <div class="alder-content">
+            <img
+              v-if="alderImagePath"
+              :src="alderImagePath"
+              :alt="alderFormattedName"
+              class="alder-photo"
+            />
+            <div class="alder-details">
+              <p class="alder-name">{{ alderFormattedName }}</p>
+              <a
+                :href="alderCouncilmaticUrl"
+                target="_blank"
+                rel="noopener"
+                class="blue-link"
+              >
+                Full Profile On Councilmatic
+                <NewTabIcon :white="true" />
+              </a>
+            </div>
+          </div>
+        </section>
+
         <section class="stats-overview -three-col-max">
           <h2>Ward {{ $context.ward }} Quick Stats</h2>
           <div class="stats-grid">
@@ -289,6 +386,57 @@ query ($ward: String) {
 
   h2 {
     margin-bottom: 0.5rem;
+  }
+
+  .alder-info {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: $off-white;
+    border: solid $border-medium $chicago-blue;
+    border-radius: $brd-rad-medium;
+
+    h2 {
+      margin-top: 0;
+      color: $blue-very-dark;
+    }
+
+    .alder-content {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+
+      @media (max-width: $mobile-max-width) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .alder-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: solid $border-medium $chicago-blue;
+      flex-shrink: 0;
+
+      @media (max-width: $mobile-max-width) {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .alder-details {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .alder-name {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: $text-main;
+    }
   }
 
   .stats {

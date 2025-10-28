@@ -2,7 +2,7 @@
 export default {};
 
 /**
- * Mapping of ward numbers to alderman image filenames
+ * Mapping of ward numbers to alderperson image filenames
  *
  * Images sourced from Chicago Councilmatic, Oct 2025
  * (https://chicago.councilmatic.org/compare-council-members)
