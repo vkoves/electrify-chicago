@@ -20,18 +20,39 @@
     <div v-if="wardInfo" class="ward-result">
       <h3>Your Alderman</h3>
       <div class="result-content">
+        <img
+          v-if="alderImagePath"
+          :src="alderImagePath"
+          :alt="wardInfo.council_member"
+          class="alder-photo"
+        />
         <div class="ward-info">
           <p class="ward-number">{{ wardInfo.district }}</p>
           <p class="alderman-name">{{ wardInfo.council_member }}</p>
+
+          <div v-if="alderInfo" class="contact-info">
+            <p v-if="alderInfo.email" class="email">
+              <strong>Email:</strong>
+              <a :href="`mailto:${alderInfo.email}`">{{ alderInfo.email }}</a>
+            </p>
+            <p v-if="alderInfo.officePhone" class="phone">
+              <strong>Phone:</strong> {{ alderInfo.officePhone }}
+            </p>
+          </div>
         </div>
-        <a
-          :href="`https://chicago.councilmatic.org${wardInfo.detail_link}`"
-          target="_blank"
-          rel="noopener"
-          class="blue-link"
-        >
-          View Profile & Contact Info
-        </a>
+        <div class="actions">
+          <g-link v-if="wardPagePath" :to="wardPagePath" class="blue-link">
+            View Ward Buildings
+          </g-link>
+          <a
+            :href="`https://chicago.councilmatic.org${wardInfo.detail_link}`"
+            target="_blank"
+            rel="noopener"
+            class="blue-link"
+          >
+            View Full Profile
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -43,6 +64,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
 import { loadGoogleMaps } from '~/google-maps-loader';
+import { AlderImages } from '~/components/alder-images.constant.vue';
 
 interface WardProperties {
   district: string;
@@ -62,6 +84,14 @@ interface WardsGeoJSON {
   features: WardFeature[];
 }
 
+interface AlderInfo {
+  name: string;
+  office: string;
+  officePhone: string;
+  email: string;
+  website: string;
+}
+
 // Chicago city boundaries for biasing Google Places autocomplete results
 const CHICAGO_BOUNDS = {
   north: 42.023131,
@@ -72,18 +102,49 @@ const CHICAGO_BOUNDS = {
 
 @Component
 export default class WardLookup extends Vue {
-  loading = false;
-  error = '';
-  wardInfo: WardProperties | null = null;
+  public loading = false;
+  public error = '';
+  public wardInfo: WardProperties | null = null;
+  public alderInfo: AlderInfo | null = null;
 
   private autocomplete: any = null;
   private wardsData: WardsGeoJSON | null = null;
+  private aldersData: Map<string, AlderInfo> = new Map();
 
-  async mounted(): Promise<void> {
-    await this.loadGoogleMaps();
-    await this.loadWardsData();
+  /** Get the image path for the current alderman based on ward number */
+  get alderImagePath(): string | null {
+    if (!this.wardInfo) return null;
+
+    // Extract ward number from district (e.g., "Ward 6" -> "6")
+    const wardMatch = this.wardInfo.district.match(/\d+/);
+    if (!wardMatch) return null;
+
+    const wardNumber = wardMatch[0];
+    const filename = AlderImages[wardNumber];
+    return filename ? `/alders/${filename}` : null;
   }
 
+  /** Get the ward page path for the current ward */
+  get wardPagePath(): string | null {
+    if (!this.wardInfo) return null;
+
+    // Extract ward number from district (e.g., "Ward 6" -> "6")
+    const wardMatch = this.wardInfo.district.match(/\d+/);
+    if (!wardMatch) return null;
+
+    return `/ward/${wardMatch[0]}`;
+  }
+
+  /** Initialize the component by loading all required data */
+  async mounted(): Promise<void> {
+    await Promise.all([
+      this.loadGoogleMaps(),
+      this.loadWardsData(),
+      this.loadAldersData(),
+    ]);
+  }
+
+  /** Load Google Maps API and initialize autocomplete */
   private async loadGoogleMaps(): Promise<void> {
     // In Gridsome, client-side env vars must be prefixed with GRIDSOME_
     // Access via process.env which gets compiled at build time
@@ -123,6 +184,7 @@ export default class WardLookup extends Vue {
     }
   }
 
+  /** Load ward boundary GeoJSON data */
   private async loadWardsData(): Promise<void> {
     try {
       const response = await fetch('/chicago-wards-2025.geojson');
@@ -132,6 +194,63 @@ export default class WardLookup extends Vue {
     }
   }
 
+  /** Load alderman contact information from CSV */
+  private async loadAldersData(): Promise<void> {
+    try {
+      const response = await fetch('/alders-info.csv');
+      const csvText = await response.text();
+
+      // Parse CSV and build a map of ward number -> alder info
+      const lines = csvText.split('\n');
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // Simple CSV parsing (handles quoted fields)
+        const values = this.parseCSVLine(line);
+        if (values.length < 5) continue;
+
+        const office = values[1].trim();
+        // Skip non-ward entries (like "Mayor", "Clerk")
+        if (!office.match(/^\d+$/)) continue;
+
+        this.aldersData.set(office, {
+          name: values[0].replace(/"/g, '').trim(),
+          office,
+          officePhone: values[2].trim(),
+          email: values[4].trim(),
+          website: values[5].trim(),
+        });
+      }
+    } catch (err) {
+      console.error('Failed to load alderman info:', err);
+    }
+  }
+
+  /** Parse a CSV line handling quoted fields */
+  private parseCSVLine(line: string): string[] {
+    const result: string[] = [];
+    let current = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+
+      if (char === '"') {
+        inQuotes = !inQuotes;
+      } else if (char === ',' && !inQuotes) {
+        result.push(current);
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+    result.push(current);
+
+    return result;
+  }
+
+  /** Handle Google Places autocomplete selection */
   private handlePlaceSelected(): void {
     if (!this.autocomplete) return;
 
@@ -148,10 +267,12 @@ export default class WardLookup extends Vue {
     this.findWard(lat, lng);
   }
 
+  /** Find which ward contains the given coordinates */
   private findWard(lat: number, lng: number): void {
     this.loading = true;
     this.error = '';
     this.wardInfo = null;
+    this.alderInfo = null;
 
     if (!this.wardsData) {
       this.error = 'Ward boundary data not loaded. Please refresh the page.';
@@ -166,6 +287,15 @@ export default class WardLookup extends Vue {
       for (const feature of this.wardsData.features) {
         if (booleanPointInPolygon(searchPoint, feature.geometry)) {
           this.wardInfo = feature.properties;
+
+          // Extract ward number from district (e.g., "Ward 6" -> "6")
+          const wardMatch = feature.properties.district.match(/\d+/);
+          if (wardMatch) {
+            const wardNumber = wardMatch[0];
+            // Look up alderman info
+            this.alderInfo = this.aldersData.get(wardNumber) || null;
+          }
+
           this.loading = false;
           return;
         }
@@ -261,6 +391,20 @@ export default class WardLookup extends Vue {
       }
     }
 
+    .alder-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: solid $border-medium $chicago-blue;
+      flex-shrink: 0;
+
+      @media (max-width: $mobile-max-width) {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
     .ward-info {
       flex: 1;
 
@@ -277,11 +421,52 @@ export default class WardLookup extends Vue {
       .alderman-name {
         font-size: 1rem;
         color: $text-main;
+        margin-bottom: 0.75rem;
+      }
+
+      .contact-info {
+        margin-top: 0.75rem;
+        font-size: 0.9rem;
+
+        p {
+          margin: 0.5rem 0;
+        }
+
+        a {
+          color: $link-blue;
+          text-decoration: none;
+
+          &:hover,
+          &:focus {
+            text-decoration: underline;
+          }
+        }
+
+        .email,
+        .phone {
+          strong {
+            display: inline-block;
+            min-width: 4rem;
+          }
+        }
       }
     }
 
-    .blue-link {
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: flex-end;
       flex-shrink: 0;
+
+      @media (max-width: $mobile-max-width) {
+        align-items: flex-start;
+        width: 100%;
+      }
+
+      .blue-link {
+        white-space: nowrap;
+      }
     }
   }
 }
