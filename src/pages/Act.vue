@@ -2,12 +2,14 @@
 import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import ShareButton from '~/components/ShareButton.vue';
+import WardLookup from '~/components/WardLookup.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 @Component<any>({
   components: {
     NewTabIcon,
     ShareButton,
+    WardLookup,
   },
   metaInfo() {
     return generatePageMeta(
@@ -82,29 +84,9 @@ export default class Act extends Vue {}
 
       <ol class="action-steps">
         <li>
-          <strong>Find your alderman</strong> using
-          <a
-            href="https://chicago.councilmatic.org/council-members/"
-            target="_blank"
-            rel="noopener"
-          >
-            Chicago Councilmatic <NewTabIcon />
-          </a>
+          <strong>Find your alderman</strong> by entering your address below:
 
-          <!--
-
-            <p>
-              Enter your address below to find your alderman's contact information:
-            </p>
-
-            <div class="iframe-container">
-              <iframe
-                src="https://chicago.councilmatic.org/council-members"
-                title="Chicago Councilmatic - Find Your Alderman"
-                loading="lazy"
-              ></iframe>
-            </div>
-          -->
+          <WardLookup />
         </li>
 
         <li>
