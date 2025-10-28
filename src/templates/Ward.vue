@@ -252,7 +252,7 @@ query ($ward: String) {
         </g-link>
 
         <section v-if="wardInfo" class="alder-info">
-          <h2>Your Alderperson</h2>
+          <h2>Ward {{ $context.ward }} Alderperson</h2>
 
           <div class="alder-content">
             <img

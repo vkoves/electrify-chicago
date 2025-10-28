@@ -16,7 +16,7 @@
     </div>
 
     <div v-if="wardInfo" class="ward-result">
-      <h3>Your Alderperson</h3>
+      <h3>Your Ward & Alderperson</h3>
       <div class="result-content">
         <img
           v-if="alderImagePath"
@@ -37,20 +37,21 @@
               <strong>Phone:</strong> {{ alderInfo.officePhone }}
             </p>
           </div>
-        </div>
-        <div class="actions">
-          <g-link v-if="wardPagePath" :to="wardPagePath" class="blue-link">
-            View Ward Buildings
-          </g-link>
-          <a
-            :href="`https://chicago.councilmatic.org${wardInfo.detail_link}`"
-            target="_blank"
-            rel="noopener"
-            class="blue-link"
-          >
-            Full Profile On Councilmatic
-            <NewTabIcon :white="true" />
-          </a>
+
+          <div class="actions">
+            <g-link v-if="wardPagePath" :to="wardPagePath" class="blue-link">
+              View Ward Buildings
+            </g-link>
+            <a
+              :href="`https://chicago.councilmatic.org${wardInfo.detail_link}`"
+              target="_blank"
+              rel="noopener"
+              class="grey-link"
+            >
+              Full Profile On Councilmatic
+              <NewTabIcon />
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -473,22 +474,33 @@ export default class WardLookup extends Vue {
           }
         }
       }
-    }
 
-    .actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      align-items: flex-end;
-      flex-shrink: 0;
+      .actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
 
-      @media (max-width: $mobile-max-width) {
-        align-items: flex-start;
-        width: 100%;
-      }
+        @media (max-width: $mobile-max-width) {
+          flex-direction: column;
+        }
 
-      .blue-link {
-        white-space: nowrap;
+        .blue-link,
+        .grey-link {
+          white-space: nowrap;
+        }
+
+        .blue-link {
+          flex: 1;
+        }
+
+        .grey-link {
+          display: inline-flex;
+          align-items: center;
+          color: $link-blue;
+          gap: 0.5rem;
+          font-weight: bold;
+        }
       }
     }
   }
