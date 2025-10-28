@@ -1,6 +1,11 @@
 <template>
   <div class="share-button-container">
-    <button class="action-btn -share" @click="handleShare">
+    <button
+      class="action-btn -share"
+      :class="{ '-with-text': showText }"
+      @click="handleShare"
+    >
+      <span v-if="showText">Share</span>
       <img src="/icons/share.svg" alt="Share" />
     </button>
     <div
@@ -30,6 +35,9 @@ export default class ShareButton extends Vue {
 
   @Prop({ type: String, default: '' })
   url!: string;
+
+  @Prop({ type: Boolean, default: false })
+  showText!: boolean;
 
   showCopyAlert = false;
   copyAlertVisible = false;
@@ -108,6 +116,16 @@ export default class ShareButton extends Vue {
 
     img {
       height: 2rem;
+    }
+
+    &.-with-text {
+      aspect-ratio: auto;
+      padding: 0.5rem 1rem;
+      gap: 0.5rem;
+
+      img {
+        height: 1.5rem;
+      }
     }
   }
 
