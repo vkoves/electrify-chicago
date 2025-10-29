@@ -80,7 +80,7 @@ export default class Act extends Vue {
               <ShareButton
                 title="Take Action - Contact Your Alderperson"
                 text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
-          by contacting your alderperson about funding an inspector position."
+                  by contacting your alderperson about funding an inspector position."
                 :show-text="true"
               />
             </div>
@@ -285,51 +285,22 @@ export default class Act extends Vue {
     margin-top: 2rem;
   }
 
-  .action-steps {
-    font-size: 1.125rem;
-    line-height: 1.6;
-    padding-left: 1.5rem;
-
-    li {
-      margin-bottom: 1rem;
-    }
-
-    ul {
-      font-size: 1rem;
-      margin-top: 0.5rem;
-    }
-  }
-
-  .iframe-container {
-    position: relative;
-    width: 100%;
-    padding-bottom: 75%;
-    margin: 1.5rem 0;
-    border: solid $border-thin $grey;
-    border-radius: $brd-rad-small;
-    overflow: hidden;
-
-    iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-  }
-
   /**
-   * Tablet and Mobile Styling
+   * Tablet and Mobile Styling - switch to one column layout under 1200px
    */
-  @media (max-width: 72rem) {
-    // 1024px
+  @media (max-width: $large-desktop-min-width) {
     .page-grid {
       grid-template-columns: 1fr;
+      max-width: 50rem;
+      margin: auto;
 
       .main-col {
         grid-column: 1;
         grid-row: 1;
+
+        .act-hero {
+          max-height: 20rem;
+        }
       }
 
       .actions-col {
@@ -345,7 +316,7 @@ export default class Act extends Vue {
   }
 
   /**
-  * Mobil Styling
+  * Mobile Styling
    */
   @media (max-width: $mobile-max-width) {
     .act-hero {
@@ -382,15 +353,6 @@ export default class Act extends Vue {
     .share-button-container {
       justify-content: center;
       margin-bottom: 1.5rem;
-    }
-
-    .action-steps {
-      font-size: 1rem;
-      padding-left: 1.25rem;
-    }
-
-    .iframe-container {
-      padding-bottom: 100%;
     }
   }
 }
