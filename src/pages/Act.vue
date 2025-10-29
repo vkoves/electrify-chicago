@@ -63,52 +63,26 @@ export default class Act extends Vue {
             those fines, and get buildings reporting!
           </p>
         </div>
-        <section class="actions">
+        <section class="actions-col">
           <h3>Contact Your Alderperson</h3>
           <p>Enter your address to find your alderperson's contact information</p>
 
-          <WardLookup @ward-found="handleWardFound" />
+          <WardLookup :show-email-cta="true" @ward-found="handleWardFound" />
 
           <div v-if="alderFound" class="additional-steps">
-            <h3>Next Steps</h3>
-            <ol class="action-steps">
-              <li>
-                <strong>Contact them</strong> via email, phone, or in person at a
-                ward meeting
-              </li>
+            <h2>Reached Out To Your Alder? Tell Your Friends!</h2>
 
-              <li>
-                <strong>Tell them:</strong>
-                <ul>
-                  <li>You support enforcing the Energy Benchmarking Ordinance</li>
-                  <li>
-                    To ensure the 2026 budget include funding for an inspector
-                    position in the Department of Environment
-                  </li>
-                  <li>
-                    This will help collect millions in unpaid fines and support
-                    Chicago's climate goals by showing how buildings use energy
-                  </li>
-                </ul>
-              </li>
-
-              <li>
-                <strong>Share this page</strong> with friends, neighbors, and
-                community groups <br />
-
-                <ShareButton
-                  title="Take Action - Contact Your Alderperson"
-                  text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
-            by contacting your alderperson about funding an inspector position."
-                  :show-text="true"
-                />
-              </li>
-            </ol>
+            <ShareButton
+              title="Take Action - Contact Your Alderperson"
+              text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
+        by contacting your alderperson about funding an inspector position."
+              :show-text="true"
+            />
           </div>
         </section>
       </div>
 
-      <section>
+      <section class="supp-details">
         <h2>The Issue - $35 Million in Uncollected Fines</h2>
 
         <p class="constrained">
@@ -176,7 +150,7 @@ export default class Act extends Vue {
       flex-basis: 80%;
     }
 
-    .actions {
+    .actions-col {
       flex: 0 0 35rem;
     }
   }
@@ -226,14 +200,14 @@ export default class Act extends Vue {
     font-size: 1.25rem;
   }
 
-  .actions {
+  .actions-col {
     background: $blue-dark;
     border-radius: $brd-rad-medium;
     padding: 2rem;
     box-shadow: 0 0.25rem 0.5rem $box-shadow-main;
     color: $white;
 
-    h3 {
+    > h3 {
       margin: 0;
       color: $white;
       font-size: 2rem;
@@ -261,21 +235,20 @@ export default class Act extends Vue {
     }
 
     .additional-steps {
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: solid $border-medium rgba(255, 255, 255, 0.3);
-
       h3 {
         margin-bottom: 1rem;
         font-size: 1.5rem;
+      }
+
+      .share-button-container button {
+        border: solid $border-medium $white;
       }
     }
   }
 
   .share-button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 1rem;
+    text-align: center;
+    margin-top: 1rem;
   }
 
   .announce-panel {
@@ -328,7 +301,7 @@ export default class Act extends Vue {
       display: block;
 
       .main-col,
-      .actions {
+      .actions-col {
         flex: none;
         width: 100%;
       }
@@ -352,7 +325,7 @@ export default class Act extends Vue {
       font-size: 1rem;
     }
 
-    .actions {
+    .actions-col {
       padding: 1.5rem;
 
       h3 {
@@ -360,9 +333,6 @@ export default class Act extends Vue {
       }
 
       .additional-steps {
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-
         h3 {
           font-size: 1.25rem;
         }

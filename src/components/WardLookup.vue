@@ -32,29 +32,42 @@
 
           <div v-if="alderInfo && showContactInfo" class="contact-info">
             <p v-if="alderInfo.email" class="email">
-              <strong>Email:</strong>
+              <strong>Email:&nbsp;</strong>
               <a :href="`mailto:${alderInfo.email}`">{{ alderInfo.email }}</a>
             </p>
             <p v-if="alderInfo.officePhone" class="phone">
-              <strong>Phone:</strong> {{ alderInfo.officePhone }}
+              <strong>Phone:&nbsp;</strong>
+              <span>{{ alderInfo.officePhone }}</span>
             </p>
           </div>
 
-          <div class="actions">
-            <g-link v-if="wardPagePath" :to="wardPagePath" class="blue-link">
-              View Ward Buildings
-            </g-link>
-            <a
-              :href="`https://chicago.councilmatic.org${wardInfo.detail_link}`"
-              target="_blank"
-              rel="noopener"
-              class="grey-link"
-            >
-              Full Profile On Councilmatic
-              <NewTabIcon />
-            </a>
+          <div v-if="!showEmailCta" class="actions">
+            <div class="action-links">
+              <g-link v-if="wardPagePath" :to="wardPagePath" class="blue-link">
+                View Ward Buildings
+              </g-link>
+              <a
+                :href="`https://chicago.councilmatic.org${wardInfo.detail_link}`"
+                target="_blank"
+                rel="noopener"
+                class="grey-link"
+              >
+                Full Profile On Councilmatic
+                <NewTabIcon />
+              </a>
+            </div>
           </div>
         </div>
+      </div>
+
+      <div v-if="showEmailCta" class="actions-full-width">
+        <a
+          v-if="alderInfo && alderInfo.email"
+          :href="`mailto:${alderInfo.email}`"
+          class="email-cta"
+        >
+          Email Alderperson {{ alderLastName }}
+        </a>
       </div>
     </div>
   </div>
@@ -113,6 +126,10 @@ export default class WardLookup extends Vue {
   @Prop({ default: true })
   showContactInfo!: boolean;
 
+  /** Whether to show a large "Email Your Alder" CTA button */
+  @Prop({ default: false })
+  showEmailCta!: boolean;
+
   public loading = false;
   public error = '';
   public wardInfo: WardProperties | null = null;
@@ -155,6 +172,19 @@ export default class WardLookup extends Vue {
     const parts = name.split(',').map((part) => part.trim());
     if (parts.length === 2) {
       return `${parts[1]} ${parts[0]}`;
+    }
+    return name; // Return as-is if format is unexpected
+  }
+
+  /** Get just the alder's last name */
+  get alderLastName(): string | null {
+    if (!this.wardInfo) return null;
+
+    const name = this.wardInfo.council_member;
+    // Extract last name (first part before comma)
+    const parts = name.split(',').map((part) => part.trim());
+    if (parts.length >= 1) {
+      return parts[0];
     }
     return name; // Return as-is if format is unexpected
   }
@@ -472,38 +502,96 @@ export default class WardLookup extends Vue {
 
         .email,
         .phone {
+          font-weight: 500;
+
           strong {
             display: inline-block;
-            min-width: 4rem;
+            min-width: 3.5rem;
           }
         }
       }
 
       .actions {
         display: flex;
+        flex-direction: column;
         gap: 1rem;
         margin-top: 1.5rem;
+
+        .action-links {
+          display: flex;
+          gap: 1rem;
+          flex-wrap: wrap;
+
+          @media (max-width: $mobile-max-width) {
+            flex-direction: column;
+          }
+
+          .blue-link,
+          .grey-link {
+            white-space: nowrap;
+          }
+
+          .blue-link {
+            flex: 1;
+          }
+
+          .grey-link {
+            display: inline-flex;
+            align-items: center;
+            color: $link-blue;
+            gap: 0.5rem;
+            font-weight: bold;
+          }
+        }
+      }
+    }
+
+    .actions-full-width {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+
+      .email-cta {
+        display: block;
+        padding: 0.5rem;
+        max-width: 20rem;
+        background: $blue-dark;
+        color: $white;
+        text-align: center;
+        text-decoration: none;
+        font-size: 1.25rem;
+        font-weight: bold;
+        border-radius: $brd-rad-small;
+        transition: background 0.2s ease;
+
+        &:hover,
+        &:focus {
+          background: $blue-very-dark;
+          color: $white;
+        }
+      }
+
+      .secondary-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
         flex-wrap: wrap;
-
-        @media (max-width: $mobile-max-width) {
-          flex-direction: column;
-        }
-
-        .blue-link,
-        .grey-link {
-          white-space: nowrap;
-        }
-
-        .blue-link {
-          flex: 1;
-        }
 
         .grey-link {
           display: inline-flex;
           align-items: center;
-          color: $link-blue;
-          gap: 0.5rem;
-          font-weight: bold;
+          color: $text-light;
+          gap: 0.25rem;
+          text-decoration: none;
+          font-weight: normal;
+
+          &:hover,
+          &:focus {
+            text-decoration: underline;
+            color: $link-blue;
+          }
         }
       }
     }
