@@ -63,9 +63,12 @@ export default class Act extends Vue {
             those fines, and get buildings reporting!
           </p>
         </div>
+
         <section class="actions-col">
           <h3>Contact Your Alderperson</h3>
-          <p>Enter your address to find your alderperson's contact information</p>
+          <p>
+            Enter your address to find your alderperson's contact information
+          </p>
 
           <WardLookup :show-email-cta="true" @ward-found="handleWardFound" />
 
@@ -80,61 +83,67 @@ export default class Act extends Vue {
             />
           </div>
         </section>
+
+        <section class="supp-details">
+          <h2>
+            The Issue: The City Has Failed to Collect $35 Million in Fines
+          </h2>
+
+          <p class="constrained">
+            About 70% of Chicago's greenhouse gas emissions come from buildings.
+            Since 2013, Chicago has had a Building Energy Use Benchmarking
+            Ordinance requiring buildings over 50,000 ft² to report energy usage
+            annually.
+            <strong
+              >However, the city has never enforced this ordinance.</strong
+            >
+          </p>
+
+          <p class="constrained">
+            Over a 5-year period starting in 2018, Chicago failed to collect
+            over
+            <strong>$35 million in fines</strong> (<g-link to="/fines-breakdown"
+              >source</g-link
+            >) from non-compliant buildings—an average of $6 million+ in
+            uncollected fines every year. And compliance is decreasing.
+          </p>
+
+          <h2>The Solution: Hire an Inspector to Enforce Fines!</h2>
+
+          <p class="constrained">
+            Starting January 1, 2025, authority over the ordinance shifted to
+            the Department of Environment. But they cannot legally enforce it
+            without a staff member in the position of "Inspector".
+          </p>
+
+          <p class="constrained">
+            <strong>
+              We need the 2026 city budget to include funding for an inspector
+              to enforce the benchmarking ordinance.
+            </strong>
+            Since an inspector's salary would be only a small fraction of the
+            roughly $6 million in potential fines they could collect annually,
+            this would likely be a net revenue-generating expenditure while
+            increasing accountability and supporting climate action.
+          </p>
+
+          <h2>Learn More</h2>
+
+          <p>
+            For more information, see our
+            <g-link to="/blog/millions-in-missed-fines">
+              analysis of missed fines
+            </g-link>
+            and the
+            <g-link to="/fines-breakdown">year by year fines breakdown</g-link>.
+          </p>
+
+          <p class="constrained">
+            This advocacy effort is led in partnership with the Climate Reality
+            Project's Chicago Metro Chapter.
+          </p>
+        </section>
       </div>
-
-      <section class="supp-details">
-        <h2>The Issue - $35 Million in Uncollected Fines</h2>
-
-        <p class="constrained">
-          About 70% of Chicago's greenhouse gas emissions come from buildings.
-          Since 2013, Chicago has had a Building Energy Use Benchmarking Ordinance
-          requiring buildings over 50,000 ft² to report energy usage annually.
-          <strong>However, the city has never enforced this ordinance.</strong>
-        </p>
-
-        <p class="constrained">
-          Over a 5-year period starting in 2018, Chicago failed to collect over
-          <strong>$35 million in fines</strong> (<g-link to="/fines-breakdown"
-            >source</g-link
-          >) from non-compliant buildings—an average of $6 million+ in uncollected
-          fines every year. And compliance is decreasing.
-        </p>
-
-        <h2>The Solution - Hire an Inspector to Enforce Fines!</h2>
-
-        <p class="constrained">
-          Starting January 1, 2025, authority over the ordinance shifted to the
-          Department of Environment. But they cannot legally enforce it without a
-          staff member in the position of "Inspector".
-        </p>
-
-        <p class="constrained">
-          <strong>
-            We need the 2026 city budget to include funding for an inspector to
-            enforce the benchmarking ordinance.
-          </strong>
-          Since an inspector's salary would be only a small fraction of the
-          roughly $6 million in potential fines they could collect annually, this
-          would likely be a net revenue-generating expenditure while increasing
-          accountability and supporting climate action.
-        </p>
-
-        <h2>Learn More</h2>
-
-        <p>
-          For more information, see our
-          <g-link to="/blog/millions-in-missed-fines">
-            analysis of missed fines
-          </g-link>
-          and the
-          <g-link to="/fines-breakdown">year by year fines breakdown</g-link>.
-        </p>
-
-        <p class="constrained">
-          This advocacy effort is led in partnership with the Climate Reality
-          Project's Chicago Metro Chapter.
-        </p>
-      </section>
     </div>
   </DefaultLayout>
 </template>
@@ -142,16 +151,24 @@ export default class Act extends Vue {
 <style lang="scss">
 .act-page {
   .two-cols {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 35rem;
     gap: 1rem;
-    align-items: flex-start;
+    align-items: start;
 
     .main-col {
-      flex-basis: 80%;
+      grid-column: 1;
+      grid-row: 1;
     }
 
     .actions-col {
-      flex: 0 0 35rem;
+      grid-column: 2;
+      grid-row: 1 / span 2;
+    }
+
+    .supp-details {
+      grid-column: 1;
+      grid-row: 2;
     }
   }
 
@@ -198,6 +215,12 @@ export default class Act extends Vue {
 
   .subtitle {
     font-size: 1.25rem;
+  }
+
+  .supp-details {
+    h2 {
+      margin-top: 0;
+    }
   }
 
   .actions-col {
@@ -296,14 +319,24 @@ export default class Act extends Vue {
   /**
    * Tablet and Mobile Styling
    */
-  @media (max-width: 72rem) { // 1024px
+  @media (max-width: 72rem) {
+    // 1024px
     .two-cols {
-      display: block;
+      grid-template-columns: 1fr;
 
-      .main-col,
+      .main-col {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
       .actions-col {
-        flex: none;
-        width: 100%;
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .supp-details {
+        grid-column: 1;
+        grid-row: 3;
       }
     }
   }

@@ -382,8 +382,13 @@ export default class WardLookup extends Vue {
     gap: 0.5rem;
     margin-bottom: 1rem;
 
-    label { font-size: 0.8125rem; }
-    label, input { font-weight: 500; }
+    label {
+      font-size: 0.8125rem;
+    }
+    label,
+    input {
+      font-weight: 500;
+    }
   }
 
   .address-input {
