@@ -1,10 +1,12 @@
 <template>
   <div class="ward-lookup">
     <div class="search-container">
+      <label for="ward-lookup-addr">Your Chicago Address</label>
       <input
+        id="ward-lookup-addr"
         ref="addressInput"
         type="text"
-        placeholder="Enter your Chicago address..."
+        placeholder="1060 W. Addison St..."
         class="address-input"
       />
     </div>
@@ -320,6 +322,8 @@ export default class WardLookup extends Vue {
           }
 
           this.loading = false;
+          // Emit event when ward is found
+          this.$emit('ward-found', this.wardInfo);
           return;
         }
       }
@@ -344,12 +348,12 @@ export default class WardLookup extends Vue {
 
   .search-container {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
     margin-bottom: 1rem;
 
-    @media (max-width: $mobile-max-width) {
-      flex-direction: column;
-    }
+    label { font-size: 0.8125rem; }
+    label, input { font-weight: 500; }
   }
 
   .address-input {

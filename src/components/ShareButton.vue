@@ -36,6 +36,7 @@ export default class ShareButton extends Vue {
   @Prop({ type: String, default: '' })
   url!: string;
 
+  /** Whether to show the word "Share" or (by default) just an icon */
   @Prop({ type: Boolean, default: false })
   showText!: boolean;
 
