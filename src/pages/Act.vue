@@ -13,6 +13,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
   },
   metaInfo() {
     return generatePageMeta(
+      'act',
       'Take Action to Get Chicago Buildings Reporting Their Energy Use',
       "Support enforcement of Chicago's Building Energy Benchmarking Ordinance by contacting " +
         'your alderperson about funding an inspector position.',
@@ -31,16 +32,16 @@ export default class Act extends Vue {
 <template>
   <DefaultLayout>
     <div class="act-page content-constrained">
-      <div class="two-cols">
+      <div class="page-grid">
         <div class="main-col">
           <div class="act-hero">
             <img
               srcset="
-                /blog/hunter-united-center-still-500p.webp  500w,
-                /blog/hunter-united-center-still.webp      1920w
+                /blog/contact-your-alder-2025/hunter-uc-still-500p.webp  500w,
+                /blog/contact-your-alder-2025/hunter-uc-still.webp      1920w
               "
               sizes="(max-width: 768px) 500px, 1920px"
-              src="/blog/hunter-united-center-still.webp"
+              src="/blog/contact-your-alder-2025/hunter-uc-still.webp"
               alt="Hunter at United Center"
             />
             <div class="hero-overlay">
@@ -152,7 +153,7 @@ export default class Act extends Vue {
 
 <style lang="scss">
 .act-page {
-  .two-cols {
+  .page-grid {
     display: grid;
     grid-template-columns: 1fr 35rem;
     gap: 1rem;
@@ -178,7 +179,7 @@ export default class Act extends Vue {
     position: relative;
     overflow: hidden;
     margin-bottom: 1.5rem;
-    border-radius: $brd-rad-small;
+    border-radius: $brd-rad-medium;
 
     img {
       width: 100%;
@@ -323,7 +324,7 @@ export default class Act extends Vue {
    */
   @media (max-width: 72rem) {
     // 1024px
-    .two-cols {
+    .page-grid {
       grid-template-columns: 1fr;
 
       .main-col {
@@ -343,9 +344,13 @@ export default class Act extends Vue {
     }
   }
 
+  /**
+  * Mobil Styling
+   */
   @media (max-width: $mobile-max-width) {
     .act-hero {
-      margin-bottom: 1rem;
+      margin: -1rem -1rem 1rem -1rem;
+      border-radius: 0;
 
       .hero-overlay {
         padding: 1.5rem 1rem 1rem;
