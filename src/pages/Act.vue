@@ -25,24 +25,78 @@ export default class Act extends Vue {}
 <template>
   <DefaultLayout>
     <div class="act-page layout-constrained">
-      <div class="header-with-share">
-        <div>
-          <h1 id="main-content" tabindex="-1">
-            Take Action to Get Chicago Buildings Reporting Their Energy Use
-          </h1>
-          <p class="subtitle">
-            Large Chicago buildings are using tons of energy, and a 2014 law
-            requires them to submit data to the city, but many haven't been
-            complying, and haven't gotten the fines they're supposed to.
-          </p>
-        </div>
-        <ShareButton
-          title="Take Action - Contact Your Alderperson"
-          text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
-            by contacting your alderperson about funding an inspector position."
-          :show-text="true"
+      <div class="act-hero">
+        <img
+          srcset="
+            /blog/hunter-united-center-still-500p.webp  500w,
+            /blog/hunter-united-center-still.webp      1920w
+          "
+          sizes="(max-width: 768px) 500px, 1920px"
+          src="/blog/hunter-united-center-still.webp"
+          alt="Hunter at United Center"
         />
+        <div class="hero-overlay">
+          <h1 id="main-content" tabindex="-1">
+            <span class="large">Email Your Alder</span> <br />
+            To Get Chicago Buildings To Report Their Energy Use
+          </h1>
+        </div>
       </div>
+
+      <p class="subtitle">
+        Many of Chicago's largest buildings are ignoring a 2014 city law that
+        requires them to report their energy usage,
+        <em>with no accountability</em>. So far the city has missed out on
+        <strong>$35 million in unrealized fines</strong>.
+      </p>
+
+      <p class="subtitle">
+        Contact your alder and tell them enough is enough - let's collect those
+        fines, and get buildings reporting!
+      </p>
+
+      <section class="actions">
+        <ol class="action-steps">
+          <li>
+            <strong>Find your alderperson</strong> by entering your address
+            below:
+
+            <WardLookup />
+          </li>
+
+          <li>
+            <strong>Contact them</strong> via email, phone, or in person at a
+            ward meeting
+          </li>
+
+          <li>
+            <strong>Tell them:</strong>
+            <ul>
+              <li>You support enforcing the Energy Benchmarking Ordinance</li>
+              <li>
+                To ensure the 2026 budget include funding for an inspector
+                position in the Department of Environment
+              </li>
+              <li>
+                This will help collect millions in unpaid fines and support
+                Chicago's climate goals by showing how buildings use energy
+              </li>
+            </ul>
+          </li>
+
+          <li>
+            <strong>Share this page</strong> with friends, neighbors, and
+            community groups <br />
+
+            <ShareButton
+              title="Take Action - Contact Your Alderperson"
+              text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
+          by contacting your alderperson about funding an inspector position."
+              :show-text="true"
+            />
+          </li>
+        </ol>
+      </section>
 
       <h2>The Issue - $35 Million in Uncollected Fines</h2>
 
@@ -65,8 +119,8 @@ export default class Act extends Vue {}
 
       <p class="constrained">
         Starting January 1, 2025, authority over the ordinance shifted to the
-        Department of Environment. But they cannot enforce it without a staff
-        member in the position of "Inspector."
+        Department of Environment. But they cannot legally enforce it without a
+        staff member in the position of "Inspector".
       </p>
 
       <p class="constrained">
@@ -79,48 +133,6 @@ export default class Act extends Vue {}
         would likely be a net revenue-generating expenditure while increasing
         accountability and supporting climate action.
       </p>
-
-      <h2>How You Can Help - Contact Your Alderperson</h2>
-
-      <ol class="action-steps">
-        <li>
-          <strong>Find your alderperson</strong> by entering your address below:
-
-          <WardLookup />
-        </li>
-
-        <li>
-          <strong>Contact them</strong> via email, phone, or in person at a ward
-          meeting
-        </li>
-
-        <li>
-          <strong>Tell them:</strong>
-          <ul>
-            <li>You support enforcing the Energy Benchmarking Ordinance</li>
-            <li>
-              To ensure the 2026 budget include funding for an inspector
-              position in the Department of Environment
-            </li>
-            <li>
-              This will help collect millions in unpaid fines and support
-              Chicago's climate goals by showing how buildings use energy
-            </li>
-          </ul>
-        </li>
-
-        <li>
-          <strong>Share this page</strong> with friends, neighbors, and
-          community groups <br />
-
-          <ShareButton
-            title="Take Action - Contact Your Alderperson"
-            text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
-              by contacting your alderperson about funding an inspector position."
-            :show-text="true"
-          />
-        </li>
-      </ol>
 
       <h2>Learn More</h2>
 
@@ -143,25 +155,55 @@ export default class Act extends Vue {}
 
 <style lang="scss">
 .act-page {
-  .header-with-share {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
+  .act-hero {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border-radius: $brd-rad-small;
 
-    .share-button-container {
-      flex-shrink: 0;
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+      filter: brightness(75%);
     }
-  }
 
-  h1 {
-    margin-bottom: 0;
+    .hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0.85) 0%,
+        rgba(0, 0, 0, 0.4) 50%,
+        transparent 100%
+      );
+      padding: 3rem;
+      color: white;
+
+      h1 {
+        margin: 0 0 0.5rem 0;
+        font-weight: 500;
+        font-size: 1.75rem;
+        text-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.5);
+
+        .large {
+          font-size: 1.25em;
+          font-weight: bold;
+        }
+      }
+    }
   }
 
   .subtitle {
     font-size: 1.25rem;
-    font-weight: 500;
-    margin-top: 0;
+  }
+
+  .share-button-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
   }
 
   .announce-panel {
@@ -206,9 +248,25 @@ export default class Act extends Vue {}
   }
 
   @media (max-width: $mobile-max-width) {
-    .header-with-share {
-      flex-direction: column;
-      align-items: flex-start;
+    .act-hero {
+      margin-bottom: 1rem;
+
+      .hero-overlay {
+        padding: 1.5rem 1rem 1rem;
+
+        h1 {
+          font-size: 1.125rem;
+        }
+      }
+    }
+
+    .subtitle {
+      font-size: 1rem;
+    }
+
+    .share-button-container {
+      justify-content: center;
+      margin-bottom: 1.5rem;
     }
 
     .action-steps {
