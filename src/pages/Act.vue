@@ -24,79 +24,82 @@ export default class Act extends Vue {}
 
 <template>
   <DefaultLayout>
-    <div class="act-page layout-constrained">
-      <div class="act-hero">
-        <img
-          srcset="
-            /blog/hunter-united-center-still-500p.webp  500w,
-            /blog/hunter-united-center-still.webp      1920w
-          "
-          sizes="(max-width: 768px) 500px, 1920px"
-          src="/blog/hunter-united-center-still.webp"
-          alt="Hunter at United Center"
-        />
-        <div class="hero-overlay">
-          <h1 id="main-content" tabindex="-1">
-            <span class="large">Email Your Alder</span> <br />
-            To Get Chicago Buildings To Report Their Energy Use
-          </h1>
-        </div>
-      </div>
-
-      <p class="subtitle">
-        Many of Chicago's largest buildings are ignoring a 2014 city law that
-        requires them to report their energy usage,
-        <em>with no accountability</em>. So far the city has missed out on
-        <strong>$35 million in unrealized fines</strong>.
-      </p>
-
-      <p class="subtitle">
-        Contact your alder and tell them enough is enough - let's collect those
-        fines, and get buildings reporting!
-      </p>
-
-      <section class="actions">
-        <ol class="action-steps">
-          <li>
-            <strong>Find your alderperson</strong> by entering your address
-            below:
-
-            <WardLookup />
-          </li>
-
-          <li>
-            <strong>Contact them</strong> via email, phone, or in person at a
-            ward meeting
-          </li>
-
-          <li>
-            <strong>Tell them:</strong>
-            <ul>
-              <li>You support enforcing the Energy Benchmarking Ordinance</li>
-              <li>
-                To ensure the 2026 budget include funding for an inspector
-                position in the Department of Environment
-              </li>
-              <li>
-                This will help collect millions in unpaid fines and support
-                Chicago's climate goals by showing how buildings use energy
-              </li>
-            </ul>
-          </li>
-
-          <li>
-            <strong>Share this page</strong> with friends, neighbors, and
-            community groups <br />
-
-            <ShareButton
-              title="Take Action - Contact Your Alderperson"
-              text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
-          by contacting your alderperson about funding an inspector position."
-              :show-text="true"
+    <div class="act-page content-constrained">
+      <div class="two-cols">
+        <div class="main-col">
+          <div class="act-hero">
+            <img
+              srcset="
+                /blog/hunter-united-center-still-500p.webp  500w,
+                /blog/hunter-united-center-still.webp      1920w
+              "
+              sizes="(max-width: 768px) 500px, 1920px"
+              src="/blog/hunter-united-center-still.webp"
+              alt="Hunter at United Center"
             />
-          </li>
-        </ol>
-      </section>
+            <div class="hero-overlay">
+              <h1 id="main-content" tabindex="-1">
+                <span class="large">Email Your Alder</span> <br />
+                To Get Chicago Buildings To Report Their Energy Use
+              </h1>
+            </div>
+          </div>
+
+          <p class="subtitle">
+            Many of Chicago's largest buildings are ignoring a 2014 city law
+            that requires them to report their energy usage,
+            <em>with no accountability</em>. So far the city has missed out on
+            <strong>$35 million in unrealized fines</strong>.
+          </p>
+
+          <p class="subtitle">
+            Contact your alder and tell them enough is enough - let's collect
+            those fines, and get buildings reporting!
+          </p>
+        </div>
+        <section class="actions">
+          <ol class="action-steps">
+            <li>
+              <strong>Find your alderperson</strong> by entering your address
+              below:
+
+              <WardLookup />
+            </li>
+
+            <li>
+              <strong>Contact them</strong> via email, phone, or in person at a
+              ward meeting
+            </li>
+
+            <li>
+              <strong>Tell them:</strong>
+              <ul>
+                <li>You support enforcing the Energy Benchmarking Ordinance</li>
+                <li>
+                  To ensure the 2026 budget include funding for an inspector
+                  position in the Department of Environment
+                </li>
+                <li>
+                  This will help collect millions in unpaid fines and support
+                  Chicago's climate goals by showing how buildings use energy
+                </li>
+              </ul>
+            </li>
+
+            <li>
+              <strong>Share this page</strong> with friends, neighbors, and
+              community groups <br />
+
+              <ShareButton
+                title="Take Action - Contact Your Alderperson"
+                text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
+          by contacting your alderperson about funding an inspector position."
+                :show-text="true"
+              />
+            </li>
+          </ol>
+        </section>
+      </div>
 
       <h2>The Issue - $35 Million in Uncollected Fines</h2>
 
@@ -155,6 +158,13 @@ export default class Act extends Vue {}
 
 <style lang="scss">
 .act-page {
+  .two-cols {
+    display: flex;
+    gap: 1rem;
+
+    .main-col { flex-basis: 80%; }
+  }
+
   .act-hero {
     position: relative;
     overflow: hidden;
@@ -247,7 +257,14 @@ export default class Act extends Vue {}
     }
   }
 
+  /**
+   * Mobile Styling
+   */
   @media (max-width: $mobile-max-width) {
+    .two-cols {
+      display: block;
+    }
+
     .act-hero {
       margin-bottom: 1rem;
 
