@@ -17,59 +17,65 @@
       {{ error }}
     </div>
 
-    <div v-if="wardInfo" class="ward-result">
-      <h3>Your Ward & Alderperson</h3>
-      <div class="result-content">
-        <img
-          v-if="alderImagePath"
-          :src="alderImagePath"
-          :alt="alderFormattedName"
-          class="alder-photo"
-        />
-        <div class="ward-info">
-          <p class="ward-number">{{ wardInfo.district }}</p>
-          <p class="alder-name">{{ alderFormattedName }}</p>
+    <transition name="slide-fade" mode="out-in">
+      <div v-if="wardInfo" :key="wardInfo.district" class="ward-result">
+        <h3>Your Ward & Alderperson</h3>
+        <div class="result-content">
+          <img
+            v-if="alderImagePath"
+            :src="alderImagePath"
+            :alt="alderFormattedName"
+            class="alder-photo"
+          />
+          <div class="ward-info">
+            <p class="ward-number">{{ wardInfo.district }}</p>
+            <p class="alder-name">{{ alderFormattedName }}</p>
 
-          <div v-if="alderInfo && showContactInfo" class="contact-info">
-            <p v-if="alderInfo.email" class="email">
-              <strong>Email:&nbsp;</strong>
-              <a :href="`mailto:${alderInfo.email}`">{{ alderInfo.email }}</a>
-            </p>
-            <p v-if="alderInfo.officePhone" class="phone">
-              <strong>Phone:&nbsp;</strong>
-              <span>{{ alderInfo.officePhone }}</span>
-            </p>
-          </div>
+            <div v-if="alderInfo && showContactInfo" class="contact-info">
+              <p v-if="alderInfo.email" class="email">
+                <strong>Email:&nbsp;</strong>
+                <a :href="`mailto:${alderInfo.email}`">{{ alderInfo.email }}</a>
+              </p>
+              <p v-if="alderInfo.officePhone" class="phone">
+                <strong>Phone:&nbsp;</strong>
+                <span>{{ alderInfo.officePhone }}</span>
+              </p>
+            </div>
 
-          <div v-if="!showEmailCta" class="actions">
-            <div class="action-links">
-              <g-link v-if="wardPagePath" :to="wardPagePath" class="blue-link">
-                View Ward Buildings
-              </g-link>
-              <a
-                :href="`https://chicago.councilmatic.org${wardInfo.detail_link}`"
-                target="_blank"
-                rel="noopener"
-                class="grey-link"
-              >
-                Full Profile On Councilmatic
-                <NewTabIcon />
-              </a>
+            <div v-if="!showEmailCta" class="actions">
+              <div class="action-links">
+                <g-link
+                  v-if="wardPagePath"
+                  :to="wardPagePath"
+                  class="blue-link"
+                >
+                  View Ward Buildings
+                </g-link>
+                <a
+                  :href="`https://chicago.councilmatic.org${wardInfo.detail_link}`"
+                  target="_blank"
+                  rel="noopener"
+                  class="grey-link"
+                >
+                  Full Profile On Councilmatic
+                  <NewTabIcon />
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div v-if="showEmailCta" class="actions-full-width">
-        <a
-          v-if="alderInfo && alderInfo.email"
-          :href="`mailto:${alderInfo.email}`"
-          class="email-cta"
-        >
-          Email Alderperson {{ alderLastName }}
-        </a>
+        <div v-if="showEmailCta" class="actions-full-width">
+          <a
+            v-if="alderInfo && alderInfo.email"
+            :href="`mailto:${alderInfo.email}`"
+            class="email-cta"
+          >
+            Email Alderperson {{ alderLastName }}
+          </a>
+        </div>
       </div>
-    </div>
+    </transition>
   </div>
 </template>
 

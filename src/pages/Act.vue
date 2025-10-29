@@ -72,16 +72,18 @@ export default class Act extends Vue {
 
           <WardLookup :show-email-cta="true" @ward-found="handleWardFound" />
 
-          <div v-if="alderFound" class="additional-steps">
-            <h2>Reached Out To Your Alder? Tell Your Friends!</h2>
+          <transition name="slide-fade" mode="out-in">
+            <div v-if="alderFound" class="additional-steps">
+              <h2>Reached Out To Your Alder? Tell Your Friends!</h2>
 
-            <ShareButton
-              title="Take Action - Contact Your Alderperson"
-              text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
-        by contacting your alderperson about funding an inspector position."
-              :show-text="true"
-            />
-          </div>
+              <ShareButton
+                title="Take Action - Contact Your Alderperson"
+                text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
+          by contacting your alderperson about funding an inspector position."
+                :show-text="true"
+              />
+            </div>
+          </transition>
         </section>
 
         <section class="supp-details">
@@ -196,7 +198,7 @@ export default class Act extends Vue {
         rgba(0, 0, 0, 0.4) 50%,
         transparent 100%
       );
-      padding: 3rem;
+      padding: 3rem 3rem 1rem 3rem;
       color: white;
 
       h1 {
