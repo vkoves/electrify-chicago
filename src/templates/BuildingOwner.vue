@@ -16,8 +16,6 @@ import {
 import {
   BuildingOwners,
   IBuildingOwner,
-  BuildingsCustomInfo,
-  IBuildingCustomInfo,
 } from '../constants/buildings-custom-info.constant.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
@@ -58,7 +56,7 @@ export default class BiggestBuildings extends Vue {
     BuildingBenchmarkStats;
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
   readonly $context!: { ownerId: string };
 
   currOwner?: IBuildingOwner;
@@ -82,28 +80,10 @@ export default class BiggestBuildings extends Vue {
     if (BuildingOwners[ownerId]) {
       this.currOwner = BuildingOwners[ownerId];
 
-      this.filterBuildings(ownerId);
+      // Buildings are pre-filtered by GraphQL query using Owner field
+      this.buildingsFiltered = this.$page.allBuilding.edges;
       this.calculateOwnedBuildingStats();
     }
-  }
-
-  filterBuildings(ownerId: string): void {
-    // Loop through BuildingsCustomInfo to get the IDs of buildings we are looking for
-    const ownerBuildingsSlugs: Array<string> = Object.entries(
-      BuildingsCustomInfo,
-    )
-      .filter(([, buildingInfo]: [string, IBuildingCustomInfo]) => {
-        return buildingInfo.owner === ownerId;
-      })
-      .map(([buildingID]: [string, IBuildingCustomInfo]) => buildingID);
-
-    this.buildingsFiltered = this.$static.allBuilding.edges.filter(
-      (buildingEdge: IBuildingEdge) => {
-        return ownerBuildingsSlugs.some(
-          (ownedBuildingID) => buildingEdge.node.ID === ownedBuildingID,
-        );
-      },
-    );
   }
 
   calculateOwnedBuildingStats(): void {
@@ -160,14 +140,10 @@ export default class BiggestBuildings extends Vue {
 }
 </script>
 
-<!--
-  This page grabs all buildings and then filters by owner on the client-side, since that data isn't
-  baked into the actual building CSV
--->
-<static-query>
-  query {
-    # BuildingOwner page only needs core BuildingsTable fields (no conditional fields)
-    allBuilding(sortBy: "GHGIntensity") {
+<!-- Buildings are filtered by owner at query time using the Owner field -->
+<page-query>
+  query($ownerId: String!) {
+    allBuilding(filter: { Owner: { eq: $ownerId } }, sortBy: "GHGIntensity") {
       edges {
         node {
           slugSource
@@ -191,11 +167,12 @@ export default class BiggestBuildings extends Vue {
           GrossFloorAreaRank
           GrossFloorAreaPercentileRank
           YearBuilt
+          Owner
         }
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">

@@ -18,11 +18,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { IBuilding } from '../../common-functions.vue';
-import {
-  IBuildingOwner,
-  BuildingsCustomInfo,
-  IBuildingCustomInfo,
-} from '../../constants/buildings-custom-info.constant.vue';
+import { IBuildingOwner } from '../../constants/buildings-custom-info.constant.vue';
+import buildingOwnersMapping from '../../constants/building-owners-mapping.json';
 import BaseSocialCard from './BaseSocialCard.vue';
 
 /**
@@ -59,12 +56,9 @@ export default class OwnerSocialCard extends Vue {
     const allBuildings = this.$page.allBuilding.edges.map((edge) => edge.node);
     const ownerId = this.owner.key;
 
-    // Filter buildings by owner ID using BuildingsCustomInfo
-    const ownerBuildingIds = Object.entries(BuildingsCustomInfo)
-      .filter(([, buildingInfo]: [string, IBuildingCustomInfo]) => {
-        return buildingInfo.owner === ownerId;
-      })
-      .map(([buildingId]: [string, IBuildingCustomInfo]) => buildingId);
+    // Get building IDs for this owner from the mapping
+    const ownerBuildingIds =
+      (buildingOwnersMapping as Record<string, string[]>)[ownerId] || [];
 
     const ownerBuildings = allBuildings.filter((building) => {
       return ownerBuildingIds.includes(String(building.ID));
