@@ -211,7 +211,7 @@ export default class WardLookup extends Vue {
   async mounted(): Promise<void> {
     await Promise.all([
       this.loadGoogleMaps(),
-      this.loadWardsData(),
+      this.loadWardBoundaries(),
       this.loadAldersData(),
     ]);
 
@@ -263,7 +263,7 @@ export default class WardLookup extends Vue {
   }
 
   /** Load ward boundary GeoJSON data */
-  private async loadWardsData(): Promise<void> {
+  private async loadWardBoundaries(): Promise<void> {
     try {
       const response = await fetch('/chicago-wards-2025.geojson');
       this.wardsData = (await response.json()) as WardsGeoJSON;
@@ -292,7 +292,11 @@ export default class WardLookup extends Vue {
         // Skip non-ward entries (like "Mayor", "Clerk")
         if (!office.match(/^\d+$/)) continue;
 
-        this.aldersData.set(office, {
+        // Normalize ward number by converting to integer and back to string
+        // This handles cases where CSV has "04" but we need to match "4"
+        const normalizedWard = parseInt(office, 10).toString();
+
+        this.aldersData.set(normalizedWard, {
           name: values[0].replace(/"/g, '').trim(),
           office,
           officePhone: values[2].trim(),
