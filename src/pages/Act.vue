@@ -22,9 +22,39 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
 })
 export default class Act extends Vue {
   public alderFound = false;
+  public initialWard: string | null = null;
 
-  handleWardFound(): void {
+  mounted(): void {
+    // Check for ward query parameter on mount
+    const urlParams = new URLSearchParams(window.location.search);
+    const wardParam = urlParams.get('ward');
+    if (wardParam) {
+      this.initialWard = wardParam;
+    }
+  }
+
+  /**
+   * Get the current page URL without the ward query param for sharing (we don't want to assume
+   * the recipient is the same ward)
+   */
+  get shareUrl(): string {
+    if (typeof window === 'undefined') return '';
+
+    return window.location.href.split('?')[0];
+  }
+
+  handleWardFound(wardInfo: any): void {
     this.alderFound = true;
+
+    // Extract ward number from district (e.g., "Ward 6" -> "6")
+    const wardMatch = wardInfo.district.match(/\d+/);
+    if (wardMatch) {
+      const wardNumber = wardMatch[0];
+      // Update URL with ward query parameter
+      const url = new URL(window.location.href);
+      url.searchParams.set('ward', wardNumber);
+      window.history.replaceState({}, '', url);
+    }
   }
 }
 </script>
@@ -71,7 +101,11 @@ export default class Act extends Vue {
             Enter your address to find your alderperson's contact information
           </p>
 
-          <WardLookup :show-email-cta="true" @ward-found="handleWardFound" />
+          <WardLookup
+            :show-email-cta="true"
+            :initial-ward="initialWard"
+            @ward-found="handleWardFound"
+          />
 
           <transition name="slide-fade" mode="out-in">
             <div v-if="alderFound" class="additional-steps">
@@ -81,6 +115,7 @@ export default class Act extends Vue {
                 title="Take Action - Contact Your Alderperson"
                 text="Support enforcement of Chicago's Building Energy Benchmarking Ordinance
                   by contacting your alderperson about funding an inspector position."
+                :url="shareUrl"
                 :show-text="true"
               />
             </div>

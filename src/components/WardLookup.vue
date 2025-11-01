@@ -122,6 +122,14 @@ const CHICAGO_BOUNDS = {
   west: -87.940267,
 };
 
+/**
+ * Ward lookup component that allows users to find their ward by address
+ * or displays ward info if an initial ward number is provided.
+ *
+ * @fires ward-found - Emitted when a ward is found (either via address
+ *   lookup or initial ward prop). Passes WardProperties object containing
+ *   the ward's council member name and related information.
+ */
 @Component({
   components: {
     NewTabIcon,
@@ -135,6 +143,10 @@ export default class WardLookup extends Vue {
   /** Whether to show a large "Email Your Alder" CTA button */
   @Prop({ default: false })
   showEmailCta!: boolean;
+
+  /** Optional initial ward number to display on load */
+  @Prop({ default: null })
+  initialWard!: string | null;
 
   public loading = false;
   public error = '';
@@ -202,6 +214,11 @@ export default class WardLookup extends Vue {
       this.loadWardsData(),
       this.loadAldersData(),
     ]);
+
+    // If initial ward is provided, look it up
+    if (this.initialWard) {
+      this.loadWardByNumber(this.initialWard);
+    }
   }
 
   /** Load Google Maps API and initialize autocomplete */
@@ -326,6 +343,29 @@ export default class WardLookup extends Vue {
     const lng = place.geometry.location.lng();
 
     this.findWard(lat, lng);
+  }
+
+  /** Load ward information by ward number */
+  private loadWardByNumber(wardNumber: string): void {
+    if (!this.wardsData) {
+      this.error = 'Ward boundary data not loaded. Please refresh the page.';
+      return;
+    }
+
+    // Find the ward with the matching number
+    for (const feature of this.wardsData.features) {
+      const wardMatch = feature.properties.district.match(/\d+/);
+      if (wardMatch && wardMatch[0] === wardNumber) {
+        this.wardInfo = feature.properties;
+        this.alderInfo = this.aldersData.get(wardNumber) || null;
+        // Emit event when ward is found
+        this.$emit('ward-found', this.wardInfo);
+        return;
+      }
+    }
+
+    // Ward not found
+    this.error = `Ward ${wardNumber} not found.`;
   }
 
   /** Find which ward contains the given coordinates */
