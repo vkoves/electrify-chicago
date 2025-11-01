@@ -83,7 +83,7 @@ export default class Act extends Vue {
           </div>
 
           <p class="subtitle">
-            Many of Chicago's largest buildings are ignoring a 2014 city law
+            Many of Chicago's largest buildings are ignoring a 2013 city law
             that requires them to report their energy usage,
             <em>with no accountability</em>. So far the city has missed out on
             <strong>$35 million in unrealized fines</strong>.
@@ -160,9 +160,9 @@ export default class Act extends Vue {
               to enforce the benchmarking ordinance.
             </strong>
             Since an inspector's salary would be only a small fraction of the
-            roughly $6 million in potential fines they could collect annually,
-            this would likely be a net revenue-generating expenditure while
-            increasing accountability and supporting climate action.
+            several million dollars in potential fines they could collect
+            annually, this would be a net revenue-generating expenditure which
+            would also increase accountability and support climate action.
           </p>
 
           <h2>Learn More</h2>
@@ -179,6 +179,18 @@ export default class Act extends Vue {
           <p class="constrained">
             This advocacy effort is led in partnership with the Climate Reality
             Project's Chicago Metro Chapter.
+
+            <a
+              ref="noopener"
+              href="https://climaterealitychicago.com"
+              target="_blank"
+              class="climate-reality-logo"
+            >
+              <img
+                src="partner-logos/climate-reality-dark.webp"
+                alt="Climate Reality Chicago"
+              />
+            </a>
           </p>
         </section>
       </div>
@@ -253,11 +265,34 @@ export default class Act extends Vue {
 
   .subtitle {
     font-size: 1.25rem;
+    margin: 0;
+
+    + .subtitle {
+      margin-top: 1rem;
+    }
   }
 
   .supp-details {
     h2 {
       margin-top: 0;
+    }
+
+    .climate-reality-logo {
+      display: block;
+      width: 20rem;
+      margin-top: 1rem;
+      padding: 0.5rem;
+      border-radius: $brd-rad-medium;
+      border: solid $border-thick transparent;
+      transition:
+        background-color 0.3s,
+        border-color 0.3s;
+
+      &:hover,
+      &:focus {
+        background-color: $off-white;
+        border-color: $chicago-blue;
+      }
     }
   }
 
@@ -374,7 +409,7 @@ export default class Act extends Vue {
     .actions-col {
       padding: 1.5rem;
 
-      h3 {
+      > h3 {
         font-size: 1.5rem;
       }
 
