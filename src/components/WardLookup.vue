@@ -87,32 +87,14 @@ import { point } from '@turf/helpers';
 import { loadGoogleMaps } from '~/google-maps-loader.vue';
 import { AlderImages } from '~/components/alder-images.constant.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
-
-interface WardProperties {
-  district: string;
-  council_member: string;
-  detail_link: string;
-  select_id: string;
-}
-
-interface WardFeature {
-  type: 'Feature';
-  properties: WardProperties;
-  geometry: any;
-}
-
-interface WardsGeoJSON {
-  type: 'FeatureCollection';
-  features: WardFeature[];
-}
-
-interface AlderInfo {
-  name: string;
-  office: string;
-  officePhone: string;
-  email: string;
-  website: string;
-}
+import {
+  loadAldersData,
+  loadWardBoundaries,
+  formatAlderName,
+  AlderInfo,
+  WardProperties,
+  WardsGeoJSON,
+} from '~/utils/alder-data.vue';
 
 // Chicago city boundaries for biasing Google Places autocomplete results
 const CHICAGO_BOUNDS = {
@@ -184,14 +166,7 @@ export default class WardLookup extends Vue {
   /** Format alder name from "Last, First" to "First Last" */
   get alderFormattedName(): string | null {
     if (!this.wardInfo) return null;
-
-    const name = this.wardInfo.council_member;
-    // Split by comma and reverse the order
-    const parts = name.split(',').map((part) => part.trim());
-    if (parts.length === 2) {
-      return `${parts[1]} ${parts[0]}`;
-    }
-    return name; // Return as-is if format is unexpected
+    return formatAlderName(this.wardInfo.council_member);
   }
 
   /** Get just the alder's last name */
@@ -262,74 +237,14 @@ export default class WardLookup extends Vue {
     }
   }
 
-  /** Load ward boundary GeoJSON data */
+  /** Load ward boundary GeoJSON data using shared utility */
   private async loadWardBoundaries(): Promise<void> {
-    try {
-      const response = await fetch('/chicago-wards-2025.geojson');
-      this.wardsData = (await response.json()) as WardsGeoJSON;
-    } catch (err) {
-      console.error('Failed to load ward boundaries:', err);
-    }
+    this.wardsData = await loadWardBoundaries();
   }
 
-  /** Load alder contact information from CSV */
+  /** Load alder contact information from CSV using shared utility */
   private async loadAldersData(): Promise<void> {
-    try {
-      const response = await fetch('/alders-info.csv');
-      const csvText = await response.text();
-
-      // Parse CSV and build a map of ward number -> alder info
-      const lines = csvText.split('\n');
-      for (let i = 1; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (!line) continue;
-
-        // Simple CSV parsing (handles quoted fields)
-        const values = this.parseCSVLine(line);
-        if (values.length < 5) continue;
-
-        const office = values[1].trim();
-        // Skip non-ward entries (like "Mayor", "Clerk")
-        if (!office.match(/^\d+$/)) continue;
-
-        // Normalize ward number by converting to integer and back to string
-        // This handles cases where CSV has "04" but we need to match "4"
-        const normalizedWard = parseInt(office, 10).toString();
-
-        this.aldersData.set(normalizedWard, {
-          name: values[0].replace(/"/g, '').trim(),
-          office,
-          officePhone: values[2].trim(),
-          email: values[4].trim(),
-          website: values[5].trim(),
-        });
-      }
-    } catch (err) {
-      console.error('Failed to load alder info:', err);
-    }
-  }
-
-  /** Parse a CSV line handling quoted fields */
-  private parseCSVLine(line: string): string[] {
-    const result: string[] = [];
-    let current = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i];
-
-      if (char === '"') {
-        inQuotes = !inQuotes;
-      } else if (char === ',' && !inQuotes) {
-        result.push(current);
-        current = '';
-      } else {
-        current += char;
-      }
-    }
-    result.push(current);
-
-    return result;
+    this.aldersData = await loadAldersData();
   }
 
   /** Handle Google Places autocomplete selection */
@@ -424,8 +339,6 @@ export default class WardLookup extends Vue {
 
 <style lang="scss">
 .ward-lookup {
-  margin: 2rem 0;
-
   .search-container {
     display: flex;
     flex-direction: column;
@@ -522,7 +435,7 @@ export default class WardLookup extends Vue {
       flex: 1;
 
       p {
-        margin: 0.25rem 0;
+        margin: 0;
       }
 
       .ward-number {
@@ -532,8 +445,9 @@ export default class WardLookup extends Vue {
       }
 
       .alder-name {
-        font-size: 1rem;
+        font-size: 1.25rem;
         color: $text-main;
+        font-weight: bold;
         margin-bottom: 0.75rem;
       }
 

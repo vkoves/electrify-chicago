@@ -13,27 +13,15 @@ import {
 } from '../common-functions.vue';
 import { BuildingOwners } from '../constants/buildings-custom-info.constant.vue';
 import { AlderImages } from '~/components/alder-images.constant.vue';
+import { WardCouncilMembers } from '~/constants/ward-council-members.constant.vue';
+import {
+  loadAldersData,
+  formatAlderName,
+  AlderInfo,
+} from '~/utils/alder-data.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import NewTabIcon from '../components/NewTabIcon.vue';
-
-interface WardProperties {
-  district: string;
-  council_member: string;
-  detail_link: string;
-  select_id: string;
-}
-
-interface WardFeature {
-  type: 'Feature';
-  properties: WardProperties;
-  geometry: any;
-}
-
-interface WardsGeoJSON {
-  type: 'FeatureCollection';
-  features: WardFeature[];
-}
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -73,12 +61,10 @@ export default class BiggestBuildings extends Vue {
   avgBuildingAge?: string;
   gradeDistributionPie: Array<IPieSlice> = [];
 
-  wardInfo: WardProperties | null = null;
+  alderInfo: AlderInfo | null = null;
 
   /** Get the image path for the current alderperson */
   get alderImagePath(): string | null {
-    if (!this.wardInfo) return null;
-
     const wardNumber = this.$context.ward;
     const filename = AlderImages[wardNumber];
     return filename ? `/alders/${filename}` : null;
@@ -86,21 +72,25 @@ export default class BiggestBuildings extends Vue {
 
   /** Get the full Councilmatic URL for the alderperson */
   get alderCouncilmaticUrl(): string | null {
-    if (!this.wardInfo) return null;
-    return `https://chicago.councilmatic.org${this.wardInfo.detail_link}`;
+    const wardData = WardCouncilMembers[this.$context.ward];
+    if (!wardData) return null;
+    return `https://chicago.councilmatic.org${wardData.detailLink}`;
   }
 
-  /** Format alder name from "Last, First" to "First Last" */
+  /** Get the alderperson's name formatted as "First Last" */
   get alderFormattedName(): string | null {
-    if (!this.wardInfo) return null;
-
-    const name = this.wardInfo.council_member;
-    // Split by comma and reverse the order
-    const parts = name.split(',').map((part) => part.trim());
-    if (parts.length === 2) {
-      return `${parts[1]} ${parts[0]}`;
+    // Try to get name from CSV first (which may already be formatted)
+    if (this.alderInfo?.name) {
+      return this.alderInfo.name;
     }
-    return name; // Return as-is if format is unexpected
+
+    // Fall back to council member from constant and format it
+    const wardData = WardCouncilMembers[this.$context.ward];
+    if (wardData) {
+      return formatAlderName(wardData.councilMember);
+    }
+
+    return null;
   }
 
   created(): void {
@@ -108,27 +98,13 @@ export default class BiggestBuildings extends Vue {
   }
 
   async mounted(): Promise<void> {
-    await this.loadWardInfo();
+    await this.loadAlderInfo();
   }
 
-  /** Load ward and alder information from GeoJSON */
-  async loadWardInfo(): Promise<void> {
-    try {
-      const response = await fetch('/chicago-wards-2025.geojson');
-      const wardsData = (await response.json()) as WardsGeoJSON;
-
-      // Find the ward that matches the current context
-      const wardFeature = wardsData.features.find(
-        (feature) =>
-          feature.properties.district === `Ward ${this.$context.ward}`,
-      );
-
-      if (wardFeature) {
-        this.wardInfo = wardFeature.properties;
-      }
-    } catch (err) {
-      console.error('Failed to load ward information:', err);
-    }
+  /** Load alderperson information for this ward */
+  async loadAlderInfo(): Promise<void> {
+    const aldersData = await loadAldersData();
+    this.alderInfo = aldersData.get(this.$context.ward) || null;
   }
 
   calculateWardStats(): void {
@@ -251,7 +227,7 @@ query ($ward: String) {
           Back to All Wards
         </g-link>
 
-        <section v-if="wardInfo" class="alder-info">
+        <section v-if="alderInfo" class="alder-info">
           <h2>Ward {{ $context.ward }} Alderperson</h2>
 
           <div class="alder-content">

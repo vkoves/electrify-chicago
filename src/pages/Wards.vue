@@ -46,10 +46,10 @@ export default class Wards extends Vue {
         </div>
       </BuildingsHero>
 
-      <div class="layout-constrained">
+      <div class="layout-constrained -padded">
         <section class="ward-lookup-section">
           <h2>Don't Know Your Ward?</h2>
-          <p>Enter your Chicago address to find your ward and alder:</p>
+          <p>Enter your address to find your ward and alder</p>
           <WardLookup :show-contact-info="false" />
         </section>
 
@@ -77,7 +77,7 @@ export default class Wards extends Vue {
 
   .ward-lookup-section {
     margin: 2rem 0;
-    padding: 2rem;
+    padding: 1rem 2rem;
     background: $off-white;
     border: solid $border-medium $chicago-blue;
     border-radius: $brd-rad-medium;

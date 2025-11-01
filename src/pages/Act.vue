@@ -376,6 +376,7 @@ export default class Act extends Vue {
       .actions-col {
         grid-column: 1;
         grid-row: 2;
+        margin: 1rem 0;
       }
 
       .supp-details {
