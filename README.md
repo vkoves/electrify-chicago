@@ -278,6 +278,24 @@ If you want to run Python scripts or Jupyter notebooks locally outside of Docker
 
 ## Managing The Data
 
+### Alderperson Data
+
+The site uses alderperson contact and ward information from two sources:
+
+**Alderperson Contact Information** (`static/alders-info.csv`):
+
+- **Source:** City of Chicago City Clerk Legislative Members page
+- **URL:** https://chicityclerkelms.chicago.gov/Legislative-Members
+
+**Ward Boundaries** (`static/chicago-wards-2025.geojson`):
+
+- **Source:** Chicago Councilmatic
+- **URL:** https://chicago.councilmatic.org/
+
+Chat with Derek Eder on getting new data.
+
+- **Note:** The GeoJSON (450KB) is used for geographic lookups. The constant file provides lightweight access to basic ward info without loading the full GeoJSON.
+
 ### Adding a Building Owner
 
 If there's a new large building owner to add, simply:
