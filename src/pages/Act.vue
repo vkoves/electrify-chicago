@@ -5,6 +5,7 @@ import ShareButton from '~/components/ShareButton.vue';
 import WardLookup from '~/components/WardLookup.vue';
 import EmailModal from '~/components/EmailModal.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
+import { AlderEmailContent } from '../constants/alder-email-content.constant.vue';
 
 @Component<any>({
   components: {
@@ -28,6 +29,18 @@ export default class Act extends Vue {
   public isEmailModalOpen = false;
   public alderEmail = '';
   public alderLastName = '';
+
+  // Expose constants for template
+  readonly emailSubject = AlderEmailContent.subject;
+  readonly emailBodyParagraphs = AlderEmailContent.bodyParagraphs;
+
+  get emailGreeting(): string {
+    return AlderEmailContent.getGreeting(this.alderLastName);
+  }
+
+  get emailClosing(): string {
+    return AlderEmailContent.getClosing();
+  }
 
   mounted(): void {
     // Check for ward query parameter on mount
@@ -211,44 +224,14 @@ export default class Act extends Vue {
         v-if="isEmailModalOpen"
         title="Email Your Alderperson"
         :recipient-email="alderEmail"
-        subject="Supporting An Inspector to Enforce Energy Benchmarking"
+        :subject="emailSubject"
         @close="isEmailModalOpen = false"
       >
-        <p>Alderperson {{ alderLastName }},</p>
-        <p>
-          I'm writing to ask you to support an inspector position to enforce
-          Chicago's Building Energy Use Benchmarking Ordinance.
+        <p>{{ emailGreeting }}</p>
+        <p v-for="(paragraph, index) in emailBodyParagraphs" :key="index">
+          {{ paragraph }}
         </p>
-        <p>
-          In 2013, Chicago passed the first-in-the-nation Building Energy Use
-          Benchmarking Ordinance. It requires buildings over 50,000 square feet
-          to annually report energy usage data. But the city has never enforced that ordinance.
-        </p>
-        <p>
-          According to Electrify Chicago
-          (https://electrifychicago.net/fines-breakdown), over Chicago has failed to collect over
-          $35 million in fines for buildings that didn't comply with the reporting
-          requirement over just the past six years. That averages to nearly $6 million in
-          uncollected fines every year, and compliance is decreasing.
-        </p>
-        <p>
-          Starting January 1, 2025, authority over the ordinance shifted to the Department of
-          Environment. But they cannot enforce it without a staff member in the position of
-          "Inspector."
-        </p>
-        <p>
-          Climate Reality Project's Chicago Metro Chapter & Electrify Chicago advocates including
-          funding in the city's 2026 budget to hire an inspector who can enforce
-          the benchmarking ordinance. Since an inspector's salary would be only a small fraction of
-          the nearly $6 million in potential fines they could collect annually, we
-          expect it to be a revenue-generating expenditure in coming years.
-          Enforcing the ordinance would also increase accountability and support voluntary climate
-          action in buildings.
-        </p>
-        <p>
-          Thank you for your attention to this important matter.
-        </p>
-        <p>Your constituent,</p>
+        <p>{{ emailClosing }}</p>
       </email-modal>
     </div>
   </DefaultLayout>

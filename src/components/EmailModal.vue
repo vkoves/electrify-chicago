@@ -171,7 +171,9 @@ dialog.email-modal {
     margin-bottom: 0.2rem;
     align-items: flex-end;
 
-    &:not(:first-of-type) { margin-top: 1rem; }
+    &:not(:first-of-type) {
+      margin-top: 1rem;
+    }
 
     button.copy-btn {
       background-color: $blue-dark;
