@@ -66,13 +66,13 @@
         </div>
 
         <div v-if="showEmailCta" class="actions-full-width">
-          <a
+          <button
             v-if="alderInfo && alderInfo.email"
-            :href="`mailto:${alderInfo.email}`"
             class="email-cta"
+            @click="handleEmailClick"
           >
             Email Alderperson {{ alderLastName }}
-          </a>
+          </button>
         </div>
       </div>
     </transition>
@@ -111,6 +111,8 @@ const CHICAGO_BOUNDS = {
  * @fires ward-found - Emitted when a ward is found (either via address
  *   lookup or initial ward prop). Passes WardProperties object containing
  *   the ward's council member name and related information.
+ * @fires email-alder - Emitted when user clicks the email button.
+ *   Passes the alderperson's email and last name.
  */
 @Component({
   components: {
@@ -180,6 +182,42 @@ export default class WardLookup extends Vue {
       return parts[0];
     }
     return name; // Return as-is if format is unexpected
+  }
+
+  /** Check if the user is on a mobile device */
+  get isMobile(): boolean {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 768;
+  }
+
+  /** Handle email button click - emit event for desktop, open mailto for mobile */
+  handleEmailClick(): void {
+    if (!this.alderInfo) return;
+
+    if (this.isMobile) {
+      // On mobile, use mailto link to open email app with prefilled content
+      const subject = encodeURIComponent(
+        'Supporting An Inspector to Enforce Energy Benchmarking',
+      );
+      const body = encodeURIComponent(
+        `Alderperson ${this.alderLastName},\n\n` +
+          `I'm writing to ask you to support an inspector position to enforce Chicago's Building Energy Use Benchmarking Ordinance.\n\n` +
+          `In 2013, Chicago passed the first-in-the-nation Building Energy Use Benchmarking Ordinance. It requires buildings over 50,000 square feet to annually report energy usage data.\n\n` +
+          `But the city has never enforced that ordinance.\n\n` +
+          `According to Electrify Chicago (https://electrifychicago.net/fines-breakdown), over a 6-year period starting in 2018, Chicago failed to collect over $35 million in fines for buildings that didn't comply with the reporting requirement. That is, on average, nearly $6 million in uncollected fines every year. And compliance is decreasing.\n\n` +
+          `Starting January 1, 2025, authority over the ordinance shifted from the Department of Business Affairs and Consumer Protection to the Department of Environment. But they cannot enforce it without a staff member in the position of "Inspector."\n\n` +
+          `Climate Reality Project's Chicago Metro Chapter advocates including funding in the city's 2026 budget to hire an inspector who can enforce the benchmarking ordinance.\n\n` +
+          `Since an inspector's salary would be only a small fraction of the nearly $6 million in potential fines they could collect annually, we expect it to be a cost-neutral or, more likely, net revenue-generating expenditure in coming years. Enforcing the ordinance would also increase accountability and support voluntary climate action in buildings.\n\n` +
+          `Your constituent,\n\n`,
+      );
+      window.location.href = `mailto:${this.alderInfo.email}?subject=${subject}&body=${body}`;
+    } else {
+      // On desktop, emit event for parent to show modal
+      this.$emit('email-alder', {
+        email: this.alderInfo.email,
+        lastName: this.alderLastName,
+      });
+    }
   }
 
   /** Initialize the component by loading all required data */
@@ -531,8 +569,10 @@ export default class WardLookup extends Vue {
         text-decoration: none;
         font-size: 1.25rem;
         font-weight: bold;
+        border: none;
         border-radius: $brd-rad-small;
         transition: background 0.2s ease;
+        cursor: pointer;
 
         &:hover,
         &:focus {
