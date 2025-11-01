@@ -75,6 +75,11 @@ def main():
             "module": "src.data.scripts.detect_anomalous_buildings",
             "description": "detect_anomalous_buildings",
         },
+        # New step to detect discrepancy between 'not reporting' and 'Not Covered 2024' submission status
+        {
+            "module": "src.data.scripts.detect_not_covered_discrepancy",
+            "description": "detect_not_covered_discrepancy",
+        },
         {
             "module": "src.data.scripts.generate_historic_stats",
             "description": "generate_historic_stats",
