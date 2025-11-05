@@ -1,5 +1,11 @@
 <script lang="ts">
+import type { Polygon, MultiPolygon } from 'geojson';
+
 export default {};
+
+// Data file paths
+const ALDERS_INFO_CSV_PATH = '/alders-info.csv';
+const WARD_BOUNDARIES_GEOJSON_PATH = '/chicago-wards-2025.geojson';
 
 /** Alderperson contact information from CSV */
 export interface AlderInfo {
@@ -22,7 +28,7 @@ export interface WardProperties {
 export interface WardFeature {
   type: 'Feature';
   properties: WardProperties;
-  geometry: any;
+  geometry: Polygon | MultiPolygon;
 }
 
 /** Full GeoJSON collection of all Chicago wards */
@@ -88,7 +94,7 @@ function parseCSVLine(line: string): string[] {
  */
 export async function loadWardBoundaries(): Promise<WardsGeoJSON | null> {
   try {
-    const response = await fetch('/chicago-wards-2025.geojson');
+    const response = await fetch(WARD_BOUNDARIES_GEOJSON_PATH);
     return (await response.json()) as WardsGeoJSON;
   } catch (err) {
     console.error('Failed to load ward boundaries:', err);
@@ -125,22 +131,21 @@ export async function loadAldersData(): Promise<Map<string, AlderInfo>> {
   const aldersData = new Map<string, AlderInfo>();
 
   try {
-    const response = await fetch('/alders-info.csv');
+    const response = await fetch(ALDERS_INFO_CSV_PATH);
     const csvText = await response.text();
 
     // Parse CSV and build a map of ward number -> alder info
     const lines = csvText.split('\n');
+
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
+
       if (!line) continue;
 
-      // Simple CSV parsing (handles quoted fields)
+      // Parse CSV line (handles quoted fields)
       const values = parseCSVLine(line);
-      if (values.length < 5) continue;
 
       const office = values[1].trim();
-      // Skip non-ward entries (like "Mayor", "Clerk")
-      if (!office.match(/^\d+$/)) continue;
 
       // Normalize ward number by converting to integer and back to string
       // This handles cases where CSV has "04" but we need to match "4"

@@ -82,7 +82,6 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
@@ -140,7 +139,7 @@ export default class WardLookup extends Vue {
   public wardInfo: WardProperties | null = null;
   public alderInfo: AlderInfo | null = null;
 
-  private autocomplete: any = null;
+  private autocomplete: google.maps.places.Autocomplete | null = null;
   private wardsData: WardsGeoJSON | null = null;
   private aldersData: Map<string, AlderInfo> = new Map();
 
@@ -246,13 +245,12 @@ export default class WardLookup extends Vue {
       await loadGoogleMaps(apiKey);
 
       // Import the places library
-      const google = (window as any).google;
-      await google.maps.importLibrary('places');
+      await window.google!.maps!.importLibrary!('places');
 
       // Initialize autocomplete on the input
       const input = this.$refs.addressInput as HTMLInputElement;
 
-      this.autocomplete = new google.maps.places.Autocomplete(input, {
+      this.autocomplete = new window.google!.maps!.places!.Autocomplete(input, {
         types: ['address'],
         componentRestrictions: { country: 'us' },
         bounds: CHICAGO_BOUNDS,

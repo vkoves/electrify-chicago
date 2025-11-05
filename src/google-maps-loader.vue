@@ -1,11 +1,23 @@
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export default {};
 
 /**
  * Utility for dynamically loading the Google Maps JavaScript API
  * Based on: https://developers.google.com/maps/documentation/javascript/load-maps-js-api
  */
+
+// Extend the Window interface to include Google Maps types
+declare global {
+  interface Window {
+    google?: {
+      maps?: {
+        __ib__?: () => void;
+        importLibrary?: (libraryName: string) => Promise<unknown>;
+        [key: string]: unknown;
+      };
+    };
+  }
+}
 
 /**
  * Load the Google Maps JavaScript API dynamically
@@ -14,7 +26,7 @@ export default {};
  */
 export async function loadGoogleMaps(apiKey: string): Promise<void> {
   // Check if already loaded
-  if ((window as any).google?.maps) {
+  if (window.google?.maps) {
     return;
   }
 
@@ -24,7 +36,7 @@ export async function loadGoogleMaps(apiKey: string): Promise<void> {
   // Wait for the script to load with polling
   return new Promise((resolve, reject) => {
     const checkInterval = setInterval(() => {
-      if ((window as any).google?.maps) {
+      if (window.google?.maps) {
         clearInterval(checkInterval);
         resolve();
       }
@@ -33,7 +45,7 @@ export async function loadGoogleMaps(apiKey: string): Promise<void> {
     // Timeout after 10 seconds
     setTimeout(() => {
       clearInterval(checkInterval);
-      if (!(window as any).google?.maps) {
+      if (!window.google?.maps) {
         reject(new Error('Google Maps failed to load within 10 seconds'));
       }
     }, 10000);
@@ -45,8 +57,9 @@ export async function loadGoogleMaps(apiKey: string): Promise<void> {
  * This implements Google's dynamic loading pattern
  */
 function injectGoogleMapsLoader(apiKey: string): void {
-  const win = window as any;
-  const google = win.google || (win.google = {});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const google = (window as any).google || ((window as any).google = {});
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const maps = google.maps || (google.maps = {});
   const libraries = new Set<string>();
   const params = new URLSearchParams();
@@ -83,9 +96,10 @@ function injectGoogleMapsLoader(apiKey: string): void {
 
   // Set up importLibrary function if not already present
   if (!maps.importLibrary) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     maps.importLibrary = (libraryName: string): Promise<any> => {
       libraries.add(libraryName);
-      return loadScript().then(() => maps.importLibrary(libraryName));
+      return loadScript().then(() => maps.importLibrary?.(libraryName));
     };
   }
 }
