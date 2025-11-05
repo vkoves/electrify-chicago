@@ -59,7 +59,7 @@ export default class AppHeader extends Vue {
           class="site-logo"
         />
       </g-link>
-
+    
       <button
         class="mobile-menu-toggle -grey mobile-only"
         :aria-expanded="mobileMenuOpen.toString()"
