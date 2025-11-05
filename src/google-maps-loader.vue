@@ -59,7 +59,7 @@ export async function loadGoogleMaps(apiKey: string): Promise<void> {
 function injectGoogleMapsLoader(apiKey: string): void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const google = (window as any).google || ((window as any).google = {});
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   const maps = google.maps || (google.maps = {});
   const libraries = new Set<string>();
   const params = new URLSearchParams();

@@ -139,7 +139,8 @@ export default class WardLookup extends Vue {
   public wardInfo: WardProperties | null = null;
   public alderInfo: AlderInfo | null = null;
 
-  private autocomplete: google.maps.places.Autocomplete | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private autocomplete: any = null;
   private wardsData: WardsGeoJSON | null = null;
   private aldersData: Map<string, AlderInfo> = new Map();
 

@@ -98,20 +98,6 @@ export default class Index extends Vue {
 
 <template>
   <DefaultLayout main-class="layout -full-width">
-    <!-- Take Action Banner - Global Notice -->
-    <div class="data-update-banner">
-      <div class="page-constrained">
-        <div class="content-left">
-          <h2>📣 Take Action to Improve Emissions Reporting!</h2>
-          <p>
-            <strong>$35 million</strong> is already lost from unenforced fines,
-            help Chicago not lose any more.
-          </p>
-        </div>
-        <g-link to="/act"> Contact Your Alderperson </g-link>
-      </div>
-    </div>
-
     <div class="homepage">
       <div class="skyline-hero">
         <div class="background"></div>
@@ -226,7 +212,9 @@ export default class Index extends Vue {
               </p>
 
               <p>
-                <a href="/blog/GHG-Intensity-Predict-Compliance" class="bold grey-link"
+                <a
+                  href="/blog/GHG-Intensity-Predict-Compliance"
+                  class="bold grey-link"
                   >Read Our Full Research</a
                 >
               </p>

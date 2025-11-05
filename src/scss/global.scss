@@ -504,10 +504,19 @@ form.search-form {
  * Data update banner - global notice panel for announcing new data releases
  */
 .data-update-banner {
+  position: relative;
   background: $blue-very-dark;
   padding: 1rem 0;
   box-shadow: 0 0.3125rem 0.25rem $box-shadow-main;
   width: 100%;
+  z-index: 1;
+
+  // Add margin and border-radius for non-full-width layouts
+  .layout:not(.-full-width) & {
+    margin: 0 1rem 2rem;
+    border-radius: $brd-rad-medium;
+    width: calc(100% - 2rem);
+  }
 
   .page-constrained {
     display: flex;

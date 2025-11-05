@@ -363,7 +363,9 @@ export default class Act extends Vue {
     // Override text color for ward lookup results
     .ward-lookup {
       // Override WardLookup focus color for dark background
-      input { outline-color: $white; }
+      input {
+        outline-color: $white;
+      }
 
       .ward-result {
         color: $text-main;
