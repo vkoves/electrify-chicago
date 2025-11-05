@@ -389,12 +389,6 @@ export default class WardLookup extends Vue {
     font-size: 1rem;
     border: solid $border-medium $grey;
     border-radius: $brd-rad-small;
-
-    &:focus {
-      outline: 0.25rem dashed $blue-very-dark;
-      outline-offset: 0.125rem;
-      border-color: $blue-dark;
-    }
   }
 
   .search-button {
@@ -424,9 +418,9 @@ export default class WardLookup extends Vue {
   .ward-result {
     margin-top: 1.5rem;
     padding: 1.5rem;
-    background: $off-white;
-    border: solid $border-medium $chicago-blue;
+    background: $white;
     border-radius: $brd-rad-medium;
+    box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
 
     h3 {
       margin-top: 0;
@@ -533,6 +527,10 @@ export default class WardLookup extends Vue {
           .blue-link,
           .grey-link {
             white-space: nowrap;
+
+            @media (max-width: $mobile-max-width) {
+              white-space: normal;
+            }
           }
 
           .blue-link {
@@ -540,11 +538,12 @@ export default class WardLookup extends Vue {
           }
 
           .grey-link {
-            display: inline-flex;
+            display: inline-block;
             align-items: center;
             color: $link-blue;
             gap: 0.5rem;
             font-weight: bold;
+            line-height: 2;
           }
         }
       }

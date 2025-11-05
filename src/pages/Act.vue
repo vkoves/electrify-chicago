@@ -46,6 +46,7 @@ export default class Act extends Vue {
     // Check for ward query parameter on mount
     const urlParams = new URLSearchParams(window.location.search);
     const wardParam = urlParams.get('ward');
+
     if (wardParam) {
       this.initialWard = wardParam;
     }
@@ -361,6 +362,9 @@ export default class Act extends Vue {
 
     // Override text color for ward lookup results
     .ward-lookup {
+      // Override WardLookup focus color for dark background
+      input { outline-color: $white; }
+
       .ward-result {
         color: $text-main;
 
@@ -382,6 +386,7 @@ export default class Act extends Vue {
 
       .share-button-container button {
         border: solid $border-medium $white;
+        outline-color: $white;
       }
     }
   }

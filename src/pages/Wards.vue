@@ -77,7 +77,7 @@ export default class Wards extends Vue {
 
   .ward-lookup-section {
     margin: 2rem 0;
-    padding: 1rem 2rem;
+    padding: 2rem;
     background: $off-white;
     border: solid $border-medium $chicago-blue;
     border-radius: $brd-rad-medium;
@@ -107,6 +107,12 @@ export default class Wards extends Vue {
       a {
         padding: 0.5rem 1rem;
       }
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    .ward-lookup-section {
+      padding: 1rem;
     }
   }
 }
