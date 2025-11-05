@@ -163,11 +163,11 @@ export default class Act extends Vue {
           </p>
 
           <p class="constrained">
-            Over a 5-year period starting in 2018, Chicago failed to collect
+            Over a 6-year period starting in 2018, Chicago failed to collect
             over
             <strong>$35 million in fines</strong> (<g-link to="/fines-breakdown"
               >source</g-link
-            >) from non-compliant buildings—an average of $6 million+ in
+            >) from non-compliant buildings—an average of over $5.5 million in
             uncollected fines every year. And compliance is decreasing.
           </p>
 
@@ -202,8 +202,13 @@ export default class Act extends Vue {
           </p>
 
           <p class="constrained">
-            This advocacy effort is led in partnership with the Climate Reality
-            Project's Chicago Metro Chapter.
+            This advocacy effort is led in partnership with the
+            <a
+              ref="noopener"
+              href="https://climaterealitychicago.com"
+              target="_blank"
+              >Climate Reality Project's Chicago Metro Chapter</a
+            >.
 
             <a
               ref="noopener"
