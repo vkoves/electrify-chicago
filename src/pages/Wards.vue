@@ -35,7 +35,7 @@ export default class Wards extends Vue {
 <template>
   <DefaultLayout main-class="layout -full-width">
     <div class="wards-page">
-      <BuildingsHero :buildings="[]">
+      <BuildingsHero :buildings="[]" :short="true">
         <div class="layout-constrained">
           <h1 id="main-content" tabindex="-1">Buildings By Ward</h1>
 

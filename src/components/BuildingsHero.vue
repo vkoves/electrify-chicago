@@ -1,5 +1,5 @@
 <template>
-  <div class="buildings-hero">
+  <div class="buildings-hero" :class="{ short: short }">
     <div
       v-if="buildingsWithImages.length > 0"
       class="hero-images"
@@ -46,6 +46,9 @@ export default class BuildingsHero extends Vue {
 
   /** THe number of buildings we should show */
   @Prop({ default: 8 }) buildingsCount!: number;
+
+  /** Whether to use a shorter hero height (14rem instead of 18rem) */
+  @Prop({ default: false }) short!: boolean;
 
   /**
    * Import the getBuildingImage function to use in template
@@ -129,6 +132,17 @@ export default class BuildingsHero extends Vue {
   .hero-skyline img {
     width: 100%;
     height: 18rem; // Same height as building images (aspect-ratio 1/2 * 11.25rem * 4)
+  }
+
+  // Short variant (14rem instead of 18rem)
+  &.short {
+    .hero-images {
+      height: 14rem;
+    }
+
+    .hero-skyline img {
+      height: 14rem;
+    }
   }
 
   .hero-overlay {

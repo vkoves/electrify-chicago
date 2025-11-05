@@ -217,6 +217,7 @@ query ($ward: String) {
     <div class="ward-page">
       <BuildingsHero
         :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
+        :short="true"
       >
         <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
       </BuildingsHero>
@@ -228,8 +229,6 @@ query ($ward: String) {
         </g-link>
 
         <section v-if="alderInfo" class="alder-info">
-          <h2>Ward {{ $context.ward }} Alderperson</h2>
-
           <div class="alder-content">
             <img
               v-if="alderImagePath"
@@ -238,6 +237,7 @@ query ($ward: String) {
               class="alder-photo"
             />
             <div class="alder-details">
+              <h2>Ward {{ $context.ward }} Alderperson</h2>
               <p class="alder-name">{{ alderFormattedName }}</p>
               <a
                 :href="alderCouncilmaticUrl"
@@ -366,15 +366,15 @@ query ($ward: String) {
   }
 
   .alder-info {
-    margin: 2rem 0;
+    margin-top: 1rem;
     padding: 1.5rem;
     background: $off-white;
     border: solid $border-medium $chicago-blue;
     border-radius: $brd-rad-medium;
+    width: fit-content;
 
-    h2 {
-      margin-top: 0;
-      color: $blue-very-dark;
+    @media (max-width: $mobile-max-width) {
+      width: 100%;
     }
 
     .alder-content {
@@ -403,9 +403,15 @@ query ($ward: String) {
     }
 
     .alder-details {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
+      h2 {
+        margin: 0;
+        color: $blue-very-dark;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 0.5rem;
+      }
     }
 
     .alder-name {
