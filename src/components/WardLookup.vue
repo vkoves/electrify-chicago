@@ -535,6 +535,7 @@ export default class WardLookup extends Vue {
           }
 
           .blue-link {
+            margin-top: 0;
             flex: 1;
           }
 
@@ -544,7 +545,7 @@ export default class WardLookup extends Vue {
             color: $link-blue;
             gap: 0.5rem;
             font-weight: bold;
-            line-height: 2;
+            line-height: 2.2;
           }
         }
       }
