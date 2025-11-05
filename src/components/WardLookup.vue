@@ -28,13 +28,15 @@
             class="alder-photo"
           />
           <div class="ward-info">
-            <p class="ward-number">{{ wardInfo.district }}</p>
+            <g-link class="ward-number" :to="wardPagePath">{{
+              wardInfo.district
+            }}</g-link>
             <p class="alder-name">{{ alderFormattedName }}</p>
 
             <div v-if="alderInfo && showContactInfo" class="contact-info">
               <p v-if="alderInfo.email" class="email">
                 <strong>Email:&nbsp;</strong>
-                <a :href="`mailto:${alderInfo.email}`">{{ alderInfo.email }}</a>
+                {{ alderInfo.email }}
               </p>
               <p v-if="alderInfo.officePhone" class="phone">
                 <strong>Phone:&nbsp;</strong>
@@ -471,6 +473,12 @@ export default class WardLookup extends Vue {
         font-size: 1.125rem;
         font-weight: bold;
         color: $blue-very-dark;
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
       }
 
       .alder-name {
