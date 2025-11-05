@@ -218,7 +218,7 @@ export default class Act extends Vue {
               class="climate-reality-logo"
             >
               <img
-                src="partner-logos/climate-reality-dark.webp"
+                src="/partner-logos/climate-reality-dark.webp"
                 alt="Climate Reality Chicago"
               />
             </a>

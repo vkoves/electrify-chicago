@@ -28,16 +28,20 @@ export default class GlobalBanner extends Vue {
   @Prop({ default: () => [] })
   hideOnPaths!: string[];
 
+  /** Track whether to show the banner (reactive) */
+  private isVisible = true;
+
   /** Whether to show the banner on the current page */
   get shouldShow(): boolean {
-    // Check if we're in the browser (not SSR)
-    if (typeof window === 'undefined') return true;
+    return this.isVisible;
+  }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const currentPath = (this as any).$route?.path;
-
-    // Hide if current path matches any in the hideOnPaths array
-    return !this.hideOnPaths.includes(currentPath);
+  mounted(): void {
+    // Check path after mount to ensure we're in the browser
+    if (typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      this.isVisible = !this.hideOnPaths.includes(currentPath);
+    }
   }
 }
 </script>
