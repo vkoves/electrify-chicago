@@ -85,7 +85,7 @@ export default class Act extends Vue {
 </script>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout :skip-banner="true">
     <div class="act-page content-constrained">
       <div class="page-grid">
         <div class="main-col">
