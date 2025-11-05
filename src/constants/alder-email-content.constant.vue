@@ -21,7 +21,7 @@ export const AlderEmailContent = {
       'annually report energy usage data. But the city has never enforced that ordinance.',
 
     'According to Electrify Chicago (https://electrifychicago.net/fines-breakdown), ' +
-      'over Chicago has failed to collect over $35 million in fines for buildings that ' +
+      'Chicago has failed to collect over $35 million in fines for buildings that ' +
       "didn't comply with the reporting requirement over just the past six years. That " +
       'averages to nearly $6 million in uncollected fines every year, and compliance is ' +
       'decreasing.',
@@ -30,13 +30,11 @@ export const AlderEmailContent = {
       'of Environment. But they cannot enforce it without a staff member in the position ' +
       'of "Inspector."',
 
-    "Climate Reality Project's Chicago Metro Chapter & Electrify Chicago advocates " +
+    "Climate Reality Project's Chicago Metro Chapter & Electrify Chicago advocate for " +
       "including funding in the city's 2026 budget to hire an inspector who can enforce " +
-      "the benchmarking ordinance. Since an inspector's salary would be only a small " +
-      'fraction of the nearly $6 million in potential fines they could collect annually, ' +
-      'we expect it to be a revenue-generating expenditure in coming years. Enforcing the ' +
-      'ordinance would also increase accountability and support voluntary climate action ' +
-      'in buildings.',
+      'the benchmarking ordinance. Enforcing the ordinance could bring in millions of dollars of ' +
+      "revenue, increase accountability, and support voluntary climate action in Chicago's big " +
+      'buildings.',
 
     'Thank you for your attention to this important matter.',
   ],
