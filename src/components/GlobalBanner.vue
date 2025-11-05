@@ -1,5 +1,5 @@
 <template>
-  <div v-if="shouldShow" class="global-banner">
+  <div v-show="shouldShow" class="global-banner">
     <div class="page-constrained">
       <div class="content-left">
         <h2>📣 Take Action to Improve Emissions Reporting!</h2>
@@ -28,20 +28,17 @@ export default class GlobalBanner extends Vue {
   @Prop({ default: () => [] })
   hideOnPaths!: string[];
 
-  /** Track whether to show the banner (reactive) */
-  private isVisible = true;
-
   /** Whether to show the banner on the current page */
   get shouldShow(): boolean {
-    return this.isVisible;
-  }
-
-  mounted(): void {
-    // Check path after mount to ensure we're in the browser
-    if (typeof window !== 'undefined') {
-      const currentPath = window.location.pathname;
-      this.isVisible = !this.hideOnPaths.includes(currentPath);
+    // During SSR or before mount, check if we're on a Gridsome static page
+    if (typeof window === 'undefined') {
+      // During SSR, default to showing (will be handled client-side)
+      return true;
     }
+
+    // In the browser, use the actual current path
+    const currentPath = window.location.pathname;
+    return !this.hideOnPaths.includes(currentPath);
   }
 }
 </script>
