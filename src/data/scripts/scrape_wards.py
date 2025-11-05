@@ -64,7 +64,7 @@ DEFAULT_CITY_HALL_ZIP = "60602"
 
 # Script settings
 REQUEST_TIMEOUT = 10  # seconds
-REQUEST_DELAY = 0.5   # seconds between requests
+REQUEST_DELAY = 0.5  # seconds between requests
 
 
 class SimpleHTMLParser(HTMLParser):
@@ -84,20 +84,18 @@ class SimpleHTMLParser(HTMLParser):
             self.text_content.append(text)
 
     def get_text(self):
-        return ' '.join(self.text_content)
+        return " ".join(self.text_content)
 
 
 def fetch_page(ward_num):
     """Fetch a ward page from Chicago city website."""
     url = WARD_URL_TEMPLATE.format(ward_num=ward_num)
-    headers = {
-        'User-Agent': USER_AGENT
-    }
+    headers = {"User-Agent": USER_AGENT}
 
     try:
         request = Request(url, headers=headers)
         with urlopen(request, timeout=REQUEST_TIMEOUT) as response:
-            html = response.read().decode('utf-8')
+            html = response.read().decode("utf-8")
             return html
     except Exception as e:
         print(f"Error fetching ward {ward_num}: {e}")
@@ -113,53 +111,79 @@ def extract_ward_info(html, ward_num, debug=False):
     # Extract alderman name from h3 tag pattern
     # More flexible pattern that captures the name until we hit contact info keywords
     keywords_pattern = f"(?:\\s+{KEYWORD_WARD_OFFICE}|\\s+{KEYWORD_EMAIL}|\\s+{KEYWORD_PHONE}|\\s+{KEYWORD_CITY_HALL}|$)"
-    name_match = re.search(rf'{KEYWORD_ALDERMAN}\s+([A-Za-z][A-Za-z\s\.,\'-]+?){keywords_pattern}', content, re.IGNORECASE)
+    name_match = re.search(
+        rf"{KEYWORD_ALDERMAN}\s+([A-Za-z][A-Za-z\s\.,\'-]+?){keywords_pattern}",
+        content,
+        re.IGNORECASE,
+    )
     if not name_match:
         # Try alternative pattern for cases where "Alderman" appears alone
-        name_match = re.search(rf'{KEYWORD_ALDERMAN}\s+([A-Za-z][A-Za-z\s\.,\'-]{{2,50}})', content, re.IGNORECASE)
+        name_match = re.search(
+            rf"{KEYWORD_ALDERMAN}\s+([A-Za-z][A-Za-z\s\.,\'-]{{2,50}})",
+            content,
+            re.IGNORECASE,
+        )
 
     name = ""
     if name_match:
         name = name_match.group(1).strip()
         # Clean up any trailing text that might have been captured
-        name = re.sub(r'\s+(Ward\s+)?Office.*$', '', name, flags=re.IGNORECASE).strip()
-        cleanup_keywords = f"({KEYWORD_EMAIL}|{KEYWORD_PHONE}|{KEYWORD_CITY_HALL}|{KEYWORD_FAX})"
-        name = re.sub(rf'\s+{cleanup_keywords}.*$', '', name, flags=re.IGNORECASE).strip()
+        name = re.sub(r"\s+(Ward\s+)?Office.*$", "", name, flags=re.IGNORECASE).strip()
+        cleanup_keywords = (
+            f"({KEYWORD_EMAIL}|{KEYWORD_PHONE}|{KEYWORD_CITY_HALL}|{KEYWORD_FAX})"
+        )
+        name = re.sub(
+            rf"\s+{cleanup_keywords}.*$", "", name, flags=re.IGNORECASE
+        ).strip()
 
     if debug:
         print(f"Name extracted: '{name}'")
 
     # Extract email
-    email_match = re.search(rf'{KEYWORD_EMAIL}[:\s]+([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{{2,}})', content, re.IGNORECASE)
+    email_match = re.search(
+        rf"{KEYWORD_EMAIL}[:\s]+([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{{2,}})",
+        content,
+        re.IGNORECASE,
+    )
     email = email_match.group(1) if email_match else ""
     if debug:
         print(f"Email extracted: '{email}'")
 
     # Extract phone
-    phone_lookahead = f"(?=\\s*{KEYWORD_FAX}|\\s*{KEYWORD_CITY_HALL}|\\s*{KEYWORD_EMAIL}|$)"
-    phone_match = re.search(rf'{KEYWORD_PHONE}[:\s]+([\d\.\-\(\)\s]+?){phone_lookahead}', content, re.IGNORECASE)
+    phone_lookahead = (
+        f"(?=\\s*{KEYWORD_FAX}|\\s*{KEYWORD_CITY_HALL}|\\s*{KEYWORD_EMAIL}|$)"
+    )
+    phone_match = re.search(
+        rf"{KEYWORD_PHONE}[:\s]+([\d\.\-\(\)\s]+?){phone_lookahead}",
+        content,
+        re.IGNORECASE,
+    )
     office_phone = ""
     if phone_match:
         phone_raw = phone_match.group(1).strip()
         # Clean up phone number
-        digits = re.findall(r'\d+', phone_raw)
+        digits = re.findall(r"\d+", phone_raw)
         if digits:
-            phone_str = ''.join(digits)
+            phone_str = "".join(digits)
             if len(phone_str) >= 10:
                 office_phone = f"({phone_str[:3]}) {phone_str[3:6]}-{phone_str[6:10]}"
     if debug:
         print(f"Phone extracted: '{office_phone}'")
 
     # Extract fax
-    fax_lookahead = f"(?=\\s*{KEYWORD_CITY_HALL}|\\s*{KEYWORD_EMAIL}|\\s*{KEYWORD_WARD_OFFICE}|$)"
-    fax_match = re.search(rf'{KEYWORD_FAX}[:\s]+([\d\.\-\(\)\s]+?){fax_lookahead}', content, re.IGNORECASE)
+    fax_lookahead = (
+        f"(?=\\s*{KEYWORD_CITY_HALL}|\\s*{KEYWORD_EMAIL}|\\s*{KEYWORD_WARD_OFFICE}|$)"
+    )
+    fax_match = re.search(
+        rf"{KEYWORD_FAX}[:\s]+([\d\.\-\(\)\s]+?){fax_lookahead}", content, re.IGNORECASE
+    )
     fax = ""
     if fax_match:
         fax_raw = fax_match.group(1).strip()
         # Clean up fax number
-        digits = re.findall(r'\d+', fax_raw)
+        digits = re.findall(r"\d+", fax_raw)
         if digits:
-            fax_str = ''.join(digits)
+            fax_str = "".join(digits)
             if len(fax_str) >= 10:
                 fax = f"({fax_str[:3]}) {fax_str[3:6]}-{fax_str[6:10]}"
     if debug:
@@ -167,9 +191,9 @@ def extract_ward_info(html, ward_num, debug=False):
 
     # Extract ward office address
     ward_office_match = re.search(
-        rf'{KEYWORD_WARD_OFFICE}[:\s]+([0-9]+[^\n]+?)\s+([A-Za-z\s]+),?\s*([A-Z]{{2}})\s*(\d{{5}})',
+        rf"{KEYWORD_WARD_OFFICE}[:\s]+([0-9]+[^\n]+?)\s+([A-Za-z\s]+),?\s*([A-Z]{{2}})\s*(\d{{5}})",
         content,
-        re.IGNORECASE
+        re.IGNORECASE,
     )
 
     office_address = ""
@@ -178,23 +202,25 @@ def extract_ward_info(html, ward_num, debug=False):
     zip_code = ""
 
     if ward_office_match:
-        office_address = ward_office_match.group(1).strip().rstrip(',')
+        office_address = ward_office_match.group(1).strip().rstrip(",")
         city = ward_office_match.group(2).strip()
         state = ward_office_match.group(3).strip()
         zip_code = ward_office_match.group(4).strip()
 
     if debug:
-        print(f"Office Address extracted: '{office_address}, {city}, {state} {zip_code}'")
+        print(
+            f"Office Address extracted: '{office_address}, {city}, {state} {zip_code}'"
+        )
 
     # Extract City Hall office address
     city_hall_match = re.search(
-        rf'{KEYWORD_CITY_HALL}[:\s]+([0-9]+[^\n]+?(?:Room[^\n]+?)?)\s+[A-Za-z\s]+,?\s*[A-Z]{{2}}\s*\d{{5}}',
+        rf"{KEYWORD_CITY_HALL}[:\s]+([0-9]+[^\n]+?(?:Room[^\n]+?)?)\s+[A-Za-z\s]+,?\s*[A-Z]{{2}}\s*\d{{5}}",
         content,
-        re.IGNORECASE
+        re.IGNORECASE,
     )
     city_hall_address = DEFAULT_CITY_HALL_ADDRESS
     if city_hall_match:
-        city_hall_address = city_hall_match.group(1).strip().rstrip(',')
+        city_hall_address = city_hall_match.group(1).strip().rstrip(",")
 
     if debug:
         print(f"City Hall Address extracted: '{city_hall_address}'")
@@ -204,28 +230,28 @@ def extract_ward_info(html, ward_num, debug=False):
     # Look for common ward website patterns in the HTML
     website_match = re.search(r'(https?://[^\s<>"]+ward[^\s<>"]*)', html, re.IGNORECASE)
     if website_match:
-        website = website_match.group(1).rstrip('/')
+        website = website_match.group(1).rstrip("/")
 
     if debug:
         print(f"Website extracted: '{website}'")
         print("--- End Debug ---\n")
 
     return {
-        'Name': name,
-        'Office': ward_num,
-        'Office Phone': office_phone,
-        'Fax': fax,
-        'Email': email,
-        'Website': website,
-        'Office Address': office_address,
-        'City': city,
-        'State': state,
-        'Zip': zip_code,
-        'City Hall Phone': office_phone,  # Often same as office phone
-        'City Hall Address': city_hall_address,
-        'City Hall City': DEFAULT_CITY,
-        'City Hall State': DEFAULT_STATE,
-        'City Hall Zip': DEFAULT_CITY_HALL_ZIP
+        "Name": name,
+        "Office": ward_num,
+        "Office Phone": office_phone,
+        "Fax": fax,
+        "Email": email,
+        "Website": website,
+        "Office Address": office_address,
+        "City": city,
+        "State": state,
+        "Zip": zip_code,
+        "City Hall Phone": office_phone,  # Often same as office phone
+        "City Hall Address": city_hall_address,
+        "City Hall City": DEFAULT_CITY,
+        "City Hall State": DEFAULT_STATE,
+        "City Hall Zip": DEFAULT_CITY_HALL_ZIP,
     }
 
 
@@ -269,12 +295,24 @@ def main(test_ward=None, debug=False):
     output_file = OUTPUT_FILE
 
     fieldnames = [
-        'Name', 'Office', 'Office Phone', 'Fax', 'Email', 'Website',
-        'Office Address', 'City', 'State', 'Zip',
-        'City Hall Phone', 'City Hall Address', 'City Hall City', 'City Hall State', 'City Hall Zip'
+        "Name",
+        "Office",
+        "Office Phone",
+        "Fax",
+        "Email",
+        "Website",
+        "Office Address",
+        "City",
+        "State",
+        "Zip",
+        "City Hall Phone",
+        "City Hall Address",
+        "City Hall City",
+        "City Hall State",
+        "City Hall Zip",
     ]
 
-    with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
+    with open(output_file, "w", newline="", encoding="utf-8") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(all_wards)
@@ -283,17 +321,17 @@ def main(test_ward=None, debug=False):
     print(f"✓ Data saved to {output_file}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
 
     # Check for arguments
     if len(sys.argv) > 1:
-        if sys.argv[1] == '--test':
+        if sys.argv[1] == "--test":
             main(test_ward=1, debug=True)
-        elif sys.argv[1] == '--wards':
+        elif sys.argv[1] == "--wards":
             # Allow specifying specific wards: --wards 11,21,40,48
             if len(sys.argv) > 2:
-                ward_nums = [int(w.strip()) for w in sys.argv[2].split(',')]
+                ward_nums = [int(w.strip()) for w in sys.argv[2].split(",")]
                 for ward_num in ward_nums:
                     main(test_ward=ward_num, debug=True)
             else:
