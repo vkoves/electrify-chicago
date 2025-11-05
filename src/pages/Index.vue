@@ -205,7 +205,7 @@ export default class Index extends Vue {
                 which stopped reporting.
               </p>
               <p>
-                <g-link to="/latest-updates" class="bold">
+                <g-link to="/latest-updates" class="bold grey-link">
                   View Latest Updates
                 </g-link>
               </p>
@@ -226,10 +226,9 @@ export default class Index extends Vue {
               </p>
 
               <p>
-                <a href="/blog/GHG-Intensity-Predict-Compliance" class="bold"
-                  >Read Our Full Research On Whether Poor Performance Impacts
-                  Reporting Rate</a
-                >.
+                <a href="/blog/GHG-Intensity-Predict-Compliance" class="bold grey-link"
+                  >Read Our Full Research</a
+                >
               </p>
             </div>
 
@@ -246,9 +245,9 @@ export default class Index extends Vue {
               </p>
 
               <p>
-                <a href="/blog/millions-in-missed-fines" class="bold"
-                  >Read Our Full Blog Post On Millions in Missed Fines</a
-                >.
+                <a href="/blog/millions-in-missed-fines" class="bold grey-link"
+                  >Read Our Full Blog on Missed Fines</a
+                >
               </p>
             </div>
           </div>
@@ -404,14 +403,23 @@ export default class Index extends Vue {
   .announcements {
     display: flex;
     gap: 1rem;
-    align-items: flex-start;
+    align-items: stretch;
+    overflow-x: auto;
 
-    > * {
-      flex-basis: 100%;
+    > .announce-panel {
+      flex: 0 0 auto;
+      min-width: 20rem; // 320px minimum width per panel
+      max-width: 25rem;
+      display: flex;
+      flex-direction: column;
     }
 
     h3 {
       font-size: 1.5rem;
+    }
+
+    a.grey-link {
+      display: inline-block;
     }
   }
 
@@ -477,6 +485,10 @@ export default class Index extends Vue {
 
     .announcements {
       flex-direction: column;
+
+      .announce-panel {
+        max-width: none;
+      }
     }
 
     .row {
