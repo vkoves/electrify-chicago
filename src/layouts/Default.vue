@@ -12,7 +12,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppFooter from '../components/layout/AppFooter.vue';
 import AppHeader from '../components/layout/AppHeader.vue';
 import MetaInfoPanel from '../components/MetaInfoPanel.vue';
-import TakeActionBanner from '../components/TakeActionBanner.vue';
+import GlobalBanner from '../components/GlobalBanner.vue';
 
 /**
  * The default layout
@@ -24,7 +24,7 @@ import TakeActionBanner from '../components/TakeActionBanner.vue';
     AppFooter,
     AppHeader,
     MetaInfoPanel,
-    TakeActionBanner,
+    GlobalBanner,
   },
   metaInfo() {
     return {
@@ -46,14 +46,6 @@ export default class Default extends Vue {
   get isDevelopment(): boolean {
     return process.env.NODE_ENV === 'development';
   }
-
-  /** Show the Take Action banner on all pages except /act */
-  get showTakeActionBanner(): boolean {
-    // Check if we're in the browser (not SSR) and not on the /act page
-    if (typeof window === 'undefined') return true;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this as any).$route?.path !== '/act';
-  }
 }
 </script>
 
@@ -64,8 +56,8 @@ export default class Default extends Vue {
     <div :class="mainClass || 'layout'">
       <AppHeader />
 
-      <!-- Take Action Banner - Show on all pages except /act -->
-      <TakeActionBanner v-if="showTakeActionBanner" />
+      <!-- Global Banner - Hide on /act page -->
+      <GlobalBanner :hide-on-paths="['/act']" />
 
       <div class="main-content">
         <!-- The main content -->
