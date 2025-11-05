@@ -98,17 +98,17 @@ export default class Index extends Vue {
 
 <template>
   <DefaultLayout main-class="layout -full-width">
-    <!-- Data Update Banner - Global Notice -->
+    <!-- Take Action Banner - Global Notice -->
     <div class="data-update-banner">
       <div class="page-constrained">
         <div class="content-left">
-          <h2>🎉 Updated with 2023 Data!</h2>
+          <h2>📣 Take Action to Improve Emissions Reporting!</h2>
           <p>
-            We've updated with the latest 2023 Chicago energy benchmarking data!
-            See what buildings are new in the data, and which stopped reporting.
+            <strong>$35 million</strong> is already lost from unenforced fines,
+            help Chicago not lose any more.
           </p>
         </div>
-        <g-link to="/latest-updates"> View Latest Updates </g-link>
+        <g-link to="/act"> Contact Your Alderperson </g-link>
       </div>
     </div>
 
@@ -189,10 +189,28 @@ export default class Index extends Vue {
           </ul>
         </div>
 
-        <h2>Our Research</h2>
+        <h2>Our Research &amp; Updates</h2>
 
         <div class="row">
           <div class="announcements">
+            <div class="announce-panel -blue">
+              <h3>
+                🎉 Updated with Latest (2023) Data!
+                <div class="regular-text-size faded">Aug. 2025</div>
+              </h3>
+              <p>
+                We've updated with the latest 2023 Chicago energy benchmarking
+                data (the most recent data available, released by the city in
+                February 2025). See what buildings are new in the data, and
+                which stopped reporting.
+              </p>
+              <p>
+                <g-link to="/latest-updates" class="bold">
+                  View Latest Updates
+                </g-link>
+              </p>
+            </div>
+
             <div class="announce-panel -orange">
               <h3>
                 📰 Do High Emitting Buildings Stop Reporting?
