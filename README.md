@@ -282,10 +282,12 @@ If you want to run Python scripts or Jupyter notebooks locally outside of Docker
 
 The site uses alderperson contact and ward information from two sources:
 
-**Alderperson Contact Information** (`static/alders-info.csv`):
+**Alderperson Contact Information** (`static/alders-info.csv` → symlink to `src/data/dist/alders-info.csv`):
 
-- **Source:** City of Chicago City Clerk Legislative Members page
-- **URL:** https://chicityclerkelms.chicago.gov/Legislative-Members
+- **Source:** Official Chicago city ward pages (scraped)
+- **URL:** https://www.chicago.gov/city/en/about/wards/
+- **Script:** `src/data/scripts/scrape_wards.py` - Run to refresh alderperson contact data
+- **Why scraped?** The official ward pages have more accurate/up-to-date contact info than the City Clerk page
 
 **Ward Boundaries** (`static/chicago-wards-2025.geojson`):
 
