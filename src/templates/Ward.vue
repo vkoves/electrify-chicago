@@ -12,6 +12,13 @@ import {
   IBuildingNode,
 } from '../common-functions.vue';
 import { BuildingOwners } from '../constants/buildings-custom-info.constant.vue';
+import { AlderImages } from '~/components/alder-images.constant.vue';
+import { WardCouncilMembers } from '~/constants/ward-council-members.constant.vue';
+import {
+  loadAldersData,
+  formatAlderName,
+  AlderInfo,
+} from '~/utils/alder-data.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import NewTabIcon from '../components/NewTabIcon.vue';
@@ -54,8 +61,50 @@ export default class BiggestBuildings extends Vue {
   avgBuildingAge?: string;
   gradeDistributionPie: Array<IPieSlice> = [];
 
+  alderInfo: AlderInfo | null = null;
+
+  /** Get the image path for the current alderperson */
+  get alderImagePath(): string | null {
+    const wardNumber = this.$context.ward;
+    const filename = AlderImages[wardNumber];
+    return filename ? `/alders/${filename}` : null;
+  }
+
+  /** Get the full Councilmatic URL for the alderperson */
+  get alderCouncilmaticUrl(): string | null {
+    const wardData = WardCouncilMembers[this.$context.ward];
+    if (!wardData) return null;
+    return `https://chicago.councilmatic.org${wardData.detailLink}`;
+  }
+
+  /** Get the alderperson's name formatted as "First Last" */
+  get alderFormattedName(): string | null {
+    // Try to get name from CSV first (which may already be formatted)
+    if (this.alderInfo?.name) {
+      return this.alderInfo.name;
+    }
+
+    // Fall back to council member from constant and format it
+    const wardData = WardCouncilMembers[this.$context.ward];
+    if (wardData) {
+      return formatAlderName(wardData.councilMember);
+    }
+
+    return null;
+  }
+
   created(): void {
     this.calculateWardStats();
+  }
+
+  async mounted(): Promise<void> {
+    await this.loadAlderInfo();
+  }
+
+  /** Load alderperson information for this ward */
+  async loadAlderInfo(): Promise<void> {
+    const aldersData = await loadAldersData();
+    this.alderInfo = aldersData.get(this.$context.ward) || null;
   }
 
   calculateWardStats(): void {
@@ -168,6 +217,7 @@ query ($ward: String) {
     <div class="ward-page">
       <BuildingsHero
         :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
+        :short="true"
       >
         <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
       </BuildingsHero>
@@ -177,6 +227,30 @@ query ($ward: String) {
           <img src="/icons/arrow-back.svg" alt="" />
           Back to All Wards
         </g-link>
+
+        <section v-if="alderInfo" class="alder-info">
+          <div class="alder-content">
+            <img
+              v-if="alderImagePath"
+              :src="alderImagePath"
+              :alt="alderFormattedName"
+              class="alder-photo"
+            />
+            <div class="alder-details">
+              <h2>Ward {{ $context.ward }} Alderperson</h2>
+              <p class="alder-name">{{ alderFormattedName }}</p>
+              <a
+                :href="alderCouncilmaticUrl"
+                target="_blank"
+                rel="noopener"
+                class="blue-link"
+              >
+                Full Profile On Councilmatic
+                <NewTabIcon :white="true" />
+              </a>
+            </div>
+          </div>
+        </section>
 
         <section class="stats-overview -three-col-max">
           <h2>Ward {{ $context.ward }} Quick Stats</h2>
@@ -289,6 +363,63 @@ query ($ward: String) {
 
   h2 {
     margin-bottom: 0.5rem;
+  }
+
+  .alder-info {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: $off-white;
+    border: solid $border-medium $chicago-blue;
+    border-radius: $brd-rad-medium;
+    width: fit-content;
+
+    @media (max-width: $mobile-max-width) {
+      width: 100%;
+    }
+
+    .alder-content {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+
+      @media (max-width: $mobile-max-width) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .alder-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: solid $border-medium $chicago-blue;
+      flex-shrink: 0;
+
+      @media (max-width: $mobile-max-width) {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .alder-details {
+      h2 {
+        margin: 0;
+        color: $blue-very-dark;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 0.5rem;
+      }
+    }
+
+    .alder-name {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: $text-main;
+    }
   }
 
   .stats {

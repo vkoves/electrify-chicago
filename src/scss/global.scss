@@ -340,6 +340,10 @@ code {
 .constrained {
   max-width: 50rem;
 
+  &.-padded {
+    padding: 0 1rem;
+  }
+
   &.-wide {
     max-width: 60rem;
   }
@@ -404,7 +408,7 @@ form.search-form {
   }
 
   &.-blue {
-    border-color: $chicago-blue;
+    border-color: $blue-dark;
   }
 
   h2,
@@ -497,13 +501,22 @@ form.search-form {
 }
 
 /**
- * Data update banner - global notice panel for announcing new data releases
+ * Global banner - notice panel for important announcements and calls to action
  */
-.data-update-banner {
+.global-banner {
+  position: relative;
   background: $blue-very-dark;
   padding: 1rem 0;
   box-shadow: 0 0.3125rem 0.25rem $box-shadow-main;
   width: 100%;
+  z-index: 1;
+
+  // Add margin and border-radius for non-full-width layouts
+  .layout:not(.-full-width) & {
+    margin: 0 1rem 2rem;
+    border-radius: $brd-rad-medium;
+    width: calc(100% - 2rem);
+  }
 
   .page-constrained {
     display: flex;
@@ -991,5 +1004,33 @@ article.blog-post {
   // Totally hide the footer
   footer {
     display: none;
+  }
+}
+
+/**
+ * Vue Transition Animations
+ */
+
+// Slide-fade animation: slide down on enter, fade on leave
+.slide-fade-enter-active {
+  animation: slide-down 0.4s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

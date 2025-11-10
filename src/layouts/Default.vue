@@ -12,17 +12,21 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppFooter from '../components/layout/AppFooter.vue';
 import AppHeader from '../components/layout/AppHeader.vue';
 import MetaInfoPanel from '../components/MetaInfoPanel.vue';
+import GlobalBanner from '../components/GlobalBanner.vue';
 
 /**
  * The default layout
  *
- * Accepts a `mainClass` - pass `layout -full-width` to not have a normal width page
+ * Props:
+ * - `mainClass` - pass `layout -full-width` to not have a normal width page
+ * - `skipBanner` - pass `true` to hide the global banner (e.g., on the Act page)
  */
 @Component<any>({
   components: {
     AppFooter,
     AppHeader,
     MetaInfoPanel,
+    GlobalBanner,
   },
   metaInfo() {
     return {
@@ -40,6 +44,7 @@ import MetaInfoPanel from '../components/MetaInfoPanel.vue';
 })
 export default class Default extends Vue {
   @Prop() mainClass?: string;
+  @Prop({ default: false }) skipBanner?: boolean;
 
   get isDevelopment(): boolean {
     return process.env.NODE_ENV === 'development';
@@ -53,6 +58,9 @@ export default class Default extends Vue {
 
     <div :class="mainClass || 'layout'">
       <AppHeader />
+
+      <!-- Global Banner - Can be skipped with skipBanner prop -->
+      <GlobalBanner v-if="!skipBanner" />
 
       <div class="main-content">
         <!-- The main content -->

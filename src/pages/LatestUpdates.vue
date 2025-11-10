@@ -287,7 +287,7 @@ export default class LatestUpdates extends Vue {
   </DefaultLayout>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../scss/global';
 @import '../scss/stat-tiles.scss';
 
