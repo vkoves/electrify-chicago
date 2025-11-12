@@ -132,6 +132,7 @@ export default class MapPage extends Vue {
     this.setupMapIcons();
 
     this.map = this.Leaflet.map('buildings-map', {
+      tap: false,
       zoomDelta: this.MapConfig.ZoomDelta,
       wheelPxPerZoomLevel: this.MapConfig.WheelPxPerZoomLevel,
       zoomSnap: this.MapConfig.ZoomSnap,
