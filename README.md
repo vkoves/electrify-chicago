@@ -1,8 +1,11 @@
-# Electrify Chicago
+<img src="https://electrifychicago.net/electrify-chicago-logo.svg" alt="Electrify Chicago" width="400">
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d777babe-6135-45a1-99dd-6377999b6127/deploy-status)](https://app.netlify.com/sites/radiant-cucurucho-d09bae/deploys)
 
+# Electrify Chicago
+
 A site to publicize some of the most polluting buildings based on the Chicago Energy Benchmarking data published in the City of Chicago Data Portal.
+**Live at [electrifychicago.net](https://electrifychicago.net)**
 
 Front-end in [VueJS 2](https://v2.vuejs.org/), statically built with [GridSome](https://gridsome.org/). Data processing with Python, and [Pandas](https://pandas.pydata.org/).
 
