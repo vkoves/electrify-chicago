@@ -2,8 +2,12 @@
 // The Client API can be used here. Learn more: gridsome.org/docs/client-api
 
 import DefaultLayout from '~/layouts/Default.vue';
+import VTooltip from 'v-tooltip';
 
 export default function (Vue, { head, isClient }) {
+  // Register v-tooltip globally
+  Vue.use(VTooltip);
+
   // Set default layout as a global component
   Vue.component('DefaultLayout', DefaultLayout);
 

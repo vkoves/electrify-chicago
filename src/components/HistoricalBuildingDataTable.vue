@@ -100,8 +100,26 @@
             />
           </td>
 
-          <td>{{ benchmark.GHGIntensity }}</td>
-          <td>{{ benchmark.TotalGHGEmissions | optionalFloat }}</td>
+          <td>
+            {{ benchmark.GHGIntensity }}
+            <span
+              v-if="isFieldImputed(benchmark, 'GHGIntensity')"
+              v-tooltip="'This value was estimated using imputation'"
+              class="imputed-indicator"
+            >
+              *
+            </span>
+          </td>
+          <td>
+            {{ benchmark.TotalGHGEmissions | optionalFloat }}
+            <span
+              v-if="isFieldImputed(benchmark, 'TotalGHGEmissions')"
+              v-tooltip="'This value was estimated using imputation'"
+              class="imputed-indicator"
+            >
+              *
+            </span>
+          </td>
 
           <!-- Energy Mix & Energy (rounded because they are big numbers) -->
           <td class="energy-mix">
@@ -136,18 +154,55 @@
           </td>
           <td v-if="renderedColumns.includes('ElectricityUse')">
             {{ benchmark.ElectricityUse | optionalInt }}
+            <span
+              v-if="isFieldImputed(benchmark, 'ElectricityUse')"
+              v-tooltip="'This value was estimated using imputation'"
+              class="imputed-indicator"
+            >
+              *
+            </span>
           </td>
           <td v-if="renderedColumns.includes('NaturalGasUse')">
             {{ benchmark.NaturalGasUse | optionalInt }}
+            <span
+              v-if="isFieldImputed(benchmark, 'NaturalGasUse')"
+              v-tooltip="'This value was estimated using imputation'"
+              class="imputed-indicator"
+            >
+              *
+            </span>
           </td>
           <td v-if="renderedColumns.includes('DistrictSteamUse')">
             {{ benchmark.DistrictSteamUse | optionalInt }}
+            <span
+              v-if="isFieldImputed(benchmark, 'DistrictSteamUse')"
+              v-tooltip="'This value was estimated using imputation'"
+              class="imputed-indicator"
+            >
+              *
+            </span>
           </td>
           <td v-if="renderedColumns.includes('DistrictChilledWaterUse')">
             {{ benchmark.DistrictChilledWaterUse | optionalInt }}
+            <span
+              v-if="isFieldImputed(benchmark, 'DistrictChilledWaterUse')"
+              v-tooltip="'This value was estimated using imputation'"
+              class="imputed-indicator"
+            >
+              *
+            </span>
           </td>
 
-          <td>{{ benchmark.SourceEUI }}</td>
+          <td>
+            {{ benchmark.SourceEUI }}
+            <span
+              v-if="isFieldImputed(benchmark, 'SourceEUI')"
+              v-tooltip="'This value was estimated using imputation'"
+              class="imputed-indicator"
+            >
+              *
+            </span>
+          </td>
           <td v-if="renderedColumns.includes('GrossFloorArea')">
             {{ benchmark.GrossFloorArea | optionalInt }}
           </td>
@@ -170,6 +225,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import {
   calculateEnergyBreakdown,
   IHistoricData,
+  isFieldImputed,
 } from '../common-functions.vue';
 import PieChart, { IPieSlice } from './graphs/PieChart.vue';
 import LetterGrade from './LetterGrade.vue';
@@ -212,6 +268,9 @@ export default class HistoricalBuildingTable extends Vue {
   @Prop({ required: true }) historicBenchmarks!: Array<IHistoricData>;
 
   renderedColumns: Array<string> = [];
+
+  /** Expose isFieldImputed to template */
+  isFieldImputed = isFieldImputed;
 
   /** Expose calculateEnergyBreakdown to template */
   getBreakdown(benchmark: IHistoricData): Array<IPieSlice> {
@@ -373,6 +432,14 @@ table.historical-data {
     &:not(.-overall) {
       vertical-align: bottom;
     }
+  }
+
+  .imputed-indicator {
+    color: #ff6b6b;
+    font-weight: bold;
+    cursor: help;
+    margin-left: 2px;
+    font-size: 0.9rem;
   }
 }
 </style>

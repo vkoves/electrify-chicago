@@ -75,6 +75,7 @@ query ($id: ID!, $ID: String) {
           NaturalGasUse
           DistrictSteamUse
           DistrictChilledWaterUse
+          ImputedFields
           # Grade data
           GHGIntensityPercentileGrade,
           GHGIntensityLetterGrade,

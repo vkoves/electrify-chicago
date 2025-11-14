@@ -11,6 +11,7 @@ import * as d3 from 'd3';
 export interface INumGraphPoint {
   x: number;
   y: number;
+  isImputed?: boolean;
 }
 
 /**
@@ -196,13 +197,14 @@ export default class BarGraph extends Vue {
           const isMinMax =
             d.x === this.minAndMaxPoints![0].x ||
             d.x === this.minAndMaxPoints![1].x;
+          const isImputed = d.isImputed ? '-imputed' : '';
 
-          return isMinMax ? 'dot -min-max' : 'dot';
+          return isMinMax ? `dot -min-max${isImputed}` : `dot${isImputed}`;
         })
         .attr('cx', (d) => x(d.x))
         .attr('cy', (d) => y(d.y))
         .attr('r', this.DotRadius)
-        .attr('fill', 'black')
+        .attr('fill', (d) => (d.isImputed ? '#ff6b6b' : 'black'))
         .attr('tabindex', '0')
         .on('mouseover', this.mouseover.bind(this))
         .on('focusin', (event: Event, d) => this.focus(event, d))
@@ -270,7 +272,7 @@ export default class BarGraph extends Vue {
           }
         })
         .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan>`)
-        .style('fill', 'black')
+        .style('fill', (d) => (d.isImputed ? '#ff6b6b' : 'black'))
         .style('font-size', this.LabelFontSize);
     }
   }
@@ -306,12 +308,17 @@ export default class BarGraph extends Vue {
     const tooltipX = d3.pointer(event)[0] * scaleFactor + 20;
     const tooltipY = d3.pointer(event)[1] * scaleFactor;
 
+    const imputedIndicator = datum.isImputed
+      ? `<div class="imputed-notice">* Estimated using imputation</div>`
+      : '';
+
     this.tooltip!.html(
       `<div class="year">${datum.x}</div>` +
         `<div class="value-cont">` +
         `<span class="value">${datum.y.toLocaleString()}</span> ` +
         `<span class="unit">${this.unit}</span>` +
-        `</div>`,
+        `</div>` +
+        imputedIndicator,
     )
       .style('left', `${tooltipX}px`)
       .style('top', `${tooltipY}px`);
@@ -355,6 +362,12 @@ export default class BarGraph extends Vue {
     .year {
       font-weight: bold;
       margin-bottom: 0.25rem;
+    }
+    .imputed-notice {
+      color: #ff6b6b;
+      font-size: 0.7rem;
+      margin-top: 0.25rem;
+      font-style: italic;
     }
   }
 

@@ -110,6 +110,9 @@ export interface IHistoricData {
   NaturalGasUse: number;
   SourceEUI: number;
   TotalGHGEmissions: number;
+
+  // Comma-separated list of imputed field names
+  ImputedFields?: string;
 }
 
 /**
@@ -725,5 +728,29 @@ export function calculateBuildingsStats(
   stats.avgYearBuilt /= stats.buildingsWithYear;
 
   return stats;
+}
+
+/**
+ * Check if a specific field was imputed for a benchmark record
+ * @param record - The benchmark record from GraphQL
+ * @param fieldName - The field name to check (e.g., 'ElectricityUse')
+ * @returns true if the field was imputed
+ */
+export function isFieldImputed(
+  record: IHistoricData,
+  fieldName: string,
+): boolean {
+  if (!record.ImputedFields) return false;
+  return record.ImputedFields.split(',').includes(fieldName);
+}
+
+/**
+ * Get all imputed fields for a benchmark record
+ * @param record - The benchmark record from GraphQL
+ * @returns Array of imputed field names
+ */
+export function getImputedFields(record: IHistoricData): string[] {
+  if (!record.ImputedFields) return [];
+  return record.ImputedFields.split(',').filter((f) => f.length > 0);
 }
 </script>

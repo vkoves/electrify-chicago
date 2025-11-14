@@ -62,6 +62,10 @@ def main():
             "module": "src.data.scripts.clean_and_split_data",
             "description": "clean_and_split_data",
         },
+        {
+            "module": "src.data.scripts.merge_imputed_historical",
+            "description": "merge_imputed_historical",
+        },
         {"module": "src.data.scripts.process_data", "description": "process_data"},
         {
             "module": "src.data.scripts.add_building_owners",

@@ -223,6 +223,11 @@ function loadHistoricBenchmarkDat(actions) {
 
     benchmark.DataYear = parseInt(benchmark.DataYear);
 
+    // Ensure ImputedFields is treated as a string (not parsed)
+    if (!benchmark.ImputedFields) {
+      benchmark.ImputedFields = '';
+    }
+
     collection.addNode(benchmark);
   }
 }

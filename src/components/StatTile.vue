@@ -214,6 +214,7 @@ import {
   IBuildingBenchmarkStats,
   IHistoricData,
   IPropertyStats,
+  isFieldImputed,
   RankConfig,
 } from '../common-functions.vue';
 import SparkLine, { INumGraphPoint } from './graphs/SparkLine.vue';
@@ -583,6 +584,7 @@ export default class StatTile extends Vue {
       this.historicStatData = this.historicData.map((datum: IHistoricData) => ({
         x: datum.DataYear,
         y: this.parseStatValueForGraph(datum),
+        isImputed: isFieldImputed(datum, this.statKey),
       }));
 
       const zeroOrNanOnly = this.historicStatData.every(
