@@ -42,20 +42,23 @@ export default class FinesBreakdown extends Vue {
       </p>
 
       <table>
+        <caption>Buildings Out Of Compliance Per Year & Predicted Fines</caption>
         <thead>
           <tr>
             <th class="year">Year</th>
-            <th class="fine">Predicted Fines</th>
+            <th class="count">Non-Reporting <br> Buildings</th>
+            <th class="fine">Predicted <br> Fines</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="[year, fine] in fineData"
+            v-for="[year, fineData] in fineData"
             :key="year"
             :class="{ '-total': year === 'total' }"
           >
             <td class="year">{{ year }}</td>
-            <td class="fine">${{ fine.toLocaleString() }}</td>
+            <td class="count">{{ fineData.count.toLocaleString() }}</td>
+            <td class="fine">${{ fineData.fines.toLocaleString() }}</td>
           </tr>
         </tbody>
       </table>
@@ -74,10 +77,16 @@ export default class FinesBreakdown extends Vue {
 <style lang="scss">
 .fines-breakdown-page {
   table {
-    width: 16rem;
+    width: 24rem;
     margin: auto;
     border-collapse: collapse;
     border: solid $border-thin $grey-dark;
+
+    caption {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
+    }
 
     thead tr {
       background-color: $blue-dark;
@@ -99,7 +108,7 @@ export default class FinesBreakdown extends Vue {
 
     th,
     td {
-      &.fine {
+      &.fine, &.count {
         text-align: right;
       }
       &.year {
