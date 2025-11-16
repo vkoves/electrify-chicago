@@ -61,14 +61,11 @@ def calculate_fines() -> list[str]:
         # Populate the dictionary for the year. .item() converts
         # the pandas integer to a standard Python integer, ensuring
         # maximum JSON compatibility, although often unnecessary.
-        fines_dict[str(year)] = {
-            'fines': fines,
-            'count': count
-        }
+        fines_dict[str(year)] = {"fines": fines, "count": count}
 
     total_count = int(yearly_counts_ser.sum())
 
-    fines_dict["total"] = { 'count': total_count, 'fines': total_count * ANNUAL_MAX_FINE }
+    fines_dict["total"] = {"count": total_count, "fines": total_count * ANNUAL_MAX_FINE}
 
     fines_output_path = get_data_file_path(data_out_directory, output_filename)
 
