@@ -46,7 +46,6 @@ def calculate_fines() -> list[str]:
     not_submitted = historic_data[historic_data["ReportingStatus"] == "Not Submitted"]
 
     yearly_counts_ser = not_submitted.groupby("DataYear").size()
-    yearly_counts = yearly_counts_ser.to_frame(name='count')
 
     # Built up a dictionary, e.g.
     # {
