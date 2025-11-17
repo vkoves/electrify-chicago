@@ -45,25 +45,22 @@ def calculate_fines() -> list[str]:
 
     not_submitted = historic_data[historic_data["ReportingStatus"] == "Not Submitted"]
 
-    yearly_counts_ser = not_submitted.groupby("DataYear").size()
+    yearly_counts_series = not_submitted.groupby("DataYear").size()
 
-    # Built up a dictionary, e.g.
+    # Built up a dictionary like:
+    #
     # {
     #   2018: { fines: 9_200_000, count: 1_000 },
     #   total: { fines: ..., count: ... }
     # }
     fines_dict = {}
 
-    for year, count in yearly_counts_ser.items():
-        # Calculate fines using the single 'count' integer value
+    for year, count in yearly_counts_series.items():
         fines = count * ANNUAL_MAX_FINE
 
-        # Populate the dictionary for the year. .item() converts
-        # the pandas integer to a standard Python integer, ensuring
-        # maximum JSON compatibility, although often unnecessary.
         fines_dict[str(year)] = {"fines": fines, "count": count}
 
-    total_count = int(yearly_counts_ser.sum())
+    total_count = int(yearly_counts_series.sum())
 
     fines_dict["total"] = {"count": total_count, "fines": total_count * ANNUAL_MAX_FINE}
 
