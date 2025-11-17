@@ -41,13 +41,16 @@ def test_calculate_fines_basic():
                         fines_data = json.load(f)
 
                     # Check calculations: 2 buildings in 2020, 1 in 2022
-                    expected_2020 = 2 * ANNUAL_MAX_FINE
-                    expected_2022 = 1 * ANNUAL_MAX_FINE
-                    expected_total = expected_2020 + expected_2022
+                    expected_2020_fines = 2 * ANNUAL_MAX_FINE
+                    expected_2022_fines = 1 * ANNUAL_MAX_FINE
+                    expected_total_fines = expected_2020_fines + expected_2022_fines
 
-                    assert fines_data["2020"] == expected_2020
-                    assert fines_data["2022"] == expected_2022
-                    assert fines_data["total"] == expected_total
+                    assert fines_data["2020"]["fines"] == expected_2020_fines
+                    assert fines_data["2020"]["count"] == 2
+                    assert fines_data["2022"]["fines"] == expected_2022_fines
+                    assert fines_data["2022"]["count"] == 1
+                    assert fines_data["total"]["fines"] == expected_total_fines
+                    assert fines_data["total"]["count"] == 3
                     assert (
                         "2021" not in fines_data
                     )  # No non-submitted buildings in 2021
@@ -78,8 +81,9 @@ def test_calculate_fines_no_violations():
                     with open(tmp.name, "r") as f:
                         fines_data = json.load(f)
 
-                    # Should only have "total": 0
-                    assert fines_data["total"] == 0
+                    # Should only have "total" with 0 count and fines
+                    assert fines_data["total"]["fines"] == 0
+                    assert fines_data["total"]["count"] == 0
                     assert len(fines_data) == 1
 
                 finally:
@@ -109,10 +113,14 @@ def test_calculate_fines_all_violations():
                         fines_data = json.load(f)
 
                     # 2 violations in 2020, 3 in 2021, 1 in 2022
-                    assert fines_data["2020"] == 2 * ANNUAL_MAX_FINE
-                    assert fines_data["2021"] == 3 * ANNUAL_MAX_FINE
-                    assert fines_data["2022"] == 1 * ANNUAL_MAX_FINE
-                    assert fines_data["total"] == 6 * ANNUAL_MAX_FINE
+                    assert fines_data["2020"]["fines"] == 2 * ANNUAL_MAX_FINE
+                    assert fines_data["2020"]["count"] == 2
+                    assert fines_data["2021"]["fines"] == 3 * ANNUAL_MAX_FINE
+                    assert fines_data["2021"]["count"] == 3
+                    assert fines_data["2022"]["fines"] == 1 * ANNUAL_MAX_FINE
+                    assert fines_data["2022"]["count"] == 1
+                    assert fines_data["total"]["fines"] == 6 * ANNUAL_MAX_FINE
+                    assert fines_data["total"]["count"] == 6
 
                 finally:
                     os.unlink(tmp.name)
