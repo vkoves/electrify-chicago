@@ -12,21 +12,26 @@ const path = require('path');
  * @param {string} rule A rule?
  */
 function addStyleResource(rule) {
-  rule.use('style-resource')
-      .loader('style-resources-loader')
-      .options({
-        patterns: [
-          path.resolve(__dirname, './src/scss/*.scss'),
-        ],
-      });
+  rule
+    .use('style-resource')
+    .loader('style-resources-loader')
+    .options({
+      patterns: [path.resolve(__dirname, './src/scss/*.scss')],
+    });
 }
-
 
 module.exports = {
   siteName: 'Electrify Chicago',
+  siteUrl: 'https://electrifychicago.net',
   plugins: [
     {
       use: 'gridsome-plugin-typescript',
+    },
+    {
+      use: '@gridsome/plugin-sitemap',
+      options: {
+        exclude: ['/social-card*', '/social-card/*'],
+      },
     },
   ],
 
@@ -43,6 +48,13 @@ module.exports = {
         path: '/building-id/:ID',
         component: './src/templates/BuildingIDRedirect.vue',
       },
+      // Only include social card template during local development
+      ...(process.env.NODE_ENV !== 'production' ? [{
+        // Social card template for generating social images
+        name: 'social-card',
+        path: '/social-card/:ID',
+        component: './src/templates/social-cards/BuildingSocialCardPage.vue',
+      }] : []),
     ],
   },
 

@@ -7,16 +7,18 @@ import { Component, Vue } from 'vue-property-decorator';
 @Component({
   name: 'AppFooter',
 })
-export default class AppFooter extends Vue {
-}
+export default class AppFooter extends Vue {}
 </script>
 
 <template>
   <footer>
-    <div class="constrained">
-      <div>
+    <div class="page-constrained footer-inner">
+      <div class="full-width">
         Created with <span class="heart">&#x2764;</span> by
-        <a href="https://github.com/vkoves/electrify-chicago/graphs/contributors">volunteers</a>
+        <a
+          href="https://github.com/vkoves/electrify-chicago/graphs/contributors"
+          >volunteers</a
+        >
         in Chicago
       </div>
 
@@ -24,14 +26,49 @@ export default class AppFooter extends Vue {
         <a
           href="https://github.com/vkoves/electrify-chicago"
           class="github-link"
+          target="_blank"
+          rel="noopener"
         >
-          <img
-            alt=""
-            src="/github-mark.svg"
-            width="16"
-          >
-          Contribute to Electrify Chicago on GitHub
+          <img alt="" src="/github-mark.svg" height="16" />
+          Contribute On GitHub
         </a>
+      </div>
+
+      <div>
+        <a
+          href="https://bsky.app/profile/electrifychicago.net"
+          class="bluesky"
+          target="_blank"
+          rel="noopener"
+        >
+          <img alt="" src="/bluesky.svg" height="16" />
+        </a>
+      </div>
+
+      <div>
+        <a
+          href="https://www.youtube.com/@electrifychicago"
+          class="youtube"
+          target="_blank"
+          rel="noopener"
+        >
+          <img class="yt-icon" alt="" src="/youtube-mark.svg" height="16" />
+        </a>
+      </div>
+
+      <div>
+        <a
+          href="https://www.instagram.com/electrify.chicago"
+          class="instagram"
+          target="_blank"
+          rel="noopener"
+        >
+          <img class="ig-icon" alt="" src="/instagram-mark.svg" height="16" />
+        </a>
+      </div>
+
+      <div>
+        <g-link to="/release-notes/" class="smaller"> Release Notes </g-link>
       </div>
     </div>
   </footer>
@@ -44,12 +81,13 @@ footer {
   padding: 2rem 0;
   background-color: $grey;
 
-  > .constrained {
+  > .footer-inner {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     margin: auto;
-    gap: 2rem;
+    gap: 1rem;
   }
 
   a {
@@ -60,15 +98,63 @@ footer {
     font-weight: 600;
   }
 
-  a.github-link {
+  a.github-link,
+  a.bluesky,
+  a.youtube,
+  a.instagram {
     text-decoration: none;
-    padding: 0.25rem 0.5rem;
-    border-radius: 1rem;
+    padding: 0.3125rem 1rem;
+
+    font-size: 0.825rem;
+    line-height: 1;
+  }
+
+  a.bluesky,
+  a.youtube,
+  a.instagram {
+    padding: 0.3125rem;
+    border-radius: 4px;
+  }
+
+  a.github-link {
+    border-radius: $brd-rad-full;
     background-color: $off-white;
     border: none;
-    font-size: 0.825rem;
 
-    &:hover, &:focus { background-color: $white; }
+    &:hover,
+    &:focus {
+      background-color: $white;
+    }
+  }
+
+  a.bluesky {
+    background-color: #0886fe; // Bluesky blue
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: #016cd0;
+    }
+  }
+
+  a.youtube {
+    background-color: #ff0000;
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: #cc0000;
+    }
+  }
+
+  a.instagram {
+    background-color: #e0257a; // Instagram
+    color: $white;
+
+    &:hover,
+    &:focus {
+      background-color: #d12342;
+    }
   }
 
   .heart {
@@ -81,6 +167,11 @@ footer {
 
   @media (max-width: $mobile-max-width) {
     position: static;
+    padding: 1.25rem;
+
+    > .footer-inner {
+      gap: 0.8125rem;
+    }
   }
 }
 </style>

@@ -1,3 +1,5 @@
+/* stylelint-disable color-no-hex, declaration-property-value-disallowed-list, function-disallowed-list, color-function-notation */
+
 /**
  * Global Colors
  */
@@ -6,19 +8,99 @@ $grey: #dcdcdc;
 $grey-dark: #c4c1c1;
 $grey-light: #eaeaea;
 $off-white: #f6f6f6;
-
 $orange: #ffa500;
-$black: #000;
-$white: #fff;
-
-$text-main: #000;
+$black: #000000;
+$off-black: #1a1a1a;
+$white: #ffffff;
+$text-main: #000000;
+$text-mid-light: #696969; // for use on $grey-light
 $text-light: #737373;
 $link-blue: #2136ab;
-
-$chicago-blue: #41B6E6;
-$chicago-red: #E4002B;
+$blue-dark: #006ef0;
+$blue-very-dark: #0060d6;
+$blue-light: #e0eaff;
+$chicago-blue: #41b6e6;
+$chicago-red: #e4002b;
 
 $warning-background: #fcfcde;
 $warning-border: #ee8a4c;
+$box-shadow-main: rgba(0, 0, 0, 0.25);
 
-$box-shadow-main: rgba(0,0,0,0.25);
+$electric-brown: #9e5e00;
+$electric-yellow: #fff6aa;
+
+// Letter grade colors
+$grade-a-green: #009f49;
+$grade-b-green: #7fa52e;
+$grade-c-orange: #b36a15;
+$grade-d-red: #972222;
+$grade-f-red: #d60101;
+
+// Additional UI colors
+$announcement-border-red: #ff5454;
+$concern-very-bad-background: #ffd9d9;
+$concern-bad-background: #ffedf0;
+$concern-medium-border: #935700;
+$concern-great-background: #e9ffe9;
+$scrollbar-track: #f1f1f1;
+$scrollbar-thumb: #888888;
+$scrollbar-thumb-hover: #555555;
+
+// Basic HTML color equivalents
+$red: #ff0000;
+$green: #008000;
+$gray: #808080;
+
+$chart-red: #e74c3c;
+$chart-blue: #3498db;
+$chart-orange: #f39c12;
+$chart-green: #27ae60;
+$chart-purple: #9b59b6;
+$chart-teal: #1abc9c;
+
+.chart-stroke-red {
+  stroke: $chart-red;
+}
+
+.chart-fill-red {
+  fill: $chart-red;
+}
+
+.chart-stroke-blue {
+  stroke: $chart-blue;
+}
+
+.chart-fill-blue {
+  fill: $chart-blue;
+}
+
+.chart-stroke-orange {
+  stroke: $chart-orange;
+}
+
+.chart-fill-orange {
+  fill: $chart-orange;
+}
+
+.chart-stroke-green {
+  stroke: $chart-green;
+}
+
+.chart-fill-green {
+  fill: $chart-green;
+}
+
+.chart-stroke-purple {
+  stroke: $chart-purple;
+}
+
+.chart-fill-purple {
+  fill: $chart-purple;
+}
+.chart-stroke-teal {
+  stroke: $chart-teal;
+}
+
+.chart-fill-teal {
+  fill: $chart-teal;
+}

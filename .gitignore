@@ -2,13 +2,34 @@ node_modules/*
 .cache/*
 src/.temp/*
 
+# Environment variables (contains API keys)
+.env
+
+**/.ipynb_checkpoints/*
 # Ignore root dist directory from `gridsome build`, we need src/data/dist
 dist/*
 
-# Ignore data debug directory, which is just used to view the data, but makes huge
-# JSON files
-src/data/debug/*.json
+# Ignore data debug directory, which is just used to view and debug the intermediate data
+src/data/debug/*
+
+# Ignore Streetview output directory - images have to be manually copy pasted into building_imgs for
+# publication
+tmp_streetview_images/*
 
 **/__pycache__/*
+.coverage
 
 .DS_Store
+
+*.venv
+/.venv
+node_modules
+.venv*
+.venv-notebook
+
+.vscode/
+*.vscode/*
+settings.json
+*/settings.json
+
+*.egg-info*

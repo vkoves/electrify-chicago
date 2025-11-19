@@ -1,0 +1,289 @@
+{
+    "dependent_variable": "Didn't Report",
+    "number_of_observations": 10588,
+    "r_squared": 0.20873694324398318,
+    "adj_r_squared": 0.20422703696438205,
+    "coefficients": {
+        "Constant": 0.2722378006764279,
+        "GHG Intensity (Last Year)": 0.00044955135058975,
+        "Change in GHG Intensity (Last Two Years)": -1.57505222394505e-05,
+        "Gross Floor Area (Millions)": -0.013476796871966724,
+        "Year Building Was Built": -0.00013669778649434905
+    },
+    "p_values": {
+        "Constant": 0.08199275330546839,
+        "GHG Intensity (Last Year)": 0.06390593515257428,
+        "Change in GHG Intensity (Last Two Years)": 0.9467270492409207,
+        "Gross Floor Area (Millions)": 0.08503539066010299,
+        "Year Building Was Built": 0.1034106392335292
+    },
+    "confidence_intervals": {
+        "Constant": [
+            -0.03455538251293111,
+            0.5790309838657869
+        ],
+        "GHG Intensity (Last Year)": [
+            -2.599706546512929e-05,
+            0.0009250997666446293
+        ],
+        "Change in GHG Intensity (Last Two Years)": [
+            -0.00047780467167909957,
+            0.00044630362720019857
+        ],
+        "Gross Floor Area (Millions)": [
+            -0.028814599260447143,
+            0.0018610055165136953
+        ],
+        "Year Building Was Built": [
+            -0.00030121966815930634,
+            2.7824095170608207e-05
+        ],
+        "PrimaryPropertyType_Ambulatory Surgical Center": [
+            -0.38380499538790697,
+            0.25709199447046654
+        ],
+        "PrimaryPropertyType_Automobile Dealership": [
+            0.1820038885535204,
+            0.6784475872943581
+        ],
+        "PrimaryPropertyType_Bank Branch": [
+            -0.149045978165843,
+            0.491411068213924
+        ],
+        "PrimaryPropertyType_College/University": [
+            -0.08207968177950412,
+            0.210451065294847
+        ],
+        "PrimaryPropertyType_Convention Center": [
+            -0.21584948268941823,
+            0.37162239730766583
+        ],
+        "PrimaryPropertyType_Courthouse": [
+            0.0502536027297196,
+            0.4783253996627512
+        ],
+        "PrimaryPropertyType_Data Center": [
+            -0.1498172576322513,
+            0.49932228268341716
+        ],
+        "PrimaryPropertyType_Distribution Center": [
+            -3.6323299789648163e-16,
+            1.5066565509657481e-15
+        ],
+        "PrimaryPropertyType_Enclosed Mall": [
+            -0.12281399638855599,
+            0.25017142439080353
+        ],
+        "PrimaryPropertyType_Financial Office": [
+            -0.05195422225419177,
+            0.3253322265745932
+        ],
+        "PrimaryPropertyType_Fitness Center/Health Club/Gym": [
+            -0.1926664690892769,
+            0.14765772740610153
+        ],
+        "PrimaryPropertyType_Hospital (General Medical & Surgical)": [
+            -0.1060784619790539,
+            0.19872598945865833
+        ],
+        "PrimaryPropertyType_Hotel": [
+            -0.06085682518430317,
+            0.2332654362532638
+        ],
+        "PrimaryPropertyType_Ice/Curling Rink": [
+            -0.6256846213733286,
+            0.5555989063574026
+        ],
+        "PrimaryPropertyType_Indoor Arena": [
+            -0.1303086127053578,
+            0.5110615978278157
+        ],
+        "PrimaryPropertyType_K-12 School": [
+            -0.09260729883077741,
+            0.19583897796015204
+        ],
+        "PrimaryPropertyType_Laboratory": [
+            -0.21081509069982973,
+            0.09518637829932358
+        ],
+        "PrimaryPropertyType_Library": [
+            -0.1925841261805771,
+            0.14408068290082301
+        ],
+        "PrimaryPropertyType_Lifestyle Center": [
+            -0.3674181853559363,
+            0.21999279091923352
+        ],
+        "PrimaryPropertyType_Medical Office": [
+            -0.07016643857753159,
+            0.25198724732787386
+        ],
+        "PrimaryPropertyType_Mixed Use Property": [
+            -0.055132905285259284,
+            0.24543676382525215
+        ],
+        "PrimaryPropertyType_Movie Theater": [
+            -0.17512506644107367,
+            0.2303163573282775
+        ],
+        "PrimaryPropertyType_Multifamily Housing": [
+            -0.0780855283044381,
+            0.2089378450828938
+        ],
+        "PrimaryPropertyType_Museum": [
+            -0.18391813594138942,
+            0.19298252169726918
+        ],
+        "PrimaryPropertyType_Office": [
+            -0.08144585266728605,
+            0.206456690188633
+        ],
+        "PrimaryPropertyType_Other": [
+            -0.11494834093319117,
+            0.20339643693857734
+        ],
+        "PrimaryPropertyType_Other - Education": [
+            -0.1661084056759643,
+            0.35309338523927924
+        ],
+        "PrimaryPropertyType_Other - Entertainment/Public Assembly": [
+            -0.21154195496659312,
+            0.16499529517403821
+        ],
+        "PrimaryPropertyType_Other - Lodging/Residential": [
+            -0.1059017252297767,
+            0.33168779164502804
+        ],
+        "PrimaryPropertyType_Other - Mall": [
+            -0.09995996428786014,
+            0.2512168492576019
+        ],
+        "PrimaryPropertyType_Other - Public Services": [
+            -0.2190045269629563,
+            0.20040197167667595
+        ],
+        "PrimaryPropertyType_Other - Recreation": [
+            -0.044611799100587296,
+            0.3102359876845321
+        ],
+        "PrimaryPropertyType_Other - Services": [
+            -0.3475064338733024,
+            0.37337298071517655
+        ],
+        "PrimaryPropertyType_Other - Specialty Hospital": [
+            -0.16801279738429245,
+            0.20215135018784033
+        ],
+        "PrimaryPropertyType_Outpatient Rehabilitation/Physical Therapy": [
+            -0.14530336204855052,
+            0.25988414305455143
+        ],
+        "PrimaryPropertyType_Performing Arts": [
+            -0.13513234116423145,
+            0.21985669885744552
+        ],
+        "PrimaryPropertyType_Pre-school/Daycare": [
+            -0.3044895111467104,
+            0.15765534735825754
+        ],
+        "PrimaryPropertyType_Prison/Incarceration": [
+            -0.16575492984241547,
+            0.3069447431594727
+        ],
+        "PrimaryPropertyType_Repair Services (Vehicle, Shoe, Locksmith, etc.)": [
+            -0.1626465208677655,
+            0.42452614967309216
+        ],
+        "PrimaryPropertyType_Residence Hall/Dormitory": [
+            -0.06403496616547645,
+            0.2410331651115158
+        ],
+        "PrimaryPropertyType_Residential Care Facility": [
+            -0.09963573268533635,
+            0.2393371807764457
+        ],
+        "PrimaryPropertyType_Retail Store": [
+            -0.11642897953148146,
+            0.18082451401902344
+        ],
+        "PrimaryPropertyType_Senior Care Community": [
+            -0.008897067605525333,
+            0.5103477450009013
+        ],
+        "PrimaryPropertyType_Senior Living Community": [
+            -0.029249271085653533,
+            0.26775832175017056
+        ],
+        "PrimaryPropertyType_Social/Meeting Hall": [
+            -0.12442565633814519,
+            0.28748183533395555
+        ],
+        "PrimaryPropertyType_Stadium (Open)": [
+            -1.324281553384914e-16,
+            7.388070894696401e-17
+        ],
+        "PrimaryPropertyType_Strip Mall": [
+            -0.12399509375997883,
+            0.1858056243762327
+        ],
+        "PrimaryPropertyType_Supermarket/Grocery Store": [
+            -0.11524119784642448,
+            0.18108206792743667
+        ],
+        "PrimaryPropertyType_Urgent Care/Clinic/Other Outpatient": [
+            -0.4515309002244879,
+            0.40790139276746623
+        ],
+        "PrimaryPropertyType_Vehicle Dealership": [
+            -0.21055308040851842,
+            0.2668311941567469
+        ],
+        "PrimaryPropertyType_Wholesale Club/Supercenter": [
+            0.13045586819312652,
+            0.49773446526701637
+        ],
+        "PrimaryPropertyType_Worship Facility": [
+            0.007579000731181479,
+            0.34015681574373235
+        ],
+        "DataYear_2015": [
+            -1.0439058543386223e-16,
+            2.8318667853442876e-17
+        ],
+        "DataYear_2016": [
+            -0.10253122218798029,
+            0.010229581428212606
+        ],
+        "DataYear_2017": [
+            -0.10280306573766682,
+            -0.010193262240941477
+        ],
+        "DataYear_2018": [
+            -0.07493437488515342,
+            0.015615449745327716
+        ],
+        "DataYear_2019": [
+            0.3240727180220271,
+            0.4156825993450767
+        ],
+        "DataYear_2020": [
+            -0.05005661884315056,
+            0.04340528473205023
+        ],
+        "DataYear_2021": [
+            -0.039386573866128885,
+            0.054208209901416254
+        ],
+        "DataYear_2022": [
+            -0.014935840265061354,
+            0.07610271620482803
+        ]
+    },
+    "covariance_type": "nonrobust",
+    "building_type_dummy": "Included",
+    "year_fixed_effects": "Included",
+    "total_dropped_rows_pct": 57.46,
+    "total_dropped_rows": 14303,
+    "pct_obs_are_one": 12.22,
+    "pct_obs_are_zero": 87.78
+}

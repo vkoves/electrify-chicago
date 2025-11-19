@@ -1,98 +1,48 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-import BuildingsTable from '~/components/BuildingsTable.vue';
-import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
-
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Redirect page for backwards compatibility
+ *
+ * This page was renamed to "All Electric Buildings" on Aug. 27th, 2025.
+ * This redirect ensures old bookmarks and links continue to work.
+ */
 @Component<any>({
-  components: {
-    BuildingsTable,
-    DataDisclaimer,
-    DataSourceFootnote,
-    NewTabIcon,
-  },
   metaInfo() {
-    return { title:  'Biggest Gas Free Buildings' };
+    return {
+      title: 'Redirecting to All Electric Buildings',
+      meta: [{ 'http-equiv': 'refresh', content: '0; URL=/all-electric' }],
+      link: [{ rel: 'canonical', href: '/all-electric' }],
+    };
   },
 })
-export default class TopGasUsers extends Vue {
-}
+export default class BiggestGasFreeBuildings extends Vue {}
 </script>
-
-<static-query>
-  query {
-    allBuilding(
-      filter: {
-        DataYear: { eq: "2022" },
-        NaturalGasUse: { eq: "0.0" },
-        DistrictSteamUse: { eq: "0.0" }
-      },
-      sortBy: "GrossFloorArea", limit: 500
-    ) {
-      edges {
-        node {
-          slugSource
-          ID
-          DataYear
-          PropertyName
-          Address
-          path
-          GrossFloorArea
-          PrimaryPropertyType
-          GHGIntensity
-          GHGIntensityRank
-          GHGIntensityPercentileRank
-          TotalGHGEmissions
-          TotalGHGEmissionsRank
-          TotalGHGEmissionsPercentileRank
-          ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
-          NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
-          DistrictSteamUse
-        }
-      }
-    }
-  }
-</static-query>
 
 <template>
   <DefaultLayout>
-    <h1
-      id="main-content"
-      tabindex="-1"
-    >
-      Chicago's {{ $static.allBuilding.edges.length }} Fully Gas Free Buildings
-    </h1>
-
-    <p class="constrained -wide">
-      These buildings are already all-electric, and feature some of the most famous buildings in
-      the city! If even the John Hancock center or Marina Towers can run off of only electricity,
-      your building can too.
-    </p>
-
-    <p class="constrained -wide">
-      <strong>Note:</strong> This list is of buildings that use neither natural gas nor a district
-      steam system, since all district steam systems in the city are currently powered by burning
-      natural gas (to the best of our knowledge).
-    </p>
-
-    <DataDisclaimer />
-
-    <BuildingsTable
-      :buildings="$static.allBuilding.edges"
-      :show-square-footage="true"
-    />
-
-    <DataSourceFootnote />
+    <div class="redirect-page">
+      <h1>Redirecting to All Electric Buildings...</h1>
+      <p>
+        This page has moved to
+        <g-link to="/all-electric">All Electric Buildings</g-link>. You will be
+        redirected automatically.
+      </p>
+    </div>
   </DefaultLayout>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
+.redirect-page {
+  text-align: center;
+  padding: 4rem 1rem;
+
+  h1 {
+    margin-bottom: 1rem;
+  }
+
+  p {
+    margin-bottom: 0.5rem;
+  }
+}
 </style>

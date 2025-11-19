@@ -3,45 +3,29 @@
 
 import DefaultLayout from '~/layouts/Default.vue';
 
-// eslint-disable-next-line require-jsdoc
-export default function(Vue, {router, head, isClient}) {
+export default function (Vue, { head, isClient }) {
   // Set default layout as a global component
   Vue.component('DefaultLayout', DefaultLayout);
 
-  Vue.config.errorHandler = function(err, vm, info) {
+  Vue.config.errorHandler = function (err, vm, info) {
     // handle error
     // `info` is a Vue-specific error info, e.g. which lifecycle hook
     // the error was found in. Only available in 2.2.0+
     console.error('Vue error', err, info, vm);
   };
 
-  // Import Roboto font
+  // Roboto (for main text, with 900 weight ultra bold for letter grades) from Google Fonts
+  // https://fonts.google.com/specimen/Roboto?preview.text=A%20B%20C%20D%20F
   head.link.push({
     rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;1,400;1,700&display=swap',
+    href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&display=swap',
   });
 
-  // Import Caveat font
-  head.link.push({
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap',
-  });
-
-  // Add meta description
+  // Add default social images (will be overridden by page-specific meta)
   head.meta.push({
-    name: 'description',
-    content: 'Learn about Chicago\'s most polluting buildings, and why we need to electrify!',
-  });
-
-  // Add social images
-  head.meta.push({
-    name: 'og:image',
+    property: 'og:image',
     content: 'https://electrifychicago.net/social-image.png',
-  });
-
-  head.meta.push({
-    name: 'twitter:image',
-    content: 'https://electrifychicago.net/social-image.png',
+    key: 'og:image',
   });
 
   head.script.push({
@@ -52,7 +36,11 @@ export default function(Vue, {router, head, isClient}) {
   // Google analytics code
   if (isClient) {
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+
+    function gtag() {
+      window.dataLayer.push(arguments);
+    }
+
     gtag('js', new Date());
 
     gtag('config', 'G-D4F03H5C02');

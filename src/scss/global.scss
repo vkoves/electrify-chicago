@@ -1,5 +1,6 @@
 // Manually import other SCSS files here so we can use them
 @import './colors';
+@import './screen-sizes';
 @import './spacing';
 
 /**
@@ -10,18 +11,31 @@ body {
   padding: 0;
   line-height: 1.5;
 
-  &, * {
-    font-family: 'Roboto', sans-serif;
+  &,
+  * {
+    font-family: Roboto, sans-serif;
     box-sizing: border-box;
+  }
+
+  // Disable page scroll when we have an open modal
+  &:has(dialog[open]) {
+    overflow: hidden;
+  }
+
+  *:target {
+    border-bottom: solid $border-thick $blue-very-dark !important;
   }
 }
 
-*:focus {
-  outline: dashed $chicago-red;
+// Default focus styles
+*:focus-visible {
+  outline: 0.25rem dashed $blue-very-dark;
   outline-offset: 0.125rem;
 }
 
-a { color: $link-blue; }
+a {
+  color: $link-blue;
+}
 
 a.grey-link {
   background-color: $grey-light;
@@ -30,35 +44,93 @@ a.grey-link {
   padding: 0.25rem 1rem;
   text-decoration: none;
 
-  &:hover, &:focus { background-color: $grey; }
+  &:hover,
+  &:focus {
+    background-color: $grey;
+  }
 }
 
-h1, h2, h3, h4, h5, h6 {
-   &:focus {
+a.blue-link {
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: $brd-rad-medium;
+  color: $white;
+  background: $blue-dark;
+  text-decoration: none;
+  text-align: center;
+  font-weight: bold;
+  outline-color: $chicago-blue;
+
+  &:hover,
+  &:focus {
+    background: $blue-very-dark;
+  }
+}
+
+// A generic back link variant that also handles the icon within
+a.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 1rem 0 0;
+  font-weight: 600;
+
+  img {
+    height: 1rem;
+  }
+}
+
+// Make sure headings handle focus, as well as elements marked "targetable", which have IDs for
+// anchor links (e.g. `<a href="#energy-mix">`)
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.targetable {
+  &:focus {
     border-bottom: solid 0.5rem $chicago-blue;
     outline: none;
   }
 
   // Drop margin for the first paragraph after a heading
-  + p { margin-top: 0; }
-
+  + p {
+    margin-top: 0;
+  }
 }
 
 /**
  * Mobile Font Size Overrides
  */
 @media (max-width: $mobile-max-width) {
-  h1 { font-size: 1.75rem; }
-  h2 { font-size: 1.25rem; }
+  h1 {
+    font-size: 1.75rem;
+  }
 
-  p { font-size: 0.75rem; }
+  h2 {
+    font-size: 1.25rem;
+  }
 }
 
-h1 { margin: 1.5rem 0 0.5rem 0; }
-h2 { margin: 1rem 0 0.5rem 0; }
+h1 {
+  margin: 1.5rem 0 0.5rem;
+}
 
-p.-no-margin, p:first-of-type { margin: 0; }
+h2 {
+  margin: 1rem 0 0.5rem;
+}
 
+// Expose -no-margin variant to ignore default paragraph margins
+p:first-of-type,
+p.-no-margin {
+  margin: 0;
+}
+
+/** A global class to hide elements via CSS */
+.hidden {
+  display: none;
+}
 
 /**
  * Default Form Styling
@@ -69,7 +141,7 @@ select {
 }
 
 button {
-  padding: 0.5rem 1rem 0.3rem 1rem;
+  padding: 0.5rem 1rem 0.3rem;
   background-color: $white;
   border-radius: $brd-rad-small;
   color: $black;
@@ -83,42 +155,61 @@ button {
     background-color: $grey;
     border-bottom: none;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: $grey-dark;
     }
   }
 }
 
-/**
- * Text helpers
- */
-.bold { font-weight: bold; }
-
 dl {
-  dt { font-weight: bold; }
-  dd { margin-left: 0; }
+  dt {
+    font-weight: bold;
+  }
 
-  dd + dt { margin-top: 1rem; }
+  dd {
+    margin-left: 0;
+  }
+
+  dd + dt {
+    margin-top: 1rem;
+  }
 }
 
 /** Style the basic disclosure widget <details> and <summary> */
 details {
-  border: solid 0.01625rem $grey-dark;
   margin-bottom: 1rem;
-  border-radius: $brd-rad-medium;
+  border: solid $border-thin transparent;
+  background-color: $off-white;
+
+  &,
+  summary {
+    border-radius: $brd-rad-medium;
+  }
 
   summary {
     background-color: $grey-light;
     padding: 1rem 1.5rem;
     cursor: pointer;
 
-    &:focus { outline-offset: 0; }
+    &:focus {
+      outline-offset: 0;
+    }
+
+    > span {
+      margin-left: 0.5rem;
+    }
   }
 
-  .details-content { padding: 1.5rem; }
+  .details-content {
+    padding: 1.5rem;
+  }
 }
 
-img { max-width: 100%; }
+// Make sure images don't go beyond the page
+img {
+  max-width: 100%;
+}
 
 img.-shadowed {
   margin-top: 1rem;
@@ -126,53 +217,140 @@ img.-shadowed {
   box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
 }
 
-.large-text { font-size: 1.3em; }
+/** Some basic default table styling */
+table {
+  thead {
+    background-color: $grey;
+  }
 
-.smaller { font-size: smaller; }
+  td,
+  th {
+    padding: 0.5rem;
+  }
+}
 
-.regular-text-size { font-size: 1rem; ;}
+code {
+  font-family: monospace;
+  background-color: $grey-light;
+  padding: 0.1rem 0.25rem;
+  border-radius: $brd-rad-small;
+}
 
-.x-small-text { font-size: 0.75rem; }
+/**
+ * Text helpers
+ */
+.bold {
+  font-weight: bold;
+}
+
+.large-text {
+  font-size: 1.3em;
+}
+
+.smaller {
+  font-size: smaller;
+}
+
+.regular-text-size {
+  font-size: 1rem;
+}
+
+.x-small-text {
+  font-size: 0.75rem;
+}
 
 .footnote {
   font-size: 0.75rem;
   margin-top: 1rem;
 
-  &.-img { margin-top: 0; ;}
+  &.-img {
+    margin-top: 0;
+  }
 }
 
-.grade-letter {
-  font-family: 'Caveat', sans-serif;
-  font-weight: 700;
+/**
+ * Styling for our building letter grades (A-F) with colors for each for emphasis
+ */
+.letter-grade {
+  font-family: Roboto, sans-serif;
+  font-weight: 900;
+  line-height: 1;
 
   &.-a {
-    color: #009f49;
+    color: $grade-a-green;
   }
 
   &.-b {
-    color: #7fa52e;
+    color: $grade-b-green;
   }
 
   &.-c {
-    color: #b36a15;
+    color: $grade-c-orange;
   }
 
   &.-d {
-    color: #7fa52e;
+    color: $grade-d-red;
   }
 
   &.-f {
-    color: #972222;
+    color: $grade-f-red;
   }
+
+  // Create a -circled style for the tables
+  &.-circled {
+    display: inline-block;
+    border: solid $border-thin;
+    width: 1.375rem;
+    height: 1.375rem;
+    padding: 0.0938rem; // 1.5px
+    text-align: center;
+    border-radius: 1rem;
+    background: $white;
+    border-width: 0.125rem;
+    margin-left: 0.5rem;
+    vertical-align: 0.0625rem; // 1px
+
+    &.-d,
+    &.-b {
+      padding-right: 0;
+    }
+  }
+
+  &.-large {
+    font-size: 2.5rem;
+  }
+
+  &.-spaced {
+    margin-left: 1rem;
+  }
+}
+
+/**
+ * Class to mimic page width
+ */
+.page-constrained {
+  max-width: $desktop-max-width;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
 // Use .constrained for a reasonable max-width for text readability and .layout-constrained for a
 // centered version
-.layout-constrained, .constrained {
+.layout-constrained,
+.constrained {
   max-width: 50rem;
 
-  &.-wide { max-width: 60rem; }
-  &.layout-constrained { margin: auto; }
+  &.-padded {
+    padding: 0 1rem;
+  }
+
+  &.-wide {
+    max-width: 60rem;
+  }
+
+  &.layout-constrained {
+    margin: auto;
+  }
 }
 
 /** Search Form styling */
@@ -182,7 +360,8 @@ form.search-form {
     white-space: nowrap;
   }
 
-  input, button {
+  input,
+  button {
     height: 2.5rem;
     box-sizing: border-box;
     border: solid $border-thin $grey;
@@ -209,7 +388,8 @@ form.search-form {
     font-weight: bold;
     background-color: $grey;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background-color: $grey-dark;
     }
   }
@@ -218,20 +398,207 @@ form.search-form {
 .announce-panel {
   padding: 1rem;
   border-radius: 1rem;
-  border: solid 0.25rem #ff5454;
+  border: solid 0.25rem $announcement-border-red;
   background: $off-white;
   border-top-width: 2rem;
   max-width: 40rem;
 
-  &.-orange { border-color: $orange; }
-  &.-blue { border-color: $chicago-blue; }
+  &.-orange {
+    border-color: $orange;
+  }
 
-  h2 { margin-top: 0; }
+  &.-blue {
+    border-color: $blue-dark;
+  }
 
-  .bold { font-size: 1.125rem; }
+  h2,
+  h3 {
+    margin-top: 0;
+  }
+
+  .bold {
+    font-size: 1.125rem;
+  }
+
+  .faded {
+    color: $text-mid-light;
+  }
 
   @media (max-width: $mobile-max-width) {
-    .bold { font-size: 1rem; }
+    .bold {
+      font-size: 1rem;
+    }
+  }
+}
+
+/** A container for little building pills, like All Electric */
+.pills-cont {
+  display: inline-flex;
+  gap: 0.5rem;
+
+  &.-small {
+    font-size: 0.875rem;
+  }
+
+  // When pills are links, add a border and highlight the text on hover or focus
+  a.pill {
+    text-decoration: none;
+    border: solid $border-medium $grey;
+    transition:
+      color 0.3s,
+      background-color 0.3s,
+      border-color 0.3s;
+
+    &.-new {
+      border-color: $blue-very-dark;
+
+      &:hover,
+      &:focus {
+        background-color: $blue-very-dark;
+        color: $white;
+      }
+    }
+
+    &.-all-electric {
+      border-color: $electric-brown;
+
+      &:hover,
+      &:focus {
+        background-color: $electric-brown;
+        color: $white;
+      }
+    }
+
+    &:hover,
+    &:focus {
+      .text {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .pill {
+    display: inline-block;
+    font-weight: bold;
+    padding: 0.125rem 1rem;
+    border-radius: 1rem;
+
+    &.-all-electric {
+      background: $electric-yellow;
+      color: $electric-brown;
+    }
+
+    &.-new {
+      background: $blue-light;
+      color: $blue-very-dark;
+    }
+
+    span.icon {
+      text-shadow: 0.0625rem 0 0.0625rem $black;
+      margin-right: 0.5em;
+    }
+  }
+}
+
+/**
+ * Global banner - notice panel for important announcements and calls to action
+ */
+.global-banner {
+  position: relative;
+  background: $blue-very-dark;
+  padding: 1rem 0;
+  box-shadow: 0 0.3125rem 0.25rem $box-shadow-main;
+  width: 100%;
+  z-index: 1;
+
+  // Add margin and border-radius for non-full-width layouts
+  .layout:not(.-full-width) & {
+    margin: 0 1rem 2rem;
+    border-radius: $brd-rad-medium;
+    width: calc(100% - 2rem);
+  }
+
+  .page-constrained {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .content-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex-grow: 1;
+  }
+
+  h2 {
+    color: $white;
+    font-size: 1.25rem;
+    margin: 0;
+  }
+
+  p {
+    color: $white;
+    font-size: 0.875rem;
+  }
+
+  a {
+    background-color: $white;
+    padding: 0.5rem 1.25rem;
+    border-radius: $brd-rad-small;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 0.9rem;
+
+    &:focus {
+      outline-color: $white;
+    }
+    &:hover,
+    &:focus {
+      background-color: $off-white;
+    }
+  }
+
+  /** Mobile styling */
+  @media (max-width: $mobile-max-width) {
+    padding: 0.75rem 0;
+    text-align: center;
+
+    .page-constrained {
+      gap: 0.5rem;
+      flex-direction: column;
+    }
+
+    h2 {
+      font-size: 1rem;
+    }
+
+    a {
+      padding: 0.3125rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    p {
+      font-size: 0.75rem;
+    }
+  }
+}
+
+/**
+ * A simple panel, for smaller warnings and such
+ */
+.panel {
+  border: solid $border-thin $grey-dark;
+  border-radius: $brd-rad-small;
+  padding: 1rem;
+  background: $grey-light;
+
+  &.-warning {
+    background: $warning-background;
+    border-color: $warning-border;
   }
 }
 
@@ -239,36 +606,431 @@ form.search-form {
  * <Pager> styling
  */
 nav.pager {
-    display: inline-flex;
-    gap: 1rem;
-    margin-top: 1rem;
+  display: inline-flex;
+  gap: 1rem;
+  margin-top: 1rem;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $text-main;
+    background-color: $grey;
+    width: 2.5rem;
+    aspect-ratio: 1;
+    text-align: center;
+    border-radius: $brd-rad-small;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover,
+    &:focus {
+      background-color: $grey-dark;
+    }
+
+    &.active {
+      background-color: $orange;
+      cursor: default;
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    gap: 0.25rem;
 
     a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: $text-main;
-      background-color: $grey;
-      width: 2.5rem;
-      aspect-ratio: 1;
-      text-align: center;
-      border-radius: $brd-rad-small;
-      text-decoration: none;
-      font-weight: bold;
+      width: 2rem;
+    }
+  }
+}
 
-      &:hover, &:focus {
-        background-color: $grey-dark;
-      }
+article.blog-post {
+  .sub-title {
+    margin: 0;
+    font-weight: bold;
+  }
+}
 
-      &.active {
-        background-color: $orange;
-        cursor: default;
-      }
+// Blog article publish time
+.publish-time {
+  margin-top: 0.25rem;
+  font-weight: 500;
+}
+
+/**
+ * Tooltips styling
+ *
+ * Base Imports:
+ *  import vToolTip from 'v-tooltip';
+ *  Vue.use(vToolTip);
+ *
+ * Base Component Structure:
+ *    <img
+ *      v-tooltip="{ content: tooltipMessage, trigger: 'click hover' }"
+ *      class="tooltip"
+ *      src="/help.svg"
+ *      alt="Help icon"
+ *      tabindex="0"
+ *    >
+ *
+ * Positioning Modifier:
+ *    v-tooltip.[top | bottom | left | right]
+ *    Ex.
+ *      <img
+ *        v-tooltip.bottom="{ content: tooltipMessage, trigger: 'click hover' }"
+ *        class="tooltip"
+ *        src="/help.svg"
+ *        alt="Help icon"
+ *        tabindex="0"
+ *      >
+ */
+.tooltip {
+  // The width of the tooltip tip
+  $tooltipSize: 0.3125rem;
+
+  z-index: 10000;
+
+  .tooltip-inner {
+    background: $white;
+    color: $black;
+    border-radius: 0.25rem; // 4px
+    border: $border-thin solid $blue-dark;
+    box-shadow: 0.25rem 0.25rem 0.25rem $grey;
+    width: 22rem;
+    padding: 1rem;
+
+    p {
+      font-size: 0.8rem;
     }
 
-    @media (max-width: $mobile-max-width) {
-      gap: 0.25rem;
-
-      a { width: 2rem; }
+    .title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: $blue-dark;
+      margin: 0;
+      margin-bottom: 0.75rem;
     }
+  }
+
+  .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: $tooltipSize;
+    border-color: $blue-dark;
+    z-index: 1;
+  }
+
+  // Positioning modifiers
+  &[x-placement^='top'] {
+    margin-bottom: $tooltipSize;
+
+    .tooltip-arrow {
+      border-width: $tooltipSize $tooltipSize 0 $tooltipSize;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      bottom: -$tooltipSize;
+      left: calc(50% - $tooltipSize);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^='bottom'] {
+    margin-top: $tooltipSize;
+
+    .tooltip-arrow {
+      border-width: 0 $tooltipSize $tooltipSize;
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-top-color: transparent;
+      top: -$tooltipSize;
+      left: calc(50% - $tooltipSize);
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
+  &[x-placement^='right'] {
+    margin-left: $tooltipSize;
+
+    .tooltip-arrow {
+      border-width: $tooltipSize $tooltipSize $tooltipSize 0;
+      border-left-color: transparent;
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+      left: -$tooltipSize;
+      top: calc(50% - $tooltipSize);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[x-placement^='left'] {
+    margin-right: $tooltipSize;
+
+    .tooltip-arrow {
+      border-width: $tooltipSize 0 $tooltipSize $tooltipSize;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: transparent;
+      right: -$tooltipSize;
+      top: calc(50% - $tooltipSize);
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+
+  &[aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition:
+      opacity 0.15s,
+      visibility 0.15s;
+  }
+
+  &[aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.15s;
+  }
+}
+
+/** A container for multiple BuildingTiles */
+
+/**
+ * Concern level styling for stats (used by StatTile and other components)
+ * Based on building performance relative to citywide medians
+ */
+.concern-level-very-bad {
+  background-color: $concern-very-bad-background;
+  border-color: $red;
+}
+
+.concern-level-bad {
+  background-color: $concern-bad-background;
+  border-color: $red;
+}
+
+.concern-level-medium {
+  background-color: $off-white;
+  border-color: $concern-medium-border;
+}
+
+.concern-level-good {
+  background-color: $off-white;
+  border-color: $green;
+}
+
+.concern-level-great {
+  background-color: $concern-great-background;
+  border-color: $green;
+}
+
+/**
+ * Median comparison styling for stats (social card and stat tile)
+ */
+.median-comparison {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+
+  .median-mult {
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+
+  .median-val {
+    font-size: 0.75rem;
+    color: $text-mid-light;
+    line-height: 1.25;
+  }
+
+  .median-label {
+    font-size: 0.825rem;
+    font-weight: 600;
+  }
+}
+
+.buildings-scroll-cont {
+  position: relative;
+
+  $card-padding: 0.75rem;
+
+  // Grow to account for inner padding
+  margin: 1rem (-$card-padding) 2rem;
+  overflow: scroll hidden;
+
+  // Create a fake partial right border to make clear it's scrollable
+  &::after {
+    content: '';
+    width: 3.75rem; // 60px
+    height: 0.25rem; // 4px
+    background: $gray;
+    position: absolute;
+    bottom: -0.25rem; // -4px
+  }
+
+  // Set scrollbar width
+  &::-webkit-scrollbar {
+    width: 0.75rem;
+  }
+
+  // Scrollbar track
+  &::-webkit-scrollbar-track {
+    background: $scrollbar-track;
+    border-radius: $brd-rad-medium;
+    margin: $card-padding;
+  }
+
+  // Scrollbar Handle
+  &::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb;
+    border-radius: $brd-rad-medium;
+    cursor: pointer;
+
+    // Scroll handle on hover
+    &:hover {
+      background: $scrollbar-thumb-hover;
+    }
+  }
+
+  ul.building-tiles {
+    list-style: none;
+    display: flex;
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: 0.5rem $card-padding 1.5rem;
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    // Undo padding on mobile to make scroll full width
+    & {
+      margin-left: -1rem;
+      margin-right: -1rem;
+
+      ul.building-tiles {
+        li {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+    }
+  }
+}
+
+/**
+ * Blue Action Button Styling - shared styles for large call-to-action buttons
+ */
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  gap: 1rem;
+  padding: 0.25rem 1.5rem;
+  height: 2.75rem; // use height to keep Email & Print consistent
+  background-color: $blue-dark;
+  border: none;
+  color: $white;
+  font-size: 1.25rem;
+  font-weight: bold;
+  border-radius: $brd-rad-medium;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    background-color: $blue-very-dark;
+  }
+
+  img {
+    border-radius: 0;
+    height: 1.5rem;
+  }
+
+  @media (max-width: $mobile-max-width) {
+    margin-bottom: 0;
+    font-size: 1rem;
+    min-width: initial;
+
+    img {
+      height: 1.25rem;
+    }
+  }
+}
+
+/**
+ * Print Styling - hides interactive elements and simplifies layout.
+ *
+ * NOTE: Print layout is around 670px (or 740px?) wide, so make sure to test that way
+ */
+@media print {
+  // Shrink all fonts
+  html {
+    font-size: 0.6125rem;
+  }
+
+  /** Expose global "no-print" class for hiding elements from printing */
+  .no-print {
+    display: none !important;
+  }
+
+  // Drop header border and padding
+  header.header {
+    padding: 0;
+
+    .site-logo {
+      width: 20rem;
+    }
+
+    // Drop all header links (just keep the logo)
+    .top-nav,
+    button.mobile-menu-toggle {
+      display: none;
+    }
+  }
+
+  // Drop main-content padding, since printed pages already have plenty
+  .layout .main-content {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  // Totally hide the footer
+  footer {
+    display: none;
+  }
+}
+
+/**
+ * Vue Transition Animations
+ */
+
+// Slide-fade animation: slide down on enter, fade on leave
+.slide-fade-enter-active {
+  animation: slide-down 0.4s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

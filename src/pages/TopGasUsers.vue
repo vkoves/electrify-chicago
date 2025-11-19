@@ -2,27 +2,35 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Biggest Natural Gas Users' };
+    return generatePageMeta(
+      'top-gas-users',
+      'Top Fossil Gas Users',
+      "Chicago's biggest consumers of fossil gas - these buildings represent " +
+        'the largest opportunity for emissions reductions through electrification.',
+    );
   },
 })
-export default class TopGasUsers extends Vue {
-}
+export default class TopGasUsers extends Vue {}
 </script>
 
+<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <static-query>
   query {
     allBuilding(sortBy: "NaturalGasUse", limit: 50) {
@@ -33,6 +41,7 @@ export default class TopGasUsers extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity
@@ -46,7 +55,10 @@ export default class TopGasUsers extends Vue {
           ElectricityUsePercentileRank
           NaturalGasUse
           NaturalGasUseRank
+          DistrictSteamUse
           NaturalGasUsePercentileRank
+          AvgPercentileLetterGrade
+          DataAnomalies
         }
       }
     }
@@ -54,30 +66,33 @@ export default class TopGasUsers extends Vue {
 </static-query>
 
 <template>
-  <DefaultLayout>
-    <h1
-      id="main-content"
-      tabindex="-1"
+  <DefaultLayout main-class="layout -full-width">
+    <BuildingsHero
+      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
     >
-      Top {{ $static.allBuilding.edges.length }} Buildings by Natural Gas Use
-    </h1>
+      <h1 id="main-content" tabindex="-1">
+        Top {{ $static.allBuilding.edges.length }} Buildings by Fossil Gas Use
+      </h1>
+    </BuildingsHero>
 
-    <p class="constrained -wide">
-      These buildings are the largest consumers of natural gas (methane) in the city. Natural gas
-      in these buildings is typically used for heating gas and water, and since electrifying the
-      grid won't clean up these emissions it's an important set of buildings to focus on!
-    </p>
+    <div class="page-constrained">
+      <p class="constrained -wide">
+        These buildings are the largest consumers of fossil gas (methane) in the
+        city. Fossil gas in these buildings is typically used for heating gas
+        and water, and since electrifying the grid won't clean up these
+        emissions it's an important set of buildings to focus on!
+      </p>
 
-    <DataDisclaimer />
+      <DataDisclaimer />
 
-    <BuildingsTable
-      :buildings="$static.allBuilding.edges"
-      :show-gas-use="true"
-    />
+      <BuildingsTable
+        :buildings="$static.allBuilding.edges"
+        :show-gas-use="true"
+      />
 
-    <DataSourceFootnote />
+      <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

@@ -1,12 +1,8 @@
-/**
- * Screen Sizes
- */
-$mobile-max-width: 800px;
-
 $border-thin: 0.0625rem; // eq. to 1px
 $border-medium: 0.125rem; // eq. to 2px
 $border-thick: 0.1875rem; // eq. to 3px
 $border-v-thick: 0.25rem; // eq. to 4px
 
-$brd-rad-small: 0.25rem;
-$brd-rad-medium: 0.5rem;
+$brd-rad-small: 0.25rem; // 4px
+$brd-rad-medium: 0.5rem; // 8px
+$brd-rad-full: 10rem;

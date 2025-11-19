@@ -1,4 +1,5 @@
 <script lang="ts">
+/** global process */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import RankText from '~/components/RankText.vue';
@@ -6,87 +7,305 @@ import OverallRankEmoji from './OverallRankEmoji.vue';
 import OwnerLogo from './OwnerLogo.vue';
 import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
 
-
 // This simple JSON is a lot easier to just use directly than going through GraphQL and it's
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import LetterGrade from './LetterGrade.vue';
 
 @Component({
   components: {
-    RankText,
+    LetterGrade,
     OverallRankEmoji,
     OwnerLogo,
+    RankText,
   },
 })
 export default class BuildingsTable extends Vue {
   /** Expose stats to template */
-  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
+    BuildingBenchmarkStats;
 
-  @Prop({required:true}) buildings!: Array<{ node: IBuilding }>;
+  @Prop({ required: true }) buildings!: Array<{ node: IBuilding }>;
 
-  @Prop({default: false}) showSquareFootage!: boolean;
+  @Prop({ default: false }) showSquareFootage!: boolean;
 
-  @Prop({default: false}) showGasUse!: boolean;
+  @Prop({ default: false }) showGasUse!: boolean;
 
-  @Prop({default: false}) showElectricityUse!: boolean;
+  @Prop({ default: false }) showElectricityUse!: boolean;
+
+  @Prop({ default: false }) showYearBuilt!: boolean;
+
+  /** Props from Search component to store field (column) being sorted and direction */
+  @Prop({ default: 'GHGIntensity' }) sortedField!: string;
+  @Prop({ default: 'desc' }) sortedDirection!: string;
+
+  /**
+   * Prop to handle whether the sorting buttons should be shown
+   * (ex. with Search component). We then emit the sorting reuqest and the parent handles
+   * actually sorting the data and passing it back in.
+   */
+  @Prop({ default: false }) showSort!: boolean;
+
+  /**
+   * Required fields for buildings (from GraphQL query):
+   *
+   * Always required:
+   * - slugSource, ID, path - for building links and routing
+   * - PropertyName, Address - displayed in name/address column
+   * - PrimaryPropertyType - displayed in property type column
+   * - GHGIntensity + GHGIntensityRank + GHGIntensityPercentileRank - always shown
+   * - TotalGHGEmissions + TotalGHGEmissionsRank + TotalGHGEmissionsPercentileRank - always shown
+   * - AvgPercentileLetterGrade - letter grade badge (LetterGrade component)
+   * - DataYear, DataAnomalies - emoji indicators (OverallRankEmoji component)
+   *
+   * Conditionally required based on props:
+   *
+   * when showYearBuilt: true
+   * - YearBuilt
+   * when showSquareFootage: true
+   * - GrossFloorArea + GrossFloorAreaRank + GrossFloorAreaPercentileRank
+   * when showElectricityUse: true
+   * - ElectricityUse + ElectricityUseRank + ElectricityUsePercentileRank
+   * when showGasUse: true
+   * - NaturalGasUse + NaturalGasUseRank + NaturalGasUsePercentileRank
+   */
+
+  // declares the property emit for TS
+  // TODO: Figure out why Vue $emit isn't recognized by Typescript
+  $emit: any;
+
+  isDebug = false;
+
+  /** Method to return the relevant aria-label value
+   * based on whether the column is selected and sorted */
+  getAriaLabelForSort(fieldname: string): string {
+    if (fieldname === this.sortedField) {
+      return (
+        `Toggle sort ${this.sortedField} - currently sorting in ` +
+        `${this.sortedDirection === 'asc' ? 'ascending' : 'descending'} order.`
+      );
+    } else {
+      return `Sort by ${this.sortedField}`;
+    }
+  }
+
+  mounted(): void {
+    /**
+     * Whether in debug mode where we show ID and full address, to allow copy pasting to building
+     * address CSV. Set in mounted to avoid error on gridsome build, as this only works in the local
+     * dev server.
+     */
+    if (window) {
+      this.isDebug = window.location.search.includes('debug');
+    }
+
+    // Validate required fields are present
+    this.validateRequiredFields();
+  }
+
+  validateRequiredFields(): void {
+    const requiredFields = [
+      'slugSource',
+      'ID',
+      'path',
+      'PropertyName',
+      'Address',
+      'PrimaryPropertyType',
+      'GHGIntensity',
+      'GHGIntensityRank',
+      'GHGIntensityPercentileRank',
+      'TotalGHGEmissions',
+      'TotalGHGEmissionsRank',
+      'TotalGHGEmissionsPercentileRank',
+      'AvgPercentileLetterGrade',
+      'DataYear',
+      'DataAnomalies',
+      // For gas free check
+      'NaturalGasUse',
+      'DistrictSteamUse',
+    ];
+
+    const conditionalFields = [
+      { field: 'YearBuilt', condition: this.showYearBuilt },
+      { field: 'GrossFloorArea', condition: this.showSquareFootage },
+      { field: 'GrossFloorAreaRank', condition: this.showSquareFootage },
+      {
+        field: 'GrossFloorAreaPercentileRank',
+        condition: this.showSquareFootage,
+      },
+      { field: 'ElectricityUse', condition: this.showElectricityUse },
+      { field: 'ElectricityUseRank', condition: this.showElectricityUse },
+      {
+        field: 'ElectricityUsePercentileRank',
+        condition: this.showElectricityUse,
+      },
+      { field: 'NaturalGasUse', condition: this.showGasUse },
+      { field: 'NaturalGasUseRank', condition: this.showGasUse },
+      { field: 'NaturalGasUsePercentileRank', condition: this.showGasUse },
+    ];
+
+    if (this.buildings.length === 0) return;
+
+    const firstBuilding = this.buildings[0].node;
+
+    // Check required fields
+    for (const field of requiredFields) {
+      if (typeof firstBuilding[field] === 'undefined') {
+        throw new Error(
+          `BuildingsTable: Missing required field '${field}' in buildings data. ` +
+            `Make sure to include it in your GraphQL query. See docs for field requirements.`,
+        );
+      }
+    }
+
+    // Check conditional fields
+    for (const { field, condition } of conditionalFields) {
+      if (condition && typeof firstBuilding[field] === 'undefined') {
+        throw new Error(
+          `BuildingsTable: Missing required field '${field}' when condition is true. ` +
+            `Make sure to include it in your GraphQL query when using the corresponding show prop.`,
+        );
+      }
+    }
+  }
 }
 </script>
 
 <template>
   <div class="buildings-table-cont">
-    <table :class="{ '-wide': showSquareFootage || showGasUse || showElectricityUse }">
+    <table
+      :class="{
+        '-wide':
+          showSquareFootage ||
+          showGasUse ||
+          showElectricityUse ||
+          showYearBuilt,
+      }"
+    >
       <thead>
         <tr>
-          <th scope="col">
-            Name / Address
-          </th>
-          <th
-            scope="col"
-            class="prop-type"
-          >
-            Primary Property Type
-          </th>
-          <th v-if="showSquareFootage">
+          <th scope="col">Name / Address</th>
+          <th scope="col" class="prop-type">Primary Property Type</th>
+          <th v-if="showYearBuilt" scope="col" class="year-col">Year Built</th>
+          <th v-if="showSquareFootage" scope="col" class="sq-footage numeric">
             Square Footage
           </th>
+          <!-- Click handlers on numeric columns for sorting -->
           <th
             v-if="showGasUse"
             scope="col"
             class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
+            @click="showSort ? $emit('sort', 'NaturalGasUse') : null"
           >
-            Natural Gas Use<br>
+            Fossil Gas Use<br />
             <span class="unit">(kBtu)</span>
+            <button
+              v-if="showSort"
+              :class="
+                sortedField === 'NaturalGasUse'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('NaturalGasUse')"
+            >
+              {{
+                sortedField === 'NaturalGasUse'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
           <th
             v-if="showElectricityUse"
             scope="col"
             class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
+            @click="showSort ? $emit('sort', 'ElectricityUse') : null"
           >
-            Electricity Use<br>
+            Electricity Use<br />
             <span class="unit">(kBtu)</span>
+            <button
+              v-if="showSort"
+              :class="
+                sortedField === 'ElectricityUse'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('ElectricityUse')"
+            >
+              {{
+                sortedField === 'ElectricityUse'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
+
           <th
             scope="col"
             class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
+            @click="showSort ? $emit('sort', 'GHGIntensity') : null"
           >
-            GHG Intensity<br>
+            GHG Intensity<br />
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
+            <button
+              v-if="showSort"
+              :class="
+                sortedField === 'GHGIntensity'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('GHGIntensity')"
+            >
+              {{
+                sortedField === 'GHGIntensity'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
           <th
             scope="col"
             class="numeric wide-col"
+            :class="{ '-sortable': showSort }"
+            @click="showSort ? $emit('sort', 'TotalGHGEmissions') : null"
           >
-            Total GHG Emissions<br>
+            Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
+            <button
+              v-if="showSort"
+              :class="
+                sortedField === 'TotalGHGEmissions'
+                  ? 'sort selected'
+                  : 'sort deselected'
+              "
+              :aria-label="getAriaLabelForSort('TotalGHGEmissions')"
+            >
+              {{
+                sortedField === 'TotalGHGEmissions'
+                  ? sortedDirection === 'asc'
+                    ? '▲'
+                    : '▼'
+                  : '▼'
+              }}
+            </button>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="edge in buildings"
-          :key="edge.node.id"
-        >
-          <td class="property-name">
+        <tr v-for="edge in buildings" :key="edge.node.id">
+          <td
+            class="property-name"
+            :class="{ '-narrow': showYearBuilt || showSquareFootage }"
+          >
             <g-link :to="edge.node.path">
               {{ edge.node.PropertyName || edge.node.Address }}
             </g-link>
@@ -94,22 +313,38 @@ export default class BuildingsTable extends Vue {
               :building="edge.node"
               :stats="BuildingBenchmarkStats"
             />
-            <OwnerLogo
-              :building="edge.node"
-              :is-small="true"
+
+            <OwnerLogo :building="edge.node" :is-text="true" />
+            <LetterGrade
+              v-if="edge.node.AvgPercentileLetterGrade"
+              :grade="edge.node.AvgPercentileLetterGrade"
+              class="-circled"
             />
 
             <div class="prop-address">
-              {{ edge.node.Address }}
+              <template v-if="isDebug">
+                <!-- If '?debug' is in URL, show ID and full address in quotes for address CSV -->
+                {{ edge.node.ID }},"{{ edge.node.Address }}, Chicago IL,
+                {{ edge.node.ZIPCode }}"
+              </template>
+              <template v-else>
+                {{ edge.node.Address
+                }}{{ isDebug ? ', Chicago IL, ' + edge.node.ZIPCode : '' }}
+              </template>
             </div>
           </td>
           <td>{{ edge.node.PrimaryPropertyType }}</td>
 
+          <!-- Year built (optional) -->
+          <td v-if="showYearBuilt">
+            <template v-if="edge.node.YearBuilt">
+              {{ Math.round(edge.node.YearBuilt) }}
+            </template>
+            <template v-else> - </template>
+          </td>
+
           <!-- Square footage is optional, only shown on BiggestBuildings -->
-          <td
-            v-if="showSquareFootage"
-            class="numeric"
-          >
+          <td v-if="showSquareFootage" class="numeric">
             <template v-if="edge.node.GrossFloorArea">
               <RankText
                 :building="edge.node"
@@ -119,15 +354,10 @@ export default class BuildingsTable extends Vue {
                 stat-key="GrossFloorArea"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
 
-          <td
-            v-if="showGasUse"
-            class="numeric"
-          >
+          <td v-if="showGasUse" class="numeric">
             <template v-if="edge.node.NaturalGasUse">
               <RankText
                 :building="edge.node"
@@ -137,14 +367,9 @@ export default class BuildingsTable extends Vue {
                 stat-key="NaturalGasUse"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
-          <td
-            v-if="showElectricityUse"
-            class="numeric"
-          >
+          <td v-if="showElectricityUse" class="numeric">
             <template v-if="edge.node.ElectricityUse">
               <RankText
                 :building="edge.node"
@@ -154,9 +379,7 @@ export default class BuildingsTable extends Vue {
                 stat-key="ElectricityUse"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
 
           <!-- GHG Intensity is shown on all tables -->
@@ -169,9 +392,7 @@ export default class BuildingsTable extends Vue {
                 :unit="'kg/sqft'"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
           <td class="numeric">
             <template v-if="edge.node.TotalGHGEmissions">
@@ -183,9 +404,7 @@ export default class BuildingsTable extends Vue {
                 :unit="'tons'"
               />
             </template>
-            <template v-else>
-              -
-            </template>
+            <template v-else> - </template>
           </td>
         </tr>
       </tbody>
@@ -202,6 +421,8 @@ export default class BuildingsTable extends Vue {
   overflow: auto;
   border: solid $border-thin $grey-dark;
   box-sizing: border-box;
+  // Don't change table colors when printing
+  print-color-adjust: exact;
 
   table {
     width: 100%;
@@ -214,7 +435,9 @@ export default class BuildingsTable extends Vue {
       min-width: 88rem;
 
       // Wide columns shouldn't be as wide if we have more of them
-      .wide-col { width: 17%; }
+      .wide-col {
+        width: 17%;
+      }
     }
 
     a {
@@ -228,7 +451,9 @@ export default class BuildingsTable extends Vue {
       position: sticky;
       top: 0;
 
-      tr { background-color: $grey-dark; }
+      tr {
+        background-color: $grey-dark;
+      }
 
       th {
         text-align: left;
@@ -241,21 +466,75 @@ export default class BuildingsTable extends Vue {
           font-size: smaller;
           font-weight: normal;
         }
+
+        // Style sortable column headers and icon
+        &.-sortable {
+          cursor: pointer;
+
+          &:hover .sort.deselected,
+          .sort.selected {
+            color: $black;
+          }
+          .sort.deselected {
+            color: rgba(0, 0, 0, 0.5);
+          }
+
+          .sort {
+            margin-left: 0.2rem;
+            font-size: 0.7rem;
+            padding: 0;
+            background-color: transparent;
+            border-bottom: none;
+            transition: color 0.3s;
+          }
+        }
       }
     }
 
-    th, td {
+    th,
+    td {
       padding: 0.75rem;
       line-height: 1.25;
 
-      &:first-of-type { padding-left: 1rem; }
-      &:last-of-type { padding-right: 1rem; }
-      &.numeric { text-align: right; }
-      &.wide-col { width: 20%; }
-      &.prop-type { width: 12rem; }
+      &:first-of-type {
+        padding-left: 1rem;
+      }
+      &:last-of-type {
+        padding-right: 1rem;
+      }
+      &.numeric {
+        text-align: right;
+      }
+      &.wide-col {
+        width: 20%;
+      }
+      &.prop-type {
+        width: 12rem;
+      }
+      &.year-col {
+        width: 5rem;
+      }
+      &.sq-footage {
+        width: 7rem;
+      }
     }
 
-    tr:nth-of-type(2n + 2) { background-color: $grey; }
+    // When we show more columns, we limit the property name column more
+    .property-name {
+      &.-narrow {
+        max-width: 24rem;
+        width: 24rem;
+
+        // Make sure long property names wrap
+        a {
+          white-space: normal;
+        }
+      }
+    }
+
+    tr:nth-of-type(2n + 2) {
+      background-color: $grey;
+    }
 
     .prop-address {
       font-size: 0.75em;
@@ -277,8 +556,16 @@ export default class BuildingsTable extends Vue {
         font-size: 0.825rem;
         padding: 0.5rem 0.25rem;
       }
-      td.property-name, td.property-address { width: 10rem; }
+      td.property-name,
+      td.property-address {
+        width: 10rem;
+      }
     }
+  }
+
+  @media print {
+    // Undo negative margin when printing, since we drop page margins
+    margin: 0 !important;
   }
 }
 </style>

@@ -1,8 +1,5 @@
 <template>
-  <div
-    :id="svgContPrefix + randomId"
-    class="spark-graph-cont"
-  >
+  <div :id="svgContPrefix + randomId" class="spark-graph-cont">
     <svg :id="svgIdPrefix + randomId"><!-- D3 inserts here --></svg>
   </div>
 </template>
@@ -22,19 +19,21 @@ export interface INumGraphPoint {
  */
 @Component({})
 export default class BarGraph extends Vue {
-  @Prop({required: true}) graphTitle!: string;
+  @Prop({ required: true }) graphTitle!: string;
 
-  @Prop({required: true}) graphData!: Array<INumGraphPoint>;
+  @Prop({ required: true }) graphData!: Array<INumGraphPoint>;
 
   /** A unit to append to the min and max values (e.g. "tons") */
-  @Prop({required: true}) unit?: string;
+  @Prop({ required: true }) unit?: string;
 
   readonly svgIdPrefix = 'spark-svg-';
   readonly svgContPrefix = 'spark-cont-';
 
   /* Strip HTML from the unit (just <sub> for CO2) and simplify by dropping 'metric' */
   get unitCleaned(): string {
-    if (!this.unit) { return ''; }
+    if (!this.unit) {
+      return '';
+    }
 
     return this.unit
       .replace('<sub>', '<tspan class="sub" dy="0.5em">')
@@ -51,38 +50,43 @@ export default class BarGraph extends Vue {
 
   /** Underlying SVG size */
   readonly width = 320;
-  readonly height = 60;
+  readonly height = 140;
 
   /** The radius, in pixels, of the min and max dots and all the points on focus */
   readonly DotRadius = 8;
 
   /** The font-size of the label, in the <svg>'s internal space (so scaled as the SVG is scaled)' */
-  readonly LabelFontSize = 28;
+  readonly LabelFontSize = 30;
 
-  // The amount to shift the x-axis down by
-  readonly xAxisOffset = 60;
+  // The amount to shift the x-axis down by - ideally 0, so it's accurate
+  readonly xAxisOffset = 0;
 
-  readonly graphMargins = { top: 50, right: 15, bottom: 110, left: 15 };
+  readonly graphMargins = { top: 40, right: 50, bottom: 50, left: 20 };
   readonly barMargin = 0.2;
 
   randomId = Math.round(Math.random() * 1000);
 
-  tooltip?: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>;
+  tooltip?: d3.Selection<HTMLDivElement, unknown, HTMLElement, null>;
 
-  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, any>;
+  svg!: d3.Selection<SVGGElement, unknown, HTMLElement, null>;
 
   mounted(): void {
-    const outerWidth = this.width + this.graphMargins.left + this.graphMargins.right;
-    const outerHeight = this.height + this.graphMargins.top + this.graphMargins.bottom;
+    const outerWidth =
+      this.width + this.graphMargins.left + this.graphMargins.right;
+    const outerHeight =
+      this.height + this.graphMargins.top + this.graphMargins.bottom;
 
     this.svg = d3
       .select(`svg#${this.svgIdPrefix}${this.randomId}`)
-      .attr("width", outerWidth)
-      .attr("height", outerHeight)
-      .attr("viewBox", `0 0 ${outerWidth} ${outerHeight}`)
-      .attr("preserveAspectRatio", "xMidYMid meet")
-      .append("g")
-        .attr("transform", `translate(${this.graphMargins.left},${this.graphMargins.top})`);
+      .attr('width', outerWidth)
+      .attr('height', outerHeight)
+      .attr('viewBox', `0 0 ${outerWidth} ${outerHeight}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet')
+      .append('g')
+      .attr(
+        'transform',
+        `translate(${this.graphMargins.left},${this.graphMargins.top})`,
+      );
 
     this.calculateMinAndMaxPoints();
     this.setupTooltip();
@@ -93,7 +97,7 @@ export default class BarGraph extends Vue {
    * Get the global min and max points, which we show on the graph with their values to act as a
    * replacement for the y-axis
    */
-   calculateMinAndMaxPoints(): void {
+  calculateMinAndMaxPoints(): void {
     const yVals: Array<number> = this.graphData.map((d) => d.y);
     const minAndMaxPoints: Array<INumGraphPoint> = [];
 
@@ -119,7 +123,9 @@ export default class BarGraph extends Vue {
     const cleanedData = this.graphData.filter((d) => !isNaN(d.y));
 
     // TODO: Fix passed years being strings and remove this conversion
-    cleanedData.forEach((point: INumGraphPoint) => point.x = parseInt(point.x.toString()));
+    cleanedData.forEach(
+      (point: INumGraphPoint) => (point.x = parseInt(point.x.toString())),
+    );
 
     const xVals: Array<number> = cleanedData.map((d) => d.x);
     const yVals: Array<number> = cleanedData.map((d) => d.y);
@@ -134,164 +140,196 @@ export default class BarGraph extends Vue {
 
     const y = d3
       .scaleLinear()
-      .domain([ d3.min(yVals) as number, d3.max(yVals) as number])
+      .domain([0, d3.max(yVals) as number])
       .rangeRound([this.height, 0]);
 
     // Render X axis
-    this.svg.append("g")
+    this.svg
+      .append('g')
       .attr('class', 'x-axis')
-      .attr("transform", `translate(0, ${this.height + this.xAxisOffset})`)
+      .attr('transform', `translate(0, ${this.height + this.xAxisOffset})`)
       .call(
-        d3.axisBottom(x)
+        d3
+          .axisBottom(x)
           .tickFormat(d3.format('d'))
           // For spark line, only show first and last year (e.g. 2018 and 2022)
           .tickValues(d3.extent(xVals) as [number, number])
           .tickSizeOuter(0), // make the x-axis a flat line, with no tick marks at the ends
       )
-      .selectAll("text")
-        .attr("text-anchor", (d) =>  d === maxYear ? 'end' : 'start')
-        // shift label a bit further from the axis line
-        .attr("dy", "0.85em");
+      .selectAll('text')
+      .attr('text-anchor', (d) => (d === maxYear ? 'start' : 'start'))
+      .attr('style', 'transform: rotate(15deg)')
+      // shift x-axis labels below the axis line
+      // .attr('dx', (d) => d === maxYear ? '-1em' : '-0.5em')
+      // shift x-axis labels below the axis line
+      .attr('dy', '1em');
 
     // Render Y axis
-    this.svg.append("g")
+    this.svg
+      .append('g')
       .attr('class', 'y-axis')
-      .call(
-        d3.axisLeft(y)
-          .tickValues(d3.extent(yVals) as [number, number]),
-    );
+      .call(d3.axisLeft(y).tickValues(d3.extent(yVals) as [number, number]));
 
     // Add the line
-    this.svg.append("path")
+    this.svg
+      .append('path')
       .datum(cleanedData)
-      .attr("fill", "none")
-      .attr("stroke", "black")
-      .attr("stroke-width", 8)
-      .attr("d", (d3.line() as any)
-        .x((d: INumGraphPoint) => x(d.x))
-        .y((d: INumGraphPoint) => y(d.y)),
-        );
+      .attr('fill', 'none')
+      .attr('stroke', 'black')
+      .attr('stroke-width', 8)
+      .attr(
+        'd',
+        (d3.line() as any)
+          .x((d: INumGraphPoint) => x(d.x))
+          .y((d: INumGraphPoint) => y(d.y)),
+      );
 
     if (this.minAndMaxPoints) {
       // Add all valid points, we'll then use CSS to hide all but the min and max unless hovered
       this.svg
-        .append("g")
-        .selectAll("dot")
+        .append('g')
+        .selectAll('dot')
         .data(cleanedData.filter((d) => !isNaN(d.y)))
         .enter()
-        .append("circle")
-          .attr('class', (d) => {
-            const isMinMax = d.x === this.minAndMaxPoints![0].x
-              || d.x === this.minAndMaxPoints![1].x;
+        .append('circle')
+        .attr('class', (d) => {
+          const isMinMax =
+            d.x === this.minAndMaxPoints![0].x ||
+            d.x === this.minAndMaxPoints![1].x;
 
-            return isMinMax ? 'dot -min-max' : 'dot';
-          })
-          .attr("cx", (d) => x(d.x))
-          .attr("cy", (d) => y(d.y))
-          .attr("r", this.DotRadius)
-          .attr("fill", "black")
-          .attr('tabindex', '0')
-          .on("mouseover", this.mouseover.bind(this))
-          .on("focusin", (event: Event, d) => this.focus(event, d))
-          .on("blur", this.mouseleave.bind(this))
-          .on("mousemove", (event: MouseEvent, d) => this.mousemove(event, d))
-          .on("mouseleave", this.mouseleave.bind(this));
+          return isMinMax ? 'dot -min-max' : 'dot';
+        })
+        .attr('cx', (d) => x(d.x))
+        .attr('cy', (d) => y(d.y))
+        .attr('r', this.DotRadius)
+        .attr('fill', 'black')
+        .attr('tabindex', '0')
+        .on('mouseover', this.mouseover.bind(this))
+        .on('focusin', (event: Event, d) => this.focus(event, d))
+        .on('blur', this.mouseleave.bind(this))
+        .on('mousemove', (event: MouseEvent, d) => this.mousemove(event, d))
+        .on('mouseleave', this.mouseleave.bind(this));
 
       // Add the value labels for the min and max points
       this.svg
-        .append("g")
-        .selectAll("pointLabels")
+        .append('g')
+        .selectAll('pointLabels')
         .data(this.minAndMaxPoints)
         .enter()
-        .append("text")
-          .attr("cx", (d) => x(d.x))
-          .attr("cy", (d) => y(d.y))
-          // Put the text at the position of the last point
-          .attr("transform", (d) => {
-            let xPos = x(d.x);
-            let yPos = y(d.y);
+        .append('text')
+        .attr('cx', (d) => x(d.x))
+        .attr('cy', (d) => y(d.y))
+        // Put the text at the position of the last point
+        .attr('transform', (d) => {
+          let xPos = x(d.x);
+          let yPos = y(d.y);
 
-            // The min point should have its label below
-            if (d.x === this.minAndMaxPoints![0].x) {
-              yPos += this.LabelFontSize * 1.5;
+          // Min Point - The min point should have its label below
+          if (d.x === this.minAndMaxPoints![0].x) {
+            // If the min is right at the bottom right or bottom left, render it above
+            // to prevent colliding with x-axis labels (e.g. Digital Lakeside > District Steam)
+            if (
+              yPos > this.height * 0.9 &&
+              (xPos < 10 || xPos > this.width * 0.9)
+            ) {
+              yPos -= this.LabelFontSize * 2;
+            } else {
+              // Otherwise if no special case, just draw it below
+              yPos += this.LabelFontSize * 1.25;
+            }
 
-              return `translate(${xPos},${yPos})`;
-            }
-            // The max point has its label above
-            else {
-              yPos -= this.LabelFontSize * 0.5;
+            return `translate(${xPos},${yPos})`;
+          }
+          // Max Point -The max point has its label above
+          else {
+            yPos -= this.LabelFontSize * 0.5;
 
-              return `translate(${xPos},${yPos})`;
-            }
-          })
-          .attr("text-anchor", (d) => {
-            // Points near the right edge of the graph should have text going left from the point,
-            // otherwise go right (e.g. first year)
-            // e.g. we have data from 2020 to 2024, the 3/4 year is 2023
-            // (2020 + (0.75 * (2024 - 2020))
-            const threeQuartersYear = Math.ceil(minYear + (0.75 * (maxYear - minYear)));
-            const halfwayYear = Math.ceil(minYear + (0.5 * (maxYear - minYear)));
+            return `translate(${xPos},${yPos})`;
+          }
+        })
+        .attr('text-anchor', (d) => {
+          // Points near the right edge of the graph should have text going left from the point,
+          // otherwise go right (e.g. first year)
+          // e.g. we have data from 2020 to 2024, the 3/4 year is 2023
+          // (2020 + (0.75 * (2024 - 2020))
+          const threeQuartersYear = Math.ceil(
+            minYear + 0.75 * (maxYear - minYear),
+          );
+          const halfwayYear = Math.ceil(minYear + 0.5 * (maxYear - minYear));
 
-            // If the min point is more than 3/4 along in the graph, it's near enough to the end
-            // that we align text to the left of the dot, otherwise to the start
-            if (d.x >= threeQuartersYear) {
-              return 'end';
-            }
-            // If it's say 2/3 along the graph, it may still hit the right edge, so center
-            else if (d.x > halfwayYear) {
-              return 'middle';
-            }
-            else {
-              return 'start';
-            }
-          })
-          .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan>`)
-          .style("fill", "black")
-          .style("font-size", this.LabelFontSize);
+          // If the min point is more than 3/4 along in the graph, it's near enough to the end
+          // that we align text to the left of the dot, otherwise to the start
+          if (d.x >= threeQuartersYear) {
+            return 'end';
+          }
+          // If it's say 2/3 along the graph, it may still hit the right edge, so center
+          else if (d.x > halfwayYear) {
+            return 'middle';
+          } else {
+            return 'start';
+          }
+        })
+        .html((d) => `<tspan class="bold">${d.y.toLocaleString()}</tspan>`)
+        .style('fill', 'black')
+        .style('font-size', this.LabelFontSize);
     }
   }
 
   /** Create the empty tooltip element we fill later */
   setupTooltip(): void {
     // create a tooltip
-    this.tooltip = d3.select(`#${this.svgContPrefix}${this.randomId}`)
-      .append("div")
-        .style("opacity", 0)
-        .attr("class", "tooltip");
+    this.tooltip = d3
+      .select(`#${this.svgContPrefix}${this.randomId}`)
+      .append('div')
+      .style('opacity', 0)
+      .attr('class', 'tooltip');
   }
 
   focus(event: Event, datum: INumGraphPoint): void {
     this.mouseover();
-    this.mousemove(event as MouseEvent, datum);
+    this.mousemove(event, datum);
   }
 
   mouseover(): void {
-    this.tooltip?.style("opacity", 1);
+    this.tooltip?.style('opacity', 1);
   }
 
   mousemove(event: Event, datum: INumGraphPoint): void {
     // Calculate a scale factor to match the internal SVG space to the rendered HTML space
-    const outerWidth = this.width + this.graphMargins.left + this.graphMargins.right;
-    const svgElem = document.getElementById(`${this.svgIdPrefix}${this.randomId}`);
+    const outerWidth =
+      this.width + this.graphMargins.left + this.graphMargins.right;
+    const svgElem = document.getElementById(
+      `${this.svgIdPrefix}${this.randomId}`,
+    );
     const scaleFactor = svgElem!.clientWidth / outerWidth;
 
-    const tooltipX = d3.pointer(event)[0] * scaleFactor + 20;
-    const tooltipY = d3.pointer(event)[1] * scaleFactor;
-
-    this.tooltip!
-      .html(
-        `<div class="year">${datum.x}</div>` +
-        `<div class="value-cont">` +
-          `<span class="value">${datum.y.toLocaleString()}</span> ` +
-          `<span class="unit">${this.unit}</span>` +
-        `</div>`,
-      )
-      .style("left", `${tooltipX}px`)
-      .style("top", `${tooltipY}px`);
+    let tooltipX: number;
+    let tooltipY: number;
+    if (event instanceof MouseEvent) {
+      [tooltipX, tooltipY] = d3.pointer(event);
+    } else if (event.target instanceof SVGGraphicsElement) {
+      // This can happen for tab-focus events, where there's no pointer.
+      // In that case, use the datum's position instead of the mouse's.
+      const bbox = event.target.getBBox();
+      tooltipX = bbox.x;
+      tooltipY = bbox.y;
+    } else {
+      return;
     }
 
+    this.tooltip!.html(
+      `<div class="year">${datum.x}</div>` +
+        `<div class="value-cont">` +
+        `<span class="value">${datum.y.toLocaleString()}</span> ` +
+        `<span class="unit">${this.unit}</span>` +
+        `</div>`,
+    )
+      .style('left', `${tooltipX * scaleFactor + 20}px`)
+      .style('top', `${tooltipY * scaleFactor}px`);
+  }
+
   mouseleave(): void {
-    this.tooltip?.style("opacity", 0);
+    this.tooltip?.style('opacity', 0);
   }
 }
 </script>
@@ -322,7 +360,9 @@ export default class BarGraph extends Vue {
       font-weight: bold;
       font-size: 1rem;
     }
-    .unit { white-space: nowrap; }
+    .unit {
+      white-space: nowrap;
+    }
     .year {
       font-weight: bold;
       margin-bottom: 0.25rem;
@@ -334,7 +374,8 @@ export default class BarGraph extends Vue {
     height: auto;
     max-width: 20rem; // 320px
 
-    &:hover, &:focus-within {
+    &:hover,
+    &:focus-within {
       // Show all dots and make them thicker using a stroke
       circle.dot {
         opacity: 1;
@@ -344,24 +385,44 @@ export default class BarGraph extends Vue {
     }
 
     .dot {
-      transition: opacity 0.3s, stroke-width 0.3s;
+      transition:
+        opacity 0.3s,
+        stroke-width 0.3s;
 
       // Hide all dots except the min max until hovered to keep the graph simple
-      &:not(.-min-max) { opacity: 0; }
+      &:not(.-min-max) {
+        opacity: 0;
+      }
     }
-    tspan.bold { font-weight: bold; }
-    tspan.sub { font-size: 0.75em; }
+    tspan.bold {
+      font-weight: bold;
+    }
+    tspan.sub {
+      font-size: 0.75em;
+    }
   }
 
   // Hide tick lines on x-axis
-  .tick line { display: none; }
+  .tick line {
+    display: none;
+  }
 
-  .x-axis .tick {
-    font-size: 1.6rem;
-    font-weight: normal
+  .x-axis {
+    // Fade out the x-axis line a bit, so text rendered on top of it isn't so harsh
+    .domain {
+      opacity: 0.3;
+      stroke-width: 2px;
+    }
+
+    .tick {
+      font-size: 1.6rem;
+      font-weight: normal;
+    }
   }
 
   // Hide y-axis via CSS, we label points instead
-  .y-axis { display: none; }
+  .y-axis {
+    display: none;
+  }
 }
 </style>

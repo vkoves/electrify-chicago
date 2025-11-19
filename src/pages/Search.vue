@@ -2,7 +2,11 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
-import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
+import {
+  IBuilding,
+  IBuildingBenchmarkStats,
+  IBuildingNode,
+} from '../common-functions.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
@@ -10,13 +14,22 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 // tiny
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import PropertyTypesConstant from '../data/dist/property-types.json';
+import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 
-interface IBuildingEdge { node: IBuilding; }
+interface IBuildingEdge {
+  node: IBuilding;
+}
+
+interface ISelectOption {
+  label: string;
+  value: string;
+}
 
 @Component<any>({
   components: {
     BuildingsTable,
     DataDisclaimer,
+    DataSourceFootnote,
     NewTabIcon,
   },
   metaInfo: {
@@ -24,7 +37,8 @@ interface IBuildingEdge { node: IBuilding; }
   },
 })
 export default class Search extends Vue {
-  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats = BuildingBenchmarkStats;
+  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
+    BuildingBenchmarkStats;
   readonly MaxBuildings = 100;
 
   readonly QueryParamKeys = {
@@ -33,7 +47,7 @@ export default class Search extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static: any;
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** The search query */
   searchFilter = '';
@@ -41,22 +55,54 @@ export default class Search extends Vue {
   /** The selected property type filter */
   propertyTypeFilter = '';
 
-  propertyTypeOptions: Array<{ label: string, value: string} | string> = [
+  /** The current sorted field (column) */
+  sortedField = 'GHGIntensity';
+
+  /** The direction of the sorted field (column) */
+  sortedDirection: 'asc' | 'desc' = 'desc';
+
+  /** Flags 'true' when any filter is applied,
+   * so that column sort (asc, desc) applies only to filtered results */
+  hasFilteredResults = false;
+
+  gradeFilter = '';
+  gradeQuintileFilter = '';
+
+  propertyTypeOptions: Array<ISelectOption> = [
     { label: 'Select Property Type', value: '' },
-  ].concat(PropertyTypesConstant.propertyTypes as any);
+  ].concat(
+    PropertyTypesConstant.propertyTypes.map((type) => ({
+      label: type,
+      value: type,
+    })),
+  );
+
+  letterGradeOptions: Array<ISelectOption> = [
+    { label: 'Select Grade', value: '' },
+    { label: 'A', value: 'A' },
+    { label: 'B', value: 'B' },
+    { label: 'C', value: 'C' },
+    { label: 'D', value: 'D' },
+    { label: 'F', value: 'F' },
+  ];
 
   searchResults: Array<IBuildingEdge> = [];
   totalResultsCount = 0;
 
+  /** Dropdown information on database details */
+  dataDisclaimer!: HTMLDetailsElement;
+
   created(): void {
     // Make sure on load we have some data
-    this.setSearchResults(this.$static.allBuilding.edges);
+    this.setSearchResults(this.$page.allBuilding.edges);
   }
 
   mounted(): void {
     const urlParams = new URLSearchParams(window.location.search);
     const urlSearchParam = urlParams.get(this.QueryParamKeys.search);
-    const urlPropertyTypeParam = urlParams.get(this.QueryParamKeys.propertyType);
+    const urlPropertyTypeParam = urlParams.get(
+      this.QueryParamKeys.propertyType,
+    );
 
     if (urlSearchParam) {
       this.searchFilter = urlSearchParam;
@@ -76,7 +122,9 @@ export default class Search extends Vue {
       matchScore += 3;
     } else if (buildingEdge.node.Address.toLowerCase().includes(query)) {
       matchScore += 2;
-    } else if (buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)) {
+    } else if (
+      buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
+    ) {
       matchScore += 1;
     }
 
@@ -101,37 +149,114 @@ export default class Search extends Vue {
 
     window.history.pushState(null, '', newUrl);
 
-    let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
+    let buildingsResults: Array<IBuildingEdge> = this.$page.allBuilding.edges;
 
     // If no filters are provided, return our max number
-    if (!query && !this.propertyTypeFilter) {
+    if (
+      !query &&
+      !this.propertyTypeFilter &&
+      !this.gradeFilter &&
+      !this.gradeQuintileFilter
+    ) {
+      this.hasFilteredResults = false;
       this.setSearchResults(buildingsResults);
       return;
     }
 
-    buildingsResults = buildingsResults.filter((buildingEdge: IBuildingEdge) => {
-      return buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
-        buildingEdge.node.Address.toLowerCase().includes(query) ||
-        buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query);
-    });
+    buildingsResults = buildingsResults.filter(
+      (buildingEdge: IBuildingEdge) => {
+        return (
+          buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
+          buildingEdge.node.Address.toLowerCase().includes(query) ||
+          buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
+        );
+      },
+    );
 
     // Sort by name matches, then address, then property type
-    buildingsResults = buildingsResults
-    .sort((buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
-      this.searchRank(buildingEdgeB, query) - this.searchRank(buildingEdgeA, query));
+    buildingsResults = buildingsResults.sort(
+      (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
+        this.searchRank(buildingEdgeB, query) -
+        this.searchRank(buildingEdgeA, query),
+    );
 
     // If property type filter is specified, filter down by that
     if (this.propertyTypeFilter) {
-      buildingsResults = buildingsResults.filter((buildingEdge: IBuildingEdge) => {
-        return buildingEdge.node.PrimaryPropertyType.toLowerCase()
-          === this.propertyTypeFilter.toLowerCase();
-      });
+      buildingsResults = this.filterResults(
+        buildingsResults,
+        'PrimaryPropertyType',
+        this.propertyTypeFilter,
+      );
+    }
 
-      this.setSearchResults(buildingsResults);
+    if (this.gradeFilter) {
+      buildingsResults = this.filterResults(
+        buildingsResults,
+        'AvgPercentileLetterGrade',
+        this.gradeFilter,
+      );
     }
-    else {
-     this.setSearchResults(buildingsResults);
+    this.hasFilteredResults = true;
+
+    this.setSearchResults(buildingsResults);
+  }
+
+  /** Handles clicks on numeric columns in
+   * BuildingsTable and sorts (desc, asc) */
+  handleSort(field: string): void {
+    // if clicking on the same field,
+    // this will toggle between 'desc' and 'asc'
+    if (this.sortedField === field) {
+      this.sortedDirection = this.sortedDirection === 'desc' ? 'asc' : 'desc';
+    } else {
+      // else if clicking on a new field, set sortedField state
+      // to the new field AND set initial sortedDirection to 'desc'
+      this.sortedField = field;
+      this.sortedDirection = 'desc';
     }
+
+    /** If there are filtered results (type, grade, search results)
+     * pass to runSort. If not, sort all. */
+    let buildingsToSort;
+    if (this.hasFilteredResults) {
+      buildingsToSort = [...this.searchResults];
+    } else {
+      buildingsToSort = [...this.$page.allBuilding.edges];
+    }
+
+    this.runSort(buildingsToSort);
+  }
+
+  /** Called from handleSort, this function sorts
+   * according to sortedField and sortedDirection state values */
+  runSort(buildings: Array<IBuildingNode>): void {
+    const sortedBuildings = buildings.sort(
+      (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) => {
+        const valueA = Number(buildingEdgeA.node[this.sortedField]);
+        const valueB = Number(buildingEdgeB.node[this.sortedField]);
+
+        if (this.sortedDirection === 'desc') {
+          return valueB - valueA;
+        } else {
+          return valueA - valueB;
+        }
+      },
+    );
+    // calls setSearchResults to update state and set to 100 buildings
+    this.setSearchResults(sortedBuildings);
+  }
+
+  /**
+   * Filter building results by a column and a value
+   */
+  filterResults(
+    results: Array<IBuildingEdge>,
+    column: string,
+    value: string,
+  ): Array<IBuildingEdge> {
+    return results.filter(
+      (buildingEdge: IBuildingEdge) => buildingEdge.node[column] === value,
+    );
   }
 
   /**
@@ -141,11 +266,22 @@ export default class Search extends Vue {
     this.totalResultsCount = allResults.length;
     this.searchResults = allResults.slice(0, this.MaxBuildings);
   }
+
+  /**
+   * Toggles DataDisclaimer open from the no-results message
+   */
+  openDataDisclaimer(): void {
+    this.dataDisclaimer = document.getElementById(
+      'data-disclaimer',
+    ) as HTMLDetailsElement;
+    this.dataDisclaimer.open = true;
+  }
 }
 </script>
 
-<static-query>
+<page-query>
   query {
+    # Search page only needs core BuildingsTable fields (no conditional fields)
     allBuilding(sortBy: "GHGIntensity") {
       edges {
         node {
@@ -162,55 +298,43 @@ export default class Search extends Vue {
           TotalGHGEmissions
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
-          ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
+          AvgPercentileLetterGrade
           NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+          DistrictSteamUse
+          DataAnomalies
         }
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout>
     <div class="search-page">
-      <h1
-        id="main-content"
-        tabindex="-1"
-      >
-        Search Buildings
-      </h1>
+      <h1 id="main-content" tabindex="-1">Search Buildings</h1>
 
       <p>
-        Search all of Chicago's benchmarked buildings by name or type! Note that results are limited
-        to the first {{ MaxBuildings }} matches.
+        Search all of Chicago's benchmarked buildings by name or type! Note that
+        results are limited to the first {{ MaxBuildings }} matches.
       </p>
 
-      <DataDisclaimer />
+      <DataDisclaimer id="data-disclaimer" />
 
       <form>
         <div>
-          <label for="page-search">
-            Building Name
-          </label>
+          <label for="page-search"> Building Name </label>
           <input
             id="page-search"
             v-model="searchFilter"
             type="text"
             name="search"
             placeholder="Search property name, type, or address"
-          >
+          />
         </div>
 
         <div>
           <label for="property-type">Property Type</label>
-          <select
-            id="property-type"
-            v-model="propertyTypeFilter"
-          >
+          <select id="property-type" v-model="propertyTypeFilter">
             <option
               v-for="propertyType in propertyTypeOptions"
               :key="propertyType.value ?? propertyType"
@@ -221,51 +345,61 @@ export default class Search extends Vue {
           </select>
         </div>
 
-        <button
-          type="submit"
-          class="-grey"
-          @click="submitSearch"
-        >
-          <img
-            src="/search.svg"
-            alt=""
-            width="15"
-            height="15"
-          >
+        <div>
+          <label for="property-type">Grade</label>
+          <select id="property-type" v-model="gradeFilter">
+            <option
+              v-for="gradeOpt in letterGradeOptions"
+              :key="gradeOpt.value"
+              :value="gradeOpt.value"
+            >
+              {{ gradeOpt.label }}
+            </option>
+          </select>
+        </div>
+
+        <button type="submit" class="-grey" @click="submitSearch">
+          <img src="/search.svg" alt="" width="15" height="15" />
           Search
         </button>
       </form>
 
-      <BuildingsTable :buildings="searchResults" />
+      <BuildingsTable
+        :buildings="searchResults"
+        :sorted-field="sortedField"
+        :sorted-direction="sortedDirection"
+        :show-sort="true"
+        @sort="handleSort"
+      />
 
-      <div
-        v-if="searchResults.length === 0"
-        class="no-results-msg"
-      >
+      <div v-if="searchResults.length === 0" class="no-results-msg">
         <h2>No results found!</h2>
 
+        <p class="layout-constrained">
+          There may be a typo in your search, the building name may be different
+          in the underlying data, or the building you are looking for may not be
+          in our dataset (buildings in Chicago over 50,000 square feet - see
+          <a href="#data-disclaimer" @click="openDataDisclaimer"
+            >dataset disclaimer</a
+          >).
+        </p>
+
         <p>
-          There may be a typo in your query or in the underlying data, or the building you are
-          looking for may not be in our dataset.
+          <strong>Note:</strong> Addresses generally follow the format
+          <em>123 W Main St</em>
         </p>
       </div>
 
-      <p>
-        Showing {{ Math.min(MaxBuildings, totalResultsCount) }} of total {{ totalResultsCount }}
+      <p class="results-count">
+        Showing
+        <strong>
+          {{ Math.min(MaxBuildings, totalResultsCount) }} of total
+          {{ totalResultsCount }}
+        </strong>
         matching buildings
       </p>
 
-      <p class="footnote">
-        Data Source:
-        <!-- eslint-disable-next-line max-len -->
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener"
-        >
-          Chicago Energy Benchmarking Data <NewTabIcon />
-        </a>
-      </p>
+      <DataSourceFootnote />
     </div>
   </DefaultLayout>
 </template>
@@ -286,9 +420,14 @@ export default class Search extends Vue {
       font-weight: 500;
     }
 
-    input, select { padding: 0.5rem; }
+    input,
+    select {
+      padding: 0.5rem;
+    }
 
-    input[type="text"] { width: 15rem; }
+    input[type='text'] {
+      width: 16rem;
+    }
 
     button {
       display: flex;
@@ -297,7 +436,9 @@ export default class Search extends Vue {
       padding: 0.5rem 1rem;
     }
 
-    select { max-width: 12rem; }
+    select {
+      max-width: 12rem;
+    }
 
     /** Mobile Styling */
     @media (max-width: $mobile-max-width) {
@@ -310,12 +451,21 @@ export default class Search extends Vue {
 
   .no-results-msg {
     background-color: $grey;
-    padding: 1rem;
+    padding: 1rem 0 2rem 0;
     text-align: center;
   }
 
   @media (max-width: $mobile-max-width) {
-    form { background-color: $off-white; }
+    form {
+      background-color: $off-white;
+    }
+
+    .no-results-msg {
+      margin: 0 -1rem;
+    }
+    .results-count {
+      font-size: 0.8125rem;
+    }
   }
 }
 </style>

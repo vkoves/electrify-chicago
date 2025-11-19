@@ -1,0 +1,36 @@
+[project]
+name = "electrify-chicago"
+version = "0.1.0"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "python-slugify>=4.0.1",
+    "pandas>=2.2.3",
+    "scipy>=1.11.3",
+    "numpy",
+    "pytest>=7.4.4",
+    "pytest-mock>=3.14.0",
+    "coverage>=7.8.2",
+    "shapely>=2.0.7",
+    "openpyxl>=3.1.5",
+    "Pillow>=11.1.0",
+    "requests>=2.32.3",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "pyright>=1.1.403",
+    "pytest>=7.4.4",
+    "ruff>=0.12.8",
+]
+notebook = [
+    "kaleido>=0.2.1",
+    "jupyterlab>=4.3.5",
+    "matplotlib>=3.10.1",
+    "ipywidgets>=8.1.5",
+    "nbconvert>=7.16.6",
+    "jupyter>=1.1.1",
+    "ipykernel>=6.29.5",
+    "plotly>=6.0.0",
+    "statsmodels>=0.14.4"
+]

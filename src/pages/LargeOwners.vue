@@ -4,7 +4,12 @@ import { Component, Vue } from 'vue-property-decorator';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+<<<<<<< HEAD
 import BuildingOwners from '../constants/building-owners.constant.vue';
+=======
+import { BuildingOwners } from '../constants/buildings-custom-info.constant.vue';
+import { generatePageMeta } from '../constants/meta-helpers.vue';
+>>>>>>> cf84b057b40fb204cf114896c91ba03a57f09513
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -15,11 +20,15 @@ import BuildingOwners from '../constants/building-owners.constant.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title:  'Large Owners' };
+    return generatePageMeta(
+      'Large Owners',
+      'Explore buildings by major property owners in Chicago - ' +
+        'universities, the city, and other large organizations.',
+    );
   },
 })
 export default class LargeOwners extends Vue {
-    BuildingOwners = BuildingOwners;
+  BuildingOwners = BuildingOwners;
 }
 </script>
 
@@ -33,6 +42,7 @@ export default class LargeOwners extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity
@@ -47,6 +57,8 @@ export default class LargeOwners extends Vue {
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank
+          AvgPercentileLetterGrade
+          DataAnomalies
         }
       }
     }
@@ -56,22 +68,18 @@ export default class LargeOwners extends Vue {
 <template>
   <DefaultLayout>
     <div class="building-owners">
-      <h1
-        id="main-content"
-        tabindex="-1"
-      >
-        Large Building Owners
-      </h1>
+      <h1 id="main-content" tabindex="-1">Large Building Owners</h1>
 
       <p class="constrained -wide">
-        These building owners own multiple properties in the City of Chicago benchmarked Buildings
-        data set, making them responsible for a larger total of emissions than individual building
-        owners.
+        These building owners own multiple properties in the City of Chicago
+        benchmarked Buildings data set, making them responsible for a larger
+        total of emissions than individual building owners.
       </p>
 
       <p class="constrained -wide">
-        <strong>Note:</strong> All building owners are manually tagged through public data, like
-        university building directories, and are thus may be an incomplete list.
+        <strong>Note:</strong> All building owners are manually tagged through
+        public data, like university building directories, and are thus may be
+        an incomplete list.
       </p>
 
       <p class="constrained -wide">
@@ -80,24 +88,15 @@ export default class LargeOwners extends Vue {
           ref="noopener"
           href="https://github.com/vkoves/electrify-chicago/issues/new"
           target="_blank"
-        >File an issue on our GitHub! <NewTabIcon />
+          >File an issue on our GitHub! <NewTabIcon />
         </a>
       </p>
 
       <!-- Loop through building owners -->
       <ul class="owners-list">
-        <li
-          v-for="owner in BuildingOwners"
-          :key="owner.key"
-        >
-          <g-link
-            :to="'/owner/' + owner.key"
-            class="owner-tile"
-          >
-            <img
-              :src="owner.logoLarge"
-              :alt="owner.name"
-            >
+        <li v-for="owner in BuildingOwners" :key="owner.key">
+          <g-link :to="'/owner/' + owner.key" class="owner-tile">
+            <img :src="owner.logoLarge" :alt="owner.name" />
           </g-link>
         </li>
       </ul>
@@ -116,7 +115,9 @@ export default class LargeOwners extends Vue {
     margin-top: 2rem;
     list-style: none;
 
-    a { text-decoration: none; }
+    a {
+      text-decoration: none;
+    }
 
     .owner-tile {
       display: flex;
@@ -145,7 +146,8 @@ export default class LargeOwners extends Vue {
         text-decoration: none;
       }
 
-      &:hover, &:focus {
+      &:hover,
+      &:focus {
         background-color: $grey-light;
       }
     }

@@ -1,59 +1,44 @@
 <script lang="ts">
-// Gridsome doesn't have types, so can't import it properly
-// eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
-const Pager = require('gridsome').Pager;
-
+/* global process */
 import { Component, Vue } from 'vue-property-decorator';
 
-import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import EmissionsBreakdownGraph from '~/components/EmissionsBreakdownGraph.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
+import DataSourceFootnote from '../components/DataSourceFootnote.vue';
+import BuildingTile from '../components/BuildingTile.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
-    EmissionsBreakdownGraph,
-    BuildingsTable,
+    BuildingTile,
     DataDisclaimer,
-    NewTabIcon,
-    Pager,
+    DataSourceFootnote,
   },
   metaInfo() {
-    return { title:  'Home' };
+    return { title: 'Home' };
   },
 })
-export default class BiggestBuildings extends Vue {
-  /** Set by Gridsome to results of GraphQL query */
-  $page: any;
+export default class Index extends Vue {
+  searchQuery = '';
 
-  pageInput = 0;
-
-  created(): void {
-    this.pageInput = this.$page.allBuilding.pageInfo.currentPage;
+  get isDevelopment(): boolean {
+    // This comes from Node during build
+    return process.env.NODE_ENV === 'development';
   }
 
-  jumpToPage(event: Event): void {
-    event.preventDefault();
+  submitSearch(event?: Event): void {
+    event?.preventDefault();
 
-    window.location.href = `/${this.pageInput}`;
+    document.location.href = `/search?q=${this.searchQuery}`;
   }
 }
 </script>
 
 <page-query>
-  query ($page: Int) {
-    allBuilding(
-      sortBy: "GHGIntensity", perPage: 15, page: $page
-    ) @paginate {
-      pageInfo {
-        hasNextPage
-        totalPages
-        currentPage
-        perPage
-        hasPreviousPage
-      }
+  query {
+    worstBuildings: allBuilding(
+      sortBy: "GHGIntensity", limit: 10
+    ) {
       edges {
         node {
           slugSource
@@ -61,20 +46,50 @@ export default class BiggestBuildings extends Vue {
           DataYear
           PropertyName
           Address
+          ZIPCode
           path
           PrimaryPropertyType
           GHGIntensity
-          GHGIntensityRank
-          GHGIntensityPercentileRank
           TotalGHGEmissions
-          TotalGHGEmissionsRank
-          TotalGHGEmissionsPercentileRank
           ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
           NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
+          DistrictSteamUse
+          AvgPercentileLetterGrade
+          DataAnomalies
+        }
+      }
+    }
+    featuredBuildings: allBuilding(
+      filter: {
+        ID: {
+          in: [
+            # Marina Towers, Willis, Shedd Aquarium, Monadnock Building, Art Institute of Chicago,
+            # Merch Mart, The John Hancock, and Aqua
+            "103606", "239096", "166134", "101567", "160196", "103656", "100429", "231019"
+          ]
+        }
+      }
+      sortBy: "ID"
+      order: DESC
+      limit: 10
+    ) {
+      edges {
+        node {
+          slugSource
+          ID
+          DataYear
+          PropertyName
+          Address
+          ZIPCode
+          path
+          PrimaryPropertyType
+          GHGIntensity
+          TotalGHGEmissions
+          ElectricityUse
+          NaturalGasUse
+          DistrictSteamUse
+          AvgPercentileLetterGrade
+          DataAnomalies
         }
       }
     }
@@ -82,138 +97,281 @@ export default class BiggestBuildings extends Vue {
 </page-query>
 
 <template>
-  <DefaultLayout>
+  <DefaultLayout main-class="layout -full-width">
     <div class="homepage">
-      <h1
-        id="main-content"
-        tabindex="-1"
-      >
-        Electrify Chicago
-      </h1>
+      <div class="skyline-hero">
+        <div class="background"></div>
+        <div class="page-constrained">
+          <h1 id="main-content" tabindex="-1">
+            Find Out How Much Chicago Buildings Pollute
+          </h1>
 
-      <p class="tagline">
-        An independent tool for viewing City of Chicago building data
-      </p>
+          <form class="search-form">
+            <div class="input-cont">
+              <input
+                id="search"
+                v-model="searchQuery"
+                type="text"
+                name="search"
+                aria-label="Search benchmarked buildings"
+                placeholder="Search property name or address"
+              />
+              <button type="submit" @click="submitSearch">
+                <img src="/search.svg" alt="Search" width="32" height="32" />
+              </button>
+            </div>
+          </form>
 
-      <div class="row">
-        <div>
-          <p class="constrained -wide main-paragraph">
-            <!-- TODO: Move to consolidated sources object-->
-            According to the
-            <a
-              ref="noopener"
-              href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
-              target="_blank"
+          <g-link class="blue-link map-link" to="/map">
+            <img src="/icons/location.svg" alt="" width="32" height="32" />
+            View Map
+          </g-link>
+        </div>
+      </div>
+
+      <div class="page-constrained">
+        <div class="list-title">
+          <h2>Chicago&apos;s Most Emissions Intense Buildings</h2>
+          <g-link class="bold" to="/highest-emissions-intensity"
+            >View More</g-link
+          >
+        </div>
+        <p class="list-desc">
+          The buildings that reported the highest greenhouse gas emissions per
+          square foot
+        </p>
+
+        <div class="buildings-scroll-cont">
+          <ul class="building-tiles">
+            <li
+              v-for="building in $page.worstBuildings.edges"
+              :key="building.node.ID"
             >
-              2022 Chicago Climate Action Plan<NewTabIcon />
-            </a>,
-            <strong>69% of Chicago's emissions come from buildings</strong>, making
-            building emissions our biggest challenge and <em>our biggest opportunity</em> as a city
-            to tackle climate change. At Electrify Chicago, we showcase building performance using
-            publicly available data supplemented by community-submitted photographs and building
-            owners.
-          </p>
+              <BuildingTile
+                :building="building.node"
+                :path="building.node.path"
+              />
+            </li>
+          </ul>
+        </div>
 
-          <p class="constrained -wide main-paragraph">
-            Start by looking at Chicago's buildings with the highest greenhouse gas
-            intensity i.e. emissions per square foot. Large, efficient, buildings can perform much
-            better than very inefficient small buildings on this metric.
-          </p>
+        <div class="list-title"><h2>Featured Chicago Buildings</h2></div>
+        <p class="list-desc">
+          Check out some of Chicago’s most famous buildings, and learn how they
+          use energy
+        </p>
 
+        <div class="buildings-scroll-cont">
+          <ul class="building-tiles">
+            <li
+              v-for="building in $page.featuredBuildings.edges"
+              :key="building.node.ID"
+            >
+              <BuildingTile
+                :building="building.node"
+                :path="building.node.path"
+              />
+            </li>
+          </ul>
+        </div>
+
+        <h2>Our Research &amp; Updates</h2>
+
+        <div class="row">
           <div class="announcements">
+            <div class="announce-panel -blue">
+              <h3>
+                🎉 Updated with Latest (2023) Data!
+                <div class="regular-text-size faded">Aug. 2025</div>
+              </h3>
+              <p>
+                We've updated with the latest 2023 Chicago energy benchmarking
+                data (the most recent data available, released by the city in
+                February 2025). See what buildings are new in the data, and
+                which stopped reporting.
+              </p>
+              <p>
+                <g-link to="/latest-updates" class="bold grey-link">
+                  View Latest Updates
+                </g-link>
+              </p>
+            </div>
+
             <div class="announce-panel -orange">
-              <h2>
-                <div class="regular-text-size">
-                  New Article
-                </div>
-                📰 $30 Million In Missed Fines
-              </h2>
+              <h3>
+                📰 Do High Emitting Buildings Stop Reporting?
+                <div class="regular-text-size faded">Mar. 6th, 2025</div>
+              </h3>
 
               <p>
-                The City Of Chicago failed to collect $30 million in potential fines from
-                the building benchmarking ordinance, reducing transparency and accountability.
+                Many buildings in Chicago that fall under the benchmarking
+                requirements don't report their energy use and emissions. We
+                investigated if there was a pattern at play, and whether poor
+                performing buildings stopped reporting at higher rates than good
+                performers.
               </p>
 
               <p>
                 <a
-                  href="/blog/millions-in-missed-fines"
-                  class="bold"
-                >Read Our Full Blog Post On Millions in Missed Fines</a>.
+                  href="/blog/GHG-Intensity-Predict-Compliance"
+                  class="bold grey-link"
+                  >Read Our Full Research</a
+                >
+              </p>
+            </div>
+
+            <div class="announce-panel -orange">
+              <h3>
+                📰 $30 Million In Missed Fines
+                <div class="regular-text-size faded">Feb. 2nd, 2024</div>
+              </h3>
+
+              <p>
+                The City Of Chicago failed to collect $30 million in potential
+                fines from the building benchmarking ordinance, reducing
+                transparency and accountability.
+              </p>
+
+              <p>
+                <a href="/blog/millions-in-missed-fines" class="bold grey-link"
+                  >Read Our Full Blog on Missed Fines</a
+                >
               </p>
             </div>
           </div>
-
-
-          <h2>Chicago Buildings by Greenhouse Gas Intensity</h2>
-
-          <DataDisclaimer />
         </div>
 
-        <EmissionsBreakdownGraph class="-desktop" />
-      </div>
+        <DataDisclaimer />
 
-      <BuildingsTable :buildings="$page.allBuilding.edges" />
+        <DataSourceFootnote />
 
-      <div class="pager-cont">
-        <div>
-          <div class="page-number">
-            Page {{ $page.allBuilding.pageInfo.currentPage }} of
-            {{ $page.allBuilding.pageInfo.totalPages }}
-
-            (Building
-            #{{ 1 + ($page.allBuilding.pageInfo.currentPage - 1)
-              * $page.allBuilding.pageInfo.perPage }}
-            to #{{ ($page.allBuilding.pageInfo.currentPage - 1)
-              * $page.allBuilding.pageInfo.perPage + $page.allBuilding.edges.length }})
+        <!-- Debug tools panel for development -->
+        <div v-if="isDevelopment" class="debug-tools">
+          <div class="announce-panel -blue">
+            <h3>🔧 Local Debug Tools</h3>
+            <p>
+              <g-link to="/social-cards" class="bold">
+                View Sample Social Cards
+              </g-link>
+            </p>
           </div>
-
-          <Pager
-            class="pager"
-            :info="$page.allBuilding.pageInfo"
-          />
         </div>
-
-        <form class="page-form search-form">
-          <label for="page-num">Go to Page</label>
-
-          <div class="input-cont">
-            <input
-              id="page-num"
-              v-model="pageInput"
-              type="number"
-            >
-            <button
-              type="submit"
-              @click="jumpToPage"
-            >
-              Jump
-            </button>
-          </div>
-        </form>
       </div>
-
-      <p class="footnote">
-        Data Source:
-
-        <a
-          href="https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c"
-          target="_blank"
-          rel="noopener"
-        >
-          Chicago Energy Benchmarking Data <NewTabIcon />
-        </a>
-      </p>
     </div>
   </DefaultLayout>
 </template>
 
 <style lang="scss">
 .homepage {
-  h1 { margin-bottom: 0; }
+  .skyline-hero {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    min-height: 28rem;
+    padding: 5rem 1rem 6rem 1rem;
+    color: $white;
+    position: relative;
 
-  .tagline {
-    font-weight: bold;
-    margin-bottom: 1rem;
+    // Apply the background on a separate element so we can apply filters to it
+    .background {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      background-image: url('/home/skyline-1920.webp');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      filter: brightness(60%);
+    }
+
+    .page-constrained {
+      padding: 0;
+    }
+
+    // Add a shadow to all the hero elements (h1 uses the same value as a text-shadow)
+    .input-cont,
+    .map-link {
+      box-shadow: 0 0.5rem 0.125rem $box-shadow-main;
+    }
+
+    h1 {
+      display: inline-block;
+      font-size: 2.5rem;
+      margin-top: 0;
+      margin-bottom: 2rem;
+      text-shadow: 0 0.25rem 0.125rem $box-shadow-main;
+    }
+
+    form {
+      margin: 0 auto 1rem auto;
+      width: 80%;
+      max-width: 50rem; // 800px
+
+      .input-cont {
+        height: 4rem;
+        border-radius: 3rem;
+        background: $white;
+
+        &:focus-within {
+          outline: solid $border-v-thick $blue-dark;
+
+          input,
+          button {
+            outline: none;
+          }
+        }
+
+        input,
+        button {
+          height: 100%;
+          border: none;
+        }
+
+        input {
+          padding: 1rem 0 1rem 2rem;
+          font-size: 1.25rem;
+        }
+
+        button {
+          padding: 0 1.5rem 0 1rem;
+          background-color: $white;
+
+          &:focus {
+            background-color: $blue-dark;
+
+            img {
+              filter: invert(1);
+            }
+          }
+        }
+      }
+    }
+
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 10rem;
+      width: 16rem;
+      max-width: 60%;
+      font-size: 1.25rem;
+    }
+  }
+
+  .list-title {
+    display: block;
+    margin: 2rem 1rem 0 0;
+
+    h2 {
+      display: inline;
+      margin: 0 0.5rem 0 0;
+    }
+  }
+  .list-desc {
+    margin: 0;
   }
 
   .row {
@@ -221,29 +379,43 @@ export default class BiggestBuildings extends Vue {
     justify-content: space-between;
     gap: 2rem;
 
-    p.main-paragraph { font-size: 1.125rem; }
+    p.main-paragraph {
+      font-size: 1.125rem;
+
+      &:first-of-type {
+        margin-top: 0;
+      }
+    }
   }
 
   .announcements {
     display: flex;
     gap: 1rem;
-    align-items: flex-start;
+    align-items: stretch;
+    overflow-x: auto;
 
-    > * { flex-basis: 100%; }
-  }
+    > .announce-panel {
+      flex: 0 0 auto;
+      min-width: 20rem; // 320px minimum width per panel
+      max-width: 25rem;
+      display: flex;
+      flex-direction: column;
+    }
 
-  .emissions-breakdown {
-    text-align: right;
-    margin-bottom: 1rem;
-    flex-shrink: 0;
+    h3 {
+      font-size: 1.5rem;
+    }
 
-    &.-mobile { display: none; }
-    > img { height: 25rem; }
-    p { margin: 0; }
+    a.grey-link {
+      display: inline-block;
+    }
   }
 
   .page-form {
-    input, button { height: 2rem; }
+    input,
+    button {
+      height: 2rem;
+    }
 
     label {
       display: block;
@@ -252,45 +424,77 @@ export default class BiggestBuildings extends Vue {
       font-weight: bold;
     }
 
-    input { width: 3.5rem;}
-  }
-
-  .pager-cont {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-top: 1rem;
-    gap: 1rem;
-
-    .pager { margin-top: 0; }
-
-    .page-number {
-      font-weight: bold;
-      font-size: smaller;
-      margin-bottom: 0.25rem;
+    input {
+      width: 3.5rem;
     }
   }
 
   @media (max-width: $mobile-max-width) {
-    .announcements { flex-direction: column; }
+    .skyline-hero {
+      min-height: unset;
+      padding: 4rem 1rem 5rem 1rem;
+
+      // Switch to smaller size but taller skyline crop
+      .background {
+        background-image: url('/home/skyline-mobile.webp');
+      }
+
+      h1 {
+        line-height: 1.25;
+        font-size: 1.8rem;
+      }
+
+      form {
+        width: 100%;
+
+        .input-cont {
+          height: 3.5rem;
+
+          input {
+            font-size: 1rem;
+            padding-left: 1.5rem;
+          }
+          button {
+            padding-left: 0.25rem;
+            padding-right: 1rem;
+
+            img {
+              width: 1.5rem;
+              height: 1.5rem;
+            }
+          }
+        }
+      }
+
+      .map-link {
+        font-size: 1.125rem;
+      }
+    }
+
+    .announcements {
+      flex-direction: column;
+
+      .announce-panel {
+        max-width: none;
+      }
+    }
 
     .row {
       display: block;
 
-      p.main-paragraph { font-size: 0.825rem; }
-    }
-
-    .emissions-breakdown {
-      width: 100%;
-      text-align: center;
-
-      &.-desktop { display: none; }
+      p.main-paragraph {
+        font-size: 0.825rem;
+      }
     }
 
     .pager-cont {
       flex-direction: column;
       align-items: flex-start;
     }
+  }
+
+  .debug-tools {
+    margin-top: 2rem;
   }
 }
 </style>

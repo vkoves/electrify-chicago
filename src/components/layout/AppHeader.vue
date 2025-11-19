@@ -8,22 +8,26 @@ import { Component, Vue } from 'vue-property-decorator';
   name: 'AppHeader',
 })
 export default class AppHeader extends Vue {
-  searchQuery = '';
-
-
+  isHomepage = false;
 
   mobileMenuOpen = false;
+
+  searchQuery = '';
 
   focusMain(): void {
     const mainHeading = document.getElementById('main-content');
 
-    mainHeading!.focus();
+    if (mainHeading) {
+      mainHeading.focus();
+    } else {
+      throw new Error(
+        "No main heading found matching selector '#main-content'!",
+      );
+    }
   }
 
   submitSearch(event?: Event): void {
-    if (event) {
-      event.preventDefault();
-    }
+    event?.preventDefault();
 
     document.location.href = `/search?q=${this.searchQuery}`;
   }
@@ -31,32 +35,29 @@ export default class AppHeader extends Vue {
   toggleMobileMenu(): void {
     this.mobileMenuOpen = !this.mobileMenuOpen;
   }
+
+  mounted(): void {
+    this.isHomepage = document.location.pathname === '/';
+  }
 }
 </script>
 
 <template>
   <header class="header">
-    <a
-      href="#main-content"
-      class="nav-link skip-to-main"
-      @click="focusMain"
-    >
+    <a href="#main-content" class="nav-link skip-to-main" @click="focusMain">
       Skip to Main Content
     </a>
 
     <!-- The main top container on mobil -->
     <div class="header-primary">
-      <g-link
-        to="/"
-        class="logo-link"
-      >
+      <g-link to="/" class="logo-link">
         <img
           src="/electrify-chicago-logo.svg"
           alt="Electrify Chicago Homepage"
-          width="334"
+          width="270"
           height="48"
           class="site-logo"
-        >
+        />
       </g-link>
 
       <button
@@ -64,83 +65,34 @@ export default class AppHeader extends Vue {
         :aria-expanded="mobileMenuOpen.toString()"
         @click="toggleMobileMenu"
       >
-        <img
-          src="/menu.svg"
-          alt="Menu"
-          width="30"
-          height="30"
-        >
+        <img src="/menu.svg" alt="Menu" width="25" height="25" />
       </button>
     </div>
 
-    <nav
-      class="top-nav"
-      :class="{ '-hidden': !mobileMenuOpen }"
-    >
-      <g-link
-        class="nav-link"
-        to="/"
-      >
-        Home
-      </g-link>
+    <nav class="top-nav" :class="{ '-hidden': !mobileMenuOpen }">
+      <g-link class="nav-link" to="/"> Home </g-link>
 
-      <g-link
-        class="nav-link"
-        to="/map"
-      >
-        Map
-      </g-link>
+      <g-link class="nav-link" to="/map"> Map </g-link>
 
-      <g-link
-        class="nav-link"
-        to="/top-gas-users"
-      >
-        Top Gas Users
-      </g-link>
+      <g-link class="nav-link" to="/wards"> Wards </g-link>
 
-      <g-link
-        class="nav-link"
-        to="/top-emitters"
-      >
-        Top Emitters
-      </g-link>
+      <g-link class="nav-link" to="/top-emitters"> Top Emitters </g-link>
 
-      <g-link
-        class="nav-link"
-        to="/biggest-buildings"
-      >
+      <g-link class="nav-link" to="/biggest-buildings">
         Biggest Buildings
       </g-link>
 
-      <g-link
-        class="nav-link"
-        to="/large-owners"
-      >
-        Large Owners
-      </g-link>
+      <g-link class="nav-link" to="/large-owners"> Large Owners </g-link>
 
-      <g-link
-        class="nav-link"
-        to="/cleanest-buildings"
-      >
+      <g-link class="nav-link" to="/cleanest-buildings">
         Cleanest Buildings
       </g-link>
 
-      <g-link
-        class="nav-link"
-        to="/about"
-      >
-        About
-      </g-link>
+      <g-link class="nav-link" to="/about"> About </g-link>
 
-      <g-link
-        class="nav-link"
-        to="/blog"
-      >
-        Blog
-      </g-link>
+      <g-link class="nav-link" to="/blog"> Blog </g-link>
 
-      <form class="search-form">
+      <form v-if="!isHomepage" class="search-form">
         <div class="input-cont">
           <input
             id="search"
@@ -149,17 +101,9 @@ export default class AppHeader extends Vue {
             name="search"
             aria-label="Search benchmarked buildings"
             placeholder="Search property name/address"
-          >
-          <button
-            type="submit"
-            @click="submitSearch"
-          >
-            <img
-              src="/search.svg"
-              alt=""
-              width="18"
-              height="18"
-            >
+          />
+          <button type="submit" @click="submitSearch">
+            <img src="/search.svg" alt="" width="18" height="18" />
             Search
           </button>
         </div>
@@ -190,17 +134,14 @@ header.header {
     outline-offset: 0.1rem;
     padding: 0.5rem 2rem;
 
-    &:focus { top: 0; }
+    &:focus {
+      top: 0;
+    }
   }
 
   .logo-link {
     display: inline-flex;
     flex-shrink: 0;
-
-    .site-logo {
-      height: 3rem;
-      width: auto;
-    }
   }
 
   .top-nav {
@@ -226,37 +167,54 @@ header.header {
     }
   }
 
-  .mobile-only { display: none; }
+  .mobile-only {
+    display: none;
+  }
 
+  /**
+   * Mobile Styling
+   */
   @media (max-width: $mobile-max-width) {
+    position: relative;
     flex-wrap: wrap;
     height: auto;
     gap: 0;
     padding: 0;
 
     // Show mobile components
-    .mobile-only { display: block; }
+    .mobile-only {
+      display: block;
+    }
 
-    .header-primary, .top-nav { padding: 1rem; }
+    .header-primary,
+    .top-nav {
+      padding: 0.5rem 0.75rem;
+    }
 
     .header-primary {
       display: flex;
       justify-content: space-between;
+      width: 100%;
     }
 
     .top-nav {
+      position: absolute;
+      top: 100%;
+      z-index: 10;
       width: 100%;
       gap: 1rem 1.5rem;
       margin: 0;
       background-color: $off-white;
 
       // Hide until nav is opened on mobile
-      &.-hidden { display: none; }
+      &.-hidden {
+        display: none;
+      }
     }
 
     .logo-link {
       flex-shrink: initial;
-      width: 70%;
+      width: 60%;
       max-width: 22rem;
 
       .site-logo {
@@ -268,17 +226,23 @@ header.header {
     .mobile-menu-toggle {
       padding: 0.5rem;
 
-      img { display: block; }
+      img {
+        display: block;
+      }
     }
-
 
     form.search-form {
       width: 100%;
 
-      input, button  { font-size: 0.75rem; }
+      input,
+      button {
+        font-size: 0.75rem;
+      }
     }
 
-    nav { margin: 1rem 0; }
+    nav {
+      margin: 1rem 0;
+    }
   }
 }
 </style>

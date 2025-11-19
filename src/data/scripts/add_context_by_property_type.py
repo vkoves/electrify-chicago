@@ -1,85 +1,94 @@
+"""
+A script that adds rankings to buildings by property type (e.g. #1 highest emissions of Office
+buildings)
+"""
+
 import pandas as pd
-import json
 
-from src.data.scripts.utils import get_data_file_path
+from typing import List, Any, cast
+from pandas.core.groupby.generic import DataFrameGroupBy
+from src.data.scripts.utils import (
+    get_data_file_path,
+    log_step_completion,
+    output_to_csv,
+    write_json_with_newline,
+)
+from src.data.scripts.building_utils import (
+    benchmarking_string_cols,
+    benchmarking_int_cols,
+)
 
-out_dir = 'dist'
-path_to_buildings_csv = get_data_file_path(out_dir, 'building-benchmarks.csv')
-property_types_file_path = get_data_file_path(out_dir, 'property-types.json')
-property_stats_file_path = get_data_file_path(out_dir, 'building-statistics-by-property-type.json')
+out_dir = "dist"
+
+# Input file path (also written to)
+input_benchmark_data_csv_path = get_data_file_path(out_dir, "building-benchmarks.csv")
+
+# Output file paths
+property_types_file_path = get_data_file_path(out_dir, "property-types.json")
+property_stats_file_path = get_data_file_path(
+    out_dir, "building-statistics-by-property-type.json"
+)
 
 # Columns we want to rank for and append ranks to each building's data
 building_cols_to_rank = [
-    'GHGIntensity',
-    'TotalGHGEmissions',
-    'ElectricityUse',
-    'NaturalGasUse',
-    'GrossFloorArea',
-    'SourceEUI',
-    'SiteEUI',
+    "GHGIntensity",
+    "TotalGHGEmissions",
+    "ElectricityUse",
+    "NaturalGasUse",
+    "GrossFloorArea",
+    "SourceEUI",
+    "SiteEUI",
 ]
 
-# Columns that should be strings because they are immutable identifiers
-string_cols = [
-    'ChicagoEnergyRating',
-    'ZIPCode',
-]
 
-# Int columns that are numbers (and can get averaged) but should be rounded
-int_cols = [
-    'NumberOfBuildings',
-    'ENERGYSTARScore',
-    # TODO: Move to string after figuring out why the X.0 is showing up
-    'Wards',
-    'CensusTracts',
-    'CommunityAreas',
-    'HistoricalWards2003-2015'
-]
+def generate_property_types(property_types: List[Any]) -> List[str]:
+    """
+    Output property_types to a json file for use in the frontend (like the type filter).
+    Returns the file written to as an array
+    """
+    property_types_json = {"propertyTypes": property_types}
 
-# raw building data
-building_data = pd.read_csv(path_to_buildings_csv)
+    write_json_with_newline(property_types_json, str(property_types_file_path))
 
-# find the latest year
-latest_year = building_data["DataYear"].max()
+    return [property_types_file_path]
 
-# filter just data for the max year
-building_data = building_data[building_data["DataYear"] == latest_year]
 
-# sorted data based on each property type: the order is alphabetical
-sorted_by_property_type = building_data.groupby("PrimaryPropertyType")
+def calculate_building_stats(
+    property_types: List[str], grouped_by_prop_type: DataFrameGroupBy
+) -> str:
+    """
+    Calculates stats by property type (e.g. median GHG emissions) and writes them to JSON file
 
-# get a list of all unique property types
-property_types = sorted_by_property_type.groups.keys()
+    Takes in the dictionary of property types from the grouped data, and the grouped data.
 
-# TODO: output property_types to a json file for use in the frontend
-def generate_property_types():
-    # output property_types to a json file for use in the frontend
-    property_types_json = {"propertyTypes": list(property_types)}
-    with open(property_types_file_path, 'w', encoding='latin1') as json_file:
-        json.dump(property_types_json, json_file)
+    Returns the file path written to
+    """
 
-def calculateBuildingStatistics():
     stats_by_property_type = {}
 
     # looping through both all the property types and all the columns we want to get data on
     for i, property in enumerate(property_types):
-        print("property", property)
-
         cur_property_type_stats = {}
+        cur_count = 0
+
         for col in building_cols_to_rank:
-
             # finding the mean, count, min, max, and quartiles of each category for each building type
-            cur_count = sorted_by_property_type[col].count()[i].item()
-
-            cur_min = round(sorted_by_property_type[col].min()[i].item(), 3)
-            cur_max = round(sorted_by_property_type[col].max()[i].item(), 3)
-
-            cur_first_quartile = round(
-                sorted_by_property_type[col].quantile(q=0.25)[i].item(), 3)
-            cur_median = round(
-                sorted_by_property_type[col].quantile(q=0.5)[i].item(), 1)
-            cur_third_quartile = round(
-                sorted_by_property_type[col].quantile(q=0.75)[i].item(), 3)
+            try:
+                cur_count = int(grouped_by_prop_type[col].count().iloc[i])
+                cur_min = round(float(grouped_by_prop_type[col].min().iloc[i]), 3)
+                cur_max = round(float(grouped_by_prop_type[col].max().iloc[i]), 3)
+                cur_first_quartile = round(
+                    float(grouped_by_prop_type[col].quantile(q=0.25).iloc[i]), 3
+                )
+                cur_median = round(
+                    float(grouped_by_prop_type[col].quantile(q=0.5).iloc[i]), 1
+                )
+                cur_third_quartile = round(
+                    float(grouped_by_prop_type[col].quantile(q=0.75).iloc[i]), 3
+                )
+            except (IndexError, AttributeError, ValueError):
+                # Skip this property type/column combination if data is not available
+                continue
 
             cur_property_type_stats[col] = {
                 "count": cur_count,
@@ -87,7 +96,7 @@ def calculateBuildingStatistics():
                 "max": cur_max,
                 "twentyFifthPercentile": cur_first_quartile,
                 "median": cur_median,
-                "seventyFifthPercentile": cur_third_quartile
+                "seventyFifthPercentile": cur_third_quartile,
             }
 
         if cur_count == 0:
@@ -95,31 +104,79 @@ def calculateBuildingStatistics():
 
         stats_by_property_type[property] = cur_property_type_stats
 
-    with open(property_stats_file_path, "w") as property_stats_file:
-        json.dump(stats_by_property_type, property_stats_file)
+    write_json_with_newline(stats_by_property_type, str(property_stats_file_path))
 
-# Ranks buildings in relation to their property type, then re-exporting the file
-def rankBuildingsByPropertyType():
+    return property_stats_file_path
+
+
+def rank_buildings_by_property_type(
+    building_data: pd.DataFrame,
+    property_types: List[str],
+    grouped_by_prop_type: DataFrameGroupBy,
+) -> List[str]:
+    """
+    Ranks buildings in relation to their property type, then re-exporting the file
+
+    Returns the file paths written to
+
+    TODO: Investigate if this should use just the latest year buildings, because we don't want to
+        rank a building that didn't report in the latest year against buildings of a different year
+    """
+
     # calculates the statistics for building property types (e.g. average GHG intensity for Hotels)
-    calculateBuildingStatistics()
+    building_stats_path = calculate_building_stats(property_types, grouped_by_prop_type)
 
-    # inputted data
-    building_data = pd.read_csv(path_to_buildings_csv)
+    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
+    # up (e.g. zipcode of 60614 or Ward 9) and make sure missing data is output as a string
+    building_data[benchmarking_string_cols] = (
+        building_data[benchmarking_string_cols].fillna("").astype(str)
+    )
+
+    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
+    building_data[benchmarking_int_cols] = building_data[benchmarking_int_cols].astype(
+        "Int64"
+    )
 
     # use pandas to rank each value for each property and store as category+"RankByProperty"
     for col in building_cols_to_rank:
-        building_data[col +
-                      'RankByPropertyType'] = sorted_by_property_type[col].rank(ascending=False)
+        building_data[col + "RankByPropertyType"] = grouped_by_prop_type[col].rank(
+            ascending=False
+        )
 
-    # Mark columns that look like numbers but should be strings as such to prevent decimals showing
-    # up (e.g. zipcode of 60614 or Ward 9)
-    building_data[string_cols] = building_data[string_cols].astype(str)
+    output_to_csv(building_data, input_benchmark_data_csv_path)
 
-    # Mark columns as ints that should never show a decimal, e.g. Number of Buildings, Zipcode
-    building_data[int_cols] = building_data[int_cols].astype('Int64')
+    return [building_stats_path, input_benchmark_data_csv_path]
 
-    building_data.to_csv(path_to_buildings_csv, sep=',', encoding='utf-8', index=False)
+
+###
+### Main
+###
+def main() -> None:
+    # Read in benchmark data, which only contains one instance of each building
+    building_data = pd.read_csv(input_benchmark_data_csv_path)
+
+    # find the latest year
+    latest_year = building_data["DataYear"].max()
+
+    # Filter to data for the newest year, so we don't aggregate stats over all time
+    latest_building_data = building_data[building_data["DataYear"] == latest_year]
+
+    # sorted data based on each property type: the order is alphabetical
+    grouped_by_prop_type = cast(
+        DataFrameGroupBy, latest_building_data.groupby("PrimaryPropertyType")
+    )
+
+    # get a list of all unique property types
+    property_types = [str(key) for key in grouped_by_prop_type.groups.keys()]
+
+    outputted_paths = []
+    outputted_paths += rank_buildings_by_property_type(
+        building_data, property_types, grouped_by_prop_type
+    )
+    outputted_paths += generate_property_types(property_types)
+
+    log_step_completion(3, outputted_paths)
+
 
 if __name__ == "__main__":
-    rankBuildingsByPropertyType()
-    generate_property_types()
+    main()

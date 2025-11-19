@@ -1,18 +1,23 @@
 <template>
   <img
     class="new-tab-icon"
-    src="/new-tab.svg"
+    :src="white ? '/new-tab-white.svg' : '/new-tab.svg'"
     alt="(opens in a new tab)"
-  >
+  />
 </template>
 
 <script lang="ts">
+import { Component, Prop, Vue } from 'vue-property-decorator';
+
 /**
  * A new tab icon for links
  */
-export default {
-  name: 'NewTabIcon',
-};
+@Component
+export default class NewTabIcon extends Vue {
+  /** Whether to use the white version of the icon (for dark backgrounds) */
+  @Prop({ default: false })
+  white!: boolean;
+}
 </script>
 
 <style lang="scss">

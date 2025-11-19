@@ -10,182 +10,201 @@
       '-sq-footage': isSquareFootage,
     }"
   >
-    <template v-if="building[statKey]">
-      <SparkLine
-        v-if="historicStatData.length > 0"
-        :graph-data="historicStatData"
-        :graph-title="statKey"
-        :unit="unit"
-      />
-
-      <!-- The actual stat value-->
-      <div class="stat-value">
-        {{ statValue }} <span
-          class="unit"
-          v-html="unit"
-        />
-      </div>
-
-      <div
-        v-if="costEstimate"
-        class="bill-estimate"
-      >
-        <strong>Est. {{ statKey === 'NaturalGasUse' ? 'Gas' : 'Electric' }} Bill:</strong>
-        ${{ Math.round(costEstimate).toLocaleString() }} for {{ building.DataYear }}**
-      </div>
-
-      <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
-      <div
-        v-if="statRank && statRank <= RankConfig.FlagRankMax && rankLabel"
-        class="rank"
-      >
-        #{{ statRank }} {{ rankLabel }}
-      </div>
-
-      <!-- Rank amongst property type -->
-      <div
-        v-if="propertyStatRank && propertyStatRank <= RankConfig.FlagRankMax && propertyRankLabel"
-        class="property-rank"
-      >
-        #{{ propertyStatRank }} {{ propertyRankLabel }}
-      </div>
-
-      <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
-      <div
-        v-if="!isSquareFootage && statRankInverted
-          && statRankInverted <= RankConfig.TrophyRankInvertedMax"
-        class="rank"
-      >
-        #{{ statRankInverted }} Lowest in Chicago* 🏆
-      </div>
-
-      <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
-      <div
-        v-if="!isSquareFootage && propertyStatRankInverted"
-        class="property-rank"
-      >
-        #{{ propertyStatRankInverted }} Lowest of {{ pluralismForPropertyType }} 🏆
-      </div>
-
-      <!-- Only show percentile if we don't have a flag or alarm -->
-      <div
-        v-if="typeof statRankPercent === 'number' && statRank > RankConfig.FlagRankMax"
-        class="percentile"
-      >
-        <!-- If stat rank is < 50%, invert it.
-        E.g higher than of benchmarked buildings becomes less than 99% of buildings-->
-        <template v-if="statRankPercent > 50">
-          Higher than {{ statRankPercent }}% of all buildings
-        </template>
-        <!-- Only show lower than X% if not getting a trophy-->
-        <template v-else-if="statRankInverted > RankConfig.TrophyRankInvertedMax">
-          <!-- Never show lower than 100%, top out at 100%-->
-          Lower than {{ Math.min(99, 100 - statRankPercent) }}% of all buildings
-        </template>
-      </div>
-
-      <div
-        v-if="medianMultipleMsgCityWide"
-        class="median-comparison"
-      >
-        <div>
-          <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
-          <span
-            v-if="statValue !== '0'"
-            class="val"
-          >
-            {{ medianMultipleMsgCityWide }} median
-          </span>
-          <span
-            v-else
-            class="median-label"
-          >
-            Median Chicago Building
-          </span>
-
-          <div class="median-val">
-            {{ stats[statKey].median.toLocaleString() }}
-            <span v-html="unit" />
-          </div>
+    <div class="text-cont">
+      <template v-if="typeof building[statKey] === 'number'">
+        <!-- The actual stat value-->
+        <div class="stat-value">
+          {{ statValueStr }} <span class="unit" v-html="unit" />
         </div>
 
-        <div v-if="medianMultiplePropertyType">
-          <!-- Only show median multiple if the building stat is > 0, otherwise it's 1/infinity -->
-          <span
-            v-if="statValue !== '0'"
-            class="val"
+        <div v-if="costEstimate" class="bill-estimate">
+          <strong
+            >Est.
+            {{ statKey === 'NaturalGasUse' ? 'Gas' : 'Electric' }} Bill:</strong
           >
-            {{ medianMultiplePropertyType }} median {{ propertyType }}
-          </span>
-          <span
-            v-else
-            class="median-label"
-          >
-            Median {{ propertyType }}
-          </span>
+          ${{ Math.round(costEstimate).toLocaleString() }} for
+          {{ building.DataYear }}**
+        </div>
 
-          <div class="median-val">
-            {{ BuildingStatsByPropertyType[propertyType][statKey].median.toLocaleString() }}
-            <span v-html="unit" />
+        <!-- Only show the rank if in the top 50, #102th highest _ doesn't mean much -->
+        <div
+          v-if="statRank && statRank <= RankConfig.FlagRankMax && rankLabel"
+          class="rank"
+        >
+          #{{ statRank }} {{ rankLabel }}
+        </div>
+
+        <!-- Rank amongst property type -->
+        <div
+          v-if="
+            propertyStatRank &&
+            propertyStatRank <= RankConfig.FlagRankMax &&
+            propertyRankLabel
+          "
+          class="property-rank"
+        >
+          #{{ propertyStatRank }} {{ propertyRankLabel }}
+        </div>
+
+        <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
+        <div
+          v-if="
+            !isSquareFootage &&
+            statRankInverted &&
+            statRankInverted <= RankConfig.TrophyRankInvertedMax
+          "
+          class="rank"
+        >
+          #{{ statRankInverted }} Lowest in Chicago* 🏆
+        </div>
+
+        <!-- If in the lowest 30, show that unless square footage (TODO: Move to GreatRankMax) -->
+        <div
+          v-if="!isSquareFootage && propertyStatRankInverted"
+          class="property-rank"
+        >
+          #{{ propertyStatRankInverted }} Lowest of
+          {{ pluralismForPropertyType }} 🏆
+        </div>
+
+        <!-- Only show percentile if we don't have a flag or alarm -->
+        <div
+          v-if="
+            typeof statRankPercent === 'number' &&
+            statRank > RankConfig.FlagRankMax
+          "
+          class="percentile"
+        >
+          <!-- If stat rank is < 50%, invert it.
+          E.g higher than of benchmarked buildings becomes less than 99% of buildings-->
+          <template v-if="statRankPercent > 50">
+            Higher than {{ statRankPercent }}% of all buildings
+          </template>
+          <!-- Only show lower than X% if not getting a trophy-->
+          <template
+            v-else-if="statRankInverted > RankConfig.TrophyRankInvertedMax"
+          >
+            <!-- Never show lower than 100%, top out at 100%-->
+            Lower than {{ Math.min(99, 100 - statRankPercent) }}% of all
+            buildings
+          </template>
+        </div>
+
+        <div v-if="medianMultipleMsgCityWide" class="median-comparison">
+          <div>
+            <!-- Only show median multiple if the stat is > 0, otherwise it's 1/infinity -->
+            <span v-if="statValueStr !== '0'" class="median-mult">
+              {{ medianMultipleMsgCityWide }} median
+            </span>
+            <span v-else class="median-label"> Median Chicago Building </span>
+
+            <div class="median-val">
+              {{ stats[statKey].median.toLocaleString() }}
+              <span v-html="unit" />
+            </div>
+          </div>
+
+          <div v-if="medianMultiplePropertyType">
+            <!-- Only show median multiple if the stat is > 0, otherwise it's 1/infinity -->
+            <span v-if="statValueStr !== '0'" class="median-mult">
+              {{ medianMultiplePropertyType }} median {{ propertyType }}
+            </span>
+            <span v-else class="median-label"> Median {{ propertyType }} </span>
+
+            <div class="median-val">
+              {{
+                BuildingStatsByPropertyType[propertyType][
+                  statKey
+                ].median.toLocaleString()
+              }}
+              <span v-html="unit" />
+            </div>
           </div>
         </div>
-      </div>
-      <p
-        v-else
-        class="no-stat-msg"
-      >
-        Most buildings don't use
-        <span v-if="statKey === 'DistrictSteamUse'">district steam</span>
-        <span v-else-if="statKey === 'DistrictChilledWaterUse'">district chilling</span>
-        <span v-else>this</span>,
-        so we don't currently have comparison data.
-      </p>
+        <p v-else class="no-stat-msg">
+          Most buildings don't use
+          <span v-if="statKey === 'DistrictSteamUse'">district steam</span>
+          <span v-else-if="statKey === 'DistrictChilledWaterUse'"
+            >district chilling</span
+          >
+          <span v-else>this</span>, so we don't currently have comparison data.
+        </p>
+      </template>
+      <template v-else>
+        <!-- No Fossil Gas specific messaging, dependant on district heating and anomalies -->
+        <div v-if="statKey === 'NaturalGasUse'" class="no-gas-msg">
+          <!-- If not reported but not gas free, show that -->
+          <div v-if="!fullyGasFree">
+            Not Reported
 
-      <!-- Natural Gas specific message -->
-      <div
-        v-if="statValue === '0' && statKey === 'NaturalGasUse'"
-        class="no-gas-msg"
-      >
-        <div v-if="fullyGasFree">
-          <div class="bold">
-            This Building Didn't Burn Any Natural Gas! 🎉
+            <p class="empty-notice">
+              This data was not reported for this building this year, which
+              <em>likely</em> means a value of zero for this field.
+            </p>
           </div>
 
-          <p class="smaller">
-            This building burned no natural gas on-site and isn't connected to a district heating
-            system, meaning it's fully electric! View <g-link to="/biggest-gas-free-buildings">
-              Chicago's Biggest Gas Free Buildings
-            </g-link>.
-          </p>
+          <div v-if="fullyGasFree">
+            <div class="bold large-text">
+              This Building Didn't Burn Any Fossil Gas! 🎉
+            </div>
+
+            <p class="smaller">
+              This building hasn't reported burning fossil gas on-site and isn't
+              connected to a district heating system, meaning it's fully
+              electric!
+            </p>
+
+            <g-link class="blue-link smaller" to="/all-electric"
+              >View All of Chicago's All Electric Buildings</g-link
+            >
+          </div>
+          <div v-else-if="building.DataAnomalies" class="panel -warning">
+            <div class="bold">
+              <span class="emoji">⚠️</span> Likely Reporting Error
+            </div>
+
+            <p class="smaller">
+              This building has burned gas in the past, so this latest year
+              having 0 gas use is likely a reporting error.
+            </p>
+          </div>
+          <div v-else>
+            <div class="bold">This Building Uses District Heating ❗</div>
+
+            <p class="smaller">
+              Although this building didn't burn any fossil gas on site, it's
+              connected to a district heating system, a centralized system for
+              heating multiple buildings. District heating systems can be fully
+              electric, but in Chicago most district heating systems are fossil
+              gas powered, meaning this building was most likely still heated
+              with fossil gas.
+            </p>
+          </div>
         </div>
         <div v-else>
-          <div class="bold">
-            This Building Uses District Heating ❗
-          </div>
+          Not Reported
 
-          <p class="smaller">
-            Although this building didn't burn any natural gas on site, it's connected to a district
-            heating system, a centralized system for heating multiple buildings. District heating
-            systems can be fully electric, but in Chicago most district heating systems are natural
-            gas powered, meaning this building was most likely still heated with natural gas.
+          <p class="empty-notice">
+            This data was not reported for this building this year, which
+            <em>likely</em> means a value of zero for this field.
           </p>
         </div>
-      </div>
-    </template>
-    <template v-else>
-      Not Reported
+      </template>
+    </div>
 
-      <p class="empty-notice">
-        This data was not reported for this building, which <em>likely</em> means a value of zero
-        for this field.
-      </p>
-    </template>
+    <SparkLine
+      v-if="historicStatData.length > 0"
+      :graph-data="historicStatData"
+      :graph-title="statKey"
+      :unit="unit"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import buildingStatsByPropertyType from "../data/dist/building-statistics-by-property-type.json";
+import buildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
+import { fullyGasFree, roundUpLargeNumber } from '../common-functions.vue';
 
 import {
   estimateUtilitySpend,
@@ -202,56 +221,53 @@ import SparkLine, { INumGraphPoint } from './graphs/SparkLine.vue';
 /**
  * A group of all the core stats by property type (e.g. GHG intensity median)
  */
-export interface IStatsByPropertyType
-{
+export interface IStatsByPropertyType {
   [propertyType: string]: IPropertyStats;
 }
 
 /**
-  * A  tile that can show the stats for a building, including whether it's
-  * doing better or worse than median, it's rank and percentile rank
-  */
+ * A  tile that can show the stats for a building, including whether it's
+ * doing better or worse than median, it's rank and percentile rank
+ */
 @Component({
   components: {
     SparkLine,
   },
 })
 export default class StatTile extends Vue {
-  @Prop({required: true}) building!: IBuilding;
-  @Prop({required: true}) statKey!: string;
-  @Prop({required: true}) stats!: IBuildingBenchmarkStats;
-  @Prop({required: true}) unit!: string;
+  @Prop({ required: true }) building!: IBuilding;
+  @Prop({ required: true }) statKey!: string;
+  @Prop({ required: true }) stats!: IBuildingBenchmarkStats;
+  @Prop({ required: true }) unit!: string;
   @Prop() historicData?: Array<IHistoricData>;
 
-  readonly BuildingStatsByPropertyType: IStatsByPropertyType = buildingStatsByPropertyType;
+  readonly BuildingStatsByPropertyType: IStatsByPropertyType =
+    buildingStatsByPropertyType;
   readonly RankConfig: typeof RankConfig = RankConfig;
 
-  readonly ColsToHideComparison = ['DistrictSteamUse', 'DistrictChilledWaterUse'];
+  readonly ColsToHideComparison = [
+    'DistrictSteamUse',
+    'DistrictChilledWaterUse',
+  ];
 
   /** The historical data for this stat, for passing to SparkLine */
   historicStatData: Array<INumGraphPoint> = [];
 
   /** The primary property type of the current building as it shows in the data */
   get propertyType(): string {
-    return this.building["PrimaryPropertyType"];
+    return this.building['PrimaryPropertyType'];
   }
 
-  /**
-   * Whether a building is _fully_ gas free, meaning no natural gas burned on-site or to heat it
-   * through a district heating system.
-   */
   get fullyGasFree(): boolean {
-    return parseFloat(this.building.NaturalGasUse) === 0
-      && parseFloat(this.building.DistrictSteamUse) === 0;
+    return fullyGasFree(this.building);
   }
 
   /** The estimated cost for the given utility */
   get costEstimate(): number | null {
     if (this.statKey === 'ElectricityUse') {
-      return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), true);
-    }
-    else if (this.statKey === 'NaturalGasUse') {
-      return estimateUtilitySpend(parseFloat(this.building[this.statKey] as string), false);
+      return estimateUtilitySpend(this.building[this.statKey], true);
+    } else if (this.statKey === 'NaturalGasUse') {
+      return estimateUtilitySpend(this.building[this.statKey], false);
     }
 
     return null;
@@ -262,38 +278,54 @@ export default class StatTile extends Vue {
     let pluralismForProperty;
     let curPropertyType = this.propertyType;
 
-    if (["Adult Education", "Outpatient Rehabilitation/Physical Therapy", "Performing Arts",
-      "Multifamily Housing"].includes(curPropertyType))
-    {
-      pluralismForProperty = curPropertyType + " Buildings";
-    }
-    else if (["College/University", "Laboratory", "Mixed Use Property",
-      "Residence Hall/Dormitory", "Residential Care Facility", "Senior Care Community",
-      "Senior Living Community", "Worship Facility"].includes(curPropertyType))
-    {
-      pluralismForProperty = curPropertyType.slice(0, -1) + "ies";
-    }
-    else if (curPropertyType == "Hospital (General Medical & Surgical)")
-    {
-      pluralismForProperty = "Hospitals (General Medical & Surgical)";
-    }
-    else if (["Other", "Other - Education", "Other - Entertainment/Public Assembly",
-      "Other - Mall", "Other - Public Services", "Other - Recreation",
-      "Other - Specialty Hospital"].includes(curPropertyType))
-    {
+    if (
+      [
+        'Adult Education',
+        'Outpatient Rehabilitation/Physical Therapy',
+        'Performing Arts',
+        'Multifamily Housing',
+      ].includes(curPropertyType)
+    ) {
+      pluralismForProperty = curPropertyType + ' Buildings';
+    } else if (
+      [
+        'College/University',
+        'Laboratory',
+        'Mixed Use Property',
+        'Residence Hall/Dormitory',
+        'Residential Care Facility',
+        'Senior Care Community',
+        'Senior Living Community',
+        'Worship Facility',
+      ].includes(curPropertyType)
+    ) {
+      pluralismForProperty = curPropertyType.slice(0, -1) + 'ies';
+    } else if (curPropertyType == 'Hospital (General Medical & Surgical)') {
+      pluralismForProperty = 'Hospitals (General Medical & Surgical)';
+    } else if (
+      [
+        'Other',
+        'Other - Education',
+        'Other - Entertainment/Public Assembly',
+        'Other - Mall',
+        'Other - Public Services',
+        'Other - Recreation',
+        'Other - Specialty Hospital',
+      ].includes(curPropertyType)
+    ) {
       pluralismForProperty = curPropertyType;
-    }
-    else
-    {
-      pluralismForProperty = curPropertyType + "s";
+    } else {
+      pluralismForProperty = curPropertyType + 's';
     }
 
     return pluralismForProperty;
   }
 
   get isAboveMedian(): boolean {
-    return this.building[this.statKey] !== null &&
-      this.building[this.statKey] as number > this.stats[this.statKey].median;
+    return (
+      this.building[this.statKey] !== null &&
+      (this.building[this.statKey] as number) > this.stats[this.statKey].median
+    );
   }
 
   /**
@@ -308,7 +340,9 @@ export default class StatTile extends Vue {
       return false;
     }
 
-    return this.building[this.statKey] as number > statMean + statStdDeviation;
+    return (
+      (this.building[this.statKey] as number) > statMean + statStdDeviation
+    );
   }
 
   // Square footage isn't directly climate related, so we show stats but treat it as
@@ -323,7 +357,7 @@ export default class StatTile extends Vue {
    *
    * TODO: Move into a generic math helper
    */
-  medianMultipleMsg(median:number, statValueNum:number): string | null {
+  medianMultipleMsg(median: number, statValueNum: number): string | null {
     if (median) {
       const medianMult = statValueNum / median;
 
@@ -334,7 +368,7 @@ export default class StatTile extends Vue {
         return medianMult.toFixed(1) + 'x';
       } else if (medianMult < 0.5) {
         // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
-        return `1/${Math.round(1 / medianMult )}`;
+        return `1/${Math.round(1 / medianMult)}`;
       } else {
         return medianMult.toFixed(1) + 'x';
       }
@@ -355,14 +389,19 @@ export default class StatTile extends Vue {
     if (!this.BuildingStatsByPropertyType[this.propertyType]) {
       return null;
     }
-    const median = this.BuildingStatsByPropertyType[this.propertyType][this.statKey]?.median;
+    const median =
+      this.BuildingStatsByPropertyType[this.propertyType][this.statKey]?.median;
     const statValueNum = parseFloat(this.building[this.statKey] as string);
 
     return this.medianMultipleMsg(median, statValueNum);
   }
 
-  get statValue(): string {
-    return parseFloat(this.building[this.statKey] as string).toLocaleString();
+  /** The stat value, as a string */
+  get statValueStr(): string {
+    const rawValue = parseFloat(this.building[this.statKey] as string);
+    const roundedNumber = roundUpLargeNumber(rawValue);
+
+    return roundedNumber.toLocaleString();
   }
 
   // Returns a rounded number or undefined if no rank
@@ -416,11 +455,13 @@ export default class StatTile extends Vue {
 
     let amountToRank = 0;
 
-    Object.entries(PropertiesToAwardByMinTypeSize).forEach(([min, propToRank]) => {
-      if (numBuildingsOfType >= parseInt(min)) {
-        amountToRank = propToRank;
-      }
-    });
+    Object.entries(PropertiesToAwardByMinTypeSize).forEach(
+      ([min, propToRank]) => {
+        if (numBuildingsOfType >= parseInt(min)) {
+          amountToRank = propToRank;
+        }
+      },
+    );
 
     return amountToRank;
   }
@@ -429,7 +470,9 @@ export default class StatTile extends Vue {
    * Return the rank of a building in its property, IF it should be rendered
    */
   get propertyStatRank(): number | null {
-    const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
+    const statRank = this.building[
+      this.statKey + 'RankByPropertyType'
+    ] as string;
 
     if (statRank && parseFloat(statRank) <= this.propertiesToAwardThisType) {
       return Math.round(parseFloat(statRank));
@@ -450,15 +493,19 @@ export default class StatTile extends Vue {
     }
 
     const numBuildingsOfType: number = propertyStats[this.statKey]?.count;
-    const statRank = this.building[this.statKey + 'RankByPropertyType'] as string;
+    const statRank = this.building[
+      this.statKey + 'RankByPropertyType'
+    ] as string;
 
     if (statRank) {
       const statRankNum = Math.round(parseFloat(statRank));
       // Rank 100/100 should invert to #1 lowest, not #0
-      const rankInverted =  numBuildingsOfType - statRankNum + 1;
+      const rankInverted = numBuildingsOfType - statRankNum + 1;
 
       // Only return the inverted rank if it's bad enough for this category
-      return rankInverted <= this.propertiesToAwardThisType ? rankInverted : null;
+      return rankInverted <= this.propertiesToAwardThisType
+        ? rankInverted
+        : null;
     }
 
     return null;
@@ -477,8 +524,11 @@ export default class StatTile extends Vue {
       return null;
     }
 
-    return getRankLabelByProperty(this.propertyStatRank, this.isSquareFootage,
-      this.pluralismForPropertyType);
+    return getRankLabelByProperty(
+      this.propertyStatRank,
+      this.isSquareFootage,
+      this.pluralismForPropertyType,
+    );
   }
 
   // Returns a number 1 - 4 for how concerned we should be about this stat
@@ -501,7 +551,7 @@ export default class StatTile extends Vue {
     // Very high concern if top 10
     if (statRank <= 10) {
       return 4;
-    // High concern if top 30 or well above mean
+      // High concern if top 30 or well above mean
     } else if (statRank <= 30 || this.isOneStdDeviationAboveMean) {
       return 3;
     } else if (this.isAboveMedian) {
@@ -516,7 +566,9 @@ export default class StatTile extends Vue {
   }
 
   get statRankPercent(): number | null {
-    const statRankPercent = this.building[this.statKey + 'PercentileRank'] as number;
+    const statRankPercent = this.building[
+      this.statKey + 'PercentileRank'
+    ] as number;
 
     if (!statRankPercent) {
       return null;
@@ -529,11 +581,13 @@ export default class StatTile extends Vue {
   mounted(): void {
     if (this.historicData) {
       this.historicStatData = this.historicData.map((datum: IHistoricData) => ({
-        x: parseInt(datum.DataYear),
+        x: datum.DataYear,
         y: this.parseStatValueForGraph(datum),
       }));
 
-      const zeroOrNanOnly = this.historicStatData.every((datum) => datum.y === 0 || isNaN(datum.y));
+      const zeroOrNanOnly = this.historicStatData.every(
+        (datum) => datum.y === 0 || isNaN(datum.y),
+      );
 
       if (zeroOrNanOnly) {
         this.historicStatData = [];
@@ -547,42 +601,42 @@ export default class StatTile extends Vue {
    * GHG intensity)
    */
   parseStatValueForGraph(datum: IHistoricData): number {
-    const statValFloat = parseFloat((datum)[this.statKey as keyof IHistoricData] as string);
+    const statValFloat = parseFloat(
+      datum[this.statKey as keyof IHistoricData] as string,
+    );
 
-    if (statValFloat > 1_000) {
-      return Math.round(statValFloat);
-    }
-    else {
-      return statValFloat;
-    }
+    return roundUpLargeNumber(statValFloat);
   }
 }
 </script>
 
 <style lang="scss">
 .stat-tile {
+  display: flex;
+  gap: 1rem;
   padding: 1rem;
-  background-color: #f5f5f5;
-  border: solid 0.01625rem $grey-dark;
+  background-color: $off-white;
+  // Use a bottom border to supplementally show how good this stat is
+  border-bottom: solid 0.375rem $grey-dark;
   box-sizing: border-box;
   border-radius: $brd-rad-small;
+  // When printing, don't remove colors or backgrounds
+  print-color-adjust: exact;
 
   &.-very-bad {
-    background-color: #ffd9d9;
-    border-color: red;
+    @extend .concern-level-very-bad;
   }
   &.-bad {
-    background-color: #ffedf0;
-    border-color: red;
+    @extend .concern-level-bad;
   }
-  // Also be pretty subtle for indicating medium attributes
-  &.-medium { border-color: #935700; }
-  // Very subtly highlight good attributes
-  &.-good { border-color: green; }
-  // Highlight best in class buildings
+  &.-medium {
+    @extend .concern-level-medium;
+  }
+  &.-good {
+    @extend .concern-level-good;
+  }
   &.-great {
-    border-color: green;
-    background-color: #e9ffe9;
+    @extend .concern-level-great;
   }
   // Square footage should override and clear anything since that's not really an
   // environmental factor, just an interesting stat
@@ -595,8 +649,8 @@ export default class StatTile extends Vue {
   .spark-graph-cont {
     width: 40%;
     max-width: 13rem;
-    float: right;
     margin-left: 1rem;
+    flex-shrink: 0;
   }
 
   .stat-value {
@@ -607,41 +661,32 @@ export default class StatTile extends Vue {
       font-weight: normal;
       font-size: 1.125rem;
     }
-    img { vertical-align: -0.25rem; }
+    img {
+      vertical-align: -0.25rem;
+    }
   }
 
   // Apply a semi-bold to rank
-  .rank { font-weight: 500; }
+  .rank {
+    font-weight: 500;
+  }
 
-  .property-rank { font-size: small; }
+  .property-rank {
+    font-size: small;
+  }
 
   .bill-estimate {
     margin-bottom: 0.25rem;
     font-size: small;
   }
 
-  .median-comparison {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 0.25rem;
-
-    .val {
-      font-size: large;
-      font-weight: 500;
-    }
-
-    .median-val  { font-size: small; }
-    .median-label {
-      font-size: 0.825rem;
-      font-weight: 600;
-    }
+  .median,
+  .percentile {
+    font-size: 0.75rem;
   }
 
-  .median, .percentile { font-size: 0.75rem; }
-
   .percentile {
-    font-weight: normal;
+    font-weight: 500;
     margin-bottom: 0.25rem;
   }
 
@@ -652,7 +697,17 @@ export default class StatTile extends Vue {
   .no-gas-msg {
     margin-top: 0.75rem;
 
-    p { margin: 0.25rem 0 0; }
+    p {
+      margin: 0.25rem 0 0;
+    }
+
+    .panel.-warning,
+    .blue-link {
+      margin-top: 0.75rem;
+    }
+    .blue-link {
+      display: inline-block;
+    }
   }
 
   .no-stat-msg {
@@ -662,10 +717,51 @@ export default class StatTile extends Vue {
 
   /** Mobile styling */
   @media (max-width: $mobile-max-width) {
+    flex-direction: column-reverse;
+
     .spark-graph-cont {
       width: 75%;
-      float: none;
       margin: 0;
+    }
+
+    // Flip median comparison to row, with wrapping so very long property types (like
+    // "Multifamily Housing") can stay in columns
+    .median-comparison {
+      flex-direction: row;
+      gap: 0.25rem 1rem;
+      flex-wrap: wrap;
+    }
+  }
+
+  /** Print Mode styling - make stats vertical with graph at bottom */
+  @media print {
+    display: flex;
+    flex-direction: column;
+
+    // Scale up not square footage stat values
+    &:not(.-sq-footage) {
+      .stat-value {
+        font-size: 2rem;
+      }
+    }
+
+    .spark-graph-cont {
+      order: 3;
+      margin-top: 2rem;
+    }
+
+    .property-rank {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .unit {
+      font-weight: bold !important;
+      font-size: 1.5rem !important;
+    }
+
+    .median-comparison .median-val {
+      color: $text-main;
     }
   }
 }
