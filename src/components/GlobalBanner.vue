@@ -1,5 +1,6 @@
 <template>
-  <div class="global-banner">
+  <!-- Make sure the banner doesn't show in printed pages, e.g. buildings -->
+  <div class="global-banner no-print">
     <div class="page-constrained">
       <div class="content-left">
         <h2>📣 Take Action to Improve Emissions Reporting!</h2>
