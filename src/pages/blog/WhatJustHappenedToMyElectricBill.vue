@@ -2,12 +2,16 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import LCOEBySource from '~/components/graphs/LCOEBySource.vue';
+import USElectricityConsumption from '~/components/graphs/USElectricityConsumption.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
 @Component<any>({
   components: {
     NewTabIcon,
+    LCOEBySource,
+    USElectricityConsumption,
   },
   metaInfo() {
     return {
@@ -112,6 +116,14 @@ export default class WhatJustHappenedToMyElectricBill extends Vue {}
         new generation is renewables, led by solar and wind.
       </p>
 
+      <LCOEBySource />
+
+      <p class="footnote">
+        Source: <a href="https://ourworldindata.org/grapher/levelized-cost-of-energy">Our World In Data
+          - Levelized Cost of Energy
+        </a>
+      </p>
+
       <p>
         Ok, that's the rundown on the supply side. Now let's turn to demand.
       </p>
@@ -144,6 +156,20 @@ export default class WhatJustHappenedToMyElectricBill extends Vue {}
         still need to modernize our grid to support a future that will be
         increasingly electric as we transition to efficient and clean
         technologies like electric vehicles and heat pumps.
+      </p>
+
+      <USElectricityConsumption />
+
+      <p class="footnote">
+        Source:
+        <a
+          href="https://www.eia.gov/totalenergy/data/browser/index.php?tbl=T07.06#/?f=A&start=1949&end=2022&charted=1-2-3-4-5-6"
+          target="_blank"
+          rel="noopener"
+        >
+          U.S. Energy Information Administration - Electricity Retail Sales
+          <NewTabIcon />
+        </a>
       </p>
 
       <p>
