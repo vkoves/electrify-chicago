@@ -54,10 +54,23 @@ export default class WhatJustHappenedToMyElectricBill extends Vue {}
       </p>
 
       <blockquote>
-        Olivia Odendahl, 26, who shares a Lakeview two-bedroom walkup apartment
-        with a roommate, saw her July 18 ComEd bill more than double
-        month-over-month to $120.83.
+        <span class="quote">&ldquo;</span>Olivia Odendahl, 26, who shares a
+        Lakeview two-bedroom walkup apartment with a roommate, saw her July 18
+        ComEd bill <strong>more than double</strong> month-over-month to
+        <strong>$120.83.</strong>
+        <span class="quote">&rdquo;</span>
       </blockquote>
+
+      <p class="footnote">
+        Source:
+        <a
+          href="https://www.chicagotribune.com/2025/07/22/comed-supply-rate-bill-increases/"
+          target="_blank"
+          rel="noopener"
+          >Chicago Tribune - ComEd supply rate bill increases
+          <NewTabIcon />
+        </a>
+      </p>
 
       <p>
         It's been a hot few months, of course, and we're all used to electric
@@ -458,6 +471,16 @@ export default class WhatJustHappenedToMyElectricBill extends Vue {}
     background-color: $off-white;
     border-left: solid 0.25rem $blue-dark;
     font-style: italic;
+    font-size: 1.125rem;
+    line-height: 1.5;
+
+    .quote {
+      font-family: 'Times New Roman', serif;
+      font-size: 1.5em;
+      font-weight: bold;
+      line-height: 0;
+      vertical-align: -0.125rem;
+    }
   }
 
   .footnote {
