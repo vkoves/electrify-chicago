@@ -1,6 +1,8 @@
 <template>
   <div class="lcoe-by-source">
-    <div v-if="loading" class="loading-message">Loading energy cost data...</div>
+    <div v-if="loading" class="loading-message">
+      Loading energy cost data...
+    </div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
     <div v-else>
       <ScatterGraph
@@ -157,5 +159,4 @@ export default class LCOEBySource extends Vue {
 .error-message {
   color: $text-light;
 }
-
 </style>

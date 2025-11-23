@@ -120,8 +120,9 @@ export default class WhatJustHappenedToMyElectricBill extends Vue {}
       <LCOEBySource />
 
       <p class="footnote">
-        Source: <a href="https://ourworldindata.org/grapher/levelized-cost-of-energy">Our World In Data
-          - Levelized Cost of Energy
+        Source:
+        <a href="https://ourworldindata.org/grapher/levelized-cost-of-energy"
+          >Our World In Data - Levelized Cost of Energy
         </a>
       </p>
 

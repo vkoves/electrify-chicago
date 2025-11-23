@@ -9,7 +9,11 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import * as d3 from 'd3';
-import { DataPoint, DataSeries, RegressionLine } from '../../common-functions.vue';
+import {
+  DataPoint,
+  DataSeries,
+  RegressionLine,
+} from '../../common-functions.vue';
 
 interface SeriesElements {
   circles: d3.Selection<SVGCircleElement, DataPoint, SVGGElement, unknown>;
@@ -453,7 +457,9 @@ export default class ScatterPlot extends Vue {
             x + this.TooltipEstimatedWidth >
             containerWidth - this.TooltipEdgeBuffer;
 
-          const tooltipContent = `<div><strong>${series.name}</strong></div><div>Year: ${d.year}</div><div>${this.yAxisLabel}: ${d.value}</div>`;
+          const tooltipContent =
+            `<div><strong>${series.name}</strong></div>` +
+            `<div>Year: ${d.year}</div><div>${this.yAxisLabel}: ${d.value}</div>`;
           tooltip
             .html(tooltipContent)
             .style(

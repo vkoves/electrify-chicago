@@ -97,7 +97,11 @@ export default class USElectricityConsumption extends Vue {
             transportation,
             directUse,
             total:
-              industrial + commercial + residential + transportation + directUse,
+              industrial +
+              commercial +
+              residential +
+              transportation +
+              directUse,
           };
         });
 
@@ -170,5 +174,4 @@ export default class USElectricityConsumption extends Vue {
 .error-message {
   color: $text-light;
 }
-
 </style>
