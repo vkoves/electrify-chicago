@@ -9,15 +9,19 @@
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from 'vue-property-decorator';
 import * as d3 from 'd3';
-import { DataPoint, RegressionLine } from '../../common-functions.vue';
+import { DataPoint, DataSeries, RegressionLine } from '../../common-functions.vue';
+
+interface SeriesElements {
+  circles: d3.Selection<SVGCircleElement, DataPoint, SVGGElement, unknown>;
+  path: d3.Selection<SVGPathElement, DataPoint[], null, undefined>;
+  trendLine: d3.Selection<SVGLineElement, unknown, null, undefined> | null;
+}
 
 interface ChartElements {
   container: d3.Selection<HTMLElement, unknown, null, undefined>;
   chartGroup: d3.Selection<SVGGElement, unknown, null, undefined>;
   tooltip: d3.Selection<HTMLDivElement, unknown, null, undefined>;
-  circles: d3.Selection<SVGCircleElement, DataPoint, SVGGElement, unknown>;
-  path: d3.Selection<SVGPathElement, DataPoint[], null, undefined>;
-  trendLine: d3.Selection<SVGLineElement, unknown, null, undefined> | null;
+  seriesElements: SeriesElements[];
 }
 
 /**
@@ -34,16 +38,23 @@ export default class ScatterPlot extends Vue {
   $refs!: {
     chartContainer: HTMLElement;
   };
-  @Prop({ required: true }) data!: DataPoint[];
+  // Legacy single-series props (for backward compatibility)
+  @Prop() data?: DataPoint[];
+  @Prop() strokeColor?: string;
+  @Prop() fillColor?: string;
+
+  // New multi-series prop
+  @Prop() series?: DataSeries[];
+
+  // Common props
   @Prop({ required: true }) yAxisLabel!: string;
-  @Prop({ required: true }) strokeColor!: string;
-  @Prop({ required: true }) fillColor!: string;
   @Prop({ required: true }) containerId!: string;
   @Prop({ required: true }) title!: string;
 
   @Prop({ default: true }) showGrid!: boolean;
   @Prop({ default: true }) showTrendLine!: boolean;
   @Prop({ default: 800 }) animationDuration!: number;
+  @Prop({ default: false }) showLegend!: boolean;
 
   private chartContainer: HTMLElement | null = null;
   private loading: boolean = true;
@@ -59,8 +70,31 @@ export default class ScatterPlot extends Vue {
   private readonly TooltipEstimatedWidth = 150; // Estimated tooltip width for positioning
   private readonly TooltipEdgeBuffer = 30; // Buffer from container edge
 
+  // Computed properties for handling both single and multi-series modes
+  get dataSeries(): DataSeries[] {
+    if (this.series && this.series.length > 0) {
+      return this.series;
+    }
+    // Backward compatibility: convert old single-series props to new format
+    if (this.data && this.strokeColor && this.fillColor) {
+      return [
+        {
+          name: this.title,
+          data: this.data,
+          strokeColor: this.strokeColor,
+          fillColor: this.fillColor,
+        },
+      ];
+    }
+    return [];
+  }
+
+  get allDataPoints(): DataPoint[] {
+    return this.dataSeries.flatMap((s) => s.data);
+  }
+
   get sortedData(): DataPoint[] {
-    return [...this.data].sort((a, b) => a.year - b.year);
+    return [...this.allDataPoints].sort((a, b) => a.year - b.year);
   }
 
   mounted(): void {
@@ -78,6 +112,15 @@ export default class ScatterPlot extends Vue {
 
   @Watch('data', { deep: true })
   onDataChange(): void {
+    this.loading = true;
+    this.hasAnimated = false;
+    this.chartRendered = false;
+    this.renderChartStructure();
+    this.animateDataElements();
+  }
+
+  @Watch('series', { deep: true })
+  onSeriesChange(): void {
     this.loading = true;
     this.hasAnimated = false;
     this.chartRendered = false;
@@ -247,28 +290,6 @@ export default class ScatterPlot extends Vue {
       .style('fill', 'black')
       .text('Year');
 
-    // Trend line (drawn first to appear behind data)
-    let trendLine: d3.Selection<
-      SVGLineElement,
-      unknown,
-      null,
-      undefined
-    > | null = null;
-
-    if (this.showTrendLine && this.sortedData.length > 1) {
-      const regression = this.calculateLinearRegression(this.sortedData);
-      trendLine = chartGroup
-        .append('line')
-        .attr('x1', this.xScale(regression.x1))
-        .attr('y1', this.yScale(regression.y1))
-        .attr('x2', this.xScale(regression.x1)) // collapsed start
-        .attr('y2', this.yScale(regression.y1))
-        .style('stroke', '#8b5cf6')
-        .style('stroke-width', 3)
-        .style('stroke-dasharray', '20,5')
-        .style('opacity', 0);
-    }
-
     // Tooltip
     const tooltip = container
       .append('div')
@@ -285,71 +306,135 @@ export default class ScatterPlot extends Vue {
       .style('box-shadow', '0 4px 20px rgba(0, 0, 0, 0.15)')
       .style('z-index', '1000');
 
-    // Line
+    // Legend
+    if (this.showLegend && this.dataSeries.length > 1) {
+      const legendX = width + margin.left + 10;
+      const legendGroup = svg
+        .append('g')
+        .attr('transform', `translate(${legendX}, ${margin.top})`);
+
+      this.dataSeries.forEach((series, i) => {
+        const legendItem = legendGroup
+          .append('g')
+          .attr('transform', `translate(0, ${i * 25})`);
+
+        legendItem
+          .append('line')
+          .attr('x1', 0)
+          .attr('x2', 20)
+          .attr('y1', 10)
+          .attr('y2', 10)
+          .attr('class', series.strokeColor)
+          .attr('stroke-width', 3);
+
+        legendItem
+          .append('circle')
+          .attr('cx', 10)
+          .attr('cy', 10)
+          .attr('r', 4)
+          .attr('class', series.fillColor);
+
+        legendItem
+          .append('text')
+          .attr('x', 30)
+          .attr('y', 10)
+          .attr('dy', '0.35em')
+          .style('font-size', '12px')
+          .text(series.name);
+      });
+    }
+
+    // Render each data series
+    const seriesElements: SeriesElements[] = [];
     const line = d3
       .line<DataPoint>()
       .x((d: DataPoint) => this.xScale(d.year))
       .y((d: DataPoint) => this.yScale(d.value))
       .curve(d3.curveMonotoneX);
 
-    const path = chartGroup
-      .append('path')
-      .datum(this.sortedData)
-      .attr('fill', 'none')
-      .attr('class', this.strokeColor)
-      .attr('stroke-width', 3)
-      .attr('d', line)
-      .style('filter', 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))')
-      .style('opacity', 0);
+    this.dataSeries.forEach((series) => {
+      const sortedSeriesData = [...series.data].sort((a, b) => a.year - b.year);
 
-    // Circles
-    const circles = chartGroup
-      .append('g')
-      .selectAll('circle')
-      .data(this.sortedData)
-      .enter()
-      .append('circle')
-      .attr('cx', (d: DataPoint) => this.xScale(d.year))
-      .attr('cy', (d: DataPoint) => this.yScale(d.value))
-      .attr('r', 0)
-      .attr('class', this.fillColor)
-      .style('cursor', 'pointer')
-      .style('opacity', 0)
-      .on('mouseover', function () {
-        tooltip.style('opacity', 1);
-      })
-      .on('mousemove', (event: MouseEvent, d: DataPoint) => {
-        const [x, y] = d3.pointer(event, container.node());
-        const containerWidth = parseInt(container.style('width'), 10) || 500;
+      // Trend line (drawn first to appear behind data)
+      let trendLine: d3.Selection<
+        SVGLineElement,
+        unknown,
+        null,
+        undefined
+      > | null = null;
 
-        // Check if tooltip would extend beyond right edge of container
-        const shouldLeftAlign =
-          x + this.TooltipEstimatedWidth >
-          containerWidth - this.TooltipEdgeBuffer;
+      if (this.showTrendLine && sortedSeriesData.length > 1) {
+        const regression = this.calculateLinearRegression(sortedSeriesData);
+        trendLine = chartGroup
+          .append('line')
+          .attr('x1', this.xScale(regression.x1))
+          .attr('y1', this.yScale(regression.y1))
+          .attr('x2', this.xScale(regression.x1)) // collapsed start
+          .attr('y2', this.yScale(regression.y1))
+          .style('stroke', '#8b5cf6')
+          .style('stroke-width', 2)
+          .style('stroke-dasharray', '5,5')
+          .style('opacity', 0);
+      }
 
-        tooltip
-          .html(
-            `<div>Year: ${d.year}</div><div>${this.yAxisLabel}: ${d.value}</div>`,
-          )
-          .style(
-            'left',
-            shouldLeftAlign
-              ? `${x - this.TooltipEstimatedWidth - this.TooltipOffset}px`
-              : `${x + this.TooltipOffset}px`,
-          )
-          .style('top', `${y - this.TooltipOffset}px`);
-      })
-      .on('mouseout', function () {
-        tooltip.style('opacity', 0);
-      });
+      // Line
+      const path = chartGroup
+        .append('path')
+        .datum(sortedSeriesData)
+        .attr('fill', 'none')
+        .attr('class', series.strokeColor)
+        .attr('stroke-width', 3)
+        .attr('d', line)
+        .style('filter', 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))')
+        .style('opacity', 0);
+
+      // Circles
+      const circles = chartGroup
+        .append('g')
+        .selectAll('circle')
+        .data(sortedSeriesData)
+        .enter()
+        .append('circle')
+        .attr('cx', (d: DataPoint) => this.xScale(d.year))
+        .attr('cy', (d: DataPoint) => this.yScale(d.value))
+        .attr('r', 0)
+        .attr('class', series.fillColor)
+        .style('cursor', 'pointer')
+        .style('opacity', 0)
+        .on('mouseover', function () {
+          tooltip.style('opacity', 1);
+        })
+        .on('mousemove', (event: MouseEvent, d: DataPoint) => {
+          const [x, y] = d3.pointer(event, container.node());
+          const containerWidth = parseInt(container.style('width'), 10) || 500;
+
+          const shouldLeftAlign =
+            x + this.TooltipEstimatedWidth >
+            containerWidth - this.TooltipEdgeBuffer;
+
+          const tooltipContent = `<div><strong>${series.name}</strong></div><div>Year: ${d.year}</div><div>${this.yAxisLabel}: ${d.value}</div>`;
+          tooltip
+            .html(tooltipContent)
+            .style(
+              'left',
+              shouldLeftAlign
+                ? `${x - this.TooltipEstimatedWidth - this.TooltipOffset}px`
+                : `${x + this.TooltipOffset}px`,
+            )
+            .style('top', `${y - this.TooltipOffset}px`);
+        })
+        .on('mouseout', function () {
+          tooltip.style('opacity', 0);
+        });
+
+      seriesElements.push({ circles, path, trendLine });
+    });
 
     this.chartElements = {
       container,
       chartGroup,
       tooltip,
-      circles,
-      path,
-      trendLine,
+      seriesElements,
     };
 
     this.loading = false;
@@ -358,39 +443,44 @@ export default class ScatterPlot extends Vue {
 
   private animateDataElements(): void {
     if (!this.chartElements || this.hasAnimated) return;
-    const { circles, path } = this.chartElements;
 
-    if (this.chartElements.trendLine) {
-      const regression = this.calculateLinearRegression(this.sortedData);
-      this.chartElements.trendLine
-        .style('opacity', 0.7)
+    this.chartElements.seriesElements.forEach((seriesElement, seriesIndex) => {
+      const { circles, path, trendLine } = seriesElement;
+      const seriesData = this.dataSeries[seriesIndex].data;
+      const sortedSeriesData = [...seriesData].sort((a, b) => a.year - b.year);
+
+      if (trendLine) {
+        const regression = this.calculateLinearRegression(sortedSeriesData);
+        trendLine
+          .style('opacity', 0.7)
+          .transition()
+          .duration(this.animationDuration)
+          .delay(this.animationDuration * 0.2)
+          .ease(d3.easeQuadOut)
+          .attr('x2', this.xScale(regression.x2))
+          .attr('y2', this.yScale(regression.y2));
+      }
+
+      // Animate line
+      const totalLength = path.node()?.getTotalLength() || 0;
+      path
+        .attr('stroke-dasharray', `${totalLength} ${totalLength}`)
+        .attr('stroke-dashoffset', totalLength)
+        .style('opacity', 1)
         .transition()
         .duration(this.animationDuration)
-        .delay(this.animationDuration * 0.2)
-        .ease(d3.easeQuadOut)
-        .attr('x2', this.xScale(regression.x2))
-        .attr('y2', this.yScale(regression.y2));
-    }
+        .ease(d3.easeLinear)
+        .attr('stroke-dashoffset', 0);
 
-    // Animate line
-    const totalLength = path.node()?.getTotalLength() || 0;
-    path
-      .attr('stroke-dasharray', `${totalLength} ${totalLength}`)
-      .attr('stroke-dashoffset', totalLength)
-      .style('opacity', 1)
-      .transition()
-      .duration(this.animationDuration)
-      .ease(d3.easeLinear)
-      .attr('stroke-dashoffset', 0);
-
-    // Animate circles
-    circles
-      .style('opacity', 1)
-      .transition()
-      .duration(this.animationDuration)
-      .delay((d: DataPoint, i: number) => i * 100)
-      .attr('r', 6)
-      .ease(d3.easeBackOut);
+      // Animate circles
+      circles
+        .style('opacity', 1)
+        .transition()
+        .duration(this.animationDuration)
+        .delay((_d: DataPoint, i: number) => i * 100)
+        .attr('r', 6)
+        .ease(d3.easeBackOut);
+    });
 
     this.hasAnimated = true;
   }

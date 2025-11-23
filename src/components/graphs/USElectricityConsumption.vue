@@ -4,46 +4,15 @@
       Loading electricity consumption data...
     </div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else class="graphs-container">
+    <div v-else>
       <ScatterGraph
-        :data="totalData"
+        :series="allSeries"
         y-axis-label="Consumption (trillion kWh)"
-        stroke-color="chart-stroke-purple"
-        fill-color="chart-fill-purple"
-        container-id="electricity-total"
-        title="Total U.S. Electricity Consumption"
+        container-id="electricity-all-sectors"
+        title="U.S. Electricity Consumption by Sector"
         :show-grid="true"
-        :show-trend-line="true"
-      />
-      <ScatterGraph
-        :data="residentialData"
-        y-axis-label="Consumption (trillion kWh)"
-        stroke-color="chart-stroke-blue"
-        fill-color="chart-fill-blue"
-        container-id="electricity-residential"
-        title="Residential Electricity Consumption"
-        :show-grid="true"
-        :show-trend-line="true"
-      />
-      <ScatterGraph
-        :data="commercialData"
-        y-axis-label="Consumption (trillion kWh)"
-        stroke-color="chart-stroke-green"
-        fill-color="chart-fill-green"
-        container-id="electricity-commercial"
-        title="Commercial Electricity Consumption"
-        :show-grid="true"
-        :show-trend-line="true"
-      />
-      <ScatterGraph
-        :data="industrialData"
-        y-axis-label="Consumption (trillion kWh)"
-        stroke-color="chart-stroke-orange"
-        fill-color="chart-fill-orange"
-        container-id="electricity-industrial"
-        title="Industrial Electricity Consumption"
-        :show-grid="true"
-        :show-trend-line="true"
+        :show-trend-line="false"
+        :show-legend="true"
       />
     </div>
   </div>
@@ -54,7 +23,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import * as d3 from 'd3';
 
 import ScatterGraph from '~/components/graphs/ScatterGraph.vue';
-import { DataPoint } from '~/common-functions.vue';
+import { DataSeries } from '~/common-functions.vue';
 
 interface ElectricityRecord {
   '': string; // The CSV has an unnamed first column for year
@@ -140,32 +109,45 @@ export default class USElectricityConsumption extends Vue {
     }
   }
 
-  get totalData(): DataPoint[] {
-    return this.electricityData.map((d) => ({
-      year: d.year,
-      value: d.total,
-    }));
-  }
-
-  get residentialData(): DataPoint[] {
-    return this.electricityData.map((d) => ({
-      year: d.year,
-      value: d.residential,
-    }));
-  }
-
-  get commercialData(): DataPoint[] {
-    return this.electricityData.map((d) => ({
-      year: d.year,
-      value: d.commercial,
-    }));
-  }
-
-  get industrialData(): DataPoint[] {
-    return this.electricityData.map((d) => ({
-      year: d.year,
-      value: d.industrial,
-    }));
+  get allSeries(): DataSeries[] {
+    return [
+      {
+        name: 'Total',
+        data: this.electricityData.map((d) => ({
+          year: d.year,
+          value: d.total,
+        })),
+        strokeColor: 'chart-stroke-purple',
+        fillColor: 'chart-fill-purple',
+      },
+      {
+        name: 'Residential',
+        data: this.electricityData.map((d) => ({
+          year: d.year,
+          value: d.residential,
+        })),
+        strokeColor: 'chart-stroke-blue',
+        fillColor: 'chart-fill-blue',
+      },
+      {
+        name: 'Commercial',
+        data: this.electricityData.map((d) => ({
+          year: d.year,
+          value: d.commercial,
+        })),
+        strokeColor: 'chart-stroke-green',
+        fillColor: 'chart-fill-green',
+      },
+      {
+        name: 'Industrial',
+        data: this.electricityData.map((d) => ({
+          year: d.year,
+          value: d.industrial,
+        })),
+        strokeColor: 'chart-stroke-orange',
+        fillColor: 'chart-fill-orange',
+      },
+    ];
   }
 }
 </script>
@@ -188,15 +170,4 @@ export default class USElectricityConsumption extends Vue {
   color: $text-light;
 }
 
-.graphs-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin: 2rem 0;
-
-  @media (max-width: $mobile-max-width) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
 </style>

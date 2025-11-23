@@ -214,6 +214,13 @@ export interface DataPoint {
   value: number;
 }
 
+export interface DataSeries {
+  name: string;
+  data: DataPoint[];
+  strokeColor: string;
+  fillColor: string;
+}
+
 export type RegressionLine = {
   x1: number;
   x2: number;

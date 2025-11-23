@@ -2,46 +2,15 @@
   <div class="lcoe-by-source">
     <div v-if="loading" class="loading-message">Loading energy cost data...</div>
     <div v-else-if="error" class="error-message">{{ error }}</div>
-    <div v-else class="graphs-container">
+    <div v-else>
       <ScatterGraph
-        :data="solarData"
+        :series="allSeries"
         y-axis-label="Cost ($/kWh)"
-        stroke-color="chart-stroke-orange"
-        fill-color="chart-fill-orange"
-        container-id="lcoe-solar"
-        title="Solar Photovoltaic Cost Over Time"
+        container-id="lcoe-all-sources"
+        title="Levelized Cost of Energy by Source Over Time"
         :show-grid="true"
-        :show-trend-line="true"
-      />
-      <ScatterGraph
-        :data="windData"
-        y-axis-label="Cost ($/kWh)"
-        stroke-color="chart-stroke-teal"
-        fill-color="chart-fill-teal"
-        container-id="lcoe-wind"
-        title="Onshore Wind Cost Over Time"
-        :show-grid="true"
-        :show-trend-line="true"
-      />
-      <ScatterGraph
-        :data="bioenergyData"
-        y-axis-label="Cost ($/kWh)"
-        stroke-color="chart-stroke-green"
-        fill-color="chart-fill-green"
-        container-id="lcoe-bioenergy"
-        title="Bioenergy Cost Over Time"
-        :show-grid="true"
-        :show-trend-line="true"
-      />
-      <ScatterGraph
-        :data="hydropowerData"
-        y-axis-label="Cost ($/kWh)"
-        stroke-color="chart-stroke-blue"
-        fill-color="chart-fill-blue"
-        container-id="lcoe-hydropower"
-        title="Hydropower Cost Over Time"
-        :show-grid="true"
-        :show-trend-line="true"
+        :show-trend-line="false"
+        :show-legend="true"
       />
     </div>
   </div>
@@ -52,7 +21,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import * as d3 from 'd3';
 
 import ScatterGraph from '~/components/graphs/ScatterGraph.vue';
-import { DataPoint } from '~/common-functions.vue';
+import { DataSeries } from '~/common-functions.vue';
 
 interface LCOERecord {
   Entity: string;
@@ -122,32 +91,45 @@ export default class LCOEBySource extends Vue {
     }
   }
 
-  get solarData(): DataPoint[] {
-    return this.lcoeData.map((d) => ({
-      year: d.year,
-      value: d.solarPV,
-    }));
-  }
-
-  get windData(): DataPoint[] {
-    return this.lcoeData.map((d) => ({
-      year: d.year,
-      value: d.onshoreWind,
-    }));
-  }
-
-  get bioenergyData(): DataPoint[] {
-    return this.lcoeData.map((d) => ({
-      year: d.year,
-      value: d.bioenergy,
-    }));
-  }
-
-  get hydropowerData(): DataPoint[] {
-    return this.lcoeData.map((d) => ({
-      year: d.year,
-      value: d.hydropower,
-    }));
+  get allSeries(): DataSeries[] {
+    return [
+      {
+        name: 'Solar PV',
+        data: this.lcoeData.map((d) => ({
+          year: d.year,
+          value: d.solarPV,
+        })),
+        strokeColor: 'chart-stroke-orange',
+        fillColor: 'chart-fill-orange',
+      },
+      {
+        name: 'Onshore Wind',
+        data: this.lcoeData.map((d) => ({
+          year: d.year,
+          value: d.onshoreWind,
+        })),
+        strokeColor: 'chart-stroke-teal',
+        fillColor: 'chart-fill-teal',
+      },
+      {
+        name: 'Bioenergy',
+        data: this.lcoeData.map((d) => ({
+          year: d.year,
+          value: d.bioenergy,
+        })),
+        strokeColor: 'chart-stroke-green',
+        fillColor: 'chart-fill-green',
+      },
+      {
+        name: 'Hydropower',
+        data: this.lcoeData.map((d) => ({
+          year: d.year,
+          value: d.hydropower,
+        })),
+        strokeColor: 'chart-stroke-blue',
+        fillColor: 'chart-fill-blue',
+      },
+    ];
   }
 }
 </script>
@@ -170,15 +152,4 @@ export default class LCOEBySource extends Vue {
   color: $text-light;
 }
 
-.graphs-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin: 2rem 0;
-
-  @media (max-width: $mobile-max-width) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
 </style>
