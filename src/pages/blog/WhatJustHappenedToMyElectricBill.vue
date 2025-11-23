@@ -121,8 +121,12 @@ export default class WhatJustHappenedToMyElectricBill extends Vue {}
 
       <p class="footnote">
         Source:
-        <a href="https://ourworldindata.org/grapher/levelized-cost-of-energy"
+        <a
+          href="https://ourworldindata.org/grapher/levelized-cost-of-energy"
+          target="_blank"
+          rel="noopener"
           >Our World In Data - Levelized Cost of Energy
+          <NewTabIcon />
         </a>
       </p>
 
@@ -170,6 +174,18 @@ export default class WhatJustHappenedToMyElectricBill extends Vue {}
           rel="noopener"
         >
           U.S. Energy Information Administration - Electricity Retail Sales
+          <NewTabIcon />
+        </a>
+
+        <br />
+
+        See more:
+        <a
+          href="https://www.utilitydive.com/news/us-electricity-demand-will-grow-50-by-2050-electrical-manufacturer-study/744575/"
+          target="_blank"
+          rel="noopener"
+        >
+          US electricity demand will grow 50% by 2050... - Utility Dive
           <NewTabIcon />
         </a>
       </p>
