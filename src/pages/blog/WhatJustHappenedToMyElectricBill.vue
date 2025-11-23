@@ -21,7 +21,8 @@ import USElectricityConsumption from '~/components/graphs/USElectricityConsumpti
           key: 'description',
           name: 'description',
           content:
-            'ComEd bills have shot up dramatically. Learn why PJM, the regional grid operator, is the real cause of rising electric rates and what you can do about it.',
+            'ComEd bills have shot up dramatically. Learn why PJM, the regional grid operator, ' +
+            'is the real cause of rising electric rates and what you can do about it.',
         },
       ],
     };

@@ -25,9 +25,9 @@ interface ChartElements {
 }
 
 /**
- * TODOS For Future:
+ * ScatterGraph - A flexible D3-based scatter plot component with line graphs
  *
- *  - Add doc block to this component, including an example perhaps
+ * TODOS For Future:
  *  - Migrate duplicate CSS to styling
  *  - Ensure all colors come from colors.scss
  *  - Avoid magic numbers
@@ -38,25 +38,49 @@ export default class ScatterPlot extends Vue {
   $refs!: {
     chartContainer: HTMLElement;
   };
+
   // Legacy single-series props (for backward compatibility)
+  /** Single data series (use `series` prop for multiple lines) */
   @Prop() data?: DataPoint[];
+  /** CSS class for line stroke color (e.g., 'chart-stroke-blue') */
   @Prop() strokeColor?: string;
+  /** CSS class for data point fill color (e.g., 'chart-fill-blue') */
   @Prop() fillColor?: string;
 
   // New multi-series prop
+  /** Array of data series for multi-line charts with legend support */
   @Prop() series?: DataSeries[];
 
   // Common props
+  /** Label displayed on the y-axis */
   @Prop({ required: true }) yAxisLabel!: string;
+  /** Unique ID for the chart container (must be unique across page) */
   @Prop({ required: true }) containerId!: string;
+  /** Chart title displayed at the top */
   @Prop({ required: true }) title!: string;
 
+  /** Show horizontal and vertical grid lines */
   @Prop({ default: true }) showGrid!: boolean;
+  /** Show linear regression trend line for each series */
   @Prop({ default: true }) showTrendLine!: boolean;
+  /** Duration of chart animations in milliseconds */
   @Prop({ default: 800 }) animationDuration!: number;
+  /** Show color-coded legend (useful for multi-series charts) */
   @Prop({ default: false }) showLegend!: boolean;
+  /** Hide data point circles, showing only lines */
   @Prop({ default: false }) hidePoints!: boolean;
+  /** Custom formatter function for y-axis tick values */
   @Prop() yAxisFormatter?: (value: number) => string;
+
+  /**
+   * Y-axis padding as a fraction of the maximum value.
+   * Controls how much extra space appears above the highest data point.
+   *
+   * @example
+   * 0.1 = 10% padding (default, tight spacing for efficient use of space)
+   * 0.5 = 50% padding (more spacious, better for sparse data)
+   */
+  @Prop({ default: 0.1 }) yAxisPadding!: number;
 
   private chartContainer: HTMLElement | null = null;
   private loading: boolean = true;
@@ -210,7 +234,7 @@ export default class ScatterPlot extends Vue {
       number,
       number,
     ];
-    const yPaddingTop = yExtent[1] * 0.5; // 50% padding above max
+    const yPaddingTop = yExtent[1] * this.yAxisPadding;
 
     this.yScale = d3
       .scaleLinear()

@@ -44,6 +44,7 @@
             :show-grid="true"
             :title="graph.title"
             :y-axis-formatter="formatSI"
+            :y-axis-padding="0.5"
           />
         </article>
       </div>
