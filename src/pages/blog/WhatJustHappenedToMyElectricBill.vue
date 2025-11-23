@@ -2,8 +2,8 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
-import LCOEBySource from '~/components/graphs/LCOEBySource.vue';
-import USElectricityConsumption from '~/components/graphs/USElectricityConsumption.vue';
+import LCOEBySource from '~/components/blog/electric-bill/LCOEBySource.vue';
+import USElectricityConsumption from '~/components/blog/electric-bill/USElectricityConsumption.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
