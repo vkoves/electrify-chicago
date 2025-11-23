@@ -43,6 +43,7 @@
             :container-id="graph.containerId"
             :show-grid="true"
             :title="graph.title"
+            :y-axis-formatter="formatSI"
           />
         </article>
       </div>
@@ -75,6 +76,7 @@
 import ScatterGraph from '@/components/graphs/ScatterGraph.vue';
 import { graphConfigs } from '../constants/citywide-stats-graph-data.vue';
 import { Component, Vue } from 'vue-property-decorator';
+import * as d3 from 'd3';
 
 @Component<any>({
   components: {
@@ -89,6 +91,11 @@ export default class CityWideStats extends Vue {
     return {
       graphConfigs,
     };
+  }
+
+  // Format large numbers with SI notation (k, M, G, etc.)
+  formatSI(value: number): string {
+    return d3.format('~s')(value);
   }
 }
 </script>

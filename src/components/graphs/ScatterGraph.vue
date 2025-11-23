@@ -55,6 +55,8 @@ export default class ScatterPlot extends Vue {
   @Prop({ default: true }) showTrendLine!: boolean;
   @Prop({ default: 800 }) animationDuration!: number;
   @Prop({ default: false }) showLegend!: boolean;
+  @Prop({ default: false }) hidePoints!: boolean;
+  @Prop() yAxisFormatter?: (value: number) => string;
 
   private chartContainer: HTMLElement | null = null;
   private loading: boolean = true;
@@ -162,7 +164,10 @@ export default class ScatterPlot extends Vue {
     const container = d3.select(this.chartContainer);
     const containerWidth = parseInt(container.style('width'), 10) || 500;
     const containerHeight = 400;
-    const margin = { top: 50, right: 40, bottom: 60, left: 80 };
+    // Add extra right margin when showing legend with multiple series
+    const rightMargin =
+      this.showLegend && this.dataSeries.length > 1 ? 150 : 40;
+    const margin = { top: 50, right: rightMargin, bottom: 60, left: 80 };
     const width = containerWidth - margin.left - margin.right;
     const height = containerHeight - margin.top - margin.bottom;
 
@@ -205,7 +210,7 @@ export default class ScatterPlot extends Vue {
       number,
       number,
     ];
-    const yPaddingTop = yExtent[1] * 0.5; // 10% padding above max
+    const yPaddingTop = yExtent[1] * 0.5; // 50% padding above max
 
     this.yScale = d3
       .scaleLinear()
@@ -244,6 +249,12 @@ export default class ScatterPlot extends Vue {
     }
 
     // Axes
+    const years = [...new Set(this.sortedData.map((d: DataPoint) => d.year))];
+    const yearRange = years[years.length - 1] - years[0];
+    // Show ~8-10 ticks for readability
+    const tickInterval = yearRange > 50 ? 10 : yearRange > 20 ? 5 : 1;
+    const tickYears = years.filter((year) => year % tickInterval === 0);
+
     chartGroup
       .append('g')
       .attr('class', 'x-axis')
@@ -251,7 +262,7 @@ export default class ScatterPlot extends Vue {
       .call(
         d3
           .axisBottom(this.xScale)
-          .tickValues(this.sortedData.map((d: DataPoint) => d.year))
+          .tickValues(tickYears)
           .tickFormat((d: d3.NumberValue) => String(d.valueOf()))
           .tickSize(-10),
       );
@@ -263,9 +274,15 @@ export default class ScatterPlot extends Vue {
         d3
           .axisLeft(this.yScale)
           .tickSize(-10)
-          .tickFormat((d: d3.NumberValue) =>
-            +d === 0 ? '' : d3.format('~s')(d),
-          ),
+          .tickFormat((d: d3.NumberValue) => {
+            const value = +d;
+            if (value === 0) return '';
+            if (this.yAxisFormatter) {
+              return this.yAxisFormatter(value);
+            }
+            // Default: use regular decimal notation
+            return value.toLocaleString();
+          }),
       );
 
     // Axis labels
@@ -388,11 +405,11 @@ export default class ScatterPlot extends Vue {
         .style('filter', 'drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1))')
         .style('opacity', 0);
 
-      // Circles
-      const circles = chartGroup
-        .append('g')
+      // Circles (optional based on hidePoints prop)
+      const circlesGroup = chartGroup.append('g');
+      const circles = circlesGroup
         .selectAll('circle')
-        .data(sortedSeriesData)
+        .data(this.hidePoints ? [] : sortedSeriesData)
         .enter()
         .append('circle')
         .attr('cx', (d: DataPoint) => this.xScale(d.year))
@@ -472,7 +489,7 @@ export default class ScatterPlot extends Vue {
         .ease(d3.easeLinear)
         .attr('stroke-dashoffset', 0);
 
-      // Animate circles
+      // Animate circles (will be empty if hidePoints is true)
       circles
         .style('opacity', 1)
         .transition()

@@ -13,6 +13,7 @@
         :show-grid="true"
         :show-trend-line="false"
         :show-legend="true"
+        :hide-points="true"
       />
     </div>
   </div>

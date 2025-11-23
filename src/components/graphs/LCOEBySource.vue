@@ -5,12 +5,13 @@
     <div v-else>
       <ScatterGraph
         :series="allSeries"
-        y-axis-label="Cost ($/kWh)"
+        y-axis-label="Cost (¢/kWh)"
         container-id="lcoe-all-sources"
         title="Levelized Cost of Energy by Source Over Time"
         :show-grid="true"
         :show-trend-line="false"
         :show-legend="true"
+        :y-axis-formatter="formatAsCents"
       />
     </div>
   </div>
@@ -56,6 +57,11 @@ export default class LCOEBySource extends Vue {
 
   mounted(): void {
     this.loadLCOEData();
+  }
+
+  formatAsCents(value: number): string {
+    const cents = value * 100;
+    return `${cents.toFixed(0)}¢`;
   }
 
   async loadLCOEData(): Promise<void> {
