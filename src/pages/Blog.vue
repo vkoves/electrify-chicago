@@ -31,6 +31,24 @@ export default class About extends Vue {
       <ul class="blogs-list">
         <li>
           <h2>
+            <g-link to="/blog/what-just-happened-to-my-electric-bill">
+              What Just Happened to My Electric Bill?
+            </g-link>
+          </h2>
+          <p class="publish-time">
+            Published <time datetime="2025-11-03">Nov. 3rd, 2025</time>
+          </p>
+
+          <p>
+            ComEd bills have shot up dramatically in the last few months. Learn
+            the surprising story behind the price increases, why PJM (the
+            regional grid operator) is the real cause, and what you can do to
+            help fix it and lower your bills.
+          </p>
+        </li>
+
+        <li>
+          <h2>
             <g-link to="/blog/how-we-grade-buildings">
               How We Grade Buildings, And Why
             </g-link>
