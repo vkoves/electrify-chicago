@@ -59,7 +59,7 @@ export default class AppHeader extends Vue {
           class="site-logo"
         />
       </g-link>
-
+    
       <button
         class="mobile-menu-toggle -grey mobile-only"
         :aria-expanded="mobileMenuOpen.toString()"
@@ -92,7 +92,7 @@ export default class AppHeader extends Vue {
 
       <g-link class="nav-link" to="/blog"> Blog </g-link>
 
-      <form v-if="!isHomepage" class="search-form">
+      <!-- <form v-if="!isHomepage" class="search-form">
         <div class="input-cont">
           <input
             id="search"
@@ -107,7 +107,7 @@ export default class AppHeader extends Vue {
             Search
           </button>
         </div>
-      </form>
+      </form> -->
     </nav>
   </header>
 </template>
