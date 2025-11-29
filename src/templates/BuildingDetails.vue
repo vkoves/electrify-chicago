@@ -58,6 +58,7 @@ query ($id: ID!, $ID: String) {
     SubmittedRecordsLetterGrade,
     AvgPercentileGrade,
     AvgPercentileLetterGrade,
+    ReportingStatus,
   }
   allBenchmark(filter: { ID: { eq: $ID } }, sortBy: "DataYear", order: ASC) {
     edges {
@@ -86,6 +87,7 @@ query ($id: ID!, $ID: String) {
           SubmittedRecordsLetterGrade,
           AvgPercentileGrade,
           AvgPercentileLetterGrade,
+          ReportingStatus,
         }
     }
   }
@@ -209,6 +211,16 @@ query ($id: ID!, $ID: String) {
 
               <p>
                 This building did not report full data in {{ LatestDataYear }},
+                so
+                <span class="bold">top-level stats are from {{ dataYear }}</span
+                >, the latest full year reported.
+              </p>
+            </div>
+
+            <div v-if="reportingStatus === 'Not Covered 2024'">
+              <h2><span class="emoji">🗒️</span> Reporting not required in 2024</h2>
+              <p>
+                This building did not require report full data in 2024,
                 so
                 <span class="bold">top-level stats are from {{ dataYear }}</span
                 >, the latest full year reported.
@@ -894,6 +906,12 @@ export default class BuildingDetails extends Vue {
       `Check out ${this.propertyName} on Electrify Chicago! ` +
       `It got a ${grade} grade and emits ${emissions} tons of CO₂.`
     );
+  }
+
+  /** The reporting status of the current building as it shows in the data */
+  get reportingStatus(): string {
+    const status = this.building.ReportingStatus ? String(this.building.ReportingStatus).trim() : '';
+    return status;
   }
 
   created(): void {
