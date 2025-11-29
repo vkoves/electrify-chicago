@@ -115,7 +115,8 @@ def get_submitted_data(building_data: pd.DataFrame) -> pd.DataFrame:
 
     is_submitted = building_data["ReportingStatus"] == "Submitted"
     is_submitted_data = building_data["ReportingStatus"] == "Submitted Data"
-    has_status_submitted = is_submitted | is_submitted_data
+    is_not_covered_2024 = building_data["ReportingStatus"] == "Not Covered 2024"
+    has_status_submitted = is_submitted | is_submitted_data | is_not_covered_2024
 
     return building_data.loc[has_status_submitted].copy()
 
@@ -127,6 +128,40 @@ def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame:
         subset=["ID"], keep="last"
     ).copy()
     return all_recent_submitted_data
+
+
+def get_last_year_with_ghg(all_submitted_data: pd.DataFrame) -> pd.DataFrame:
+    """For each building ID, pick the most recent row that has a GHGIntensity > 0.
+
+    If no rows for the building have GHGIntensity > 0, fall back to the most recent
+    submitted row (by DataYear).
+    """
+    # Ensure numeric DataYear and GHGIntensity for comparisons
+    all_submitted_data = all_submitted_data.copy()
+    all_submitted_data["DataYear"] = pd.to_numeric(all_submitted_data["DataYear"], errors="coerce")
+    all_submitted_data["GHGIntensity"] = pd.to_numeric(all_submitted_data["GHGIntensity"], errors="coerce").fillna(0)
+
+    def choose_row(group: pd.DataFrame) -> pd.Series:
+        grp = group.sort_values(by="DataYear", ascending=False)
+        # Prefer explicit 'Not Covered 2024' rows if present (these indicate reporting
+        # was not required for the latest year).
+        not_covered = grp.loc[grp["ReportingStatus"] == "Not Covered 2024"]
+        if not not_covered.empty:
+            return not_covered.iloc[0]
+
+        # Next prefer the most recent row that has a GHGIntensity value
+        with_ghg = grp.loc[grp["GHGIntensity"] > 0]
+        if not with_ghg.empty:
+            return with_ghg.iloc[0]
+
+        # Fallback: return the most recent submitted row
+        return grp.iloc[0]
+
+    result = all_submitted_data.groupby("ID", group_keys=False).apply(choose_row)
+    # When groupby+apply returns a DataFrame with a multiindex, reset index
+    if isinstance(result, pd.DataFrame):
+        result = result.reset_index(drop=True)
+    return result
 
 
 def filter_cols_historic(building_data: pd.DataFrame) -> pd.DataFrame:
@@ -170,9 +205,12 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
 
     # Only filter to the latest reporting year if that's the file we're generating
     if latest_year_only:
-        cleaned_data = get_buildings_with_ghg_intensity(building_data)
+        # First filter ReportingStatus, then find latest year having GHG
         cleaned_data = get_submitted_data(cleaned_data)
-        cleaned_data = get_last_year_data(cleaned_data)
+        # First filter to submitted/not-covered statuses, then pick the most recent
+        # row for each building that has a GHGIntensity (fallback to most recent
+        # submitted row if none of the submitted rows contain GHG data).
+        cleaned_data = get_last_year_with_ghg(cleaned_data)
     else:
         cleaned_data = filter_cols_historic(cleaned_data)
 
