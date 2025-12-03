@@ -139,8 +139,8 @@ def get_last_year_with_ghg(all_submitted_data: pd.DataFrame) -> pd.DataFrame:
     # Ensure numeric DataYear and GHGIntensity for comparisons
     all_submitted_data = all_submitted_data.copy()
     all_submitted_data["DataYear"] = pd.to_numeric(all_submitted_data["DataYear"], errors="coerce")
-    ghg_values = pd.to_numeric(all_submitted_data["GHGIntensity"], errors="coerce")
-    all_submitted_data["GHGIntensity"] = ghg_values.fillna(0)
+    all_submitted_data["GHGIntensity"] = pd.to_numeric(all_submitted_data["GHGIntensity"], errors="coerce")
+    all_submitted_data["GHGIntensity"] = all_submitted_data["GHGIntensity"].fillna(0)
 
     def choose_row(group: pd.DataFrame) -> pd.Series:
         grp = group.sort_values(by="DataYear", ascending=False)
