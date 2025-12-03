@@ -1,0 +1,159 @@
+{
+  "chart": {
+    "title": "Levelized cost of energy for renewables",
+    "subtitle": "The average cost per unit of energy generated across the lifetime of a new power plant. This data is expressed in US dollars per [kilowatt-hour](#dod:watt-hours). It is adjusted for inflation but does not account for differences in living costs between countries.",
+    "note": "Costs are expressed in constant 2024 US$ per kilowatt-hour.",
+    "citation": "IRENA (2025); IRENA (2024)",
+    "originalChartUrl": "https://ourworldindata.org/grapher/levelized-cost-of-energy?time=2010..latest&overlay=download-data&v=1&csvType=filtered&useColumnShortNames=false",
+    "selection": [
+      "World"
+    ]
+  },
+  "columns": {
+    "Bioenergy levelized cost of energy": {
+      "titleShort": "Bioenergy levelized cost of energy",
+      "titleLong": "Bioenergy levelized cost of energy",
+      "descriptionShort": "This data is expressed in US dollars per kilowatt-hour. It is adjusted for inflation but does not account for differences in living costs between countries.",
+      "descriptionKey": [
+        "Levelized cost of energy (LCOE) estimates the average cost per unit of energy generated across the lifetime of a new power plant. It is measured in US$ per kilowatt-hour."
+      ],
+      "descriptionProcessing": "- The resulting costs are compiled from two IRENA reports: Renewable Power Generation Costs in 2024 (primarily for data from 2010 onwards) and Renewable Power Generation Costs in 2023 (for earlier data not included in the latest report).\n- Data from the Renewable Power Generation Costs in 2023 report (expressed in constant 2023 US dollars) was converted to constant 2024 US dollars using the GDP deflator, to account for the effects of inflation in each country. The deflator data is available from the [World Bank World Development Indicators](https://data.worldbank.org/indicator/NY.GDP.DEFL.ZS.AD). Global data was adjusted using the US GDP deflator.",
+      "shortUnit": "$/kWh",
+      "unit": "constant 2024 US$ per kilowatt-hour",
+      "timespan": "2010-2024",
+      "type": "Numeric",
+      "owidVariableId": 1104664,
+      "shortName": "bioenergy",
+      "lastUpdated": "2025-08-22",
+      "nextUpdate": "2026-08-22",
+      "citationShort": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data",
+      "citationLong": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data. “Bioenergy levelized cost of energy” [dataset]. IRENA, “Renewable Power Generation Costs in 2024”; IRENA, “Renewable Power Generation Costs in 2023” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1104664.metadata.json"
+    },
+    "Geothermal levelized cost of energy": {
+      "titleShort": "Geothermal levelized cost of energy",
+      "titleLong": "Geothermal levelized cost of energy",
+      "descriptionShort": "This data is expressed in US dollars per kilowatt-hour. It is adjusted for inflation but does not account for differences in living costs between countries.",
+      "descriptionKey": [
+        "Levelized cost of energy (LCOE) estimates the average cost per unit of energy generated across the lifetime of a new power plant. It is measured in US$ per kilowatt-hour."
+      ],
+      "descriptionProcessing": "- The resulting costs are compiled from two IRENA reports: Renewable Power Generation Costs in 2024 (primarily for data from 2010 onwards) and Renewable Power Generation Costs in 2023 (for earlier data not included in the latest report).\n- Data from the Renewable Power Generation Costs in 2023 report (expressed in constant 2023 US dollars) was converted to constant 2024 US dollars using the GDP deflator, to account for the effects of inflation in each country. The deflator data is available from the [World Bank World Development Indicators](https://data.worldbank.org/indicator/NY.GDP.DEFL.ZS.AD). Global data was adjusted using the US GDP deflator.",
+      "shortUnit": "$/kWh",
+      "unit": "constant 2024 US$ per kilowatt-hour",
+      "timespan": "2007-2024",
+      "type": "Numeric",
+      "owidVariableId": 1104666,
+      "shortName": "geothermal",
+      "lastUpdated": "2025-08-22",
+      "nextUpdate": "2026-08-22",
+      "citationShort": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data",
+      "citationLong": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data. “Geothermal levelized cost of energy” [dataset]. IRENA, “Renewable Power Generation Costs in 2024”; IRENA, “Renewable Power Generation Costs in 2023” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1104666.metadata.json"
+    },
+    "Offshore wind levelized cost of energy": {
+      "titleShort": "Offshore wind levelized cost of energy",
+      "titleLong": "Offshore wind levelized cost of energy",
+      "descriptionShort": "This data is expressed in US dollars per kilowatt-hour. It is adjusted for inflation but does not account for differences in living costs between countries.",
+      "descriptionKey": [
+        "Levelized cost of energy (LCOE) estimates the average cost per unit of energy generated across the lifetime of a new power plant. It is measured in US$ per kilowatt-hour."
+      ],
+      "descriptionProcessing": "- The resulting costs are compiled from two IRENA reports: Renewable Power Generation Costs in 2024 (primarily for data from 2010 onwards) and Renewable Power Generation Costs in 2023 (for earlier data not included in the latest report).\n- Data from the Renewable Power Generation Costs in 2023 report (expressed in constant 2023 US dollars) was converted to constant 2024 US dollars using the GDP deflator, to account for the effects of inflation in each country. The deflator data is available from the [World Bank World Development Indicators](https://data.worldbank.org/indicator/NY.GDP.DEFL.ZS.AD). Global data was adjusted using the US GDP deflator.",
+      "shortUnit": "$/kWh",
+      "unit": "constant 2024 US$ per kilowatt-hour",
+      "timespan": "2000-2024",
+      "type": "Numeric",
+      "owidVariableId": 1104667,
+      "shortName": "offshore_wind",
+      "lastUpdated": "2025-08-22",
+      "nextUpdate": "2026-08-22",
+      "citationShort": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data",
+      "citationLong": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data. “Offshore wind levelized cost of energy” [dataset]. IRENA, “Renewable Power Generation Costs in 2024”; IRENA, “Renewable Power Generation Costs in 2023” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1104667.metadata.json"
+    },
+    "Solar photovoltaic levelized cost of energy": {
+      "titleShort": "Solar photovoltaic levelized cost of energy",
+      "titleLong": "Solar photovoltaic levelized cost of energy",
+      "descriptionShort": "This data is expressed in US dollars per kilowatt-hour. It is adjusted for inflation but does not account for differences in living costs between countries.",
+      "descriptionKey": [
+        "Levelized cost of energy (LCOE) estimates the average cost per unit of energy generated across the lifetime of a new power plant. It is measured in US$ per kilowatt-hour."
+      ],
+      "descriptionProcessing": "- The resulting costs are compiled from two IRENA reports: Renewable Power Generation Costs in 2024 (primarily for data from 2010 onwards) and Renewable Power Generation Costs in 2023 (for earlier data not included in the latest report).\n- Data from the Renewable Power Generation Costs in 2023 report (expressed in constant 2023 US dollars) was converted to constant 2024 US dollars using the GDP deflator, to account for the effects of inflation in each country. The deflator data is available from the [World Bank World Development Indicators](https://data.worldbank.org/indicator/NY.GDP.DEFL.ZS.AD). Global data was adjusted using the US GDP deflator.",
+      "shortUnit": "$/kWh",
+      "unit": "constant 2024 US$ per kilowatt-hour",
+      "timespan": "2010-2024",
+      "type": "Numeric",
+      "owidVariableId": 1104672,
+      "shortName": "solar_photovoltaic",
+      "lastUpdated": "2025-08-22",
+      "nextUpdate": "2026-08-22",
+      "citationShort": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data",
+      "citationLong": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data. “Solar photovoltaic levelized cost of energy” [dataset]. IRENA, “Renewable Power Generation Costs in 2024”; IRENA, “Renewable Power Generation Costs in 2023” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1104672.metadata.json"
+    },
+    "Concentrated solar power levelized cost of energy": {
+      "titleShort": "Concentrated solar power levelized cost of energy",
+      "titleLong": "Concentrated solar power levelized cost of energy",
+      "descriptionShort": "This data is expressed in US dollars per kilowatt-hour. It is adjusted for inflation but does not account for differences in living costs between countries.",
+      "descriptionKey": [
+        "Levelized cost of energy (LCOE) estimates the average cost per unit of energy generated across the lifetime of a new power plant. It is measured in US$ per kilowatt-hour."
+      ],
+      "descriptionProcessing": "- The resulting costs are compiled from two IRENA reports: Renewable Power Generation Costs in 2024 (primarily for data from 2010 onwards) and Renewable Power Generation Costs in 2023 (for earlier data not included in the latest report).\n- Data from the Renewable Power Generation Costs in 2023 report (expressed in constant 2023 US dollars) was converted to constant 2024 US dollars using the GDP deflator, to account for the effects of inflation in each country. The deflator data is available from the [World Bank World Development Indicators](https://data.worldbank.org/indicator/NY.GDP.DEFL.ZS.AD). Global data was adjusted using the US GDP deflator.",
+      "shortUnit": "$/kWh",
+      "unit": "constant 2024 US$ per kilowatt-hour",
+      "timespan": "2010-2024",
+      "type": "Numeric",
+      "owidVariableId": 1104668,
+      "shortName": "concentrated_solar_power",
+      "lastUpdated": "2025-08-22",
+      "nextUpdate": "2026-08-22",
+      "citationShort": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data",
+      "citationLong": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data. “Concentrated solar power levelized cost of energy” [dataset]. IRENA, “Renewable Power Generation Costs in 2024”; IRENA, “Renewable Power Generation Costs in 2023” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1104668.metadata.json"
+    },
+    "Hydropower levelized cost of energy": {
+      "titleShort": "Hydropower levelized cost of energy",
+      "titleLong": "Hydropower levelized cost of energy",
+      "descriptionShort": "This data is expressed in US dollars per kilowatt-hour. It is adjusted for inflation but does not account for differences in living costs between countries.",
+      "descriptionKey": [
+        "Levelized cost of energy (LCOE) estimates the average cost per unit of energy generated across the lifetime of a new power plant. It is measured in US$ per kilowatt-hour."
+      ],
+      "descriptionProcessing": "- The resulting costs are compiled from two IRENA reports: Renewable Power Generation Costs in 2024 (primarily for data from 2010 onwards) and Renewable Power Generation Costs in 2023 (for earlier data not included in the latest report).\n- Data from the Renewable Power Generation Costs in 2023 report (expressed in constant 2023 US dollars) was converted to constant 2024 US dollars using the GDP deflator, to account for the effects of inflation in each country. The deflator data is available from the [World Bank World Development Indicators](https://data.worldbank.org/indicator/NY.GDP.DEFL.ZS.AD). Global data was adjusted using the US GDP deflator.",
+      "shortUnit": "$/kWh",
+      "unit": "constant 2024 US$ per kilowatt-hour",
+      "timespan": "2010-2024",
+      "type": "Numeric",
+      "owidVariableId": 1104665,
+      "shortName": "hydropower",
+      "lastUpdated": "2025-08-22",
+      "nextUpdate": "2026-08-22",
+      "citationShort": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data",
+      "citationLong": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data. “Hydropower levelized cost of energy” [dataset]. IRENA, “Renewable Power Generation Costs in 2024”; IRENA, “Renewable Power Generation Costs in 2023” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1104665.metadata.json"
+    },
+    "Onshore wind levelized cost of energy": {
+      "titleShort": "Onshore wind levelized cost of energy",
+      "titleLong": "Onshore wind levelized cost of energy",
+      "descriptionShort": "This data is expressed in US dollars per kilowatt-hour. It is adjusted for inflation but does not account for differences in living costs between countries.",
+      "descriptionKey": [
+        "Levelized cost of energy (LCOE) estimates the average cost per unit of energy generated across the lifetime of a new power plant. It is measured in US$ per kilowatt-hour."
+      ],
+      "descriptionProcessing": "- The resulting costs are compiled from two IRENA reports: Renewable Power Generation Costs in 2024 (primarily for data from 2010 onwards) and Renewable Power Generation Costs in 2023 (for earlier data not included in the latest report).\n- Data from the Renewable Power Generation Costs in 2023 report (expressed in constant 2023 US dollars) was converted to constant 2024 US dollars using the GDP deflator, to account for the effects of inflation in each country. The deflator data is available from the [World Bank World Development Indicators](https://data.worldbank.org/indicator/NY.GDP.DEFL.ZS.AD). Global data was adjusted using the US GDP deflator.",
+      "shortUnit": "$/kWh",
+      "unit": "constant 2024 US$ per kilowatt-hour",
+      "timespan": "1984-2024",
+      "type": "Numeric",
+      "owidVariableId": 1104671,
+      "shortName": "onshore_wind",
+      "lastUpdated": "2025-08-22",
+      "nextUpdate": "2026-08-22",
+      "citationShort": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data",
+      "citationLong": "IRENA (2025); IRENA (2024) – with major processing by Our World in Data. “Onshore wind levelized cost of energy” [dataset]. IRENA, “Renewable Power Generation Costs in 2024”; IRENA, “Renewable Power Generation Costs in 2023” [original data].",
+      "fullMetadata": "https://api.ourworldindata.org/v1/indicators/1104671.metadata.json"
+    }
+  },
+  "dateDownloaded": "2025-11-23",
+  "activeFilters": {
+    "overlay": "download-data",
+    "time": "2010..latest"
+  }
+}
