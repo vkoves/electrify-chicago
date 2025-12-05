@@ -212,6 +212,8 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
         # row for each building that has a GHGIntensity (fallback to most recent
         # submitted row if none of the submitted rows contain GHG data).
         cleaned_data = get_last_year_with_ghg(cleaned_data)
+        # Filter out any buildings that still don't have GHG data after selection
+        cleaned_data = get_buildings_with_ghg_intensity(cleaned_data)
     else:
         cleaned_data = filter_cols_historic(cleaned_data)
 
