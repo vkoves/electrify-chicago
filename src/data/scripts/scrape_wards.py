@@ -6,7 +6,7 @@ The city's ward pages (https://www.chicago.gov/city/en/about/wards/) contain mor
 up-to-date alderperson contact information than other sources. This script fetches and parses
 contact details for all 50 wards.
 
-Output file: dist/alders-info.csv (also accessible via symlink at static/alders-info.csv)
+Output file: static/alders-info.csv
 
 Columns in output:
 - Name: Alderperson's full name
@@ -44,9 +44,10 @@ from html.parser import HTMLParser
 WARD_URL_TEMPLATE = "https://www.chicago.gov/city/en/about/wards/{ward_num:02d}.html"
 USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36"
 
-# Output file path - goes to dist/ and is symlinked from static/
+# Output file path - saved directly to static/ directory
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-OUTPUT_FILE = os.path.join(_SCRIPT_DIR, "..", "dist", "alders-info.csv")
+_PROJECT_ROOT = os.path.join(_SCRIPT_DIR, "..", "..", "..")
+OUTPUT_FILE = os.path.join(_PROJECT_ROOT, "static", "alders-info.csv")
 
 # Parsing keywords - Update these if website text changes
 KEYWORD_ALDERMAN = "Alderman"
