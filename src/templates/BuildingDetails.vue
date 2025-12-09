@@ -910,7 +910,7 @@ export default class BuildingDetails extends Vue {
 
   /** The reporting status of the current building as it shows in the data */
   get reportingStatus(): string {
-    const status = this.building.ReportingStatus ? String(this.building.ReportingStatus).trim() : '';
+    const status = this.building.ReportingStatus ? String(this.building.ReportingStatus).trim() :'';
     return status;
   }
 
