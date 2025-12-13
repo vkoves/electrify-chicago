@@ -58,6 +58,7 @@ export default class TopEmitters extends Vue {}
           AvgPercentileLetterGrade
           DistrictSteamUse
           DataAnomalies
+          FirstYearReported
         }
       }
     }

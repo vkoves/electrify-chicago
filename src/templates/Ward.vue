@@ -204,6 +204,7 @@ query ($ward: String) {
             GrossFloorAreaRank
             GrossFloorAreaPercentileRank
             DataAnomalies
+            FirstYearReported
             AvgPercentileGrade,
             AvgPercentileLetterGrade,
         }

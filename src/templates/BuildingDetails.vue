@@ -47,6 +47,7 @@ query ($id: ID!, $ID: String) {
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
     DataAnomalies
+    FirstYearReported
     # Grade data
     GHGIntensityPercentileGrade,
     GHGIntensityLetterGrade,

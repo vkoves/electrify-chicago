@@ -113,8 +113,13 @@ export default class OverallRankEmoji extends Vue {
   }
 
   get hasNeverSubmitted(): boolean {
-    console.log(this.building.FirstYearReported, this.building.Address);
-    return typeof this.building.FirstYearReported === 'number';
+    console.log(
+      this.building.FirstYearReported,
+      this.building.DataYear,
+      this.building.Address,
+      Object.entries(this.building),
+    );
+    return this.building.FirstYearReported === null;
   }
 }
 </script>
