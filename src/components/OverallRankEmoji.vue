@@ -35,7 +35,7 @@
     </span>
 
     <span
-      v-if="isOldData && !largeView"
+      v-if="!hasNeverSubmitted && isOldData && !largeView"
       class="emoji has-img-emoji"
       title="Outdated data (did not submit in the latest year)"
     >
@@ -113,12 +113,6 @@ export default class OverallRankEmoji extends Vue {
   }
 
   get hasNeverSubmitted(): boolean {
-    console.log(
-      this.building.FirstYearReported,
-      this.building.DataYear,
-      this.building.Address,
-      Object.entries(this.building),
-    );
     return this.building.FirstYearReported === null;
   }
 }
