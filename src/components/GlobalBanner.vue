@@ -1,6 +1,9 @@
 <template>
+  <!-- We're not showing a global banner right now, but I'm leaving the structure here for any
+   future ones-->
+
   <!-- Make sure the banner doesn't show in printed pages, e.g. buildings -->
-  <div class="global-banner no-print">
+  <!-- <div class="global-banner no-print">
     <div class="page-constrained">
       <div class="content-left">
         <h2>📣 Take Action to Improve Emissions Reporting!</h2>
@@ -11,7 +14,7 @@
       </div>
       <g-link to="/act"> Contact Your Alderperson </g-link>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script lang="ts">
