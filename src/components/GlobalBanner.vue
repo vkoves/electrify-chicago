@@ -2,6 +2,8 @@
   <!-- We're not showing a global banner right now, but I'm leaving the structure here for any
    future ones-->
 
+  <div></div>
+
   <!-- Make sure the banner doesn't show in printed pages, e.g. buildings -->
   <!-- <div class="global-banner no-print">
     <div class="page-constrained">
@@ -34,7 +36,7 @@ export default class GlobalBanner extends Vue {}
 </script>
 
 <style lang="scss">
-  /**
+/**
  * Global banner - notice panel for important announcements and calls to action
  */
 .global-banner {
