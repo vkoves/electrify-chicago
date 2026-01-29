@@ -68,7 +68,7 @@ export default class Act extends Vue {
     return window.location.href.split('?')[0];
   }
 
-  handleWardFound(wardInfo: any): void {
+  handleWardFound(wardInfo: { district: string }): void {
     this.alderFound = true;
 
     // Extract ward number from district (e.g., "Ward 6" -> "6")

@@ -91,7 +91,7 @@ import { Component, Vue } from 'vue-property-decorator';
   },
 })
 export default class CityWideStats extends Vue {
-  data(): any {
+  data(): { graphConfigs: typeof graphConfigs } {
     return {
       graphConfigs,
     };

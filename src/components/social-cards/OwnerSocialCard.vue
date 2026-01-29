@@ -42,7 +42,7 @@ export default class OwnerSocialCard extends Vue {
   /** Get the current owner from parent context */
   get owner(): IBuildingOwner {
     return (
-      (this.$parent as any).owner || {
+      (this.$parent as { owner?: IBuildingOwner }).owner || {
         key: 'default',
         name: 'Building Owner',
         nameShort: 'Owner',

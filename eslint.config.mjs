@@ -126,7 +126,7 @@ export default tseslint.config(
       // Use eslint-disable comments with clear explanations when require() is necessary
       '@typescript-eslint/no-require-imports': 'error',
 
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
     },
   },
   {

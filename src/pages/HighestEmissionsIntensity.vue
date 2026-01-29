@@ -33,7 +33,13 @@ export default class HighestEmissionsIntensity extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
 
   /** Set by Gridsome to results of GraphQL query */
-  $page: any;
+  $page!: {
+    allBuilding: {
+      pageInfo: {
+        currentPage: number;
+      };
+    };
+  };
 
   pageInput = 0;
 
