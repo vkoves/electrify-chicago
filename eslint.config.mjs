@@ -55,6 +55,8 @@ export default tseslint.config(
       'vue/html-indent': 'off',
       'vue/multi-word-component-names': ['off'],
       'vue/no-deprecated-filter': ['off'],
+      // This is a FE only site, so there's no real HTML security risks
+      'vue/no-v-html': 'off',
 
       'vue/multiline-html-element-content-newline': [
         'error',
