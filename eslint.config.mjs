@@ -121,8 +121,10 @@ export default tseslint.config(
         },
       ],
 
-      // We have to use `require` in some cases
-      '@typescript-eslint/no-require-imports': 'warn',
+      // Disallow require() imports - use ES6 imports instead
+      // Note: require() is sometimes needed for SSR compatibility (Gridsome) or webpack asset bundling
+      // Use eslint-disable comments with clear explanations when require() is necessary
+      '@typescript-eslint/no-require-imports': 'error',
 
       '@typescript-eslint/no-explicit-any': 'warn',
     },

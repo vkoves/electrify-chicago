@@ -117,8 +117,10 @@ export default class MapPage extends Vue {
     // Do nothing if rendering the static HTML files - there's nothing we can do map wise and
     // Gridsome gets cranky importing Leaflet
     if (typeof window !== 'undefined') {
-      // Runtime Leaflet imports
+      // Dynamic import required for SSR compatibility
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       this.Leaflet = require('leaflet');
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       require('leaflet.gridlayer.googlemutant');
 
       this.setupMap();
@@ -163,6 +165,8 @@ export default class MapPage extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (this.Leaflet.Icon.Default.prototype as any)._getIconUrl;
 
+    // require() needed for webpack asset bundling
+    /* eslint-disable @typescript-eslint/no-require-imports */
     this.Leaflet.Icon.Default.mergeOptions({
       iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
       iconUrl: require('leaflet/dist/images/marker-icon.png'),
@@ -176,6 +180,7 @@ export default class MapPage extends Vue {
         shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
       },
     });
+    /* eslint-enable @typescript-eslint/no-require-imports */
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.icons.red = new (CustomMarkerIcon as any)({
