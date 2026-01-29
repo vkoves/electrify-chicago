@@ -3,9 +3,12 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import {
+  fullyGasFree,
   IBuilding,
   IBuildingBenchmarkStats,
   IBuildingNode,
+  IHistoricData,
+  isNewBuilding,
 } from '../common-functions.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
@@ -25,6 +28,11 @@ interface ISelectOption {
   value: string;
 }
 
+interface IFilter {
+  isActive: boolean;
+  apply: (buildings: Array<IBuildingEdge>) => Array<IBuildingEdge>;
+}
+
 @Component<any>({
   components: {
     BuildingsTable,
@@ -41,13 +49,22 @@ export default class Search extends Vue {
     BuildingBenchmarkStats;
   readonly MaxBuildings = 100;
 
+  /** Pre-computed index of building ID to historical data for performance */
+  private historicalDataIndex: Map<string | number, Array<IHistoricData>> =
+    new Map();
+
   readonly QueryParamKeys = {
     search: 'q',
     propertyType: 'type',
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $static!: {
+    allBuilding: { edges: Array<IBuildingNode> };
+    allBenchmark: { edges: Array<{ node: IHistoricData }> };
+  };
+
+  // readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** The search query */
   searchFilter = '';
@@ -67,6 +84,12 @@ export default class Search extends Vue {
 
   gradeFilter = '';
   gradeQuintileFilter = '';
+
+  /** Filter for all electric buildings */
+  allElectricFilter = false;
+
+  /** Filter for new buildings */
+  newBuildingsFilter = false;
 
   propertyTypeOptions: Array<ISelectOption> = [
     { label: 'Select Property Type', value: '' },
@@ -93,8 +116,10 @@ export default class Search extends Vue {
   dataDisclaimer!: HTMLDetailsElement;
 
   created(): void {
+    // Initialize performance index for historical data
+    this.initializeHistoricalDataIndex();
     // Make sure on load we have some data
-    this.setSearchResults(this.$page.allBuilding.edges);
+    this.setSearchResults(this.$static.allBuilding.edges);
   }
 
   mounted(): void {
@@ -131,13 +156,77 @@ export default class Search extends Vue {
     return matchScore;
   }
 
+  /**
+   * Get all active filter configurations
+   */
+  private getActiveFilters(): Array<IFilter> {
+    const query = this.searchFilter.toLowerCase().trim();
+
+    return [
+      // Text search filter
+      {
+        isActive: Boolean(query),
+        apply: (buildings: Array<IBuildingEdge>) => {
+          const filtered = buildings.filter((buildingEdge: IBuildingEdge) => {
+            return (
+              buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
+              buildingEdge.node.Address.toLowerCase().includes(query) ||
+              buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(
+                query,
+              )
+            );
+          });
+
+          // Sort by relevance
+          return filtered.sort(
+            (a: IBuildingEdge, b: IBuildingEdge) =>
+              this.searchRank(b, query) - this.searchRank(a, query),
+          );
+        },
+      },
+      // Property type filter
+      {
+        isActive: Boolean(this.propertyTypeFilter),
+        apply: (buildings: Array<IBuildingEdge>) =>
+          this.filterResults(
+            buildings,
+            'PrimaryPropertyType',
+            this.propertyTypeFilter,
+          ),
+      },
+      // Grade filter
+      {
+        isActive: Boolean(this.gradeFilter),
+        apply: (buildings: Array<IBuildingEdge>) =>
+          this.filterResults(
+            buildings,
+            'AvgPercentileLetterGrade',
+            this.gradeFilter,
+          ),
+      },
+      // All electric filter
+      {
+        isActive: this.allElectricFilter,
+        apply: (buildings: Array<IBuildingEdge>) =>
+          buildings.filter((edge) => fullyGasFree(edge.node)),
+      },
+      // New buildings filter
+      {
+        isActive: this.newBuildingsFilter,
+        apply: (buildings: Array<IBuildingEdge>) =>
+          buildings.filter((edge) =>
+            isNewBuilding(this.getHistoricalDataForBuilding(edge.node.ID)),
+          ),
+      },
+    ];
+  }
+
   submitSearch(event?: Event): void {
     if (event) {
       event.preventDefault();
     }
 
     const query = this.searchFilter.toLowerCase().trim();
-
     const propertyFilterEncoded = encodeURIComponent(this.propertyTypeFilter);
 
     // Update URL bar with search query so refresh persists search
@@ -149,55 +238,23 @@ export default class Search extends Vue {
 
     window.history.pushState(null, '', newUrl);
 
-    let buildingsResults: Array<IBuildingEdge> = this.$page.allBuilding.edges;
+    const filters = this.getActiveFilters();
+    const activeFilters = filters.filter((f) => f.isActive);
 
-    // If no filters are provided, return our max number
-    if (
-      !query &&
-      !this.propertyTypeFilter &&
-      !this.gradeFilter &&
-      !this.gradeQuintileFilter
-    ) {
+    // If no filters are active, return all results
+    if (activeFilters.length === 0) {
       this.hasFilteredResults = false;
-      this.setSearchResults(buildingsResults);
+      this.setSearchResults(this.$static.allBuilding.edges);
       return;
     }
 
-    buildingsResults = buildingsResults.filter(
-      (buildingEdge: IBuildingEdge) => {
-        return (
-          buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
-          buildingEdge.node.Address.toLowerCase().includes(query) ||
-          buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
-        );
-      },
-    );
-
-    // Sort by name matches, then address, then property type
-    buildingsResults = buildingsResults.sort(
-      (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
-        this.searchRank(buildingEdgeB, query) -
-        this.searchRank(buildingEdgeA, query),
-    );
-
-    // If property type filter is specified, filter down by that
-    if (this.propertyTypeFilter) {
-      buildingsResults = this.filterResults(
-        buildingsResults,
-        'PrimaryPropertyType',
-        this.propertyTypeFilter,
-      );
+    // Apply all active filters in sequence
+    let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
+    for (const filter of activeFilters) {
+      buildingsResults = filter.apply(buildingsResults);
     }
 
-    if (this.gradeFilter) {
-      buildingsResults = this.filterResults(
-        buildingsResults,
-        'AvgPercentileLetterGrade',
-        this.gradeFilter,
-      );
-    }
     this.hasFilteredResults = true;
-
     this.setSearchResults(buildingsResults);
   }
 
@@ -221,7 +278,7 @@ export default class Search extends Vue {
     if (this.hasFilteredResults) {
       buildingsToSort = [...this.searchResults];
     } else {
-      buildingsToSort = [...this.$page.allBuilding.edges];
+      buildingsToSort = [...this.$static.allBuilding.edges];
     }
 
     this.runSort(buildingsToSort);
@@ -268,6 +325,49 @@ export default class Search extends Vue {
   }
 
   /**
+   * Initialize the historical data index for O(1) lookups
+   */
+  private initializeHistoricalDataIndex(): void {
+    this.historicalDataIndex.clear();
+
+    for (const edge of this.$static.allBenchmark.edges) {
+      const buildingId = edge.node.ID;
+      if (!this.historicalDataIndex.has(buildingId)) {
+        this.historicalDataIndex.set(buildingId, []);
+      }
+      this.historicalDataIndex.get(buildingId)!.push(edge.node);
+    }
+  }
+
+  /**
+   * Get historical data for a specific building ID (O(1) lookup)
+   */
+  getHistoricalDataForBuilding(
+    buildingId: string | number,
+  ): Array<IHistoricData> {
+    return this.historicalDataIndex.get(buildingId) || [];
+  }
+
+  /**
+   * Apply current filters and run search
+   */
+  applyFilters(): void {
+    this.submitSearch();
+  }
+
+  /**
+   * Clear all filters and reset to default search
+   */
+  clearFilters(): void {
+    this.propertyTypeFilter = '';
+    this.gradeFilter = '';
+    this.gradeQuintileFilter = '';
+    this.allElectricFilter = false;
+    this.newBuildingsFilter = false;
+    this.submitSearch();
+  }
+
+  /**
    * Toggles DataDisclaimer open from the no-results message
    */
   openDataDisclaimer(): void {
@@ -279,7 +379,7 @@ export default class Search extends Vue {
 }
 </script>
 
-<page-query>
+<static-query>
   query {
     # Search page only needs core BuildingsTable fields (no conditional fields)
     allBuilding(sortBy: "GHGIntensity") {
@@ -305,8 +405,18 @@ export default class Search extends Vue {
         }
       }
     }
+    # Get all historical data for new building detection
+    allBenchmark(sortBy: "DataYear", order: ASC) {
+      edges {
+        node {
+          ID
+          DataYear
+          GHGIntensity
+        }
+      }
+    }
   }
-</page-query>
+</static-query>
 
 <template>
   <DefaultLayout>
@@ -320,49 +430,88 @@ export default class Search extends Vue {
 
       <DataDisclaimer id="data-disclaimer" />
 
-      <form>
+      <form class="search-form">
         <div>
           <label for="page-search"> Building Name </label>
-          <input
-            id="page-search"
-            v-model="searchFilter"
-            type="text"
-            name="search"
-            placeholder="Search property name, type, or address"
-          />
+          <div class="input-cont">
+            <input
+              id="page-search"
+              v-model="searchFilter"
+              type="text"
+              name="search"
+              placeholder="Search property name, type, or address"
+            />
+            <button type="submit" class="-grey" @click="submitSearch">
+              <img src="/search.svg" alt="" width="15" height="15" />
+              Search
+            </button>
+          </div>
         </div>
-
-        <div>
-          <label for="property-type">Property Type</label>
-          <select id="property-type" v-model="propertyTypeFilter">
-            <option
-              v-for="propertyType in propertyTypeOptions"
-              :key="propertyType.value ?? propertyType"
-              :value="propertyType.value ?? propertyType"
-            >
-              {{ propertyType.label || propertyType }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label for="property-type">Grade</label>
-          <select id="property-type" v-model="gradeFilter">
-            <option
-              v-for="gradeOpt in letterGradeOptions"
-              :key="gradeOpt.value"
-              :value="gradeOpt.value"
-            >
-              {{ gradeOpt.label }}
-            </option>
-          </select>
-        </div>
-
-        <button type="submit" class="-grey" @click="submitSearch">
-          <img src="/search.svg" alt="" width="15" height="15" />
-          Search
-        </button>
       </form>
+
+      <details class="filters-section">
+        <summary>Advanced Filters</summary>
+        <div class="details-content">
+          <div class="filter-grid">
+            <div class="select-row">
+              <div>
+                <label for="property-type">Property Type</label>
+                <select id="property-type" v-model="propertyTypeFilter">
+                  <option
+                    v-for="propertyType in propertyTypeOptions"
+                    :key="propertyType.value ?? propertyType"
+                    :value="propertyType.value ?? propertyType"
+                  >
+                    {{ propertyType.label || propertyType }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label for="grade-filter">Grade</label>
+                <select id="grade-filter" v-model="gradeFilter">
+                  <option
+                    v-for="gradeOpt in letterGradeOptions"
+                    :key="gradeOpt.value"
+                    :value="gradeOpt.value"
+                  >
+                    {{ gradeOpt.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+
+            <div class="checkbox-row">
+              <div>
+                <input
+                  id="all-electric-filter"
+                  v-model="allElectricFilter"
+                  type="checkbox"
+                />
+                <label for="all-electric-filter">⚡ All Electric</label>
+              </div>
+
+              <div>
+                <input
+                  id="new-buildings-filter"
+                  v-model="newBuildingsFilter"
+                  type="checkbox"
+                />
+                <label for="new-buildings-filter">New</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="filter-actions">
+            <button class="-grey" type="button" @click="applyFilters">
+              Apply Filters
+            </button>
+            <button class="-grey" type="button" @click="clearFilters">
+              Clear Filters
+            </button>
+          </div>
+        </div>
+      </details>
 
       <BuildingsTable
         :buildings="searchResults"
@@ -420,23 +569,12 @@ export default class Search extends Vue {
       font-weight: 500;
     }
 
-    input,
+    input {
+      width: 20rem;
+    }
+
     select {
       padding: 0.5rem;
-    }
-
-    input[type='text'] {
-      width: 16rem;
-    }
-
-    button {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-    }
-
-    select {
       max-width: 12rem;
     }
 
@@ -446,6 +584,72 @@ export default class Search extends Vue {
       flex-direction: column;
       align-items: flex-start;
       gap: 1rem;
+    }
+  }
+
+  .filters-section {
+    margin: 1rem 0;
+
+    summary {
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+    }
+
+    .filter-grid {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .select-row,
+    .checkbox-row {
+      display: flex;
+      gap: 0 1rem;
+      flex-wrap: wrap;
+    }
+
+    .select-row {
+      margin-bottom: 1rem;
+
+      > div {
+        display: flex;
+        flex-direction: column;
+      }
+
+      select {
+        padding: 0.5rem;
+        max-width: 12rem;
+      }
+
+      label {
+        font-size: 0.75rem;
+      }
+    }
+
+    .checkbox-row {
+      > div {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      input[type='checkbox'] {
+        margin: 0;
+        width: 1rem;
+        height: 1rem;
+      }
+
+      label {
+        margin: 0;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+    }
+
+    .filter-actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
     }
   }
 

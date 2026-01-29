@@ -168,42 +168,22 @@ export function fullyGasFree(building: IBuilding): boolean {
 /**
  * Whether a building is "new" - meaning this is the first year it has reported data
  */
-export function isNewBuilding(
-  building: IBuilding,
-  historicData: Array<IHistoricData>,
-): boolean {
+export function isNewBuilding(historicData: Array<IHistoricData>): boolean {
   if (!historicData) {
     throw new Error('Missing historicData for isNewBuilding check!');
   }
-  // No historic data = not reported (so not new)
-  else if (historicData.length === 0) {
+
+  // Filter to only years with meaningful reported data
+  const yearsWithReportedData = historicData.filter(hasReportedData);
+
+  // New buildings have exactly 1 year with reported data
+  if (yearsWithReportedData.length !== 1) {
     return false;
   }
 
-  const reportedYears = historicData
-    .filter((data) => hasReportedData(data))
-    .map((data) => data.DataYear)
-    .sort((a, b) => a - b);
-
-  // Non reporting isn't new
-  if (reportedYears.length === 0) {
-    return false;
-  }
-
-  const currentDataYear = parseInt(building.DataYear.toString(), 10);
-
-  // A building is "new" if:
-  // 1. It's currently reporting in the latest data year (2023)
-  // 2. AND this is the first year it has ever reported
-  // 3. AND it only has one year of reported data
-  const isReportingInLatestYear = currentDataYear === LatestDataYear;
-  const hasOnlyOneYearOfData = reportedYears.length === 1;
-  const firstReportedYear = reportedYears[0];
-  const isFirstYearEqualToLatest = firstReportedYear === currentDataYear;
-
-  return (
-    isReportingInLatestYear && hasOnlyOneYearOfData && isFirstYearEqualToLatest
-  );
+  // Check if that single reported year is the latest data year
+  const singleReportedRecord = yearsWithReportedData[0];
+  return singleReportedRecord.DataYear === LatestDataYear;
 }
 
 /**
