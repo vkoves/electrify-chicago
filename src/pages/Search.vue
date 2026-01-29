@@ -28,6 +28,11 @@ interface ISelectOption {
   value: string;
 }
 
+interface IFilter {
+  isActive: boolean;
+  apply: (buildings: Array<IBuildingEdge>) => Array<IBuildingEdge>;
+}
+
 @Component<any>({
   components: {
     BuildingsTable,
@@ -45,7 +50,8 @@ export default class Search extends Vue {
   readonly MaxBuildings = 100;
 
   /** Pre-computed index of building ID to historical data for performance */
-  private historicalDataIndex: Map<string | number, Array<IHistoricData>> = new Map();
+  private historicalDataIndex: Map<string | number, Array<IHistoricData>> =
+    new Map();
 
   readonly QueryParamKeys = {
     search: 'q',
@@ -110,8 +116,6 @@ export default class Search extends Vue {
   dataDisclaimer!: HTMLDetailsElement;
 
   created(): void {
-    console.log(this.$static);
-
     // Initialize performance index for historical data
     this.initializeHistoricalDataIndex();
     // Make sure on load we have some data
@@ -155,7 +159,7 @@ export default class Search extends Vue {
   /**
    * Get all active filter configurations
    */
-  private getActiveFilters() {
+  private getActiveFilters(): Array<IFilter> {
     const query = this.searchFilter.toLowerCase().trim();
 
     return [
@@ -167,7 +171,9 @@ export default class Search extends Vue {
             return (
               buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
               buildingEdge.node.Address.toLowerCase().includes(query) ||
-              buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
+              buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(
+                query,
+              )
             );
           });
 
@@ -182,13 +188,21 @@ export default class Search extends Vue {
       {
         isActive: Boolean(this.propertyTypeFilter),
         apply: (buildings: Array<IBuildingEdge>) =>
-          this.filterResults(buildings, 'PrimaryPropertyType', this.propertyTypeFilter),
+          this.filterResults(
+            buildings,
+            'PrimaryPropertyType',
+            this.propertyTypeFilter,
+          ),
       },
       // Grade filter
       {
         isActive: Boolean(this.gradeFilter),
         apply: (buildings: Array<IBuildingEdge>) =>
-          this.filterResults(buildings, 'AvgPercentileLetterGrade', this.gradeFilter),
+          this.filterResults(
+            buildings,
+            'AvgPercentileLetterGrade',
+            this.gradeFilter,
+          ),
       },
       // All electric filter
       {
@@ -328,7 +342,9 @@ export default class Search extends Vue {
   /**
    * Get historical data for a specific building ID (O(1) lookup)
    */
-  getHistoricalDataForBuilding(buildingId: string | number): Array<IHistoricData> {
+  getHistoricalDataForBuilding(
+    buildingId: string | number,
+  ): Array<IHistoricData> {
     return this.historicalDataIndex.get(buildingId) || [];
   }
 
@@ -487,8 +503,12 @@ export default class Search extends Vue {
           </div>
 
           <div class="filter-actions">
-            <button type="button" @click="applyFilters">Apply Filters</button>
-            <button type="button" @click="clearFilters">Clear Filters</button>
+            <button class="-grey" type="button" @click="applyFilters">
+              Apply Filters
+            </button>
+            <button class="-grey" type="button" @click="clearFilters">
+              Clear Filters
+            </button>
           </div>
         </div>
       </details>
@@ -577,9 +597,7 @@ export default class Search extends Vue {
 
     .filter-grid {
       display: flex;
-      flex-direction: column;
-      gap: 0 1rem;
-      margin-bottom: 1rem;
+      gap: 1rem;
     }
 
     .select-row,
