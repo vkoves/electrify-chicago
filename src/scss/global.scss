@@ -25,12 +25,12 @@ body {
   *:target {
     border-bottom: solid $border-thick $blue-very-dark !important;
   }
-}
 
-// Default focus styles
-*:focus-visible {
-  outline: 0.25rem dashed $blue-very-dark;
-  outline-offset: 0.125rem;
+  // Default focus styles
+  *:focus-visible {
+    outline: 0.25rem dashed $blue-very-dark;
+    outline-offset: 0.125rem;
+  }
 }
 
 a {
@@ -67,6 +67,17 @@ a.blue-link {
   }
 }
 
+// Make sure images don't go beyond the page
+img {
+  max-width: 100%;
+}
+
+img.-shadowed {
+  margin-top: 1rem;
+  border: solid $border-thin $grey;
+  box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
+}
+
 // A generic back link variant that also handles the icon within
 a.back-link {
   display: inline-flex;
@@ -77,6 +88,26 @@ a.back-link {
 
   img {
     height: 1rem;
+  }
+}
+
+h1 {
+  margin: 1.5rem 0 0.5rem;
+}
+h2 {
+  margin: 1rem 0 0.5rem;
+}
+
+/**
+ * Mobile Font Size Overrides
+ */
+@media (max-width: $mobile-max-width) {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
   }
 }
 
@@ -98,27 +129,6 @@ h6,
   + p {
     margin-top: 0;
   }
-}
-
-/**
- * Mobile Font Size Overrides
- */
-@media (max-width: $mobile-max-width) {
-  h1 {
-    font-size: 1.75rem;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-  }
-}
-
-h1 {
-  margin: 1.5rem 0 0.5rem;
-}
-
-h2 {
-  margin: 1rem 0 0.5rem;
 }
 
 // Expose -no-margin variant to ignore default paragraph margins
@@ -204,17 +214,6 @@ details {
   .details-content {
     padding: 1.5rem;
   }
-}
-
-// Make sure images don't go beyond the page
-img {
-  max-width: 100%;
-}
-
-img.-shadowed {
-  margin-top: 1rem;
-  border: solid $border-thin $grey;
-  box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
 }
 
 /** Some basic default table styling */
