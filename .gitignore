@@ -2,6 +2,9 @@ node_modules/*
 .cache/*
 src/.temp/*
 
+# Environment variables (contains API keys)
+.env
+
 **/.ipynb_checkpoints/*
 # Ignore root dist directory from `gridsome build`, we need src/data/dist
 dist/*

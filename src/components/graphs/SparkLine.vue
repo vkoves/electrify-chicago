@@ -287,7 +287,7 @@ export default class BarGraph extends Vue {
 
   focus(event: Event, datum: INumGraphPoint): void {
     this.mouseover();
-    this.mousemove(event as MouseEvent, datum);
+    this.mousemove(event, datum);
   }
 
   mouseover(): void {
@@ -303,8 +303,19 @@ export default class BarGraph extends Vue {
     );
     const scaleFactor = svgElem!.clientWidth / outerWidth;
 
-    const tooltipX = d3.pointer(event)[0] * scaleFactor + 20;
-    const tooltipY = d3.pointer(event)[1] * scaleFactor;
+    let tooltipX: number;
+    let tooltipY: number;
+    if (event instanceof MouseEvent) {
+      [tooltipX, tooltipY] = d3.pointer(event);
+    } else if (event.target instanceof SVGGraphicsElement) {
+      // This can happen for tab-focus events, where there's no pointer.
+      // In that case, use the datum's position instead of the mouse's.
+      const bbox = event.target.getBBox();
+      tooltipX = bbox.x;
+      tooltipY = bbox.y;
+    } else {
+      return;
+    }
 
     this.tooltip!.html(
       `<div class="year">${datum.x}</div>` +
@@ -313,8 +324,8 @@ export default class BarGraph extends Vue {
         `<span class="unit">${this.unit}</span>` +
         `</div>`,
     )
-      .style('left', `${tooltipX}px`)
-      .style('top', `${tooltipY}px`);
+      .style('left', `${tooltipX * scaleFactor + 20}px`)
+      .style('top', `${tooltipY * scaleFactor}px`);
   }
 
   mouseleave(): void {

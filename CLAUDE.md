@@ -2,6 +2,10 @@
 
 This document contains important guidelines for Claude when working on this codebase.
 
+## Packages
+
+This project uses Yarn, use `yarn install` commands, NOT NPM.
+
 ## Code Duplication
 
 **NEVER duplicate code or CSS.** Always extract shared functionality to common files:

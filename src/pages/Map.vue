@@ -9,6 +9,7 @@ import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 import {
   IBuildingBenchmarkStats,
@@ -26,6 +27,7 @@ const GoogleMapsScriptId = 'google-maps-script';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingImage,
@@ -37,7 +39,10 @@ const GoogleMapsScriptId = 'google-maps-script';
   },
   metaInfo() {
     return {
-      title: 'Map',
+      ...generatePageMeta(
+        'Map',
+        'Interactive map of Chicago buildings showing energy performance and emissions data',
+      ),
       link: [
         {
           // Leaflet CSS
@@ -74,8 +79,8 @@ export default class MapPage extends Vue {
 
   /** VueJS template refs */
   $refs!: {
-    mapPopup: any;
-    googleMapsSearchInput: any;
+    mapPopup: HTMLElement;
+    googleMapsSearchInput: HTMLInputElement;
   };
 
   Leaflet!: typeof Leaflet;
@@ -101,7 +106,7 @@ export default class MapPage extends Vue {
   zipCodes: Array<number> = [];
 
   /* Declare dynamic template data for VueJS */
-  data(): any {
+  data(): { currBuilding?: IBuilding } {
     return { currBuilding: this.currBuilding };
   }
 
@@ -127,6 +132,7 @@ export default class MapPage extends Vue {
     this.setupMapIcons();
 
     this.map = this.Leaflet.map('buildings-map', {
+      tap: false,
       zoomDelta: this.MapConfig.ZoomDelta,
       wheelPxPerZoomLevel: this.MapConfig.WheelPxPerZoomLevel,
       zoomSnap: this.MapConfig.ZoomSnap,
@@ -151,6 +157,7 @@ export default class MapPage extends Vue {
 
   setupMapIcons(): void {
     // Fix Leaflet markers not working. Source: https://stackoverflow.com/a/65761448
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     delete (this.Leaflet.Icon.Default.prototype as any)._getIconUrl;
 
     this.Leaflet.Icon.Default.mergeOptions({
@@ -167,28 +174,34 @@ export default class MapPage extends Vue {
       },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.icons.red = new (CustomMarkerIcon as any)({
       iconUrl: '/map-markers/marker-red.png',
-    }) as Leaflet.Icon;
+    });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.icons.green = new (CustomMarkerIcon as any)({
       iconUrl: '/map-markers/marker-green.png',
-    }) as Leaflet.Icon;
+    });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.icons.orange = new (CustomMarkerIcon as any)({
       iconUrl: '/map-markers/marker-orange.png',
-    }) as Leaflet.Icon;
+    });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.icons.grey = new (CustomMarkerIcon as any)({
       iconUrl: '/map-markers/marker-grey.png',
-    }) as Leaflet.Icon;
+    });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     this.icons.blue = new (CustomMarkerIcon as any)({
       iconUrl: '/map-markers/marker-blue.png',
-    }) as Leaflet.Icon;
+    });
   }
 
   setupGoogleMutant(): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (this.Leaflet.gridLayer as any)
       .googleMutant({
         type: 'roadmap', // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
@@ -211,7 +224,7 @@ export default class MapPage extends Vue {
 
     googleMapsScriptElem.onload = () => {
       const searchInput = this.$refs.googleMapsSearchInput;
-      const google = (window as any).google;
+      const google = window.google!;
 
       // NW edge of O'Hare down to long of South edge
       const southwest = { lat: 41.644624, lng: -87.93976 };
@@ -237,17 +250,20 @@ export default class MapPage extends Vue {
       searchBox.addListener('places_changed', () => {
         const places = searchBox.getPlaces();
 
-        if (places.length === 0) {
+        if (!places || places.length === 0) {
           return;
         }
 
         // Clear form zip and store the coordinates
         this.formZip = '';
 
-        this.formPointCoords = [
-          places[0].geometry.location.lat(),
-          places[0].geometry.location.lng(),
-        ];
+        const firstPlace = places[0];
+        if (firstPlace?.geometry?.location) {
+          this.formPointCoords = [
+            firstPlace.geometry.location.lat(),
+            firstPlace.geometry.location.lng(),
+          ];
+        }
       });
     };
   }
@@ -409,9 +425,9 @@ export default class MapPage extends Vue {
         },
         {
           // Fix popup max-width
-          maxWidth: 'auto',
-          // eslint-disable-next-line
-        } as any,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          maxWidth: 'auto' as any,
+        },
       );
     });
   }

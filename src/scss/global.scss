@@ -340,6 +340,10 @@ code {
 .constrained {
   max-width: 50rem;
 
+  &.-padded {
+    padding: 0 1rem;
+  }
+
   &.-wide {
     max-width: 60rem;
   }
@@ -404,7 +408,7 @@ form.search-form {
   }
 
   &.-blue {
-    border-color: $chicago-blue;
+    border-color: $blue-dark;
   }
 
   h2,
@@ -492,84 +496,6 @@ form.search-form {
     span.icon {
       text-shadow: 0.0625rem 0 0.0625rem $black;
       margin-right: 0.5em;
-    }
-  }
-}
-
-/**
- * Data update banner - global notice panel for announcing new data releases
- */
-.data-update-banner {
-  background: $blue-very-dark;
-  padding: 1rem 0;
-  box-shadow: 0 0.3125rem 0.25rem $box-shadow-main;
-  width: 100%;
-
-  .page-constrained {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  .content-left {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex-grow: 1;
-  }
-
-  h2 {
-    color: $white;
-    font-size: 1.25rem;
-    margin: 0;
-  }
-
-  p {
-    color: $white;
-    font-size: 0.875rem;
-  }
-
-  a {
-    background-color: $white;
-    padding: 0.5rem 1.25rem;
-    border-radius: $brd-rad-small;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9rem;
-
-    &:focus {
-      outline-color: $white;
-    }
-    &:hover,
-    &:focus {
-      background-color: $off-white;
-    }
-  }
-
-  /** Mobile styling */
-  @media (max-width: $mobile-max-width) {
-    padding: 0.75rem 0;
-    text-align: center;
-
-    .page-constrained {
-      gap: 0.5rem;
-      flex-direction: column;
-    }
-
-    h2 {
-      font-size: 1rem;
-    }
-
-    a {
-      padding: 0.3125rem 1rem;
-      font-size: 0.85rem;
-    }
-
-    p {
-      font-size: 0.75rem;
     }
   }
 }
@@ -991,5 +917,33 @@ article.blog-post {
   // Totally hide the footer
   footer {
     display: none;
+  }
+}
+
+/**
+ * Vue Transition Animations
+ */
+
+// Slide-fade animation: slide down on enter, fade on leave
+.slide-fade-enter-active {
+  animation: slide-down 0.4s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

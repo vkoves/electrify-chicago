@@ -381,7 +381,7 @@ export const BuildingImages: IBuildingImages = {
   '256435': {
     imgUrl:
       BuildingImagesBase +
-      'auto-streetview/iit/256435-55_W_34th_Street_60616.web',
+      'auto-streetview/iit/256435-55_W_34th_Street_60616.webp',
     fromGoogleMaps: true,
   },
 
@@ -729,7 +729,7 @@ export const BuildingImages: IBuildingImages = {
   '254989': {
     imgUrl:
       BuildingImagesBase +
-      'auto-streetview/depaul/254989-2330_N_HALSTED_ST_60614.web',
+      'auto-streetview/depaul/254989-2330_N_HALSTED_ST_60614.webp',
     fromGoogleMaps: true,
   },
   '251330': {
@@ -939,7 +939,7 @@ export const BuildingImages: IBuildingImages = {
   '256502': {
     imgUrl:
       BuildingImagesBase +
-      'auto-streetview/uchicago/256502-1442_E__59th_Street_60637.web',
+      'auto-streetview/uchicago/256502-1442_E__59th_Street_60637.webp',
     fromGoogleMaps: true,
   },
 
@@ -1221,6 +1221,344 @@ export const BuildingImages: IBuildingImages = {
     imgUrl:
       BuildingImagesBase +
       'auto-streetview/cleanest/104431-5948_5958_N_BROADWAY_60660.webp',
+    fromGoogleMaps: true,
+  },
+
+  // New buildings from 2023 streetview imagery
+  '103580': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/103580-6720_S_Cornell_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '109191': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/109191-1020_W_Bryn_Mawr_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '126141': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/126141-839_W__79th_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '155614': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/155614-3447_3457_W_Foster_Avenue.webp',
+    fromGoogleMaps: true,
+  },
+  '156139': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/156139-300_N_Michigan.webp',
+    fromGoogleMaps: true,
+  },
+  '157158': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/157158-2800_S__Ashland_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '158061': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/158061-5700_North_Ashland_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '165245': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/165245-2320_W_113th_Place.webp',
+    fromGoogleMaps: true,
+  },
+  '175053': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/175053-5330_N_Damen_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '175579': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/175579-7645_N_Sheridan_Rd.webp',
+    fromGoogleMaps: true,
+  },
+  '175845': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/175845-2451_W_Howard_St.webp',
+    fromGoogleMaps: true,
+  },
+  '254998': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/254998-165_W__Superior_St.webp',
+    fromGoogleMaps: true,
+  },
+  '255003': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/255003-2211_N_Milwaukee_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '255925': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/255925-1955_North_Richmond_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '256531': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256531-180_N__Ada_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '256534': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256534-811_W_Agatite_Avenue.webp',
+    fromGoogleMaps: true,
+  },
+  '256542': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256542-5525_W_Diversey_Avenue.webp',
+    fromGoogleMaps: true,
+  },
+  '256675': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256675-1750_N_Wolcott_Avenue.webp',
+    fromGoogleMaps: true,
+  },
+  '256779': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256779-1346_W_Taylor_St.webp',
+    fromGoogleMaps: true,
+  },
+  '256789': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256789-4022_N_Elston.webp',
+    fromGoogleMaps: true,
+  },
+  '256795': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256795-2845_W_Belden_Avenue.webp',
+    fromGoogleMaps: true,
+  },
+  '256805': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256805-2410_W_Pratt.webp',
+    fromGoogleMaps: true,
+  },
+  '256886': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256886-215_N_Peoria_St.webp',
+    fromGoogleMaps: true,
+  },
+  '256893': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256893-211_N_Harbor_Dr.webp',
+    fromGoogleMaps: true,
+  },
+  '256894': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256894-228_W_Hill_Sr.webp',
+    fromGoogleMaps: true,
+  },
+  '256897': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256897-1646_N__Halsted_St.webp',
+    fromGoogleMaps: true,
+  },
+  '256898': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256898-1520_W__Harrison_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '256904': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256904-2344_S_State_St.webp',
+    fromGoogleMaps: true,
+  },
+  '256953': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256953-532_W_Hobbie_551_W_Elm_531_W_Elm.webp',
+    fromGoogleMaps: true,
+  },
+  '256962': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256962-30_E_Balbo_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '256997': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/256997-400_N_Aberdeen_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '257024': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257024-1454_W_Randolph_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257030': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257030-2322_S_Canal_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257032': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257032-3460_N_Broadway_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257043': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257043-4308_S_Calument_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '257044': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257044-808_S_Michigan_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '257046': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257046-1400_S_Wabash_Ave.webp',
+    fromGoogleMaps: true,
+  },
+  '257149': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257149-345_N_Morgan_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257153': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257153-1135_S_Delano_Ct_E.webp',
+    fromGoogleMaps: true,
+  },
+  '257154': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257154-4144_N_Sheridan.webp',
+    fromGoogleMaps: true,
+  },
+  '257161': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257161-320_South_Canal_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '257167': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257167-306_W_Erie_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257173': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257173-24_East_Washington_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '257174': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257174-725_S__Wells.webp',
+    fromGoogleMaps: true,
+  },
+  '257175': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257175-1132_S_Jefferson_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257178': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257178-4533_W_Roscoe_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257179': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257179-2011_W_Hastings_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257180': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257180-905_W_Fulton_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '257182': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257182-6230_South_Cottage_Grove_Avenue.webp',
+    fromGoogleMaps: true,
+  },
+  '257183': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257183-1023_East_47th_St.webp',
+    fromGoogleMaps: true,
+  },
+  '257185': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257185-1221_W_Sherwin_Avenue.webp',
+    fromGoogleMaps: true,
+  },
+  '257186': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257186-4431_N__Clifton.webp',
+    fromGoogleMaps: true,
+  },
+  '257188': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257188-2928_S_Archer_Avenue.webp',
+    fromGoogleMaps: true,
+  },
+  '257189': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257189-852_854_W__Sunnyside.webp',
+    fromGoogleMaps: true,
+  },
+  '257191': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257191-2614_N_Emmett_Street.webp',
+    fromGoogleMaps: true,
+  },
+  '257193': {
+    imgUrl:
+      BuildingImagesBase +
+      'auto-streetview/new-buildings-2023/257193-4034_W_56th_St.webp',
     fromGoogleMaps: true,
   },
 };

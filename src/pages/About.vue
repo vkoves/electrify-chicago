@@ -4,6 +4,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
 import EmissionsBreakdownGraph from '../components/EmissionsBreakdownGraph.vue';
+import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 // TODO: Figure out a way to get metaInfo working without any
 // https://github.com/xerebede/gridsome-starter-typescript/issues/37
@@ -13,7 +14,11 @@ import EmissionsBreakdownGraph from '../components/EmissionsBreakdownGraph.vue';
     NewTabIcon,
   },
   metaInfo() {
-    return { title: 'About Us' };
+    return generatePageMeta(
+      'About Us',
+      'Learn about Electrify Chicago, and our mission to decarbonize buildings ' +
+        'and fight climate change through data transparency!',
+    );
   },
 })
 export default class About extends Vue {
@@ -149,14 +154,15 @@ export default class About extends Vue {
           <g-link to="/top-electricity-users"> Top Electricity Users </g-link>
         </li>
         <li>
-          <g-link to="/biggest-gas-free-buildings">
-            Biggest Gas Free Buildings
-          </g-link>
+          <g-link to="/all-electric"> All Electric Buildings </g-link>
         </li>
         <li>
           <g-link to="/retrofit-chicago-participants">
             Retrofit Chicago Case Studies
           </g-link>
+        </li>
+        <li>
+          <g-link to="/fines-breakdown"> Year by Year Predicted Fines </g-link>
         </li>
       </ul>
 

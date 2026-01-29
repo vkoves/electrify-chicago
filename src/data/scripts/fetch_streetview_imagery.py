@@ -4,7 +4,7 @@ Functions to automatically fetch images from the Google Maps API
 WIP - not integrated into data pipeline, call from root with with:
 
 ```
-python3 -m src.data.scripts.fetch_streetview_imagery API_KEY addresses.csv
+uv run python -m src.data.scripts.fetch_streetview_imagery API_KEY addresses.csv
 ```
 
 Viktor has a Google Maps API key, or you can create your own!
@@ -17,15 +17,17 @@ import requests
 import pandas as pd
 from io import BytesIO
 from PIL import Image
-from typing import List
 
 from src.data.scripts.utils import print_red, print_yellow, print_green
 
 # Expected table columns
-address_col = 'address'
-id_col = 'ID'
+address_col = "address"
+id_col = "ID"
 
-def get_and_store_streetview_image(address: str, api_key: str, filename: str, fov=100, pitch=30, size="640x640"):
+
+def get_and_store_streetview_image(
+    address: str, api_key: str, filename: str, fov=100, pitch=30, size="640x640"
+):
     """
     Retrieves a Google Street View image for a given address. Returns a filename if an image was
     found and saved, and None otherwise. Note that the FOV and the size are related, so don't shift
@@ -62,7 +64,10 @@ def get_and_store_streetview_image(address: str, api_key: str, filename: str, fo
         return filename
     except requests.exceptions.RequestException as e:
         # 404 errors mean there's no imagery, so we skip that silently
-        if isinstance(e, requests.exceptions.HTTPError) and e.response.status_code == 404:
+        if (
+            isinstance(e, requests.exceptions.HTTPError)
+            and e.response.status_code == 404
+        ):
             # Do nothing
             print_yellow(f"Google has no imagery for {address}.")
         else:
@@ -74,6 +79,7 @@ def get_and_store_streetview_image(address: str, api_key: str, filename: str, fo
         print_red(f"An unexpected error occurred for {address}: {e}")
         return None
 
+
 def create_img_filename(building_id: str, address: str) -> str:
     """
     Given an address, generates a standardized image filename format. We don't store the city or
@@ -83,14 +89,17 @@ def create_img_filename(building_id: str, address: str) -> str:
     """
 
     # Remove the city and state parts of the address.
-    address_without_city_state = re.sub(r', Chicago IL,?', '', address).strip()
+    address_without_city_state = re.sub(r", Chicago IL,?", "", address).strip()
 
     # Replace spaces with underscores and remove other special characters.
-    addr_cleaned = re.sub(r'[^\w]', '_', address_without_city_state).strip('_')
+    addr_cleaned = re.sub(r"[^\w]", "_", address_without_city_state).strip("_")
 
     return f"{building_id}-{addr_cleaned}"
 
-def get_and_store_building_streetview_images(buildings: pd.DataFrame, api_key: str, output_dir: str) -> int:
+
+def get_and_store_building_streetview_images(
+    buildings: pd.DataFrame, api_key: str, output_dir: str
+) -> int:
     """
     Retrieves and saves Google Street View images for a list of addresses. Returns the number of
     images found and stored, since some buildings may not have imagery.
@@ -101,17 +110,22 @@ def get_and_store_building_streetview_images(buildings: pd.DataFrame, api_key: s
     images_count = 0
 
     for index, row in buildings.iterrows():
-        building_id = row[id_col]
-        address = row[address_col]
+        building_id = str(row[id_col])
+        address = str(row[address_col])
 
-        filename = os.path.join(output_dir, f"{create_img_filename(building_id, address)}.webp")
+        filename = os.path.join(
+            output_dir, f"{create_img_filename(building_id, address)}.webp"
+        )
 
-        output_filename = get_and_store_streetview_image(address, api_key, filename=filename)
+        output_filename = get_and_store_streetview_image(
+            address, api_key, filename=filename
+        )
 
         if output_filename:
             images_count += 1
 
     return images_count
+
 
 def load_buildings_from_csv(csv_filepath: str) -> pd.DataFrame | None:
     """
@@ -133,7 +147,8 @@ def load_buildings_from_csv(csv_filepath: str) -> pd.DataFrame | None:
         return df
     except FileNotFoundError:
         print_red(f"Error: CSV file '{csv_filepath}' not found.")
-        return []
+        return None
+
 
 def main():
     if len(sys.argv) < 2:
@@ -146,19 +161,27 @@ def main():
         csv_file = sys.argv[2]  # Override with command-line argument
     else:
         print_red("Error! No CSV path specified for second argument.")
+        sys.exit(1)
 
     buildings = load_buildings_from_csv(csv_file)
 
-    if len(buildings) > 0:
+    if buildings is not None and len(buildings) > 0:  # type: ignore
         print(f"Attempting to fetch imagery for {len(buildings)} buildings...")
 
         output_dir = "tmp_streetview_images"
-        imgs_count = get_and_store_building_streetview_images(buildings, api_key, output_dir)
+        imgs_count = get_and_store_building_streetview_images(
+            buildings,
+            api_key,
+            output_dir,  # type: ignore
+        )
 
-        print_green(f"Done, {imgs_count} of {len(buildings)} buildings had images found and stored in '/{output_dir}'!")
-        print('Make sure to verify imagery looks good before it is published!')
+        print_green(
+            f"Done, {imgs_count} of {len(buildings)} buildings had images found and stored in '/{output_dir}'!"
+        )
+        print("Make sure to verify imagery looks good before it is published!")
     else:
-        print_red('Error! No addresses provided')
+        print_red("Error! No addresses provided")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

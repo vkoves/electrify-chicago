@@ -45,7 +45,7 @@ export default class Search extends Vue {
   readonly MaxBuildings = 100;
 
   /** Pre-computed index of building ID to historical data for performance */
-  private historicalDataIndex: Map<string, Array<IHistoricData>> = new Map();
+  private historicalDataIndex: Map<string | number, Array<IHistoricData>> = new Map();
 
   readonly QueryParamKeys = {
     search: 'q',
@@ -57,6 +57,8 @@ export default class Search extends Vue {
     allBuilding: { edges: Array<IBuildingNode> };
     allBenchmark: { edges: Array<{ node: IHistoricData }> };
   };
+
+  // readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** The search query */
   searchFilter = '';
@@ -108,6 +110,8 @@ export default class Search extends Vue {
   dataDisclaimer!: HTMLDetailsElement;
 
   created(): void {
+    console.log(this.$static);
+
     // Initialize performance index for historical data
     this.initializeHistoricalDataIndex();
     // Make sure on load we have some data
@@ -324,7 +328,7 @@ export default class Search extends Vue {
   /**
    * Get historical data for a specific building ID (O(1) lookup)
    */
-  getHistoricalDataForBuilding(buildingId: string): Array<IHistoricData> {
+  getHistoricalDataForBuilding(buildingId: string | number): Array<IHistoricData> {
     return this.historicalDataIndex.get(buildingId) || [];
   }
 
