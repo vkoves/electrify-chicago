@@ -42,25 +42,6 @@
     }
   }
 
-  .stat-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    height: 100%; // Fill the full grid cell height
-
-    &:hover,
-    &:focus {
-      .stat-card.-clickable {
-        box-shadow: 0.125rem 0.125rem 0.75rem $box-shadow-main;
-        border-color: $blue-dark;
-
-        .stat-label {
-          color: $blue-dark;
-        }
-      }
-    }
-  }
-
   .stat-card {
     display: flex;
     flex-direction: column;
@@ -73,6 +54,22 @@
     transition: box-shadow 0.2s ease-in-out;
     height: 100%; // Fill the full link height
     min-height: 8.75rem; // 140px Minimum height to prevent cards from being too short
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: $text-mid-light;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      line-height: 1.25;
+      font-weight: bold;
+      transition: color 0.2s ease-in-out;
+      margin-bottom: 0.25rem;
+    }
 
     &.-clickable {
       cursor: pointer;
@@ -95,22 +92,6 @@
 
     &.negative .stat-number {
       color: $chicago-red;
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: $text-mid-light;
-      line-height: 1;
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-label {
-      font-size: 1.1rem;
-      line-height: 1.25;
-      font-weight: bold;
-      transition: color 0.2s ease-in-out;
-      margin-bottom: 0.25rem;
     }
 
     .stat-description {
@@ -146,6 +127,25 @@
 
       .stat-footnote {
         font-size: 0.7rem;
+      }
+    }
+  }
+
+  .stat-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%; // Fill the full grid cell height
+
+    &:hover,
+    &:focus {
+      .stat-card.-clickable {
+        box-shadow: 0.125rem 0.125rem 0.75rem $box-shadow-main;
+        border-color: $blue-dark;
+
+        .stat-label {
+          color: $blue-dark;
+        }
       }
     }
   }
