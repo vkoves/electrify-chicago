@@ -80,17 +80,20 @@ export default class PieChart extends Vue {
     }
 
     // Compute the position of each group on the pie:
-    var pie = d3.pie().value((d: any) => d.value);
+    var pie = d3.pie<IPieSlice>().value((d) => d.value);
     if (!this.sortByLargest) {
       pie = pie.sort(null);
     }
-    var dataReady = pie(this.graphData as any);
+    var dataReady = pie(this.graphData);
 
     // shape helper to build arcs:
-    var arcGenerator = d3.arc().innerRadius(0).outerRadius(pieRadius);
+    var arcGenerator = d3
+      .arc<d3.PieArcDatum<IPieSlice>>()
+      .innerRadius(0)
+      .outerRadius(pieRadius);
 
     var labelArcGenerator = d3
-      .arc()
+      .arc<d3.PieArcDatum<IPieSlice>>()
       .innerRadius(pieRadius)
       .outerRadius(labelRadius);
 
@@ -101,8 +104,8 @@ export default class PieChart extends Vue {
       .data(dataReady)
       .enter()
       .append('path')
-      .attr('d', arcGenerator as any)
-      .attr('fill', (d) => (d.data as any as IPieSlice).color);
+      .attr('d', arcGenerator)
+      .attr('fill', (d) => d.data.color);
 
     // Calculate total value for % calculation
     let totalValue = 0;
@@ -127,7 +130,7 @@ export default class PieChart extends Vue {
             return '';
           }
 
-          let data = d.data as any as IPieSlice;
+          let data = d.data;
 
           const label =
             `<tspan class="percent">${this.calculatePercentage(
@@ -146,9 +149,7 @@ export default class PieChart extends Vue {
             return '';
           }
 
-          return `translate(${labelArcGenerator.centroid(
-            d as unknown as d3.DefaultArcObject,
-          )})`;
+          return `translate(${labelArcGenerator.centroid(d)})`;
         })
         .style('text-anchor', (d) => {
           // Center single slice label
