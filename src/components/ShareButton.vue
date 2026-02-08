@@ -15,12 +15,54 @@
     >
       Link copied to clipboard!
     </div>
+    <div
+      v-show="showShareDropdown"
+      class="share-dropdown"
+      :class="{ show: shareDropdownVisible }"
+    >
+      <ul class="share-list">
+        <li>
+          <img src="/icons/link.svg" alt="Link" />
+          <button
+            class="share-link"
+            :class="{ '-with-text': showText }"
+            @click="dropdownShareUrl()"
+          >
+          Share Link
+            <!--span v-if="showText">Share</span-->
+          </button>
+        </li>
+        <li>
+          <img src="/icons/reddit.svg" alt="Reddit" />
+          <a class="share-link" :href="redditShareUrl()" target="_blank" rel="noopener noreferrer">
+            Share on Reddit
+          </a>
+        </li>
+        <li>
+          <img src="/icons/bluesky.svg" alt="Bluesky" />
+          <a class="share-link" :href="blueskyShareUrl()" target="_blank" rel="noopener noreferrer">
+            Share on Bluesky
+          </a>
+        </li>
+        <li>
+          <img src="/icons/facebook.svg" alt="Facebook" />
+          <a class="share-link" :href="facebookShareUrl()" target="_blank" rel="noopener noreferrer">
+            Share on Facebook
+          </a>
+        </li>
+        <li>
+          <img src="/icons/x.svg" alt="X" />
+          <a class="share-link" :href="twitterShareUrl()" target="_blank" rel="noopener noreferrer">
+            Share on X
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
 /**
  * Reusable share button that uses the native Web Share API when available,
  * with clipboard fallback. Shows a fade-in alert when link is copied.
@@ -43,9 +85,51 @@ export default class ShareButton extends Vue {
   showCopyAlert = false;
   copyAlertVisible = false;
 
+  showShareDropdown = false;
+  shareDropdownVisible = false;
+
   // Animation timing constants
   private readonly AlertFadeDurationMs = 300;
   private readonly AlertDisplayDurationMs = 2500;
+
+  //Share endpoint constants
+  private readonly TwitterShareEndpoint = 'https://twitter.com/intent/tweet';
+  private readonly FacebookShareEndpoint = 'https://www.facebook.com/sharer/sharer.php';
+  private readonly BlueskyShareEndpoint = 'https://bsky.app/intent/compose';
+  private readonly RedditShareEndpoint = 'http://www.reddit.com/submit';
+
+  dropdownShareUrl(): void {
+    const shareUrl =
+    this.url || (typeof window !== 'undefined' ? window.location.href : '');
+    return this.copyToClipboard(shareUrl);
+  }
+
+  //TODO: add support for &text= with current page title
+  twitterShareUrl(): string {
+      const shareUrl =
+      this.url || (typeof window !== 'undefined' ? window.location.href : '');
+      return `${this.TwitterShareEndpoint}?url=${shareUrl}`;
+  }
+
+  // TODO: Tag Electrify Chicago acct?
+  blueskyShareUrl(): string {
+      const shareUrl =
+      this.url || (typeof window !== 'undefined' ? window.location.href : '');
+      return `${this.BlueskyShareEndpoint}?text=${this.text}%0A${shareUrl}`;
+  }
+
+  facebookShareUrl(): string {
+    const shareUrl =
+    this.url || (typeof window !== 'undefined' ? window.location.href : '');
+    return `${this.FacebookShareEndpoint}?u=${shareUrl}`;
+  }
+
+  //TODO: Add support for &title=
+  redditShareUrl(): string {
+    const shareUrl =
+    this.url || (typeof window !== 'undefined' ? window.location.href : '');
+    return `${this.RedditShareEndpoint}?url=${shareUrl}&title=${this.text}`;
+  }
 
   handleShare(): void {
     const shareUrl =
@@ -67,7 +151,8 @@ export default class ShareButton extends Vue {
         });
     } else {
       // Fallback for browsers without Web Share API
-      this.copyToClipboard(shareUrl);
+      //this.copyToClipboard(shareUrl);
+      this.enableDropdown();
     }
   }
 
@@ -103,7 +188,30 @@ export default class ShareButton extends Vue {
       }, this.AlertFadeDurationMs);
     }, this.AlertDisplayDurationMs);
   }
+
+  private enableDropdown(): void {
+    this.showShareDropdown = true;
+    this.shareDropdownVisible = false;
+
+    // Small delay to ensure DOM element is rendered, then trigger fade in
+    setTimeout(() => {
+      this.shareDropdownVisible = true;
+    }, 10);
+
+    //TODO: Replace with function to close dropdown when user clicks
+    //      elsewhere on page, or selects a link to share.
+
+    // Start fade out after display duration, then hide completely
+    /*setTimeout(() => {
+      this.shareDropdownVisible = false;
+      // Hide element after animation completes
+      setTimeout(() => {
+        this.showDropdown = false;
+      }, this.AlertFadeDurationMs);
+    }, this.AlertDisplayDurationMs);*/
+  }
 }
+
 </script>
 
 <style lang="scss">
@@ -150,6 +258,45 @@ export default class ShareButton extends Vue {
     &.show {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  .share-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background-color: $blue-very-dark;
+    color: $white;
+    padding: 0.5rem 0.75rem;
+    border-radius: $brd-rad-small;
+    font-size: 1.25rem;
+    white-space: nowrap;
+    z-index: 999;
+    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    list-style: none;
+    transform: translateY(-0.5rem);
+    transition: all 0.3s ease-in-out;
+
+    &.show {
+      opacity: 1;
+      transform: translateY(0);
+
+      .share-list {
+        list-style: none;
+        padding: 0;
+
+        li {
+          display: flex;
+          align-items: center;
+        }
+
+        img {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
     }
   }
 }
