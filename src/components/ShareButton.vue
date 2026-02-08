@@ -28,7 +28,7 @@
             :class="{ '-with-text': showText }"
             @click="dropdownShareUrl()"
           >
-          Share Link
+          Copy Link
             <!--span v-if="showText">Share</span-->
           </button>
         </li>
@@ -267,13 +267,11 @@ export default class ShareButton extends Vue {
     right: 0;
     margin-top: 0.5rem;
     background-color: $blue-very-dark;
-    color: $white;
-    padding: 0.5rem 0.75rem;
+    padding: 0.5rem 1.75rem .5rem .5rem;
     border-radius: $brd-rad-small;
     font-size: 1.25rem;
     white-space: nowrap;
     z-index: 999;
-    box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.2);
     opacity: 0;
     list-style: none;
     transform: translateY(-0.5rem);
@@ -286,13 +284,26 @@ export default class ShareButton extends Vue {
       .share-list {
         list-style: none;
         padding: 0;
+        display: grid;
+        row-gap: .75rem;
 
         li {
           display: flex;
           align-items: center;
         }
 
+        .share-link {
+          color: $white;
+          text-decoration: none;
+          margin-inline: .5rem;
+          background: none;
+          border-bottom: none;
+          font-size: 1rem;
+          padding: 0;
+        }
+
         img {
+          border-radius: 0;
           width: 1.25rem;
           height: 1.25rem;
         }
