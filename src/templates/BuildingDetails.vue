@@ -224,9 +224,9 @@ query ($id: ID!, $ID: String) {
               </h2>
 
               <p>
-                This building didn't report data in the last year, but was marked in the city data
-                as "Not Covered 2024". We're not sure why this building would be exempt, or if
-                this is accurate.
+                This building didn't report data in the last year, but was
+                marked in the city data as "Not Covered 2024". We're not sure
+                why this building would be exempt, or if this is accurate.
 
                 <span class="bold">Stats are from {{ dataYear }}</span
                 >, the latest full year reported.
@@ -922,7 +922,9 @@ export default class BuildingDetails extends Vue {
 
   /** The reporting status of the current building as it shows in the data */
   get reportingStatus(): string {
-    const status = this.building.ReportingStatus ? String(this.building.ReportingStatus).trim() :'';
+    const status = this.building.ReportingStatus
+      ? String(this.building.ReportingStatus).trim()
+      : '';
     return status;
   }
 
