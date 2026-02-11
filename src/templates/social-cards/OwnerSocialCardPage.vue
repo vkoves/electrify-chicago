@@ -45,10 +45,13 @@ import {
   },
 })
 export default class OwnerSocialCardTemplate extends Vue {
+  /** Context passed from gridsome.server.js */
+  readonly $context!: { ownerId: string };
+
   /** Get owner info from context (passed from gridsome.server.js) */
   get owner(): IBuildingOwner {
     // ownerId is available from GraphQL context
-    const ownerId = (this as any).$context.ownerId;
+    const ownerId = this.$context.ownerId;
 
     return (
       BuildingOwners[ownerId] || {

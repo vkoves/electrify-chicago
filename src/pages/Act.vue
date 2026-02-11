@@ -7,6 +7,12 @@ import EmailModal from '~/components/EmailModal.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
 import { AlderEmailContent } from '../constants/alder-email-content.constant.vue';
 
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     EmailModal,
@@ -62,7 +68,7 @@ export default class Act extends Vue {
     return window.location.href.split('?')[0];
   }
 
-  handleWardFound(wardInfo: any): void {
+  handleWardFound(wardInfo: { district: string }): void {
     this.alderFound = true;
 
     // Extract ward number from district (e.g., "Ward 6" -> "6")

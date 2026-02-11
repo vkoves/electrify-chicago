@@ -25,12 +25,12 @@ body {
   *:target {
     border-bottom: solid $border-thick $blue-very-dark !important;
   }
-}
 
-// Default focus styles
-*:focus-visible {
-  outline: 0.25rem dashed $blue-very-dark;
-  outline-offset: 0.125rem;
+  // Default focus styles
+  *:focus-visible {
+    outline: 0.25rem dashed $blue-very-dark;
+    outline-offset: 0.125rem;
+  }
 }
 
 a {
@@ -67,6 +67,17 @@ a.blue-link {
   }
 }
 
+// Make sure images don't go beyond the page
+img {
+  max-width: 100%;
+}
+
+img.-shadowed {
+  margin-top: 1rem;
+  border: solid $border-thin $grey;
+  box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
+}
+
 // A generic back link variant that also handles the icon within
 a.back-link {
   display: inline-flex;
@@ -77,6 +88,26 @@ a.back-link {
 
   img {
     height: 1rem;
+  }
+}
+
+h1 {
+  margin: 1.5rem 0 0.5rem;
+}
+h2 {
+  margin: 1rem 0 0.5rem;
+}
+
+/**
+ * Mobile Font Size Overrides
+ */
+@media (max-width: $mobile-max-width) {
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
   }
 }
 
@@ -98,27 +129,6 @@ h6,
   + p {
     margin-top: 0;
   }
-}
-
-/**
- * Mobile Font Size Overrides
- */
-@media (max-width: $mobile-max-width) {
-  h1 {
-    font-size: 1.75rem;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-  }
-}
-
-h1 {
-  margin: 1.5rem 0 0.5rem;
-}
-
-h2 {
-  margin: 1rem 0 0.5rem;
 }
 
 // Expose -no-margin variant to ignore default paragraph margins
@@ -204,17 +214,6 @@ details {
   .details-content {
     padding: 1.5rem;
   }
-}
-
-// Make sure images don't go beyond the page
-img {
-  max-width: 100%;
-}
-
-img.-shadowed {
-  margin-top: 1rem;
-  border: solid $border-thin $grey;
-  box-shadow: 0.125rem 0.125rem 0.25rem $box-shadow-main;
 }
 
 /** Some basic default table styling */
@@ -496,93 +495,6 @@ form.search-form {
     span.icon {
       text-shadow: 0.0625rem 0 0.0625rem $black;
       margin-right: 0.5em;
-    }
-  }
-}
-
-/**
- * Global banner - notice panel for important announcements and calls to action
- */
-.global-banner {
-  position: relative;
-  background: $blue-very-dark;
-  padding: 1rem 0;
-  box-shadow: 0 0.3125rem 0.25rem $box-shadow-main;
-  width: 100%;
-  z-index: 1;
-
-  // Add margin and border-radius for non-full-width layouts
-  .layout:not(.-full-width) & {
-    margin: 0 1rem 2rem;
-    border-radius: $brd-rad-medium;
-    width: calc(100% - 2rem);
-  }
-
-  .page-constrained {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2rem;
-  }
-
-  .content-left {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    flex-grow: 1;
-  }
-
-  h2 {
-    color: $white;
-    font-size: 1.25rem;
-    margin: 0;
-  }
-
-  p {
-    color: $white;
-    font-size: 0.875rem;
-  }
-
-  a {
-    background-color: $white;
-    padding: 0.5rem 1.25rem;
-    border-radius: $brd-rad-small;
-    text-align: center;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9rem;
-
-    &:focus {
-      outline-color: $white;
-    }
-    &:hover,
-    &:focus {
-      background-color: $off-white;
-    }
-  }
-
-  /** Mobile styling */
-  @media (max-width: $mobile-max-width) {
-    padding: 0.75rem 0;
-    text-align: center;
-
-    .page-constrained {
-      gap: 0.5rem;
-      flex-direction: column;
-    }
-
-    h2 {
-      font-size: 1rem;
-    }
-
-    a {
-      padding: 0.3125rem 1rem;
-      font-size: 0.85rem;
-    }
-
-    p {
-      font-size: 0.75rem;
     }
   }
 }
@@ -928,7 +840,7 @@ article.blog-post {
 /**
  * Blue Action Button Styling - shared styles for large call-to-action buttons
  */
-.action-btn {
+button.action-btn {
   display: flex;
   align-items: center;
   justify-content: space-around;
