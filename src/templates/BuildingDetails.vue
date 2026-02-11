@@ -218,11 +218,17 @@ query ($id: ID!, $ID: String) {
             </div>
 
             <div v-if="reportingStatus === 'Not Covered 2024'">
-              <h2><span class="emoji">🗒️</span> Reporting not required in 2024</h2>
+              <h2>
+                <span class="emoji">🗒️</span>
+                This Building Didn't Report In 2024 - But May Have Been Exempt
+              </h2>
+
               <p>
-                This building did not require report full data in 2024,
-                so
-                <span class="bold">top-level stats are from {{ dataYear }}</span
+                This building didn't report data in the last year, but was marked in the city data
+                as "Not Covered 2024". We're not sure why this building would be exempt, or if
+                this is accurate.
+
+                <span class="bold">Stats are from {{ dataYear }}</span
                 >, the latest full year reported.
               </p>
             </div>
