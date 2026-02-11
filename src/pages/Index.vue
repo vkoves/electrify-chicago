@@ -6,8 +6,12 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 import BuildingTile from '../components/BuildingTile.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingTile,
@@ -98,20 +102,6 @@ export default class Index extends Vue {
 
 <template>
   <DefaultLayout main-class="layout -full-width">
-    <!-- Data Update Banner - Global Notice -->
-    <div class="data-update-banner">
-      <div class="page-constrained">
-        <div class="content-left">
-          <h2>🎉 Updated with 2023 Data!</h2>
-          <p>
-            We've updated with the latest 2023 Chicago energy benchmarking data!
-            See what buildings are new in the data, and which stopped reporting.
-          </p>
-        </div>
-        <g-link to="/latest-updates"> View Latest Updates </g-link>
-      </div>
-    </div>
-
     <div class="homepage">
       <div class="skyline-hero">
         <div class="background"></div>
@@ -189,10 +179,28 @@ export default class Index extends Vue {
           </ul>
         </div>
 
-        <h2>Our Research</h2>
+        <h2>Our Research &amp; Updates</h2>
 
         <div class="row">
           <div class="announcements">
+            <div class="announce-panel -blue">
+              <h3>
+                🎉 Updated with Latest (2023) Data!
+                <div class="regular-text-size faded">Aug. 2025</div>
+              </h3>
+              <p>
+                We've updated with the latest 2023 Chicago energy benchmarking
+                data (the most recent data available, released by the city in
+                February 2025). See what buildings are new in the data, and
+                which stopped reporting.
+              </p>
+              <p>
+                <g-link to="/latest-updates" class="bold grey-link">
+                  View Latest Updates
+                </g-link>
+              </p>
+            </div>
+
             <div class="announce-panel -orange">
               <h3>
                 📰 Do High Emitting Buildings Stop Reporting?
@@ -208,10 +216,11 @@ export default class Index extends Vue {
               </p>
 
               <p>
-                <a href="/blog/GHG-Intensity-Predict-Compliance" class="bold"
-                  >Read Our Full Research On Whether Poor Performance Impacts
-                  Reporting Rate</a
-                >.
+                <a
+                  href="/blog/GHG-Intensity-Predict-Compliance"
+                  class="bold grey-link"
+                  >Read Our Full Research</a
+                >
               </p>
             </div>
 
@@ -228,9 +237,9 @@ export default class Index extends Vue {
               </p>
 
               <p>
-                <a href="/blog/millions-in-missed-fines" class="bold"
-                  >Read Our Full Blog Post On Millions in Missed Fines</a
-                >.
+                <a href="/blog/millions-in-missed-fines" class="bold grey-link"
+                  >Read Our Full Blog on Missed Fines</a
+                >
               </p>
             </div>
           </div>
@@ -386,14 +395,23 @@ export default class Index extends Vue {
   .announcements {
     display: flex;
     gap: 1rem;
-    align-items: flex-start;
+    align-items: stretch;
+    overflow-x: auto;
 
-    > * {
-      flex-basis: 100%;
+    > .announce-panel {
+      flex: 0 0 auto;
+      min-width: 20rem; // 320px minimum width per panel
+      max-width: 25rem;
+      display: flex;
+      flex-direction: column;
     }
 
     h3 {
       font-size: 1.5rem;
+    }
+
+    a.grey-link {
+      display: inline-block;
     }
   }
 
@@ -459,6 +477,10 @@ export default class Index extends Vue {
 
     .announcements {
       flex-direction: column;
+
+      .announce-panel {
+        max-width: none;
+      }
     }
 
     .row {

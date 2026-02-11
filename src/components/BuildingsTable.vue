@@ -71,7 +71,8 @@ export default class BuildingsTable extends Vue {
    */
 
   // declares the property emit for TS
-  // TODO: Figure out why Vue $emit isn't recognized by Typescript
+  // Vue $emit type is complex and varies by event, using Function type for compatibility
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   $emit: any;
 
   isDebug = false;

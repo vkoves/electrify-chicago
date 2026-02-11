@@ -18,7 +18,25 @@
     "name": "University of Chicago",
     "nameShort": "UChicago",
     "logoSmall": "/building-owners/uchicago/uchicago-small.jpg",
-    "logoLarge": "/building-owners/uchicago/uchicago-large.png"
+    "logoLarge": "/building-owners/uchicago/uchicago-large.png",
+    "links": [
+        {
+            "url": "https://bpb-us-w2.wpmucdn.com/voices.uchicago.edu/dist/a/3657/files/2023/06/UChicago_GHG_Plan_2022.pdf",
+            "text": "Greenhouse Gas Emissions Reduction Plan | FY2022-FY2030"
+        },
+        {
+            "url": "https://sustainability.uchicago.edu/reporting/formal-reporting/",
+            "text": "Annual Progress Report"
+        },
+        {
+            "url": "https://sustainability.uchicago.edu/reporting/dashboards/",
+            "text": "Campus Dashboards"
+        },
+        {
+            "url": "https://bpb-us-w2.wpmucdn.com/voices.uchicago.edu/dist/a/3657/files/2023/07/SUS16-0774.Sustainability-Plan-Report.Final_.pdf",
+            "text": "Sustainability Plan (2016)"
+        }
+    ]
   },
   "northwestern": {
     "key": "northwestern",

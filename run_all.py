@@ -64,6 +64,10 @@ def main():
         },
         {"module": "src.data.scripts.process_data", "description": "process_data"},
         {
+            "module": "src.data.scripts.add_building_owners",
+            "description": "add_building_owners",
+        },
+        {
             "module": "src.data.scripts.add_context_by_property_type",
             "description": "add_context_by_property_type",
         },

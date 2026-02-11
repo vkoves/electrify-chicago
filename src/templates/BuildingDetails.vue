@@ -616,11 +616,32 @@ query ($id: ID!, $ID: String) {
         <a href="/take-action-tips"> Own this Building? Take Action. </a>
       </div>
 
-      <email-building-modal
+      <email-modal
         v-if="isEmailModalOpen"
-        :building="$page.building"
+        title="Email This Building"
+        subject="What Is Our Building's Plan For Saving Energy & Reducing Emissions?"
         @close="isEmailModalOpen = false"
-      />
+      >
+        <p>Dear sir or madam,</p>
+        <p>
+          My name is <span class="to-replace">_NAME_</span>, and I am an
+          <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of
+          {{ $page.building.PropertyName }}.
+        </p>
+        <p>
+          I've been reading about {{ $page.building.PropertyName }}'s emissions
+          and energy use, and I wanted to learn more about your plans to improve
+          our energy efficiency, electrify the building, and reduce our
+          emissions. Well insulated all-electric buildings have lower energy
+          bills, cleaner air, and are more comfortable for their occupants, and
+          I want to make sure there is a concrete plan to make
+          {{ $page.building.PropertyName }} one of those buildings!
+        </p>
+        <p>
+          You can see more at
+          <strong>https://electrifychicago.net{{ $page.building.path }}</strong>
+        </p>
+      </email-modal>
     </div>
   </DefaultLayout>
 </template>
@@ -665,7 +686,7 @@ import {
   getBuildingCustomInfo,
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
-import EmailBuildingModal from '../components/EmailBuildingModal.vue';
+import EmailModal from '../components/EmailModal.vue';
 import LetterGrade from '../components/LetterGrade.vue';
 import ShareButton from '../components/ShareButton.vue';
 
@@ -674,6 +695,12 @@ import ReportCard from '../components/ReportCard.vue';
 
 Vue.use(vToolTip);
 
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   metaInfo() {
     const propertyName =
@@ -705,7 +732,7 @@ Vue.use(vToolTip);
     BarGraph,
     BuildingImage,
     DataSourceFootnote,
-    EmailBuildingModal,
+    EmailModal,
     HistoricalBuildingDataTable,
     LetterGrade,
     NewTabIcon,

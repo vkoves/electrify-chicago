@@ -14,8 +14,12 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
  * NOTE: This page was previously located at /biggest-gas-free-buildings before Aug. 27th, 2025.
  * The old route redirects to this new location for backwards compatibility.
  */
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,

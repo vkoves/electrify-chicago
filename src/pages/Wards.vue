@@ -1,13 +1,21 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import WardLookup from '~/components/WardLookup.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     NewTabIcon,
+    WardLookup,
+    BuildingsHero,
   },
   metaInfo() {
     return generatePageMeta(
@@ -29,21 +37,34 @@ export default class Wards extends Vue {
 
 <!-- If this query is updated, make sure to update PageSocialCard as well -->
 <template>
-  <DefaultLayout>
-    <div class="wards-page layout-constrained">
-      <h1 id="main-content" and tabindex="-1">Buildings By Ward</h1>
-      <p class="subtitle">
-        Looking for the buildings in a specific Chicago aldermanic ward? Just
-        find your ward in the list below!
-      </p>
+  <DefaultLayout main-class="layout -full-width">
+    <div class="wards-page">
+      <BuildingsHero :buildings="[]" :short="true">
+        <div class="layout-constrained">
+          <h1 id="main-content" tabindex="-1">Buildings By Ward</h1>
 
-      <ol>
-        <li v-for="ward in wards" :key="ward">
-          <g-link class="grey-link" :to="`/ward/${ward}`">
-            Ward {{ ward }}
-          </g-link>
-        </li>
-      </ol>
+          <p class="subtitle">
+            Looking for the buildings in a specific Chicago aldermanic ward?
+            Just find your ward in the list below!
+          </p>
+        </div>
+      </BuildingsHero>
+
+      <div class="layout-constrained -padded">
+        <section class="ward-lookup-section">
+          <h2>Don't Know Your Ward?</h2>
+          <p>Enter your address to find your ward and alder</p>
+          <WardLookup :show-contact-info="false" />
+        </section>
+
+        <ol>
+          <li v-for="ward in wards" :key="ward">
+            <g-link class="grey-link" :to="`/ward/${ward}`">
+              Ward {{ ward }}
+            </g-link>
+          </li>
+        </ol>
+      </div>
     </div>
   </DefaultLayout>
 </template>
@@ -56,6 +77,23 @@ export default class Wards extends Vue {
 
   .subtitle {
     margin-top: 0;
+  }
+
+  .ward-lookup-section {
+    margin: 2rem 0;
+    padding: 2rem;
+    background: $off-white;
+    border: solid $border-medium $chicago-blue;
+    border-radius: $brd-rad-medium;
+
+    h2 {
+      margin-top: 0;
+      color: $blue-very-dark;
+    }
+
+    p {
+      margin-bottom: 1rem;
+    }
   }
 
   ol {
@@ -73,6 +111,12 @@ export default class Wards extends Vue {
       a {
         padding: 0.5rem 1rem;
       }
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    .ward-lookup-section {
+      padding: 1rem;
     }
   }
 }

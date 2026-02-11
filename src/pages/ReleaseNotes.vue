@@ -3,8 +3,12 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     NewTabIcon,
@@ -47,6 +51,11 @@ export default class About extends Vue {}
           Additionally, we've improved meta imagery across the site - pages now
           have proper social media preview images, making them look better when
           shared on social platforms!
+        </p>
+
+        <p>
+          <strong>Update Oct. 2025:</strong> We've now added these same stats
+          and graphs to the ward pages as well!
         </p>
       </div>
 

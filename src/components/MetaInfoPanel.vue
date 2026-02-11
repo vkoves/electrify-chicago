@@ -1,5 +1,6 @@
 <template>
-  <div class="meta-cont">
+  <!-- Don't print the meta panel -->
+  <div class="meta-cont no-print">
     <details class="meta-info-panel page-constrained">
       <summary class="meta-toggle-btn">
         Meta Info (Developer Only)

@@ -1,16 +1,27 @@
 <template>
-  <Popup class="email-this-building" @close="close()">
+  <Popup class="email-modal" @close="close()">
     <div class="header">
       <img src="/email.svg" alt="" />
-      <h1 autofocus>Email This Building</h1>
+      <h1 autofocus>{{ title }}</h1>
     </div>
 
     <div class="email-prompt-wrapper">
-      <h1 class="prompt">Do you know this building's owner?</h1>
-      <p class="description">
-        Send them an email asking about their electrification plan!
+      <div v-if="recipientEmail" class="email-modal-subheader">
+        <h2>Recipient</h2>
+
+        <button class="copy-btn" @click="copyRecipient">
+          Copy Recipient
+          <img src="/copy.svg" alt="" />
+        </button>
+
+        <!-- Will say 'Copied' after copying -->
+        <div ref="recipient-copied" aria-live="polite" class="copy-notice" />
+      </div>
+      <p v-if="recipientEmail" ref="email-recipient" class="email-box">
+        {{ recipientEmail }}
       </p>
-      <div class="email-this-building-subheader">
+
+      <div class="email-modal-subheader">
         <h2>Subject</h2>
 
         <button class="copy-btn" @click="copySubject">
@@ -22,9 +33,9 @@
         <div ref="subj-copied" aria-live="polite" class="copy-notice" />
       </div>
       <p ref="email-subj" class="email-box">
-        What Is Our Building's Plan For Saving Energy & Reducing Emissions?
+        {{ subject }}
       </p>
-      <div class="email-this-building-subheader">
+      <div class="email-modal-subheader">
         <h2>Body</h2>
 
         <button class="copy-btn" @click="copyBody">
@@ -36,25 +47,7 @@
         <div ref="body-copied" aria-live="polite" class="copy-notice" />
       </div>
       <div ref="email-body" class="email-box -body">
-        <p>Dear sir or madam,</p>
-        <p>
-          My name is <span class="to-replace">_NAME_</span>, and I am an
-          <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of
-          {{ building.PropertyName }}.
-        </p>
-        <p>
-          I've been reading about {{ building.PropertyName }}'s emissions and
-          energy use, and I wanted to learn more about your plans to improve our
-          energy efficiency, electrify the building, and reduce our emissions.
-          Well insulated all-electric buildings have lower energy bills, cleaner
-          air, and are more comfortable for their occupants, and I want to make
-          sure there is a concrete plan to make {{ building.PropertyName }} one
-          of those buildings!
-        </p>
-        <p>
-          You can see more at
-          <strong>https://electrifychicago.net{{ building.path }}</strong>
-        </p>
+        <slot />
       </div>
     </div>
   </Popup>
@@ -62,21 +55,22 @@
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
-import { IBuilding } from '../common-functions.vue';
 import Popup from '../components/layout/Popup.vue';
 
 /**
- * A modal to email a given building
+ * A generic modal for composing and copying email content
  */
 @Component({
   components: {
     Popup,
   },
 })
-export default class EmailBuildingModal extends Vue {
+export default class EmailModal extends Vue {
   readonly CopyNoticeDurMs: number = 1500;
 
-  @Prop({ required: true }) building!: IBuilding;
+  @Prop({ required: true }) title!: string;
+  @Prop({ required: true }) subject!: string;
+  @Prop({ default: '' }) recipientEmail!: string;
 
   /** Emit on modal close */
   @Emit()
@@ -113,6 +107,13 @@ export default class EmailBuildingModal extends Vue {
     }, this.CopyNoticeDurMs);
   }
 
+  copyRecipient(): void {
+    this.copyElementTextToClipboard(
+      this.$refs['email-recipient'] as HTMLElement,
+      this.$refs['recipient-copied'] as HTMLElement,
+    );
+  }
+
   copyBody(): void {
     this.copyElementTextToClipboard(
       this.$refs['email-body'] as HTMLElement,
@@ -130,7 +131,7 @@ export default class EmailBuildingModal extends Vue {
 </script>
 
 <style lang="scss">
-dialog.email-this-building {
+dialog.email-modal {
   .popup-inner {
     max-width: 37.5rem; // 600px
     margin: auto auto;
@@ -156,24 +157,23 @@ dialog.email-this-building {
   }
 
   h2 {
-    margin: 1rem 0 0;
+    font-size: 1.25rem;
+    margin: 0;
   }
 
   .email-prompt-wrapper {
     padding: 2rem;
-
-    .prompt {
-      font-size: 1.75rem;
-      font-weight: 700;
-    }
   }
 
-  .email-this-building-subheader {
+  .email-modal-subheader {
     display: flex;
     gap: 0.5rem;
-    margin-top: 0.75rem;
     margin-bottom: 0.2rem;
     align-items: flex-end;
+
+    &:not(:first-of-type) {
+      margin-top: 1rem;
+    }
 
     button.copy-btn {
       background-color: $blue-dark;
@@ -209,11 +209,13 @@ dialog.email-this-building {
 
   .email-box {
     border: solid $border-thin $black;
-    padding: 0.75rem;
+    padding: 0.5rem 0.75rem;
     border-radius: $brd-rad-small;
 
     &.-body {
       padding: 1rem 0.75rem;
+      max-height: 20rem;
+      overflow-y: auto;
     }
 
     p + p {

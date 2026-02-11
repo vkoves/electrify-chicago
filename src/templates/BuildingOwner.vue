@@ -8,6 +8,7 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import {
+  calculateBuildingsStats,
   IBuildingBenchmarkStats,
   IBuilding,
   IBuildingNode,
@@ -15,8 +16,6 @@ import {
 import {
   BuildingOwners,
   IBuildingOwner,
-  BuildingsCustomInfo,
-  IBuildingCustomInfo,
 } from '../constants/buildings-custom-info.constant.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
@@ -26,8 +25,12 @@ interface IBuildingEdge {
   node: IBuilding;
 }
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,
@@ -57,7 +60,7 @@ export default class BiggestBuildings extends Vue {
     BuildingBenchmarkStats;
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
   readonly $context!: { ownerId: string };
 
   currOwner?: IBuildingOwner;
@@ -81,91 +84,37 @@ export default class BiggestBuildings extends Vue {
     if (BuildingOwners[ownerId]) {
       this.currOwner = BuildingOwners[ownerId];
 
-      this.filterBuildings(ownerId);
+      // Buildings are pre-filtered by GraphQL query using Owner field
+      this.buildingsFiltered = this.$page.allBuilding.edges;
       this.calculateOwnedBuildingStats();
     }
   }
 
-  filterBuildings(ownerId: string): void {
-    // Loop through BuildingsCustomInfo to get the IDs of buildings we are looking for
-    const ownerBuildingsSlugs: Array<string> = Object.entries(
-      BuildingsCustomInfo,
-    )
-      .filter(([, buildingInfo]: [string, IBuildingCustomInfo]) => {
-        return buildingInfo.owner === ownerId;
-      })
-      .map(([buildingID]: [string, IBuildingCustomInfo]) => buildingID);
-
-    this.buildingsFiltered = this.$static.allBuilding.edges.filter(
-      (buildingEdge: IBuildingEdge) => {
-        return ownerBuildingsSlugs.some(
-          (ownedBuildingID) => buildingEdge.node.ID === ownedBuildingID,
-        );
-      },
-    );
-  }
-
   calculateOwnedBuildingStats(): void {
-    let totalGHGEmissions = 0;
-    let totalGHGIntensity = 0;
-    let totalSquareFootage = 0;
-    let totalYearBuilt = 0;
-    let buildingsWithYear = 0;
-    const gradeCounts: Record<string, number> = {
-      A: 0,
-      B: 0,
-      C: 0,
-      D: 0,
-      F: 0,
-    };
+    const stats = calculateBuildingsStats(this.buildingsFiltered);
 
-    this.buildingsFiltered.forEach((buildingEdge: IBuildingEdge) => {
-      const building: IBuilding = buildingEdge.node;
-
-      totalGHGIntensity += building.GHGIntensity;
-      totalGHGEmissions += building.TotalGHGEmissions;
-      totalSquareFootage += building.GrossFloorArea || 0;
-
-      // Calculate average building age
-      if (building.YearBuilt) {
-        const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
-        if (
-          !isNaN(yearBuilt) &&
-          yearBuilt > 1800 &&
-          yearBuilt <= new Date().getFullYear()
-        ) {
-          totalYearBuilt += yearBuilt;
-          buildingsWithYear++;
-        }
-      }
-
-      // Count grade distribution
-      const grade = building.AvgPercentileLetterGrade;
-      if (grade && typeof grade === 'string' && grade in gradeCounts) {
-        gradeCounts[grade]++;
-      }
-    });
-
-    // Existing calculations
-    this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
-    const avgGHGIntensity: number =
-      totalGHGIntensity / this.buildingsFiltered.length;
+    // Calculations
+    this.totalGHGEmissions = Math.round(
+      stats.totalGHGEmissions,
+    ).toLocaleString();
+    const avgGHGIntensity: number = stats.avgGHGIntensity;
     this.avgGHGIntensity = avgGHGIntensity.toFixed(1);
 
     this.medianGHGIntensityMultiple = (
       avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median
     ).toFixed(0);
     this.medianGHGEmissionsMultiple = (
-      totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
+      stats.totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
     ).toFixed(0);
 
-    // New calculations
-    this.totalSquareFootage = (totalSquareFootage / 1000000).toFixed(1); // Convert to millions
+    // Convert millions
+    this.totalSquareFootage = (stats.totalSquareFootage / 1000000).toFixed(1);
 
-    if (buildingsWithYear > 0) {
-      const avgYearBuilt = totalYearBuilt / buildingsWithYear;
+    if (stats.buildingsWithYear > 0) {
       const currentYear = new Date().getFullYear();
-      this.avgBuildingAge = Math.round(currentYear - avgYearBuilt).toString();
+      this.avgBuildingAge = Math.round(
+        currentYear - stats.avgYearBuilt,
+      ).toString();
     } else {
       this.avgBuildingAge = 'N/A';
     }
@@ -179,7 +128,8 @@ export default class BiggestBuildings extends Vue {
       F: '#d60101', // $grade-f-red
     };
 
-    this.gradeDistributionPie = Object.entries(gradeCounts)
+    // Build data for Pie Chart
+    this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
       .filter(([, count]) => count > 0) // Only include grades that exist
       .sort(([a], [b]) => {
         const gradeOrder = ['A', 'B', 'C', 'D', 'F'];
@@ -194,14 +144,10 @@ export default class BiggestBuildings extends Vue {
 }
 </script>
 
-<!--
-  This page grabs all buildings and then filters by owner on the client-side, since that data isn't
-  baked into the actual building CSV
--->
-<static-query>
-  query {
-    # BuildingOwner page only needs core BuildingsTable fields (no conditional fields)
-    allBuilding(sortBy: "GHGIntensity") {
+<!-- Buildings are filtered by owner at query time using the Owner field -->
+<page-query>
+  query($ownerId: String!) {
+    allBuilding(filter: { Owner: { eq: $ownerId } }, sortBy: "GHGIntensity") {
       edges {
         node {
           slugSource
@@ -225,11 +171,12 @@ export default class BiggestBuildings extends Vue {
           GrossFloorAreaRank
           GrossFloorAreaPercentileRank
           YearBuilt
+          Owner
         }
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">
@@ -246,7 +193,7 @@ export default class BiggestBuildings extends Vue {
 
       <div class="page-constrained">
         <g-link to="/large-owners" class="back-link grey-link">
-          <img src="/icons/arrow-back.svg" />
+          <img src="/icons/arrow-back.svg" alt="" />
           Back to All Owners
         </g-link>
 

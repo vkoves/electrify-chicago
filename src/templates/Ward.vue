@@ -3,28 +3,37 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
+import PieChart, { IPieSlice } from '~/components/graphs/PieChart.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
+  calculateBuildingsStats,
   IBuildingBenchmarkStats,
-  IBuilding,
   IBuildingNode,
 } from '../common-functions.vue';
 import { BuildingOwners } from '../constants/buildings-custom-info.constant.vue';
+import { AlderImages } from '~/components/alder-images.constant.vue';
+import { WardCouncilMembers } from '~/constants/ward-council-members.constant.vue';
+import {
+  loadAldersData,
+  formatAlderName,
+  AlderInfo,
+} from '~/utils/alder-data.vue';
 
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import NewTabIcon from '../components/NewTabIcon.vue';
 
-interface IBuildingEdge {
-  node: IBuilding;
-}
-
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,
     BuildingsHero,
+    PieChart,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -52,43 +61,106 @@ export default class BiggestBuildings extends Vue {
   totalGHGEmissions?: string;
   medianGHGEmissionsMultiple?: string;
 
-  /** Chicago.gov uses a two digit number for wards, so 3 becomes wards/03.html */
-  get wardZeroed(): string {
-    const ward = this.$context.ward;
+  totalSquareFootage?: string;
+  avgBuildingAge?: string;
+  gradeDistributionPie: Array<IPieSlice> = [];
 
-    if (parseInt(ward) < 10) {
-      return `0${ward}`;
-    } else {
-      return ward;
+  alderInfo: AlderInfo | null = null;
+
+  /** Get the image path for the current alderperson */
+  get alderImagePath(): string | null {
+    const wardNumber = this.$context.ward;
+    const filename = AlderImages[wardNumber];
+    return filename ? `/alders/${filename}` : null;
+  }
+
+  /** Get the full Councilmatic URL for the alderperson */
+  get alderCouncilmaticUrl(): string | null {
+    const wardData = WardCouncilMembers[this.$context.ward];
+    if (!wardData) return null;
+    return `https://chicago.councilmatic.org${wardData.detailLink}`;
+  }
+
+  /** Get the alderperson's name formatted as "First Last" */
+  get alderFormattedName(): string | null {
+    // Try to get name from CSV first (which may already be formatted)
+    if (this.alderInfo?.name) {
+      return this.alderInfo.name;
     }
+
+    // Fall back to council member from constant and format it
+    const wardData = WardCouncilMembers[this.$context.ward];
+    if (wardData) {
+      return formatAlderName(wardData.councilMember);
+    }
+
+    return null;
   }
 
   created(): void {
     this.calculateWardStats();
   }
 
+  async mounted(): Promise<void> {
+    await this.loadAlderInfo();
+  }
+
+  /** Load alderperson information for this ward */
+  async loadAlderInfo(): Promise<void> {
+    const aldersData = await loadAldersData();
+    this.alderInfo = aldersData.get(this.$context.ward) || null;
+  }
+
   calculateWardStats(): void {
-    let totalGHGEmissions = 0;
-    let totalGHGIntensity = 0;
+    const stats = calculateBuildingsStats(this.$page.allBuilding.edges);
 
-    this.$page.allBuilding.edges.forEach((buildingEdge: IBuildingEdge) => {
-      const building: IBuilding = buildingEdge.node;
-
-      totalGHGIntensity += building.GHGIntensity;
-      totalGHGEmissions += building.TotalGHGEmissions;
-    });
-
-    this.totalGHGEmissions = Math.round(totalGHGEmissions).toLocaleString();
-    const avgGHGIntensity: number =
-      totalGHGIntensity / this.$page.allBuilding.edges.length;
+    // Calculations
+    this.totalGHGEmissions = Math.round(
+      stats.totalGHGEmissions,
+    ).toLocaleString();
+    const avgGHGIntensity: number = stats.avgGHGIntensity;
     this.avgGHGIntensity = avgGHGIntensity.toFixed(1);
 
     this.medianGHGIntensityMultiple = (
       avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median
     ).toFixed(0);
     this.medianGHGEmissionsMultiple = (
-      totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
+      stats.totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
     ).toFixed(0);
+
+    // Convert to millions
+    this.totalSquareFootage = (stats.totalSquareFootage / 1000000).toFixed(1);
+
+    if (stats.buildingsWithYear > 0) {
+      const currentYear = new Date().getFullYear();
+      this.avgBuildingAge = Math.round(
+        currentYear - stats.avgYearBuilt,
+      ).toString();
+    } else {
+      this.avgBuildingAge = 'N/A';
+    }
+
+    // Grade distribution for pie chart
+    const gradeColors: Record<string, string> = {
+      A: '#009f49', // $grade-a-green
+      B: '#7fa52e', // $grade-b-green
+      C: '#b36a15', // $grade-c-orange
+      D: '#972222', // $grade-d-red
+      F: '#d60101', // $grade-f-red
+    };
+
+    // Build data for Pie Chart
+    this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
+      .filter(([, count]) => count > 0) // Only include grades that exist
+      .sort(([a], [b]) => {
+        const gradeOrder = ['A', 'B', 'C', 'D', 'F'];
+        return gradeOrder.indexOf(a) - gradeOrder.indexOf(b);
+      })
+      .map(([grade, count]) => ({
+        label: `Grade ${grade}`,
+        value: count,
+        color: gradeColors[grade] || '#999999',
+      }));
   }
 }
 </script>
@@ -149,15 +221,113 @@ query ($ward: String) {
     <div class="ward-page">
       <BuildingsHero
         :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
+        :short="true"
       >
         <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
       </BuildingsHero>
 
       <div class="page-constrained">
         <g-link to="/wards" class="grey-link back-link">
-          <img src="/icons/arrow-back.svg" />
+          <img src="/icons/arrow-back.svg" alt="" />
           Back to All Wards
         </g-link>
+
+        <section v-if="alderInfo" class="alder-info">
+          <div class="alder-content">
+            <img
+              v-if="alderImagePath"
+              :src="alderImagePath"
+              :alt="alderFormattedName"
+              class="alder-photo"
+            />
+            <div class="alder-details">
+              <h2>Ward {{ $context.ward }} Alderperson</h2>
+              <p class="alder-name">{{ alderFormattedName }}</p>
+              <a
+                :href="alderCouncilmaticUrl"
+                target="_blank"
+                rel="noopener"
+                class="blue-link"
+              >
+                Full Profile On Councilmatic
+                <NewTabIcon :white="true" />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-overview -three-col-max">
+          <h2>Ward {{ $context.ward }} Quick Stats</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">
+                {{ $page.allBuilding.edges.length }}
+              </div>
+              <div class="stat-label">Tagged Buildings</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Total Emissions</div>
+              <div class="stat-number">{{ totalGHGEmissions }}</div>
+              <div class="stat-description">
+                metric tons CO<sub>2</sub> equivalent
+              </div>
+              <div class="stat-footnote">
+                {{ medianGHGEmissionsMultiple }}x the median building ({{
+                  BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
+                }}
+                tons CO<sub>2</sub>e)
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Avg GHG Intensity</div>
+              <div class="stat-number">{{ avgGHGIntensity }}</div>
+              <div class="stat-description">kg CO<sub>2</sub>e/sqft</div>
+              <div class="stat-footnote">
+                {{ medianGHGIntensityMultiple }}x the median building ({{
+                  BuildingBenchmarkStats.GHGIntensity.median
+                }}
+                kg CO<sub>2</sub>/sqft)
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          v-if="gradeDistributionPie.length > 0"
+          class="grade-distribution"
+        >
+          <div class="grade-content">
+            <div class="grade-chart-container">
+              <h3>Grade Distribution</h3>
+
+              <PieChart
+                :graph-data="gradeDistributionPie"
+                id-prefix="grade-distribution"
+                :show-labels="true"
+                :sort-by-largest="false"
+              />
+            </div>
+            <div class="supplementary-stats stats-overview">
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <div class="stat-label">Total Square Footage</div>
+                  <div class="stat-number">{{ totalSquareFootage }}M</div>
+                  <div class="stat-description">
+                    million sq ft under management
+                  </div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-label">Avg Building Age</div>
+                  <div class="stat-number">{{ avgBuildingAge }}</div>
+                  <div class="stat-description">years old</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
         <p>
           This page shows all buildings identified as being in Ward
@@ -166,7 +336,7 @@ query ($ward: String) {
         <p>
           Learn more at
           <a
-            :href="`https://www.chicago.gov/city/en/about/wards/${wardZeroed}.html`"
+            :href="`https://www.chicago.gov/city/en/about/wards/${$context.ward.padStart(2, '0')}.html`"
             target="_blank"
             rel="noopener"
           >
@@ -175,46 +345,6 @@ query ($ward: String) {
             <NewTabIcon />
           </a>
         </p>
-
-        <h2>Ward Stats</h2>
-
-        <ul class="stats">
-          <li class="bold">{{ $page.allBuilding.edges.length }} Buildings</li>
-
-          <li>
-            <strong>
-              Total Emissions:
-              {{ totalGHGEmissions }} metric tons CO<sub>2</sub> equivalent
-            </strong>
-
-            <p class="footnote">
-              <strong>
-                Equivalent to {{ medianGHGEmissionsMultiple }} of the median
-                benchmarked building
-              </strong>
-              ({{
-                BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
-              }}
-              tons CO<sub>2</sub>e)
-            </p>
-          </li>
-
-          <li>
-            <strong>
-              Average GHG Intensity:
-              {{ avgGHGIntensity }} kg CO<sub>2</sub>e/sqft
-            </strong>
-
-            <p class="footnote">
-              <strong
-                >{{ medianGHGIntensityMultiple }}x the median benchmarked
-                building</strong
-              >
-              ({{ BuildingBenchmarkStats.GHGIntensity.median }} kg
-              CO<sub>2</sub>/sqft)
-            </p>
-          </li>
-        </ul>
 
         <DataDisclaimer />
 
@@ -239,6 +369,63 @@ query ($ward: String) {
     margin-bottom: 0.5rem;
   }
 
+  .alder-info {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: $off-white;
+    border: solid $border-medium $chicago-blue;
+    border-radius: $brd-rad-medium;
+    width: fit-content;
+
+    @media (max-width: $mobile-max-width) {
+      width: 100%;
+    }
+
+    .alder-content {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+
+      @media (max-width: $mobile-max-width) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .alder-photo {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: solid $border-medium $chicago-blue;
+      flex-shrink: 0;
+
+      @media (max-width: $mobile-max-width) {
+        width: 100px;
+        height: 100px;
+      }
+    }
+
+    .alder-details {
+      h2 {
+        margin: 0;
+        color: $blue-very-dark;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 0.5rem;
+      }
+    }
+
+    .alder-name {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: $text-main;
+    }
+  }
+
   .stats {
     margin-top: 0;
     padding-left: 1.25rem;
@@ -249,6 +436,57 @@ query ($ward: String) {
 
     .footnote {
       margin: 0rem;
+    }
+  }
+
+  // Override grid for 3 cards layout
+  &.-three-col-max .stats-grid {
+    // Mobile: 2 columns
+    grid-template-columns: repeat(2, 1fr);
+
+    // Desktop: 3 columns (one row with 3 cards)
+    @media (min-width: $desktop-min-width) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .grade-distribution {
+    margin: 2rem 0;
+
+    h2 {
+      font-size: 1rem;
+      margin: 0;
+    }
+
+    .grade-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      align-items: center;
+
+      @media (min-width: $desktop-min-width) {
+        grid-template-columns: 1fr 3fr;
+        align-items: flex-start;
+      }
+    }
+
+    .supplementary-stats {
+      // Override the default margin from stats-overview
+      margin: 0;
+
+      .stats-grid {
+        // Override default 4-column layout for our 2 stats
+        grid-template-columns: 1fr;
+
+        @media (min-width: $mobile-max-width) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        // Keep it at 2 columns even on large desktop
+        @media (min-width: $large-desktop-min-width) {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
     }
   }
 }

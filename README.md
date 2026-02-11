@@ -1,8 +1,11 @@
-# Electrify Chicago
+<img src="https://electrifychicago.net/electrify-chicago-logo.svg" alt="Electrify Chicago" width="400">
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/d777babe-6135-45a1-99dd-6377999b6127/deploy-status)](https://app.netlify.com/sites/radiant-cucurucho-d09bae/deploys)
 
+# Electrify Chicago
+
 A site to publicize some of the most polluting buildings based on the Chicago Energy Benchmarking data published in the City of Chicago Data Portal.
+**Live at [electrifychicago.net](https://electrifychicago.net)**
 
 Front-end in [VueJS 2](https://v2.vuejs.org/), statically built with [GridSome](https://gridsome.org/). Data processing with Python, and [Pandas](https://pandas.pydata.org/).
 
@@ -32,7 +35,31 @@ Docker is the recommended approach to quickly getting started with local develop
 - The recommended installation method for your operating system can be found [here](https://docs.docker.com/install/).
 - [Get started with Docker](https://docs.docker.com/get-started/)
 
-### **2. Start Docker**
+### **2. Configure Environment Variables**
+
+Copy the example environment file and add your API keys:
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` and add your Google Maps API key:
+
+- **Google Maps API Key** (Required for ward lookup on `/act` page):
+  1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+  2. Create a new project or select an existing one
+  3. Enable the **Places API** for your project
+  4. Create an API key under Credentials
+  5. Restrict the key to:
+     - **API restrictions**: Places API only
+     - **Application restrictions**: HTTP referrers (for production) or None (for development)
+  6. Add the key to your `.env` file: `GRIDSOME_GOOGLE_MAPS_API_KEY=your_key_here`
+
+**Important:** The key must be prefixed with `GRIDSOME_` to be accessible in client-side code.
+
+**Note:** The ward lookup feature will show an error message if the API key is not configured, but the rest of the site will work fine.
+
+### **3. Start Docker**
 
 This command starts server locally. To start it, `cd` into the project directory in your terminal then run the following command:
 
@@ -63,7 +90,7 @@ If you are running into this error even after installing the dependency multiple
 
 For more information, see this excellent article <a href="https://www.timsanteford.com/posts/how-to-force-a-complete-rebuild-in-docker compose-including-anonymous-volumes/" target="_blank">How to Force a Complete Rebuild in Docker Compose, Including Anonymous Volumes</a> by <a href="https://www.timsanteford.com/about-me/" target="_blank">Tim Santeford</a>.
 
-### **3. Stop Docker**
+### **4. Stop Docker**
 
 - To stop and completely remove the server (i.e. the running Docker container), run `docker compose down`
 - To stop the server, but not destroy it (often sufficient for day-to-day work), run `docker compose stop`
@@ -298,6 +325,26 @@ If you want to run Python scripts or Jupyter notebooks locally outside of Docker
 
 ## Managing The Data
 
+### Alderperson Data
+
+The site uses alderperson contact and ward information from two sources:
+
+**Alderperson Contact Information** (`static/alders-info.csv` → symlink to `src/data/dist/alders-info.csv`):
+
+- **Source:** Official Chicago city ward pages (scraped)
+- **URL:** https://www.chicago.gov/city/en/about/wards/
+- **Script:** `src/data/scripts/scrape_wards.py` - Run to refresh alderperson contact data
+- **Why scraped?** The official ward pages have more accurate/up-to-date contact info than the City Clerk page
+
+**Ward Boundaries** (`static/chicago-wards-2025.geojson`):
+
+- **Source:** Chicago Councilmatic
+- **URL:** https://chicago.councilmatic.org/
+
+Chat with Derek Eder on getting new data.
+
+- **Note:** The GeoJSON (450KB) is used for geographic lookups. The constant file provides lightweight access to basic ward info without loading the full GeoJSON.
+
 ### Adding a Building Owner
 
 If there's a new large building owner to add, simply:
@@ -328,7 +375,25 @@ Example:
 '256434': {owner: BuildingOwners.iit.key},
 ```
 
-3. **Setup their route by adding the new owner's ID (key) to `BuildingOwnerIds`** (in
+3. **Add the building IDs to the JSON mapping file** (`src/constants/building-owners-mapping.json`):
+
+```json
+{
+  "iit": ["256419", "256434"]
+}
+```
+
+4. **Re-run the data pipeline** to add the owner information to the building CSV:
+
+```bash
+docker compose run --rm electrify-chicago uv run python run_all.py
+```
+
+The `add_building_owners.py` script (step 3 of 6 in the pipeline) reads the JSON mapping
+file and adds an `Owner` column to the building data, allowing GraphQL to filter buildings by
+owner at query time.
+
+5. **Setup their route by adding the new owner's ID (key) to `BuildingOwnerIds`** (in
    `gridsome.server.js`) - this tells Gridsome to create a route for this given slug
 
 Example:
@@ -340,7 +405,7 @@ const BuildingOwnerIds = [
 ];
 ```
 
-**Note:** You'll have to restart your `yarn develop` after step 3 to see changes, since
+**Note:** You'll have to restart your `yarn develop` after step 5 to see changes, since
 `gridsome.server.js` just runs once.
 
 ### Adding Building Images

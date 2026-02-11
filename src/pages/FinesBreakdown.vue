@@ -5,8 +5,12 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 
 import FinesData from '../data/dist/fines-by-year.json';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     NewTabIcon,
@@ -41,24 +45,46 @@ export default class FinesBreakdown extends Vue {
         annual maximum fine.
       </p>
 
-      <table>
-        <thead>
-          <tr>
-            <th class="year">Year</th>
-            <th class="fine">Predicted Fines</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="[year, fine] in fineData"
-            :key="year"
-            :class="{ '-total': year === 'total' }"
-          >
-            <td class="year">{{ year }}</td>
-            <td class="fine">${{ fine.toLocaleString() }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="table-cont">
+        <table>
+          <caption>
+            Buildings Out Of Compliance Per Year & Predicted Fines
+          </caption>
+          <thead>
+            <tr>
+              <th class="year">Year</th>
+              <th class="count">
+                Non-Reporting <br />
+                Buildings
+              </th>
+              <th class="fine">
+                Predicted <br />
+                Fines
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="[year, fineData] in fineData"
+              :key="year"
+              :class="{ '-total': year === 'total' }"
+            >
+              <td class="year">{{ year }}</td>
+              <td class="count">
+                {{ fineData.count.toLocaleString()
+                }}<span v-if="year === 'total'" class="asterisk">*</span>
+              </td>
+              <td class="fine">${{ fineData.fines.toLocaleString() }}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="footnote">
+          <strong>*</strong> The total is a number of incidents of
+          non-compliance, not a count of buildings, since several buildings
+          don't report for several years.
+        </p>
+      </div>
 
       <p>
         To maintain accuracy, predictions are based off of simply counting the
@@ -73,11 +99,29 @@ export default class FinesBreakdown extends Vue {
 </template>
 <style lang="scss">
 .fines-breakdown-page {
-  table {
-    width: 16rem;
+  .table-cont {
+    width: 24rem;
     margin: auto;
+
+    .footnote {
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: $mobile-max-width) {
+      width: 100%;
+    }
+  }
+
+  table {
     border-collapse: collapse;
     border: solid $border-thin $grey-dark;
+    width: 100%;
+
+    caption {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      font-size: 1.125rem;
+    }
 
     thead tr {
       background-color: $blue-dark;
@@ -99,11 +143,18 @@ export default class FinesBreakdown extends Vue {
 
     th,
     td {
-      &.fine {
+      &.fine,
+      &.count {
         text-align: right;
       }
       &.year {
         text-align: center;
+      }
+
+      span.asterisk {
+        position: relative;
+        margin-left: 0.125em;
+        top: -0.25rem;
       }
     }
   }

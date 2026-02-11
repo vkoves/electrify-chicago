@@ -11,6 +11,12 @@ import {
   smoothlyScrollToAnchor,
 } from '../common-functions.vue';
 
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,
@@ -287,7 +293,7 @@ export default class LatestUpdates extends Vue {
   </DefaultLayout>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '../scss/global';
 @import '../scss/stat-tiles.scss';
 
