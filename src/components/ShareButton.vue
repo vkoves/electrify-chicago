@@ -22,37 +22,42 @@
     >
       <ul class="share-list">
         <li>
-          <img src="/icons/link.svg" alt="Link" />
           <button
             class="share-link"
             :class="{ '-with-text': showText }"
             @click="dropdownShareUrl()"
           >
+          <img src="/icons/link.svg" alt="Link" />
           Copy Link
-            <!--span v-if="showText">Share</span-->
           </button>
         </li>
         <li>
-          <img src="/icons/reddit.svg" alt="Reddit" />
           <a class="share-link" :href="redditShareUrl()" target="_blank" rel="noopener noreferrer">
+            <img src="/icons/reddit.svg" alt="Reddit" />
             Share on Reddit
           </a>
         </li>
         <li>
-          <img src="/icons/bluesky.svg" alt="Bluesky" />
           <a class="share-link" :href="blueskyShareUrl()" target="_blank" rel="noopener noreferrer">
+            <img src="/icons/bluesky.svg" alt="Bluesky" />
             Share on Bluesky
           </a>
         </li>
         <li>
-          <img src="/icons/facebook.svg" alt="Facebook" />
+          <a class="share-link" :href="linkedinShareUrl()" target="_blank" rel="noopener noreferrer">
+            <img src="/icons/linkedin.svg" alt="LinkedIn" />
+            Share on LinkedIn
+          </a>
+        </li>
+        <li>
           <a class="share-link" :href="facebookShareUrl()" target="_blank" rel="noopener noreferrer">
+            <img src="/icons/facebook.svg" alt="Facebook" />
             Share on Facebook
           </a>
         </li>
         <li>
-          <img src="/icons/x.svg" alt="X" />
           <a class="share-link" :href="twitterShareUrl()" target="_blank" rel="noopener noreferrer">
+            <img src="/icons/x.svg" alt="X" />
             Share on X
           </a>
         </li>
@@ -95,6 +100,7 @@ export default class ShareButton extends Vue {
   //Share endpoint constants
   private readonly TwitterShareEndpoint = 'https://twitter.com/intent/tweet';
   private readonly FacebookShareEndpoint = 'https://www.facebook.com/sharer/sharer.php';
+  private readonly LinkedInShareEndpoint = 'https://www.linkedin.com/shareArticle'
   private readonly BlueskyShareEndpoint = 'https://bsky.app/intent/compose';
   private readonly RedditShareEndpoint = 'http://www.reddit.com/submit';
 
@@ -104,18 +110,22 @@ export default class ShareButton extends Vue {
     return this.copyToClipboard(shareUrl);
   }
 
-  //TODO: add support for &text= with current page title
+  linkedinShareUrl(): string {
+      const shareUrl =
+      this.url || (typeof window !== 'undefined' ? window.location.href : '');
+      return `${this.LinkedInShareEndpoint}?mini=true&url=${encodeURIComponent(shareUrl)}`;
+  }
+
   twitterShareUrl(): string {
       const shareUrl =
       this.url || (typeof window !== 'undefined' ? window.location.href : '');
       return `${this.TwitterShareEndpoint}?url=${shareUrl}`;
   }
 
-  // TODO: Tag Electrify Chicago acct?
   blueskyShareUrl(): string {
       const shareUrl =
       this.url || (typeof window !== 'undefined' ? window.location.href : '');
-      return `${this.BlueskyShareEndpoint}?text=${this.text}%0A${shareUrl}`;
+      return `${this.BlueskyShareEndpoint}?text=${this.text}%0A${encodeURIComponent(shareUrl)}`;
   }
 
   facebookShareUrl(): string {
@@ -124,7 +134,6 @@ export default class ShareButton extends Vue {
     return `${this.FacebookShareEndpoint}?u=${shareUrl}`;
   }
 
-  //TODO: Add support for &title=
   redditShareUrl(): string {
     const shareUrl =
     this.url || (typeof window !== 'undefined' ? window.location.href : '');
@@ -151,7 +160,6 @@ export default class ShareButton extends Vue {
         });
     } else {
       // Fallback for browsers without Web Share API
-      //this.copyToClipboard(shareUrl);
       this.enableDropdown();
     }
   }
@@ -190,6 +198,18 @@ export default class ShareButton extends Vue {
   }
 
   private enableDropdown(): void {
+
+    if (this.showShareDropdown) {
+      this.shareDropdownVisible = false;
+
+      // Hide element after fade-out animation completes
+      setTimeout(() => {
+        this.showShareDropdown = false;
+      }, this.AlertFadeDurationMs);
+
+      return;
+    }
+
     this.showShareDropdown = true;
     this.shareDropdownVisible = false;
 
@@ -197,18 +217,6 @@ export default class ShareButton extends Vue {
     setTimeout(() => {
       this.shareDropdownVisible = true;
     }, 10);
-
-    //TODO: Replace with function to close dropdown when user clicks
-    //      elsewhere on page, or selects a link to share.
-
-    // Start fade out after display duration, then hide completely
-    /*setTimeout(() => {
-      this.shareDropdownVisible = false;
-      // Hide element after animation completes
-      setTimeout(() => {
-        this.showDropdown = false;
-      }, this.AlertFadeDurationMs);
-    }, this.AlertDisplayDurationMs);*/
   }
 }
 
@@ -267,7 +275,7 @@ export default class ShareButton extends Vue {
     right: 0;
     margin-top: 0.5rem;
     background-color: $blue-very-dark;
-    padding: 0.5rem 1.75rem .5rem .5rem;
+    padding: 1.25rem 1rem;
     border-radius: $brd-rad-small;
     font-size: 1.25rem;
     white-space: nowrap;
@@ -280,33 +288,37 @@ export default class ShareButton extends Vue {
     &.show {
       opacity: 1;
       transform: translateY(0);
+    }
 
-      .share-list {
-        list-style: none;
+    .share-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      margin: 0;
+      row-gap: 1rem;
+      width: max-content;
+
+      li {
+        display: flex;
+        align-items: center;
+      }
+
+      .share-link {
+        color: $white;
+        column-gap: 1rem;
+        display: flex;
+        outline-color: $white;
+        text-decoration: none;
+        background: none;
+        border-bottom: none;
+        font-size: 1rem;
         padding: 0;
-        display: grid;
-        row-gap: .75rem;
+      }
 
-        li {
-          display: flex;
-          align-items: center;
-        }
-
-        .share-link {
-          color: $white;
-          text-decoration: none;
-          margin-inline: .5rem;
-          background: none;
-          border-bottom: none;
-          font-size: 1rem;
-          padding: 0;
-        }
-
-        img {
-          border-radius: 0;
-          width: 1.25rem;
-          height: 1.25rem;
-        }
+      img {
+        border-radius: 0;
+        width: 1.25rem;
+        height: 1.25rem;
       }
     }
   }
