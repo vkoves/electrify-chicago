@@ -304,15 +304,21 @@ export default class ShareButton extends Vue {
       }
 
       .share-link {
+        align-items: center;
         color: $white;
         column-gap: 1rem;
         display: flex;
+        font-weight: normal;
         outline-color: $white;
         text-decoration: none;
         background: none;
         border-bottom: none;
         font-size: 1rem;
         padding: 0;
+
+        &:hover {
+          font-weight: bold;
+        }
       }
 
       img {
@@ -321,6 +327,16 @@ export default class ShareButton extends Vue {
         height: 1.25rem;
       }
     }
+  }
+
+  .share-dropdown::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    inset-inline-end: 14px;
+    border-width: 7px;
+    border-style: solid;
+    border-color: transparent transparent $blue-very-dark transparent;
   }
 }
 </style>
