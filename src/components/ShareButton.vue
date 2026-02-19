@@ -110,34 +110,30 @@ export default class ShareButton extends Vue {
     return this.copyToClipboard(shareUrl);
   }
 
+  getShareUrl(): string {
+    const shareUrl =
+    this.url || (typeof window !== 'undefined' ? window.location.href : '');
+    return shareUrl;
+  }
+
   linkedinShareUrl(): string {
-      const shareUrl =
-      this.url || (typeof window !== 'undefined' ? window.location.href : '');
-      return `${this.LinkedInShareEndpoint}?mini=true&url=${encodeURIComponent(shareUrl)}`;
+    return `${this.LinkedInShareEndpoint}?mini=true&url=${encodeURIComponent(this.getShareUrl())}`;
   }
 
   twitterShareUrl(): string {
-      const shareUrl =
-      this.url || (typeof window !== 'undefined' ? window.location.href : '');
-      return `${this.TwitterShareEndpoint}?url=${shareUrl}`;
+    return `${this.TwitterShareEndpoint}?url=${encodeURIComponent(this.getShareUrl())}`;
   }
 
   blueskyShareUrl(): string {
-      const shareUrl =
-      this.url || (typeof window !== 'undefined' ? window.location.href : '');
-      return `${this.BlueskyShareEndpoint}?text=${this.text}%0A${encodeURIComponent(shareUrl)}`;
+    return `${this.BlueskyShareEndpoint}?text=${this.text}%0A${encodeURIComponent(this.getShareUrl())}`;
   }
 
   facebookShareUrl(): string {
-    const shareUrl =
-    this.url || (typeof window !== 'undefined' ? window.location.href : '');
-    return `${this.FacebookShareEndpoint}?u=${shareUrl}`;
+    return `${this.FacebookShareEndpoint}?u=${encodeURIComponent(this.getShareUrl())}`;
   }
 
   redditShareUrl(): string {
-    const shareUrl =
-    this.url || (typeof window !== 'undefined' ? window.location.href : '');
-    return `${this.RedditShareEndpoint}?url=${shareUrl}&title=${this.text}`;
+    return `${this.RedditShareEndpoint}?url=${encodeURIComponent(this.getShareUrl())}&title=${encodeURI(this.text)}`;
   }
 
   handleShare(): void {
