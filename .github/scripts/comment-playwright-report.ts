@@ -122,6 +122,7 @@ function parseTestResults(): TestResults | null {
  * Removes ANSI escape codes from a string
  */
 function stripAnsiCodes(text: string): string {
+  // Control character (\u001b = ESC) is intentional for matching ANSI codes
   // eslint-disable-next-line no-control-regex
   return text.replace(/\u001b\[[0-9;]*m/g, '');
 }
