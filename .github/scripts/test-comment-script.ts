@@ -21,8 +21,8 @@ const mockGitHub = {
             // Uncomment to simulate existing comment:
             // {
             //   id: 12345,
-            //   user: { type: 'Bot' },
-            //   body: '## 🎭 Playwright Test Report\n\nOld content',
+            //   user: { login: 'github-actions[bot]' },
+            //   body: '## 🎭 Playwright Visual Test Report\n\nOld content',
             // },
           ],
         };

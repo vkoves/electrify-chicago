@@ -44,7 +44,7 @@ interface GitHubAPI {
         repo: string;
         issue_number: number;
       }) => Promise<{
-        data: Array<{ user: { type: string }; body: string; id: number }>;
+        data: Array<{ user?: { login?: string }; body: string; id: number }>;
       }>;
       updateComment: (params: {
         owner: string;
@@ -267,8 +267,8 @@ export default async function commentPlaywrightReport({
 
   const botComment = comments.data.find(
     (comment) =>
-      comment.user.type === 'Bot' &&
-      comment.body.includes('Playwright Test Report')
+      comment.user?.login === 'github-actions[bot]' &&
+      comment.body.includes('## 🎭 Playwright Visual Test Report')
   );
 
   // Create or update comment
