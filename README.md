@@ -284,6 +284,10 @@ Run Playwright with update snapshots to overwrite the existing snapshots.
 yarn playwright test --update-snapshots
 ```
 
+**GitHub Actions Integration:**
+
+Pull requests automatically run Playwright tests and post results as comments. For details on testing the comment script locally, see [`.github/scripts/README.md`](.github/scripts/README.md).
+
 ### Run Data Processing Tests
 
 1. Make sure test data is created/replaced before running tests by running the following script (it will overwrite the existing test data file if it exists):
