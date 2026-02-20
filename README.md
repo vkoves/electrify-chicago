@@ -237,6 +237,16 @@ taking full page screenshots of core pages. This helps ensure we don't break cor
 "All Electric" badges or stat graphs, and should make QA easier when doing data updates (since you'll
 have a set of images to compare).
 
+**First Time Setup:**
+
+Before running Playwright tests for the first time, you need to install the browser binaries:
+
+```bash
+yarn playwright install
+```
+
+**Note:** `yarn install` only installs the Playwright npm package, not the actual browsers (Chromium, Firefox, WebKit). You need to run `yarn playwright install` separately to download the browser binaries.
+
 Some Playwright commands _with the server running_:
 
 ```bash
