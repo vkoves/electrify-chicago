@@ -18,14 +18,13 @@
       📷
     </span>
 
-    <!-- TODO PR #237 - bring back -->
-    <!-- <span
+    <span
       v-if="isGasFree && !largeView"
       class="emoji has-img-emoji"
       title="All Electric!"
     >
       ⚡
-    </span> -->
+    </span>
 
     <span
       v-if="isOldData && !largeView"

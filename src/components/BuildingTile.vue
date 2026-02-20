@@ -44,11 +44,10 @@ export default class BuildingTile extends Vue {
       <div class="building-tile">
         <div class="img-cont">
           <div class="pills-cont -small">
-            <!-- TODO PR #237 - bring back -->
-            <!-- <div v-if="fullyGasFree" class="pill -all-electric">
+            <div v-if="fullyGasFree" class="pill -all-electric">
               <span class="icon">⚡</span>
               <span class="text">All Electric</span>
-            </div> -->
+            </div>
           </div>
 
           <OwnerLogo :building="building" :is-small="true" />
