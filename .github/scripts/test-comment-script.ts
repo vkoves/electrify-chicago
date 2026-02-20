@@ -58,6 +58,26 @@ const mockGitHub = {
         console.log('─'.repeat(80));
       },
     },
+    actions: {
+      listWorkflowRunArtifacts: async (params: {
+        owner: string;
+        repo: string;
+        run_id: number;
+      }) => {
+        console.log('\n🔍 [Mock] listWorkflowRunArtifacts called with:', params);
+        // Return mock artifact data
+        return {
+          data: {
+            artifacts: [
+              {
+                id: 5596343156,
+                name: 'playwright-report',
+              },
+            ],
+          },
+        };
+      },
+    },
   },
 };
 

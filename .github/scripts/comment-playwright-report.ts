@@ -26,7 +26,7 @@ interface PlaywrightResults {
 
 interface TestResults {
   totalTests: number;
-  passedTests: number;
+  passedTests: PlaywrightSpec[];
   failedTests: PlaywrightSpec[];
 }
 
@@ -58,6 +58,15 @@ interface GitHubAPI {
         issue_number: number;
         body: string;
       }) => Promise<void>;
+    };
+    actions: {
+      listWorkflowRunArtifacts: (params: {
+        owner: string;
+        repo: string;
+        run_id: number;
+      }) => Promise<{
+        data: { artifacts: Array<{ id: number; name: string }> };
+      }>;
     };
   };
 }
@@ -98,7 +107,9 @@ function parseTestResults(): TestResults | null {
         t.results.some((r) => r.status === 'failed' || r.status === 'timedOut')
       )
     );
-    const passedTests = totalTests - failedTests.length;
+    const passedTests = allTests.filter((test) =>
+      !failedTests.includes(test)
+    );
 
     return { totalTests, passedTests, failedTests };
   } catch (error) {
@@ -116,6 +127,29 @@ function stripAnsiCodes(text: string): string {
 }
 
 /**
+ * Extracts the key error message from Playwright error output
+ */
+function extractKeyError(errorMessage: string): string {
+  const clean = stripAnsiCodes(errorMessage);
+
+  // Look for pixel difference messages
+  const pixelDiffMatch = clean.match(/(\d+) pixels \(ratio [0-9.]+.*?\) are different/);
+  if (pixelDiffMatch) {
+    return pixelDiffMatch[0];
+  }
+
+  // Look for image size differences
+  const sizeDiffMatch = clean.match(/Expected an image .+?\. \d+ pixels \(ratio [0-9.]+.*?\) are different/);
+  if (sizeDiffMatch) {
+    return sizeDiffMatch[0];
+  }
+
+  // Fall back to first non-empty line
+  const lines = clean.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  return lines[0] || 'Test failed';
+}
+
+/**
  * Formats test failure information for display
  */
 function formatFailures(failedTests: PlaywrightSpec[]): string {
@@ -127,12 +161,28 @@ function formatFailures(failedTests: PlaywrightSpec[]): string {
     const projectName = failedTest?.projectName || 'Unknown';
 
     const errorMessage = result?.error?.message || 'Test failed';
-    const cleanMessage = stripAnsiCodes(errorMessage);
+    const keyError = extractKeyError(errorMessage);
 
-    return `- **${spec.title}** (${projectName})\n  ${cleanMessage}`;
+    return `- **${spec.title}** (${projectName})\n  ${keyError}`;
   });
 
-  return `\n\n<details>\n<summary>Failed Tests</summary>\n\n${failures.join('\n\n')}\n\n</details>`;
+  return `\n\n<details>\n<summary>Failed Tests (${failedTests.length})</summary>\n\n${failures.join('\n\n')}\n\n</details>`;
+}
+
+/**
+ * Formats passed test information for display
+ */
+function formatPassed(passedTests: PlaywrightSpec[]): string {
+  const passed = passedTests.map((spec) => {
+    const passedTest = spec.tests.find((t) =>
+      t.results.some((r) => r.status === 'passed')
+    );
+    const projectName = passedTest?.projectName || 'Unknown';
+
+    return `- **${spec.title}** (${projectName})`;
+  });
+
+  return `\n\n<details>\n<summary>Passed Tests (${passedTests.length})</summary>\n\n${passed.join('\n')}\n\n</details>`;
 }
 
 /**
@@ -144,20 +194,33 @@ function buildCommentBody(
   runUrl: string
 ): string {
   let testSummary = '';
-  let failureDetails = '';
+  let testDetails = '';
 
   if (!testResults) {
     testSummary = '⚠️ Unable to parse test results';
   } else if (testResults.failedTests.length === 0) {
-    testSummary = `✅ ${testResults.passedTests}/${testResults.totalTests} tests passed!`;
+    // Get unique page names from all tests
+    const allPages = [...new Set(testResults.passedTests.map((t) => t.title))];
+    const pageList = allPages.slice(0, 5).join(', ');
+    const morePages =
+      allPages.length > 5 ? ` and ${allPages.length - 5} more` : '';
+
+    testSummary = `**✅ ${testResults.passedTests.length}/${testResults.totalTests} tests passed!** 🎉\n\nWe didn't detect any visual changes on: ${pageList}${morePages}`;
+    testDetails = formatPassed(testResults.passedTests);
   } else {
-    testSummary = `❌ ${testResults.failedTests.length}/${testResults.totalTests} tests failed`;
-    failureDetails = formatFailures(testResults.failedTests);
+    // Get unique page names from failed tests
+    const failedPages = [
+      ...new Set(testResults.failedTests.map((t) => t.title)),
+    ];
+    const pageList = failedPages.join(', ');
+
+    testSummary = `**❌ ${testResults.failedTests.length}/${testResults.totalTests} tests failed**\n\nWe've detected visual changes on: ${pageList}`;
+    testDetails = formatFailures(testResults.failedTests) + formatPassed(testResults.passedTests);
   }
 
-  return `## 🎭 Playwright Test Report
+  return `## 🎭 Playwright Visual Test Report
 
-${testSummary}${failureDetails}
+${testSummary}${testDetails}
 
 [📦 Download Full Report](${artifactUrl}) | [🔍 View Run Details](${runUrl})`;
 }
@@ -172,8 +235,28 @@ export default async function commentPlaywrightReport({
   github: GitHubAPI;
   context: GitHubContext;
 }): Promise<void> {
-  const artifactUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}/artifacts`;
   const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
+
+  // Fetch the artifact ID for the playwright-report
+  let artifactUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}/artifacts`;
+  try {
+    const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+      owner: context.repo.owner,
+      repo: context.repo.repo,
+      run_id: context.runId,
+    });
+
+    const playwrightArtifact = artifacts.data.artifacts.find(
+      (artifact: { name: string }) => artifact.name === 'playwright-report'
+    );
+
+    if (playwrightArtifact) {
+      artifactUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}/artifacts/${playwrightArtifact.id}`;
+    }
+  } catch (error) {
+    console.error('Failed to fetch artifact ID:', error);
+    // Fall back to generic artifacts URL
+  }
 
   const testResults = parseTestResults();
   const body = buildCommentBody(testResults, artifactUrl, runUrl);
