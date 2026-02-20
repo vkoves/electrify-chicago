@@ -19,7 +19,10 @@ test.use({
 test.describe('Building Page Print Mode Snapshots', () => {
 
   BuildingPages.forEach(({ name, url }) => {
-    test(`${name} (Print Page 1)`, async ({ page }) => {
+    test(`${name} (Print Page 1)`, async ({ page }, testInfo) => {
+      // Skip mobile - print tests only run on desktop
+      test.skip(testInfo.project.name === 'Mobile Chrome', 'Print tests are desktop only');
+
       await page.goto(url);
       await waitForPageReady(page);
 
