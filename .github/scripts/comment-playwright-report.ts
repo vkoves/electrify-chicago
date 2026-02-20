@@ -174,14 +174,10 @@ function formatFailures(failedTests: PlaywrightSpec[]): string {
  * Formats passed test information for display
  */
 function formatPassed(passedTests: PlaywrightSpec[]): string {
-  const passed = passedTests.map((spec) => {
-    const passedTest = spec.tests.find((t) =>
-      t.results.some((r) => r.status === 'passed')
-    );
-    const projectName = passedTest?.projectName || 'Unknown';
+  // Get unique test titles (consolidate desktop/mobile variants)
+  const uniqueTitles = [...new Set(passedTests.map((spec) => spec.title))];
 
-    return `- **${spec.title}** (${projectName})`;
-  });
+  const passed = uniqueTitles.map((title) => `- **${title}**`);
 
   return `\n\n<details>\n<summary>Passed Tests (${passedTests.length})</summary>\n\n${passed.join('\n')}\n\n</details>`;
 }
