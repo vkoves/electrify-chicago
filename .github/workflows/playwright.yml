@@ -38,10 +38,13 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+    - name: Compile TypeScript comment script
+      if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+      run: npx tsc .github/scripts/comment-playwright-report.ts --module commonjs --target ES2020 --esModuleInterop --skipLibCheck
     - name: Comment PR with Artifact Link
       if: ${{ !cancelled() && github.event_name == 'pull_request' }}
       uses: actions/github-script@v7
       with:
         script: |
           const commentScript = require('./.github/scripts/comment-playwright-report.js');
-          await commentScript({ github, context });
+          await commentScript.default({ github, context });
