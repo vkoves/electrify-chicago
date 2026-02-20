@@ -39,9 +39,7 @@ export default defineConfig({
   expect: {
     // @see https://playwright.dev/docs/api/class-pageassertions#page-assertions-to-have-screenshot-2
     toHaveScreenshot: {
-      // Allow a 0.3% diff to account for CI font mismatch - ideally this should be higher on
-      // desktop and lower on mobile, where, probably 0.0002 would be fine
-      maxDiffPixelRatio: 0.003,
+      // Project-specific maxDiffPixelRatios are set below
     },
   },
 
@@ -56,12 +54,24 @@ export default defineConfig({
           args: ['--disable-font-subpixel-positioning'],
         },
       },
+      expect: {
+        toHaveScreenshot: {
+          // Higher threshold for desktop to account for CI font rendering differences
+          maxDiffPixelRatio: 0.003,
+        },
+      },
     },
 
     /* Test against a larger mobile viewports */
     {
       name: 'Mobile Chrome',
       use: { ...devices['iPhone 15 Plus'] },
+      expect: {
+        toHaveScreenshot: {
+          // Lower threshold for mobile where font rendering is more consistent
+          maxDiffPixelRatio: 0.0002,
+        },
+      },
     },
   ],
 
