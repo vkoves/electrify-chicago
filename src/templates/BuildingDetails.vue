@@ -548,6 +548,15 @@ query ($id: ID!, $ID: String) {
         </div>
       </div>
 
+      <div class="no-print">
+        <h2>What Should We Do About This?</h2>
+
+        <p>
+          Own this Building? Check out our
+          <a href="/take-action-tips">Take Action</a> page for tips and advice!
+        </p>
+      </div>
+
       <details class="extra-info">
         <summary class="bold">View Extra Technical & Historic Info</summary>
 
@@ -615,12 +624,6 @@ query ($id: ID!, $ID: String) {
       </details>
 
       <DataSourceFootnote />
-
-      <div class="no-print">
-        <h2>What Should We Do About This?</h2>
-
-        <a href="/take-action-tips"> Own this Building? Take Action. </a>
-      </div>
 
       <email-modal
         v-if="isEmailModalOpen"
