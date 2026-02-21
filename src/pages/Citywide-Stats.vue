@@ -43,6 +43,8 @@
             :container-id="graph.containerId"
             :show-grid="true"
             :title="graph.title"
+            :y-axis-formatter="formatSI"
+            :y-axis-padding="0.5"
           />
         </article>
       </div>
@@ -75,13 +77,8 @@
 import ScatterGraph from '@/components/graphs/ScatterGraph.vue';
 import { graphConfigs } from '../constants/citywide-stats-graph-data.vue';
 import { Component, Vue } from 'vue-property-decorator';
+import * as d3 from 'd3';
 
-/**
- * Note: @Component<any> is required for metaInfo to work with TypeScript
- * This is a known limitation of vue-property-decorator + vue-meta integration
- * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
- */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     ScatterGraph,
@@ -91,10 +88,15 @@ import { Component, Vue } from 'vue-property-decorator';
   },
 })
 export default class CityWideStats extends Vue {
-  data(): { graphConfigs: typeof graphConfigs } {
+  data(): any {
     return {
       graphConfigs,
     };
+  }
+
+  // Format large numbers with SI notation (k, M, G, etc.)
+  formatSI(value: number): string {
+    return d3.format('~s')(value);
   }
 }
 </script>
