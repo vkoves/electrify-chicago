@@ -1,7 +1,8 @@
 /* eslint-env node */
 /**
  * Slugify a property type name for URL use
- * Converts "Office" -> "office", "K-12 School" -> "k-12-school", etc.
+ * Converts "Office" -> "office", "K-12 School" -> "k-12-school"
+ * "Hospital (General Medical & Surgical)" -> "hospital-general-medical-and-surgical"
  *
  * IMPORTANT: This function is used in both:
  * - gridsome.server.js (Node.js, build time) for generating routes
@@ -13,8 +14,12 @@
 function slugifyPropertyType(propertyType) {
   return propertyType
     .toLowerCase()
-    .replace(/\//g, '-') // Replace slashes with hyphens
-    .replace(/\s+/g, '-'); // Replace spaces with hyphens
+    .replace(/&/g, 'and')
+    .replace(/[()]/g, '')
+    .replace(/\//g, '-')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 }
 
 // eslint-disable-next-line no-undef
