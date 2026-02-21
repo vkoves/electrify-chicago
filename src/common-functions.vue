@@ -662,6 +662,29 @@ export function smoothlyScrollToAnchor(event: MouseEvent): void {
   }
 }
 
+/**
+ * Pluralize a property type name for display
+ * Examples:
+ * - "Data Center" -> "Data Centers"
+ * - "Office" -> "Office Buildings"
+ * - "Multifamily Housing" -> "Multifamily Housing"
+ */
+export function pluralizePropertyType(propertyType: string): string {
+  // Words ending in "Center" become "Centers"
+  if (propertyType.endsWith('Center')) {
+    return propertyType + 's';
+  }
+
+  // Words ending in "Housing" stay as-is (mass noun)
+  // Words ending in "Hall" stay as-is (already works as category)
+  if (propertyType.endsWith('Housing') || propertyType.endsWith('Hall')) {
+    return propertyType;
+  }
+
+  // Default: append " Buildings"
+  return propertyType + ' Buildings';
+}
+
 /** Common stats for groups of buildings, like for ward pages & owner pages */
 export type BuildingsStats = {
   buildingsWithYear: number;

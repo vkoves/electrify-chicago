@@ -9,7 +9,7 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
-import { IBuildingNode } from '../common-functions.vue';
+import { IBuildingNode, pluralizePropertyType } from '../common-functions.vue';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -27,9 +27,10 @@ import { IBuildingNode } from '../common-functions.vue';
   },
   metaInfo() {
     const propertyType: string = this.$context.propertyType;
+    const propertyTypePlural = pluralizePropertyType(propertyType);
 
     return {
-      title: `${propertyType} Buildings`,
+      title: propertyTypePlural,
       meta: [
         {
           name: 'description',
@@ -68,6 +69,10 @@ export default class PropertyType extends Vue {
 
   get propertyType(): string {
     return this.$context.propertyType;
+  }
+
+  get propertyTypePlural(): string {
+    return pluralizePropertyType(this.$context.propertyType);
   }
 
   get buildingCount(): number {
@@ -125,7 +130,7 @@ export default class PropertyType extends Vue {
   <DefaultLayout main-class="layout -full-width">
     <div class="property-type-page">
       <BuildingsHero :buildings="buildingsFiltered.map((edge) => edge.node)">
-        <h1 id="main-content" tabindex="-1">{{ propertyType }} Buildings</h1>
+        <h1 id="main-content" tabindex="-1">{{ propertyTypePlural }}</h1>
         <p class="building-count">
           {{ buildingCount }} building{{ buildingCount !== 1 ? 's' : '' }} in
           Chicago
@@ -133,7 +138,7 @@ export default class PropertyType extends Vue {
       </BuildingsHero>
 
       <div class="page-constrained">
-        <h2>All {{ propertyType }} Buildings</h2>
+        <h2>All {{ propertyTypePlural }}</h2>
 
         <p class="constrained -wide smaller">
           Showing all {{ propertyType }} buildings that reported their energy
