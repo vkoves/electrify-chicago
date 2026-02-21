@@ -1,4 +1,8 @@
 <script lang="ts">
+// Gridsome doesn't have types, so can't import it properly
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const Pager = require('gridsome').Pager;
+
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
@@ -19,6 +23,7 @@ import { IBuildingNode } from '../common-functions.vue';
     BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
+    Pager,
   },
   metaInfo() {
     const propertyType: string = this.$context.propertyType;
@@ -38,14 +43,27 @@ import { IBuildingNode } from '../common-functions.vue';
 })
 export default class PropertyType extends Vue {
   /** Set by Gridsome to results of GraphQL query */
-  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $page!: {
+    allBuilding: {
+      edges: Array<IBuildingNode>;
+      pageInfo: {
+        currentPage: number;
+        totalPages: number;
+        perPage: number;
+        hasNextPage: boolean;
+        hasPreviousPage: boolean;
+      };
+    };
+  };
   readonly $context!: { propertyType: string };
 
   buildingsFiltered: Array<IBuildingNode> = [];
+  pageInput = 0;
 
   created(): void {
     // Buildings are pre-filtered by GraphQL query using PrimaryPropertyType field
     this.buildingsFiltered = this.$page.allBuilding.edges;
+    this.pageInput = this.$page.allBuilding.pageInfo.currentPage;
   }
 
   get propertyType(): string {
@@ -60,11 +78,20 @@ export default class PropertyType extends Vue {
 
 <!-- Buildings are filtered by property type at query time using the PrimaryPropertyType field -->
 <page-query>
-  query($propertyType: String!) {
+  query($propertyType: String!, $page: Int) {
     allBuilding(
       filter: { PrimaryPropertyType: { eq: $propertyType } }
-      sortBy: "GHGIntensity"
-    ) {
+      sortBy: "GrossFloorArea"
+      perPage: 15
+      page: $page
+    ) @paginate {
+      pageInfo {
+        hasNextPage
+        totalPages
+        currentPage
+        perPage
+        hasPreviousPage
+      }
       edges {
         node {
           slugSource
@@ -121,6 +148,28 @@ export default class PropertyType extends Vue {
           :show-square-footage="true"
         />
 
+        <div class="pager-cont">
+          <div>
+            <div class="page-number">
+              Page {{ $page.allBuilding.pageInfo.currentPage }} of
+              {{ $page.allBuilding.pageInfo.totalPages }}
+
+              (Building #{{
+                1 +
+                ($page.allBuilding.pageInfo.currentPage - 1) *
+                  $page.allBuilding.pageInfo.perPage
+              }}
+              to #{{
+                ($page.allBuilding.pageInfo.currentPage - 1) *
+                  $page.allBuilding.pageInfo.perPage +
+                $page.allBuilding.edges.length
+              }})
+            </div>
+
+            <Pager class="pager" :info="$page.allBuilding.pageInfo" />
+          </div>
+        </div>
+
         <DataSourceFootnote />
       </div>
     </div>
@@ -142,6 +191,31 @@ export default class PropertyType extends Vue {
 
   h2 {
     margin-bottom: 0.5rem;
+  }
+
+  .pager-cont {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 1rem;
+    gap: 1rem;
+
+    .pager {
+      margin-top: 0;
+    }
+
+    .page-number {
+      font-weight: bold;
+      font-size: smaller;
+      margin-bottom: 0.25rem;
+    }
+  }
+
+  @media (max-width: $mobile-max-width) {
+    .pager-cont {
+      flex-direction: column;
+      align-items: flex-start;
+    }
   }
 }
 </style>
