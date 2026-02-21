@@ -176,7 +176,7 @@ export default class PropertyType extends Vue {
           <div class="stat-item">
             <div class="stat-number">{{ totalGHGEmissions }}</div>
             <div class="stat-label">
-              <strong>Total Emissions</strong> <br>
+              <strong>Total Emissions</strong> <br />
               (metric tons CO<sub>2</sub>e)
             </div>
           </div>
@@ -184,7 +184,7 @@ export default class PropertyType extends Vue {
           <div class="stat-item">
             <div class="stat-number">{{ avgGHGIntensity }}</div>
             <div class="stat-label">
-              <strong>Avg GHG Intensity</strong> <br>
+              <strong>Avg GHG Intensity</strong> <br />
               (kg CO<sub>2</sub>e/sqft)
             </div>
           </div>
@@ -203,6 +203,7 @@ export default class PropertyType extends Vue {
               id-prefix="grade-distribution"
               :show-labels="true"
               :sort-by-largest="false"
+              :small="true"
             />
             <div class="stat-label bold no-min">Grade Distribution</div>
           </div>
@@ -257,9 +258,10 @@ export default class PropertyType extends Vue {
     flex-wrap: wrap;
 
     @media (max-width: $mobile-max-width) {
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
-      align-items: stretch;
+      padding: 1rem;
     }
 
     .stat-item {
@@ -278,23 +280,17 @@ export default class PropertyType extends Vue {
         text-align: left;
         border-right: none;
         padding-right: 0;
-        border-bottom: $border-thin solid $grey;
-        padding-bottom: 1rem;
-
-        &:last-child {
-          border-bottom: none;
-          padding-bottom: 0;
-        }
       }
 
       &.grade-chart-inline {
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 0.5rem;
 
         @media (max-width: $mobile-max-width) {
-          align-items: flex-start;
+          grid-column: 1 / -1;
+          padding-top: 1.5rem;
+          border-top: $border-thin solid $grey;
         }
       }
     }

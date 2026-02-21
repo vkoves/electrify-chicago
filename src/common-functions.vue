@@ -694,6 +694,27 @@ export function pluralizePropertyType(propertyType: string): string {
   return propertyType + ' Buildings';
 }
 
+/**
+ * Determines if a color is dark based on its luminance
+ * Returns true for dark colors (should use white text), false for light colors (use black text)
+ */
+export function isColorDark(hexColor: string): boolean {
+  // Remove # if present
+  const hex = hexColor.replace('#', '');
+
+  // Convert to RGB
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Calculate relative luminance (perceived brightness)
+  // Using formula from https://www.w3.org/TR/WCAG20/#relativeluminancedef
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // If luminance is less than 0.5, it's a dark color
+  return luminance < 0.5;
+}
+
 /** Common stats for groups of buildings, like for ward pages & owner pages */
 export type BuildingsStats = {
   buildingsWithYear: number;
