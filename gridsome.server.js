@@ -95,6 +95,19 @@ module.exports = function (api) {
           }
         });
       });
+
+      // Create property type social card routes
+      propertyTypesData.propertyTypes.forEach((propertyType) => {
+        const slug = slugifyPropertyType(propertyType);
+
+        createPage({
+          path: `/property-type-social-card/${slug}`,
+          component: './src/templates/social-cards/PropertyTypeSocialCardPage.vue',
+          context: {
+            propertyType: propertyType
+          }
+        });
+      });
     }
   });
 };

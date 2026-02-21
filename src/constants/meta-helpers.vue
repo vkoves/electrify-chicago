@@ -132,4 +132,50 @@ export function generateOwnerMeta(
     meta: baseMeta,
   };
 }
+
+/**
+ * Generate social media meta tags for property type pages
+ *
+ * @param propertyTypeSlug - The property type slug (e.g., 'office', 'data-center')
+ * @param propertyTypePlural - The display name of the property type (e.g., 'Office Buildings')
+ * @param propertyType - The original property type name (e.g., 'Office')
+ */
+export function generatePropertyTypeMeta(
+  propertyTypeSlug: string,
+  propertyTypePlural: string,
+  propertyType: string,
+): PageMetaData {
+  const title = propertyTypePlural;
+  const description =
+    `View all ${propertyType} buildings in Chicago and their ` +
+    `greenhouse gas emissions data.`;
+  const socialImageUrl = `/social-images/property-type-${propertyTypeSlug}.webp`;
+
+  const baseMeta = [
+    { name: 'description', content: description, key: 'description' },
+    { property: 'og:title', content: title, key: 'og:title' },
+    { property: 'og:description', content: description, key: 'og:description' },
+    { property: 'og:type', content: 'website', key: 'og:type' },
+    { property: 'og:image', content: socialImageUrl, key: 'og:image' },
+    { property: 'og:image:width', content: '1200', key: 'og:image:width' },
+    { property: 'og:image:height', content: '630', key: 'og:image:height' },
+    { name: 'twitter:title', content: title, key: 'twitter:title' },
+    {
+      name: 'twitter:description',
+      content: description,
+      key: 'twitter:description',
+    },
+    {
+      name: 'twitter:card',
+      content: 'summary_large_image',
+      key: 'twitter:card',
+    },
+    { name: 'twitter:image', content: socialImageUrl, key: 'twitter:image' },
+  ];
+
+  return {
+    title: title,
+    meta: baseMeta,
+  };
+}
 </script>

@@ -13,6 +13,8 @@ import {
   IBuildingNode,
   pluralizePropertyType,
 } from '../common-functions.vue';
+import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
+import { generatePropertyTypeMeta } from '../constants/meta-helpers.vue';
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 /**
@@ -32,18 +34,9 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
   metaInfo() {
     const propertyType: string = this.$context.propertyType;
     const propertyTypePlural = pluralizePropertyType(propertyType);
+    const slug = slugifyPropertyType(propertyType);
 
-    return {
-      title: propertyTypePlural,
-      meta: [
-        {
-          name: 'description',
-          content:
-            `View all ${propertyType} buildings in Chicago and their ` +
-            `greenhouse gas emissions data.`,
-        },
-      ],
-    };
+    return generatePropertyTypeMeta(slug, propertyTypePlural, propertyType);
   },
 })
 export default class PropertyType extends Vue {
