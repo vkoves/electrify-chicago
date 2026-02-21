@@ -96,7 +96,7 @@ export default class GraphDemos extends Vue {
 
 <template>
   <DefaultLayout>
-    <div class="graph-demos constrained -wide">
+    <div class="graph-demos">
       <h1 id="main-content" tabindex="-1">Graph Component Demos</h1>
 
       <p>
@@ -104,28 +104,33 @@ export default class GraphDemos extends Vue {
         example includes sample data and common configurations.
       </p>
 
-      <!-- BarGraph Demo -->
-      <section class="demo-section">
-        <h2>BarGraph</h2>
-        <p>
-          A bar chart component for displaying categorical data with numeric
-          values. Supports both string and numeric x-axis values.
-        </p>
+      <div class="demos-grid">
+        <!-- BarGraph Demo -->
+        <section class="demo-section">
+          <h2>BarGraph</h2>
+          <p>
+            A bar chart component for displaying categorical data with numeric
+            values. Supports both string and numeric x-axis values.
+          </p>
 
-        <div class="demo-container">
-          <BarGraph
-            graph-title="Annual Emissions Over Time"
-            :graph-data="barGraphData"
-          />
-        </div>
+          <div class="demo-container -medium">
+            <BarGraph
+              graph-title="Annual Emissions Over Time"
+              :graph-data="barGraphData"
+            />
+          </div>
 
-        <div class="code-example">
-          <h3>Usage Example:</h3>
-          <pre>
+          <details class="code-example">
+            <summary>View Code Example</summary>
+            <pre>
 <code>&lt;BarGraph
   graph-title="Annual Emissions Over Time"
   :graph-data="barGraphData"
+  bar-color="#006ef0"
 /&gt;
+
+// Props:
+// - barColor: string (default: '#006ef0' - $blue-dark)
 
 // Data format:
 const barGraphData: Array&lt;IGraphPoint&gt; = [
@@ -134,28 +139,28 @@ const barGraphData: Array&lt;IGraphPoint&gt; = [
   // ...
 ];</code>
 </pre>
-        </div>
-      </section>
+          </details>
+        </section>
 
-      <!-- SparkLine Demo -->
-      <section class="demo-section">
-        <h2>SparkLine</h2>
-        <p>
-          A compact line graph component ideal for showing trends in small
-          spaces. Displays min and max values with interactive tooltips.
-        </p>
+        <!-- SparkLine Demo -->
+        <section class="demo-section">
+          <h2>SparkLine</h2>
+          <p>
+            A compact line graph component ideal for showing trends in small
+            spaces. Displays min and max values with interactive tooltips.
+          </p>
 
-        <div class="demo-container -small">
-          <SparkLine
-            graph-title="GHG Intensity Trend"
-            :graph-data="sparkLineData"
-            unit="tons CO<sub>2</sub>e"
-          />
-        </div>
+          <div class="demo-container -spark">
+            <SparkLine
+              graph-title="GHG Intensity Trend"
+              :graph-data="sparkLineData"
+              unit="tons CO<sub>2</sub>e"
+            />
+          </div>
 
-        <div class="code-example">
-          <h3>Usage Example:</h3>
-          <pre>
+          <details class="code-example">
+            <summary>View Code Example</summary>
+            <pre>
 <code>&lt;SparkLine
   graph-title="GHG Intensity Trend"
   :graph-data="sparkLineData"
@@ -169,29 +174,29 @@ const sparkLineData: Array&lt;INumGraphPoint&gt; = [
   // ...
 ];</code>
 </pre>
-        </div>
-      </section>
+          </details>
+        </section>
 
-      <!-- PieChart Demo -->
-      <section class="demo-section">
-        <h2>PieChart</h2>
-        <p>
-          A pie chart component for displaying proportional data. Supports
-          custom colors and optional labels.
-        </p>
+        <!-- PieChart Demo -->
+        <section class="demo-section">
+          <h2>PieChart</h2>
+          <p>
+            A pie chart component for displaying proportional data. Supports
+            custom colors and optional labels.
+          </p>
 
-        <div class="demo-container -medium">
-          <PieChart
-            :graph-data="pieChartData"
-            id-prefix="energy-breakdown"
-            :show-labels="true"
-            :sort-by-largest="true"
-          />
-        </div>
+          <div class="demo-container -small">
+            <PieChart
+              :graph-data="pieChartData"
+              id-prefix="energy-breakdown"
+              :show-labels="true"
+              :sort-by-largest="true"
+            />
+          </div>
 
-        <div class="code-example">
-          <h3>Usage Example:</h3>
-          <pre>
+          <details class="code-example">
+            <summary>View Code Example</summary>
+            <pre>
 <code>&lt;PieChart
   :graph-data="pieChartData"
   id-prefix="energy-breakdown"
@@ -206,35 +211,40 @@ const pieChartData: Array&lt;IPieSlice&gt; = [
   // ...
 ];</code>
 </pre>
-        </div>
-      </section>
+          </details>
+        </section>
+      </div>
 
-      <!-- ScatterGraph Single Series Demo -->
+      <!-- ScatterGraph Demos -->
       <section class="demo-section">
-        <h2>ScatterGraph (Single Series)</h2>
-        <p>
-          A scatter plot component with line connections. Supports trend lines,
-          grid display, and interactive tooltips. Single series mode is ideal
-          for simple time series data.
-        </p>
+        <h2>ScatterGraph</h2>
+          <p>
+            A scatter plot component with line connections. Supports trend
+            lines, grid display, and interactive tooltips.
+          </p>
 
-        <div class="demo-container">
-          <ScatterGraph
-            container-id="scatter-single-demo"
-            title="Average GHG Intensity"
-            y-axis-label="GHG Intensity (kg CO₂/sqft)"
-            :data="scatterSingleData"
-            stroke-color="chart-stroke-blue"
-            fill-color="chart-fill-blue"
-            :show-grid="true"
-            :show-trend-line="true"
-            :show-legend="false"
-          />
-        </div>
+          <div class="scatter-demos">
+            <div class="scatter-variant">
+              <h3>Single Series</h3>
+              <p>Ideal for simple time series data.</p>
 
-        <div class="code-example">
-          <h3>Usage Example:</h3>
-          <pre>
+              <div class="demo-container">
+                <ScatterGraph
+                  container-id="scatter-single-demo"
+                  title="Average GHG Intensity"
+                  y-axis-label="GHG Intensity (kg CO₂/sqft)"
+                  :data="scatterSingleData"
+                  stroke-color="chart-stroke-blue"
+                  fill-color="chart-fill-blue"
+                  :show-grid="true"
+                  :show-trend-line="true"
+                  :show-legend="false"
+                />
+              </div>
+
+              <details class="code-example">
+                <summary>View Code Example</summary>
+                <pre>
 <code>&lt;ScatterGraph
   container-id="scatter-single-demo"
   title="Average GHG Intensity"
@@ -253,32 +263,28 @@ const scatterSingleData: Array&lt;DataPoint&gt; = [
   // ...
 ];</code>
 </pre>
-        </div>
-      </section>
+              </details>
+            </div>
 
-      <!-- ScatterGraph Multi-Series Demo -->
-      <section class="demo-section">
-        <h2>ScatterGraph (Multi-Series)</h2>
-        <p>
-          ScatterGraph also supports multiple data series with a legend,
-          allowing comparison of different datasets on the same chart.
-        </p>
+            <div class="scatter-variant">
+              <h3>Multi-Series</h3>
+              <p>Compare multiple datasets with a legend.</p>
 
-        <div class="demo-container">
-          <ScatterGraph
-            container-id="scatter-multi-demo"
-            title="Emissions by Building Type"
-            y-axis-label="GHG Intensity (kg CO₂/sqft)"
-            :series="scatterMultiData"
-            :show-grid="true"
-            :show-trend-line="true"
-            :show-legend="true"
-          />
-        </div>
+              <div class="demo-container">
+                <ScatterGraph
+                  container-id="scatter-multi-demo"
+                  title="Emissions by Building Type"
+                  y-axis-label="GHG Intensity (kg CO₂/sqft)"
+                  :series="scatterMultiData"
+                  :show-grid="true"
+                  :show-trend-line="true"
+                  :show-legend="true"
+                />
+              </div>
 
-        <div class="code-example">
-          <h3>Usage Example:</h3>
-          <pre>
+              <details class="code-example">
+                <summary>View Code Example</summary>
+                <pre>
 <code>&lt;ScatterGraph
   container-id="scatter-multi-demo"
   title="Emissions by Building Type"
@@ -305,11 +311,13 @@ const scatterMultiData: Array&lt;DataSeries&gt; = [
   },
 ];</code>
 </pre>
-        </div>
-      </section>
+              </details>
+            </div>
+          </div>
+        </section>
 
       <!-- Props Reference -->
-      <section class="demo-section">
+      <section class="demo-section props-reference">
         <h2>Common Props Reference</h2>
 
         <h3>ScatterGraph Props</h3>
@@ -362,23 +370,60 @@ const scatterMultiData: Array&lt;DataSeries&gt; = [
 
 <style lang="scss">
 .graph-demos {
-  .demo-section {
-    margin-bottom: 4rem;
-    padding-bottom: 2rem;
-    border-bottom: solid $border-thin $grey;
+  .demos-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
 
-    &:last-child {
-      border-bottom: none;
+    @media (max-width: $mobile-max-width) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .demo-section {
+    margin-bottom: 2rem;
+
+    &.props-reference {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: solid $border-thin $grey;
+    }
+  }
+
+  .scatter-demos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+
+    @media (max-width: $mobile-max-width) {
+      grid-template-columns: 1fr;
+    }
+
+    .scatter-variant {
+      h3 {
+        font-size: 1.125rem;
+        margin-top: 1rem;
+      }
+
+      > p {
+        font-size: 0.875rem;
+        color: $text-mid-light;
+        margin-top: 0;
+      }
     }
   }
 
   .demo-container {
     background: $white;
-    padding: 2rem;
+    padding: 1rem;
     border-radius: $brd-rad-medium;
     border: solid $border-thin $grey;
     margin-top: 1rem;
     margin-bottom: 1.5rem;
+
+    &.-spark {
+      max-width: 20rem;
+    }
 
     &.-small {
       max-width: 25rem;
@@ -390,17 +435,27 @@ const scatterMultiData: Array&lt;DataSeries&gt; = [
   }
 
   .code-example {
-    background: $grey-light;
-    padding: 1.5rem;
-    border-radius: $brd-rad-medium;
+    margin-top: 1rem;
 
-    h3 {
-      margin-top: 0;
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 0.75rem;
+      background: $grey-light;
+      border-radius: $brd-rad-medium;
+
+      &:hover {
+        background: $grey;
+      }
     }
 
     pre {
-      margin: 0;
+      margin: 0.5rem 0 0 0;
+      padding: 1rem;
       overflow-x: auto;
+      border-radius: $brd-rad-medium;
+
+      summary { padding: 0 0 1rem 0; }
 
       code {
         display: block;
