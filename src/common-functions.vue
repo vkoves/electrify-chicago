@@ -12,6 +12,15 @@ export const EnergyBreakdownColors = {
   NaturalGas: '#993300',
 };
 
+/** Colors for grade distribution pie charts */
+export const GradeColors: Record<string, string> = {
+  A: '#009f49', // $grade-a-green
+  B: '#7fa52e', // $grade-b-green
+  C: '#b36a15', // $grade-c-orange
+  D: '#972222', // $grade-d-red
+  F: '#d60101', // $grade-f-red
+};
+
 export interface IBuildingBenchmarkStat {
   count: number;
   min: number;
