@@ -1,11 +1,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import BarGraph, {
-  IGraphPoint,
-} from '../components/graphs/BarGraph.vue';
-import SparkLine, {
-  INumGraphPoint,
-} from '../components/graphs/SparkLine.vue';
+import BarGraph, { IGraphPoint } from '../components/graphs/BarGraph.vue';
+import SparkLine, { INumGraphPoint } from '../components/graphs/SparkLine.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
 import ScatterGraph from '../components/graphs/ScatterGraph.vue';
 import { DataPoint, DataSeries } from '../common-functions.vue';
@@ -104,8 +100,8 @@ export default class GraphDemos extends Vue {
       <h1 id="main-content" tabindex="-1">Graph Component Demos</h1>
 
       <p>
-        This page showcases the available graph components in our codebase.
-        Each example includes sample data and common configurations.
+        This page showcases the available graph components in our codebase. Each
+        example includes sample data and common configurations.
       </p>
 
       <!-- BarGraph Demo -->
@@ -323,8 +319,8 @@ const scatterMultiData: Array&lt;DataSeries&gt; = [
             and vertical grid lines
           </li>
           <li>
-            <code>showTrendLine</code> (boolean, default: true) - Display
-            linear regression trend line
+            <code>showTrendLine</code> (boolean, default: true) - Display linear
+            regression trend line
           </li>
           <li>
             <code>showLegend</code> (boolean, default: false) - Display
@@ -335,8 +331,8 @@ const scatterMultiData: Array&lt;DataSeries&gt; = [
             circles, showing only lines
           </li>
           <li>
-            <code>yAxisPadding</code> (number, default: 0.1) - Y-axis padding
-            as fraction of max value (0.1 = 10%)
+            <code>yAxisPadding</code> (number, default: 0.1) - Y-axis padding as
+            fraction of max value (0.1 = 10%)
           </li>
           <li>
             <code>animationDuration</code> (number, default: 800) - Animation
