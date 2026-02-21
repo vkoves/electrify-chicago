@@ -19,10 +19,7 @@ import {
 } from './social-images-helpers';
 
 // Import slugifyPropertyType for generating property type slugs
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const {
-  slugifyPropertyType,
-} = require('../src/constants/property-type-helpers.js');
+import { slugifyPropertyType } from '../src/constants/property-type-helpers.js';
 
 type Browser = puppeteer.Browser;
 type Page = puppeteer.Page;

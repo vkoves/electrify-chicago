@@ -52,8 +52,9 @@ export default class PropertyTypeSocialCard extends Vue {
     );
 
     // Get all buildings of this type, since we show a count
-    return typeBuildings
-      .sort((a, b) => (b.GrossFloorArea || 0) - (a.GrossFloorArea || 0));
+    return typeBuildings.sort(
+      (a, b) => (b.GrossFloorArea || 0) - (a.GrossFloorArea || 0),
+    );
   }
 
   get buildingCount(): number {

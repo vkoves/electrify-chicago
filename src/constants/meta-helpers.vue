@@ -111,7 +111,11 @@ export function generateOwnerMeta(
 
   return {
     title: title,
-    meta: buildMetaTags(title, description || defaultDescription, socialImageUrl),
+    meta: buildMetaTags(
+      title,
+      description || defaultDescription,
+      socialImageUrl,
+    ),
   };
 }
 

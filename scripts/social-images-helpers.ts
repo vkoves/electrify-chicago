@@ -11,10 +11,7 @@ import buildingOwnersData from '../src/constants/building-owners.json';
 import propertyTypesData from '../src/data/dist/property-types.json';
 
 // Import slugifyPropertyType from the CommonJS module
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const {
-  slugifyPropertyType,
-} = require('../src/constants/property-type-helpers.js');
+import { slugifyPropertyType } from '../src/constants/property-type-helpers.js';
 
 // Shared constants
 export const SOCIAL_IMAGES_DIR = './static/social-images';
