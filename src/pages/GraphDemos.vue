@@ -218,33 +218,33 @@ const pieChartData: Array&lt;IPieSlice&gt; = [
       <!-- ScatterGraph Demos -->
       <section class="demo-section">
         <h2>ScatterGraph</h2>
-          <p>
-            A scatter plot component with line connections. Supports trend
-            lines, grid display, and interactive tooltips.
-          </p>
+        <p>
+          A scatter plot component with line connections. Supports trend lines,
+          grid display, and interactive tooltips.
+        </p>
 
-          <div class="scatter-demos">
-            <div class="scatter-variant">
-              <h3>Single Series</h3>
-              <p>Ideal for simple time series data.</p>
+        <div class="scatter-demos">
+          <div class="scatter-variant">
+            <h3>Single Series</h3>
+            <p>Ideal for simple time series data.</p>
 
-              <div class="demo-container">
-                <ScatterGraph
-                  container-id="scatter-single-demo"
-                  title="Average GHG Intensity"
-                  y-axis-label="GHG Intensity (kg CO₂/sqft)"
-                  :data="scatterSingleData"
-                  stroke-color="chart-stroke-blue"
-                  fill-color="chart-fill-blue"
-                  :show-grid="true"
-                  :show-trend-line="true"
-                  :show-legend="false"
-                />
-              </div>
+            <div class="demo-container">
+              <ScatterGraph
+                container-id="scatter-single-demo"
+                title="Average GHG Intensity"
+                y-axis-label="GHG Intensity (kg CO₂/sqft)"
+                :data="scatterSingleData"
+                stroke-color="chart-stroke-blue"
+                fill-color="chart-fill-blue"
+                :show-grid="true"
+                :show-trend-line="true"
+                :show-legend="false"
+              />
+            </div>
 
-              <details class="code-example">
-                <summary>View Code Example</summary>
-                <pre>
+            <details class="code-example">
+              <summary>View Code Example</summary>
+              <pre>
 <code>&lt;ScatterGraph
   container-id="scatter-single-demo"
   title="Average GHG Intensity"
@@ -263,28 +263,28 @@ const scatterSingleData: Array&lt;DataPoint&gt; = [
   // ...
 ];</code>
 </pre>
-              </details>
+            </details>
+          </div>
+
+          <div class="scatter-variant">
+            <h3>Multi-Series</h3>
+            <p>Compare multiple datasets with a legend.</p>
+
+            <div class="demo-container">
+              <ScatterGraph
+                container-id="scatter-multi-demo"
+                title="Emissions by Building Type"
+                y-axis-label="GHG Intensity (kg CO₂/sqft)"
+                :series="scatterMultiData"
+                :show-grid="true"
+                :show-trend-line="true"
+                :show-legend="true"
+              />
             </div>
 
-            <div class="scatter-variant">
-              <h3>Multi-Series</h3>
-              <p>Compare multiple datasets with a legend.</p>
-
-              <div class="demo-container">
-                <ScatterGraph
-                  container-id="scatter-multi-demo"
-                  title="Emissions by Building Type"
-                  y-axis-label="GHG Intensity (kg CO₂/sqft)"
-                  :series="scatterMultiData"
-                  :show-grid="true"
-                  :show-trend-line="true"
-                  :show-legend="true"
-                />
-              </div>
-
-              <details class="code-example">
-                <summary>View Code Example</summary>
-                <pre>
+            <details class="code-example">
+              <summary>View Code Example</summary>
+              <pre>
 <code>&lt;ScatterGraph
   container-id="scatter-multi-demo"
   title="Emissions by Building Type"
@@ -311,10 +311,10 @@ const scatterMultiData: Array&lt;DataSeries&gt; = [
   },
 ];</code>
 </pre>
-              </details>
-            </div>
+            </details>
           </div>
-        </section>
+        </div>
+      </section>
 
       <!-- Props Reference -->
       <section class="demo-section props-reference">
@@ -455,7 +455,9 @@ const scatterMultiData: Array&lt;DataSeries&gt; = [
       overflow-x: auto;
       border-radius: $brd-rad-medium;
 
-      summary { padding: 0 0 1rem 0; }
+      summary {
+        padding: 0 0 1rem 0;
+      }
 
       code {
         display: block;
