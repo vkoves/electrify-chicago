@@ -253,11 +253,18 @@ export default class Index extends Vue {
         <div v-if="isDevelopment" class="debug-tools">
           <div class="announce-panel -blue">
             <h3>🔧 Local Debug Tools</h3>
-            <p>
-              <g-link to="/social-cards" class="bold">
-                View Sample Social Cards
-              </g-link>
-            </p>
+            <ul>
+              <li>
+                <g-link to="/social-cards" class="bold">
+                  View Sample Social Cards
+                </g-link>
+              </li>
+              <li>
+                <g-link to="/graph-demos" class="bold">
+                  View Graph Demos
+                </g-link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
