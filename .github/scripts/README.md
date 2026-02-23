@@ -5,6 +5,7 @@ This directory contains TypeScript scripts used by GitHub Actions workflows.
 ## comment-playwright-report.ts
 
 Posts or updates PR comments with Playwright test results. This script:
+
 - Parses Playwright JSON test results
 - Fetches artifact IDs for direct download links
 - Creates/updates a single PR comment showing passed/failed tests
@@ -18,6 +19,7 @@ Used by `.github/workflows/playwright.yml` after tests run.
 Local testing harness for `comment-playwright-report.ts`. Mocks the GitHub API and logs what would be called.
 
 **Usage:**
+
 ```bash
 yarn test-playwright-comment
 ```
@@ -25,6 +27,7 @@ yarn test-playwright-comment
 This reads your local `playwright-report/results.json` and shows exactly what comment would be posted to a PR.
 
 **Testing scenarios:**
+
 - Edit line 20 in `test-comment-script.ts` to simulate an existing comment
 - Run Playwright tests to generate different results (passed/failed)
 - Verify comment formatting without pushing to CI

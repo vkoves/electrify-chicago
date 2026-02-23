@@ -64,7 +64,10 @@ const mockGitHub = {
         repo: string;
         run_id: number;
       }) => {
-        console.log('\n🔍 [Mock] listWorkflowRunArtifacts called with:', params);
+        console.log(
+          '\n🔍 [Mock] listWorkflowRunArtifacts called with:',
+          params,
+        );
         // Return mock artifact data
         return {
           data: {

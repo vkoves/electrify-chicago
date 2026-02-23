@@ -603,18 +603,20 @@ query ($id: ID!, $ID: String) {
           <p class="constrained">
             <strong>* Note on Rankings:</strong> Rankings and medians are among
             <em>included</em> buildings, which are those who reported under the
-            Chicago Energy Benchmarking Ordinance for the year {{ LatestDataYear }},
-            which only applies to buildings over 50,000 square feet.
+            Chicago Energy Benchmarking Ordinance for the year
+            {{ LatestDataYear }}, which only applies to buildings over 50,000
+            square feet.
           </p>
 
           <p class="constrained">
             <strong>** Note on Bill Estimates:</strong>
-            Estimates for gas and electric bills are based on average electric and
-            gas <em>retail</em> prices for Chicago in {{ UtilityCosts.year }} and
-            are rounded. We expect large buildings would negotiate lower rates with
-            utilities, but these estimates serve as an upper bound of cost and help
-            understand the volume of energy a building is used by comparing it to
-            your own energy bills! See our
+            Estimates for gas and electric bills are based on average electric
+            and gas <em>retail</em> prices for Chicago in
+            {{ UtilityCosts.year }} and are rounded. We expect large buildings
+            would negotiate lower rates with utilities, but these estimates
+            serve as an upper bound of cost and help understand the volume of
+            energy a building is used by comparing it to your own energy bills!
+            See our
             <a :href="UtilityCosts.source" target="_blank" rel="noopener">
               Chicago Gas & Electric Costs Source <NewTabIcon />
             </a>

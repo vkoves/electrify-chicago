@@ -13,15 +13,17 @@ const PrintPageHeight = 1056; // 11 * 96
 
 // Configure to only run on Desktop Chrome with print page dimensions
 test.use({
-  viewport: { width: PrintPageWidth, height: PrintPageHeight }
+  viewport: { width: PrintPageWidth, height: PrintPageHeight },
 });
 
 test.describe('Building Page Print Mode Snapshots', () => {
-
   BuildingPages.forEach(({ name, url }) => {
     test(`${name} (Print Page 1)`, async ({ page }, testInfo) => {
       // Skip mobile - print tests only run on desktop
-      test.skip(testInfo.project.name === 'Mobile Chrome', 'Print tests are desktop only');
+      test.skip(
+        testInfo.project.name === 'Mobile Chrome',
+        'Print tests are desktop only',
+      );
 
       await page.goto(url);
       await waitForPageReady(page);
@@ -43,7 +45,7 @@ test.describe('Building Page Print Mode Snapshots', () => {
         `${pageNameToFileName(name)}-print-page1.png`,
         {
           fullPage: false, // Only capture viewport (first page)
-        }
+        },
       );
     });
   });

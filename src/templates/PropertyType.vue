@@ -205,8 +205,8 @@ export default class PropertyType extends Vue {
         <h2>All {{ propertyTypePlural }}</h2>
 
         <p class="constrained -wide smaller">
-          Showing {{ propertyTypePlural }} buildings that reported their energy use and
-          greenhouse gas emissions to the City of Chicago under energy
+          Showing {{ propertyTypePlural }} buildings that reported their energy
+          use and greenhouse gas emissions to the City of Chicago under energy
           benchmarking.
         </p>
 

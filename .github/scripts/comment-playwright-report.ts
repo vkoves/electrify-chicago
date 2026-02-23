@@ -34,6 +34,7 @@ interface GitHubContext {
   repo: { owner: string; repo: string };
   runId: number;
   issue: { number: number };
+  sha: string;
 }
 
 interface GitHubAPI {
@@ -74,7 +75,10 @@ interface GitHubAPI {
 /**
  * Recursively collects all test specs from Playwright suites
  */
-function collectTests(suite: PlaywrightSuite, allTests: PlaywrightSpec[]): void {
+function collectTests(
+  suite: PlaywrightSuite,
+  allTests: PlaywrightSpec[],
+): void {
   if (suite.specs) {
     allTests.push(...suite.specs);
   }
@@ -91,10 +95,10 @@ function parseTestResults(): TestResults | null {
     const resultsPath = path.join(
       process.cwd(),
       'playwright-report',
-      'results.json'
+      'results.json',
     );
     const results = JSON.parse(
-      fs.readFileSync(resultsPath, 'utf8')
+      fs.readFileSync(resultsPath, 'utf8'),
     ) as PlaywrightResults;
 
     const allTests: PlaywrightSpec[] = [];
@@ -104,12 +108,10 @@ function parseTestResults(): TestResults | null {
     const totalTests = allTests.length;
     const failedTests = allTests.filter((test) =>
       test.tests.some((t) =>
-        t.results.some((r) => r.status === 'failed' || r.status === 'timedOut')
-      )
+        t.results.some((r) => r.status === 'failed' || r.status === 'timedOut'),
+      ),
     );
-    const passedTests = allTests.filter((test) =>
-      !failedTests.includes(test)
-    );
+    const passedTests = allTests.filter((test) => !failedTests.includes(test));
 
     return { totalTests, passedTests, failedTests };
   } catch (error) {
@@ -134,19 +136,26 @@ function extractKeyError(errorMessage: string): string {
   const clean = stripAnsiCodes(errorMessage);
 
   // Look for pixel difference messages
-  const pixelDiffMatch = clean.match(/(\d+) pixels \(ratio [0-9.]+.*?\) are different/);
+  const pixelDiffMatch = clean.match(
+    /(\d+) pixels \(ratio [0-9.]+.*?\) are different/,
+  );
   if (pixelDiffMatch) {
     return pixelDiffMatch[0];
   }
 
   // Look for image size differences
-  const sizeDiffMatch = clean.match(/Expected an image .+?\. \d+ pixels \(ratio [0-9.]+.*?\) are different/);
+  const sizeDiffMatch = clean.match(
+    /Expected an image .+?\. \d+ pixels \(ratio [0-9.]+.*?\) are different/,
+  );
   if (sizeDiffMatch) {
     return sizeDiffMatch[0];
   }
 
   // Fall back to first non-empty line
-  const lines = clean.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  const lines = clean
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l.length > 0);
   return lines[0] || 'Test failed';
 }
 
@@ -156,7 +165,7 @@ function extractKeyError(errorMessage: string): string {
 function formatFailures(failedTests: PlaywrightSpec[]): string {
   const failures = failedTests.map((spec) => {
     const failedTest = spec.tests.find((t) =>
-      t.results.some((r) => r.status === 'failed')
+      t.results.some((r) => r.status === 'failed'),
     );
     const result = failedTest?.results?.find((r) => r.status === 'failed');
     const projectName = failedTest?.projectName || 'Unknown';
@@ -183,12 +192,29 @@ function formatPassed(passedTests: PlaywrightSpec[]): string {
 }
 
 /**
+ * Formats a Date as a human-readable string in Central Time, e.g. "Feb 23, 2026, 12:33 PM CST"
+ */
+function formatRunTime(date: Date): string {
+  return date.toLocaleString('en-US', {
+    timeZone: 'America/Chicago',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+    timeZoneName: 'short',
+  });
+}
+
+/**
  * Builds the PR comment body with test results
  */
 function buildCommentBody(
   testResults: TestResults | null,
   artifactUrl: string,
-  runUrl: string
+  runUrl: string,
+  commitSha: string,
 ): string {
   let testSummary = '';
   let testDetails = '';
@@ -212,10 +238,16 @@ function buildCommentBody(
     const pageList = failedPages.join(', ');
 
     testSummary = `**❌ ${testResults.failedTests.length}/${testResults.totalTests} tests failed**\n\nWe've detected visual changes on: ${pageList}`;
-    testDetails = formatFailures(testResults.failedTests) + formatPassed(testResults.passedTests);
+    testDetails =
+      formatFailures(testResults.failedTests) +
+      formatPassed(testResults.passedTests);
   }
 
+  const shortSha = commitSha.substring(0, 7);
+  const runTime = formatRunTime(new Date());
+
   return `## 🎭 Playwright Visual Test Report
+_Run on commit \`${shortSha}\` at ${runTime}_
 
 ${testSummary}${testDetails}
 
@@ -244,7 +276,7 @@ export default async function commentPlaywrightReport({
     });
 
     const playwrightArtifact = artifacts.data.artifacts.find(
-      (artifact: { name: string }) => artifact.name === 'playwright-report'
+      (artifact: { name: string }) => artifact.name === 'playwright-report',
     );
 
     if (playwrightArtifact) {
@@ -256,7 +288,7 @@ export default async function commentPlaywrightReport({
   }
 
   const testResults = parseTestResults();
-  const body = buildCommentBody(testResults, artifactUrl, runUrl);
+  const body = buildCommentBody(testResults, artifactUrl, runUrl, context.sha);
 
   // Find existing comment
   const comments = await github.rest.issues.listComments({
@@ -268,7 +300,7 @@ export default async function commentPlaywrightReport({
   const botComment = comments.data.find(
     (comment) =>
       comment.user?.login === 'github-actions[bot]' &&
-      comment.body.includes('## 🎭 Playwright Visual Test Report')
+      comment.body.includes('## 🎭 Playwright Visual Test Report'),
   );
 
   // Create or update comment
