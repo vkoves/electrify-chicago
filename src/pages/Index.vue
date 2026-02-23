@@ -5,6 +5,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 import BuildingTile from '../components/BuildingTile.vue';
+import OwnersList from '../components/OwnersList.vue';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -17,6 +18,7 @@ import BuildingTile from '../components/BuildingTile.vue';
     BuildingTile,
     DataDisclaimer,
     DataSourceFootnote,
+    OwnersList,
   },
   metaInfo() {
     return { title: 'Home' };
@@ -94,6 +96,16 @@ export default class Index extends Vue {
           DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
+        }
+      }
+    }
+    allBuildings: allBuilding {
+      edges {
+        node {
+          ID
+          Owner
+          GHGIntensity
+          TotalGHGEmissions
         }
       }
     }
@@ -178,6 +190,8 @@ export default class Index extends Vue {
             </li>
           </ul>
         </div>
+
+        <OwnersList :buildings="$page.allBuildings.edges" />
 
         <h2>Our Research &amp; Updates</h2>
 
