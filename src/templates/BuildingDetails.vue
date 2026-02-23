@@ -244,7 +244,7 @@ query ($id: ID!, $ID: String) {
                   <dd>
                     <g-link
                       class="nav-link"
-                      :to="`/search?type=${propertyTypeEncoded}`"
+                      :to="`/property-type/${propertyTypeSlug}`"
                     >
                       {{ $page.building.PrimaryPropertyType }}
                     </g-link>
@@ -695,6 +695,7 @@ import {
   getBuildingCustomInfo,
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
+import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
 import EmailModal from '../components/EmailModal.vue';
 import LetterGrade from '../components/LetterGrade.vue';
 import ShareButton from '../components/ShareButton.vue';
@@ -853,6 +854,11 @@ export default class BuildingDetails extends Vue {
   /** The primary property type of the current building, URL encoded for a link */
   get propertyTypeEncoded(): string {
     return encodeURIComponent(this.propertyType);
+  }
+
+  /** The property type slug for linking to the property type page */
+  get propertyTypeSlug(): string {
+    return slugifyPropertyType(this.propertyType);
   }
 
   get prodBuildingUrl(): string {

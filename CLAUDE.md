@@ -6,6 +6,13 @@ This document contains important guidelines for Claude when working on this code
 
 This project uses Yarn, use `yarn install` commands, NOT NPM.
 
+## Linting
+
+**Always use `yarn lint-fix` to auto-fix linting errors.** Do not run individual ESLint or Prettier commands.
+
+- `yarn lint-fix` - Automatically fixes ESLint, Stylelint, and Prettier errors
+- `yarn lint` - Check for linting errors without fixing
+
 ## Code Duplication
 
 **NEVER duplicate code or CSS.** Always extract shared functionality to common files:

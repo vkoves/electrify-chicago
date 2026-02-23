@@ -8,6 +8,10 @@ import { parse } from 'csv-parse/sync';
 
 import pageSocialConfigs from '../src/constants/page-social-images/page-social-configs.json';
 import buildingOwnersData from '../src/constants/building-owners.json';
+import propertyTypesData from '../src/data/dist/property-types.json';
+
+// Import slugifyPropertyType from the CommonJS module
+import { slugifyPropertyType } from '../src/constants/property-type-helpers.js';
 
 // Shared constants
 export const SOCIAL_IMAGES_DIR = './static/social-images';
@@ -100,5 +104,22 @@ export function getOwnerSocialImagePath(ownerId: string): string {
 
 export async function ownerImageExists(ownerId: string): Promise<boolean> {
   const imagePath = getOwnerSocialImagePath(ownerId);
+  return await fs.pathExists(imagePath);
+}
+
+// Property type social image utilities
+export function getAvailablePropertyTypes(): string[] {
+  return (propertyTypesData as { propertyTypes: string[] }).propertyTypes;
+}
+
+export function getPropertyTypeSocialImagePath(propertyType: string): string {
+  const slug = (slugifyPropertyType as (pt: string) => string)(propertyType);
+  return path.join(SOCIAL_IMAGES_DIR, `property-type-${slug}.webp`);
+}
+
+export async function propertyTypeImageExists(
+  propertyType: string,
+): Promise<boolean> {
+  const imagePath = getPropertyTypeSocialImagePath(propertyType);
   return await fs.pathExists(imagePath);
 }

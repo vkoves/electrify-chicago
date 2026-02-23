@@ -12,6 +12,15 @@ export const EnergyBreakdownColors = {
   NaturalGas: '#993300',
 };
 
+/** Colors for grade distribution pie charts */
+export const GradeColors: Record<string, string> = {
+  A: '#009f49', // $grade-a-green
+  B: '#7fa52e', // $grade-b-green
+  C: '#b36a15', // $grade-c-orange
+  D: '#972222', // $grade-d-red
+  F: '#d60101', // $grade-f-red
+};
+
 export interface IBuildingBenchmarkStat {
   count: number;
   min: number;
@@ -212,6 +221,13 @@ export function isNewBuilding(
 export interface DataPoint {
   year: number;
   value: number;
+}
+
+export interface DataSeries {
+  name: string;
+  data: DataPoint[];
+  strokeColor: string;
+  fillColor: string;
 }
 
 export type RegressionLine = {
@@ -653,6 +669,50 @@ export function smoothlyScrollToAnchor(event: MouseEvent): void {
       window.history.pushState(null, '', `#${targetId}`);
     }
   }
+}
+
+/**
+ * Pluralize a property type name for display
+ * Examples:
+ * - "Data Center" -> "Data Centers"
+ * - "Office" -> "Office Buildings"
+ * - "Multifamily Housing" -> "Multifamily Housing"
+ */
+export function pluralizePropertyType(propertyType: string): string {
+  // Words ending in "Center" become "Centers"
+  if (propertyType.endsWith('Center')) {
+    return propertyType + 's';
+  }
+
+  // Words ending in "Housing" stay as-is (mass noun)
+  // Words ending in "Hall" stay as-is (already works as category)
+  if (propertyType.endsWith('Housing') || propertyType.endsWith('Hall')) {
+    return propertyType;
+  }
+
+  // Default: append " Buildings"
+  return propertyType + ' Buildings';
+}
+
+/**
+ * Determines if a color is dark based on its luminance
+ * Returns true for dark colors (should use white text), false for light colors (use black text)
+ */
+export function isColorDark(hexColor: string): boolean {
+  // Remove # if present
+  const hex = hexColor.replace('#', '');
+
+  // Convert to RGB
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Calculate relative luminance (perceived brightness)
+  // Using formula from https://www.w3.org/TR/WCAG20/#relativeluminancedef
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // If luminance is less than 0.5, it's a dark color
+  return luminance < 0.5;
 }
 
 /** Common stats for groups of buildings, like for ward pages & owner pages */
