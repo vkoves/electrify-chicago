@@ -9,6 +9,7 @@ import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import {
   calculateBuildingsStats,
+  GradeColors,
   IBuildingBenchmarkStats,
   IBuilding,
   IBuildingNode,
@@ -119,15 +120,6 @@ export default class BiggestBuildings extends Vue {
       this.avgBuildingAge = 'N/A';
     }
 
-    // Grade distribution for pie chart
-    const gradeColors: Record<string, string> = {
-      A: '#009f49', // $grade-a-green
-      B: '#7fa52e', // $grade-b-green
-      C: '#b36a15', // $grade-c-orange
-      D: '#972222', // $grade-d-red
-      F: '#d60101', // $grade-f-red
-    };
-
     // Build data for Pie Chart
     this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
       .filter(([, count]) => count > 0) // Only include grades that exist
@@ -138,7 +130,7 @@ export default class BiggestBuildings extends Vue {
       .map(([grade, count]) => ({
         label: `Grade ${grade}`,
         value: count,
-        color: gradeColors[grade] || '#999999',
+        color: GradeColors[grade] || '#999999',
       }));
   }
 }
@@ -322,6 +314,7 @@ export default class BiggestBuildings extends Vue {
 
     .stat-number {
       margin-top: 0.5rem;
+      color: $off-black;
     }
 
     // Override grid for 3 cards layout
