@@ -5,6 +5,7 @@ comprehensive statistical summaries.  It transforms raw building energy data
 into year-over-year statistical insights used for analysis and visualization.
 """
 
+import math
 import pandas
 from typing import List, Dict
 from src.data.scripts.utils import (
@@ -45,6 +46,26 @@ building_cols_to_analyze = [
     "DistrictSteamUse",
     "DistrictChilledWaterUse",
 ]
+
+
+def clean_year_stats(stats_dict: dict) -> dict:
+    """
+    Post-processes a describe().to_dict() result:
+    - Columns with count=0 are reduced to {"count": 0} to avoid NaN fields in JSON
+    - NaN values in other columns are dropped (e.g. std=NaN for single-building years)
+    - count is cast to int since buildings are always whole numbers
+    """
+    result = {}
+    for col, col_stats in stats_dict.items():
+        if col_stats.get("count", 0) == 0:
+            result[col] = {"count": 0}
+        else:
+            result[col] = {
+                k: int(v) if k == "count" else v
+                for k, v in col_stats.items()
+                if not (isinstance(v, float) and math.isnan(v))
+            }
+    return result
 
 
 def hasReportedData(ghg_intensity) -> bool:
@@ -148,7 +169,7 @@ def calculateBuildingStatsByYear(building_data_in: pandas.DataFrame) -> List[str
         )
 
         # Convert to dictionary and store
-        yearly_stats[str(year)] = year_stats_df.to_dict()
+        yearly_stats[str(year)] = clean_year_stats(year_stats_df.to_dict())
 
     # Create summary statistics across all years
 

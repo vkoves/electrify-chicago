@@ -80,6 +80,10 @@ def main():
             "description": "generate_historic_stats",
         },
         {
+            "module": "src.data.scripts.generate_historic_stats_by_property_type",
+            "description": "generate_historic_stats_by_property_type",
+        },
+        {
             "module": "src.data.scripts.calculate_fines",
             "description": "calculate_fines",
         },

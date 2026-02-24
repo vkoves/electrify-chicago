@@ -251,9 +251,8 @@ def test_calculateBuildingStatsByYear_single_year_single_building():
             assert stats["count"] == 1
             assert stats["mean"] == stats["min"] == stats["max"] == stats["median"]
 
-            # standard deviation should be 0 for single value (pandas returns NaN for single value std)
-            # We need to handle NaN case since pandas returns NaN for std of single value
-            assert stats["std"] == 0.0 or pd.isna(stats["std"])
+            # pandas returns NaN for std of a single value; clean_year_stats drops NaN fields
+            assert "std" not in stats
 
 
 def test_calculateBuildingStatsByYear_data_input_not_mutated(sample_building_data):
