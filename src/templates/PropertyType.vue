@@ -60,6 +60,8 @@ export default class PropertyType extends Vue {
   totalNaturalGasUse?: string;
   medianNaturalGasUse?: string;
 
+  showTrends = false;
+
   created(): void {
     // Buildings are pre-filtered by GraphQL query using PrimaryPropertyType field
     this.buildingsFiltered = this.$page.allBuilding.edges;
@@ -215,6 +217,7 @@ export default class PropertyType extends Vue {
       .sort((a, b) => a.x - b.x);
   }
 
+  // TODO: Move to using calculateEnergyBreakdown
   get energyMixPie(): IPieSlice[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const stats = (BuildingStatsByPropertyType as Record<string, any>)[
@@ -303,7 +306,7 @@ export default class PropertyType extends Vue {
       </BuildingsHero>
 
       <div class="page-constrained">
-        <section class="stats-line">
+        <section class="stats-panel">
           <h2 class="stats-heading">{{ propertyType }} Stats</h2>
 
           <div class="stats-row">
@@ -414,8 +417,19 @@ export default class PropertyType extends Vue {
             </div>
           </div>
 
-          <div
+          <button
             v-if="buildingCountOverTime.length > 1"
+            class="trends-toggle"
+            @click="showTrends = !showTrends"
+          >
+            {{ showTrends ? 'Hide' : 'Show' }} Trends
+            <span class="trends-toggle-arrow" :class="{ '-open': showTrends }"
+              >▼</span
+            >
+          </button>
+
+          <div
+            v-if="buildingCountOverTime.length > 1 && showTrends"
             class="stats-subsection -spark-lines"
           >
             <div class="spark-stat-item">
@@ -526,22 +540,20 @@ export default class PropertyType extends Vue {
     width: 100%;
     margin: 0;
     font-size: 1rem;
+    padding: 1rem 1rem 0;
   }
 
-  .stats-line {
+  .stats-panel {
     display: flex;
     align-items: center;
     margin: 2rem 0;
-    padding: 1rem 1rem;
     background: $off-white;
     border-radius: $brd-rad-medium;
     flex-wrap: wrap;
 
     @media (max-width: $mobile-max-width) {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      padding: 1rem;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     .stats-row {
@@ -550,7 +562,8 @@ export default class PropertyType extends Vue {
       gap: 2rem;
       width: 100%;
       flex-wrap: wrap;
-      margin-bottom: 1rem;
+      padding: 0 1rem 1rem;
+      margin-top: 0;
 
       @media (max-width: $mobile-max-width) {
         display: grid;
@@ -582,7 +595,6 @@ export default class PropertyType extends Vue {
           align-items: center;
 
           @media (max-width: $mobile-max-width) {
-            grid-column: 1 / -1;
             padding-top: 1.5rem;
             border-top: $border-thin solid $grey;
           }
@@ -627,12 +639,14 @@ export default class PropertyType extends Vue {
       display: flex;
       gap: 2rem;
       width: 100%;
-      padding: 1rem 0;
+      padding: 1rem;
       border-top: $border-thin solid $grey;
       flex-wrap: wrap;
 
       @media (max-width: $mobile-max-width) {
         gap: 1.5rem;
+
+        .divider { display: none; }
       }
 
       .stat-item {
@@ -661,6 +675,37 @@ export default class PropertyType extends Vue {
           height: 3rem;
           filter: drop-shadow(0.125rem 0.125rem rgba(0, 0, 0, 0.4));
         }
+      }
+    }
+  }
+
+  .trends-toggle {
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: none;
+    border: none;
+    border-top: $border-thin solid $grey;
+    border-radius: 0 0 $brd-rad-medium $brd-rad-medium;
+    font-size: 0.8rem;
+    color: $text-mid-light;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+
+    &:hover {
+      background: $grey-light;
+      color: $off-black;
+    }
+
+    .trends-toggle-arrow {
+      display: inline-block;
+      transition: transform 0.2s ease;
+      font-size: 0.6rem;
+
+      &.-open {
+        transform: rotate(180deg);
       }
     }
   }
