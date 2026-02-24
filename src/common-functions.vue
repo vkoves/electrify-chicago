@@ -392,7 +392,7 @@ export function getMedianMultipleMsg(
 
   // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
   if (medianMult > 5) {
-    return Math.round(medianMult) + 'x';
+    return Math.round(medianMult).toLocaleString() + 'x';
   }
 
   // If the multiple is < 1, make a fraction (e.g. 1/5 the median)

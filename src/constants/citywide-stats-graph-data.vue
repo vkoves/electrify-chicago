@@ -163,7 +163,7 @@ const graphConfigs = [
     data: extractMetricData('SourceEUI', '50%'),
     containerId: 'source-eui-chart',
     title: 'Median Source EUI',
-    yAxisLabel: 'kBtu/sq ft',
+    yAxisLabel: 'kBTU/sq ft',
     strokeColor: 'chart-stroke-purple',
     fillColor: 'chart-fill-purple',
     description: [
@@ -174,9 +174,9 @@ const graphConfigs = [
         'that power to the building.',
       'For every kWh that reaches your building, about 2-3 kWh of primary energy was needed ' +
         'at the ' +
-        'power plant due to conversion and transmission losses. One kBtu is roughly the energy ' +
+        'power plant due to conversion and transmission losses. One kBTU is roughly the energy ' +
         'in a ' +
-        'wooden kitchen match — buildings typically use tens of thousands of kBtu per square ' +
+        'wooden kitchen match — buildings typically use tens of thousands of kBTU per square ' +
         'foot annually.',
       'This metric matters because it reflects the true demand buildings place on our energy ' +
         'infrastructure. ' +
@@ -189,7 +189,7 @@ const graphConfigs = [
     data: extractMetricData('SiteEUI', '50%'),
     containerId: 'site-eui-chart',
     title: 'Median Site EUI',
-    yAxisLabel: 'kBtu/sq ft',
+    yAxisLabel: 'kBTU/sq ft',
     strokeColor: 'chart-stroke-teal',
     fillColor: 'chart-fill-teal',
     description: [
@@ -198,9 +198,9 @@ const graphConfigs = [
         "what you'd see on your utility bills. This is the most straightforward way to " +
         'understand ' +
         'how much energy a building uses per square foot.',
-      'A well-insulated, efficient building in Chicago might use 50-80 kBtu per square foot ' +
+      'A well-insulated, efficient building in Chicago might use 50-80 kBTU per square foot ' +
         'annually, ' +
-        "while an older, inefficient building could use 150+ kBtu per square foot. That's " +
+        "while an older, inefficient building could use 150+ kBTU per square foot. That's " +
         'the difference ' +
         'between a warm sweater and a thin t-shirt in a Chicago winter.',
       "Site EUI is the go-to metric for comparing building performance because it's " +

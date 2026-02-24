@@ -11,6 +11,7 @@ import {
   EnergyBreakdownColors,
   GradeColors,
   IBuildingNode,
+  getMedianMultipleMsg,
   pluralizePropertyType,
 } from '../common-functions.vue';
 import { NumberFormatter } from '../utils/number-formatter.vue';
@@ -136,6 +137,54 @@ export default class PropertyType extends Vue {
   get citywideMedianNaturalGasUse(): string {
     return NumberFormatter.formatKbtu(
       BuildingBenchmarkStats.NaturalGasUse.median,
+    );
+  }
+
+  get electricityTotalVsCitywideMultiple(): string | null {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
+      this.propertyType
+    ];
+    if (!stats?.ElectricityUse?.total) return null;
+    return getMedianMultipleMsg(
+      BuildingBenchmarkStats.ElectricityUse.median,
+      stats.ElectricityUse.total,
+    );
+  }
+
+  get electricityMedianMultiple(): string | null {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
+      this.propertyType
+    ];
+    if (!stats?.ElectricityUse?.median) return null;
+    return getMedianMultipleMsg(
+      BuildingBenchmarkStats.ElectricityUse.median,
+      stats.ElectricityUse.median,
+    );
+  }
+
+  get gasTotalVsCitywideMultiple(): string | null {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
+      this.propertyType
+    ];
+    if (!stats?.NaturalGasUse?.total) return null;
+    return getMedianMultipleMsg(
+      BuildingBenchmarkStats.NaturalGasUse.median,
+      stats.NaturalGasUse.total,
+    );
+  }
+
+  get gasMedianMultiple(): string | null {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
+      this.propertyType
+    ];
+    if (!stats?.NaturalGasUse?.median) return null;
+    return getMedianMultipleMsg(
+      BuildingBenchmarkStats.NaturalGasUse.median,
+      stats.NaturalGasUse.median,
     );
   }
 
@@ -321,7 +370,7 @@ export default class PropertyType extends Vue {
               <div class="stat-number">{{ totalGHGEmissions }}</div>
               <div class="stat-label">
                 <strong>Total Emissions</strong> <br />
-                (metric tons CO<sub>2</sub>e)
+                <span class="unit">metric tons CO<sub>2</sub>e</span>
               </div>
             </div>
 
@@ -329,7 +378,7 @@ export default class PropertyType extends Vue {
               <div class="stat-number">{{ avgGHGIntensity }}</div>
               <div class="stat-label">
                 <strong>Avg GHG Intensity</strong> <br />
-                (kg CO<sub>2</sub>e/sqft)
+                <span class="unit">kg CO<sub>2</sub>e/sqft</span>
               </div>
             </div>
 
@@ -378,17 +427,22 @@ export default class PropertyType extends Vue {
               />
               <div>
                 <div class="stat-label -no-min bold">Total Electricity Use</div>
-                <div class="stat-number">{{ totalElectricityUse }} kBtu</div>
-                <div class="stat-avg-line">
-                  <span>
-                    <strong>Median {{ propertyType }}:</strong>
-                    {{ medianElectricityUse }} kBtu</span
+                <div class="stat-number">{{ totalElectricityUse }} kBTU</div>
+                <div
+                  v-if="electricityTotalVsCitywideMultiple"
+                  class="stat-median-compare"
+                >
+                  <strong
+                    >{{ electricityTotalVsCitywideMultiple }} Median City
+                    Building</strong
                   >
-                  <span class="divider">|</span>
-                  <span>
-                    <strong>City Median:</strong>
-                    {{ citywideMedianElectricityUse }} kBtu/bldg
-                  </span>
+                  ({{ citywideMedianElectricityUse }} kBTU)
+                </div>
+                <div v-if="medianElectricityUse" class="stat-type-median">
+                  Median {{ propertyType }}: {{ medianElectricityUse }} kBTU
+                  <span v-if="electricityMedianMultiple"
+                    >({{ electricityMedianMultiple }} median)</span
+                  >
                 </div>
               </div>
             </div>
@@ -401,17 +455,22 @@ export default class PropertyType extends Vue {
               />
               <div>
                 <div class="stat-label -no-min bold">Total Natural Gas Use</div>
-                <div class="stat-number">{{ totalNaturalGasUse }} kBtu</div>
-                <div class="stat-avg-line">
-                  <span>
-                    <strong>Median {{ propertyType }}:</strong>
-                    {{ medianNaturalGasUse }} kBtu</span
+                <div class="stat-number">{{ totalNaturalGasUse }} kBTU</div>
+                <div
+                  v-if="gasTotalVsCitywideMultiple"
+                  class="stat-median-compare"
+                >
+                  <strong
+                    >{{ gasTotalVsCitywideMultiple }} Median City
+                    Building</strong
                   >
-                  <span class="divider">|</span>
-                  <span>
-                    <strong>City Median:</strong>
-                    {{ citywideMedianNaturalGasUse }} kBtu/bldg
-                  </span>
+                  ({{ citywideMedianNaturalGasUse }} kBTU)
+                </div>
+                <div v-if="medianNaturalGasUse" class="stat-type-median">
+                  Median {{ propertyType }}: {{ medianNaturalGasUse }} kBTU
+                  <span v-if="gasMedianMultiple"
+                    >({{ gasMedianMultiple }} median)</span
+                  >
                 </div>
               </div>
             </div>
@@ -612,6 +671,12 @@ export default class PropertyType extends Vue {
     .stat-label {
       font-size: 0.875rem;
       color: $text-mid-light;
+      line-height: 1.25;
+      margin-top: 0.25rem;
+
+      .unit {
+        font-size: 0.75rem;
+      }
 
       &:not(.-no-min) {
         // Lock to two lines for alignment
@@ -625,14 +690,16 @@ export default class PropertyType extends Vue {
       margin-top: 0.25rem;
     }
 
-    .stat-avg-line {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
+    .stat-median-compare {
+      font-size: 0.875rem;
       color: $text-mid-light;
       margin-top: 0.25rem;
-      flex-wrap: wrap;
+    }
+
+    .stat-type-median {
+      font-size: 0.8rem;
+      color: $text-mid-light;
+      margin-top: 0.15rem;
     }
 
     .stats-subsection {
@@ -646,7 +713,9 @@ export default class PropertyType extends Vue {
       @media (max-width: $mobile-max-width) {
         gap: 1.5rem;
 
-        .divider { display: none; }
+        .divider {
+          display: none;
+        }
       }
 
       .stat-item {
