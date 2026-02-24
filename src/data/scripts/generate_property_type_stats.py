@@ -29,6 +29,14 @@ property_stats_file_path = get_data_file_path(
     out_dir, "building-statistics-by-property-type.json"
 )
 
+# Columns for which we compute a total (sum) across all buildings of a property type
+building_cols_to_total = [
+    "TotalGHGEmissions",
+    "GrossFloorArea",
+    "ElectricityUse",
+    "NaturalGasUse",
+]
+
 # Columns we want to rank for and append ranks to each building's data
 building_cols_to_rank = [
     "GHGIntensity",
@@ -74,7 +82,7 @@ def calculate_building_stats(
 
     # Compute all stats upfront
     describe_df = grouped_by_prop_type[building_cols_to_rank].describe()
-    sum_df = grouped_by_prop_type[["TotalGHGEmissions", "GrossFloorArea"]].sum()
+    sum_df = grouped_by_prop_type[building_cols_to_total].sum()
     grade_dist = (
         grouped_by_prop_type["AvgPercentileLetterGrade"]
         .value_counts()
@@ -102,12 +110,9 @@ def calculate_building_stats(
             col_stats["count"] = int(col_stats["count"])
 
         # Add totals for aggregate fields needed by the property type page
-        prop_stats["TotalGHGEmissions"]["total"] = round(
-            float(sum_df.loc[property, "TotalGHGEmissions"]), 1
-        )
-        prop_stats["GrossFloorArea"]["total"] = round(
-            float(sum_df.loc[property, "GrossFloorArea"]), 1
-        )
+        for col in building_cols_to_total:
+            if col in prop_stats:
+                prop_stats[col]["total"] = round(float(sum_df.loc[property, col]), 1)
 
         # Add grade distribution
         if property in grade_dist.index:

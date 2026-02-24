@@ -11,9 +11,11 @@ import {
   IBuildingNode,
   pluralizePropertyType,
 } from '../common-functions.vue';
+import { NumberFormatter } from '../utils/number-formatter.vue';
 import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
 import { generatePropertyTypeMeta } from '../constants/meta-helpers.vue';
 import BuildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
+import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -49,6 +51,11 @@ export default class PropertyType extends Vue {
   totalSquareFootage?: string;
   gradeDistributionPie: Array<IPieSlice> = [];
 
+  totalElectricityUse?: string;
+  medianElectricityUse?: string;
+  totalNaturalGasUse?: string;
+  medianNaturalGasUse?: string;
+
   created(): void {
     // Buildings are pre-filtered by GraphQL query using PrimaryPropertyType field
     this.buildingsFiltered = this.$page.allBuilding.edges;
@@ -68,6 +75,24 @@ export default class PropertyType extends Vue {
     ).toLocaleString();
     this.avgGHGIntensity = (stats.GHGIntensity.mean as number).toFixed(1);
     this.totalSquareFootage = (stats.GrossFloorArea.total / 1000000).toFixed(1);
+
+    if (stats.ElectricityUse?.total) {
+      this.totalElectricityUse = NumberFormatter.formatKbtu(
+        stats.ElectricityUse.total,
+      );
+      this.medianElectricityUse = NumberFormatter.formatKbtu(
+        stats.ElectricityUse.median,
+      );
+    }
+
+    if (stats.NaturalGasUse?.total) {
+      this.totalNaturalGasUse = NumberFormatter.formatKbtu(
+        stats.NaturalGasUse.total,
+      );
+      this.medianNaturalGasUse = NumberFormatter.formatKbtu(
+        stats.NaturalGasUse.median,
+      );
+    }
 
     // Build data for Pie Chart
     this.gradeDistributionPie = Object.entries(
@@ -94,6 +119,18 @@ export default class PropertyType extends Vue {
 
   get buildingCount(): number {
     return this.buildingsFiltered.length;
+  }
+
+  get citywideMedianElectricityUse(): string {
+    return NumberFormatter.formatKbtu(
+      BuildingBenchmarkStats.ElectricityUse.median,
+    );
+  }
+
+  get citywideMedianNaturalGasUse(): string {
+    return NumberFormatter.formatKbtu(
+      BuildingBenchmarkStats.NaturalGasUse.median,
+    );
   }
 }
 </script>
@@ -141,51 +178,110 @@ export default class PropertyType extends Vue {
       <BuildingsHero :buildings="buildingsFiltered.map((edge) => edge.node)">
         <h1 id="main-content" tabindex="-1">{{ propertyTypePlural }}</h1>
         <p class="building-count">
-          {{ buildingCount }} building{{ buildingCount !== 1 ? 's' : '' }} in
-          Chicago
+          {{ buildingCount.toLocaleString() }} building{{
+            buildingCount !== 1 ? 's' : ''
+          }}
+          in Chicago
         </p>
       </BuildingsHero>
 
       <div class="page-constrained">
         <section class="stats-line">
-          <div class="stat-item">
-            <div class="stat-number">{{ buildingCount }}</div>
-            <div class="stat-label bold">Buildings</div>
-          </div>
+          <h2 class="stats-heading">{{ propertyType }} Stats</h2>
 
-          <div class="stat-item">
-            <div class="stat-number">{{ totalGHGEmissions }}</div>
-            <div class="stat-label">
-              <strong>Total Emissions</strong> <br />
-              (metric tons CO<sub>2</sub>e)
+          <div class="stats-row">
+            <div class="stat-item">
+              <div class="stat-number">
+                {{ buildingCount.toLocaleString() }}
+              </div>
+              <div class="stat-label bold">Buildings</div>
             </div>
-          </div>
 
-          <div class="stat-item">
-            <div class="stat-number">{{ avgGHGIntensity }}</div>
-            <div class="stat-label">
-              <strong>Avg GHG Intensity</strong> <br />
-              (kg CO<sub>2</sub>e/sqft)
+            <div class="stat-item">
+              <div class="stat-number">{{ totalGHGEmissions }}</div>
+              <div class="stat-label">
+                <strong>Total Emissions</strong> <br />
+                (metric tons CO<sub>2</sub>e)
+              </div>
             </div>
-          </div>
 
-          <div class="stat-item">
-            <div class="stat-number">{{ totalSquareFootage }}M</div>
-            <div class="stat-label bold">Total Square Footage</div>
+            <div class="stat-item">
+              <div class="stat-number">{{ avgGHGIntensity }}</div>
+              <div class="stat-label">
+                <strong>Avg GHG Intensity</strong> <br />
+                (kg CO<sub>2</sub>e/sqft)
+              </div>
+            </div>
+
+            <div class="stat-item">
+              <div class="stat-number">{{ totalSquareFootage }}M</div>
+              <div class="stat-label bold">Total Square Footage</div>
+            </div>
+
+            <div
+              v-if="gradeDistributionPie.length > 0"
+              class="stat-item grade-chart-inline"
+            >
+              <PieChart
+                :graph-data="gradeDistributionPie"
+                id-prefix="grade-distribution"
+                :show-labels="true"
+                :sort-by-largest="false"
+                :small="true"
+              />
+              <div class="stat-label bold -no-min">Grade Distribution</div>
+            </div>
           </div>
 
           <div
-            v-if="gradeDistributionPie.length > 0"
-            class="stat-item grade-chart-inline"
+            v-if="totalElectricityUse || totalNaturalGasUse"
+            class="stats-subsection"
           >
-            <PieChart
-              :graph-data="gradeDistributionPie"
-              id-prefix="grade-distribution"
-              :show-labels="true"
-              :sort-by-largest="false"
-              :small="true"
-            />
-            <div class="stat-label bold no-min">Grade Distribution</div>
+            <div v-if="totalElectricityUse" class="stat-item">
+              <img
+                src="/energy-icons/electricity.svg"
+                alt=""
+                class="stat-icon electricity"
+              />
+              <div>
+                <div class="stat-label -no-min bold">Total Electricity Use</div>
+                <div class="stat-number">{{ totalElectricityUse }} kBtu</div>
+                <div class="stat-avg-line">
+                  <span>
+                    <strong>Median {{ propertyType }}:</strong>
+                    {{ medianElectricityUse }} kBtu</span
+                  >
+                  <span class="divider">|</span>
+                  <span>
+                    <strong>City Median:</strong>
+                    {{ citywideMedianElectricityUse }} kBtu/bldg
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="totalNaturalGasUse" class="stat-item">
+              <img
+                src="/energy-icons/natural-gas.svg"
+                alt=""
+                class="stat-icon"
+              />
+              <div>
+                <div class="stat-label -no-min bold">Total Natural Gas Use</div>
+                <div class="stat-number">{{ totalNaturalGasUse }} kBtu</div>
+                <div class="stat-avg-line">
+                  <span>
+                    <strong>Median {{ propertyType }}:</strong>
+                    {{ medianNaturalGasUse }} kBtu</span
+                  >
+                  <span class="divider">|</span>
+                  <span>
+                    <strong>City Median:</strong>
+                    {{ citywideMedianNaturalGasUse }} kBtu/bldg
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -228,12 +324,17 @@ export default class PropertyType extends Vue {
     margin-bottom: 0.5rem;
   }
 
+  .stats-heading {
+    width: 100%;
+    margin: 0;
+    font-size: 1rem;
+  }
+
   .stats-line {
     display: flex;
     align-items: center;
-    gap: 2rem;
     margin: 2rem 0;
-    padding: 0.5rem 1rem;
+    padding: 1rem 1rem;
     background: $off-white;
     border-radius: $brd-rad-medium;
     flex-wrap: wrap;
@@ -245,33 +346,48 @@ export default class PropertyType extends Vue {
       padding: 1rem;
     }
 
-    .stat-item {
-      text-align: center;
-      flex: 1;
-      min-width: 0;
-      padding-right: 2rem;
-      border-right: $border-thin solid $grey;
-
-      &:last-child {
-        border-right: none;
-        padding-right: 0;
-      }
+    .stats-row {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      width: 100%;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
 
       @media (max-width: $mobile-max-width) {
-        text-align: left;
-        border-right: none;
-        padding-right: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
       }
 
-      &.grade-chart-inline {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+      .stat-item {
+        text-align: center;
+        flex: 1;
+        min-width: 0;
+        padding-right: 2rem;
+        border-right: $border-thin solid $grey;
+
+        &:last-child {
+          border-right: none;
+          padding-right: 0;
+        }
 
         @media (max-width: $mobile-max-width) {
-          grid-column: 1 / -1;
-          padding-top: 1.5rem;
-          border-top: $border-thin solid $grey;
+          text-align: left;
+          border-right: none;
+          padding-right: 0;
+        }
+
+        &.grade-chart-inline {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+
+          @media (max-width: $mobile-max-width) {
+            grid-column: 1 / -1;
+            padding-top: 1.5rem;
+            border-top: $border-thin solid $grey;
+          }
         }
       }
     }
@@ -287,9 +403,66 @@ export default class PropertyType extends Vue {
       font-size: 0.875rem;
       color: $text-mid-light;
 
-      &:not(.no-min) {
+      &:not(.-no-min) {
         // Lock to two lines for alignment
         min-height: 3.2em;
+      }
+    }
+
+    .stat-avg {
+      font-size: 0.75rem;
+      color: $text-mid-light;
+      margin-top: 0.25rem;
+    }
+
+    .stat-avg-line {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: $text-mid-light;
+      margin-top: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .stats-subsection {
+      display: flex;
+      gap: 2rem;
+      width: 100%;
+      padding-top: 1rem;
+      border-top: $border-thin solid $grey;
+      flex-wrap: wrap;
+
+      @media (max-width: $mobile-max-width) {
+        gap: 1.5rem;
+      }
+
+      .stat-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.75rem;
+        text-align: left;
+        flex: 1;
+        padding-right: 2rem;
+        border-right: $border-thin solid $grey;
+
+        &:last-child {
+          border-right: none;
+          padding-right: 0;
+        }
+      }
+
+      .stat-icon {
+        width: 2rem;
+        height: 2rem;
+        flex-shrink: 0;
+
+        &.electricity {
+          width: 3rem;
+          height: 3rem;
+          filter: drop-shadow(0.125rem 0.125rem rgba(0, 0, 0, 0.4));
+        }
       }
     }
   }
