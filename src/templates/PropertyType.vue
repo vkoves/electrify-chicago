@@ -4,6 +4,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
 import PieChart, { IPieSlice } from '~/components/graphs/PieChart.vue';
+import SparkLine, { INumGraphPoint } from '~/components/graphs/SparkLine.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
@@ -16,6 +17,7 @@ import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
 import { generatePropertyTypeMeta } from '../constants/meta-helpers.vue';
 import BuildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import HistoricStatsByPropertyType from '../data/dist/historic-stats-by-property-type.json';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -28,6 +30,7 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
     BuildingsTable,
     BuildingsHero,
     PieChart,
+    SparkLine,
     DataDisclaimer,
     DataSourceFootnote,
   },
@@ -131,6 +134,54 @@ export default class PropertyType extends Vue {
     return NumberFormatter.formatKbtu(
       BuildingBenchmarkStats.NaturalGasUse.median,
     );
+  }
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  get historicPropertyTypeStats(): Record<string, any> | null {
+    return (
+      (HistoricStatsByPropertyType as Record<string, any>)[this.propertyType] ??
+      null
+    );
+  }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
+
+  get buildingCountOverTime(): INumGraphPoint[] {
+    if (!this.historicPropertyTypeStats) return [];
+    return Object.entries(this.historicPropertyTypeStats)
+      .map(([year, stats]) => ({
+        x: parseInt(year),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        y: (stats as any).GHGIntensity?.count ?? 0,
+      }))
+      .filter((d) => d.y > 0)
+      .sort((a, b) => a.x - b.x);
+  }
+
+  get totalGHGOverTime(): INumGraphPoint[] {
+    if (!this.historicPropertyTypeStats) return [];
+    return Object.entries(this.historicPropertyTypeStats)
+      .map(([year, stats]) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const s = (stats as any).TotalGHGEmissions;
+        return {
+          x: parseInt(year),
+          y: s?.count > 0 ? Math.round(s.mean * s.count) : 0,
+        };
+      })
+      .filter((d) => d.y > 0)
+      .sort((a, b) => a.x - b.x);
+  }
+
+  get ghgIntensityOverTime(): INumGraphPoint[] {
+    if (!this.historicPropertyTypeStats) return [];
+    return Object.entries(this.historicPropertyTypeStats)
+      .map(([year, stats]) => ({
+        x: parseInt(year),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        y: (stats as any).GHGIntensity?.median ?? 0,
+      }))
+      .filter((d) => d.y > 0)
+      .sort((a, b) => a.x - b.x);
   }
 }
 </script>
@@ -283,6 +334,42 @@ export default class PropertyType extends Vue {
               </div>
             </div>
           </div>
+
+          <div
+            v-if="buildingCountOverTime.length > 1"
+            class="stats-subsection -spark-lines"
+          >
+            <div class="spark-stat-item">
+              <div class="stat-label -no-min bold">Buildings Reporting</div>
+              <SparkLine
+                :graph-data="buildingCountOverTime"
+                graph-title="Buildings Reporting"
+                unit="buildings"
+              />
+            </div>
+
+            <div class="spark-stat-item">
+              <div class="stat-label -no-min bold">
+                Total GHG Emissions (metric tons CO<sub>2</sub>e)
+              </div>
+              <SparkLine
+                :graph-data="totalGHGOverTime"
+                graph-title="Total GHG Emissions"
+                unit="metric tons CO₂e"
+              />
+            </div>
+
+            <div class="spark-stat-item">
+              <div class="stat-label -no-min bold">
+                Median GHG Intensity (kg CO<sub>2</sub>e/sqft)
+              </div>
+              <SparkLine
+                :graph-data="ghgIntensityOverTime"
+                graph-title="Median GHG Intensity"
+                unit="kg CO₂e / sqft"
+              />
+            </div>
+          </div>
         </section>
 
         <h2>All {{ propertyTypePlural }}</h2>
@@ -429,7 +516,7 @@ export default class PropertyType extends Vue {
       display: flex;
       gap: 2rem;
       width: 100%;
-      padding-top: 1rem;
+      padding: 1rem 0;
       border-top: $border-thin solid $grey;
       flex-wrap: wrap;
 
@@ -463,6 +550,17 @@ export default class PropertyType extends Vue {
           height: 3rem;
           filter: drop-shadow(0.125rem 0.125rem rgba(0, 0, 0, 0.4));
         }
+      }
+    }
+  }
+
+  .stats-subsection.-spark-lines {
+    .spark-stat-item {
+      flex: 1;
+      min-width: 10rem;
+
+      .spark-graph-cont {
+        max-width: 13rem;
       }
     }
   }
