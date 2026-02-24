@@ -8,6 +8,7 @@ import SparkLine, { INumGraphPoint } from '~/components/graphs/SparkLine.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
+  EnergyBreakdownColors,
   GradeColors,
   IBuildingNode,
   pluralizePropertyType,
@@ -183,6 +184,71 @@ export default class PropertyType extends Vue {
       .filter((d) => d.y > 0)
       .sort((a, b) => a.x - b.x);
   }
+
+  get electricityUseOverTime(): INumGraphPoint[] {
+    if (!this.historicPropertyTypeStats) return [];
+    return Object.entries(this.historicPropertyTypeStats)
+      .map(([year, stats]) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const s = (stats as any).ElectricityUse;
+        return {
+          x: parseInt(year),
+          y: s?.count > 0 ? Math.round(s.mean * s.count) : 0,
+        };
+      })
+      .filter((d) => d.y > 0)
+      .sort((a, b) => a.x - b.x);
+  }
+
+  get naturalGasUseOverTime(): INumGraphPoint[] {
+    if (!this.historicPropertyTypeStats) return [];
+    return Object.entries(this.historicPropertyTypeStats)
+      .map(([year, stats]) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const s = (stats as any).NaturalGasUse;
+        return {
+          x: parseInt(year),
+          y: s?.count > 0 ? Math.round(s.mean * s.count) : 0,
+        };
+      })
+      .filter((d) => d.y > 0)
+      .sort((a, b) => a.x - b.x);
+  }
+
+  get energyMixPie(): IPieSlice[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
+      this.propertyType
+    ];
+    if (!stats) return [];
+
+    const slices: IPieSlice[] = [];
+    if (stats.ElectricityUse?.total > 0)
+      slices.push({
+        label: 'Electricity',
+        value: stats.ElectricityUse.total,
+        color: EnergyBreakdownColors.Electricity,
+      });
+    if (stats.NaturalGasUse?.total > 0)
+      slices.push({
+        label: 'Fossil Gas',
+        value: stats.NaturalGasUse.total,
+        color: EnergyBreakdownColors.NaturalGas,
+      });
+    if (stats.DistrictSteamUse?.total > 0)
+      slices.push({
+        label: 'District Steam',
+        value: stats.DistrictSteamUse.total,
+        color: EnergyBreakdownColors.DistrictSteam,
+      });
+    if (stats.DistrictChilledWaterUse?.total > 0)
+      slices.push({
+        label: 'District Chilling',
+        value: stats.DistrictChilledWaterUse.total,
+        color: EnergyBreakdownColors.DistrictChilling,
+      });
+    return slices;
+  }
 }
 </script>
 
@@ -282,6 +348,19 @@ export default class PropertyType extends Vue {
               />
               <div class="stat-label bold -no-min">Grade Distribution</div>
             </div>
+
+            <div
+              v-if="energyMixPie.length > 0"
+              class="stat-item grade-chart-inline"
+            >
+              <PieChart
+                :graph-data="energyMixPie"
+                id-prefix="energy-mix"
+                :show-labels="true"
+                :small="true"
+              />
+              <div class="stat-label bold -no-min">Total Energy Mix</div>
+            </div>
           </div>
 
           <div
@@ -340,7 +419,7 @@ export default class PropertyType extends Vue {
             class="stats-subsection -spark-lines"
           >
             <div class="spark-stat-item">
-              <div class="stat-label -no-min bold">Buildings Reporting</div>
+              <div class="spark-label">Buildings Reporting</div>
               <SparkLine
                 :graph-data="buildingCountOverTime"
                 graph-title="Buildings Reporting"
@@ -349,8 +428,9 @@ export default class PropertyType extends Vue {
             </div>
 
             <div class="spark-stat-item">
-              <div class="stat-label -no-min bold">
-                Total GHG Emissions (metric tons CO<sub>2</sub>e)
+              <div class="spark-label">
+                Total GHG Emissions
+                <span class="spark-unit">metric tons CO<sub>2</sub>e</span>
               </div>
               <SparkLine
                 :graph-data="totalGHGOverTime"
@@ -360,13 +440,44 @@ export default class PropertyType extends Vue {
             </div>
 
             <div class="spark-stat-item">
-              <div class="stat-label -no-min bold">
-                Median GHG Intensity (kg CO<sub>2</sub>e/sqft)
+              <div class="spark-label">
+                Median GHG Intensity
+                <span class="spark-unit">kg CO<sub>2</sub>e / sqft</span>
               </div>
               <SparkLine
                 :graph-data="ghgIntensityOverTime"
                 graph-title="Median GHG Intensity"
                 unit="kg CO₂e / sqft"
+              />
+            </div>
+
+            <div
+              v-if="electricityUseOverTime.length > 1"
+              class="spark-stat-item"
+            >
+              <div class="spark-label">
+                Total Electricity Use
+                <span class="spark-unit">kBtu</span>
+              </div>
+              <SparkLine
+                :graph-data="electricityUseOverTime"
+                graph-title="Total Electricity Use"
+                unit="kBtu"
+              />
+            </div>
+
+            <div
+              v-if="naturalGasUseOverTime.length > 1"
+              class="spark-stat-item"
+            >
+              <div class="spark-label">
+                Total Natural Gas Use
+                <span class="spark-unit">kBtu</span>
+              </div>
+              <SparkLine
+                :graph-data="naturalGasUseOverTime"
+                graph-title="Total Natural Gas Use"
+                unit="kBtu"
               />
             </div>
           </div>
@@ -555,12 +666,30 @@ export default class PropertyType extends Vue {
   }
 
   .stats-subsection.-spark-lines {
+    gap: 1rem;
+
     .spark-stat-item {
       flex: 1;
-      min-width: 10rem;
+
+      .spark-label {
+        font-size: 0.875rem;
+        color: $off-black;
+        font-weight: 600;
+        line-height: 1.2;
+        min-height: 2.5rem;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .spark-unit {
+        font-size: 0.75rem;
+        color: $text-mid-light;
+        font-weight: normal;
+      }
 
       .spark-graph-cont {
-        max-width: 13rem;
+        margin-top: 0.5rem;
+        width: 8rem;
       }
     }
   }
