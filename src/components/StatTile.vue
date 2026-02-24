@@ -393,7 +393,7 @@ export default class StatTile extends Vue {
       this.BuildingStatsByPropertyType[this.propertyType][this.statKey]?.median;
     const statValueNum = parseFloat(this.building[this.statKey] as string);
 
-    return this.medianMultipleMsg(median, statValueNum);
+    return this.medianMultipleMsg(median ?? 0, statValueNum);
   }
 
   /** The stat value, as a string */
@@ -437,7 +437,7 @@ export default class StatTile extends Vue {
       return 0;
     }
 
-    const numBuildingsOfType = propertyStats[this.statKey]?.count;
+    const numBuildingsOfType = propertyStats[this.statKey]?.count ?? 0;
 
     /**
      * The amount of buildings we should give a category specific trophy or alarm to based on the
@@ -492,7 +492,7 @@ export default class StatTile extends Vue {
       return null;
     }
 
-    const numBuildingsOfType: number = propertyStats[this.statKey]?.count;
+    const numBuildingsOfType = propertyStats[this.statKey]?.count ?? 0;
     const statRank = this.building[
       this.statKey + 'RankByPropertyType'
     ] as string;

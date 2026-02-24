@@ -64,45 +64,60 @@ def calculate_building_stats(
     Returns the file path written to
     """
 
+    # Stat rows from describe() to include (excludes std)
+    detail_cols_to_keep = ["count", "mean", "min", "25%", "50%", "75%", "max"]
+    rename_map = {
+        "25%": "twentyFifthPercentile",
+        "50%": "median",
+        "75%": "seventyFifthPercentile",
+    }
+
+    # Compute all stats upfront
+    describe_df = grouped_by_prop_type[building_cols_to_rank].describe()
+    sum_df = grouped_by_prop_type[["TotalGHGEmissions", "GrossFloorArea"]].sum()
+    grade_dist = (
+        grouped_by_prop_type["AvgPercentileLetterGrade"]
+        .value_counts()
+        .unstack(fill_value=0)
+    )
+
     stats_by_property_type = {}
 
-    # looping through both all the property types and all the columns we want to get data on
-    for i, property in enumerate(property_types):
-        cur_property_type_stats = {}
-        cur_count = 0
-
-        for col in building_cols_to_rank:
-            # finding the mean, count, min, max, and quartiles of each category for each building type
-            try:
-                cur_count = int(grouped_by_prop_type[col].count().iloc[i])
-                cur_min = round(float(grouped_by_prop_type[col].min().iloc[i]), 3)
-                cur_max = round(float(grouped_by_prop_type[col].max().iloc[i]), 3)
-                cur_first_quartile = round(
-                    float(grouped_by_prop_type[col].quantile(q=0.25).iloc[i]), 3
-                )
-                cur_median = round(
-                    float(grouped_by_prop_type[col].quantile(q=0.5).iloc[i]), 1
-                )
-                cur_third_quartile = round(
-                    float(grouped_by_prop_type[col].quantile(q=0.75).iloc[i]), 3
-                )
-            except (IndexError, AttributeError, ValueError):
-                # Skip this property type/column combination if data is not available
-                continue
-
-            cur_property_type_stats[col] = {
-                "count": cur_count,
-                "min": cur_min,
-                "max": cur_max,
-                "twentyFifthPercentile": cur_first_quartile,
-                "median": cur_median,
-                "seventyFifthPercentile": cur_third_quartile,
-            }
-
-        if cur_count == 0:
+    for property in property_types:
+        if property not in describe_df.index:
             continue
 
-        stats_by_property_type[property] = cur_property_type_stats
+        # Build per-column stats from describe(), dropping columns with no data
+        prop_df = (
+            describe_df.loc[property]
+            .unstack()[detail_cols_to_keep]
+            .rename(columns=rename_map)
+            .round(1)
+        )
+        prop_df = prop_df[prop_df["count"] > 0]
+        prop_stats = prop_df.to_dict(orient="index")
+
+        # Fix count to be int (describe() returns it as float)
+        for col_stats in prop_stats.values():
+            col_stats["count"] = int(col_stats["count"])
+
+        # Add totals for aggregate fields needed by the property type page
+        prop_stats["TotalGHGEmissions"]["total"] = round(
+            float(sum_df.loc[property, "TotalGHGEmissions"]), 1
+        )
+        prop_stats["GrossFloorArea"]["total"] = round(
+            float(sum_df.loc[property, "GrossFloorArea"]), 1
+        )
+
+        # Add grade distribution
+        if property in grade_dist.index:
+            prop_stats["gradeDistribution"] = {
+                grade: int(count)
+                for grade, count in grade_dist.loc[property].items()
+                if count > 0
+            }
+
+        stats_by_property_type[property] = prop_stats
 
     write_json_with_newline(stats_by_property_type, str(property_stats_file_path))
 
@@ -111,20 +126,14 @@ def calculate_building_stats(
 
 def rank_buildings_by_property_type(
     building_data: pd.DataFrame,
-    property_types: List[str],
     grouped_by_prop_type: DataFrameGroupBy,
 ) -> List[str]:
     """
-    Ranks buildings in relation to their property type, then re-exporting the file
+    Ranks buildings against others of the same property type using only the latest year's
+    buildings, then re-exports the file.
 
     Returns the file paths written to
-
-    TODO: Investigate if this should use just the latest year buildings, because we don't want to
-        rank a building that didn't report in the latest year against buildings of a different year
     """
-
-    # calculates the statistics for building property types (e.g. average GHG intensity for Hotels)
-    building_stats_path = calculate_building_stats(property_types, grouped_by_prop_type)
 
     # Mark columns that look like numbers but should be strings as such to prevent decimals showing
     # up (e.g. zipcode of 60614 or Ward 9) and make sure missing data is output as a string
@@ -145,7 +154,7 @@ def rank_buildings_by_property_type(
 
     output_to_csv(building_data, input_benchmark_data_csv_path)
 
-    return [building_stats_path, input_benchmark_data_csv_path]
+    return [input_benchmark_data_csv_path]
 
 
 ###
@@ -158,22 +167,29 @@ def main() -> None:
     # find the latest year
     latest_year = building_data["DataYear"].max()
 
-    # Filter to data for the newest year, so we don't aggregate stats over all time
+    # Filter to buildings that reported in the latest year - used for rankings and property type
+    # list, so only currently active buildings appear
     latest_building_data = building_data[building_data["DataYear"] == latest_year]
-
-    # sorted data based on each property type: the order is alphabetical
-    grouped_by_prop_type = cast(
+    latest_year_grouped = cast(
         DataFrameGroupBy, latest_building_data.groupby("PrimaryPropertyType")
     )
+    latest_property_types = [str(key) for key in latest_year_grouped.groups.keys()]
 
-    # get a list of all unique property types
-    property_types = [str(key) for key in grouped_by_prop_type.groups.keys()]
+    # For stats, use all buildings at their latest reported year so totals and averages reflect
+    # the full picture, not just buildings that happened to report in the most recent year
+    all_buildings_grouped = cast(
+        DataFrameGroupBy, building_data.groupby("PrimaryPropertyType")
+    )
+    all_property_types = [str(key) for key in all_buildings_grouped.groups.keys()]
 
     outputted_paths = []
+    outputted_paths += [
+        calculate_building_stats(all_property_types, all_buildings_grouped)
+    ]
     outputted_paths += rank_buildings_by_property_type(
-        building_data, property_types, grouped_by_prop_type
+        building_data, latest_year_grouped
     )
-    outputted_paths += generate_property_types(property_types)
+    outputted_paths += generate_property_types(latest_property_types)
 
     log_step_completion(3, outputted_paths)
 

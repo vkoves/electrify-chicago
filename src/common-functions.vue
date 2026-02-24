@@ -49,7 +49,8 @@ export interface IPropertyStat {
 
 /** The type of each property type in building-statistics-by-property-type.json */
 export interface IPropertyStats {
-  [statKey: string]: IPropertyStat;
+  gradeDistribution?: Record<string, number>;
+  [statKey: string]: IPropertyStat | Record<string, number> | undefined;
 }
 
 /** All the available data anomaly codes from detect_anomalous_buildings.py:anomaly_values */

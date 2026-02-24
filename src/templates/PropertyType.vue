@@ -7,15 +7,13 @@ import PieChart, { IPieSlice } from '~/components/graphs/PieChart.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
-  calculateBuildingsStats,
   GradeColors,
-  IBuildingBenchmarkStats,
   IBuildingNode,
   pluralizePropertyType,
 } from '../common-functions.vue';
 import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
 import { generatePropertyTypeMeta } from '../constants/meta-helpers.vue';
-import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
+import BuildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -40,10 +38,6 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
   },
 })
 export default class PropertyType extends Vue {
-  /** Expose stats to template */
-  readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
-    BuildingBenchmarkStats;
-
   /** Set by Gridsome to results of GraphQL query */
   readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
   readonly $context!: { propertyType: string };
@@ -51,41 +45,34 @@ export default class PropertyType extends Vue {
   buildingsFiltered: Array<IBuildingNode> = [];
 
   avgGHGIntensity?: string;
-  medianGHGIntensityMultiple?: string;
   totalGHGEmissions?: string;
-  medianGHGEmissionsMultiple?: string;
   totalSquareFootage?: string;
   gradeDistributionPie: Array<IPieSlice> = [];
 
   created(): void {
     // Buildings are pre-filtered by GraphQL query using PrimaryPropertyType field
     this.buildingsFiltered = this.$page.allBuilding.edges;
-    this.calculatePropertyTypeStats();
+    this.loadPropertyTypeStats();
   }
 
-  calculatePropertyTypeStats(): void {
-    const stats = calculateBuildingsStats(this.$page.allBuilding.edges);
+  loadPropertyTypeStats(): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
+      this.$context.propertyType
+    ];
 
-    // Calculations
+    if (!stats) return;
+
     this.totalGHGEmissions = Math.round(
-      stats.totalGHGEmissions,
+      stats.TotalGHGEmissions.total,
     ).toLocaleString();
-    const avgGHGIntensity: number = stats.avgGHGIntensity;
-    this.avgGHGIntensity = avgGHGIntensity.toFixed(1);
-
-    this.medianGHGIntensityMultiple = (
-      avgGHGIntensity / BuildingBenchmarkStats.GHGIntensity.median
-    ).toFixed(0);
-    this.medianGHGEmissionsMultiple = (
-      stats.totalGHGEmissions / BuildingBenchmarkStats.TotalGHGEmissions.median
-    ).toFixed(0);
-
-    // Convert to millions
-    this.totalSquareFootage = (stats.totalSquareFootage / 1000000).toFixed(1);
+    this.avgGHGIntensity = (stats.GHGIntensity.mean as number).toFixed(1);
+    this.totalSquareFootage = (stats.GrossFloorArea.total / 1000000).toFixed(1);
 
     // Build data for Pie Chart
-    this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
-      .filter(([, count]) => count > 0) // Only include grades that exist
+    this.gradeDistributionPie = Object.entries(
+      stats.gradeDistribution as Record<string, number>,
+    )
       .sort(([a], [b]) => {
         const gradeOrder = ['A', 'B', 'C', 'D', 'F'];
         return gradeOrder.indexOf(a) - gradeOrder.indexOf(b);
@@ -205,8 +192,8 @@ export default class PropertyType extends Vue {
         <h2>All {{ propertyTypePlural }}</h2>
 
         <p class="constrained -wide smaller">
-          Showing {{ propertyTypePlural }} buildings that reported their energy use and
-          greenhouse gas emissions to the City of Chicago under energy
+          Showing {{ propertyTypePlural }} buildings that reported their energy
+          use and greenhouse gas emissions to the City of Chicago under energy
           benchmarking.
         </p>
 

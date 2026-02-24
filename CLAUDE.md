@@ -6,6 +6,14 @@ This document contains important guidelines for Claude when working on this code
 
 This project uses Yarn, use `yarn install` commands, NOT NPM.
 
+## Python
+
+This project uses **uv** to manage Python dependencies and run scripts. See [PythonDev.md](PythonDev.md) for full details.
+
+- **Run Python scripts/tests:** use `uv run python -m pytest tests/` (not `uv run pytest` — the `-m` flag is required so `src` is on the path)
+- **Install dependencies:** `uv sync --locked --all-groups`
+- **Never use** `python`, `pip`, or `.venv/bin/...` directly
+
 ## Linting
 
 **Always use `yarn lint-fix` to auto-fix linting errors.** Do not run individual ESLint or Prettier commands.
