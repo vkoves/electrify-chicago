@@ -427,7 +427,7 @@ export default class PropertyType extends Vue {
               />
               <div>
                 <div class="stat-label -no-min bold">Total Electricity Use</div>
-                <div class="stat-number">{{ totalElectricityUse }} kBTU</div>
+                <div class="stat-number">{{ totalElectricityUse }} kBtu</div>
                 <div
                   v-if="electricityTotalVsCitywideMultiple"
                   class="stat-median-compare"
@@ -436,10 +436,10 @@ export default class PropertyType extends Vue {
                     >{{ electricityTotalVsCitywideMultiple }} Median City
                     Building</strong
                   >
-                  ({{ citywideMedianElectricityUse }} kBTU)
+                  ({{ citywideMedianElectricityUse }} kBtu)
                 </div>
                 <div v-if="medianElectricityUse" class="stat-type-median">
-                  Median {{ propertyType }}: {{ medianElectricityUse }} kBTU
+                  Median {{ propertyType }}: {{ medianElectricityUse }} kBtu
                   <span v-if="electricityMedianMultiple"
                     >({{ electricityMedianMultiple }} median)</span
                   >
@@ -455,7 +455,7 @@ export default class PropertyType extends Vue {
               />
               <div>
                 <div class="stat-label -no-min bold">Total Natural Gas Use</div>
-                <div class="stat-number">{{ totalNaturalGasUse }} kBTU</div>
+                <div class="stat-number">{{ totalNaturalGasUse }} kBtu</div>
                 <div
                   v-if="gasTotalVsCitywideMultiple"
                   class="stat-median-compare"
@@ -464,10 +464,10 @@ export default class PropertyType extends Vue {
                     >{{ gasTotalVsCitywideMultiple }} Median City
                     Building</strong
                   >
-                  ({{ citywideMedianNaturalGasUse }} kBTU)
+                  ({{ citywideMedianNaturalGasUse }} kBtu)
                 </div>
                 <div v-if="medianNaturalGasUse" class="stat-type-median">
-                  Median {{ propertyType }}: {{ medianNaturalGasUse }} kBTU
+                  Median {{ propertyType }}: {{ medianNaturalGasUse }} kBtu
                   <span v-if="gasMedianMultiple"
                     >({{ gasMedianMultiple }} median)</span
                   >
