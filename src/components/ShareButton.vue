@@ -100,7 +100,7 @@ export default class ShareButton extends Vue {
   //Share endpoint constants
   private readonly TwitterShareEndpoint = 'https://twitter.com/intent/tweet';
   private readonly FacebookShareEndpoint = 'https://www.facebook.com/sharer/sharer.php';
-  private readonly LinkedInShareEndpoint = 'https://www.linkedin.com/shareArticle'
+  private readonly LinkedInShareEndpoint = 'https://www.linkedin.com/feed/'
   private readonly BlueskyShareEndpoint = 'https://bsky.app/intent/compose';
   private readonly RedditShareEndpoint = 'http://www.reddit.com/submit';
 
@@ -117,7 +117,7 @@ export default class ShareButton extends Vue {
   }
 
   linkedinShareUrl(): string {
-    return `${this.LinkedInShareEndpoint}?mini=true&url=${encodeURIComponent(this.getShareUrl())}`;
+    return `${this.LinkedInShareEndpoint}?shareActive=true&shareUrl=${encodeURIComponent(this.getShareUrl())}`;
   }
 
   twitterShareUrl(): string {
@@ -271,7 +271,7 @@ export default class ShareButton extends Vue {
     right: 0;
     margin-top: 0.5rem;
     background-color: $blue-very-dark;
-    padding: 1.25rem 1rem;
+    padding: 1.25rem 0;
     border-radius: $brd-rad-small;
     font-size: 1.25rem;
     white-space: nowrap;
@@ -291,12 +291,16 @@ export default class ShareButton extends Vue {
       padding: 0;
       display: grid;
       margin: 0;
-      row-gap: 1rem;
       width: max-content;
 
       li {
         display: flex;
         align-items: center;
+        padding: .5rem 1rem;
+
+        &:hover {
+          background: $link-blue;
+        }
       }
 
       .share-link {
@@ -311,10 +315,6 @@ export default class ShareButton extends Vue {
         border-bottom: none;
         font-size: 1rem;
         padding: 0;
-
-        &:hover {
-          font-weight: bold;
-        }
       }
 
       img {
