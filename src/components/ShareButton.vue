@@ -302,7 +302,7 @@ export default class ShareButton extends Vue {
     right: 0;
     margin-top: 0.5rem;
     background-color: $blue-very-dark;
-    padding: 1.25rem 0;
+    padding: 0.5rem 0;
     border-radius: $brd-rad-small;
     font-size: 1.25rem;
     white-space: nowrap;
@@ -327,7 +327,7 @@ export default class ShareButton extends Vue {
       li {
         display: flex;
         align-items: center;
-        padding: 0.5rem 1rem;
+        margin-top: 0;
 
         &:hover {
           background: $link-blue;
@@ -345,7 +345,9 @@ export default class ShareButton extends Vue {
         background: none;
         border-bottom: none;
         font-size: 1rem;
-        padding: 0;
+        padding: 0.75rem 1.25rem;
+        width: 100%;
+        outline-offset: -0.125rem;
       }
 
       img {
