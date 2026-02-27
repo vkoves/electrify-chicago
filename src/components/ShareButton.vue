@@ -25,38 +25,63 @@
           <button
             class="share-link"
             :class="{ '-with-text': showText }"
-            @click="dropdownShareUrl()"
+            @click="copyShareUrl()"
           >
-          <img src="/icons/link.svg" alt="Link" />
-          Copy Link
+            <img src="/icons/link.svg" alt="Link" />
+            Copy Link
           </button>
         </li>
         <li>
-          <a class="share-link" :href="redditShareUrl()" target="_blank" rel="noopener noreferrer">
+          <a
+            class="share-link"
+            :href="redditShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src="/icons/reddit.svg" alt="Reddit" />
             Share on Reddit
           </a>
         </li>
         <li>
-          <a class="share-link" :href="blueskyShareUrl()" target="_blank" rel="noopener noreferrer">
+          <a
+            class="share-link"
+            :href="blueskyShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src="/icons/bluesky.svg" alt="Bluesky" />
             Share on Bluesky
           </a>
         </li>
         <li>
-          <a class="share-link" :href="linkedinShareUrl()" target="_blank" rel="noopener noreferrer">
+          <a
+            class="share-link"
+            :href="linkedinShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src="/icons/linkedin.svg" alt="LinkedIn" />
             Share on LinkedIn
           </a>
         </li>
         <li>
-          <a class="share-link" :href="facebookShareUrl()" target="_blank" rel="noopener noreferrer">
+          <a
+            class="share-link"
+            :href="facebookShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src="/icons/facebook.svg" alt="Facebook" />
             Share on Facebook
           </a>
         </li>
         <li>
-          <a class="share-link" :href="twitterShareUrl()" target="_blank" rel="noopener noreferrer">
+          <a
+            class="share-link"
+            :href="twitterShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <img src="/icons/x.svg" alt="X" />
             Share on X
           </a>
@@ -99,25 +124,27 @@ export default class ShareButton extends Vue {
 
   //Share endpoint constants
   private readonly TwitterShareEndpoint = 'https://twitter.com/intent/tweet';
-  private readonly FacebookShareEndpoint = 'https://www.facebook.com/sharer/sharer.php';
-  private readonly LinkedInShareEndpoint = 'https://www.linkedin.com/feed/'
+  private readonly FacebookShareEndpoint =
+    'https://www.facebook.com/sharer/sharer.php';
+  private readonly LinkedInShareEndpoint = 'https://www.linkedin.com/feed/';
   private readonly BlueskyShareEndpoint = 'https://bsky.app/intent/compose';
   private readonly RedditShareEndpoint = 'http://www.reddit.com/submit';
 
-  dropdownShareUrl(): void {
-    const shareUrl =
-    this.url || (typeof window !== 'undefined' ? window.location.href : '');
-    return this.copyToClipboard(shareUrl);
+  copyShareUrl(): void {
+    return this.copyToClipboard(this.getShareUrl());
   }
 
   getShareUrl(): string {
     const shareUrl =
-    this.url || (typeof window !== 'undefined' ? window.location.href : '');
+      this.url || (typeof window !== 'undefined' ? window.location.href : '');
     return shareUrl;
   }
 
   linkedinShareUrl(): string {
-    return `${this.LinkedInShareEndpoint}?shareActive=true&shareUrl=${encodeURIComponent(this.getShareUrl())}`;
+    return (
+      this.LinkedInShareEndpoint +
+      `?shareActive=true&shareUrl=${encodeURIComponent(this.getShareUrl())}`
+    );
   }
 
   twitterShareUrl(): string {
@@ -125,7 +152,10 @@ export default class ShareButton extends Vue {
   }
 
   blueskyShareUrl(): string {
-    return `${this.BlueskyShareEndpoint}?text=${this.text}%0A${encodeURIComponent(this.getShareUrl())}`;
+    return (
+      this.BlueskyShareEndpoint +
+      `?text=${this.text}%0A${encodeURIComponent(this.getShareUrl())}`
+    );
   }
 
   facebookShareUrl(): string {
@@ -133,7 +163,10 @@ export default class ShareButton extends Vue {
   }
 
   redditShareUrl(): string {
-    return `${this.RedditShareEndpoint}?url=${encodeURIComponent(this.getShareUrl())}&title=${encodeURI(this.text)}`;
+    return (
+      this.RedditShareEndpoint +
+      `?url=${encodeURIComponent(this.getShareUrl())}&title=${encodeURI(this.text)}`
+    );
   }
 
   handleShare(): void {
@@ -194,7 +227,6 @@ export default class ShareButton extends Vue {
   }
 
   private enableDropdown(): void {
-
     if (this.showShareDropdown) {
       this.shareDropdownVisible = false;
 
@@ -215,7 +247,6 @@ export default class ShareButton extends Vue {
     }, 10);
   }
 }
-
 </script>
 
 <style lang="scss">
@@ -296,7 +327,7 @@ export default class ShareButton extends Vue {
       li {
         display: flex;
         align-items: center;
-        padding: .5rem 1rem;
+        padding: 0.5rem 1rem;
 
         &:hover {
           background: $link-blue;
