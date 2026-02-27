@@ -12,14 +12,20 @@ import {
   GradeColors,
   IBuildingNode,
   getMedianMultipleMsg,
+  kBtuToKwh,
+  kBtuToKwhTooltip,
   pluralizePropertyType,
 } from '../common-functions.vue';
 import { NumberFormatter } from '../utils/number-formatter.vue';
+import vToolTip from 'v-tooltip';
+
 import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
 import { generatePropertyTypeMeta } from '../constants/meta-helpers.vue';
 import BuildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import HistoricStatsByPropertyType from '../data/dist/historic-stats-by-property-type.json';
+
+Vue.use(vToolTip);
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -56,8 +62,8 @@ export default class PropertyType extends Vue {
   totalSquareFootage?: string;
   gradeDistributionPie: Array<IPieSlice> = [];
 
-  totalElectricityUse?: string;
-  medianElectricityUse?: string;
+  totalElectricityUseKbtu?: number;
+  medianElectricityUseKbtu?: number;
   totalNaturalGasUse?: string;
   medianNaturalGasUse?: string;
 
@@ -84,12 +90,8 @@ export default class PropertyType extends Vue {
     this.totalSquareFootage = (stats.GrossFloorArea.total / 1000000).toFixed(1);
 
     if (stats.ElectricityUse?.total) {
-      this.totalElectricityUse = NumberFormatter.formatKbtu(
-        stats.ElectricityUse.total,
-      );
-      this.medianElectricityUse = NumberFormatter.formatKbtu(
-        stats.ElectricityUse.median,
-      );
+      this.totalElectricityUseKbtu = stats.ElectricityUse.total;
+      this.medianElectricityUseKbtu = stats.ElectricityUse.median;
     }
 
     if (stats.NaturalGasUse?.total) {
@@ -128,10 +130,38 @@ export default class PropertyType extends Vue {
     return this.buildingsFiltered.length;
   }
 
-  get citywideMedianElectricityUse(): string {
-    return NumberFormatter.formatKbtu(
-      BuildingBenchmarkStats.ElectricityUse.median,
+  get totalElectricityUse(): string | undefined {
+    if (this.totalElectricityUseKbtu == null) return undefined;
+    return NumberFormatter.formatBigNumber(
+      kBtuToKwh(this.totalElectricityUseKbtu),
     );
+  }
+
+  get totalElectricityUseTooltip(): string {
+    if (this.totalElectricityUseKbtu == null) return '';
+    return kBtuToKwhTooltip(this.totalElectricityUseKbtu);
+  }
+
+  get medianElectricityUse(): string | undefined {
+    if (this.medianElectricityUseKbtu == null) return undefined;
+    return NumberFormatter.formatBigNumber(
+      kBtuToKwh(this.medianElectricityUseKbtu),
+    );
+  }
+
+  get medianElectricityUseTooltip(): string {
+    if (this.medianElectricityUseKbtu == null) return '';
+    return kBtuToKwhTooltip(this.medianElectricityUseKbtu);
+  }
+
+  get citywideMedianElectricityUse(): string {
+    return NumberFormatter.formatBigNumber(
+      kBtuToKwh(BuildingBenchmarkStats.ElectricityUse.median),
+    );
+  }
+
+  get citywideMedianElectricityUseTooltip(): string {
+    return kBtuToKwhTooltip(BuildingBenchmarkStats.ElectricityUse.median);
   }
 
   get citywideMedianNaturalGasUse(): string {
@@ -427,7 +457,19 @@ export default class PropertyType extends Vue {
               />
               <div>
                 <div class="stat-label -no-min bold">Total Electricity Use</div>
-                <div class="stat-number">{{ totalElectricityUse }} kBtu</div>
+                <div class="stat-number">
+                  {{ totalElectricityUse }} kWh
+                  <img
+                    v-tooltip.bottom="{
+                      content: totalElectricityUseTooltip,
+                      trigger: 'click hover',
+                    }"
+                    class="tooltip -left"
+                    src="/info.svg"
+                    alt="Info icon"
+                    tabindex="0"
+                  />
+                </div>
                 <div
                   v-if="electricityTotalVsCitywideMultiple"
                   class="stat-median-compare"
@@ -436,10 +478,10 @@ export default class PropertyType extends Vue {
                     >{{ electricityTotalVsCitywideMultiple }} Median City
                     Building</strong
                   >
-                  ({{ citywideMedianElectricityUse }} kBtu)
+                  ({{ citywideMedianElectricityUse }} kWh)
                 </div>
                 <div v-if="medianElectricityUse" class="stat-type-median">
-                  Median {{ propertyType }}: {{ medianElectricityUse }} kBtu
+                  Median {{ propertyType }}: {{ medianElectricityUse }} kWh
                   <span v-if="electricityMedianMultiple"
                     >({{ electricityMedianMultiple }} median)</span
                   >

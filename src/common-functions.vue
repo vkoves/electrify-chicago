@@ -531,6 +531,24 @@ export function getOverallRankEmoji(
   return null;
 }
 
+/** 1 kWh = 3.412 kBtu (exact thermodynamic conversion) */
+export const kWhPerKbtu = 1 / 3.412;
+
+/**
+ * Converts a kBtu value to kWh
+ */
+export function kBtuToKwh(kBtu: number): number {
+  return kBtu * kWhPerKbtu;
+}
+
+/**
+ * Returns a tooltip string for a kWh value that was converted from kBtu,
+ * e.g. "Converted from original 1,234,567 kBtu"
+ */
+export function kBtuToKwhTooltip(kBtu: number): string {
+  return `Converted from original ${roundUpLargeNumber(kBtu).toLocaleString()} kBtu`;
+}
+
 /**
  * A constant for Chicago avg. utility costs in the latest data year (in dollar per unit of energy),
  * which we use to estimate an upper bound of how much a building would pay for gas or electric

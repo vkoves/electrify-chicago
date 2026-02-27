@@ -14,7 +14,22 @@
       <template v-if="typeof building[statKey] === 'number'">
         <!-- The actual stat value-->
         <div class="stat-value">
-          {{ statValueStr }} <span class="unit" v-html="unit" />
+          <template v-if="statKey === 'ElectricityUse'">
+            {{ electricityKwhStr }} <span class="unit">kWh</span>
+            <img
+              v-tooltip.bottom="{
+                content: electricityKwhTooltip,
+                trigger: 'click hover',
+              }"
+              class="tooltip -left"
+              src="/info.svg"
+              alt="Info icon"
+              tabindex="0"
+            />
+          </template>
+          <template v-else>
+            {{ statValueStr }} <span class="unit" v-html="unit" />
+          </template>
         </div>
 
         <div v-if="costEstimate" class="bill-estimate">
@@ -99,8 +114,8 @@
             <span v-else class="median-label"> Median Chicago Building </span>
 
             <div class="median-val">
-              {{ stats[statKey].median.toLocaleString() }}
-              <span v-html="unit" />
+              {{ medianCitywideStr }}
+              <span v-html="displayUnit" />
             </div>
           </div>
 
@@ -112,12 +127,8 @@
             <span v-else class="median-label"> Median {{ propertyType }} </span>
 
             <div class="median-val">
-              {{
-                BuildingStatsByPropertyType[propertyType][
-                  statKey
-                ].median.toLocaleString()
-              }}
-              <span v-html="unit" />
+              {{ medianPropertyTypeStr }}
+              <span v-html="displayUnit" />
             </div>
           </div>
         </div>
@@ -214,9 +225,14 @@ import {
   IBuildingBenchmarkStats,
   IHistoricData,
   IPropertyStats,
+  kBtuToKwh,
+  kBtuToKwhTooltip,
   RankConfig,
 } from '../common-functions.vue';
 import SparkLine, { INumGraphPoint } from './graphs/SparkLine.vue';
+import vToolTip from 'v-tooltip';
+
+Vue.use(vToolTip);
 
 /**
  * A group of all the core stats by property type (e.g. GHG intensity median)
@@ -402,6 +418,43 @@ export default class StatTile extends Vue {
     const roundedNumber = roundUpLargeNumber(rawValue);
 
     return roundedNumber.toLocaleString();
+  }
+
+  /** The electricity use in kWh, formatted for display */
+  get electricityKwhStr(): string {
+    return roundUpLargeNumber(
+      kBtuToKwh(this.building.ElectricityUse),
+    ).toLocaleString();
+  }
+
+  /** Tooltip for electricity kWh showing the original kBtu value */
+  get electricityKwhTooltip(): string {
+    return kBtuToKwhTooltip(this.building.ElectricityUse);
+  }
+
+  get isElectricityUse(): boolean {
+    return this.statKey === 'ElectricityUse';
+  }
+
+  /** The unit to display — kWh for electricity, otherwise the passed unit */
+  get displayUnit(): string {
+    return this.isElectricityUse ? 'kWh' : this.unit;
+  }
+
+  /** Citywide median formatted in the display unit */
+  get medianCitywideStr(): string {
+    const median = this.stats[this.statKey].median;
+    const value = this.isElectricityUse ? kBtuToKwh(median) : median;
+    return roundUpLargeNumber(value).toLocaleString();
+  }
+
+  /** Property-type median formatted in the display unit */
+  get medianPropertyTypeStr(): string {
+    const median =
+      this.BuildingStatsByPropertyType[this.propertyType][this.statKey]
+        ?.median ?? 0;
+    const value = this.isElectricityUse ? kBtuToKwh(median) : median;
+    return roundUpLargeNumber(value).toLocaleString();
   }
 
   // Returns a rounded number or undefined if no rank
