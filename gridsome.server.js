@@ -14,6 +14,8 @@ const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
 const pageSocialConfigsData = require('./src/constants/page-social-images/page-social-configs.json');
 const buildingOwnersData = require('./src/constants/building-owners.json');
+const propertyTypesData = require('./src/data/dist/property-types.json');
+const { slugifyPropertyType } = require('./src/constants/property-type-helpers.js');
 
 const DataDirectory = './src/data/dist/';
 
@@ -57,6 +59,17 @@ module.exports = function (api) {
       });
     }
 
+    // Create pages for each property type
+    propertyTypesData.propertyTypes.forEach((propertyType) => {
+      const slug = slugifyPropertyType(propertyType);
+
+      createPage({
+        path: `/property-type/${slug}`,
+        component: './src/templates/PropertyType.vue',
+        context: { propertyType },
+      });
+    });
+
     // Create social card routes (only in development)
     if (process.env.NODE_ENV !== 'production') {
       // Create page social card routes
@@ -79,6 +92,19 @@ module.exports = function (api) {
           component: './src/templates/social-cards/OwnerSocialCardPage.vue',
           context: {
             ownerId: ownerId
+          }
+        });
+      });
+
+      // Create property type social card routes
+      propertyTypesData.propertyTypes.forEach((propertyType) => {
+        const slug = slugifyPropertyType(propertyType);
+
+        createPage({
+          path: `/property-type-social-card/${slug}`,
+          component: './src/templates/social-cards/PropertyTypeSocialCardPage.vue',
+          context: {
+            propertyType: propertyType
           }
         });
       });
