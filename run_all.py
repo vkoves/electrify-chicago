@@ -68,8 +68,8 @@ def main():
             "description": "add_building_owners",
         },
         {
-            "module": "src.data.scripts.add_context_by_property_type",
-            "description": "add_context_by_property_type",
+            "module": "src.data.scripts.generate_property_type_stats",
+            "description": "generate_property_type_stats",
         },
         {
             "module": "src.data.scripts.detect_anomalous_buildings",
@@ -78,6 +78,10 @@ def main():
         {
             "module": "src.data.scripts.generate_historic_stats",
             "description": "generate_historic_stats",
+        },
+        {
+            "module": "src.data.scripts.generate_historic_stats_by_property_type",
+            "description": "generate_historic_stats_by_property_type",
         },
         {
             "module": "src.data.scripts.calculate_fines",

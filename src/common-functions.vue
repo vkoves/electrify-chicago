@@ -49,7 +49,8 @@ export interface IPropertyStat {
 
 /** The type of each property type in building-statistics-by-property-type.json */
 export interface IPropertyStats {
-  [statKey: string]: IPropertyStat;
+  gradeDistribution?: Record<string, number>;
+  [statKey: string]: IPropertyStat | Record<string, number> | undefined;
 }
 
 /** All the available data anomaly codes from detect_anomalous_buildings.py:anomaly_values */
@@ -391,7 +392,7 @@ export function getMedianMultipleMsg(
 
   // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
   if (medianMult > 5) {
-    return Math.round(medianMult) + 'x';
+    return Math.round(medianMult).toLocaleString() + 'x';
   }
 
   // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
@@ -528,6 +529,24 @@ export function getOverallRankEmoji(
   }
 
   return null;
+}
+
+/** 1 kWh = 3.412 kBtu (exact thermodynamic conversion) */
+export const kWhPerKbtu = 1 / 3.412;
+
+/**
+ * Converts a kBtu value to kWh
+ */
+export function kBtuToKwh(kBtu: number): number {
+  return kBtu * kWhPerKbtu;
+}
+
+/**
+ * Returns a tooltip string for a kWh value that was converted from kBtu,
+ * e.g. "Converted from original 1,234,567 kBtu"
+ */
+export function kBtuToKwhTooltip(kBtu: number): string {
+  return `Converted from original ${roundUpLargeNumber(kBtu).toLocaleString()} kBtu`;
 }
 
 /**

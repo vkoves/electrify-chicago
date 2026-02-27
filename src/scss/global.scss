@@ -595,6 +595,16 @@ article.blog-post {
  *        tabindex="0"
  *      >
  */
+// Size the tooltip trigger icon — SVGs don't all have matching intrinsic sizes
+img.tooltip {
+  width: 1.25rem;
+  height: 1.25rem;
+
+  &.-left {
+    margin-left: 0.25rem;
+  }
+}
+
 .tooltip {
   // The width of the tooltip tip
   $tooltipSize: 0.3125rem;
