@@ -362,8 +362,8 @@ export default class ShareButton extends Vue {
     content: '';
     position: absolute;
     bottom: 100%;
-    inset-inline-end: 14px;
-    border-width: 7px;
+    right: 1rem;
+    border-width: 0.425rem;
     border-style: solid;
     border-color: transparent transparent $blue-very-dark transparent;
   }
