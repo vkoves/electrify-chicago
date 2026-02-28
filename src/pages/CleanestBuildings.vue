@@ -81,6 +81,7 @@ export default class CleanestBuildings extends Vue {
           AvgPercentileLetterGrade
           EnergyMixLetterGrade
           DataAnomalies
+          FirstYearReported
         }
       }
     }

@@ -91,11 +91,6 @@ replace_headers = {
     "Longitude": "Longitude",
     "Location": "Location",
     "Row_ID": "Row_ID",
-    # 'Wards': 'Wards',
-    # 'Community Areas': 'CommunityAreas',
-    # 'Zip Codes': 'ZipCodes',
-    # 'Census Tracts': 'CensusTracts',
-    # 'Historical Wards 2003-2015': 'HistoricalWards2003-2015'
 }
 
 
@@ -170,8 +165,8 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
 
     # Only filter to the latest reporting year if that's the file we're generating
     if latest_year_only:
-        cleaned_data = get_buildings_with_ghg_intensity(building_data)
-        cleaned_data = get_submitted_data(cleaned_data)
+        # cleaned_data = get_buildings_with_ghg_intensity(building_data)
+        # cleaned_data = get_submitted_data(cleaned_data)
         cleaned_data = get_last_year_data(cleaned_data)
     else:
         cleaned_data = filter_cols_historic(cleaned_data)

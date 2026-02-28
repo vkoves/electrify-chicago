@@ -47,6 +47,7 @@ query ($id: ID!, $ID: String) {
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
     DataAnomalies
+    FirstYearReported
     # Grade data
     GHGIntensityPercentileGrade,
     GHGIntensityLetterGrade,
@@ -204,7 +205,7 @@ query ($id: ID!, $ID: String) {
               </div>
             </div>
 
-            <div v-if="dataYear < LatestDataYear">
+            <div v-if="!hasNeverSubmitted && dataYear < LatestDataYear">
               <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
 
               <p>
@@ -212,6 +213,14 @@ query ($id: ID!, $ID: String) {
                 so
                 <span class="bold">top-level stats are from {{ dataYear }}</span
                 >, the latest full year reported.
+              </p>
+            </div>
+            <div v-if="hasNeverSubmitted">
+              <h2><span class="emoji">❌</span> Building Never Reported Data</h2>
+
+              <p>
+                This building has never reported full data,
+                so top-level stats may be inconsistent.
               </p>
             </div>
           </div>
@@ -840,6 +849,10 @@ export default class BuildingDetails extends Vue {
   /** The year of the data for this specific building */
   get dataYear(): number {
     return this.building.DataYear as number;
+  }
+
+  get hasNeverSubmitted(): boolean {
+    return this.building.FirstYearReported === null;
   }
 
   /** The primary property type of the current building, URL encoded for a link */
