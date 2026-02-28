@@ -548,6 +548,15 @@ query ($id: ID!, $ID: String) {
         </div>
       </div>
 
+      <div class="no-print">
+        <h2>What Should We Do About This?</h2>
+
+        <p>
+          Own this Building? Check out our
+          <a href="/take-action-tips">Take Action</a> page for tips and advice!
+        </p>
+      </div>
+
       <details class="extra-info">
         <summary class="bold">View Extra Technical & Historic Info</summary>
 
@@ -587,34 +596,36 @@ query ($id: ID!, $ID: String) {
         </div>
       </details>
 
-      <p class="constrained">
-        <strong>* Note on Rankings:</strong> Rankings and medians are among
-        <em>included</em> buildings, which are those who reported under the
-        Chicago Energy Benchmarking Ordinance for the year {{ LatestDataYear }},
-        which only applies to buildings over 50,000 square feet.
-      </p>
+      <details class="data-notes">
+        <summary class="bold">View Data Notes & Disclaimers</summary>
 
-      <p class="constrained">
-        <strong>** Note on Bill Estimates:</strong>
-        Estimates for gas and electric bills are based on average electric and
-        gas <em>retail</em> prices for Chicago in {{ UtilityCosts.year }} and
-        are rounded. We expect large buildings would negotiate lower rates with
-        utilities, but these estimates serve as an upper bound of cost and help
-        understand the volume of energy a building is used by comparing it to
-        your own energy bills! See our
-        <a :href="UtilityCosts.source" target="_blank" rel="noopener">
-          Chicago Gas & Electric Costs Source <NewTabIcon />
-        </a>
-        for the original statistics.
-      </p>
+        <div class="details-content">
+          <p class="constrained">
+            <strong>* Note on Rankings:</strong> Rankings and medians are among
+            <em>included</em> buildings, which are those who reported under the
+            Chicago Energy Benchmarking Ordinance for the year
+            {{ LatestDataYear }}, which only applies to buildings over 50,000
+            square feet.
+          </p>
+
+          <p class="constrained">
+            <strong>** Note on Bill Estimates:</strong>
+            Estimates for gas and electric bills are based on average electric
+            and gas <em>retail</em> prices for Chicago in
+            {{ UtilityCosts.year }} and are rounded. We expect large buildings
+            would negotiate lower rates with utilities, but these estimates
+            serve as an upper bound of cost and help understand the volume of
+            energy a building is used by comparing it to your own energy bills!
+            See our
+            <a :href="UtilityCosts.source" target="_blank" rel="noopener">
+              Chicago Gas & Electric Costs Source <NewTabIcon />
+            </a>
+            for the original statistics.
+          </p>
+        </div>
+      </details>
 
       <DataSourceFootnote />
-
-      <div class="no-print">
-        <h2>What Should We Do About This?</h2>
-
-        <a href="/take-action-tips"> Own this Building? Take Action. </a>
-      </div>
 
       <email-modal
         v-if="isEmailModalOpen"

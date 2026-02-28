@@ -100,3 +100,23 @@ If you need to create new reusable styles:
 - Always check for existing similar functionality before creating new code
 - Prefer editing existing files over creating new ones
 - Look for patterns in the codebase and follow them consistently
+
+## TypeScript/JavaScript Naming Conventions
+
+**Use PascalCase for constants** instead of SCREAMING_SNAKE_CASE:
+
+❌ **Wrong:**
+
+```typescript
+const BUILDING_PAGES = [...];
+const PRINT_PAGE_WIDTH = 816;
+```
+
+✅ **Right:**
+
+```typescript
+const BuildingPages = [...];
+const PrintPageWidth = 816;
+```
+
+This follows modern JavaScript conventions and improves readability.

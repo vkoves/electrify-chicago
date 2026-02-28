@@ -14,11 +14,13 @@ export default function (Vue, { head, isClient }) {
     console.error('Vue error', err, info, vm);
   };
 
-  // Roboto (for main text, with 900 weight ultra bold for letter grades) from Google Fonts
-  // https://fonts.google.com/specimen/Roboto?preview.text=A%20B%20C%20D%20F
+  // Preload the most critical font (Regular) for faster initial render
   head.link.push({
-    rel: 'stylesheet',
-    href: 'https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;0,700;0,900;1,400;1,700&display=swap',
+    rel: 'preload',
+    href: '/fonts/Roboto-Regular.woff2',
+    as: 'font',
+    type: 'font/woff2',
+    crossorigin: 'anonymous',
   });
 
   // Add default social images (will be overridden by page-specific meta)

@@ -240,6 +240,64 @@ docker compose run --rm electrify-chicago uv run python run_all.py
 docker compose run --rm electrify-chicago uv run python -m src.data.scripts.name_of_your_script
 ```
 
+### End-to-End Testing with Playwright
+
+We use [Playwright](https://playwright.dev) for fast and easy snapshot and E2E testing, including
+taking full page screenshots of core pages. This helps ensure we don't break core functionality, like
+"All Electric" badges or stat graphs, and should make QA easier when doing data updates (since you'll
+have a set of images to compare).
+
+**First Time Setup:**
+
+Before running Playwright tests for the first time, you need to install the browser binaries:
+
+```bash
+yarn playwright install
+```
+
+**Note:** `yarn install` only installs the Playwright npm package, not the actual browsers (Chromium, Firefox, WebKit). You need to run `yarn playwright install` separately to download the browser binaries.
+
+Some Playwright commands _with the server running_:
+
+```bash
+# Run all tests
+yarn playwright test
+
+# Run tests in headed mode (see browser)
+yarn playwright test --headed
+
+# Show the full Playwright UI, letting you run specific tests
+yarn playwright test --ui
+
+# Run specific test file
+yarn playwright test e2e/example.spec.ts
+
+# Show test report
+yarn playwright show-report
+```
+
+**Development Tools:**
+
+```bash
+# Record new tests interactively
+npx playwright codegen
+
+# Debug tests with Playwright Inspector
+yarn playwright test --debug
+```
+
+**Tip - Made Visual Updates?**
+
+Run Playwright with update snapshots to overwrite the existing snapshots.
+
+```bash
+yarn playwright test --update-snapshots
+```
+
+**GitHub Actions Integration:**
+
+Pull requests automatically run Playwright tests and post results as comments. For details on testing the comment script locally, see [`.github/scripts/README.md`](.github/scripts/README.md).
+
 ### Run Data Processing Tests
 
 1. Make sure test data is created/replaced before running tests by running the following script (it will overwrite the existing test data file if it exists):

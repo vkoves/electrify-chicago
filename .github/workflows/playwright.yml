@@ -1,0 +1,53 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+        cache: 'yarn'
+    - name: Install dependencies
+      run: npm install -g yarn && yarn
+    - name: Get Playwright version
+      id: playwright-version
+      run: echo "PLAYWRIGHT_VERSION=$(yarn list @playwright/test --depth=0 --json | jq -r '.data.trees[0].name' | sed 's/@playwright\/test@//')" >> $GITHUB_OUTPUT
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      id: playwright-cache
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ steps.playwright-version.outputs.PLAYWRIGHT_VERSION }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
+    - name: Install Playwright Browsers
+      run: yarn playwright install --with-deps
+    - name: Run Playwright tests
+      run: yarn playwright test
+    - uses: actions/upload-artifact@v4
+      if: ${{ !cancelled() }}
+      id: artifact-upload
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+    - name: Compile TypeScript comment script
+      if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+      run: npx tsc .github/scripts/comment-playwright-report.ts --module commonjs --target ES2020 --esModuleInterop --skipLibCheck
+    - name: Comment PR with Artifact Link
+      if: ${{ !cancelled() && github.event_name == 'pull_request' }}
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const commentScript = require('./.github/scripts/comment-playwright-report.js');
+          await commentScript.default({ github, context });

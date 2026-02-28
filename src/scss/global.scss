@@ -3,6 +3,58 @@
 @import './screen-sizes';
 @import './spacing';
 
+// Self-hosted Roboto static fonts (matching original Google Fonts import)
+// Available font-weights: 400 (regular), 500 (medium), 700 (bold), 900 (black)
+// Available font-styles: normal, italic (for 400 and 700 weights only)
+// If you need additional weights or styles, download from https://fonts.google.com/specimen/Roboto
+@font-face {
+  font-family: Roboto;
+  src: url('/fonts/Roboto-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('/fonts/Roboto-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('/fonts/Roboto-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('/fonts/Roboto-Black.woff2') format('woff2');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('/fonts/Roboto-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Roboto;
+  src: url('/fonts/Roboto-BoldItalic.woff2') format('woff2');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
 /**
  * Global Styles
  */
@@ -13,6 +65,8 @@ body {
 
   &,
   * {
+    // Tip: for font debugging, try "Roboto, 'Times New Roman'", which makes it very obvious if
+    // fonts fail to load
     font-family: Roboto, sans-serif;
     box-sizing: border-box;
   }
@@ -271,7 +325,6 @@ code {
  * Styling for our building letter grades (A-F) with colors for each for emphasis
  */
 .letter-grade {
-  font-family: Roboto, sans-serif;
   font-weight: 900;
   line-height: 1;
 
