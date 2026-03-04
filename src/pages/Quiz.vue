@@ -28,7 +28,7 @@ interface QuizPair {
   },
   metaInfo() {
     return generatePageMeta(
-      'Which Building Is Greener?',
+      'Do You Know Chicago Buildings?',
       'Test your knowledge! Guess which famous Chicago building has lower ' +
         'greenhouse gas emissions intensity in this interactive quiz.',
     );
@@ -45,16 +45,17 @@ export default class Quiz extends Vue {
    * Maps building IDs from the static query to array indices for easy lookup.
    * Order matches the static-query result sorted by ID ASC:
    * 0: 100429 (Hancock), 1: 101567 (Monadnock), 2: 101713 (Aon Center),
-   * 3: 102460 (MSI), 4: 103606 (Willis), 5: 103638 (Field Museum),
+   * 3: 102460 (MSI), 4: 103606 (Willis), 5: 160196 (Art Institute),
    * 6: 231019 (Aqua), 7: 239096 (Marina Towers)
    */
   readonly quizPairs: QuizPair[] = [
     {
       category: 'Loop Office Buildings',
       explainer:
-        'The Monadnock Building has less than half the Aon Center\'s greenhouse gas ' +
-        'intensity, despite being nearly 90 years older! The Monadnock\'s 6-foot-thick ' +
-        'brick walls act as incredible insulation, making its efficiency surprisingly good.',
+        "The Monadnock Building has less than half the Aon Center's greenhouse gas " +
+        "intensity, despite being nearly 90 years older! The Monadnock's 6-foot-thick " +
+        'brick walls act as incredible insulation, giving it incredible efficiency, the old-' +
+        'school way.',
       buildingAIndex: 2, // Aon Center (GHG 5.9)
       buildingBIndex: 1, // Monadnock (GHG 2.6)
     },
@@ -62,8 +63,8 @@ export default class Quiz extends Vue {
       category: 'Residential Towers',
       explainer:
         'Marina Towers edges out the much newer Aqua despite being built nearly 50 years ' +
-        "earlier. Both are efficient for residential buildings, but Marina Towers' compact " +
-        'design gives it a slight advantage.',
+        "earlier. Both are efficient for residential buildings, but Marina Towers' cylindrical " +
+        ' concrete design and all-electric heating gives it the advantage!',
       buildingAIndex: 7, // Marina Towers (GHG 5.3)
       buildingBIndex: 6, // Aqua (GHG 5.8)
     },
@@ -71,19 +72,20 @@ export default class Quiz extends Vue {
       category: 'Iconic Skyscrapers',
       explainer:
         'The Hancock Center has significantly lower greenhouse gas intensity than Willis ' +
-        "Tower, despite both being massive 1970s skyscrapers. Willis Tower's enormous " +
-        'floor area makes efficiency a bigger challenge.',
+        "Tower, despite both being massive 1970s skyscrapers. There's probably efficiency " +
+        'differences, but the Hancock is also all-electric. No fossil gas here!',
       buildingAIndex: 4, // Willis Tower (GHG 13.9)
       buildingBIndex: 0, // Hancock (GHG 10.0)
     },
     {
       category: 'Chicago Museums',
       explainer:
-        'The Museum of Science and Industry has less than half the greenhouse gas ' +
-        'intensity of the Field Museum, despite similar square footage. Museum climate ' +
-        'control needs can vary a lot based on collections and building design.',
+        'MSI gets 63% of its energy from electricity, while the Art Institute relies on ' +
+        'fossil gas for 66% of its energy. The Art Institute burns nearly 6x more gas ' +
+        'than MSI despite being 22% smaller by square footage. That gas dependence is ' +
+        'the biggest driver of the Art Institute\'s much higher emissions intensity.',
       buildingAIndex: 3, // MSI (GHG 4.9)
-      buildingBIndex: 5, // Field Museum (GHG 11.3)
+      buildingBIndex: 5, // Art Institute (GHG 16.3)
     },
   ];
 
@@ -99,7 +101,7 @@ export default class Quiz extends Vue {
       'willis-tower.webp',
       'art-institute.webp',
       'marina-towers.webp',
-      'field-museum.webp',
+      'art-institute.webp',
       'merchandise-mart.webp',
       'navy-pier.webp',
     ],
@@ -201,7 +203,7 @@ export default class Quiz extends Vue {
     allBuilding(
       filter: {
         DataYear: { eq: "2023" },
-        ID: { in: ["100429", "101567", "101713", "102460", "103606", "103638", "231019", "239096"] }
+        ID: { in: ["100429", "101567", "101713", "102460", "103606", "160196", "231019", "239096"] }
       },
       sortBy: "ID", order: ASC
     ) {
@@ -254,16 +256,20 @@ export default class Quiz extends Vue {
       <div class="quiz-overlay">
         <!-- Intro screen -->
         <div v-if="!quizStarted" class="quiz-intro">
+          <g-link to="/" class="intro-logo">
+            <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
+          </g-link>
+
           <div class="intro-inner">
-            <h1 id="main-content" tabindex="-1">Which Building Is Greener?</h1>
+            <h1 id="main-content" tabindex="-1">
+              Do <em>You</em> Know Chicago Buildings?
+            </h1>
 
             <p>
-              We'll show you pairs of famous Chicago buildings. Your job: guess
-              which one has <strong>lower greenhouse gas intensity</strong> (less
-              CO<sub>2</sub> per square foot).
+              Two famous Chicago buildings, one question: which one emits less
+              CO<sub>2</sub> per square foot? Test your instincts across
+              {{ quizPairs.length }} rounds.
             </p>
-
-            <p>{{ quizPairs.length }} rounds. Can you get them all right?</p>
 
             <button class="action-btn start-btn" @click="startQuiz">
               Start Quiz
@@ -271,99 +277,123 @@ export default class Quiz extends Vue {
           </div>
         </div>
 
-        <div class="quiz-page page-constrained">
+        <div
+        v-if="quizStarted || quizComplete"
+        class="quiz-page page-constrained"
+        >
           <!-- Quiz round -->
-          <div v-if="quizStarted && !quizComplete">
-        <h1 id="main-content" tabindex="-1" class="sr-only">
-          Which Building Is Greener?
-        </h1>
+          <div v-if="!quizComplete">
+            <h1 id="main-content" tabindex="-1" class="sr-only">
+              Green or Guzzler?
+            </h1>
 
-        <div class="round-header">
-          <p class="round-indicator">
-            Round {{ currentRound + 1 }}/{{ quizPairs.length }}
-          </p>
-          <p class="round-category">{{ currentPair.category }}</p>
-        </div>
+            <div class="round-header">
+              <p class="round-indicator">
+                Round {{ currentRound + 1 }}/{{ quizPairs.length }}
+              </p>
+              <p class="round-category">{{ currentPair.category }}</p>
+            </div>
 
-        <p class="quiz-prompt">
-          Which building emits less CO<sub>2</sub> per square foot?
-        </p>
+            <p class="quiz-prompt">
+              Which building emits less CO<sub>2</sub> per square foot?
+            </p>
 
-        <div class="quiz-pair">
-          <button
-            v-for="building in [buildingA, buildingB]"
-            :key="building.ID"
-            :class="getCardClass(building)"
-            :disabled="hasSelected"
-            @click="selectBuilding(building.ID)"
-          >
-            <BuildingImage :building="building" :hide-attribution="true" />
+            <div class="quiz-pair-container">
+              <div class="quiz-pair">
+                <button
+                  v-for="building in [buildingA, buildingB]"
+                  :key="building.ID"
+                  :class="getCardClass(building)"
+                  :disabled="hasSelected"
+                  @click="selectBuilding(building.ID)"
+                >
+                  <BuildingImage :building="building" :hide-attribution="true" />
 
-            <h2 class="building-name">{{ building.PropertyName }}</h2>
+                  <h2 class="building-name">{{ building.PropertyName }}</h2>
 
-            <ul class="building-stats">
-              <li>{{ building.PrimaryPropertyType }}</li>
-              <li>Built {{ Math.round(building.YearBuilt) }}</li>
-              <li>{{ formatNumber(building.GrossFloorArea) }} sq ft</li>
-            </ul>
+                  <ul class="building-stats">
+                    <li>{{ building.PrimaryPropertyType }}</li>
+                    <li>Built {{ Math.round(building.YearBuilt) }}</li>
+                    <li>{{ formatNumber(building.GrossFloorArea) }} sq ft</li>
+                  </ul>
+                </button>
+              </div>
 
-            <div v-if="hasSelected" class="result-stats">
-              <p class="ghg-value">
-                {{ building.GHGIntensity }}
-                <span class="ghg-unit">kg CO<sub>2</sub>/ft<sup>2</sup></span>
+              <!-- Feedback overlay on top of cards -->
+              <div v-if="hasSelected" class="round-feedback">
+                <div class="feedback-inner">
+                  <p v-if="isCorrect" class="feedback-msg -correct">Correct!</p>
+                  <p v-else class="feedback-msg -wrong">Not quite!</p>
+
+                  <div class="feedback-scores">
+                    <div
+                      v-for="building in [buildingA, buildingB]"
+                      :key="'score-' + building.ID"
+                      class="feedback-score"
+                      :class="{
+                        '-winner': String(building.ID) === String(winnerId),
+                        '-loser': String(building.ID) !== String(winnerId),
+                      }"
+                    >
+                      <p class="feedback-building-name">
+                        {{ building.PropertyName }}
+                      </p>
+                      <p class="ghg-value">
+                        {{ building.GHGIntensity }}
+                        <span class="ghg-unit"
+                          >kg CO<sub>2</sub>/ft<sup>2</sup></span
+                        >
+                      </p>
+                    </div>
+                  </div>
+
+                  <p class="explainer">{{ currentPair.explainer }}</p>
+
+                  <button class="action-btn" @click="nextRound">
+                    {{
+                      currentRound < quizPairs.length - 1
+                        ? 'Next Round'
+                        : 'See Results'
+                    }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Final score -->
+          <div v-if="quizComplete" class="quiz-results">
+            <h1 id="main-content" tabindex="-1" class="sr-only">
+              Green or Guzzler?
+            </h1>
+
+            <div class="announce-panel -blue">
+              <h2>Quiz Complete!</h2>
+              <p class="final-score">
+                <strong>{{ score }}</strong> / {{ quizPairs.length }}
+              </p>
+              <p v-if="score === quizPairs.length" class="score-msg">
+                Perfect score! You really know Chicago's buildings.
+              </p>
+              <p v-else-if="score >= quizPairs.length / 2" class="score-msg">
+                Good job! Building efficiency can be tricky to guess.
+              </p>
+              <p v-else class="score-msg">
+                Building efficiency is full of surprises! Explore the site to
+                learn more.
               </p>
             </div>
-          </button>
-        </div>
 
-        <!-- Feedback after selection -->
-        <div v-if="hasSelected" class="round-feedback">
-          <p v-if="isCorrect" class="feedback-msg -correct">Correct!</p>
-          <p v-else class="feedback-msg -wrong">Not quite!</p>
+            <button class="action-btn play-again-btn" @click="playAgain">
+              Play Again
+            </button>
 
-          <p class="explainer">{{ currentPair.explainer }}</p>
-
-          <button class="action-btn" @click="nextRound">
-            {{
-              currentRound < quizPairs.length - 1 ? 'Next Round' : 'See Results'
-            }}
-          </button>
-        </div>
-      </div>
-
-      <!-- Final score -->
-      <div v-if="quizComplete" class="quiz-results">
-        <h1 id="main-content" tabindex="-1" class="sr-only">
-          Which Building Is Greener?
-        </h1>
-
-        <div class="announce-panel -blue">
-          <h2>Quiz Complete!</h2>
-          <p class="final-score">
-            <strong>{{ score }}</strong> / {{ quizPairs.length }}
-          </p>
-          <p v-if="score === quizPairs.length" class="score-msg">
-            Perfect score! You really know Chicago's buildings.
-          </p>
-          <p v-else-if="score >= quizPairs.length / 2" class="score-msg">
-            Good job! Building efficiency can be tricky to guess.
-          </p>
-          <p v-else class="score-msg">
-            Building efficiency is full of surprises! Explore the site to learn
-            more.
-          </p>
-        </div>
-
-        <button class="action-btn play-again-btn" @click="playAgain">
-          Play Again
-        </button>
-
-        <h3 class="view-more-heading">View More About These Buildings</h3>
-        <ul class="view-more-links">
-          <li v-for="building in buildings" :key="building.ID">
-            <g-link :to="building.path">{{ building.PropertyName }}</g-link>
-          </li>
-        </ul>
+            <h3 class="view-more-heading">View More About These Buildings</h3>
+            <ul class="view-more-links">
+              <li v-for="building in buildings" :key="building.ID">
+                <g-link :to="building.path">{{ building.PropertyName }}</g-link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -377,7 +407,6 @@ export default class Quiz extends Vue {
 .quiz-wrapper {
   position: relative;
   height: 100vh;
-  overflow: hidden;
   background: $white;
 }
 
@@ -389,6 +418,7 @@ export default class Quiz extends Vue {
   gap: 0.5rem;
   justify-content: center;
   z-index: 0;
+  overflow: hidden;
 }
 
 .gallery-track {
@@ -440,6 +470,7 @@ export default class Quiz extends Vue {
 // --- Intro screen ---
 
 .quiz-intro {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -447,6 +478,20 @@ export default class Quiz extends Vue {
   min-height: 100dvh;
   text-align: center;
   padding: 1.5rem;
+}
+
+.intro-logo {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+
+  img {
+    background: white;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    height: 2.5rem;
+    width: auto;
+  }
 }
 
 .intro-inner {
@@ -519,11 +564,15 @@ export default class Quiz extends Vue {
 
 // --- Quiz pair grid ---
 
+.quiz-pair-container {
+  position: relative;
+  margin: 1rem 0.5rem;
+}
+
 .quiz-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  margin: 1rem 0.5rem;
 
   @media (max-width: $mobile-max-width) {
     grid-template-columns: 1fr;
@@ -538,7 +587,9 @@ export default class Quiz extends Vue {
   background-color: $white;
   color: $text-main;
   cursor: pointer;
-  transition: border-color 0.15s, transform 0.15s;
+  transition:
+    border-color 0.15s,
+    transform 0.15s;
   font-family: inherit;
   font-size: inherit;
   width: 100%;
@@ -600,33 +651,32 @@ export default class Quiz extends Vue {
   margin-right: auto;
 }
 
-.result-stats {
-  margin-top: 0.5rem;
-}
-
-.ghg-value {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0;
-}
-
-.ghg-unit {
-  font-size: 0.8125rem;
-  font-weight: normal;
-  color: $text-mid-light;
-}
-
-// --- Feedback ---
+// --- Feedback overlay ---
 
 .round-feedback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.feedback-inner {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(0.25rem);
+  border-radius: $brd-rad-medium;
+  padding: 1.5rem;
   text-align: center;
-  margin: 1rem 0;
+  max-width: 30rem;
+  width: 100%;
+  color: $white;
 }
 
 .feedback-msg {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: bold;
-  margin-bottom: 0.25rem;
+  margin: 0 0 1rem !important;
 
   &.-correct {
     color: $concern-great-background;
@@ -637,10 +687,54 @@ export default class Quiz extends Vue {
   }
 }
 
+.feedback-scores {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.feedback-score {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: $brd-rad-medium;
+
+  &.-winner {
+    background-color: rgba($green, 0.2);
+    border: $border-medium solid $green;
+  }
+
+  &.-loser {
+    background-color: rgba($red, 0.15);
+    border: $border-medium solid $red;
+  }
+}
+
+.feedback-building-name {
+  font-size: 0.875rem;
+  margin: 0 0 0.25rem;
+  font-weight: bold;
+}
+
+.ghg-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.ghg-unit {
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: $grey-light;
+}
+
 .explainer {
-  max-width: 36rem;
+  max-width: 30rem;
   margin: 0 auto 1rem;
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   color: $grey-light;
 }
 
@@ -648,11 +742,15 @@ export default class Quiz extends Vue {
 
 .quiz-results {
   text-align: center;
-  margin-top: 2rem;
+  padding: 2rem 1rem;
 
   .announce-panel {
     display: inline-block;
     text-align: center;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(0.25rem);
+    color: $white;
+    border-color: $chicago-blue;
   }
 
   .final-score {
@@ -670,14 +768,18 @@ export default class Quiz extends Vue {
 
 .view-more-heading {
   margin-top: 2rem;
+  text-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.8);
 }
 
 .view-more-links {
   list-style: none;
-  padding: 0;
+  padding: 1rem;
   text-align: left;
   max-width: 24rem;
   margin: 0.5rem auto;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(0.25rem);
+  border-radius: $brd-rad-medium;
 
   li {
     margin-bottom: 0.5rem;
