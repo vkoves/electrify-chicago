@@ -44,18 +44,18 @@ export default class Quiz extends Vue {
   /**
    * Maps building IDs from the static query to array indices for easy lookup.
    * Order matches the static-query result sorted by ID ASC:
-   * 0: 100429 (Hancock), 1: 101567 (Monadnock), 2: 102460 (MSI),
-   * 3: 103606 (Willis), 4: 103638 (Field Museum), 5: 103721 (Rookery),
+   * 0: 100429 (Hancock), 1: 101567 (Monadnock), 2: 101713 (Aon Center),
+   * 3: 102460 (MSI), 4: 103606 (Willis), 5: 103638 (Field Museum),
    * 6: 231019 (Aqua), 7: 239096 (Marina Towers)
    */
   readonly quizPairs: QuizPair[] = [
     {
-      category: '1880s Loop Offices',
+      category: 'Loop Office Buildings',
       explainer:
-        'Despite both being historic 1880s office buildings in the Loop, the Monadnock ' +
-        "Building has roughly a third of the Rookery's greenhouse gas intensity. " +
-        "Building age alone doesn't determine efficiency!",
-      buildingAIndex: 5, // Rookery (GHG 7.9)
+        'The Monadnock Building has less than half the Aon Center\'s greenhouse gas ' +
+        'intensity, despite being nearly 90 years older! The Monadnock\'s 6-foot-thick ' +
+        'brick walls act as incredible insulation, making its efficiency surprisingly good.',
+      buildingAIndex: 2, // Aon Center (GHG 5.9)
       buildingBIndex: 1, // Monadnock (GHG 2.6)
     },
     {
@@ -73,7 +73,7 @@ export default class Quiz extends Vue {
         'The Hancock Center has significantly lower greenhouse gas intensity than Willis ' +
         "Tower, despite both being massive 1970s skyscrapers. Willis Tower's enormous " +
         'floor area makes efficiency a bigger challenge.',
-      buildingAIndex: 3, // Willis Tower (GHG 13.9)
+      buildingAIndex: 4, // Willis Tower (GHG 13.9)
       buildingBIndex: 0, // Hancock (GHG 10.0)
     },
     {
@@ -82,8 +82,8 @@ export default class Quiz extends Vue {
         'The Museum of Science and Industry has less than half the greenhouse gas ' +
         'intensity of the Field Museum, despite similar square footage. Museum climate ' +
         'control needs can vary a lot based on collections and building design.',
-      buildingAIndex: 2, // MSI (GHG 4.9)
-      buildingBIndex: 4, // Field Museum (GHG 11.3)
+      buildingAIndex: 3, // MSI (GHG 4.9)
+      buildingBIndex: 5, // Field Museum (GHG 11.3)
     },
   ];
 
@@ -105,7 +105,7 @@ export default class Quiz extends Vue {
     ],
     [
       'john-hancock.webp',
-      'rookery-building.webp',
+      'aon-center.webp',
       'aqua.webp',
       'shedd-aquarium.webp',
       'museum-of-science-and-industry.webp',
@@ -201,7 +201,7 @@ export default class Quiz extends Vue {
     allBuilding(
       filter: {
         DataYear: { eq: "2023" },
-        ID: { in: ["100429", "101567", "102460", "103606", "103638", "103721", "231019", "239096"] }
+        ID: { in: ["100429", "101567", "101713", "102460", "103606", "103638", "231019", "239096"] }
       },
       sortBy: "ID", order: ASC
     ) {
@@ -252,19 +252,21 @@ export default class Quiz extends Vue {
       </div>
 
       <div class="intro-overlay">
-        <h1 id="main-content" tabindex="-1">Which Building Is Greener?</h1>
+        <div class="intro-inner">
+          <h1 id="main-content" tabindex="-1">Which Building Is Greener?</h1>
 
-        <p>
-          We'll show you pairs of famous Chicago buildings. Your job: guess
-          which one has <strong>lower greenhouse gas intensity</strong> (less
-          CO<sub>2</sub> per square foot).
-        </p>
+          <p>
+            We'll show you pairs of famous Chicago buildings. Your job: guess
+            which one has <strong>lower greenhouse gas intensity</strong> (less
+            CO<sub>2</sub> per square foot).
+          </p>
 
-        <p>{{ quizPairs.length }} rounds. Can you get them all right?</p>
+          <p>{{ quizPairs.length }} rounds. Can you get them all right?</p>
 
-        <button class="action-btn start-btn" @click="startQuiz">
-          Start Quiz
-        </button>
+          <button class="action-btn start-btn" @click="startQuiz">
+            Start Quiz
+          </button>
+        </div>
       </div>
     </div>
 
@@ -403,6 +405,7 @@ export default class Quiz extends Vue {
     animation: gallery-scroll-right 30s linear infinite;
   }
 
+
   img {
     height: calc(100vh / 3 - 1rem);
     height: calc(100dvh / 3 - 1rem);
@@ -443,6 +446,13 @@ export default class Quiz extends Vue {
   background: rgba(0, 0, 0, 0.6);
   padding: 1.5rem;
 
+  .intro-inner {
+    background: rgba(0, 0, 0,0.3);
+    border-radius: 0.5rem;
+    padding: 1.5rem 0.5rem;
+    backdrop-filter: blur(0.5rem);
+  }
+
   h1,
   p {
     color: $white;
@@ -450,7 +460,7 @@ export default class Quiz extends Vue {
   }
 
   h1 {
-    margin-bottom: 0.5rem;
+    margin: 0 0 0.5rem 0;
   }
 
   p {
