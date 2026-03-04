@@ -198,6 +198,41 @@ export const BuildingsCustomInfo: {
   },
 };
 
+/**
+ * Validates that a hard-coded GraphQL query filter matches the buildings tagged with the given tag.
+ * Pages that use a hard-coded ID filter for performance MUST call this in created() to detect
+ * mismatches between the GraphQL query and the tag data.
+ *
+ * @param tag - The BuildingTags value to validate against
+ * @param actualIds - The building IDs returned by the GraphQL query (as strings)
+ */
+export function validateTaggedBuildings(
+  tag: BuildingTags,
+  actualIds: string[],
+): void {
+  const expectedIds = Object.entries(BuildingsCustomInfo)
+    .filter(([, info]) => info.tags?.includes(tag))
+    .map(([id]) => id)
+    .sort();
+
+  const sortedActual = [...actualIds].sort();
+  const missing = expectedIds.filter((id) => !sortedActual.includes(id));
+  const extra = sortedActual.filter((id) => !expectedIds.includes(id));
+
+  if (missing.length > 0 || extra.length > 0) {
+    const details = [
+      missing.length > 0 && `Missing: [${missing.join(', ')}]`,
+      extra.length > 0 && `Extra: [${extra.join(', ')}]`,
+    ]
+      .filter(Boolean)
+      .join(', ');
+    throw new Error(
+      `GraphQL query mismatch for tag "${tag}". ${details}. ` +
+        'Update GraphQL query to match tagged buildings.',
+    );
+  }
+}
+
 export function getBuildingCustomInfo(
   building: IBuilding,
 ): IBuildingCustomInfo | null {

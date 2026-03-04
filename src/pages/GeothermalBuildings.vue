@@ -4,15 +4,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
-import { IBuilding, IBuildingNode } from '../common-functions.vue';
+import { IBuildingNode } from '../common-functions.vue';
 import {
   BuildingTags,
   validateTaggedBuildings,
 } from '../constants/buildings-custom-info.constant.vue';
 
 interface IBuildingEdge {
-  node: IBuilding;
+  node: IBuildingNode['node'];
 }
 
 /**
@@ -26,21 +25,20 @@ interface IBuildingEdge {
     BuildingsTable,
     DataDisclaimer,
     DataSourceFootnote,
-    NewTabIcon,
   },
   metaInfo() {
-    return { title: 'Retrofit Chicago Participant Case Studies' };
+    return { title: 'Chicago Buildings with Geothermal Heat Pumps' };
   },
 })
-export default class ChicagoRetrofitParticipants extends Vue {
+export default class GeothermalBuildings extends Vue {
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $static!: { allBuilding: { edges: Array<IBuildingEdge> } };
 
   buildingsFiltered: Array<IBuildingEdge> = [];
 
   created(): void {
     validateTaggedBuildings(
-      BuildingTags.hasRetrofitCaseStudy,
+      BuildingTags.hasGeothermalHeatPump,
       this.$static.allBuilding.edges.map((e) => e.node.ID.toString()),
     );
     this.buildingsFiltered = this.$static.allBuilding.edges;
@@ -49,19 +47,20 @@ export default class ChicagoRetrofitParticipants extends Vue {
 </script>
 
 <!--
-  This page grabs all buildings and then filters by owner on the client-side, since that data isn't
-  baked into the actual building CSV
+  This page lists buildings with geothermal heat pumps. It uses a hard-coded GraphQL filter for
+  performance optimization. The IDs MUST match buildings tagged with hasGeothermalHeatPump in
+  buildings-custom-info.constant.vue (validated at runtime via validateTaggedBuildings).
 -->
 <static-query>
   query {
-    # PERFORMANCE OPTIMIZATION: Hard-coded filter for buildings with hasRetrofitCaseStudy tag
+    # PERFORMANCE OPTIMIZATION: Hard-coded filter for buildings with hasGeothermalHeatPump tag
     # These IDs MUST match buildings-custom-info.constant.vue (validated at runtime)
-    # When adding/removing retrofit buildings, update both this query AND the constant
+    # When adding/removing geothermal buildings, update both this query AND the constant
     allBuilding(
       sortBy: "GHGIntensity",
       filter: {
         ID: {
-          in: ["103721", "101920", "102336", "101852", "251328", "252064", "256405", "252065"]
+          in: ["175895", "256537"]
         }
       }
     ) {
@@ -92,24 +91,15 @@ export default class ChicagoRetrofitParticipants extends Vue {
 
 <template>
   <DefaultLayout>
-    <div class="retrofit-page">
+    <div class="geothermal-page">
       <h1 id="main-content" tabindex="-1">
-        Retrofit Chicago Participant Case Studies
+        Chicago Buildings with Geothermal Heat Pumps
       </h1>
 
       <p class="constrained -wide">
-        These buildings participated in the Retrofit Chicago program and have
-        published case studies, so you can learn more about how they became more
-        efficient!
-      </p>
-
-      <p>
-        Buildings sourced from
-        <a
-          href="https://www.chicago.gov/city/en/sites/retrofit-chicago2/home/participant-achievments/past-participants.html#case-studies"
-        >
-          City of Chicago - Retrofit Chicago </a
-        >.
+        These buildings use geothermal heat pump systems, which leverage the
+        earth's stable underground temperature to heat and cool the building
+        more efficiently than conventional HVAC systems.
       </p>
 
       <DataDisclaimer />
@@ -122,6 +112,6 @@ export default class ChicagoRetrofitParticipants extends Vue {
 </template>
 
 <style lang="scss">
-.retrofit-page {
+.geothermal-page {
 }
 </style>

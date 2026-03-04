@@ -322,7 +322,9 @@ query ($id: ID!, $ID: String) {
                     <div class="pills-cont">
                       <span class="pill -geothermal">
                         <span class="icon">♻️</span>
-                        <span class="text">Geothermal Heat Pump</span>
+                        <g-link class="text" to="/geothermal-buildings/"
+                          >Geothermal Heat Pump</g-link
+                        >
                         <a
                           v-if="geothermalSourceLink"
                           v-tooltip="
