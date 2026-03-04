@@ -51,6 +51,7 @@ import GlobalBanner from '../components/GlobalBanner.vue';
 export default class Default extends Vue {
   @Prop() mainClass?: string;
   @Prop({ default: false }) skipBanner?: boolean;
+  @Prop({ default: false }) fullPage?: boolean;
 
   get isDevelopment(): boolean {
     return process.env.NODE_ENV === 'development';
@@ -60,21 +61,27 @@ export default class Default extends Vue {
 
 <template>
   <div>
-    <MetaInfoPanel v-if="isDevelopment" />
+    <template v-if="fullPage">
+      <slot />
+    </template>
 
-    <div :class="mainClass || 'layout'">
-      <AppHeader />
+    <template v-else>
+      <MetaInfoPanel v-if="isDevelopment" />
 
-      <!-- Global Banner - Can be skipped with skipBanner prop -->
-      <GlobalBanner v-if="!skipBanner" />
+      <div :class="mainClass || 'layout'">
+        <AppHeader />
 
-      <div class="main-content">
-        <!-- The main content -->
-        <slot />
+        <!-- Global Banner - Can be skipped with skipBanner prop -->
+        <GlobalBanner v-if="!skipBanner" />
+
+        <div class="main-content">
+          <!-- The main content -->
+          <slot />
+        </div>
       </div>
-    </div>
 
-    <AppFooter />
+      <AppFooter />
+    </template>
   </div>
 </template>
 

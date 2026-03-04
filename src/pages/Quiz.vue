@@ -226,7 +226,7 @@ export default class Quiz extends Vue {
 </static-query>
 
 <template>
-  <DefaultLayout main-class="layout -full-width">
+  <DefaultLayout :full-page="true">
     <div class="quiz-wrapper">
       <!-- Persistent gallery background -->
       <div class="gallery" aria-hidden="true">
@@ -290,10 +290,12 @@ export default class Quiz extends Vue {
         </p>
 
         <div class="quiz-pair">
-          <div
+          <button
             v-for="building in [buildingA, buildingB]"
             :key="building.ID"
             :class="getCardClass(building)"
+            :disabled="hasSelected"
+            @click="selectBuilding(building.ID)"
           >
             <BuildingImage :building="building" :hide-attribution="true" />
 
@@ -305,21 +307,13 @@ export default class Quiz extends Vue {
               <li>{{ formatNumber(building.GrossFloorArea) }} sq ft</li>
             </ul>
 
-            <button
-              v-if="!hasSelected"
-              class="action-btn pick-btn"
-              @click="selectBuilding(building.ID)"
-            >
-              Pick
-            </button>
-
             <div v-if="hasSelected" class="result-stats">
               <p class="ghg-value">
                 {{ building.GHGIntensity }}
                 <span class="ghg-unit">kg CO<sub>2</sub>/ft<sup>2</sup></span>
               </p>
             </div>
-          </div>
+          </button>
         </div>
 
         <!-- Feedback after selection -->
@@ -382,8 +376,7 @@ export default class Quiz extends Vue {
 
 .quiz-wrapper {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
   overflow: hidden;
   background: $white;
 }
@@ -489,7 +482,6 @@ export default class Quiz extends Vue {
 .quiz-page {
   padding: 1rem 0;
   color: $white;
-  margin-top: 0.75rem;
 }
 
 // --- Round header ---
@@ -516,10 +508,13 @@ export default class Quiz extends Vue {
 }
 
 .quiz-prompt {
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-top: 0.25rem;
-  padding: 0 1rem;
+  margin: 1rem !important;
+  text-shadow: 0.25rem 0.25rem $box-shadow-main;
+  border-bottom: solid 0.5rem $chicago-blue;
+  line-height: 1.2;
 }
 
 // --- Quiz pair grid ---
@@ -529,6 +524,10 @@ export default class Quiz extends Vue {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   margin: 1rem 0.5rem;
+
+  @media (max-width: $mobile-max-width) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .quiz-card {
@@ -538,6 +537,20 @@ export default class Quiz extends Vue {
   text-align: center;
   background-color: $white;
   color: $text-main;
+  cursor: pointer;
+  transition: border-color 0.15s, transform 0.15s;
+  font-family: inherit;
+  font-size: inherit;
+  width: 100%;
+
+  &:not(:disabled):hover {
+    border-color: $chicago-blue;
+    transform: scale(1.02);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
 
   &.-winner {
     border-color: $green;
@@ -565,22 +578,21 @@ export default class Quiz extends Vue {
 }
 
 .building-stats {
+  display: flex;
+  justify-content: center;
   list-style: none;
   padding: 0;
   margin: 0.25rem 0 0.75rem;
-  font-size: 0.875rem;
   color: $text-mid-light;
+  margin-top: 1rem;
+  gap: 1.5rem;
+  font-weight: normal;
 
   li {
     display: block;
-    font-size: 0.9375rem;
     color: $text-main;
     margin-bottom: 0.125rem;
   }
-}
-
-.pick-btn {
-  width: 10rem;
 }
 
 .action-btn {
@@ -713,10 +725,6 @@ export default class Quiz extends Vue {
   .building-name {
     font-size: 1.25rem;
     line-height: 1.25;
-  }
-
-  .building-stats {
-    font-size: 0.8125rem;
   }
 }
 </style>
