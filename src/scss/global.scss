@@ -492,9 +492,35 @@ form.search-form {
       color: $blue-very-dark;
     }
 
+    &.-geothermal {
+      background: $grade-a-green;
+      color: $white;
+
+      .link-icon-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 0.375rem;
+        opacity: 0.85;
+
+        img {
+          width: 0.875rem;
+          height: 0.875rem;
+        }
+
+        &:hover,
+        &:focus {
+          opacity: 1;
+        }
+      }
+    }
+
     span.icon {
       text-shadow: 0.0625rem 0 0.0625rem $black;
       margin-right: 0.5em;
+    }
+
+    a {
+      color: inherit;
     }
   }
 }
