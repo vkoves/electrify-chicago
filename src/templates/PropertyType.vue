@@ -11,6 +11,8 @@ import {
   EnergyBreakdownColors,
   GradeColors,
   IBuildingNode,
+  PropertyTypeStats,
+  YearData,
   getMedianMultipleMsg,
   kBtuToKwh,
   kBtuToKwhTooltip,
@@ -76,18 +78,17 @@ export default class PropertyType extends Vue {
   }
 
   loadPropertyTypeStats(): void {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
-      this.$context.propertyType
-    ];
+    const stats = this.propertyTypeStats;
 
     if (!stats) return;
 
     this.totalGHGEmissions = Math.round(
-      stats.TotalGHGEmissions.total,
+      stats.TotalGHGEmissions?.total ?? 0,
     ).toLocaleString();
-    this.avgGHGIntensity = (stats.GHGIntensity.mean as number).toFixed(1);
-    this.totalSquareFootage = (stats.GrossFloorArea.total / 1000000).toFixed(1);
+    this.avgGHGIntensity = (stats.GHGIntensity?.mean ?? 0).toFixed(1);
+    this.totalSquareFootage = (
+      (stats.GrossFloorArea?.total ?? 0) / 1000000
+    ).toFixed(1);
 
     if (stats.ElectricityUse?.total) {
       this.totalElectricityUseKbtu = stats.ElectricityUse.total;
@@ -99,14 +100,12 @@ export default class PropertyType extends Vue {
         stats.NaturalGasUse.total,
       );
       this.medianNaturalGasUse = NumberFormatter.formatKbtu(
-        stats.NaturalGasUse.median,
+        stats.NaturalGasUse.median ?? 0,
       );
     }
 
     // Build data for Pie Chart
-    this.gradeDistributionPie = Object.entries(
-      stats.gradeDistribution as Record<string, number>,
-    )
+    this.gradeDistributionPie = Object.entries(stats.gradeDistribution ?? {})
       .sort(([a], [b]) => {
         const gradeOrder = ['A', 'B', 'C', 'D', 'F'];
         return gradeOrder.indexOf(a) - gradeOrder.indexOf(b);
@@ -171,162 +170,147 @@ export default class PropertyType extends Vue {
   }
 
   get electricityTotalVsCitywideMultiple(): string | null {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
-      this.propertyType
-    ];
-    if (!stats?.ElectricityUse?.total) return null;
+    const total = this.propertyTypeStats?.ElectricityUse?.total;
+    if (!total) return null;
     return getMedianMultipleMsg(
       BuildingBenchmarkStats.ElectricityUse.median,
-      stats.ElectricityUse.total,
+      total,
     );
   }
 
   get electricityMedianMultiple(): string | null {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
-      this.propertyType
-    ];
-    if (!stats?.ElectricityUse?.median) return null;
+    const median = this.propertyTypeStats?.ElectricityUse?.median;
+    if (!median) return null;
     return getMedianMultipleMsg(
       BuildingBenchmarkStats.ElectricityUse.median,
-      stats.ElectricityUse.median,
+      median,
     );
   }
 
   get gasTotalVsCitywideMultiple(): string | null {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
-      this.propertyType
-    ];
-    if (!stats?.NaturalGasUse?.total) return null;
+    const total = this.propertyTypeStats?.NaturalGasUse?.total;
+    if (!total) return null;
     return getMedianMultipleMsg(
       BuildingBenchmarkStats.NaturalGasUse.median,
-      stats.NaturalGasUse.total,
+      total,
     );
   }
 
   get gasMedianMultiple(): string | null {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
-      this.propertyType
-    ];
-    if (!stats?.NaturalGasUse?.median) return null;
+    const median = this.propertyTypeStats?.NaturalGasUse?.median;
+    if (!median) return null;
     return getMedianMultipleMsg(
       BuildingBenchmarkStats.NaturalGasUse.median,
-      stats.NaturalGasUse.median,
+      median,
     );
   }
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  get historicPropertyTypeStats(): Record<string, any> | null {
+  get propertyTypeStats(): PropertyTypeStats | null {
     return (
-      (HistoricStatsByPropertyType as Record<string, any>)[this.propertyType] ??
-      null
+      (BuildingStatsByPropertyType as Record<string, PropertyTypeStats>)[
+        this.propertyType
+      ] ?? null
     );
   }
-  /* eslint-enable @typescript-eslint/no-explicit-any */
+
+  get historicPropertyTypeStats(): Record<string, YearData> | null {
+    return (
+      (HistoricStatsByPropertyType as Record<string, Record<string, YearData>>)[
+        this.propertyType
+      ] ?? null
+    );
+  }
+
+  /** Extracts a median value for a metric across all years for this property type. */
+  private historicMedian(metric: keyof YearData): INumGraphPoint[] {
+    if (!this.historicPropertyTypeStats) return [];
+    return Object.entries(this.historicPropertyTypeStats)
+      .map(([year, yearData]) => ({
+        x: parseInt(year),
+        y: yearData[metric]?.median ?? 0,
+      }))
+      .filter((d) => d.y > 0)
+      .sort((a, b) => a.x - b.x);
+  }
+
+  /** Extracts a total (mean * count) value for a metric across all years for this property type. */
+  private historicTotal(metric: keyof YearData): INumGraphPoint[] {
+    if (!this.historicPropertyTypeStats) return [];
+    return Object.entries(this.historicPropertyTypeStats)
+      .map(([year, yearData]) => {
+        const s = yearData[metric];
+        return {
+          x: parseInt(year),
+          y: s?.count && s.mean ? Math.round(s.mean * s.count) : 0,
+        };
+      })
+      .filter((d) => d.y > 0)
+      .sort((a, b) => a.x - b.x);
+  }
 
   get buildingCountOverTime(): INumGraphPoint[] {
     if (!this.historicPropertyTypeStats) return [];
     return Object.entries(this.historicPropertyTypeStats)
-      .map(([year, stats]) => ({
+      .map(([year, yearData]) => ({
         x: parseInt(year),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        y: (stats as any).GHGIntensity?.count ?? 0,
+        y: yearData.GHGIntensity?.count ?? 0,
       }))
       .filter((d) => d.y > 0)
       .sort((a, b) => a.x - b.x);
   }
 
   get totalGHGOverTime(): INumGraphPoint[] {
-    if (!this.historicPropertyTypeStats) return [];
-    return Object.entries(this.historicPropertyTypeStats)
-      .map(([year, stats]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const s = (stats as any).TotalGHGEmissions;
-        return {
-          x: parseInt(year),
-          y: s?.count > 0 ? Math.round(s.mean * s.count) : 0,
-        };
-      })
-      .filter((d) => d.y > 0)
-      .sort((a, b) => a.x - b.x);
+    return this.historicTotal('TotalGHGEmissions');
   }
 
   get ghgIntensityOverTime(): INumGraphPoint[] {
-    if (!this.historicPropertyTypeStats) return [];
-    return Object.entries(this.historicPropertyTypeStats)
-      .map(([year, stats]) => ({
-        x: parseInt(year),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        y: (stats as any).GHGIntensity?.median ?? 0,
-      }))
-      .filter((d) => d.y > 0)
-      .sort((a, b) => a.x - b.x);
+    return this.historicMedian('GHGIntensity');
   }
 
   get electricityUseOverTime(): INumGraphPoint[] {
-    if (!this.historicPropertyTypeStats) return [];
-    return Object.entries(this.historicPropertyTypeStats)
-      .map(([year, stats]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const s = (stats as any).ElectricityUse;
-        return {
-          x: parseInt(year),
-          y: s?.count > 0 ? Math.round(s.mean * s.count) : 0,
-        };
-      })
-      .filter((d) => d.y > 0)
-      .sort((a, b) => a.x - b.x);
+    return this.historicTotal('ElectricityUse');
   }
 
   get naturalGasUseOverTime(): INumGraphPoint[] {
-    if (!this.historicPropertyTypeStats) return [];
-    return Object.entries(this.historicPropertyTypeStats)
-      .map(([year, stats]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const s = (stats as any).NaturalGasUse;
-        return {
-          x: parseInt(year),
-          y: s?.count > 0 ? Math.round(s.mean * s.count) : 0,
-        };
-      })
-      .filter((d) => d.y > 0)
-      .sort((a, b) => a.x - b.x);
+    return this.historicTotal('NaturalGasUse');
+  }
+
+  get weatherNormalizedSourceEUIOverTime(): INumGraphPoint[] {
+    return this.historicMedian('WeatherNormalizedSourceEUI');
   }
 
   // TODO: Move to using calculateEnergyBreakdown
   get energyMixPie(): IPieSlice[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const stats = (BuildingStatsByPropertyType as Record<string, any>)[
-      this.propertyType
-    ];
+    const stats = this.propertyTypeStats;
     if (!stats) return [];
 
     const slices: IPieSlice[] = [];
-    if (stats.ElectricityUse?.total > 0)
+    const electricityTotal = stats.ElectricityUse?.total;
+    if (electricityTotal)
       slices.push({
         label: 'Electricity',
-        value: stats.ElectricityUse.total,
+        value: electricityTotal,
         color: EnergyBreakdownColors.Electricity,
       });
-    if (stats.NaturalGasUse?.total > 0)
+    const naturalGasTotal = stats.NaturalGasUse?.total;
+    if (naturalGasTotal)
       slices.push({
         label: 'Fossil Gas',
-        value: stats.NaturalGasUse.total,
+        value: naturalGasTotal,
         color: EnergyBreakdownColors.NaturalGas,
       });
-    if (stats.DistrictSteamUse?.total > 0)
+    const districtSteamTotal = stats.DistrictSteamUse?.total;
+    if (districtSteamTotal)
       slices.push({
         label: 'District Steam',
-        value: stats.DistrictSteamUse.total,
+        value: districtSteamTotal,
         color: EnergyBreakdownColors.DistrictSteam,
       });
-    if (stats.DistrictChilledWaterUse?.total > 0)
+    const districtChillingTotal = stats.DistrictChilledWaterUse?.total;
+    if (districtChillingTotal)
       slices.push({
         label: 'District Chilling',
-        value: stats.DistrictChilledWaterUse.total,
+        value: districtChillingTotal,
         color: EnergyBreakdownColors.DistrictChilling,
       });
     return slices;
@@ -593,6 +577,21 @@ export default class PropertyType extends Vue {
                 :graph-data="naturalGasUseOverTime"
                 graph-title="Total Natural Gas Use"
                 unit="kBtu"
+              />
+            </div>
+
+            <div
+              v-if="weatherNormalizedSourceEUIOverTime.length > 1"
+              class="spark-stat-item"
+            >
+              <div class="spark-label">
+                Median Weather Normalized Source EUI
+                <span class="spark-unit">kBtu/sqft</span>
+              </div>
+              <SparkLine
+                :graph-data="weatherNormalizedSourceEUIOverTime"
+                graph-title="Median Weather Normalized Source EUI"
+                unit="kBtu/sqft"
               />
             </div>
           </div>

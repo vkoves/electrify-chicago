@@ -57,6 +57,7 @@ $chart-orange: #f39c12;
 $chart-green: #27ae60;
 $chart-purple: #9b59b6;
 $chart-teal: #1abc9c;
+$chart-pink: #e91e8c;
 
 .chart-stroke-red {
   stroke: $chart-red;
@@ -103,4 +104,11 @@ $chart-teal: #1abc9c;
 
 .chart-fill-teal {
   fill: $chart-teal;
+}
+.chart-stroke-pink {
+  stroke: $chart-pink;
+}
+
+.chart-fill-pink {
+  fill: $chart-pink;
 }

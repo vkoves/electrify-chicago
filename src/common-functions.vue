@@ -238,15 +238,35 @@ export type RegressionLine = {
   y2: number;
 };
 
+// Stats fields beyond count are optional because some metrics have no records for certain years
+// or property types (e.g. WeatherNormalizedSourceEUI in 2019, or DistrictChilledWaterUse for a
+// property type that doesn't use district chilling at all), resulting in a stats object with
+// only a count of 0 and no computed values.
 export interface MetricStats {
   count: number;
-  mean: number;
-  std: number;
-  min: number;
-  max: number;
-  twentyFifthPercentile: number;
-  median: number;
-  seventyFifthPercentile: number;
+  mean?: number;
+  std?: number;
+  min?: number;
+  max?: number;
+  twentyFifthPercentile?: number;
+  median?: number;
+  seventyFifthPercentile?: number;
+  /** Only present in building-statistics-by-property-type.json */
+  total?: number;
+}
+
+/** Shape of a single property type's entry in building-statistics-by-property-type.json */
+export interface PropertyTypeStats {
+  GHGIntensity?: MetricStats;
+  TotalGHGEmissions?: MetricStats;
+  ElectricityUse?: MetricStats;
+  NaturalGasUse?: MetricStats;
+  GrossFloorArea?: MetricStats;
+  SourceEUI?: MetricStats;
+  SiteEUI?: MetricStats;
+  DistrictSteamUse?: MetricStats;
+  DistrictChilledWaterUse?: MetricStats;
+  gradeDistribution?: Record<string, number>;
 }
 
 export interface YearData {
@@ -255,6 +275,7 @@ export interface YearData {
   ElectricityUse?: MetricStats;
   NaturalGasUse?: MetricStats;
   SourceEUI?: MetricStats;
+  WeatherNormalizedSourceEUI?: MetricStats;
   SiteEUI?: MetricStats;
 }
 

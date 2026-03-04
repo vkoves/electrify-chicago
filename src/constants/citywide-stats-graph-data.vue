@@ -210,6 +210,26 @@ const graphConfigs = [
         "It's also what most energy benchmarking programs use to set targets and requirements.",
     ],
   },
+  {
+    data: extractMetricData('WeatherNormalizedSourceEUI', '50%'),
+    containerId: 'weather-normalized-source-eui-chart',
+    title: 'Median Weather Normalized Source EUI',
+    yAxisLabel: 'kBTU/sq ft',
+    strokeColor: 'chart-stroke-pink',
+    fillColor: 'chart-fill-pink',
+    description: [
+      "Weather Normalized Source EUI adjusts a building's energy use to account for " +
+        'unusual weather in a given year — hotter summers or colder winters than average. ' +
+        'This makes it easier to compare performance across years without weather skewing ' +
+        'the results.',
+      "For example, an exceptionally cold Chicago winter might push a building's energy " +
+        'use up even if the building itself became more efficient. Weather normalization ' +
+        'strips out that effect, revealing the underlying trend in building performance.',
+      'Comparing this metric to the regular Source EUI can reveal how much weather is ' +
+        'driving energy use changes from year to year. When the two diverge significantly, ' +
+        "it's often a sign that Chicago had an unusually warm or cold year.",
+    ],
+  },
 ] as const;
 
 export { graphConfigs, extractMetricData };
