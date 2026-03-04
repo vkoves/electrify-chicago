@@ -227,8 +227,8 @@ export default class Quiz extends Vue {
 
 <template>
   <DefaultLayout main-class="layout -full-width">
-    <!-- Intro screen - full viewport -->
-    <div v-if="!quizStarted" class="quiz-intro">
+    <div class="quiz-wrapper">
+      <!-- Persistent gallery background -->
       <div class="gallery" aria-hidden="true">
         <div
           v-for="(row, rowIndex) in galleryRows"
@@ -251,28 +251,29 @@ export default class Quiz extends Vue {
         </div>
       </div>
 
-      <div class="intro-overlay">
-        <div class="intro-inner">
-          <h1 id="main-content" tabindex="-1">Which Building Is Greener?</h1>
+      <div class="quiz-overlay">
+        <!-- Intro screen -->
+        <div v-if="!quizStarted" class="quiz-intro">
+          <div class="intro-inner">
+            <h1 id="main-content" tabindex="-1">Which Building Is Greener?</h1>
 
-          <p>
-            We'll show you pairs of famous Chicago buildings. Your job: guess
-            which one has <strong>lower greenhouse gas intensity</strong> (less
-            CO<sub>2</sub> per square foot).
-          </p>
+            <p>
+              We'll show you pairs of famous Chicago buildings. Your job: guess
+              which one has <strong>lower greenhouse gas intensity</strong> (less
+              CO<sub>2</sub> per square foot).
+            </p>
 
-          <p>{{ quizPairs.length }} rounds. Can you get them all right?</p>
+            <p>{{ quizPairs.length }} rounds. Can you get them all right?</p>
 
-          <button class="action-btn start-btn" @click="startQuiz">
-            Start Quiz
-          </button>
+            <button class="action-btn start-btn" @click="startQuiz">
+              Start Quiz
+            </button>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="quiz-page page-constrained">
-      <!-- Quiz round -->
-      <div v-if="quizStarted && !quizComplete">
+        <div class="quiz-page page-constrained">
+          <!-- Quiz round -->
+          <div v-if="quizStarted && !quizComplete">
         <h1 id="main-content" tabindex="-1" class="sr-only">
           Which Building Is Greener?
         </h1>
@@ -369,31 +370,32 @@ export default class Quiz extends Vue {
             <g-link :to="building.path">{{ building.PropertyName }}</g-link>
           </li>
         </ul>
+          </div>
+        </div>
       </div>
     </div>
   </DefaultLayout>
 </template>
 
 <style lang="scss" scoped>
-.quiz-page {
-  padding: 1rem 0;
-}
+// --- Wrapper and persistent background ---
 
-// --- Intro screen ---
-
-.quiz-intro {
+.quiz-wrapper {
   position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
   overflow: hidden;
-  height: 100vh;
-  height: 100dvh;
+  background: $white;
 }
 
 .gallery {
+  position: absolute;
+  inset: 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  height: 100%;
   justify-content: center;
+  z-index: 0;
 }
 
 .gallery-track {
@@ -404,7 +406,6 @@ export default class Quiz extends Vue {
   &.-reverse {
     animation: gallery-scroll-right 30s linear infinite;
   }
-
 
   img {
     height: calc(100vh / 3 - 1rem);
@@ -435,23 +436,31 @@ export default class Quiz extends Vue {
   }
 }
 
-.intro-overlay {
-  position: absolute;
-  inset: 0;
+.quiz-overlay {
+  position: relative;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.6);
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+// --- Intro screen ---
+
+.quiz-intro {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
   text-align: center;
-  background: rgba(0, 0, 0, 0.6);
   padding: 1.5rem;
+}
 
-  .intro-inner {
-    background: rgba(0, 0, 0,0.3);
-    border-radius: 0.5rem;
-    padding: 1.5rem 0.5rem;
-    backdrop-filter: blur(0.5rem);
-  }
+.intro-inner {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  backdrop-filter: blur(0.5rem);
 
   h1,
   p {
@@ -460,7 +469,7 @@ export default class Quiz extends Vue {
   }
 
   h1 {
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.5rem;
   }
 
   p {
@@ -472,6 +481,14 @@ export default class Quiz extends Vue {
 .start-btn {
   font-size: 1.5rem;
   padding: 0.75rem 2.5rem;
+  margin-top: 0.75rem;
+}
+
+// --- Quiz page content ---
+
+.quiz-page {
+  padding: 1rem 0;
+  color: $white;
   margin-top: 0.75rem;
 }
 
@@ -487,7 +504,7 @@ export default class Quiz extends Vue {
 
 .round-indicator {
   font-weight: bold;
-  color: $text-mid-light;
+  color: $grey;
   margin: 0;
   white-space: nowrap;
 }
@@ -510,21 +527,8 @@ export default class Quiz extends Vue {
 .quiz-pair {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-  margin: 1rem 0;
-
-  @media (max-width: $mobile-max-width) {
-    gap: 0;
-
-    .quiz-card:first-child {
-      padding: 1rem;
-      border-right: $border-medium solid $grey;
-    }
-
-    .quiz-card:last-child {
-      padding: 1rem;
-    }
-  }
+  gap: 1rem;
+  margin: 1rem 0.5rem;
 }
 
 .quiz-card {
@@ -532,6 +536,8 @@ export default class Quiz extends Vue {
   border-radius: $brd-rad-medium;
   padding: 0.75rem;
   text-align: center;
+  background-color: $white;
+  color: $text-main;
 
   &.-winner {
     border-color: $green;
@@ -549,26 +555,6 @@ export default class Quiz extends Vue {
 
     img {
       max-height: 12rem;
-    }
-  }
-
-  @media (max-width: $mobile-max-width) {
-    border: none;
-    border-radius: 0;
-    padding: 0;
-    text-align: left;
-
-    &.-winner,
-    &.-loser {
-      border: none;
-    }
-
-    &.-winner {
-      background-color: $concern-great-background;
-    }
-
-    &.-loser {
-      background-color: $concern-very-bad-background;
     }
   }
 }
@@ -594,7 +580,7 @@ export default class Quiz extends Vue {
 }
 
 .pick-btn {
-  width: 100%;
+  width: 10rem;
 }
 
 .action-btn {
@@ -631,11 +617,11 @@ export default class Quiz extends Vue {
   margin-bottom: 0.25rem;
 
   &.-correct {
-    color: $green;
+    color: $concern-great-background;
   }
 
   &.-wrong {
-    color: $red;
+    color: $announcement-border-red;
   }
 }
 
@@ -643,7 +629,7 @@ export default class Quiz extends Vue {
   max-width: 36rem;
   margin: 0 auto 1rem;
   font-size: 0.9375rem;
-  color: $text-mid-light;
+  color: $grey-light;
 }
 
 // --- Results ---
@@ -686,6 +672,10 @@ export default class Quiz extends Vue {
     font-size: 1.125rem;
     font-weight: bold;
   }
+
+  a {
+    color: $blue-light;
+  }
 }
 
 // --- Accessibility ---
@@ -710,7 +700,7 @@ export default class Quiz extends Vue {
       font-size: 1.25rem;
     }
 
-    .intro-overlay {
+    .intro-inner {
       padding: 1rem;
     }
   }
