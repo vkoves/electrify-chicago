@@ -8,6 +8,7 @@ over time.
 """
 
 import pandas
+from typing import cast
 from src.data.scripts.utils import (
     get_and_clean_csv,
     get_data_file_path,
@@ -57,7 +58,7 @@ def calculate_historic_stats_by_property_type(
             if year < HISTORIC_DATA_START_YEAR:
                 continue
 
-            year_data = prop_data[prop_data["DataYear"] == year]
+            year_data = cast(pandas.DataFrame, prop_data[prop_data["DataYear"] == year])
 
             if year_data.empty:
                 continue
@@ -103,7 +104,7 @@ def main() -> None:
     # Join it onto the all-years data by ID so we can group historic data by property type.
     benchmarks = pandas.read_csv(
         get_data_file_path(data_out_directory, building_benchmarks_file),
-        usecols=["ID", "PrimaryPropertyType"],
+        usecols=pandas.Index(["ID", "PrimaryPropertyType"]),
     )
     building_data = building_data.merge(benchmarks, on="ID", how="left")
 
