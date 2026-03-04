@@ -227,7 +227,7 @@ export default class BuildingsTable extends Vue {
             @click="showSort ? $emit('sort', 'ElectricityUse') : null"
           >
             Electricity Use<br />
-            <span class="unit">(kBtu)</span>
+            <span class="unit">(kWh)</span>
             <button
               v-if="showSort"
               :class="
@@ -376,7 +376,8 @@ export default class BuildingsTable extends Vue {
                 :building="edge.node"
                 :should-round="true"
                 :stats="BuildingBenchmarkStats"
-                :unit="'kBtu'"
+                :unit="'kWh'"
+                :convert-to-kwh="true"
                 stat-key="ElectricityUse"
               />
             </template>
