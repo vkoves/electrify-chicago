@@ -8,11 +8,11 @@ import SparkLine, { INumGraphPoint } from '~/components/graphs/SparkLine.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
-  EnergyBreakdownColors,
   GradeColors,
   IBuildingNode,
   PropertyTypeStats,
   YearData,
+  buildEnergyPieSlices,
   getMedianMultipleMsg,
   kBtuToKwh,
   kBtuToKwhTooltip,
@@ -64,8 +64,6 @@ export default class PropertyType extends Vue {
   totalSquareFootage?: string;
   gradeDistributionPie: Array<IPieSlice> = [];
 
-  totalElectricityUseKbtu?: number;
-  medianElectricityUseKbtu?: number;
   totalNaturalGasUse?: string;
   medianNaturalGasUse?: string;
 
@@ -89,11 +87,6 @@ export default class PropertyType extends Vue {
     this.totalSquareFootage = (
       (stats.GrossFloorArea?.total ?? 0) / 1000000
     ).toFixed(1);
-
-    if (stats.ElectricityUse?.total) {
-      this.totalElectricityUseKbtu = stats.ElectricityUse.total;
-      this.medianElectricityUseKbtu = stats.ElectricityUse.median;
-    }
 
     if (stats.NaturalGasUse?.total) {
       this.totalNaturalGasUse = NumberFormatter.formatKbtu(
@@ -129,38 +122,38 @@ export default class PropertyType extends Vue {
     return this.buildingsFiltered.length;
   }
 
+  private kwhFormatted(kbtu: number | null | undefined): string | undefined {
+    if (kbtu == null) return undefined;
+    return NumberFormatter.formatBigNumber(kBtuToKwh(kbtu));
+  }
+
+  private kwhTooltip(kbtu: number | null | undefined): string {
+    if (kbtu == null) return '';
+    return kBtuToKwhTooltip(kbtu);
+  }
+
   get totalElectricityUse(): string | undefined {
-    if (this.totalElectricityUseKbtu == null) return undefined;
-    return NumberFormatter.formatBigNumber(
-      kBtuToKwh(this.totalElectricityUseKbtu),
-    );
+    return this.kwhFormatted(this.propertyTypeStats?.ElectricityUse?.total);
   }
 
   get totalElectricityUseTooltip(): string {
-    if (this.totalElectricityUseKbtu == null) return '';
-    return kBtuToKwhTooltip(this.totalElectricityUseKbtu);
+    return this.kwhTooltip(this.propertyTypeStats?.ElectricityUse?.total);
   }
 
   get medianElectricityUse(): string | undefined {
-    if (this.medianElectricityUseKbtu == null) return undefined;
-    return NumberFormatter.formatBigNumber(
-      kBtuToKwh(this.medianElectricityUseKbtu),
-    );
+    return this.kwhFormatted(this.propertyTypeStats?.ElectricityUse?.median);
   }
 
   get medianElectricityUseTooltip(): string {
-    if (this.medianElectricityUseKbtu == null) return '';
-    return kBtuToKwhTooltip(this.medianElectricityUseKbtu);
+    return this.kwhTooltip(this.propertyTypeStats?.ElectricityUse?.median);
   }
 
   get citywideMedianElectricityUse(): string {
-    return NumberFormatter.formatBigNumber(
-      kBtuToKwh(BuildingBenchmarkStats.ElectricityUse.median),
-    );
+    return this.kwhFormatted(BuildingBenchmarkStats.ElectricityUse.median)!;
   }
 
   get citywideMedianElectricityUseTooltip(): string {
-    return kBtuToKwhTooltip(BuildingBenchmarkStats.ElectricityUse.median);
+    return this.kwhTooltip(BuildingBenchmarkStats.ElectricityUse.median);
   }
 
   get citywideMedianNaturalGasUse(): string {
@@ -169,39 +162,39 @@ export default class PropertyType extends Vue {
     );
   }
 
+  private citywideMultiple(
+    citywideMedian: number,
+    value: number | undefined,
+  ): string | null {
+    if (!value) return null;
+    return getMedianMultipleMsg(citywideMedian, value);
+  }
+
   get electricityTotalVsCitywideMultiple(): string | null {
-    const total = this.propertyTypeStats?.ElectricityUse?.total;
-    if (!total) return null;
-    return getMedianMultipleMsg(
+    return this.citywideMultiple(
       BuildingBenchmarkStats.ElectricityUse.median,
-      total,
+      this.propertyTypeStats?.ElectricityUse?.total,
     );
   }
 
   get electricityMedianMultiple(): string | null {
-    const median = this.propertyTypeStats?.ElectricityUse?.median;
-    if (!median) return null;
-    return getMedianMultipleMsg(
+    return this.citywideMultiple(
       BuildingBenchmarkStats.ElectricityUse.median,
-      median,
+      this.propertyTypeStats?.ElectricityUse?.median,
     );
   }
 
   get gasTotalVsCitywideMultiple(): string | null {
-    const total = this.propertyTypeStats?.NaturalGasUse?.total;
-    if (!total) return null;
-    return getMedianMultipleMsg(
+    return this.citywideMultiple(
       BuildingBenchmarkStats.NaturalGasUse.median,
-      total,
+      this.propertyTypeStats?.NaturalGasUse?.total,
     );
   }
 
   get gasMedianMultiple(): string | null {
-    const median = this.propertyTypeStats?.NaturalGasUse?.median;
-    if (!median) return null;
-    return getMedianMultipleMsg(
+    return this.citywideMultiple(
       BuildingBenchmarkStats.NaturalGasUse.median,
-      median,
+      this.propertyTypeStats?.NaturalGasUse?.median,
     );
   }
 
@@ -279,41 +272,15 @@ export default class PropertyType extends Vue {
     return this.historicMedian('WeatherNormalizedSourceEUI');
   }
 
-  // TODO: Move to using calculateEnergyBreakdown
   get energyMixPie(): IPieSlice[] {
     const stats = this.propertyTypeStats;
     if (!stats) return [];
-
-    const slices: IPieSlice[] = [];
-    const electricityTotal = stats.ElectricityUse?.total;
-    if (electricityTotal)
-      slices.push({
-        label: 'Electricity',
-        value: electricityTotal,
-        color: EnergyBreakdownColors.Electricity,
-      });
-    const naturalGasTotal = stats.NaturalGasUse?.total;
-    if (naturalGasTotal)
-      slices.push({
-        label: 'Fossil Gas',
-        value: naturalGasTotal,
-        color: EnergyBreakdownColors.NaturalGas,
-      });
-    const districtSteamTotal = stats.DistrictSteamUse?.total;
-    if (districtSteamTotal)
-      slices.push({
-        label: 'District Steam',
-        value: districtSteamTotal,
-        color: EnergyBreakdownColors.DistrictSteam,
-      });
-    const districtChillingTotal = stats.DistrictChilledWaterUse?.total;
-    if (districtChillingTotal)
-      slices.push({
-        label: 'District Chilling',
-        value: districtChillingTotal,
-        color: EnergyBreakdownColors.DistrictChilling,
-      });
-    return slices;
+    return buildEnergyPieSlices({
+      ElectricityUse: stats.ElectricityUse?.total,
+      NaturalGasUse: stats.NaturalGasUse?.total,
+      DistrictSteamUse: stats.DistrictSteamUse?.total,
+      DistrictChilledWaterUse: stats.DistrictChilledWaterUse?.total,
+    });
   }
 }
 </script>
@@ -480,7 +447,7 @@ export default class PropertyType extends Vue {
                 class="stat-icon"
               />
               <div>
-                <div class="stat-label -no-min bold">Total Natural Gas Use</div>
+                <div class="stat-label -no-min bold">Total Fossil Gas Use</div>
                 <div class="stat-number">{{ totalNaturalGasUse }} kBtu</div>
                 <div
                   v-if="gasTotalVsCitywideMultiple"
@@ -570,12 +537,12 @@ export default class PropertyType extends Vue {
               class="spark-stat-item"
             >
               <div class="spark-label">
-                Total Natural Gas Use
+                Total Fossil Gas Use
                 <span class="spark-unit">kBtu</span>
               </div>
               <SparkLine
                 :graph-data="naturalGasUseOverTime"
-                graph-title="Total Natural Gas Use"
+                graph-title="Total Fossil Gas Use"
                 unit="kBtu"
               />
             </div>

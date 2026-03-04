@@ -620,6 +620,52 @@ export function estimateUtilitySpend(
   }
 }
 
+/** Energy use totals used to build pie chart slices */
+export interface EnergyTotals {
+  ElectricityUse?: number | null;
+  NaturalGasUse?: number | null;
+  DistrictSteamUse?: number | null;
+  DistrictChilledWaterUse?: number | null;
+}
+
+/**
+ * Builds energy breakdown pie chart slices from a set of energy use totals.
+ * Only includes sources with a positive value.
+ */
+export function buildEnergyPieSlices(totals: EnergyTotals): Array<IPieSlice> {
+  type Source = {
+    value: number | null | undefined;
+    label: string;
+    color: string;
+  };
+  const sources: Array<Source> = [
+    {
+      value: totals.ElectricityUse,
+      label: 'Electricity',
+      color: EnergyBreakdownColors.Electricity,
+    },
+    {
+      value: totals.NaturalGasUse,
+      label: 'Fossil Gas',
+      color: EnergyBreakdownColors.NaturalGas,
+    },
+    {
+      value: totals.DistrictSteamUse,
+      label: 'District Steam',
+      color: EnergyBreakdownColors.DistrictSteam,
+    },
+    {
+      value: totals.DistrictChilledWaterUse,
+      label: 'District Chilling',
+      color: EnergyBreakdownColors.DistrictChilling,
+    },
+  ];
+
+  return sources
+    .filter((s): s is typeof s & { value: number } => !!s.value && s.value > 0)
+    .map(({ value, label, color }) => ({ label, value, color }));
+}
+
 /**
  * Converts a building or benchmark record into pie chart slices and a total energy use
  */
@@ -627,47 +673,10 @@ export function calculateEnergyBreakdown(record: IBuilding | IHistoricData): {
   energyBreakdown: Array<IPieSlice>;
   totalEnergyUse: number;
 } {
-  const energyBreakdown: Array<IPieSlice> = [];
+  const energyBreakdown = buildEnergyPieSlices(record);
+  const totalEnergyUse = energyBreakdown.reduce((sum, d) => sum + d.value, 0);
 
-  if (record.ElectricityUse > 0) {
-    energyBreakdown.push({
-      label: 'Electricity',
-      value: parseFloat(record.ElectricityUse.toString()),
-      color: EnergyBreakdownColors.Electricity,
-    });
-  }
-
-  if (record.NaturalGasUse > 0) {
-    energyBreakdown.push({
-      label: 'Fossil Gas',
-      value: parseFloat(record.NaturalGasUse.toString()),
-      color: EnergyBreakdownColors.NaturalGas,
-    });
-  }
-
-  if (record.DistrictSteamUse > 0) {
-    energyBreakdown.push({
-      label: 'District Steam',
-      value: parseFloat(record.DistrictSteamUse.toString()),
-      color: EnergyBreakdownColors.DistrictSteam,
-    });
-  }
-
-  if (record.DistrictChilledWaterUse > 0) {
-    energyBreakdown.push({
-      label: 'District Chilling',
-      value: parseFloat(record.DistrictChilledWaterUse.toString()),
-      color: EnergyBreakdownColors.DistrictChilling,
-    });
-  }
-
-  let totalEnergyUse = 0;
-  energyBreakdown.forEach((datum) => (totalEnergyUse += datum.value));
-
-  return {
-    energyBreakdown,
-    totalEnergyUse,
-  };
+  return { energyBreakdown, totalEnergyUse };
 }
 
 /**

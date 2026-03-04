@@ -32,19 +32,20 @@ export default class About extends Vue {}
         <p>
           We added new property type pages (like
           <g-link to="/building-type/Data%20Center">Data Centers</g-link> or
-          <g-link to="/property-type/museums">Museums</g-link>), to make it easy to learn more about
-          all properties marked as a certain type! Previously, clicking a property type on a
-          building page just took you to a filtered search, but now each property
-          type has its own dedicated page with critical stats and graphs and images of a sample of
-          those buildings.
+          <g-link to="/property-type/museums">Museums</g-link>), to make it easy
+          to learn more about all properties marked as a certain type!
+          Previously, clicking a property type on a building page just took you
+          to a filtered search, but now each property type has its own dedicated
+          page with critical stats and graphs and images of a sample of those
+          buildings.
         </p>
 
         <p>
           Each property type page now includes a stats panel with total
           emissions, average GHG intensity, total square footage, grade
           distribution, and total energy mix. You can also expand a
-          <strong>Trends</strong> section to see graphs of how the buildings in that property type
-          have changed over time.
+          <strong>Trends</strong> section to see graphs of how the buildings in
+          that property type have changed over time.
         </p>
       </div>
 
