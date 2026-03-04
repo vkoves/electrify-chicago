@@ -37,11 +37,15 @@ export function getAvailableOwnerIds(): string[] {
 export interface IBuildingCustomInfo {
   links?: Array<ILink>;
   tags?: Array<BuildingTags>;
+  /** Optional source links scoped to specific tags, to validate/cite a tag's claim */
+  tagLinks?: Partial<Record<BuildingTags, ILink>>;
 }
 
 export interface ILink {
   url: string;
   text: string;
+  /** Optional pull quote to show as a tooltip preview */
+  preview?: string;
 }
 
 /**
@@ -54,6 +58,7 @@ export interface ILink {
  * */
 export enum BuildingTags {
   hasRetrofitCaseStudy = 'has-retrofit-case-study',
+  hasGeothermalHeatPump = 'has-geothermal-heat-pump',
 }
 
 /**
@@ -161,6 +166,35 @@ export const BuildingsCustomInfo: {
         text: 'SAIC 280 S Columbus Building Retrofit Report',
       },
     ],
+  },
+
+  /**
+   * Geothermal Heat Pump Buildings
+   */
+  // BVM Hall (Loyola University)
+  '175895': {
+    tags: [BuildingTags.hasGeothermalHeatPump],
+    tagLinks: {
+      [BuildingTags.hasGeothermalHeatPump]: {
+        url: 'https://www.luc.edu/sustainability/about/ourfacilities/#:~:text=in%20the%20building.-,Geothermal%20System,-%3A%C2%A0A%2091',
+        text: 'Loyola University Sustainability - BVM Hall Geothermal System',
+        preview:
+          'A 91-well geothermal system heats and cools the SES building by tapping into the earth\'s constant temperature deep underground. The system is highly efficient, cutting the building\'s heating and cooling costs by 30 percent.',
+      },
+    },
+  },
+
+  // Eagle Building
+  '256537': {
+    tags: [BuildingTags.hasGeothermalHeatPump],
+    tagLinks: {
+      [BuildingTags.hasGeothermalHeatPump]: {
+        url: 'https://theeaglebuilding.com/#:~:text=and%20natural%20beauty!-,GEOTHERMAL%20HEATING,-%26%20COOLING',
+        text: 'Eagle Building - Geothermal Heating & Cooling',
+        preview:
+          'Geothermal energy offers tenants significant cost savings... by harnessing the earth\'s natural temperature, these systems require less energy compared to traditional HVAC methods, leading to lower monthly expenses.',
+      },
+    },
   },
 };
 
