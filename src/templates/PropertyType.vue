@@ -426,7 +426,7 @@ export default class PropertyType extends Vue {
                   class="stat-median-compare"
                 >
                   <strong
-                    >{{ electricityTotalVsCitywideMultiple }} Median City
+                    >{{ electricityTotalVsCitywideMultiple }} Median Benchmarked
                     Building</strong
                   >
                   ({{ citywideMedianElectricityUse }} kWh)
@@ -454,7 +454,7 @@ export default class PropertyType extends Vue {
                   class="stat-median-compare"
                 >
                   <strong
-                    >{{ gasTotalVsCitywideMultiple }} Median City
+                    >{{ gasTotalVsCitywideMultiple }} Median Benchmarked
                     Building</strong
                   >
                   ({{ citywideMedianNaturalGasUse }} kBtu)
