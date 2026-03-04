@@ -7,7 +7,7 @@
     <!-- TODO: Figure out how to do alt text for these images - skipping for now -->
     <img :src="buildingImg.imgUrl" alt="" />
 
-    <p class="attribution -no-margin">
+    <p v-if="!hideAttribution" class="attribution -no-margin">
       <strong>Attribution:</strong>
       {{ buildingImg.fromGoogleMaps ? '© Google ' + currentYear : '' }}
       <a
@@ -44,6 +44,7 @@ import NewTabIcon from './NewTabIcon.vue';
 })
 export default class BuildingImage extends Vue {
   @Prop({ required: true }) building!: IBuilding;
+  @Prop({ default: false }) hideAttribution!: boolean;
 
   /**
    * Returns the image object associated with this image
