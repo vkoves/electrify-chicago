@@ -15,7 +15,10 @@ from src.data.scripts.utils import (
     log_step_completion,
     write_json_with_newline,
 )
-from src.data.scripts.generate_historic_stats import building_cols_to_analyze, clean_year_stats
+from src.data.scripts.generate_historic_stats import (
+    building_cols_to_analyze,
+    clean_year_stats,
+)
 
 output_filename = "historic-stats-by-property-type.json"
 data_out_directory = "dist"

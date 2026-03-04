@@ -12,17 +12,44 @@ def sample_building_data():
     """Multi-year data with two property types, 2 buildings each, for testing."""
     return pd.DataFrame(
         {
-            "DataYear":            [2016,  2016,  2017,  2017,  2016,  2016,  2017,  2017],
-            "PrimaryPropertyType": ["Office","Office","Office","Office","Hotel","Hotel","Hotel","Hotel"],
-            "GHGIntensity":        [10.0,  14.0,  12.0,  16.0,  8.0,   9.0,   9.0,   11.0],
-            "TotalGHGEmissions":   [1000., 1400., 1200., 1600., 800.,  900.,  900.,  1100.],
-            "ElectricityUse":      [500.,  700.,  600.,  800.,  400.,  450.,  450.,  550.],
-            "NaturalGasUse":       [300.,  420.,  360.,  480.,  240.,  270.,  270.,  330.],
-            "SourceEUI":           [50.0,  70.0,  55.0,  75.0,  45.0,  48.0,  48.0,  58.0],
-            "WeatherNormalizedSourceEUI": [51.0, 71.0, 56.0, 76.0, 46.0, 49.0, 49.0, 59.0],
-            "SiteEUI":             [40.0,  56.0,  45.0,  61.0,  35.0,  38.0,  38.0,  46.0],
-            "DistrictSteamUse":    [0.0,   0.0,   0.0,   0.0,  100.,  120.,  110.,  130.],
-            "DistrictChilledWaterUse": [0.0, 0.0,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0],
+            "DataYear": [2016, 2016, 2017, 2017, 2016, 2016, 2017, 2017],
+            "PrimaryPropertyType": [
+                "Office",
+                "Office",
+                "Office",
+                "Office",
+                "Hotel",
+                "Hotel",
+                "Hotel",
+                "Hotel",
+            ],
+            "GHGIntensity": [10.0, 14.0, 12.0, 16.0, 8.0, 9.0, 9.0, 11.0],
+            "TotalGHGEmissions": [
+                1000.0,
+                1400.0,
+                1200.0,
+                1600.0,
+                800.0,
+                900.0,
+                900.0,
+                1100.0,
+            ],
+            "ElectricityUse": [500.0, 700.0, 600.0, 800.0, 400.0, 450.0, 450.0, 550.0],
+            "NaturalGasUse": [300.0, 420.0, 360.0, 480.0, 240.0, 270.0, 270.0, 330.0],
+            "SourceEUI": [50.0, 70.0, 55.0, 75.0, 45.0, 48.0, 48.0, 58.0],
+            "WeatherNormalizedSourceEUI": [
+                51.0,
+                71.0,
+                56.0,
+                76.0,
+                46.0,
+                49.0,
+                49.0,
+                59.0,
+            ],
+            "SiteEUI": [40.0, 56.0, 45.0, 61.0, 35.0, 38.0, 38.0, 46.0],
+            "DistrictSteamUse": [0.0, 0.0, 0.0, 0.0, 100.0, 120.0, 110.0, 130.0],
+            "DistrictChilledWaterUse": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
         }
     )
 
@@ -116,7 +143,11 @@ def test_partial_nan_column_shows_only_count():
             "WeatherNormalizedSourceEUI": [51.0, 56.0, 46.0],
             "SiteEUI": [40.0, 45.0, 35.0],
             "DistrictSteamUse": [100.0, None, None],  # only 1 of 3 has data → count=1
-            "DistrictChilledWaterUse": [None, None, None],  # all NaN → omitted by describe()
+            "DistrictChilledWaterUse": [
+                None,
+                None,
+                None,
+            ],  # all NaN → omitted by describe()
         }
     )
     _, stats = _run_and_capture(data)
@@ -138,7 +169,15 @@ def test_nonzero_count_column_has_all_stat_keys(sample_building_data):
     """Columns with data should have the core statistical keys (std omitted if only 1 building)."""
     _, stats = _run_and_capture(sample_building_data)
     ghg = stats["Office"]["2016"]["GHGIntensity"]
-    required_keys = {"count", "mean", "min", "max", "twentyFifthPercentile", "median", "seventyFifthPercentile"}
+    required_keys = {
+        "count",
+        "mean",
+        "min",
+        "max",
+        "twentyFifthPercentile",
+        "median",
+        "seventyFifthPercentile",
+    }
     assert required_keys.issubset(set(ghg.keys()))
 
 
