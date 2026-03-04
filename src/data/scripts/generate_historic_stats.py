@@ -42,6 +42,7 @@ building_cols_to_analyze = [
     "ElectricityUse",
     "NaturalGasUse",
     "SourceEUI",
+    "WeatherNormalizedSourceEUI",
     "SiteEUI",
     "DistrictSteamUse",
     "DistrictChilledWaterUse",
