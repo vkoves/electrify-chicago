@@ -19,6 +19,7 @@ def sample_building_data():
             "ElectricityUse":      [500.,  700.,  600.,  800.,  400.,  450.,  450.,  550.],
             "NaturalGasUse":       [300.,  420.,  360.,  480.,  240.,  270.,  270.,  330.],
             "SourceEUI":           [50.0,  70.0,  55.0,  75.0,  45.0,  48.0,  48.0,  58.0],
+            "WeatherNormalizedSourceEUI": [51.0, 71.0, 56.0, 76.0, 46.0, 49.0, 49.0, 59.0],
             "SiteEUI":             [40.0,  56.0,  45.0,  61.0,  35.0,  38.0,  38.0,  46.0],
             "DistrictSteamUse":    [0.0,   0.0,   0.0,   0.0,  100.,  120.,  110.,  130.],
             "DistrictChilledWaterUse": [0.0, 0.0,  0.0,   0.0,   0.0,   0.0,   0.0,   0.0],
@@ -65,6 +66,7 @@ def test_pre_2016_years_excluded():
             "ElectricityUse": [250.0, 500.0, 600.0],
             "NaturalGasUse": [150.0, 300.0, 360.0],
             "SourceEUI": [25.0, 50.0, 55.0],
+            "WeatherNormalizedSourceEUI": [26.0, 51.0, 56.0],
             "SiteEUI": [20.0, 40.0, 45.0],
             "DistrictSteamUse": [0.0, 0.0, 0.0],
             "DistrictChilledWaterUse": [0.0, 0.0, 0.0],
@@ -86,6 +88,7 @@ def test_year_with_no_data_for_property_type_excluded():
             "ElectricityUse": [500.0, 600.0, 400.0],
             "NaturalGasUse": [300.0, 360.0, 240.0],
             "SourceEUI": [50.0, 55.0, 45.0],
+            "WeatherNormalizedSourceEUI": [51.0, 56.0, 46.0],
             "SiteEUI": [40.0, 45.0, 35.0],
             "DistrictSteamUse": [0.0, 0.0, 0.0],
             "DistrictChilledWaterUse": [0.0, 0.0, 0.0],
@@ -110,6 +113,7 @@ def test_partial_nan_column_shows_only_count():
             "ElectricityUse": [500.0, 600.0, 400.0],
             "NaturalGasUse": [300.0, 360.0, 240.0],
             "SourceEUI": [50.0, 55.0, 45.0],
+            "WeatherNormalizedSourceEUI": [51.0, 56.0, 46.0],
             "SiteEUI": [40.0, 45.0, 35.0],
             "DistrictSteamUse": [100.0, None, None],  # only 1 of 3 has data → count=1
             "DistrictChilledWaterUse": [None, None, None],  # all NaN → omitted by describe()
