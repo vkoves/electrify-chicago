@@ -469,7 +469,7 @@ export default class BuildingsMap extends Vue {
     this.addBuildingsToMap(topBuildings);
 
     this.mapStatus =
-      `Top ${BuildingsMap.MaxBuildingsCount} highest GHG intensity buildings of ` +
+      `Top ${BuildingsMap.MaxBuildingsCount} all electric buildings of ` +
       `${buildingNodes.length.toLocaleString()} total`;
   }
 
