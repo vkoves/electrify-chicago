@@ -1,9 +1,5 @@
 <template>
     <div class="map-page">
-      <h1 id="main-content" tabindex="-1">Map</h1>
-
-      <!--DataDisclaimer /-->
-
       <details class="filter-details">
         <summary>Filter Buildings</summary>
         <form>
@@ -119,8 +115,6 @@
       <!--
         <BuildingsTable :buildings="$page.allBuilding.edges" />
       -->
-
-      <DataSourceFootnote />
     </div>
 </template>
 
