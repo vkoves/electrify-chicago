@@ -31,7 +31,7 @@ export default class About extends Vue {}
 
         <p>
           We added new property type pages (like
-          <g-link to="/building-type/Data%20Center">Data Centers</g-link> or
+          <g-link to="/property-type/data-center">Data Centers</g-link> or
           <g-link to="/property-type/museums">Museums</g-link>), to make it easy
           to learn more about all properties marked as a certain type!
           Previously, clicking a property type on a building page just took you
