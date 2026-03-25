@@ -168,6 +168,11 @@ query ($id: ID!, $ID: String) {
 
             <!-- Share button -->
             <ShareButton :title="propertyName" :text="shareText" />
+
+            <!-- Export button -->
+            <!--TODO: replace rows with actual array to pass data. This button currently does
+            not export data and is a proof-of-concept placeholder -->
+            <ExportButton :filename="propertyName" :rows="shareText" />
           </div>
         </div>
 
@@ -704,6 +709,7 @@ import ShareButton from '../components/ShareButton.vue';
 
 import vToolTip from 'v-tooltip';
 import ReportCard from '../components/ReportCard.vue';
+import ExportButton from '../components/ExportButton.vue';
 
 Vue.use(vToolTip);
 
@@ -754,6 +760,7 @@ Vue.use(vToolTip);
     ReportCard,
     ReportingTile,
     ShareButton,
+    ExportButton,
     StatTile,
   },
   filters: {
