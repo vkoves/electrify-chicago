@@ -180,6 +180,8 @@ export default class BuildingsMap extends Vue {
     
 @Prop({ type: Array<IBuildingNode>, default: '' })
   buildings!: Array<IBuildingNode>;
+  
+@Prop({ default: '' }) filterLabel!: String;
 
   static readonly MaxBuildingsCount = 100;
 
@@ -463,7 +465,7 @@ export default class BuildingsMap extends Vue {
     this.addBuildingsToMap(topBuildings);
 
     this.mapStatus =
-      `Top ${BuildingsMap.MaxBuildingsCount} all electric buildings of ` +
+      `Top ${BuildingsMap.MaxBuildingsCount} ${this.filterLabel} buildings of ` +
       `${buildingNodes.length.toLocaleString()} total`;
   }
 

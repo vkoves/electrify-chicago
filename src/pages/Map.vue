@@ -109,6 +109,7 @@ export default class MapPage extends Vue {}
 
       <BuildingsMap
         :buildings="$page.allBuilding.edges"
+        filterLabel="highest GHG intensity"
       />
 
       <!--
