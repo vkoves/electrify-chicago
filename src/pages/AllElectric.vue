@@ -131,7 +131,7 @@ export default class AllElectric extends Vue {}
 
       <BuildingsMap
         :buildings="$static.allBuilding.edges"
-        filter-label="all electric"
+        filterLabel="all electric"
       />
 
       <BuildingsTable
