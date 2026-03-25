@@ -124,12 +124,11 @@ def parse_geojson_field(value) -> dict | None:
 def apply_verified_coordinates(building_data: pd.DataFrame, geojson_path: str) -> pd.DataFrame:
     """ Parse through geoJSON data to extract proper coordinates for buildings """
 
-    # TODO: shorten/clean this
-    geojson_path = get_data_file_path(file_dir, "d_chicago_energy_benchmark_buildings_permanent_20240115.geojson")
+    geojson_path = get_data_file_path(file_dir, geojson_path)
 
-    # TODO: Refactor into separate function?
+    """ TODO: Refactor into separate function? """
     # To use if properties.geojson.coordinates are not provided for a building
-    # Takes IL State Plane feet from properties.geometry.coordinates & converts to lon, lat
+    # Takes IL State Plane feet from geometry.coordinates & converts to lon, lat
     transformer = Transformer.from_crs("EPSG:3435", "EPSG:4326", always_xy=True)
 
     with open(geojson_path, 'r') as f:
@@ -140,8 +139,7 @@ def apply_verified_coordinates(building_data: pd.DataFrame, geojson_path: str) -
         props = feature['properties']
         building_id = int(props['building_id'])
 
-        # TODO: Discuss with team about refactoring this logic into separate helper function
-
+        """ TODO: Discuss with team about refactoring this logic into separate helper function """
         # Prefer WGS84 (lon, lat) coordinates if available
         geojson_val = parse_geojson_field(props.get('geojson')) # Check if string and return data we can parse
         if geojson_val and geojson_val.get('coordinates'):
@@ -248,7 +246,9 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
 
     building_data = rename_columns(building_data)
 
-    # TODO: Likely move/re-work this further. Is this the correct place in the data processing pipeline to apply this fix?
+    """ TODO: Likely move/re-work this further. 
+    Is this the correct place in the data processing pipeline to apply this fix? 
+    """
     # Fix any incorrect coordinate data
     if latest_year_only:
         building_data = apply_verified_coordinates(building_data, src_verified_coordinates_filename)
