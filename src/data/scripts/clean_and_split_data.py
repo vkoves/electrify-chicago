@@ -254,8 +254,8 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
 
     building_data = rename_columns(building_data)
 
-    """ TODO: Likely move/re-work this further. 
-    Is this the correct place in the data processing pipeline to apply this fix? 
+    """ TODO: Likely move/re-work this further.
+    Is this the correct place in the data processing pipeline to apply this fix?
     """
     # Fix any incorrect coordinate data
     if latest_year_only:
