@@ -33,9 +33,7 @@ src_emissions_filename = "ChicagoEnergyBenchmarking.csv"
 
 # TODO : probably change filename and variable name for clarity and consistency
 # The geoJSON file we use to replace erroneous coordinates from the city's raw data
-src_verified_coordinates_filename = (
-    "d_chicago_energy_benchmark_buildings_permanent_20240115.geojson"
-)
+src_verified_coordinates_filename = "benchmark_building_locations_fixed.geojson"
 
 # The output file we generate that has all columns, but just for the latest year reported, which
 # goes into the next step of the data pipeline
@@ -132,7 +130,6 @@ def apply_verified_coordinates(
 
     geojson_path = get_data_file_path(file_dir, geojson_path)
 
-    """ TODO: Refactor into separate function? """
     # To use if properties.geojson.coordinates are not provided for a building
     # Takes IL State Plane feet from geometry.coordinates & converts to lon, lat
     transformer = Transformer.from_crs("EPSG:3435", "EPSG:4326", always_xy=True)
@@ -254,9 +251,6 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
 
     building_data = rename_columns(building_data)
 
-    """ TODO: Likely move/re-work this further.
-    Is this the correct place in the data processing pipeline to apply this fix?
-    """
     # Fix any incorrect coordinate data
     if latest_year_only:
         building_data = apply_verified_coordinates(
