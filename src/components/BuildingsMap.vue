@@ -177,10 +177,10 @@ const GoogleMapsScriptId = 'google-maps-script';
   },
 })
 export default class BuildingsMap extends Vue {
-    
+
 @Prop({ type: Array<IBuildingNode>, default: '' })
   buildings!: Array<IBuildingNode>;
-  
+
 @Prop({ default: '' }) filterLabel!: String;
 
   static readonly MaxBuildingsCount = 100;
