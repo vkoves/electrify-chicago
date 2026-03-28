@@ -166,7 +166,7 @@ def parse_geojson_field(value) -> dict | None:
     return value if isinstance(value, dict) else None
 
 def extract_lon_lat(geometry: dict, transformer: Transformer | None = None) -> tuple[float, float]:
-    """ Extract (lon, lat) from a geoJSON geometry dict. if a transformer is provided, 
+    """ Extract (lon, lat) from a geoJSON geometry dict. if a transformer is provided,
     input coordinates are transformed first (e.g IL State Plane -> WGS84)."""
 
     if geometry["type"] == "Point":
@@ -174,10 +174,10 @@ def extract_lon_lat(geometry: dict, transformer: Transformer | None = None) -> t
     else:
         # For Polygon/Multipolygon, use shapely to get centroid
         x, y = shape(geometry).centroid.coords[0]
-    
+
     if transformer:
         return transformer.transform(x, y)
-    
+
     return x, y
 
 
