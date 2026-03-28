@@ -170,7 +170,9 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
 
     # Fix any incorrect coordinate data
     if latest_year_only:
-        src_verified_coordinates_path = get_data_file_path(file_dir, src_verified_coordinates_filename)
+        src_verified_coordinates_path = get_data_file_path(
+            file_dir, src_verified_coordinates_filename
+        )
         building_data = apply_verified_coordinates(
             building_data, src_verified_coordinates_path
         )

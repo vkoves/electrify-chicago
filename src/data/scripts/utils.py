@@ -165,8 +165,11 @@ def parse_geojson_field(value) -> dict | None:
             return None
     return value if isinstance(value, dict) else None
 
-def extract_lon_lat(geometry: dict, transformer: Transformer | None = None) -> tuple[float, float]:
-    """ Extract (lon, lat) from a geoJSON geometry dict. if a transformer is provided,
+
+def extract_lon_lat(
+    geometry: dict, transformer: Transformer | None = None
+) -> tuple[float, float]:
+    """Extract (lon, lat) from a geoJSON geometry dict. if a transformer is provided,
     input coordinates are transformed first (e.g IL State Plane -> WGS84)."""
 
     if geometry["type"] == "Point":
@@ -212,6 +215,7 @@ def apply_verified_coordinates(
         verified_coords[building_id] = (lat, lon)
 
     """TODO: Refactor this further?"""
+
     # Override only where verified data exists
     def override_lat(row):
         bid = int(row["ID"]) if pd.notna(row["ID"]) else None
