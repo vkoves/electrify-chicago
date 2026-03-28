@@ -206,7 +206,9 @@ def apply_verified_coordinates(
         # Else, convert IL state plane units
         elif feature.get("geometry") and feature["geometry"].get("coordinates"):
             lon, lat = extract_lon_lat(feature["geometry"], transformer)
-        
+        else:
+            continue
+
         verified_coords[building_id] = (lat, lon)
 
     """TODO: Refactor this further?"""
