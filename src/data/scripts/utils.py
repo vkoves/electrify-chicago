@@ -4,6 +4,8 @@ data being processed
 """
 
 import json
+from pyproj import Transformer
+from shapely.geometry import shape
 import pandas as pd
 import pathlib
 
@@ -148,3 +150,83 @@ def log_step_completion(step_num, outputted_paths):
 
     for path in other_paths:
         print(f" - {path}")
+
+
+def parse_geojson_field(value) -> dict | None:
+    """Helper function to parse coordinates when geojson property is
+    provided as a String"""
+    if not value:
+        return None
+    if isinstance(value, str):
+        try:
+            value = json.loads(value)
+        except (json.JSONDecodeError, ValueError):
+            return None
+    return value if isinstance(value, dict) else None
+
+
+def apply_verified_coordinates(
+    building_data: pd.DataFrame, geojson_path: str
+) -> pd.DataFrame:
+    """Parse through geoJSON data to extract proper coordinates for buildings"""
+
+    geojson_path = get_data_file_path(file_dir, geojson_path)
+
+    # To use if properties.geojson.coordinates are not provided for a building
+    # Takes IL State Plane feet from geometry.coordinates & converts to lon, lat
+    transformer = Transformer.from_crs("EPSG:3435", "EPSG:4326", always_xy=True)
+
+    with open(geojson_path, "r") as f:
+        geojson = json.load(f)
+
+    verified_coords = {}
+    for feature in geojson["features"]:
+        props = feature["properties"]
+        building_id = int(props["building_id"])
+
+        """ TODO: Discuss with team about refactoring this logic into separate helper function """
+        # Prefer WGS84 (lon, lat) coordinates if available
+        geojson_val = parse_geojson_field(
+            props.get("geojson")
+        )  # Check if string and return data we can parse
+        if geojson_val and geojson_val.get("coordinates"):
+            geom_type = geojson_val["type"]
+            if geom_type == "Point":
+                lon, lat = geojson_val["coordinates"]  # GeoJSON is [lon, lat]
+            else:
+                # For Polygon/Multipolygon, use shapely to get centroid
+                lon, lat = shape(geojson_val).centroid.coords[0]
+            verified_coords[building_id] = (lat, lon)
+
+        # Else, convert IL state plane units
+        elif feature.get("geometry") and feature["geometry"].get("coordinates"):
+            geom_type = feature["geometry"]["type"]
+            if geom_type == "Point":
+                x, y = feature["geometry"]["coordinates"]
+            else:
+                # For Polygon/MultiPolygon, use shapely to get centroid
+                x, y = shape(feature["geometry"]).centroid.coords[0]
+            lon, lat = transformer.transform(x, y)  # Transform output is [lon, lat]
+            verified_coords[building_id] = (lat, lon)
+
+    # Override only where verified data exists
+    def override_lat(row):
+        bid = int(row["ID"]) if pd.notna(row["ID"]) else None
+        return verified_coords[bid][0] if bid in verified_coords else row["Latitude"]
+
+    def override_lon(row):
+        bid = int(row["ID"]) if pd.notna(row["ID"]) else None
+        return verified_coords[bid][1] if bid in verified_coords else row["Longitude"]
+
+    def override_location(row):
+        bid = int(row["ID"]) if pd.notna(row["ID"]) else None
+        if bid in verified_coords:
+            lat, lon = verified_coords[bid]
+            return f"({lat}, {lon})"
+        return row["Location"]
+
+    building_data["Latitude"] = building_data.apply(override_lat, axis=1)
+    building_data["Longitude"] = building_data.apply(override_lon, axis=1)
+    building_data["Location"] = building_data.apply(override_location, axis=1)
+
+    return building_data
