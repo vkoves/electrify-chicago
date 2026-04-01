@@ -15,12 +15,84 @@
     >
       Link copied to clipboard!
     </div>
+    <div
+      v-show="showShareDropdown"
+      class="share-dropdown"
+      :class="{ show: shareDropdownVisible }"
+    >
+      <ul class="share-list">
+        <li>
+          <button
+            class="share-link"
+            :class="{ '-with-text': showText }"
+            @click="copyShareUrl()"
+          >
+            <img src="/icons/link.svg" alt="Link" />
+            Copy Link
+          </button>
+        </li>
+        <li>
+          <a
+            class="share-link"
+            :href="redditShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/icons/reddit.svg" alt="Reddit" />
+            Share on Reddit
+          </a>
+        </li>
+        <li>
+          <a
+            class="share-link"
+            :href="blueskyShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/icons/bluesky.svg" alt="Bluesky" />
+            Share on Bluesky
+          </a>
+        </li>
+        <li>
+          <a
+            class="share-link"
+            :href="linkedinShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/icons/linkedin.svg" alt="LinkedIn" />
+            Share on LinkedIn
+          </a>
+        </li>
+        <li>
+          <a
+            class="share-link"
+            :href="facebookShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/icons/facebook.svg" alt="Facebook" />
+            Share on Facebook
+          </a>
+        </li>
+        <li>
+          <a
+            class="share-link"
+            :href="twitterShareUrl()"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="/icons/x.svg" alt="X" />
+            Share on X
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-
 /**
  * Reusable share button that uses the native Web Share API when available,
  * with clipboard fallback. Shows a fade-in alert when link is copied.
@@ -43,9 +115,59 @@ export default class ShareButton extends Vue {
   showCopyAlert = false;
   copyAlertVisible = false;
 
+  showShareDropdown = false;
+  shareDropdownVisible = false;
+
   // Animation timing constants
   private readonly AlertFadeDurationMs = 300;
   private readonly AlertDisplayDurationMs = 2500;
+
+  //Share endpoint constants
+  private readonly TwitterShareEndpoint = 'https://twitter.com/intent/tweet';
+  private readonly FacebookShareEndpoint =
+    'https://www.facebook.com/sharer/sharer.php';
+  private readonly LinkedInShareEndpoint = 'https://www.linkedin.com/feed/';
+  private readonly BlueskyShareEndpoint = 'https://bsky.app/intent/compose';
+  private readonly RedditShareEndpoint = 'http://www.reddit.com/submit';
+
+  copyShareUrl(): void {
+    return this.copyToClipboard(this.getShareUrl());
+  }
+
+  getShareUrl(): string {
+    const shareUrl =
+      this.url || (typeof window !== 'undefined' ? window.location.href : '');
+    return shareUrl;
+  }
+
+  linkedinShareUrl(): string {
+    return (
+      this.LinkedInShareEndpoint +
+      `?shareActive=true&shareUrl=${encodeURIComponent(this.getShareUrl())}`
+    );
+  }
+
+  twitterShareUrl(): string {
+    return `${this.TwitterShareEndpoint}?url=${encodeURIComponent(this.getShareUrl())}`;
+  }
+
+  blueskyShareUrl(): string {
+    return (
+      this.BlueskyShareEndpoint +
+      `?text=${this.text}%0A${encodeURIComponent(this.getShareUrl())}`
+    );
+  }
+
+  facebookShareUrl(): string {
+    return `${this.FacebookShareEndpoint}?u=${encodeURIComponent(this.getShareUrl())}`;
+  }
+
+  redditShareUrl(): string {
+    return (
+      this.RedditShareEndpoint +
+      `?url=${encodeURIComponent(this.getShareUrl())}&title=${encodeURI(this.text)}`
+    );
+  }
 
   handleShare(): void {
     const shareUrl =
@@ -67,7 +189,7 @@ export default class ShareButton extends Vue {
         });
     } else {
       // Fallback for browsers without Web Share API
-      this.copyToClipboard(shareUrl);
+      this.enableDropdown();
     }
   }
 
@@ -102,6 +224,27 @@ export default class ShareButton extends Vue {
         this.showCopyAlert = false;
       }, this.AlertFadeDurationMs);
     }, this.AlertDisplayDurationMs);
+  }
+
+  private enableDropdown(): void {
+    if (this.showShareDropdown) {
+      this.shareDropdownVisible = false;
+
+      // Hide element after fade-out animation completes
+      setTimeout(() => {
+        this.showShareDropdown = false;
+      }, this.AlertFadeDurationMs);
+
+      return;
+    }
+
+    this.showShareDropdown = true;
+    this.shareDropdownVisible = false;
+
+    // Small delay to ensure DOM element is rendered, then trigger fade in
+    setTimeout(() => {
+      this.shareDropdownVisible = true;
+    }, 10);
   }
 }
 </script>
@@ -151,6 +294,78 @@ export default class ShareButton extends Vue {
       opacity: 1;
       transform: translateY(0);
     }
+  }
+
+  .share-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.5rem;
+    background-color: $blue-very-dark;
+    padding: 0.5rem 0;
+    border-radius: $brd-rad-small;
+    font-size: 1.25rem;
+    white-space: nowrap;
+    z-index: 999;
+    opacity: 0;
+    list-style: none;
+    transform: translateY(-0.5rem);
+    transition: all 0.3s ease-in-out;
+
+    &.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .share-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      margin: 0;
+      width: max-content;
+
+      li {
+        display: flex;
+        align-items: center;
+        margin-top: 0;
+
+        &:hover {
+          background: $link-blue;
+        }
+      }
+
+      .share-link {
+        align-items: center;
+        color: $white;
+        column-gap: 1rem;
+        display: flex;
+        font-weight: normal;
+        outline-color: $white;
+        text-decoration: none;
+        background: none;
+        border-bottom: none;
+        font-size: 1rem;
+        padding: 0.75rem 1.25rem;
+        width: 100%;
+        outline-offset: -0.125rem;
+      }
+
+      img {
+        border-radius: 0;
+        width: 1.25rem;
+        height: 1.25rem;
+      }
+    }
+  }
+
+  .share-dropdown::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    right: 1rem;
+    border-width: 0.425rem;
+    border-style: solid;
+    border-color: transparent transparent $blue-very-dark transparent;
   }
 }
 </style>

@@ -9,11 +9,17 @@ import {
   getSocialImagePath,
   getPageSocialImagePath,
   getOwnerSocialImagePath,
+  getPropertyTypeSocialImagePath,
   getAvailablePageIdsFromConfig,
   pageImageExists,
   ownerImageExists,
+  propertyTypeImageExists,
   getAvailableOwnerIds,
+  getAvailablePropertyTypes,
 } from './social-images-helpers';
+
+// Import slugifyPropertyType for generating property type slugs
+import { slugifyPropertyType } from '../src/constants/property-type-helpers.js';
 
 type Browser = puppeteer.Browser;
 type Page = puppeteer.Page;
@@ -239,6 +245,22 @@ export async function generateOwnerSocialImages(
 }
 
 /**
+ * Generate property type social images for all property types
+ */
+export async function generatePropertyTypeSocialImages(
+  deleteExisting: boolean = true,
+): Promise<void> {
+  const propertyTypes = getAvailablePropertyTypes();
+  await processEntityImages(
+    propertyTypes,
+    'property type',
+    generateSinglePropertyTypeImage,
+    propertyTypeImageExists,
+    deleteExisting,
+  );
+}
+
+/**
  * Generate social images for specific building IDs or all buildings
  *
  * @param reqBuildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
@@ -267,14 +289,14 @@ export async function generateBuildingSocialImages(
 }
 
 /**
- * Generate building, page, and owner social images from scratch
+ * Generate building, page, owner, and property type social images from scratch
  */
 export async function generateAllSocialImages(
   reqBuildingIds: string[] | null = null,
   deleteExisting: boolean = true,
 ): Promise<void> {
   console.log(
-    '🎨 Starting complete social image generation (buildings + pages + owners)...',
+    '🎨 Starting complete social image generation (buildings + pages + owners + property types)...',
   );
 
   // Generate page social images first (they're faster)
@@ -282,6 +304,9 @@ export async function generateAllSocialImages(
 
   // Generate owner social images (also fast)
   await generateOwnerSocialImages(deleteExisting);
+
+  // Generate property type social images (also fast)
+  await generatePropertyTypeSocialImages(deleteExisting);
 
   // Then generate building social images (slowest, since 6k records)
   await generateBuildingSocialImages(reqBuildingIds, false); // Don't delete again
@@ -372,6 +397,28 @@ export async function generateSingleOwnerImage(
 }
 
 /**
+ * Generate a social image for a single property type
+ */
+export async function generateSinglePropertyTypeImage(
+  browser: Browser,
+  propertyType: string,
+): Promise<void> {
+  const outputPath = getPropertyTypeSocialImagePath(
+    propertyType,
+  ) as `${string}.webp`;
+  const slug = (slugifyPropertyType as (pt: string) => string)(propertyType);
+  const url = `${BASE_URL}/property-type-social-card/${slug}`;
+
+  await generateScreenshot(
+    browser,
+    url,
+    outputPath,
+    'property type',
+    propertyType,
+  );
+}
+
+/**
  * Clean up old social images (optional - for when buildings are removed)
  */
 export async function cleanupOldImages(): Promise<void> {
@@ -407,10 +454,12 @@ if (require.main === module) {
     generatePageSocialImages().catch(console.error);
   } else if (command === 'owners') {
     generateOwnerSocialImages().catch(console.error);
+  } else if (command === 'property-types') {
+    generatePropertyTypeSocialImages().catch(console.error);
   } else if (command === 'buildings') {
     generateBuildingSocialImages().catch(console.error);
   } else {
-    // Default to generating all images (buildings + pages + owners)
+    // Default to generating all images (buildings + pages + owners + property types)
     generateAllSocialImages().catch(console.error);
   }
 }

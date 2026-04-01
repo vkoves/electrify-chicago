@@ -255,7 +255,7 @@ query ($id: ID!, $ID: String) {
                   <dd>
                     <g-link
                       class="nav-link"
-                      :to="`/search?type=${propertyTypeEncoded}`"
+                      :to="`/property-type/${propertyTypeSlug}`"
                     >
                       {{ $page.building.PrimaryPropertyType }}
                     </g-link>
@@ -559,6 +559,15 @@ query ($id: ID!, $ID: String) {
         </div>
       </div>
 
+      <div class="no-print">
+        <h2>What Should We Do About This?</h2>
+
+        <p>
+          Own this Building? Check out our
+          <a href="/take-action-tips">Take Action</a> page for tips and advice!
+        </p>
+      </div>
+
       <details class="extra-info">
         <summary class="bold">View Extra Technical & Historic Info</summary>
 
@@ -598,34 +607,36 @@ query ($id: ID!, $ID: String) {
         </div>
       </details>
 
-      <p class="constrained">
-        <strong>* Note on Rankings:</strong> Rankings and medians are among
-        <em>included</em> buildings, which are those who reported under the
-        Chicago Energy Benchmarking Ordinance for the year {{ LatestDataYear }},
-        which only applies to buildings over 50,000 square feet.
-      </p>
+      <details class="data-notes">
+        <summary class="bold">View Data Notes & Disclaimers</summary>
 
-      <p class="constrained">
-        <strong>** Note on Bill Estimates:</strong>
-        Estimates for gas and electric bills are based on average electric and
-        gas <em>retail</em> prices for Chicago in {{ UtilityCosts.year }} and
-        are rounded. We expect large buildings would negotiate lower rates with
-        utilities, but these estimates serve as an upper bound of cost and help
-        understand the volume of energy a building is used by comparing it to
-        your own energy bills! See our
-        <a :href="UtilityCosts.source" target="_blank" rel="noopener">
-          Chicago Gas & Electric Costs Source <NewTabIcon />
-        </a>
-        for the original statistics.
-      </p>
+        <div class="details-content">
+          <p class="constrained">
+            <strong>* Note on Rankings:</strong> Rankings and medians are among
+            <em>included</em> buildings, which are those who reported under the
+            Chicago Energy Benchmarking Ordinance for the year
+            {{ LatestDataYear }}, which only applies to buildings over 50,000
+            square feet.
+          </p>
+
+          <p class="constrained">
+            <strong>** Note on Bill Estimates:</strong>
+            Estimates for gas and electric bills are based on average electric
+            and gas <em>retail</em> prices for Chicago in
+            {{ UtilityCosts.year }} and are rounded. We expect large buildings
+            would negotiate lower rates with utilities, but these estimates
+            serve as an upper bound of cost and help understand the volume of
+            energy a building is used by comparing it to your own energy bills!
+            See our
+            <a :href="UtilityCosts.source" target="_blank" rel="noopener">
+              Chicago Gas & Electric Costs Source <NewTabIcon />
+            </a>
+            for the original statistics.
+          </p>
+        </div>
+      </details>
 
       <DataSourceFootnote />
-
-      <div class="no-print">
-        <h2>What Should We Do About This?</h2>
-
-        <a href="/take-action-tips"> Own this Building? Take Action. </a>
-      </div>
 
       <email-modal
         v-if="isEmailModalOpen"
@@ -697,6 +708,7 @@ import {
   getBuildingCustomInfo,
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
+import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
 import EmailModal from '../components/EmailModal.vue';
 import LetterGrade from '../components/LetterGrade.vue';
 import ShareButton from '../components/ShareButton.vue';
@@ -706,6 +718,12 @@ import ReportCard from '../components/ReportCard.vue';
 
 Vue.use(vToolTip);
 
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   metaInfo() {
     const propertyName =
@@ -853,6 +871,11 @@ export default class BuildingDetails extends Vue {
   /** The primary property type of the current building, URL encoded for a link */
   get propertyTypeEncoded(): string {
     return encodeURIComponent(this.propertyType);
+  }
+
+  /** The property type slug for linking to the property type page */
+  get propertyTypeSlug(): string {
+    return slugifyPropertyType(this.propertyType);
   }
 
   get prodBuildingUrl(): string {

@@ -6,23 +6,6 @@
 .stats-overview {
   margin: 2rem 0;
 
-  // Variant for single column on mobile, 2 cols on desktop, 3 on large desktop
-  &.-three-col-max {
-    .stats-grid {
-      grid-template-columns: repeat(1, 1fr); // Mobile first - single column
-
-      // Desktop and up - two columns
-      @media (min-width: $desktop-min-width) {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      // Large desktop - three columns
-      @media (min-width: $large-desktop-min-width) {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-  }
-
   .stats-grid {
     display: grid;
     grid-template-columns: repeat(
@@ -44,22 +27,18 @@
     }
   }
 
-  .stat-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    height: 100%; // Fill the full grid cell height
+  // Variant for single column on mobile, 2 cols on desktop, 3 on large desktop
+  &.-three-col-max .stats-grid {
+    grid-template-columns: repeat(1, 1fr); // Mobile first - single column
 
-    &:hover,
-    &:focus {
-      .stat-card.-clickable {
-        box-shadow: 0.125rem 0.125rem 0.75rem $box-shadow-main;
-        border-color: $blue-dark;
+    // Desktop and up - two columns
+    @media (min-width: $desktop-min-width) {
+      grid-template-columns: repeat(2, 1fr);
+    }
 
-        .stat-label {
-          color: $blue-dark;
-        }
-      }
+    // Large desktop - three columns
+    @media (min-width: $large-desktop-min-width) {
+      grid-template-columns: repeat(3, 1fr);
     }
   }
 
@@ -75,6 +54,22 @@
     transition: box-shadow 0.2s ease-in-out;
     height: 100%; // Fill the full link height
     min-height: 8.75rem; // 140px Minimum height to prevent cards from being too short
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: $text-mid-light;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 1.1rem;
+      line-height: 1.25;
+      font-weight: bold;
+      transition: color 0.2s ease-in-out;
+      margin-bottom: 0.25rem;
+    }
 
     &.-clickable {
       cursor: pointer;
@@ -97,22 +92,6 @@
 
     &.negative .stat-number {
       color: $chicago-red;
-    }
-
-    .stat-number {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: $text-mid-light;
-      line-height: 1;
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-label {
-      font-size: 1.1rem;
-      line-height: 1.25;
-      font-weight: bold;
-      transition: color 0.2s ease-in-out;
-      margin-bottom: 0.25rem;
     }
 
     .stat-description {
@@ -148,6 +127,25 @@
 
       .stat-footnote {
         font-size: 0.7rem;
+      }
+    }
+  }
+
+  .stat-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    height: 100%; // Fill the full grid cell height
+
+    &:hover,
+    &:focus {
+      .stat-card.-clickable {
+        box-shadow: 0.125rem 0.125rem 0.75rem $box-shadow-main;
+        border-color: $blue-dark;
+
+        .stat-label {
+          color: $blue-dark;
+        }
       }
     }
   }

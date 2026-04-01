@@ -55,6 +55,8 @@ export default tseslint.config(
       'vue/html-indent': 'off',
       'vue/multi-word-component-names': ['off'],
       'vue/no-deprecated-filter': ['off'],
+      // This is a FE only site, so there's no real HTML security risks
+      'vue/no-v-html': 'off',
 
       'vue/multiline-html-element-content-newline': [
         'error',
@@ -119,10 +121,12 @@ export default tseslint.config(
         },
       ],
 
-      // We have to use `require` in some cases
-      '@typescript-eslint/no-require-imports': 'warn',
+      // Disallow require() imports - use ES6 imports instead
+      // Note: require() is sometimes needed for SSR compatibility (Gridsome) or webpack asset bundling
+      // Use eslint-disable comments with clear explanations when require() is necessary
+      '@typescript-eslint/no-require-imports': 'error',
 
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-explicit-any': 'error',
     },
   },
   {

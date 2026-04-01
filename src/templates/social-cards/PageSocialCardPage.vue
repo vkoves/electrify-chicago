@@ -44,10 +44,13 @@ import type { IPageSocialConfig } from '../../constants/page-social-images/page-
   },
 })
 export default class PageSocialCardTemplate extends Vue {
+  /** Context passed from gridsome.server.js */
+  readonly $context!: { pageId: string };
+
   /** Get page config from context (passed from gridsome.server.js) */
   get pageConfig(): IPageSocialConfig {
     // pageId is available from GraphQL context
-    const pageId = (this as any).$context.pageId;
+    const pageId = this.$context.pageId;
 
     return (
       getPageSocialConfig(pageId) || {

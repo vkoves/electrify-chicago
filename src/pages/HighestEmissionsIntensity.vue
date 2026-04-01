@@ -1,6 +1,6 @@
 <script lang="ts">
 // Gridsome doesn't have types, so can't import it properly
-
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const Pager = require('gridsome').Pager;
 
 import { Component, Vue } from 'vue-property-decorator';
@@ -11,8 +11,12 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,
@@ -29,7 +33,13 @@ export default class HighestEmissionsIntensity extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
 
   /** Set by Gridsome to results of GraphQL query */
-  $page: any;
+  $page!: {
+    allBuilding: {
+      pageInfo: {
+        currentPage: number;
+      };
+    };
+  };
 
   pageInput = 0;
 

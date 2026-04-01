@@ -7,6 +7,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import * as d3 from 'd3';
+import { isColorDark } from '../../common-functions.vue';
 
 export interface IPieSlice {
   value: number;
@@ -32,6 +33,9 @@ export default class PieChart extends Vue {
 
   /** Whether to sort slices by largest first (D3 default) or preserve data order */
   @Prop({ default: true }) sortByLargest!: boolean;
+
+  /** Whether this is a small chart (scales up text for readability) */
+  @Prop({ default: false }) small!: boolean;
 
   @Watch('graphData')
   onDataChanged(): void {
@@ -79,18 +83,26 @@ export default class PieChart extends Vue {
       pieRadius = 200;
     }
 
+    // Push labels 10% further out for small charts
+    if (this.small) {
+      labelRadius = labelRadius * 1.1;
+    }
+
     // Compute the position of each group on the pie:
-    var pie = d3.pie().value((d: any) => d.value);
+    var pie = d3.pie<IPieSlice>().value((d) => d.value);
     if (!this.sortByLargest) {
       pie = pie.sort(null);
     }
-    var dataReady = pie(this.graphData as any);
+    var dataReady = pie(this.graphData);
 
     // shape helper to build arcs:
-    var arcGenerator = d3.arc().innerRadius(0).outerRadius(pieRadius);
+    var arcGenerator = d3
+      .arc<d3.PieArcDatum<IPieSlice>>()
+      .innerRadius(0)
+      .outerRadius(pieRadius);
 
     var labelArcGenerator = d3
-      .arc()
+      .arc<d3.PieArcDatum<IPieSlice>>()
       .innerRadius(pieRadius)
       .outerRadius(labelRadius);
 
@@ -101,8 +113,8 @@ export default class PieChart extends Vue {
       .data(dataReady)
       .enter()
       .append('path')
-      .attr('d', arcGenerator as any)
-      .attr('fill', (d) => (d.data as any as IPieSlice).color);
+      .attr('d', arcGenerator)
+      .attr('fill', (d) => d.data.color);
 
     // Calculate total value for % calculation
     let totalValue = 0;
@@ -127,7 +139,7 @@ export default class PieChart extends Vue {
             return '';
           }
 
-          let data = d.data as any as IPieSlice;
+          let data = d.data;
 
           const label =
             `<tspan class="percent">${this.calculatePercentage(
@@ -138,7 +150,14 @@ export default class PieChart extends Vue {
 
           return label;
         })
-        .attr('class', () => (this.graphData.length === 1 ? '-only-slice' : ''))
+        .attr('class', () => {
+          const classes = [];
+
+          if (this.graphData.length === 1) classes.push('-only-slice');
+          if (this.small) classes.push('-small');
+
+          return classes.join(' ');
+        })
         .attr('transform', (d) => {
           // If we have only 1 slice (e.g. 100% electric, like Marina Towers), place dead center,
           // otherwise use secondary arc centroid
@@ -146,9 +165,7 @@ export default class PieChart extends Vue {
             return '';
           }
 
-          return `translate(${labelArcGenerator.centroid(
-            d as unknown as d3.DefaultArcObject,
-          )})`;
+          return `translate(${labelArcGenerator.centroid(d)})`;
         })
         .style('text-anchor', (d) => {
           // Center single slice label
@@ -158,6 +175,14 @@ export default class PieChart extends Vue {
 
           // are we past the center?
           return (d.endAngle + d.startAngle) / 2 > Math.PI ? 'end' : 'start';
+        })
+        .style('fill', (d) => {
+          // For single slices, use white text on dark backgrounds, black on light
+          if (this.graphData.length === 1) {
+            return isColorDark(d.data.color) ? 'white' : 'black';
+          }
+
+          return 'black';
         });
     }
   }
@@ -192,6 +217,15 @@ export default class PieChart extends Vue {
 
     text.-only-slice {
       font-size: 1.5rem;
+    }
+
+    // A small variant, which has a larger font size
+    text.-small {
+      font-size: 1.5rem;
+
+      &.-only-slice {
+        font-size: 1.8rem;
+      }
     }
   }
 

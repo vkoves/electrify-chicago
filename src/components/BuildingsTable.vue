@@ -71,7 +71,8 @@ export default class BuildingsTable extends Vue {
    */
 
   // declares the property emit for TS
-  // TODO: Figure out why Vue $emit isn't recognized by Typescript
+  // Vue $emit type is complex and varies by event, using Function type for compatibility
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   $emit: any;
 
   isDebug = false;
@@ -227,7 +228,7 @@ export default class BuildingsTable extends Vue {
             @click="showSort ? $emit('sort', 'ElectricityUse') : null"
           >
             Electricity Use<br />
-            <span class="unit">(kBtu)</span>
+            <span class="unit">(kWh)</span>
             <button
               v-if="showSort"
               :class="
@@ -376,7 +377,8 @@ export default class BuildingsTable extends Vue {
                 :building="edge.node"
                 :should-round="true"
                 :stats="BuildingBenchmarkStats"
-                :unit="'kBtu'"
+                :unit="'kWh'"
+                :convert-to-kwh="true"
                 stat-key="ElectricityUse"
               />
             </template>

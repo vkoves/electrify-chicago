@@ -8,6 +8,7 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
   calculateBuildingsStats,
+  GradeColors,
   IBuildingBenchmarkStats,
   IBuildingNode,
 } from '../common-functions.vue';
@@ -23,8 +24,12 @@ import {
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import NewTabIcon from '../components/NewTabIcon.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,
@@ -136,15 +141,6 @@ export default class BiggestBuildings extends Vue {
       this.avgBuildingAge = 'N/A';
     }
 
-    // Grade distribution for pie chart
-    const gradeColors: Record<string, string> = {
-      A: '#009f49', // $grade-a-green
-      B: '#7fa52e', // $grade-b-green
-      C: '#b36a15', // $grade-c-orange
-      D: '#972222', // $grade-d-red
-      F: '#d60101', // $grade-f-red
-    };
-
     // Build data for Pie Chart
     this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
       .filter(([, count]) => count > 0) // Only include grades that exist
@@ -155,7 +151,7 @@ export default class BiggestBuildings extends Vue {
       .map(([grade, count]) => ({
         label: `Grade ${grade}`,
         value: count,
-        color: gradeColors[grade] || '#999999',
+        color: GradeColors[grade] || '#999999',
       }));
   }
 }

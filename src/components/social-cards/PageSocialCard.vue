@@ -31,7 +31,7 @@ export default class PageSocialCard extends Vue {
   /** Get the current page configuration from parent */
   get pageConfig(): IPageSocialConfig {
     return (
-      (this.$parent as any).pageConfig || {
+      (this.$parent as { pageConfig?: IPageSocialConfig }).pageConfig || {
         id: 'default',
         title: 'Electrify Chicago',
         description: 'Explore Chicago building energy data',
