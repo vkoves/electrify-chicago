@@ -47,6 +47,8 @@ export default class AllElectric extends Vue {}
     allBuilding(
       filter: {
         DataYear: { eq: "2023" },
+        # Ensure the building has a record of reporting
+        FirstYearReported: { ne: null },
         # Use lte: 0 to capture buildings with 0, null, or empty values for gas usage
         NaturalGasUse: { lte: 0 },
         DistrictSteamUse: { lte: 0 },

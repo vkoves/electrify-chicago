@@ -161,7 +161,8 @@ export function fullyGasFree(building: IBuilding): boolean {
   return (
     !building.DataAnomalies.includes(DataAnomalies.gasZeroWithPreviousUse) &&
     isZeroOrNull(building.NaturalGasUse) &&
-    isZeroOrNull(building.DistrictSteamUse)
+    isZeroOrNull(building.DistrictSteamUse) &&
+    !isZeroOrNull(building.FirstYearReported)
   );
 }
 

@@ -78,7 +78,9 @@ export default class PageSocialCard extends Vue {
         return allBuildings
           .filter(
             (b) =>
-              (b.NaturalGasUse || 0) <= 0 && (b.DistrictSteamUse || 0) <= 0,
+              (b.NaturalGasUse || 0) <= 0 &&
+              (b.DistrictSteamUse || 0) <= 0 &&
+              b.FirstYearReported !== null,
           )
           .sort((a, b) => (b.GrossFloorArea || 0) - (a.GrossFloorArea || 0))
           .slice(0, 50);

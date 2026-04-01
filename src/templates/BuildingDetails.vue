@@ -216,11 +216,13 @@ query ($id: ID!, $ID: String) {
               </p>
             </div>
             <div v-if="hasNeverSubmitted">
-              <h2><span class="emoji">❌</span> Building Never Reported Data</h2>
+              <h2>
+                <span class="emoji">❌</span> Building Never Reported Data
+              </h2>
 
               <p>
-                This building has never reported full data,
-                so top-level stats may be inconsistent.
+                This building has never reported full data, so top-level stats
+                may be inconsistent.
               </p>
             </div>
           </div>
