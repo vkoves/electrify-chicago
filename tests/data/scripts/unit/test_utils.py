@@ -1,7 +1,54 @@
+import json
+import pandas as pd
 import pytest
 from pyproj import Transformer
 
-from src.data.scripts.utils import extract_lon_lat, parse_geojson_field
+from src.data.scripts.utils import (
+    apply_verified_coordinates,
+    extract_lon_lat,
+    fetch_geojson_coordinates,
+    parse_geojson_field,
+)
+
+
+# --- fetch_geojson_coordinates ---
+
+
+def test_fetch_geojson_coordinates_valid_file(tmp_path):
+    """returns parsed geojson dict from a valid file"""
+    data = {"type": "FeatureCollection", "features": []}
+    geojson_file = tmp_path / "test.geojson"
+    geojson_file.write_text(json.dumps(data))
+
+    result = fetch_geojson_coordinates(str(geojson_file))
+    assert result == data
+
+
+def test_fetch_geojson_coordinates_missing_file():
+    """returns None when the file does not exist"""
+    result = fetch_geojson_coordinates("/nonexistent/path/file.geojson")
+    assert result is None
+
+
+def test_fetch_geojson_coordinates_preserves_features(tmp_path):
+    """returns features intact from the geojson file"""
+    data = {
+        "type": "FeatureCollection",
+        "features": [
+            {
+                "type": "Feature",
+                "properties": {"building_id": 1},
+                "geometry": {"type": "Point", "coordinates": [-87.63, 41.88]},
+            }
+        ],
+    }
+    geojson_file = tmp_path / "test.geojson"
+    geojson_file.write_text(json.dumps(data))
+
+    result = fetch_geojson_coordinates(str(geojson_file))
+    assert result is not None
+    assert len(result["features"]) == 1
+    assert result["features"][0]["properties"]["building_id"] == 1
 
 
 # --- parse_geojson_field ---
@@ -87,3 +134,146 @@ def test_extract_lon_lat_no_transformer_returns_raw():
     lon, lat = extract_lon_lat(geometry)
     assert lon == 1176000
     assert lat == 1901000
+
+
+# --- apply_verified_coordinates ---
+
+
+def make_building_df(rows: list[dict]) -> pd.DataFrame:
+    """Helper to build a minimal building DataFrame for testing"""
+    return pd.DataFrame(rows)
+
+
+def make_geojson(features: list[dict]) -> dict:
+    return {"type": "FeatureCollection", "features": features}
+
+
+def test_apply_verified_coordinates_wgs84_point():
+    """overrides lat/lon/location from a WGS84 Point in properties.geojson"""
+    df = make_building_df(
+        [{"ID": 1, "Latitude": 0.0, "Longitude": 0.0, "Location": "(0.0, 0.0)"}]
+    )
+    geojson = make_geojson(
+        [
+            {
+                "type": "Feature",
+                "properties": {
+                    "building_id": 1,
+                    "geojson": '{"type": "Point", "coordinates": [-87.63, 41.88]}',
+                },
+                "geometry": None,
+            }
+        ]
+    )
+    result = apply_verified_coordinates(df, geojson)
+    assert result.loc[0, "Longitude"] == pytest.approx(-87.63)
+    assert result.loc[0, "Latitude"] == pytest.approx(41.88)
+    assert result.loc[0, "Location"] == "(41.88, -87.63)"
+
+
+def test_apply_verified_coordinates_state_plane_fallback():
+    """falls back to IL State Plane geometry when properties.geojson is absent"""
+    df = make_building_df(
+        [{"ID": 1, "Latitude": 0.0, "Longitude": 0.0, "Location": "(0.0, 0.0)"}]
+    )
+    geojson = make_geojson(
+        [
+            {
+                "type": "Feature",
+                "properties": {"building_id": 1, "geojson": None},
+                "geometry": {"type": "Point", "coordinates": [1176000, 1901000]},
+            }
+        ]
+    )
+    result = apply_verified_coordinates(df, geojson)
+    # Should be somewhere in Chicago after transform
+    assert -88.5 < result.loc[0, "Longitude"] < -87.0
+    assert 41.5 < result.loc[0, "Latitude"] < 42.5
+
+
+def test_apply_verified_coordinates_no_geometry_leaves_row_unchanged():
+    """rows with no matching geojson geometry are left unchanged"""
+    df = make_building_df(
+        [
+            {
+                "ID": 1,
+                "Latitude": 41.88,
+                "Longitude": -87.63,
+                "Location": "(41.88, -87.63)",
+            }
+        ]
+    )
+    geojson = make_geojson(
+        [
+            {
+                "type": "Feature",
+                "properties": {"building_id": 1, "geojson": None},
+                "geometry": None,
+            }
+        ]
+    )
+    result = apply_verified_coordinates(df, geojson)
+    assert result.loc[0, "Latitude"] == pytest.approx(41.88)
+    assert result.loc[0, "Longitude"] == pytest.approx(-87.63)
+    assert result.loc[0, "Location"] == "(41.88, -87.63)"
+
+
+def test_apply_verified_coordinates_unmatched_building_unchanged():
+    """buildings not present in the geojson are left unchanged"""
+    df = make_building_df(
+        [
+            {
+                "ID": 99,
+                "Latitude": 41.88,
+                "Longitude": -87.63,
+                "Location": "(41.88, -87.63)",
+            }
+        ]
+    )
+    geojson = make_geojson(
+        [
+            {
+                "type": "Feature",
+                "properties": {
+                    "building_id": 1,
+                    "geojson": '{"type": "Point", "coordinates": [-87.0, 42.0]}',
+                },
+                "geometry": None,
+            }
+        ]
+    )
+    result = apply_verified_coordinates(df, geojson)
+    assert result.loc[0, "Latitude"] == pytest.approx(41.88)
+    assert result.loc[0, "Longitude"] == pytest.approx(-87.63)
+
+
+def test_apply_verified_coordinates_multiple_buildings():
+    """only the matched building is updated when multiple buildings are present"""
+    df = make_building_df(
+        [
+            {"ID": 1, "Latitude": 0.0, "Longitude": 0.0, "Location": "(0.0, 0.0)"},
+            {
+                "ID": 2,
+                "Latitude": 41.88,
+                "Longitude": -87.63,
+                "Location": "(41.88, -87.63)",
+            },
+        ]
+    )
+    geojson = make_geojson(
+        [
+            {
+                "type": "Feature",
+                "properties": {
+                    "building_id": 1,
+                    "geojson": '{"type": "Point", "coordinates": [-87.70, 41.95]}',
+                },
+                "geometry": None,
+            }
+        ]
+    )
+    result = apply_verified_coordinates(df, geojson)
+    assert result.loc[0, "Longitude"] == pytest.approx(-87.70)
+    assert result.loc[0, "Latitude"] == pytest.approx(41.95)
+    assert result.loc[1, "Longitude"] == pytest.approx(-87.63)
+    assert result.loc[1, "Latitude"] == pytest.approx(41.88)

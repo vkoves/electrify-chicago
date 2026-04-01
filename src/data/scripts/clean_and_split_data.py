@@ -15,7 +15,7 @@ from src.data.scripts.utils import (
     get_data_file_path,
     log_step_completion,
     output_to_csv,
-    apply_verified_coordinates,
+    correct_building_locations,
 )
 from src.data.scripts.building_utils import (
     benchmarking_string_cols,
@@ -173,7 +173,7 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
         src_verified_coordinates_path = get_data_file_path(
             file_dir, src_verified_coordinates_filename
         )
-        building_data = apply_verified_coordinates(
+        building_data = correct_building_locations(
             building_data, src_verified_coordinates_path
         )
 
