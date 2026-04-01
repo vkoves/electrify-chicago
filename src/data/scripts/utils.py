@@ -184,17 +184,28 @@ def extract_lon_lat(
     return x, y
 
 
+def fetch_geojson_coordinates(geojson_path: str) -> dict | None:
+    """Helper function to open geojson file from a provided path string"""
+
+    try:
+        with open(geojson_path, "r") as f:
+            geojson_data = json.load(f)
+
+    except IOError:
+        print("could not read file")
+        geojson_data = None
+
+    return geojson_data
+
+
 def apply_verified_coordinates(
-    building_data: pd.DataFrame, geojson_path: str
+    building_data: pd.DataFrame, geojson: dict
 ) -> pd.DataFrame:
-    """Parse through geoJSON data to extract proper coordinates for buildings"""
+    """Helper function to parse through geoJSON data to extract building id & proper coordinates for buildings"""
 
     # To use if properties.geojson.coordinates are not provided for a building
     # Takes IL State Plane feet from geometry.coordinates & converts to lon, lat
     transformer = Transformer.from_crs("EPSG:3435", "EPSG:4326", always_xy=True)
-
-    with open(geojson_path, "r") as f:
-        geojson = json.load(f)
 
     verified_coords = {}
     for feature in geojson["features"]:
@@ -213,8 +224,6 @@ def apply_verified_coordinates(
             continue
 
         verified_coords[building_id] = (lat, lon)
-
-    """TODO: Refactor this further?"""
 
     # Override only where verified data exists
     def override_lat(row):
@@ -237,3 +246,11 @@ def apply_verified_coordinates(
     building_data["Location"] = building_data.apply(override_location, axis=1)
 
     return building_data
+
+
+def correct_building_locations(
+    building_data: pd.DataFrame, geojson_path: str
+) -> pd.DataFrame:
+    """Applies corrected geocodes to buildings in city data"""
+    loc_data = fetch_geojson_coordinates(geojson_path)
+    return apply_verified_coordinates(building_data, loc_data)
