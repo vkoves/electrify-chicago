@@ -57,6 +57,7 @@ export default class TopElectricityUsers extends Vue {}
           ElectricityUse
           ElectricityUseRank
           ElectricityUsePercentileRank
+          FirstYearReported
           NaturalGasUse
           NaturalGasUseRank
           NaturalGasUsePercentileRank

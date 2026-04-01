@@ -59,6 +59,7 @@ export default class LargeOwners extends Vue {
           NaturalGasUsePercentileRank
           AvgPercentileLetterGrade
           DataAnomalies
+          FirstYearReported
         }
       }
     }

@@ -91,11 +91,6 @@ replace_headers = {
     "Longitude": "Longitude",
     "Location": "Location",
     "Row_ID": "Row_ID",
-    # 'Wards': 'Wards',
-    # 'Community Areas': 'CommunityAreas',
-    # 'Zip Codes': 'ZipCodes',
-    # 'Census Tracts': 'CensusTracts',
-    # 'Historical Wards 2003-2015': 'HistoricalWards2003-2015'
 }
 
 

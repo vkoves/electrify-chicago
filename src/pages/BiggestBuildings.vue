@@ -69,6 +69,7 @@ export default class BiggestBuildings extends Vue {
           DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
+          FirstYearReported
         }
       }
     }
