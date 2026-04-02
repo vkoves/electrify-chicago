@@ -256,4 +256,15 @@ def correct_building_locations(
 ) -> pd.DataFrame:
     """Applies corrected geocodes to buildings in city data"""
     loc_data = fetch_geojson_coordinates(geojson_path)
-    return apply_verified_coordinates(building_data, loc_data)
+
+    # Log any changes made
+    original = building_data[["Latitude", "Longitude", "Location"]].copy()
+    result = apply_verified_coordinates(building_data, loc_data)
+    changed = (
+        result[["Latitude", "Longitude", "Location"]].ne(original).any(axis=1).sum()
+    )
+    print(
+        f"Coordinates corrected: {changed} buildings updated, {len(result) - changed} unchanged"
+    )
+
+    return result
