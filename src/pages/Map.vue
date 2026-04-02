@@ -1,9 +1,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
-// For types, we actually set window.Leaflet for runtime
-import type * as Leaflet from 'leaflet';
-
 import RankText from '~/components/RankText.vue';
 import OverallRankEmoji from '~/components/OverallRankEmoji.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
@@ -11,20 +8,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import BuildingsMap from '~/components/BuildingsMap.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
-
-import {
-  IBuildingBenchmarkStats,
-  IBuilding,
-  IBuildingNode,
-  getOverallRankEmoji,
-  RankConfig,
-} from '../common-functions.vue';
-
-import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import BuildingImage from '../components/BuildingImage.vue';
-
-/** The ID of the google maps <script> tag, so we can tack on an onload */
-const GoogleMapsScriptId = 'google-maps-script';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -109,7 +93,7 @@ export default class MapPage extends Vue {}
 
       <BuildingsMap
         :buildings="$page.allBuilding.edges"
-        filterLabel="highest GHG intensity"
+        filter-label="highest GHG intensity"
       />
 
       <!--

@@ -1,121 +1,120 @@
 <template>
-    <div class="map-page">
-      <details class="filter-details">
-        <summary>Filter Buildings</summary>
-        <form>
-          <h2>Filter Buildings</h2>
+  <div class="map-page">
+    <details class="filter-details">
+      <summary>Filter Buildings</summary>
+      <form>
+        <h2>Filter Buildings</h2>
 
-          <p v-if="errorMessage" class="error-message">
-            {{ errorMessage }}
-          </p>
+        <p v-if="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </p>
 
-          <label for="addr-input">Find Buildings Near Address or Place</label>
-          <input
-            id="addr-input"
-            ref="googleMapsSearchInput"
-            type="text"
-            placeholder="Type address or place"
-            @keydown.enter="cancelEvent"
-          />
+        <label for="addr-input">Find Buildings Near Address or Place</label>
+        <input
+          id="addr-input"
+          ref="googleMapsSearchInput"
+          type="text"
+          placeholder="Type address or place"
+          @keydown.enter="cancelEvent"
+        />
 
-          <label for="search-dist">Search Distance</label>
-          <select id="search-dist" v-model="formSearchDistanceMiles">
-            <option :value="0.25">1/4 mile</option>
-            <option :value="0.5">1/2 mile</option>
-            <option :value="1">1 mile</option>
-            <option :value="2">2 miles</option>
-          </select>
+        <label for="search-dist">Search Distance</label>
+        <select id="search-dist" v-model="formSearchDistanceMiles">
+          <option :value="0.25">1/4 mile</option>
+          <option :value="0.5">1/2 mile</option>
+          <option :value="1">1 mile</option>
+          <option :value="2">2 miles</option>
+        </select>
 
-          <hr />
+        <hr />
 
-          <label for="zipcode">Or Filter Zip Code</label>
-          <select id="zipcode" v-model="formZip">
-            <option disabled :value="''">Choose Zipcode</option>
-            <option v-for="zipcode in zipCodes" :key="zipcode" :value="zipcode">
-              {{ zipcode }}
-            </option>
-            "
-          </select>
+        <label for="zipcode">Or Filter Zip Code</label>
+        <select id="zipcode" v-model="formZip">
+          <option disabled :value="''">Choose Zipcode</option>
+          <option v-for="zipcode in zipCodes" :key="zipcode" :value="zipcode">
+            {{ zipcode }}
+          </option>
+        </select>
 
-          <div class="button-row">
-            <button type="button" @click="reset">Reset</button>
+        <div class="button-row">
+          <button type="button" @click="reset">Reset</button>
 
-            <button type="submit" @click="applyFilters">Submit</button>
-          </div>
-        </form>
-      </details>
+          <button type="submit" @click="applyFilters">Submit</button>
+        </div>
+      </form>
+    </details>
 
-      <p class="map-status"><strong>Filtering By:</strong> {{ mapStatus }}</p>
+    <p class="map-status"><strong>Filtering By:</strong> {{ mapStatus }}</p>
 
-      <div id="buildings-map" />
+    <div id="buildings-map" />
 
-      <div v-show="false">
-        <!-- The map popup used by Leaflet, so we can do Vue things -->
-        <div ref="mapPopup" class="map-popup">
-          <div v-if="currBuilding">
-            <h1>
-              {{
-                currBuilding.PropertyName || currBuilding.Address
-              }}&nbsp;<OverallRankEmoji
-                :building="currBuilding"
-                :stats="BuildingBenchmarkStats"
-              />
-            </h1>
+    <div v-show="false">
+      <!-- The map popup used by Leaflet, so we can do Vue things -->
+      <div ref="mapPopup" class="map-popup">
+        <div v-if="currBuilding">
+          <h1>
+            {{
+              currBuilding.PropertyName || currBuilding.Address
+            }}&nbsp;<OverallRankEmoji
+              :building="currBuilding"
+              :stats="BuildingBenchmarkStats"
+            />
+          </h1>
 
-            {{ currBuilding.PropertyName ? currBuilding.Address : '' }}
+          {{ currBuilding.PropertyName ? currBuilding.Address : '' }}
 
-            <div class="popup-main">
-              <BuildingImage :building="currBuilding" />
+          <div class="popup-main">
+            <BuildingImage :building="currBuilding" />
 
-              <div class="stats-list">
-                <div>
-                  <h2>Square Footage</h2>
+            <div class="stats-list">
+              <div>
+                <h2>Square Footage</h2>
 
-                  <RankText
-                    :building="currBuilding"
-                    :should-round="true"
-                    :stats="BuildingBenchmarkStats"
-                    :unit="'sqft'"
-                    stat-key="GrossFloorArea"
-                  />
-                </div>
+                <RankText
+                  :building="currBuilding"
+                  :should-round="true"
+                  :stats="BuildingBenchmarkStats"
+                  :unit="'sqft'"
+                  stat-key="GrossFloorArea"
+                />
+              </div>
 
-                <div>
-                  <h2>GHG Intensity</h2>
+              <div>
+                <h2>GHG Intensity</h2>
 
-                  <RankText
-                    :building="currBuilding"
-                    :stats="BuildingBenchmarkStats"
-                    stat-key="GHGIntensity"
-                    :unit="'kg/sqft'"
-                  />
-                </div>
+                <RankText
+                  :building="currBuilding"
+                  :stats="BuildingBenchmarkStats"
+                  stat-key="GHGIntensity"
+                  :unit="'kg/sqft'"
+                />
+              </div>
 
-                <div>
-                  <h2>Total GHG Emissions</h2>
+              <div>
+                <h2>Total GHG Emissions</h2>
 
-                  <RankText
-                    :building="currBuilding"
-                    :should-round="true"
-                    :stats="BuildingBenchmarkStats"
-                    stat-key="TotalGHGEmissions"
-                    :unit="'tons'"
-                  />
-                </div>
+                <RankText
+                  :building="currBuilding"
+                  :should-round="true"
+                  :stats="BuildingBenchmarkStats"
+                  stat-key="TotalGHGEmissions"
+                  :unit="'tons'"
+                />
               </div>
             </div>
-
-            <a :href="currBuilding.path" class="details-link"
-              >View More Details</a
-            >
           </div>
+
+          <a :href="currBuilding.path" class="details-link"
+            >View More Details</a
+          >
         </div>
       </div>
+    </div>
 
-      <!--
+    <!--
         <BuildingsTable :buildings="$page.allBuilding.edges" />
       -->
-    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -177,11 +176,10 @@ const GoogleMapsScriptId = 'google-maps-script';
   },
 })
 export default class BuildingsMap extends Vue {
-    
-@Prop({ type: Array<IBuildingNode>, default: '' })
+  @Prop({ type: Array<IBuildingNode>, default: '' })
   buildings!: Array<IBuildingNode>;
-  
-@Prop({ default: '' }) filterLabel!: String;
+
+  @Prop({ default: '' }) filterLabel!: string;
 
   static readonly MaxBuildingsCount = 100;
 

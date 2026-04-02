@@ -38,7 +38,11 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
 
     // Tie this page to it's PageSocialCard
     return {
-      ...generatePageMeta('all-electric', 'All Electric Buildings', description),
+      ...generatePageMeta(
+        'all-electric',
+        'All Electric Buildings',
+        description,
+      ),
       link: [
         {
           // Leaflet CSS - required for map tiles to render
@@ -131,7 +135,7 @@ export default class AllElectric extends Vue {}
 
       <BuildingsMap
         :buildings="$static.allBuilding.edges"
-        filterLabel="all electric"
+        filter-label="all electric"
       />
 
       <BuildingsTable
