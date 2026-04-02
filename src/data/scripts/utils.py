@@ -260,9 +260,8 @@ def correct_building_locations(
     # Log any changes made
     original = building_data[["Latitude", "Longitude", "Location"]].copy()
     result = apply_verified_coordinates(building_data, loc_data)
-    changed = int(
-        result[["Latitude", "Longitude", "Location"]].ne(original).any(axis=1).sum()
-    )
+    rows_changed: pd.Series = result[["Latitude", "Longitude", "Location"]].ne(original).any(axis=1)
+    changed = int(rows_changed.sum())
     print(
         f"Coordinates corrected: {changed} buildings updated, {len(result) - changed} unchanged"
     )
