@@ -199,9 +199,12 @@ def fetch_geojson_coordinates(geojson_path: str) -> dict | None:
 
 
 def apply_verified_coordinates(
-    building_data: pd.DataFrame, geojson: dict
+    building_data: pd.DataFrame, geojson: dict | None
 ) -> pd.DataFrame:
     """Helper function to parse through geoJSON data to extract building id & proper coordinates for buildings"""
+
+    if not geojson:
+        return building_data
 
     # To use if properties.geojson.coordinates are not provided for a building
     # Takes IL State Plane feet from geometry.coordinates & converts to lon, lat

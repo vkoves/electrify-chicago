@@ -148,6 +148,25 @@ def make_geojson(features: list[dict]) -> dict:
     return {"type": "FeatureCollection", "features": features}
 
 
+def test_apply_verified_coordinates_no_geojson():
+    """tests that original data is returned when geojson is absent"""
+    df = make_building_df(
+        [
+            {
+                "ID": 1,
+                "Latitude": 41.88,
+                "Longitude": -87.63,
+                "Location": "(41.88, -87.63)",
+            }
+        ]
+    )
+
+    result = apply_verified_coordinates(df, None)
+    assert result.loc[0, "Longitude"] == pytest.approx(-87.63)
+    assert result.loc[0, "Latitude"] == pytest.approx(41.88)
+    assert result.loc[0, "Location"] == "(41.88, -87.63)"
+
+
 def test_apply_verified_coordinates_wgs84_point():
     """overrides lat/lon/location from a WGS84 Point in properties.geojson"""
     df = make_building_df(
