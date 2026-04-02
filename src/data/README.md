@@ -77,9 +77,10 @@ rankings (e.g. #1 highest GHG in the city, #3 highest GHG among Office), but the
 
 ### Corrected Geocodes - benchmark_building_locations_fixed.geojson
 
-Source: https://github.com/ChicagoCityscape/gis-data/commit/f21316bd9899b0390fffc0b3c975659f0b9781e5
+Source: https://github.com/ChicagoCityscape/gis-data
 Contains corrected geocoding information for buildings that report emissions data. The file is used
-during data processing to overrwrite incorrect locations from the city's raw data.
+during data processing to overrwrite incorrect locations from the city's raw data. To update, clone
+repository and pull the latest changes.
 
 ### The Historical File - `benchmarking-all-years.csv`
 

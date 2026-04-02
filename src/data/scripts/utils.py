@@ -260,7 +260,7 @@ def correct_building_locations(
     # Log any changes made
     original = building_data[["Latitude", "Longitude", "Location"]].copy()
     result = apply_verified_coordinates(building_data, loc_data)
-    changed = (
+    changed = int(
         result[["Latitude", "Longitude", "Location"]].ne(original).any(axis=1).sum()
     )
     print(
