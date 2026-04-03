@@ -6,6 +6,7 @@ import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import BuildingsMap from '~/components/BuildingsMap.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
 
 /**
@@ -24,6 +25,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
   components: {
     BuildingsTable,
     BuildingsHero,
+    BuildingsMap,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -35,11 +37,20 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
       'so can your building.';
 
     // Tie this page to it's PageSocialCard
-    return generatePageMeta(
-      'all-electric',
-      'All Electric Buildings',
-      description,
-    );
+    return {
+      ...generatePageMeta(
+        'all-electric',
+        'All Electric Buildings',
+        description,
+      ),
+      link: [
+        {
+          // Leaflet CSS - required for map tiles to render
+          href: 'https://unpkg.com/leaflet@1.9.3/dist/leaflet.css',
+          rel: 'stylesheet',
+        },
+      ],
+    };
   },
 })
 export default class AllElectric extends Vue {}
@@ -72,6 +83,8 @@ export default class AllElectric extends Vue {}
           GrossFloorArea
           GrossFloorAreaRank
           GrossFloorAreaPercentileRank
+          Latitude
+          Longitude
           PrimaryPropertyType
           GHGIntensity
           GHGIntensityRank
@@ -119,6 +132,11 @@ export default class AllElectric extends Vue {}
       </p>
 
       <DataDisclaimer />
+
+      <BuildingsMap
+        :buildings="$static.allBuilding.edges"
+        filter-label="all electric"
+      />
 
       <BuildingsTable
         :buildings="$static.allBuilding.edges"
