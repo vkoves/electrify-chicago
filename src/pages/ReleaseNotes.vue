@@ -25,6 +25,41 @@ export default class About extends Vue {}
       <div class="layout-constrained">
         <h1 id="main-content" tabindex="-1">Release Notes</h1>
       </div>
+      
+      <div class="layout-constrained">
+        <h2>April 3rd, 2026 - Update to Map Geocoding</h2>
+
+        <p>
+          We've introduced changes to our data pipeline to correct the geocodes for buildings in our dataset.
+          Previously, our <g-link to="/map">Map</g-link> component had been relying on incorrect coordinates being reported from the city's raw data.
+          With this update, <b>21029</b> / 28,329 buildings are now visible on the map in their proper locations!
+        </p>
+
+      <div class="two-cols">
+        <div>
+          <a href="/release-notes/2026/geocoding-before.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2026/geocoding-before.webp"
+              alt="Map component showing pin of building in incorrect location"
+            />
+          </a>
+
+          <p class="bold">IIT Map Pins Before</p>
+        </div>
+        <div>
+          <a href="/release-notes/2026/geocoding-after.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2026/geocoding-after.webp"
+              alt="Map component showing pin in correct location after data update"
+            />
+          </a>
+
+          <p class="bold">IIT Map Pins After</p>
+        </div>
+      </div>
+      </div>
 
       <div class="layout-constrained">
         <h2>March 3rd, 2026 - New Property Type Pages</h2>
