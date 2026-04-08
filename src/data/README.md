@@ -79,8 +79,8 @@ rankings (e.g. #1 highest GHG in the city, #3 highest GHG among Office), but the
 
 Source: https://github.com/ChicagoCityscape/gis-data/blob/master/d_chicago_energy_benchmark_buildings_permanent_20240115.geojson
 Contains corrected geocoding information for buildings that report emissions data. The file is used
-during data processing to overrwrite incorrect locations from the city's raw data. To update, clone
-repository (https://github.com/ChicagoCityscape/gis-data) and pull the latest changes.
+during data processing to overrwrite incorrect locations from the city's raw data. To update, check the
+timestamp and simply download the file directly from github.
 
 ### The Historical File - `benchmarking-all-years.csv`
 
