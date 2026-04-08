@@ -48,7 +48,7 @@ export default class About extends Vue {}
               />
             </a>
 
-            <p class="bold">IIT Map Pins Before</p>
+            <p class="bold">Map Pins Before</p>
           </div>
           <div>
             <a href="/release-notes/2026/geocoding-after.webp" target="_blank">
@@ -59,7 +59,7 @@ export default class About extends Vue {}
               />
             </a>
 
-            <p class="bold">IIT Map Pins After</p>
+            <p class="bold">Map Pins After</p>
           </div>
         </div>
       </div>
