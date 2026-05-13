@@ -546,8 +546,18 @@ form.search-form {
     }
 
     &.-geothermal {
+      display: inline-flex;
       background: $grade-a-green;
       color: $white;
+      align-items: center;
+
+      .text {
+        text-decoration: none;
+
+        &:hover, &:focus {
+          text-decoration: underline;
+        }
+      }
 
       .link-icon-btn {
         display: inline-flex;
@@ -558,6 +568,11 @@ form.search-form {
         img {
           width: 0.875rem;
           height: 0.875rem;
+
+          &.-large {
+            width: 1rem;
+            height: 1rem;
+          }
         }
 
         &:hover,

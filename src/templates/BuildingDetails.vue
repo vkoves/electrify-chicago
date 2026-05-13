@@ -341,8 +341,9 @@ query ($id: ID!, $ID: String) {
                           rel="noopener"
                         >
                           <img
-                            src="/icons/link.svg"
-                            alt="Source"
+                            src="/icons/info-white.svg"
+                            class="-large"
+                            alt="More info"
                           />
                         </a>
                       </span>
