@@ -50,7 +50,13 @@
     "name": "Loyola University Chicago",
     "nameShort": "Loyola",
     "logoSmall": "/building-owners/loyola/loyola-small.png",
-    "logoLarge": "/building-owners/loyola/loyola-large.png"
+    "logoLarge": "/building-owners/loyola/loyola-large.png",
+    "links": [
+        {
+            "text": "Loyola's Sustainable Campuses",
+            "url": "https://www.luc.edu/sustainability/sustainabilityatloyola/loyolascampus"
+        }
+    ]
   },
   "cps": {
     "key": "cps",

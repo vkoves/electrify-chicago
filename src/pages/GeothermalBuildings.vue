@@ -60,7 +60,7 @@ export default class GeothermalBuildings extends Vue {
       sortBy: "GHGIntensity",
       filter: {
         ID: {
-          in: ["175895", "256537"]
+          in: ["254170", "256537"]
         }
       }
     ) {

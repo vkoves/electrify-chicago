@@ -171,8 +171,8 @@ export const BuildingsCustomInfo: {
   /**
    * Geothermal Heat Pump Buildings
    */
-  // BVM Hall (Loyola University)
-  '175895': {
+  // School of Environmental Sustainability (Loyola University)
+  '254170': {
     tags: [BuildingTags.hasGeothermalHeatPump],
     tagLinks: {
       [BuildingTags.hasGeothermalHeatPump]: {
