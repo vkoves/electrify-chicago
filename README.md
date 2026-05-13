@@ -447,7 +447,22 @@ We should reasonably crop images if needed and then scale them to be EITHER:
 Make sure to export it as a `.webp` image at a **quality level of 70**, which should ensure a reasonable
 file size under 200 kB.
 
-**Store the image in `/static/building-imgs/`.**
+**Tip!** Use the `yarn convert-img` helper to handle the resize + webp export in one step
+(requires ImageMagick on your PATH — `magick` for v7, `convert` for v6):
+
+```bash
+# Landscape (defaults to 1000px wide, quality 70)
+yarn convert-img path/to/source.png --out=static/building-imgs/owner/ID-XXXXX-name.webp
+
+# Portrait
+yarn convert-img path/to/source.jpg --tall --out=static/building-imgs/owner/ID-XXXXX-name.webp
+```
+
+If `--out` is omitted, it writes alongside the input with a `.webp` extension. The helper warns
+if the result exceeds our 200 kB target.
+
+**Store the image in `/static/building-imgs/`** — preferably under a per-owner subdirectory
+(e.g. `loyola/`, `iit/`) when the building belongs to a tracked owner.
 
 3. **Tell The Site There's a Building Image** - Follow the pattern of other buildings in the
    `building-images.constant.vue`, providing an attribution URL, the image file name, and specify
