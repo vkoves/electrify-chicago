@@ -176,6 +176,44 @@ export function fullyGasFree(building: IBuilding): boolean {
 }
 
 /**
+ * The share of a building's combustion-style energy use that comes from electricity, expressed
+ * as a value between 0 and 1. Considers ElectricityUse, NaturalGasUse, and DistrictSteamUse
+ * (all reported in kBtu, so they're directly comparable). Returns null when there's no
+ * reported energy data to divide by.
+ */
+export function percentElectric(building: IBuilding): number | null {
+  validateBuildingProperties(
+    building,
+    ['ElectricityUse', 'NaturalGasUse', 'DistrictSteamUse'],
+    'percentElectric',
+  );
+
+  const electric = Math.max(0, building.ElectricityUse ?? 0);
+  const gas = Math.max(0, building.NaturalGasUse ?? 0);
+  const steam = Math.max(0, building.DistrictSteamUse ?? 0);
+  const total = electric + gas + steam;
+
+  if (total === 0) return null;
+  return electric / total;
+}
+
+/**
+ * Whether a building is mostly — but not entirely — electric: >80% of its energy mix is
+ * electricity, with some remaining gas or district steam use. Excludes fully gas-free
+ * buildings (those belong on the All Electric page) and excludes buildings flagged as
+ * gas:zero-with-prev-use, since their current zero gas reading is suspect.
+ */
+export function isMostlyElectric(building: IBuilding): boolean {
+  if (fullyGasFree(building)) return false;
+  if (building.DataAnomalies.includes(DataAnomalies.gasZeroWithPreviousUse)) {
+    return false;
+  }
+
+  const share = percentElectric(building);
+  return share !== null && share > 0.8 && share < 1;
+}
+
+/**
  * Whether a building is "new" - meaning this is the first year it has reported data
  */
 export function isNewBuilding(

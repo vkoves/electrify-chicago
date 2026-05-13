@@ -11,7 +11,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { IBuilding } from '../../common-functions.vue';
+import { IBuilding, isMostlyElectric } from '../../common-functions.vue';
 import type { IPageSocialConfig } from '../../constants/page-social-images/page-social-configs.vue';
 import BaseSocialCard from './BaseSocialCard.vue';
 
@@ -80,6 +80,12 @@ export default class PageSocialCard extends Vue {
             (b) =>
               (b.NaturalGasUse || 0) <= 0 && (b.DistrictSteamUse || 0) <= 0,
           )
+          .sort((a, b) => (b.GrossFloorArea || 0) - (a.GrossFloorArea || 0))
+          .slice(0, 50);
+
+      case 'mostly-electric':
+        return allBuildings
+          .filter(isMostlyElectric)
           .sort((a, b) => (b.GrossFloorArea || 0) - (a.GrossFloorArea || 0))
           .slice(0, 50);
 

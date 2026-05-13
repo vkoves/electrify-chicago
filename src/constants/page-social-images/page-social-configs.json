@@ -17,6 +17,12 @@
     "description": "Chicago buildings that are already all-electric!",
     "filter": "best"
   },
+  "mostly-electric": {
+    "id": "mostly-electric",
+    "title": "Mostly Electric Buildings",
+    "description": "Chicago buildings that are more than 80% electric — close to fully electrified.",
+    "filter": "best"
+  },
   "cleanest-buildings": {
     "id": "cleanest-buildings",
     "title": "Cleanest Buildings",
