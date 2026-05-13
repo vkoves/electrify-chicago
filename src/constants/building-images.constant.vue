@@ -944,6 +944,15 @@ export const BuildingImages: IBuildingImages = {
   },
 
   /**
+   * Loyola University Buildings
+   */
+  // San Francisco Hall
+  '254170': {
+    imgUrl: BuildingImagesBase + 'loyola/ID-254170-san-francisco-hall.webp',
+    fromGoogleMaps: true,
+  },
+
+  /**
    * Misc. High Emitters
    */
   //
