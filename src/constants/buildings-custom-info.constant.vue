@@ -17,6 +17,8 @@ export interface IBuildingOwner {
   nameShort: string; // Name for table view
   logoSmall?: string; // A square logo for table view
   logoLarge?: string; // Any size logo for building details
+  /** Related links (sustainability plans, reports, etc.) shown in the owner page header */
+  links?: Array<ILink>;
 }
 
 export interface IBuildingOwners {
