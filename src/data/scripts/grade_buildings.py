@@ -307,6 +307,10 @@ def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
     """
     Calculates the submission rate per building (percentage of years submitted).
 
+    Uses the span from a building's first year through the latest year in the dataset as the
+    expected total, so buildings that have no row for a year (rather than a "Not Submitted"
+    row) are still counted as missing.
+
     Args:
         df (pd.DataFrame): The DataFrame with building and year data.
         building_id_col (str): The name of the building ID column.
@@ -317,12 +321,15 @@ def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: A DataFrame with building IDs and their submission rates as a SubmissionRate
             column
     """
+    max_year = df["DataYear"].max()
 
     def calculate_metrics(group):
-        total_years = len(group)
+        total_years = max_year - group["DataYear"].min() + 1
         # TODO: Refactor not submitted to be no GHG Intensity, since that's our true count
         not_submitted_count = (group["ReportingStatus"] == "Not Submitted").sum()
-        submitted_years = total_years - not_submitted_count
+        # Years where the building has no row at all also count as missing
+        missing_years = total_years - len(group)
+        submitted_years = len(group) - not_submitted_count
 
         if total_years == 0:
             submission_rate = 0.0
@@ -332,7 +339,7 @@ def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
         return pd.Series(
             {
                 "submission_rate": submission_rate,
-                "not_submitted_count": not_submitted_count,
+                "not_submitted_count": not_submitted_count + missing_years,
             }
         )
 
