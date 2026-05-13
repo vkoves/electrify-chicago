@@ -5,7 +5,7 @@
   "repository": "git@github.com:vkoves/electrify-chicago.git",
   "author": "Viktor Köves <3187531+vkoves@users.noreply.github.com>",
   "engines": {
-    "node": ">=18.00 <= 24.6.0"
+    "node": ">=18.00 <25.0.0"
   },
   "license": "MIT",
   "scripts": {
@@ -28,7 +28,8 @@
     "prettier-fix": "yarn prettier-base --write",
     "lint": "yarn eslint-base && yarn stylelint-base && yarn prettier-base --check",
     "lint-fix": "yarn eslint-base --fix && yarn stylelint-base --fix && yarn prettier-base --write --log-level warn",
-    "lint-fix-quiet": "yarn eslint-base --fix --quiet && yarn stylelint-base --fix --quiet && yarn prettier-base --write --log-level error"
+    "lint-fix-quiet": "yarn eslint-base --fix --quiet && yarn stylelint-base --fix --quiet && yarn prettier-base --write --log-level error",
+    "test-playwright-comment": "npx tsx .github/scripts/test-comment-script.ts"
   },
   "dependencies": {
     "@gridsome/plugin-sitemap": "^0.4.0",
@@ -47,10 +48,12 @@
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@microsoft/eslint-formatter-sarif": "^3.0.0",
+    "@playwright/test": "^1.55.0",
     "@types/d3": "^7.4.3",
     "@types/fs-extra": "^11.0.4",
     "@types/google.maps": "^3.58.1",
     "@types/leaflet": "^1.9.3",
+    "@types/node": "^24.3.1",
     "@types/qrcodejs": "^1.0.4",
     "@types/sindresorhus__slugify": "^0.9.3",
     "@typescript-eslint/eslint-plugin": "^8.24.0",

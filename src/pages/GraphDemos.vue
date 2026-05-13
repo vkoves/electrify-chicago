@@ -47,7 +47,7 @@ export default class GraphDemos extends Vue {
   // PieChart sample data
   pieChartData: Array<IPieSlice> = [
     { label: 'Electricity', value: 45, color: '#F0E100' },
-    { label: 'Natural Gas', value: 35, color: '#993300' },
+    { label: 'Fossil Gas', value: 35, color: '#993300' },
     { label: 'District Steam', value: 15, color: '#ABABAB' },
     { label: 'District Chilling', value: 5, color: '#01295F' },
   ];
@@ -207,7 +207,7 @@ const sparkLineData: Array&lt;INumGraphPoint&gt; = [
 // Data format:
 const pieChartData: Array&lt;IPieSlice&gt; = [
   { label: 'Electricity', value: 45, color: '#F0E100' },
-  { label: 'Natural Gas', value: 35, color: '#993300' },
+  { label: 'Fossil Gas', value: 35, color: '#993300' },
   // ...
 ];</code>
 </pre>
