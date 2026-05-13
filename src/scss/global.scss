@@ -551,14 +551,6 @@ form.search-form {
       color: $white;
       align-items: center;
 
-      .text {
-        text-decoration: none;
-
-        &:hover, &:focus {
-          text-decoration: underline;
-        }
-      }
-
       .link-icon-btn {
         display: inline-flex;
         align-items: center;
@@ -578,6 +570,17 @@ form.search-form {
         &:hover,
         &:focus {
           opacity: 1;
+        }
+      }
+
+      // a.text (not .text) so this matches the specificity of .pills-cont a.pill:hover .text
+      // above, satisfying stylelint's no-descending-specificity rule.
+      a.text {
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
         }
       }
     }
@@ -616,6 +619,9 @@ nav.pager {
   gap: 1rem;
   margin-top: 1rem;
 
+  // Disabled: the only earlier `a` rule (.pills-cont .pill a) lives in a separate DOM tree —
+  // pager anchors and pill anchors never co-exist as the same element.
+  /* stylelint-disable-next-line no-descending-specificity */
   a {
     display: flex;
     align-items: center;
@@ -964,6 +970,9 @@ button.action-btn {
     background-color: $blue-very-dark;
   }
 
+  // Disabled: the earlier `img` rule lives inside .pills-cont .pill.-geothermal .link-icon-btn,
+  // a totally separate DOM tree from action-btn — they never target the same element.
+  /* stylelint-disable-next-line no-descending-specificity */
   img {
     border-radius: 0;
     height: 1.5rem;
