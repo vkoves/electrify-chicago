@@ -402,6 +402,37 @@ export const BuildingImages: IBuildingImages = {
     fromGoogleMaps: true,
     isTall: true,
   },
+  '100856': {
+    imgUrl: BuildingImagesBase + 'ID-100856-united-center.webp',
+  },
+  '103595': {
+    imgUrl: BuildingImagesBase + 'ID-103595-141_West_Jackson_Boulevard.webp',
+    attributionUrl: 'https://commons.wikimedia.org/wiki/File:Chicago_Board_Of_Trade_Building.jpg',
+    isTall: true,
+  },
+  '103669': {
+    imgUrl: BuildingImagesBase + 'ID-103669-soldier-field.webp',
+    attributionUrl: 'https://commons.wikimedia.org/wiki/File:Soldier_Field_S.jpg',
+  },
+  '101762': {
+    imgUrl: BuildingImagesBase + 'ID-101762-richard-j-daley-center.webp',
+    attributionUrl: 'https://commons.wikimedia.org/wiki/File:Daley_Center_June_20,_2025.jpg',
+  },
+  '103677': {
+    imgUrl: BuildingImagesBase + 'ID-103677-150_N_Riverside_Plaza.webp',
+    attributionUrl: 'https://commons.wikimedia.org/wiki/File:150_North_Riverside,_Wolf_Point,_Chicago.jpg',
+    isTall: true,
+  },
+  '250129': {
+    imgUrl: BuildingImagesBase + 'ID-250129-300_N_Lasalle.webp',
+    attributionUrl: 'https://commons.wikimedia.org/wiki/File:300_North_LaSalle_in_Chicago.jpg',
+    isTall: true,
+  },
+  '238910': {
+    imgUrl: BuildingImagesBase + 'ID-238910-505_N_Lake_Shore_Drive.webp',
+    attributionUrl: 'https://commons.wikimedia.org/wiki/File:Lake_Point_Tower.jpg',
+    isTall: true,
+  },
 
   /** Auto streetview biggest buildings */
   '100851': {
@@ -953,6 +984,14 @@ export const BuildingImages: IBuildingImages = {
   },
 
   /**
+   * Northwestern
+   */
+  '103748': {
+    imgUrl: BuildingImagesBase + 'northwestern/103748-710_N_Fairbanks_Ct.webp',
+    fromGoogleMaps: true,
+  },
+
+  /**
    * Misc. High Emitters
    */
   //
@@ -1233,7 +1272,15 @@ export const BuildingImages: IBuildingImages = {
     fromGoogleMaps: true,
   },
 
-  // New buildings from 2023 streetview imagery
+  /**
+   * New 2023 Buildings
+   */
+  '256808': {
+    imgUrl:
+      BuildingImagesBase +
+      'manual/new-buildings-2023/256808-205_South_Peoria_Street.webp',
+    fromGoogleMaps: true,
+  },
   '103580': {
     imgUrl:
       BuildingImagesBase +

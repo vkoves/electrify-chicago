@@ -1,5 +1,4 @@
 <script lang="ts">
-/* global process */
 import { Component, Vue } from 'vue-property-decorator';
 
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
@@ -268,6 +267,11 @@ export default class Index extends Vue {
           <div class="announce-panel -blue">
             <h3>🔧 Local Debug Tools</h3>
             <ul>
+              <li>
+                <g-link to="/admin" class="bold">
+                  View Admin Page (including image helper)
+                </g-link>
+              </li>
               <li>
                 <g-link to="/social-cards" class="bold">
                   View Sample Social Cards
