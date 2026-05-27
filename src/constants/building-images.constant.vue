@@ -1249,7 +1249,7 @@ export const BuildingImages: IBuildingImages = {
       BuildingImagesBase +
       'manual/new-buildings-2023/256808-205_South_Peoria_Street.webp',
     fromGoogleMaps: true,
-  }
+  },
   '103580': {
     imgUrl:
       BuildingImagesBase +
