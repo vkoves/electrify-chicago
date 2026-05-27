@@ -1,6 +1,8 @@
 <template>
   <DefaultLayout>
     <div v-if="isDevelopment" class="constrained -wide">
+      <g-link to="/admin" class="grey-link">← Back to Admin</g-link>
+
       <h1 id="main-content" tabindex="-1">🖼️ Building Image Uploader</h1>
 
       <p>
@@ -36,7 +38,7 @@
 
           <!-- Building Info Display -->
           <div v-if="selectedBuilding" class="building-info">
-            <h3>Building Found:</h3>
+            <h3>Building Found</h3>
             <div class="building-details">
               <p>
                 <strong>Name:</strong>
@@ -176,7 +178,7 @@
 
       <!-- Quick Links -->
       <section>
-        <h3>🚀 Quick Links</h3>
+        <h3>Quick Links</h3>
         <div class="quick-links">
           <g-link to="/admin" class="grey-link">← Back to Admin</g-link>
           <g-link to="/social-cards" class="grey-link"
@@ -317,13 +319,13 @@ export default class BuildingImageUploader extends Vue {
   get generatedFilename(): string {
     if (!this.form.buildingId || !this.selectedBuilding) return '';
 
-    // Create filename: ID-address.webp (e.g. 256419-10_W_31st_Street.webp) and remove
+    // Create filename: ID-ID-address.webp (e.g. ID-256419-10_W_31st_Street.webp) and remove
     // characters
     const cleanAddress = this.selectedBuilding.Address.replace(/[^\w\s]/g, '')
       .replace(/\s+/g, '_') // Replace spaces with underscores
       .trim();
 
-    return `${this.form.buildingId}-${cleanAddress}.webp`;
+    return `ID-${this.form.buildingId}-${cleanAddress}.webp`;
   }
 
   handleFileSelect(event: Event): void {
@@ -450,7 +452,12 @@ export default class BuildingImageUploader extends Vue {
   generateCodeSnippet(buildingId: string, relativePath: string): string {
     return `'${buildingId}': {
   imgUrl: BuildingImagesBase + '${relativePath}',
+  // If from Google Maps
   fromGoogleMaps: true,
+  // Otherwise
+  attributionUrl: 'SOMEURL',
+  // If it's a portrait image, add and uncomment this line, otherwise delete:
+  // isTall: true,
 },`;
   }
 
@@ -522,6 +529,10 @@ export default class BuildingImageUploader extends Vue {
     }
   }
 
+  input[type="file"] {
+    background-color: $grey;
+  }
+
   .help-text {
     display: block;
     margin-top: 0.25rem;
@@ -535,25 +546,24 @@ export default class BuildingImageUploader extends Vue {
 }
 
 .building-info {
-  background-color: $off-white;
+  background-color: $white;
   border: $border-thin solid $green;
   border-radius: $brd-rad-medium;
-  padding: 1.5rem;
+  padding: 1rem;
   margin: 1rem 0;
 
   h3 {
     color: $green;
-    margin-bottom: 1rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
   }
 
   .building-details {
-    p {
-      margin-bottom: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 0.5rem;
 
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
+    p { margin: 0; }
   }
 }
 
@@ -656,6 +666,7 @@ export default class BuildingImageUploader extends Vue {
   border-top: $border-thin solid $grey-light;
 
   h4 {
+    margin-top: 0;
     margin-bottom: 0.5rem;
     font-size: 0.9rem;
   }
