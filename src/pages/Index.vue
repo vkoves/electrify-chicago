@@ -268,6 +268,11 @@ export default class Index extends Vue {
             <h3>🔧 Local Debug Tools</h3>
             <ul>
               <li>
+                <g-link to="/admin" class="bold">
+                  View Admin Page (including image helper)
+                </g-link>
+              </li>
+              <li>
                 <g-link to="/social-cards" class="bold">
                   View Sample Social Cards
                 </g-link>
