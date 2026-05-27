@@ -3,8 +3,12 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     NewTabIcon,
@@ -20,6 +24,163 @@ export default class About extends Vue {}
     <div class="release-notes-page">
       <div class="layout-constrained">
         <h1 id="main-content" tabindex="-1">Release Notes</h1>
+      </div>
+
+      <div class="layout-constrained">
+        <h2>April 3rd, 2026 - Update to Map Geocoding</h2>
+
+        <p>
+          We've introduced changes to our data pipeline to correct the geocodes
+          for buildings in our dataset. Previously, our
+          <g-link to="/map">Map</g-link> component had been relying on incorrect
+          coordinates being reported from the city's raw data. With this update,
+          <b>21029</b> / buildings are now visible on the map in their proper
+          locations!
+        </p>
+
+        <div class="two-cols">
+          <div>
+            <a href="/release-notes/2026/geocoding-before.webp" target="_blank">
+              <img
+                class="-shadowed"
+                src="/release-notes/2026/geocoding-before.webp"
+                alt="Map component showing pin of building in incorrect location"
+              />
+            </a>
+
+            <p class="bold">Map Pins Before</p>
+          </div>
+          <div>
+            <a href="/release-notes/2026/geocoding-after.webp" target="_blank">
+              <img
+                class="-shadowed"
+                src="/release-notes/2026/geocoding-after.webp"
+                alt="Map component showing pin in correct location after data update"
+              />
+            </a>
+
+            <p class="bold">Map Pins After</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="layout-constrained">
+        <h2>March 3rd, 2026 - New Property Type Pages</h2>
+
+        <p>
+          We added new property type pages (like
+          <g-link to="/property-type/data-center">Data Centers</g-link> or
+          <g-link to="/property-type/museums">Museums</g-link>), to make it easy
+          to learn more about all properties marked as a certain type!
+          Previously, clicking a property type on a building page just took you
+          to a filtered search, but now each property type has its own dedicated
+          page with critical stats and graphs and images of a sample of those
+          buildings.
+        </p>
+
+        <p>
+          Each property type page now includes a stats panel with total
+          emissions, average GHG intensity, total square footage, grade
+          distribution, and total energy mix. You can also expand a
+          <strong>Trends</strong> section to see graphs of how the buildings in
+          that property type have changed over time.
+        </p>
+      </div>
+
+      <div class="layout-constrained -wide">
+        <a href="/release-notes/2026/new-prop-type-page.webp" target="_blank">
+          <img
+            class="-shadowed"
+            src="/release-notes/2026/new-prop-type-page.webp"
+            alt="The new Data Centers property type page showing a hero with building photos, a
+              stats panel with 7 buildings, 273,034 metric tons total emissions, 83.6 kg CO2e/sqft
+              average GHG intensity, 2.6M total square footage, a grade distribution pie chart,
+              and a total energy mix pie chart showing 99% electricity"
+          />
+        </a>
+      </div>
+
+      <div class="layout-constrained">
+        <h2>
+          September 22nd, 2025 - Enhanced Building Owner Pages & Hero Imagery
+        </h2>
+
+        <p>
+          We made significant improvements to building owner pages to make them
+          more compelling and informative. Each owner page now features a hero
+          that showcases images of the buildings they own, showing a quick
+          preview of some of their properties. We've added this hero imagery to
+          other pages, like our <g-link to="/all-electric">all electric</g-link>
+          page!
+        </p>
+
+        <p>
+          Building owner pages now also include additional statistics and graphs
+          to help you better understand each owner's environmental impact,
+          including total square footage, total emissions, average greenhouse
+          gas intensity, and a breakdown of their buildings' grades.
+        </p>
+
+        <p>
+          Additionally, we've improved meta imagery across the site - pages now
+          have proper social media preview images, making them look better when
+          shared on social platforms!
+        </p>
+
+        <p>
+          <strong>Update Oct. 2025:</strong> We've now added these same stats
+          and graphs to the ward pages as well!
+        </p>
+      </div>
+
+      <div class="two-cols">
+        <div>
+          <a href="/release-notes/2025/biggest-before.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/biggest-before.webp"
+              alt="Building owner page showing basic layout without hero images"
+            />
+          </a>
+
+          <p class="bold">Before</p>
+        </div>
+        <div>
+          <a href="/release-notes/2025/biggest-after.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/biggest-after.webp"
+              alt="Enhanced building owner page with building hero images and improved stats"
+            />
+          </a>
+
+          <p class="bold">After</p>
+        </div>
+      </div>
+
+      <div class="two-cols">
+        <div>
+          <a href="/release-notes/2025/iit-before.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/iit-before.webp"
+              alt="IIT owner page before improvements"
+            />
+          </a>
+
+          <p class="bold">IIT Before</p>
+        </div>
+        <div>
+          <a href="/release-notes/2025/iit-after.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2025/iit-after.webp"
+              alt="IIT owner page with new building hero and enhanced statistics"
+            />
+          </a>
+
+          <p class="bold">IIT After</p>
+        </div>
       </div>
 
       <div class="layout-constrained">
@@ -285,6 +446,10 @@ export default class About extends Vue {}
 </template>
 <style lang="scss">
 .release-notes-page {
+  .layout-constrained img.-shadowed {
+    width: 100%;
+  }
+
   .two-cols {
     display: flex;
     align-items: center;

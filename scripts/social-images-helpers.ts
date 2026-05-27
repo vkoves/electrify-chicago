@@ -1,6 +1,17 @@
+/**
+ * A set of Typescript helper functions for our social image generation
+ */
+
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import { parse } from 'csv-parse/sync';
+
+import pageSocialConfigs from '../src/constants/page-social-images/page-social-configs.json';
+import buildingOwnersData from '../src/constants/building-owners.json';
+import propertyTypesData from '../src/data/dist/property-types.json';
+
+// Import slugifyPropertyType from the CommonJS module
+import { slugifyPropertyType } from '../src/constants/property-type-helpers.js';
 
 // Shared constants
 export const SOCIAL_IMAGES_DIR = './static/social-images';
@@ -34,9 +45,27 @@ export function getSocialImagePath(buildingId: string): string {
   return path.join(SOCIAL_IMAGES_DIR, `building-${buildingId}.webp`);
 }
 
+export function getPageSocialImagePath(pageId: string): string {
+  return path.join(SOCIAL_IMAGES_DIR, `page-${pageId}.webp`);
+}
+
 export async function imageExists(buildingId: string): Promise<boolean> {
   const imagePath = getSocialImagePath(buildingId);
   return await fs.pathExists(imagePath);
+}
+
+export async function pageImageExists(pageId: string): Promise<boolean> {
+  const imagePath = getPageSocialImagePath(pageId);
+  return await fs.pathExists(imagePath);
+}
+
+// Page data utilities
+export function getAvailablePageIdsFromConfig(): string[] {
+  return Object.keys(pageSocialConfigs);
+}
+
+export function getAvailableOwnerIds(): string[] {
+  return Object.keys(buildingOwnersData);
 }
 
 export async function ensureSocialImagesDirectory(): Promise<void> {
@@ -66,4 +95,31 @@ export async function removeImages(buildingIds: string[]): Promise<void> {
       console.log(`   🗑️  Removed building-${buildingId}.webp`);
     }
   }
+}
+
+// Owner social image utilities
+export function getOwnerSocialImagePath(ownerId: string): string {
+  return path.join(SOCIAL_IMAGES_DIR, `owner-${ownerId}.webp`);
+}
+
+export async function ownerImageExists(ownerId: string): Promise<boolean> {
+  const imagePath = getOwnerSocialImagePath(ownerId);
+  return await fs.pathExists(imagePath);
+}
+
+// Property type social image utilities
+export function getAvailablePropertyTypes(): string[] {
+  return (propertyTypesData as { propertyTypes: string[] }).propertyTypes;
+}
+
+export function getPropertyTypeSocialImagePath(propertyType: string): string {
+  const slug = (slugifyPropertyType as (pt: string) => string)(propertyType);
+  return path.join(SOCIAL_IMAGES_DIR, `property-type-${slug}.webp`);
+}
+
+export async function propertyTypeImageExists(
+  propertyType: string,
+): Promise<boolean> {
+  const imagePath = getPropertyTypeSocialImagePath(propertyType);
+  return await fs.pathExists(imagePath);
 }

@@ -11,7 +11,7 @@ PR template, to indicate you've completed all steps!**
 - [ ] **Run data processing**:
 
   ```bash
-  docker-compose run --rm electrify-chicago python3 run_all.py
+  docker-compose run --rm electrify-chicago uv run python run_all.py
   ```
 
 - [ ] **Fetch updated ward numbers for new buildings** - Follow instructions in `src/data/scripts/city-geocodes/README.md` to generate updated `src/data/source/CityGeocoder.xlsx` file using the City of Chicago Geocoder

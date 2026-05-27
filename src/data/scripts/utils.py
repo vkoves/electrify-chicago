@@ -3,26 +3,50 @@ Utils - Basic utilities for file processing that are agnostic to the specific
 data being processed
 """
 
+import json
+from pyproj import Transformer
+from shapely.geometry import shape
 import pandas as pd
 import pathlib
-import pathlib
 
-from typing import List
+from typing import Any, List, cast
 
 # ANSI color codes for output
-RED = '\033[0;31m'
-GREEN = '\033[0;32m'
-YELLOW = '\033[0;33m'
-LIGHT_BLUE = '\033[0;34m'
-NC = '\033[0m'  # No Color
+RED = "\033[0;31m"
+GREEN = "\033[0;32m"
+YELLOW = "\033[0;33m"
+LIGHT_BLUE = "\033[0;34m"
+NC = "\033[0m"  # No Color
+
+
+def write_json_with_newline(
+    data: Any, file_path: str, indent: int | None = None
+) -> None:
+    """
+    Write JSON data to a file with proper EOF newline for linting consistency.
+
+    Args:
+        data: The data to write as JSON
+        file_path: Path to the output file
+        indent: Optional indentation level (None for minified JSON)
+    """
+    with open(file_path, "w") as f:
+        if indent is not None:
+            json.dump(data, f, indent=indent)
+        else:
+            json.dump(data, f, separators=(",", ":"))
+        f.write("\n")  # Add EOF newline
+
 
 def print_red(msg: str) -> None:
     """Print to the console with red text"""
     print(f"{RED}{msg}{NC}")
 
+
 def print_yellow(msg: str) -> None:
     """Print to the console with yellow text"""
     print(f"{YELLOW}{msg}{NC}")
+
 
 def print_green(msg: str) -> None:
     """Print to the console with green text"""
@@ -35,7 +59,8 @@ def get_data_file_path(dir: str, f: str) -> str:
     curr_path = pathlib.Path(".")
     path = curr_path.parent.absolute() / "src" / "data" / dir / f
 
-    return path
+    return str(path)
+
 
 def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pd.DataFrame:
     """Fetch a building benchmarking CSV in Pandas, keeping the cols_to_keep (if specified)"""
@@ -44,26 +69,28 @@ def get_and_clean_csv(path_to_csv, cols_to_keep=None) -> pd.DataFrame:
     data_types = {
         # Specify that "Exempt From Chicago Energy Rating" column is a string, preventing default
         # boolean parsing and warning of mixed types
-        7: 'string',
+        7: "string",
     }
 
-    df = pd.read_csv(path_to_csv, dtype=data_types)
+    df = pd.read_csv(path_to_csv, dtype=data_types)  # type: ignore
 
     if cols_to_keep is None:
         return df
     else:
         return df[cols_to_keep]
 
+
 def output_to_csv(building_data: pd.DataFrame, output_path: str) -> None:
     """Output a Pandas dataframe to a CSV file"""
-    building_data.to_csv(output_path, sep=',', encoding='utf-8', index=False)
+    building_data.to_csv(output_path, sep=",", encoding="utf-8", index=False)
+
 
 def json_data_builder(
     dataframe, outer_tag="default", is_array=True, array_key="emissionsByYear"
 ) -> List[str]:
     """Process the a CSV dataframe into a JSON object"""
 
-    uniqueColKey = 'ID'
+    uniqueColKey = "ID"
 
     dataframe = dataframe.map(lambda x: "" if pd.isnull(x) else x)
 
@@ -81,11 +108,12 @@ def json_data_builder(
         #     building_json = building_df.to_dict('records')
         #     json_object.append({"building": building, array_key: building_json})
         # else:
-        building_json = building_df.to_dict('records')[0]
+        building_json = building_df.to_dict("records")[0]
         json_object.append(building_json)
 
     # Return outer tag output object
     return json_object
+
 
 def log_step_completion(step_num, outputted_paths):
     """Logs the completion of a data processing step and the paths of exported files.
@@ -122,3 +150,123 @@ def log_step_completion(step_num, outputted_paths):
 
     for path in other_paths:
         print(f" - {path}")
+
+
+def parse_geojson_field(value) -> dict | None:
+    """Helper function to parse coordinates when geojson property is
+    provided as a String"""
+
+    if not value:
+        return None
+    if isinstance(value, str):
+        try:
+            value = json.loads(value)
+        except (json.JSONDecodeError, ValueError):
+            return None
+    return value if isinstance(value, dict) else None
+
+
+def extract_lon_lat(
+    geometry: dict, transformer: Transformer | None = None
+) -> tuple[float, float]:
+    """Extract (lon, lat) from a geoJSON geometry dict. if a transformer is provided,
+    input coordinates are transformed first (e.g IL State Plane -> WGS84)."""
+
+    if geometry["type"] == "Point":
+        x, y = geometry["coordinates"]
+    else:
+        # For Polygon/Multipolygon, use shapely to get centroid
+        x, y = shape(geometry).centroid.coords[0]
+
+    if transformer:
+        return transformer.transform(x, y)
+
+    return x, y
+
+
+def fetch_geojson_coordinates(geojson_path: str) -> dict | None:
+    """Helper function to open geojson file from a provided path string"""
+
+    try:
+        with open(geojson_path, "r") as f:
+            geojson_data = json.load(f)
+
+    except IOError:
+        print("could not read file")
+        geojson_data = None
+
+    return geojson_data
+
+
+def apply_verified_coordinates(
+    building_data: pd.DataFrame, geojson: dict | None
+) -> pd.DataFrame:
+    """Helper function to parse through geoJSON data to extract building id & proper coordinates for buildings"""
+
+    if not geojson:
+        return building_data
+
+    # To use if properties.geojson.coordinates are not provided for a building
+    # Takes IL State Plane feet from geometry.coordinates & converts to lon, lat
+    transformer = Transformer.from_crs("EPSG:3435", "EPSG:4326", always_xy=True)
+
+    verified_coords = {}
+    for feature in geojson["features"]:
+        props = feature["properties"]
+        building_id = int(props["building_id"])
+
+        # Prefer WGS84 (lon, lat) coordinates if available
+        geojson_val = parse_geojson_field(props.get("geojson"))
+        if geojson_val and geojson_val.get("coordinates"):
+            lon, lat = extract_lon_lat(geojson_val)
+
+        # Else, convert IL state plane units
+        elif feature.get("geometry") and feature["geometry"].get("coordinates"):
+            lon, lat = extract_lon_lat(feature["geometry"], transformer)
+        else:
+            continue
+
+        verified_coords[building_id] = (lat, lon)
+
+    # Override only where verified data exists
+    def override_lat(row):
+        bid = int(row["ID"]) if pd.notna(row["ID"]) else None
+        return verified_coords[bid][0] if bid in verified_coords else row["Latitude"]
+
+    def override_lon(row):
+        bid = int(row["ID"]) if pd.notna(row["ID"]) else None
+        return verified_coords[bid][1] if bid in verified_coords else row["Longitude"]
+
+    def override_location(row):
+        bid = int(row["ID"]) if pd.notna(row["ID"]) else None
+        if bid in verified_coords:
+            lat, lon = verified_coords[bid]
+            return f"({lat}, {lon})"
+        return row["Location"]
+
+    building_data["Latitude"] = building_data.apply(override_lat, axis=1)
+    building_data["Longitude"] = building_data.apply(override_lon, axis=1)
+    building_data["Location"] = building_data.apply(override_location, axis=1)
+
+    return building_data
+
+
+def correct_building_locations(
+    building_data: pd.DataFrame, geojson_path: str
+) -> pd.DataFrame:
+    """Applies corrected geocodes to buildings in city data"""
+    loc_data = fetch_geojson_coordinates(geojson_path)
+
+    # Log any changes made
+    original = building_data[["Latitude", "Longitude", "Location"]].copy()
+    result = apply_verified_coordinates(building_data, loc_data)
+    rows_changed = cast(
+        pd.Series,
+        result[["Latitude", "Longitude", "Location"]].ne(original).any(axis=1),
+    )
+    changed = int(rows_changed.sum())
+    print(
+        f"Coordinates corrected: {changed} buildings updated, {len(result) - changed} unchanged"
+    )
+
+    return result

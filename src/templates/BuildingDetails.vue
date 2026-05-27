@@ -185,7 +185,7 @@ query ($id: ID!, $ID: String) {
                 </h2>
 
                 <p>
-                  This building reported zero fossil gas use in the most recent
+                  This building did not report fossil gas use in the most recent
                   year, but has used gas in the past, which may be a reporting
                   error. Take a look at how this building has used energy over
                   time under "Extra Technical & Historic Info".
@@ -244,7 +244,7 @@ query ($id: ID!, $ID: String) {
                   <dd>
                     <g-link
                       class="nav-link"
-                      :to="`/search?type=${propertyTypeEncoded}`"
+                      :to="`/property-type/${propertyTypeSlug}`"
                     >
                       {{ $page.building.PrimaryPropertyType }}
                     </g-link>
@@ -313,6 +313,42 @@ query ($id: ID!, $ID: String) {
                 <div>
                   <dt>Owner</dt>
                   <OwnerLogo :building="$page.building" />
+                </div>
+
+                <div v-if="hasGeothermalHeatPump">
+                  <dt>Notable Features</dt>
+
+                  <dd>
+                    <div class="pills-cont">
+                      <span class="pill -geothermal">
+                        <span class="icon">♻️</span>
+                        <g-link class="text" to="/geothermal-buildings/"
+                          >Geothermal Heat Pump</g-link
+                        >
+                        <a
+                          v-if="geothermalSourceLink"
+                          v-tooltip="
+                            geothermalSourceLink.preview
+                              ? '&ldquo;' +
+                                geothermalSourceLink.preview +
+                                '&rdquo;<br><br>Source: ' +
+                                geothermalSourceLink.text
+                              : 'Source: ' + geothermalSourceLink.text
+                          "
+                          class="link-icon-btn"
+                          :href="geothermalSourceLink.url"
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          <img
+                            src="/icons/info-white.svg"
+                            class="-large"
+                            alt="More info"
+                          />
+                        </a>
+                      </span>
+                    </div>
+                  </dd>
                 </div>
 
                 <div v-if="customLinks">
@@ -548,6 +584,15 @@ query ($id: ID!, $ID: String) {
         </div>
       </div>
 
+      <div class="no-print">
+        <h2>What Should We Do About This?</h2>
+
+        <p>
+          Own this Building? Check out our
+          <a href="/take-action-tips">Take Action</a> page for tips and advice!
+        </p>
+      </div>
+
       <details class="extra-info">
         <summary class="bold">View Extra Technical & Historic Info</summary>
 
@@ -587,40 +632,63 @@ query ($id: ID!, $ID: String) {
         </div>
       </details>
 
-      <p class="constrained">
-        <strong>* Note on Rankings:</strong> Rankings and medians are among
-        <em>included</em> buildings, which are those who reported under the
-        Chicago Energy Benchmarking Ordinance for the year {{ LatestDataYear }},
-        which only applies to buildings over 50,000 square feet.
-      </p>
+      <details class="data-notes">
+        <summary class="bold">View Data Notes & Disclaimers</summary>
 
-      <p class="constrained">
-        <strong>** Note on Bill Estimates:</strong>
-        Estimates for gas and electric bills are based on average electric and
-        gas <em>retail</em> prices for Chicago in {{ UtilityCosts.year }} and
-        are rounded. We expect large buildings would negotiate lower rates with
-        utilities, but these estimates serve as an upper bound of cost and help
-        understand the volume of energy a building is used by comparing it to
-        your own energy bills! See our
-        <a :href="UtilityCosts.source" target="_blank" rel="noopener">
-          Chicago Gas & Electric Costs Source <NewTabIcon />
-        </a>
-        for the original statistics.
-      </p>
+        <div class="details-content">
+          <p class="constrained">
+            <strong>* Note on Rankings:</strong> Rankings and medians are among
+            <em>included</em> buildings, which are those who reported under the
+            Chicago Energy Benchmarking Ordinance for the year
+            {{ LatestDataYear }}, which only applies to buildings over 50,000
+            square feet.
+          </p>
+
+          <p class="constrained">
+            <strong>** Note on Bill Estimates:</strong>
+            Estimates for gas and electric bills are based on average electric
+            and gas <em>retail</em> prices for Chicago in
+            {{ UtilityCosts.year }} and are rounded. We expect large buildings
+            would negotiate lower rates with utilities, but these estimates
+            serve as an upper bound of cost and help understand the volume of
+            energy a building is used by comparing it to your own energy bills!
+            See our
+            <a :href="UtilityCosts.source" target="_blank" rel="noopener">
+              Chicago Gas & Electric Costs Source <NewTabIcon />
+            </a>
+            for the original statistics.
+          </p>
+        </div>
+      </details>
 
       <DataSourceFootnote />
 
-      <div class="no-print">
-        <h2>What Should We Do About This?</h2>
-
-        <a href="/take-action-tips"> Own this Building? Take Action. </a>
-      </div>
-
-      <email-building-modal
+      <email-modal
         v-if="isEmailModalOpen"
-        :building="$page.building"
+        title="Email This Building"
+        subject="What Is Our Building's Plan For Saving Energy & Reducing Emissions?"
         @close="isEmailModalOpen = false"
-      />
+      >
+        <p>Dear sir or madam,</p>
+        <p>
+          My name is <span class="to-replace">_NAME_</span>, and I am an
+          <span class="to-replace">_OWNER/OCCUPANT/OTHER_</span> of
+          {{ $page.building.PropertyName }}.
+        </p>
+        <p>
+          I've been reading about {{ $page.building.PropertyName }}'s emissions
+          and energy use, and I wanted to learn more about your plans to improve
+          our energy efficiency, electrify the building, and reduce our
+          emissions. Well insulated all-electric buildings have lower energy
+          bills, cleaner air, and are more comfortable for their occupants, and
+          I want to make sure there is a concrete plan to make
+          {{ $page.building.PropertyName }} one of those buildings!
+        </p>
+        <p>
+          You can see more at
+          <strong>https://electrifychicago.net{{ $page.building.path }}</strong>
+        </p>
+      </email-modal>
     </div>
   </DefaultLayout>
 </template>
@@ -663,9 +731,11 @@ import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
 import {
   getBuildingCustomInfo,
+  BuildingTags,
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
-import EmailBuildingModal from '../components/EmailBuildingModal.vue';
+import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
+import EmailModal from '../components/EmailModal.vue';
 import LetterGrade from '../components/LetterGrade.vue';
 import ShareButton from '../components/ShareButton.vue';
 
@@ -674,6 +744,12 @@ import ReportCard from '../components/ReportCard.vue';
 
 Vue.use(vToolTip);
 
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   metaInfo() {
     const propertyName =
@@ -705,7 +781,7 @@ Vue.use(vToolTip);
     BarGraph,
     BuildingImage,
     DataSourceFootnote,
-    EmailBuildingModal,
+    EmailModal,
     HistoricalBuildingDataTable,
     LetterGrade,
     NewTabIcon,
@@ -819,6 +895,11 @@ export default class BuildingDetails extends Vue {
     return encodeURIComponent(this.propertyType);
   }
 
+  /** The property type slug for linking to the property type page */
+  get propertyTypeSlug(): string {
+    return slugifyPropertyType(this.propertyType);
+  }
+
   get prodBuildingUrl(): string {
     if (typeof window !== 'undefined' && window.location?.pathname) {
       return `https://electrifychicago.net${window.location.pathname}`;
@@ -858,6 +939,21 @@ export default class BuildingDetails extends Vue {
     }
 
     return null;
+  }
+
+  get geothermalSourceLink(): ILink | null {
+    const buildingCustomInfo = getBuildingCustomInfo(this.building);
+    return (
+      buildingCustomInfo?.tagLinks?.[BuildingTags.hasGeothermalHeatPump] ?? null
+    );
+  }
+
+  get hasGeothermalHeatPump(): boolean {
+    const buildingCustomInfo = getBuildingCustomInfo(this.building);
+    return (
+      buildingCustomInfo?.tags?.includes(BuildingTags.hasGeothermalHeatPump) ??
+      false
+    );
   }
 
   get buildingAnomalies(): Array<DataAnomalies> {

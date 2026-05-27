@@ -25,6 +25,12 @@ interface ISelectOption {
   value: string;
 }
 
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,
@@ -47,7 +53,7 @@ export default class Search extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** The search query */
   searchFilter = '';
@@ -94,7 +100,7 @@ export default class Search extends Vue {
 
   created(): void {
     // Make sure on load we have some data
-    this.setSearchResults(this.$static.allBuilding.edges);
+    this.setSearchResults(this.$page.allBuilding.edges);
   }
 
   mounted(): void {
@@ -149,7 +155,7 @@ export default class Search extends Vue {
 
     window.history.pushState(null, '', newUrl);
 
-    let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
+    let buildingsResults: Array<IBuildingEdge> = this.$page.allBuilding.edges;
 
     // If no filters are provided, return our max number
     if (
@@ -221,7 +227,7 @@ export default class Search extends Vue {
     if (this.hasFilteredResults) {
       buildingsToSort = [...this.searchResults];
     } else {
-      buildingsToSort = [...this.$static.allBuilding.edges];
+      buildingsToSort = [...this.$page.allBuilding.edges];
     }
 
     this.runSort(buildingsToSort);
@@ -279,7 +285,7 @@ export default class Search extends Vue {
 }
 </script>
 
-<static-query>
+<page-query>
   query {
     # Search page only needs core BuildingsTable fields (no conditional fields)
     allBuilding(sortBy: "GHGIntensity") {
@@ -306,7 +312,7 @@ export default class Search extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout>

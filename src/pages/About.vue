@@ -4,16 +4,25 @@ import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
 import EmissionsBreakdownGraph from '../components/EmissionsBreakdownGraph.vue';
+import { generatePageMeta } from '../constants/meta-helpers.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     EmissionsBreakdownGraph,
     NewTabIcon,
   },
   metaInfo() {
-    return { title: 'About Us' };
+    return generatePageMeta(
+      'About Us',
+      'Learn about Electrify Chicago, and our mission to decarbonize buildings ' +
+        'and fight climate change through data transparency!',
+    );
   },
 })
 export default class About extends Vue {
@@ -152,9 +161,15 @@ export default class About extends Vue {
           <g-link to="/all-electric"> All Electric Buildings </g-link>
         </li>
         <li>
+          <g-link to="/geothermal-buildings">Geothermal Buildings</g-link>
+        </li>
+        <li>
           <g-link to="/retrofit-chicago-participants">
             Retrofit Chicago Case Studies
           </g-link>
+        </li>
+        <li>
+          <g-link to="/fines-breakdown"> Year by Year Predicted Fines </g-link>
         </li>
       </ul>
 

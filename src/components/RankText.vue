@@ -60,6 +60,7 @@ import {
   RankConfig,
   IBuilding,
   IBuildingBenchmarkStats,
+  kBtuToKwh,
 } from '../common-functions';
 
 /**
@@ -78,6 +79,8 @@ export default class RankText extends Vue {
 
   @Prop() unit?: string;
 
+  @Prop({ default: false }) convertToKwh!: boolean;
+
   // Expose RankConfig to template
   RankConfig = RankConfig;
 
@@ -93,7 +96,8 @@ export default class RankText extends Vue {
   }
 
   get statValue(): number {
-    return parseFloat(this.building[this.statKey] as string);
+    const raw = parseFloat(this.building[this.statKey] as string);
+    return this.convertToKwh ? kBtuToKwh(raw) : raw;
   }
 
   // Returns a rounded number or null if no rank

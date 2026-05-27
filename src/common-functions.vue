@@ -12,6 +12,15 @@ export const EnergyBreakdownColors = {
   NaturalGas: '#993300',
 };
 
+/** Colors for grade distribution pie charts */
+export const GradeColors: Record<string, string> = {
+  A: '#009f49', // $grade-a-green
+  B: '#7fa52e', // $grade-b-green
+  C: '#b36a15', // $grade-c-orange
+  D: '#972222', // $grade-d-red
+  F: '#d60101', // $grade-f-red
+};
+
 export interface IBuildingBenchmarkStat {
   count: number;
   min: number;
@@ -40,7 +49,8 @@ export interface IPropertyStat {
 
 /** The type of each property type in building-statistics-by-property-type.json */
 export interface IPropertyStats {
-  [statKey: string]: IPropertyStat;
+  gradeDistribution?: Record<string, number>;
+  [statKey: string]: IPropertyStat | Record<string, number> | undefined;
 }
 
 /** All the available data anomaly codes from detect_anomalous_buildings.py:anomaly_values */
@@ -56,6 +66,8 @@ export enum DataAnomalies {
  * all of the parameter types
  */
 export interface IBuilding {
+  ID: string | number;
+  DataYear: number;
   PropertyName: string;
   Address: string;
   PrimaryPropertyType: string;
@@ -73,7 +85,11 @@ export interface IBuilding {
   TotalGHGEmissions: number;
   YearBuilt: number;
 
-  [buildingKey: string]: string | number | boolean;
+  FirstYearReported: number | null;
+  LastYearReported: number | null;
+  Owner?: string; // Building owner key (e.g., 'depaul', 'uchicago')
+
+  [buildingKey: string]: string | number | boolean | null | undefined;
 }
 
 /** How GraphQL passes back a building */
@@ -81,6 +97,9 @@ export interface IBuildingNode {
   node: IBuilding;
 }
 
+export interface IBuildingEdge {
+  node: IBuilding;
+}
 /**
  * A year of benchmark data, with columns we parse by
  */
@@ -205,6 +224,13 @@ export interface DataPoint {
   value: number;
 }
 
+export interface DataSeries {
+  name: string;
+  data: DataPoint[];
+  strokeColor: string;
+  fillColor: string;
+}
+
 export type RegressionLine = {
   x1: number;
   x2: number;
@@ -212,15 +238,35 @@ export type RegressionLine = {
   y2: number;
 };
 
+// Stats fields beyond count are optional because some metrics have no records for certain years
+// or property types (e.g. WeatherNormalizedSourceEUI in 2019, or DistrictChilledWaterUse for a
+// property type that doesn't use district chilling at all), resulting in a stats object with
+// only a count of 0 and no computed values.
 export interface MetricStats {
   count: number;
-  mean: number;
-  std: number;
-  min: number;
-  max: number;
-  twentyFifthPercentile: number;
-  median: number;
-  seventyFifthPercentile: number;
+  mean?: number;
+  std?: number;
+  min?: number;
+  max?: number;
+  twentyFifthPercentile?: number;
+  median?: number;
+  seventyFifthPercentile?: number;
+  /** Only present in building-statistics-by-property-type.json */
+  total?: number;
+}
+
+/** Shape of a single property type's entry in building-statistics-by-property-type.json */
+export interface PropertyTypeStats {
+  GHGIntensity?: MetricStats;
+  TotalGHGEmissions?: MetricStats;
+  ElectricityUse?: MetricStats;
+  NaturalGasUse?: MetricStats;
+  GrossFloorArea?: MetricStats;
+  SourceEUI?: MetricStats;
+  SiteEUI?: MetricStats;
+  DistrictSteamUse?: MetricStats;
+  DistrictChilledWaterUse?: MetricStats;
+  gradeDistribution?: Record<string, number>;
 }
 
 export interface YearData {
@@ -229,6 +275,7 @@ export interface YearData {
   ElectricityUse?: MetricStats;
   NaturalGasUse?: MetricStats;
   SourceEUI?: MetricStats;
+  WeatherNormalizedSourceEUI?: MetricStats;
   SiteEUI?: MetricStats;
 }
 
@@ -366,7 +413,7 @@ export function getMedianMultipleMsg(
 
   // We can say 2.5x but 5.5x or 40.56x is a bit silly, just round
   if (medianMult > 5) {
-    return Math.round(medianMult) + 'x';
+    return Math.round(medianMult).toLocaleString() + 'x';
   }
 
   // If the multiple is < 1, make a fraction (e.g. 1/5 the median)
@@ -505,6 +552,24 @@ export function getOverallRankEmoji(
   return null;
 }
 
+/** 1 kWh = 3.412 kBtu (exact thermodynamic conversion) */
+export const kWhPerKbtu = 1 / 3.412;
+
+/**
+ * Converts a kBtu value to kWh
+ */
+export function kBtuToKwh(kBtu: number): number {
+  return kBtu * kWhPerKbtu;
+}
+
+/**
+ * Returns a tooltip string for a kWh value that was converted from kBtu,
+ * e.g. "Converted from original 1,234,567 kBtu"
+ */
+export function kBtuToKwhTooltip(kBtu: number): string {
+  return `Converted from original ${roundUpLargeNumber(kBtu).toLocaleString()} kBtu`;
+}
+
 /**
  * A constant for Chicago avg. utility costs in the latest data year (in dollar per unit of energy),
  * which we use to estimate an upper bound of how much a building would pay for gas or electric
@@ -555,6 +620,52 @@ export function estimateUtilitySpend(
   }
 }
 
+/** Energy use totals used to build pie chart slices */
+export interface EnergyTotals {
+  ElectricityUse?: number | null;
+  NaturalGasUse?: number | null;
+  DistrictSteamUse?: number | null;
+  DistrictChilledWaterUse?: number | null;
+}
+
+/**
+ * Builds energy breakdown pie chart slices from a set of energy use totals.
+ * Only includes sources with a positive value.
+ */
+export function buildEnergyPieSlices(totals: EnergyTotals): Array<IPieSlice> {
+  type Source = {
+    value: number | null | undefined;
+    label: string;
+    color: string;
+  };
+  const sources: Array<Source> = [
+    {
+      value: totals.ElectricityUse,
+      label: 'Electricity',
+      color: EnergyBreakdownColors.Electricity,
+    },
+    {
+      value: totals.NaturalGasUse,
+      label: 'Fossil Gas',
+      color: EnergyBreakdownColors.NaturalGas,
+    },
+    {
+      value: totals.DistrictSteamUse,
+      label: 'District Steam',
+      color: EnergyBreakdownColors.DistrictSteam,
+    },
+    {
+      value: totals.DistrictChilledWaterUse,
+      label: 'District Chilling',
+      color: EnergyBreakdownColors.DistrictChilling,
+    },
+  ];
+
+  return sources
+    .filter((s): s is typeof s & { value: number } => !!s.value && s.value > 0)
+    .map(({ value, label, color }) => ({ label, value, color }));
+}
+
 /**
  * Converts a building or benchmark record into pie chart slices and a total energy use
  */
@@ -562,47 +673,10 @@ export function calculateEnergyBreakdown(record: IBuilding | IHistoricData): {
   energyBreakdown: Array<IPieSlice>;
   totalEnergyUse: number;
 } {
-  const energyBreakdown: Array<IPieSlice> = [];
+  const energyBreakdown = buildEnergyPieSlices(record);
+  const totalEnergyUse = energyBreakdown.reduce((sum, d) => sum + d.value, 0);
 
-  if (record.ElectricityUse > 0) {
-    energyBreakdown.push({
-      label: 'Electricity',
-      value: parseFloat(record.ElectricityUse.toString()),
-      color: EnergyBreakdownColors.Electricity,
-    });
-  }
-
-  if (record.NaturalGasUse > 0) {
-    energyBreakdown.push({
-      label: 'Fossil Gas',
-      value: parseFloat(record.NaturalGasUse.toString()),
-      color: EnergyBreakdownColors.NaturalGas,
-    });
-  }
-
-  if (record.DistrictSteamUse > 0) {
-    energyBreakdown.push({
-      label: 'District Steam',
-      value: parseFloat(record.DistrictSteamUse.toString()),
-      color: EnergyBreakdownColors.DistrictSteam,
-    });
-  }
-
-  if (record.DistrictChilledWaterUse > 0) {
-    energyBreakdown.push({
-      label: 'District Chilling',
-      value: parseFloat(record.DistrictChilledWaterUse.toString()),
-      color: EnergyBreakdownColors.DistrictChilling,
-    });
-  }
-
-  let totalEnergyUse = 0;
-  energyBreakdown.forEach((datum) => (totalEnergyUse += datum.value));
-
-  return {
-    energyBreakdown,
-    totalEnergyUse,
-  };
+  return { energyBreakdown, totalEnergyUse };
 }
 
 /**
@@ -644,5 +718,121 @@ export function smoothlyScrollToAnchor(event: MouseEvent): void {
       window.history.pushState(null, '', `#${targetId}`);
     }
   }
+}
+
+/**
+ * Pluralize a property type name for display
+ * Examples:
+ * - "Data Center" -> "Data Centers"
+ * - "Office" -> "Office Buildings"
+ * - "Multifamily Housing" -> "Multifamily Housing"
+ */
+export function pluralizePropertyType(propertyType: string): string {
+  // Words ending in "Center" become "Centers"
+  if (propertyType.endsWith('Center')) {
+    return propertyType + 's';
+  }
+
+  // Words ending in "Housing" stay as-is (mass noun)
+  // Words ending in "Hall" stay as-is (already works as category)
+  if (propertyType.endsWith('Housing') || propertyType.endsWith('Hall')) {
+    return propertyType;
+  }
+
+  // Default: append " Buildings"
+  return propertyType + ' Buildings';
+}
+
+/**
+ * Determines if a color is dark based on its luminance
+ * Returns true for dark colors (should use white text), false for light colors (use black text)
+ */
+export function isColorDark(hexColor: string): boolean {
+  // Remove # if present
+  const hex = hexColor.replace('#', '');
+
+  // Convert to RGB
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+
+  // Calculate relative luminance (perceived brightness)
+  // Using formula from https://www.w3.org/TR/WCAG20/#relativeluminancedef
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // If luminance is less than 0.5, it's a dark color
+  return luminance < 0.5;
+}
+
+/** Common stats for groups of buildings, like for ward pages & owner pages */
+export type BuildingsStats = {
+  buildingsWithYear: number;
+  totalGHGEmissions: number;
+  totalGHGIntensity: number;
+  avgGHGIntensity: number;
+  totalSquareFootage: number;
+  avgYearBuilt: number;
+  gradeDistribution: Record<string, number>;
+};
+
+/**
+ * Calculate statistics for a group of buildings based off of a
+ * filter, primarily for the stats pages for buildings grouped
+ * by building owners or based off of ward.
+ */
+export function calculateBuildingsStats(
+  buildings: Array<IBuildingEdge>,
+): BuildingsStats {
+  let stats: BuildingsStats = {
+    buildingsWithYear: 0,
+    totalGHGEmissions: 0,
+    totalGHGIntensity: 0,
+    avgGHGIntensity: 0,
+    totalSquareFootage: 0,
+    avgYearBuilt: 0,
+    gradeDistribution: {
+      A: 0,
+      B: 0,
+      C: 0,
+      D: 0,
+      F: 0,
+    },
+  };
+
+  buildings.forEach((node: IBuildingEdge) => {
+    const building: IBuilding = node.node;
+
+    stats.totalGHGIntensity += building.GHGIntensity;
+    stats.totalGHGEmissions += building.TotalGHGEmissions;
+    stats.totalSquareFootage += building.GrossFloorArea || 0;
+
+    // Calculate average building age
+    if (building.YearBuilt) {
+      const yearBuilt = parseInt(building.YearBuilt.toString(), 10);
+      if (
+        !isNaN(yearBuilt) &&
+        yearBuilt > 1800 &&
+        yearBuilt <= new Date().getFullYear()
+      ) {
+        stats.avgYearBuilt += yearBuilt;
+        stats.buildingsWithYear++;
+      }
+    }
+
+    // Count grade distribution
+    const grade = building.AvgPercentileLetterGrade;
+    if (
+      grade &&
+      typeof grade === 'string' &&
+      grade in stats.gradeDistribution
+    ) {
+      stats.gradeDistribution[grade]++;
+    }
+  });
+
+  stats.avgGHGIntensity = stats.totalGHGIntensity / buildings.length;
+  stats.avgYearBuilt /= stats.buildingsWithYear;
+
+  return stats;
 }
 </script>

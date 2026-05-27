@@ -101,6 +101,31 @@
           </div>
         </div>
       </div>
+
+      <div class="test-pages">
+        <h2>Test Page Social Cards</h2>
+
+        <div class="card-grid">
+          <div
+            v-for="pageConfig in pageConfigs"
+            :key="pageConfig.id"
+            class="test-card"
+          >
+            <h3>{{ pageConfig.title }}</h3>
+            <p><strong>ID:</strong> {{ pageConfig.id }}</p>
+            <p>{{ pageConfig.description }}</p>
+            <div class="links">
+              <a
+                :href="`/page-social-card/${pageConfig.id}`"
+                target="_blank"
+                class="grey-link"
+              >
+                View Social Card
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </DefaultLayout>
 </template>
@@ -108,9 +133,20 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+import {
+  pageSocialConfigs,
+  type IPageSocialConfig,
+} from '../constants/page-social-images/page-social-configs.vue';
+
 /**
  * TODO: Add this to footer in local dev
  */
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   metaInfo() {
     return {
@@ -121,7 +157,12 @@ import { Component, Vue } from 'vue-property-decorator';
     };
   },
 })
-export default class SocialCards extends Vue {}
+export default class SocialCards extends Vue {
+  /** Get all page social configurations for the template */
+  get pageConfigs(): IPageSocialConfig[] {
+    return Object.values(pageSocialConfigs);
+  }
+}
 </script>
 
 <style lang="scss" scoped>
@@ -137,6 +178,10 @@ export default class SocialCards extends Vue {}
   border: $border-thin solid $grey-dark;
   border-radius: 1rem;
   padding: 1.5rem;
+
+  h3 {
+    margin-top: 0;
+  }
 }
 
 .links {

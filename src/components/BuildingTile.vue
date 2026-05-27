@@ -217,6 +217,7 @@ export default class BuildingTile extends Vue {
     .stats {
       display: flex;
       justify-content: space-between;
+      margin-top: 0.5rem;
     }
 
     dl {
