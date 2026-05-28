@@ -257,6 +257,12 @@ interface UploadResult {
   regenSocialImgCmd?: string;
 }
 
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   metaInfo() {
     return {
@@ -544,7 +550,7 @@ export default class BuildingImageUploader extends Vue {
     }
   }
 
-  input[type="file"] {
+  input[type='file'] {
     background-color: $grey;
   }
 
@@ -578,7 +584,9 @@ export default class BuildingImageUploader extends Vue {
     flex-wrap: wrap;
     gap: 1rem 0.5rem;
 
-    p { margin: 0; }
+    p {
+      margin: 0;
+    }
   }
 }
 
