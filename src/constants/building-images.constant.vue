@@ -404,6 +404,7 @@ export const BuildingImages: IBuildingImages = {
   },
   '100856': {
     imgUrl: BuildingImagesBase + 'ID-100856-united-center.webp',
+    attributionUrl: 'https://commons.wikimedia.org/wiki/File:United_Center_1.jpg',
   },
   '103595': {
     imgUrl: BuildingImagesBase + 'ID-103595-141_West_Jackson_Boulevard.webp',
