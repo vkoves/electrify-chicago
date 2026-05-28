@@ -54,6 +54,23 @@ async function cleanupExistingImages(): Promise<void> {
 }
 
 /**
+ * Remove the social images for a specific list of building IDs so they
+ * will be regenerated on the next run.
+ */
+async function cleanupBuildingImages(buildingIds: string[]): Promise<void> {
+  console.log(
+    `🧹 Removing existing social images for ${buildingIds.length} building(s)...`,
+  );
+
+  for (const buildingId of buildingIds) {
+    const imagePath = getSocialImagePath(buildingId);
+    if (await fs.pathExists(imagePath)) {
+      await fs.remove(imagePath);
+    }
+  }
+}
+
+/**
  * Setup and test browser accessibility
  */
 async function setupBrowser(): Promise<Browser> {
@@ -274,7 +291,11 @@ export async function generateBuildingSocialImages(
 
   await ensureSocialImagesDirectory();
 
-  if (deleteExisting) {
+  if (reqBuildingIds && reqBuildingIds.length > 0) {
+    // For a targeted regeneration, only delete the requested buildings'
+    // images so they get re-created — leave the rest of the cache alone.
+    await cleanupBuildingImages(reqBuildingIds);
+  } else if (deleteExisting) {
     await cleanupExistingImages();
   }
 
@@ -457,7 +478,12 @@ if (require.main === module) {
   } else if (command === 'property-types') {
     generatePropertyTypeSocialImages().catch(console.error);
   } else if (command === 'buildings') {
-    generateBuildingSocialImages().catch(console.error);
+    // Any extra args after `buildings` are treated as a list of specific
+    // building IDs to regenerate (e.g. `... buildings 256419 256420`).
+    const buildingIdArgs = process.argv.slice(3);
+    generateBuildingSocialImages(
+      buildingIdArgs.length > 0 ? buildingIdArgs : null,
+    ).catch(console.error);
   } else {
     // Default to generating all images (buildings + pages + owners + property types)
     generateAllSocialImages().catch(console.error);

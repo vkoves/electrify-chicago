@@ -164,6 +164,17 @@
                   >
                   (to confirm image displays correctly)
                 </li>
+                <li>
+                  Regenerate the social image so it picks up the new photo:
+
+                  <pre><code>{{ result.regenSocialImgCmd }}</code></pre>
+                  <button
+                    class="button -small"
+                    @click="copyToClipboard(result.regenSocialImgCmd)"
+                  >
+                    Copy Command
+                  </button>
+                </li>
               </ol>
               <button
                 class="button -small"
@@ -243,6 +254,7 @@ interface UploadResult {
   dimensions?: string;
   fileSize?: string;
   codeSnippet?: string;
+  regenSocialImgCmd?: string;
 }
 
 @Component<any>({
@@ -384,6 +396,9 @@ export default class BuildingImageUploader extends Vue {
           this.form.buildingId,
           relativePath,
         ),
+        regenSocialImgCmd:
+          'docker compose run --rm electrify-chicago ' +
+          `yarn gen-social-imgs-buildings ${this.form.buildingId}`,
       };
 
       // Download the processed image
