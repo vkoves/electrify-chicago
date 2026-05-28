@@ -4,8 +4,8 @@
       <h1 id="main-content" tabindex="-1">🔧 Admin Tools</h1>
 
       <p>
-        Development-only admin interface for managing Electrify Chicago.
-        Not available in production builds.
+        Development-only admin interface for managing Electrify Chicago. Not
+        available in production builds.
       </p>
 
       <section>
@@ -84,6 +84,12 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   metaInfo() {
     return {
@@ -131,7 +137,8 @@ export default class Admin extends Vue {
     background-color: $grey-light;
   }
 
-  a, button {
+  a,
+  button {
     display: inline-block;
     margin-top: 1rem;
     font-weight: bold;

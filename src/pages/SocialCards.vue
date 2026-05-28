@@ -187,9 +187,13 @@ export default class SocialCards extends Vue {
 }
 
 .links {
-  a { display: inline-block; }
+  a {
+    display: inline-block;
+  }
 
-  a + a { margin-top: 0.5rem; }
+  a + a {
+    margin-top: 0.5rem;
+  }
 
   .grey-link {
     font-weight: bold;
