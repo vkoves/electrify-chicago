@@ -4,6 +4,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import WardLookup from '~/components/WardLookup.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
+import WardsTable from '../components/WardsTable.vue';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -16,6 +17,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
     NewTabIcon,
     WardLookup,
     BuildingsHero,
+    WardsTable,
   },
   metaInfo() {
     return generatePageMeta(
@@ -34,6 +36,54 @@ export default class Wards extends Vue {
   ];
 }
 </script>
+
+<!-- Filter to buildings with the given `ward` from the context -->
+<page-query>
+query {
+  allBuilding(
+    sortBy: "Ward", limit: 5000
+  ) {
+    edges {
+        node {
+            slugSource
+            path
+            ID
+            DataYear
+            Address
+            ChicagoEnergyRating
+            CommunityArea
+            ENERGYSTARScore
+            DistrictChilledWaterUse
+            DistrictSteamUse
+            ElectricityUse
+            GHGIntensity
+            GrossFloorArea
+            NaturalGasUse
+            NumberOfBuildings
+            PrimaryPropertyType
+            PropertyName
+            SiteEUI
+            SourceEUI
+            TotalGHGEmissions
+            YearBuilt
+            ZIPCode
+            Ward
+            GHGIntensityRank
+            GHGIntensityPercentileRank
+            TotalGHGEmissionsRank
+            TotalGHGEmissionsPercentileRank
+            NaturalGasUse
+            DistrictSteamUse
+            GrossFloorAreaRank
+            GrossFloorAreaPercentileRank
+            DataAnomalies
+            AvgPercentileGrade,
+            AvgPercentileLetterGrade,
+        }
+    }
+  }
+}
+</page-query>
 
 <!-- If this query is updated, make sure to update PageSocialCard as well -->
 <template>
@@ -64,6 +114,13 @@ export default class Wards extends Vue {
             </g-link>
           </li>
         </ol>
+
+        <h2>Ward Summary</h2>
+        <p>Aggregate energy and emissions statistics for each Chicago aldermanic ward.</p>
+        <WardsTable 
+        :buildings="$page.allBuilding.edges" 
+        :showBuildingAge="false"
+        />
       </div>
     </div>
   </DefaultLayout>
