@@ -161,6 +161,10 @@ docker compose run --rm electrify-chicago yarn gen-social-imgs
 # Generate only building social images
 docker compose run --rm electrify-chicago yarn gen-social-imgs-buildings
 
+# Regenerate building social images for a specific list of building IDs
+# (useful after uploading a new photo for a building)
+docker compose run --rm electrify-chicago yarn gen-social-imgs-buildings 256419 256420
+
 # Generate only page social images
 docker compose run --rm electrify-chicago yarn gen-social-imgs-pages
 
