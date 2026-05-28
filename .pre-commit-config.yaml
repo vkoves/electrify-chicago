@@ -1,3 +1,7 @@
+# Single source of truth for merge-gating checks. Runs locally on
+# `git commit` (after `pre-commit install`) and in CI via the
+# `Run pre-commit hooks` step in .github/workflows/linting.yml.
+
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
@@ -42,7 +46,7 @@ repos:
         files: "pyproject.toml|uv.lock"
       - id: typescript-format
         name: typescript-format
-        files: '\\.(js|jsx|ts|tsx|vue|css|scss|json|md)$'
+        files: "\\.(js|jsx|ts|tsx|vue|css|scss|json|md)$"
         types: [file]
         exclude: "(node_modules/.*|dist/.*|build/.*|\\.gridsome/.*|static/.*)$"
         entry: yarn prettier-fix
@@ -50,7 +54,7 @@ repos:
         pass_filenames: false
       - id: typescript-lint
         name: typescript-lint
-        files: '\\.(js|jsx|ts|tsx|vue|css|scss)$'
+        files: "\\.(js|jsx|ts|tsx|vue|css|scss)$"
         exclude: "(node_modules/.*|dist/.*|build/.*|\\.gridsome/.*|static/.*)$"
         types: [file]
         entry: yarn lint
@@ -59,7 +63,7 @@ repos:
         pass_filenames: false
       - id: typescript-typecheck
         name: typescript-typecheck
-        files: '\\.(ts|tsx|vue)$|tsconfig.*\\.json$|package\\.json$'
+        files: "\\.(ts|tsx|vue)$|tsconfig.*\\.json$|package\\.json$"
         types: [file]
         entry: npx tsc --noEmit
         require_serial: true
