@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { IBuilding } from '../common-functions.vue';
+import ExportButton from '../components/ExportButton.vue';
 
 /** Aggregated statistics for a single ward */
 interface IWardStats {
@@ -12,7 +13,7 @@ interface IWardStats {
   avgBuildingAge: number | null;
 }
 
-@Component({})
+@Component({ components: { ExportButton } })
 export default class WardsTable extends Vue {
   @Prop({ required: true }) buildings!: Array<{ node: IBuilding }>;
 
@@ -89,6 +90,29 @@ export default class WardsTable extends Vue {
     return this.sortStats(stats);
   }
 
+  /** Rows formatted for ExportButton: header row + one data row per ward 
+   * TODO: Fix data for buildings missing build year
+  */
+  get exportRows(): (string | number | null)[][] {
+    const header = [
+      'Ward',
+      'Buildings',
+      'Total GHG Emissions (tons CO2 eq.)',
+      'Avg GHG Intensity (kg CO2 eq./sqft)',
+      'Total Square Footage (sqft)',
+      //'Avg Building Age (years)',
+    ];
+    const rows = this.wardStats.map((s) => [
+      s.ward,
+      s.buildingCount,
+      s.totalGHGEmissions,
+      s.avgGHGIntensity,
+      s.totalSquareFootage,
+      //s.avgBuildingAge,
+    ]);
+    return [header, ...rows];
+  }
+
   sortStats(stats: IWardStats[]): IWardStats[] {
     return [...stats].sort((a, b) => {
       const aVal = a[this.sortedField];
@@ -114,6 +138,9 @@ export default class WardsTable extends Vue {
 
 <template>
   <div class="wards-table-cont">
+    <!-- Export button -->
+    <ExportButton filename="ward-summary" :rows="exportRows" :show-text="true" />
+
     <table
         :class="{
         '-wide':
