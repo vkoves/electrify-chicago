@@ -145,15 +145,7 @@ export default class WardsTable extends Vue {
       :show-text="true"
     />
 
-    <table
-      :class="{
-        '-wide':
-          showSquareFootage ||
-          showGasUse ||
-          showElectricityUse ||
-          showBuildingAge,
-      }"
-    >
+    <table>
       <thead>
         <tr>
           <th scope="col">Ward</th>
