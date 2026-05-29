@@ -116,10 +116,13 @@ query {
         </ol>
 
         <h2>Ward Summary</h2>
-        <p>Aggregate energy and emissions statistics for each Chicago aldermanic ward.</p>
-        <WardsTable 
-        :buildings="$page.allBuilding.edges" 
-        :showBuildingAge="false"
+        <p>
+          Aggregate energy and emissions statistics for each Chicago aldermanic
+          ward.
+        </p>
+        <WardsTable
+          :buildings="$page.allBuilding.edges"
+          :show-building-age="false"
         />
       </div>
     </div>

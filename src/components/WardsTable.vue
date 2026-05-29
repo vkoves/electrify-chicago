@@ -90,9 +90,9 @@ export default class WardsTable extends Vue {
     return this.sortStats(stats);
   }
 
-  /** Rows formatted for ExportButton: header row + one data row per ward 
+  /** Rows formatted for ExportButton: header row + one data row per ward
    * TODO: Fix data for buildings missing build year
-  */
+   */
   get exportRows(): (string | number | null)[][] {
     const header = [
       'Ward',
@@ -139,10 +139,14 @@ export default class WardsTable extends Vue {
 <template>
   <div class="wards-table-cont">
     <!-- Export button -->
-    <ExportButton filename="ward-summary" :rows="exportRows" :show-text="true" />
+    <ExportButton
+      filename="ward-summary"
+      :rows="exportRows"
+      :show-text="true"
+    />
 
     <table
-        :class="{
+      :class="{
         '-wide':
           showSquareFootage ||
           showGasUse ||
@@ -155,17 +159,21 @@ export default class WardsTable extends Vue {
           <th scope="col">Ward</th>
           <!-- TODO: Add Click handlers on numeric columns for sorting -->
           <th scope="col">Buildings</th>
-          <th scope="col"> Total GHG Emissions<br />
+          <th scope="col">
+            Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
           </th>
-          <th scope="col">Avg GHG Intensity<br />
+          <th scope="col">
+            Avg GHG Intensity<br />
             <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
           </th>
-          <th scope="col">Total Square Footage<br />
+          <th scope="col">
+            Total Square Footage<br />
             <span class="unit">(sqft)</span>
           </th>
           <!-- TODO: Need to add method to handle invalid or null YearBuilt value-->
-          <th v-if="showBuildingAge" scope="col">Avg Building Age<br />
+          <th v-if="showBuildingAge" scope="col">
+            Avg Building Age<br />
             <span class="unit">(years)</span>
           </th>
         </tr>

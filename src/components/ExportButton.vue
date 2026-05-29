@@ -6,7 +6,7 @@
       @click="handleExport"
     >
       <span v-if="showText">Export</span>
-      <img src="/icons/export.svg" alt="Export"/>
+      <img src="/icons/export.svg" alt="Export" />
     </button>
   </div>
 </template>
@@ -61,7 +61,9 @@ export default class ExportButton extends Vue {
     if (link.download !== undefined) {
       const url = URL.createObjectURL(blob);
       link.setAttribute('href', url);
-      const filename = this.filename.endsWith('.csv') ? this.filename : `${this.filename}.csv`;
+      const filename = this.filename.endsWith('.csv')
+        ? this.filename
+        : `${this.filename}.csv`;
       link.setAttribute('download', filename);
       link.style.visibility = 'hidden';
       document.body.appendChild(link);
