@@ -51,9 +51,11 @@ export default class WardsTable extends Vue {
       ([wardStr, buildings]) => {
         const ward = Number(wardStr);
 
-        const buildingCount = buildings.length
-        const compliantCount = buildings.filter((b) => b.DataYear == 2023).length
-        const complianceRate = (compliantCount / buildingCount) * 100
+        const buildingCount = buildings.length;
+        const compliantCount = buildings.filter(
+          (b) => b.DataYear == 2023,
+        ).length;
+        const complianceRate = (compliantCount / buildingCount) * 100;
 
         const totalGHGEmissions = buildings.reduce(
           (sum, b) => sum + (b.TotalGHGEmissions || 0),
@@ -185,7 +187,9 @@ export default class WardsTable extends Vue {
             <g-link :to="`/ward/${stats.ward}`">Ward {{ stats.ward }}</g-link>
           </td>
           <td class="numeric">{{ formatNumber(stats.complianceRate, 1) }}%</td>
-          <td class="numeric">{{ stats.compliantCount }}/{{ stats.buildingCount }}</td>
+          <td class="numeric">
+            {{ stats.compliantCount }}/{{ stats.buildingCount }}
+          </td>
           <td class="numeric">{{ formatNumber(stats.totalGHGEmissions) }}</td>
           <td class="numeric">{{ formatNumber(stats.avgGHGIntensity, 2) }}</td>
           <td class="numeric">{{ formatNumber(stats.totalSquareFootage) }}</td>
