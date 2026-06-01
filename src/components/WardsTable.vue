@@ -7,6 +7,8 @@ import ExportButton from '../components/ExportButton.vue';
 interface IWardStats {
   ward: number;
   buildingCount: number;
+  compliantCount: number;
+  complianceRate: number;
   totalGHGEmissions: number;
   avgGHGIntensity: number;
   totalSquareFootage: number;
@@ -49,6 +51,10 @@ export default class WardsTable extends Vue {
       ([wardStr, buildings]) => {
         const ward = Number(wardStr);
 
+        const buildingCount = buildings.length
+        const compliantCount = buildings.filter((b) => b.DataYear == 2023).length
+        const complianceRate = (compliantCount / buildingCount) * 100
+
         const totalGHGEmissions = buildings.reduce(
           (sum, b) => sum + (b.TotalGHGEmissions || 0),
           0,
@@ -78,7 +84,9 @@ export default class WardsTable extends Vue {
 
         return {
           ward,
-          buildingCount: buildings.length,
+          buildingCount,
+          compliantCount,
+          complianceRate,
           totalGHGEmissions,
           avgGHGIntensity,
           totalSquareFootage,
@@ -96,7 +104,7 @@ export default class WardsTable extends Vue {
   get exportRows(): (string | number | null)[][] {
     const header = [
       'Ward',
-      'Buildings',
+      'Compliance Rate',
       'Total GHG Emissions (tons CO2 eq.)',
       'Avg GHG Intensity (kg CO2 eq./sqft)',
       'Total Square Footage (sqft)',
@@ -104,7 +112,7 @@ export default class WardsTable extends Vue {
     ];
     const rows = this.wardStats.map((s) => [
       s.ward,
-      s.buildingCount,
+      s.complianceRate,
       s.totalGHGEmissions,
       s.avgGHGIntensity,
       s.totalSquareFootage,
@@ -150,7 +158,8 @@ export default class WardsTable extends Vue {
         <tr>
           <th scope="col">Ward</th>
           <!-- TODO: Add Click handlers on numeric columns for sorting -->
-          <th scope="col">Buildings</th>
+          <th scope="col">Compliance Rate</th>
+          <th scope="col">Total Compliant Buildings</th>
           <th scope="col">
             Total GHG Emissions<br />
             <span class="unit">(tons CO<sub>2</sub> eq.)</span>
@@ -175,7 +184,8 @@ export default class WardsTable extends Vue {
           <td class="ward-col">
             <g-link :to="`/ward/${stats.ward}`">Ward {{ stats.ward }}</g-link>
           </td>
-          <td class="numeric">{{ formatNumber(stats.buildingCount) }}</td>
+          <td class="numeric">{{ formatNumber(stats.complianceRate, 1) }}%</td>
+          <td class="numeric">{{ stats.compliantCount }}/{{ stats.buildingCount }}</td>
           <td class="numeric">{{ formatNumber(stats.totalGHGEmissions) }}</td>
           <td class="numeric">{{ formatNumber(stats.avgGHGIntensity, 2) }}</td>
           <td class="numeric">{{ formatNumber(stats.totalSquareFootage) }}</td>
