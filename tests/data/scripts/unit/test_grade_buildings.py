@@ -7,6 +7,7 @@ from src.data.scripts.grade_buildings import (
     generate_percentile_grade,
     generate_energymix_grade,
     generate_consistent_reporting_grade,
+    calculate_building_submission_rate,
     calculate_weighted_average,
     grade_ghg_intensity_energy_mix_all_years,
     grade_buildings,
@@ -140,6 +141,86 @@ def test_generate_consistent_reporting_grade():
     )
     assert id3_row["SubmittedRecordsLetterGrade"].values[0] in letter_grades
     assert id3_row["MissingRecordsCount"].values[0] == 2
+
+
+# Test calculate_building_submission_rate function
+def test_calculate_building_submission_rate_counts_missing_rows():
+    """
+    Regression test for #288: buildings that stop reporting have no row at all for
+    the missing years (rather than a "Not Submitted" row), so the expected total must
+    be derived from the building's first year through the latest year in the dataset.
+    """
+    test_data = pd.DataFrame(
+        {
+            "ID": [1, 1, 1, 1, 2, 2, 3],
+            "DataYear": [
+                # Building 1: present and submitted every year (2019-2022)
+                2019,
+                2020,
+                2021,
+                2022,
+                # Building 2: appeared in 2019, then stopped reporting (no rows for
+                # 2021 and 2022, which should still count as missing)
+                2019,
+                2020,
+                # Building 3: only appears in 2022, so only one expected year
+                2022,
+            ],
+            "ReportingStatus": [
+                "Submitted",
+                "Submitted",
+                "Submitted",
+                "Submitted",
+                "Submitted",
+                "Submitted",
+                "Submitted",
+            ],
+        }
+    )
+
+    result = calculate_building_submission_rate(test_data)
+    result = result.set_index("ID")
+
+    # Building 1: submitted all 4 years -> 100%, nothing missing
+    assert result.loc[1, "submission_rate"] == pytest.approx(100.0)
+    assert result.loc[1, "not_submitted_count"] == 0
+
+    # Building 2: expected 2019-2022 (4 years), submitted 2, missing 2 rows entirely
+    assert result.loc[2, "submission_rate"] == pytest.approx(50.0)
+    assert result.loc[2, "not_submitted_count"] == 2
+
+    # Building 3: first appeared in the latest year, so only 1 expected year
+    assert result.loc[3, "submission_rate"] == pytest.approx(100.0)
+    assert result.loc[3, "not_submitted_count"] == 0
+
+
+def test_calculate_building_submission_rate_mixes_not_submitted_and_missing_rows():
+    """
+    A building can have both explicit "Not Submitted" rows and years with no row at
+    all; both should be counted toward the missing total.
+    """
+    test_data = pd.DataFrame(
+        {
+            "ID": [1, 1, 1, 2],
+            # Building 2's row establishes the latest dataset year (2022). Building 1's
+            # expected span is then 2019-2022 (4 years) even though it has only 3 rows
+            # and no row at all for 2022.
+            "DataYear": [2019, 2020, 2021, 2022],
+            "ReportingStatus": [
+                "Submitted",
+                "Not Submitted",
+                "Submitted",
+                "Submitted",
+            ],
+        }
+    )
+
+    result = calculate_building_submission_rate(test_data).set_index("ID")
+
+    # 4 expected years, 2 submitted (2019, 2021), 1 explicit "Not Submitted" (2020),
+    # and 1 missing row entirely (2022) -> 2 submitted / 4 expected = 50%
+    assert result.loc[1, "submission_rate"] == pytest.approx(50.0)
+    assert result.loc[1, "not_submitted_count"] == 2
 
 
 # Test calculate_weighted_average function
