@@ -37,6 +37,12 @@ export default class PieChart extends Vue {
   /** Whether this is a small chart (scales up text for readability) */
   @Prop({ default: false }) small!: boolean;
 
+  /**
+   * Render labels in white instead of black for use on dark backgrounds
+   * (e.g. embedded in the social share square).
+   */
+  @Prop({ default: false }) lightText!: boolean;
+
   @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
@@ -182,7 +188,7 @@ export default class PieChart extends Vue {
             return isColorDark(d.data.color) ? 'white' : 'black';
           }
 
-          return 'black';
+          return this.lightText ? 'white' : 'black';
         });
     }
   }

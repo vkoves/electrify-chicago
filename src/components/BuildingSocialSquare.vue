@@ -1,6 +1,6 @@
 <template>
   <div class="building-social-square" :data-slide="slideNumber">
-    <div class="brand panel">
+    <div class="brand soc-panel">
       <img src="/electrify-chicago-logo.svg" alt="Electrify Chicago" />
     </div>
 
@@ -17,7 +17,7 @@
 
     <!-- Slide 1: Title / building intro -->
     <div v-if="slideNumber === 1" class="slide -title">
-      <div class="panel" :class="{ '-with-photo': buildingImage }">
+      <div class="soc-panel" :class="{ '-with-photo': buildingImage }">
         <h1>{{ propertyName }}</h1>
         <p class="address">
           {{ building.Address }}, Chicago IL {{ building.ZIPCode }}
@@ -43,31 +43,36 @@
       </div>
     </div>
 
-    <!-- Slide 2: GHG emissions -->
-    <div v-else-if="slideNumber === 2" class="slide -emissions">
-      <div class="panel">
-        <h2>Total Greenhouse Gas Emissions</h2>
-        <div class="big-stat">
-          {{ formattedEmissions }}
-          <span class="unit">tons CO<sub>2</sub>e</span>
+    <!-- Slide 2: Report card -->
+    <div v-else-if="slideNumber === 2" class="slide -report">
+      <div class="soc-panel">
+        <h2>{{ propertyName }}</h2>
+        <p class="caption">{{ dataYear }} Report Card</p>
+        <div class="report-card-wrapper">
+          <ReportCard :building="building" :data-year="dataYear" />
         </div>
-        <p class="caption">{{ propertyName }}</p>
       </div>
     </div>
 
-    <!-- Slide 3: Energy mix placeholder -->
+    <!-- Slide 3: Energy mix pie chart -->
     <div v-else-if="slideNumber === 3" class="slide -energy">
-      <div class="panel">
+      <div class="soc-panel">
         <h2>Energy Mix</h2>
-        <p class="caption">
-          Energy breakdown for {{ propertyName }} goes here.
-        </p>
+        <p class="caption">{{ propertyName }} &middot; {{ dataYear }}</p>
+        <div class="pie-wrapper">
+          <PieChart
+            id-prefix="social-square-energy-mix"
+            :graph-data="energyBreakdown"
+            :sort-by-largest="false"
+            :light-text="true"
+          />
+        </div>
       </div>
     </div>
 
     <!-- Slide 4: Call to action -->
     <div v-else-if="slideNumber === 4" class="slide -cta">
-      <div class="panel">
+      <div class="soc-panel">
         <h2>See the full report</h2>
         <p class="url">electrifychicago.net{{ building.path }}</p>
       </div>
@@ -75,7 +80,7 @@
 
     <!-- Fallback for unknown slide numbers -->
     <div v-else class="slide -fallback">
-      <div class="panel">
+      <div class="soc-panel">
         <p>Slide {{ slideNumber }} not yet defined</p>
       </div>
     </div>
@@ -84,18 +89,29 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { IBuilding, IBuildingBenchmarkStats } from '../common-functions.vue';
+import {
+  calculateEnergyBreakdown,
+  IBuilding,
+  IBuildingBenchmarkStats,
+} from '../common-functions.vue';
 import {
   getBuildingImage,
   IBuildingImage,
 } from '../constants/building-images.constant.vue';
+import PieChart, { IPieSlice } from './graphs/PieChart.vue';
+import ReportCard from './ReportCard.vue';
 
 /**
  * A 1080x1080 square rendering of a building's stats, intended for export
  * as an Instagram-ready image. Different slides are rendered based on the
  * `slideNumber` prop so the parent can step through the deck.
  */
-@Component
+@Component({
+  components: {
+    PieChart,
+    ReportCard,
+  },
+})
 export default class BuildingSocialSquare extends Vue {
   /** Total number of slides available in the deck */
   static readonly SlideCount = 4;
@@ -127,6 +143,14 @@ export default class BuildingSocialSquare extends Vue {
   get buildingImage(): IBuildingImage | null {
     return getBuildingImage(this.building);
   }
+
+  get dataYear(): number {
+    return this.building.DataYear as number;
+  }
+
+  get energyBreakdown(): Array<IPieSlice> {
+    return calculateEnergyBreakdown(this.building).energyBreakdown;
+  }
 }
 </script>
 
@@ -157,7 +181,7 @@ export default class BuildingSocialSquare extends Vue {
   // Semi-transparent black panel for readable text content. A real
   // backdrop-filter blur isn't reliably captured by html-to-image during
   // export, so we use a solid translucent fill instead.
-  .panel {
+  .soc-panel {
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 0.5rem;
     padding: 2rem 2.5rem;
@@ -184,10 +208,10 @@ export default class BuildingSocialSquare extends Vue {
     gap: 2rem;
   }
 
-  // Logo chip overrides the shared .panel styling: pinned to the top-left
+  // Logo chip overrides the shared .soc-panel styling: pinned to the top-left
   // corner of the square with a white background and only the bottom-right
   // corner rounded so it visually anchors into the corner.
-  .brand.panel {
+  .brand.soc-panel {
     position: absolute;
     top: 0;
     left: 0;
@@ -262,6 +286,48 @@ export default class BuildingSocialSquare extends Vue {
     }
   }
 
+  // Centered wrapper for the embedded ReportCard on slide 2. The card is
+  // designed for ~18rem desktop columns, so we scale it up here for the
+  // larger square canvas and center it horizontally.
+  .report-card-wrapper {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+
+    .report-card-cont {
+      width: 32rem;
+      max-width: 100%;
+      font-size: 1.5rem;
+    }
+
+    // ReportCard normally inherits its background from the page; on the
+    // dark social-square panel we need to supply one.
+    .report-card {
+      background-color: $white;
+      color: $text-main;
+    }
+
+    // The "Learn About Our Grading" link is page UI, not relevant in the
+    // exported share image.
+    .learn-more-cont {
+      display: none;
+    }
+  }
+
+  // Centered wrapper for the embedded PieChart on slide 3. The chart renders
+  // its own SVG with fixed internal dimensions; we just give it room.
+  .pie-wrapper {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .pie-chart-cont {
+      width: 100%;
+      max-width: 36rem;
+    }
+  }
+
   .grade-block {
     margin-top: 2rem;
     display: flex;
@@ -310,7 +376,7 @@ export default class BuildingSocialSquare extends Vue {
   .slide.-fallback {
     align-items: center;
 
-    .panel {
+    .soc-panel {
       opacity: 0.75;
     }
   }
