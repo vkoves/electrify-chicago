@@ -19,6 +19,9 @@
     <div v-if="slideNumber === 1" class="slide -title">
       <div class="soc-panel" :class="{ '-with-photo': buildingImage }">
         <h1>{{ propertyName }}</h1>
+        <div v-if="building.PrimaryPropertyType">
+          <h2>{{ building.PrimaryPropertyType }}</h2>
+        </div>
         <p class="address">
           {{ building.Address }}, Chicago IL {{ building.ZIPCode }}
         </p>
@@ -47,7 +50,6 @@
     <div v-else-if="slideNumber === 2" class="slide -report">
       <div class="soc-panel">
         <h2>{{ propertyName }}</h2>
-        <p class="caption">{{ dataYear }} Report Card</p>
         <div class="report-card-wrapper">
           <ReportCard :building="building" :data-year="dataYear" />
         </div>
@@ -191,7 +193,7 @@ export default class BuildingSocialSquare extends Vue {
     // When the building photo is overlaid on the left of the panel, push
     // panel content to the right so it doesn't sit behind the image.
     &.-with-photo {
-      padding-left: 33rem;
+      padding-left: 28rem;
     }
   }
 
@@ -229,14 +231,14 @@ export default class BuildingSocialSquare extends Vue {
     }
   }
 
-  h1 {
-    font-size: 5rem;
+  .slide h1 {
+    font-size: 4rem;
     line-height: 1.1;
     margin: 0;
   }
 
-  h2 {
-    font-size: 3.5rem;
+  .slide h2 {
+    font-size: 2.5rem;
     margin: 0;
   }
 
@@ -254,7 +256,7 @@ export default class BuildingSocialSquare extends Vue {
     position: absolute;
     top: 18rem;
     left: 0;
-    width: 34rem;
+    width: 30rem;
     height: 24rem;
     object-fit: cover;
     border-radius: 0 0.5rem 0.5rem 0;
@@ -286,24 +288,21 @@ export default class BuildingSocialSquare extends Vue {
     }
   }
 
-  // Centered wrapper for the embedded ReportCard on slide 2. The card is
-  // designed for ~18rem desktop columns, so we scale it up here for the
-  // larger square canvas and center it horizontally.
+  // Centered wrapper for the embedded ReportCard on slide 2. ReportCard
+  // exposes `--rc-base-font-size`; bumping it 2x scales every internal
+  // font-size and padding without breaking layout.
   .report-card-wrapper {
     margin-top: 1.5rem;
     display: flex;
     justify-content: center;
 
     .report-card-cont {
-      width: 32rem;
+      --rc-base-font-size: 2rem;
+      width: 50rem;
       max-width: 100%;
-      font-size: 1.5rem;
     }
 
-    // ReportCard normally inherits its background from the page; on the
-    // dark social-square panel we need to supply one.
     .report-card {
-      background-color: $white;
       color: $text-main;
     }
 
