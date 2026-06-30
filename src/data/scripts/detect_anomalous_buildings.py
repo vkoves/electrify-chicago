@@ -240,7 +240,7 @@ def main() -> None:
     outputted_paths = []
     outputted_paths += detect_anomalous_buildings()
 
-    log_step_completion(4, outputted_paths)
+    log_step_completion(5, outputted_paths)
 
 
 if __name__ == "__main__":

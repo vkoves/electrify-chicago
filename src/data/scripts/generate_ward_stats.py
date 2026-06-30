@@ -99,7 +99,7 @@ def main() -> None:
     # Output to CSV
     output_to_csv(ward_stats, ward_stats_file_path)
 
-    log_step_completion(4, [ward_stats_file_path])
+    log_step_completion(8, [ward_stats_file_path])
 
 
 if __name__ == "__main__":
