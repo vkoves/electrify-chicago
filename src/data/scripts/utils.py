@@ -250,6 +250,7 @@ def apply_verified_coordinates(
 
     return building_data
 
+
 def correct_building_locations(
     building_data: pd.DataFrame, geojson_path: str
 ) -> pd.DataFrame:

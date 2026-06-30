@@ -16,15 +16,13 @@ out_dir = "dist"
 input_benchmark_data_csv_path = get_data_file_path(out_dir, "building-benchmarks.csv")
 
 # Output file paths
-ward_stats_file_path = get_data_file_path(
-    out_dir, "ward-stats.csv"
-)
+ward_stats_file_path = get_data_file_path(out_dir, "ward-stats.csv")
+
 
 def calculate_compliant_buildings(
     building_data: pd.DataFrame,
     latest_year: int,
 ) -> pd.Series:
-    
     compliant_counts = (
         building_data[building_data["DataYear"] == latest_year]
         .groupby("Ward")
@@ -33,24 +31,24 @@ def calculate_compliant_buildings(
     )
 
     return compliant_counts
-    
+
+
 def calculate_avg_building_age(
     building_data: pd.DataFrame,
     latest_year: int,
 ) -> pd.Series:
-    
     age_df = building_data.dropna(subset=["YearBuilt"]).copy()
     age_df["age"] = latest_year - age_df["YearBuilt"]
     avg_age = age_df.groupby("Ward")["age"].mean().rename("Avg Building Age (years)")
 
     return avg_age
 
+
 def compile_ward_stats(
     building_data: pd.DataFrame,
     compliant_counts: pd.Series,
     avg_age: pd.Series,
 ) -> pd.DataFrame:
-    
     ward_stats = building_data.groupby("Ward").agg(
         **{
             "Total Buildings": ("Ward", "size"),
@@ -79,11 +77,11 @@ def compile_ward_stats(
         ]
     ]
 
+
 ###
 ### Main
 ###
 def main() -> None:
-
     building_data = pd.read_csv(input_benchmark_data_csv_path)
 
     # find the latest year
@@ -99,6 +97,7 @@ def main() -> None:
     output_to_csv(ward_stats, ward_stats_file_path)
 
     log_step_completion(4, [ward_stats_file_path])
+
 
 if __name__ == "__main__":
     main()
