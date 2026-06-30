@@ -1468,13 +1468,6 @@ export default class BuildingDetails extends Vue {
     }
   }
 
-  @media not print {
-    // Hide print only content, like duplicate title text
-    .print-only {
-      display: none;
-    }
-  }
-
   /** Print Styling - hides interactive elements and simplifies layout */
   @media print {
     // Prevent removing backgrounds from warning panels and top info

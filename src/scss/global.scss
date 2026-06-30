@@ -989,6 +989,13 @@ button.action-btn {
   }
 }
 
+@media not print {
+  // Hide print only content, like duplicate title text
+  .print-only {
+    display: none;
+  }
+}
+
 /**
  * Print Styling - hides interactive elements and simplifies layout.
  *

@@ -627,6 +627,10 @@ export default class BuildingsMap extends Vue {
       font-weight: bold;
       font-size: 1.25rem;
     }
+
+    @media print {
+      display: none;
+    }
   }
 
   form {

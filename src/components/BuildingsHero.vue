@@ -163,6 +163,11 @@ export default class BuildingsHero extends Vue {
       margin: 0;
       font-size: 1.75rem;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+      @media print {
+        color: black;
+        text-shadow: none;
+      }
     }
   }
 
@@ -207,11 +212,11 @@ export default class BuildingsHero extends Vue {
 
       // On very small mobile, only show first 4 images
       .hero-image:not(
-          :nth-child(1),
-          :nth-child(2),
-          :nth-child(3),
-          :nth-child(4)
-        ) {
+        :nth-child(1),
+        :nth-child(2),
+        :nth-child(3),
+        :nth-child(4)
+      ) {
         display: none;
       }
     }
@@ -227,6 +232,17 @@ export default class BuildingsHero extends Vue {
       h2 {
         font-size: 1.25rem;
       }
+    }
+  }
+
+  // Print adjustments
+  @media print {
+    .hero-images {
+      display: none;
+    }
+
+    .hero-overlay {
+      position: relative;
     }
   }
 }

@@ -249,10 +249,7 @@ export default class BiggestBuildings extends Vue {
           </div>
         </section>
 
-        <section
-          v-if="gradeDistributionPie.length > 0"
-          class="grade-distribution"
-        >
+        <div v-if="gradeDistributionPie.length > 0" class="grade-distribution">
           <div class="grade-content">
             <div class="grade-chart-container">
               <h3>Grade Distribution</h3>
@@ -282,7 +279,7 @@ export default class BiggestBuildings extends Vue {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         <h2>{{ currOwner.name }} Buildings List</h2>
 
