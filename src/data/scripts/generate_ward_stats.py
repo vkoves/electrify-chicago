@@ -21,14 +21,21 @@ input_benchmark_data_csv_path = get_data_file_path(out_dir, "building-benchmarks
 ward_stats_file_path = get_data_file_path(out_dir, "ward-stats.csv")
 
 
+def get_latest_year(
+    building_data: pd.DataFrame,
+) -> int:
+    valid_years = building_data["DataYear"].dropna()
+    if valid_years.empty:
+        raise ValueError("No valid DataYear values found in building data")
+    return int(valid_years.max())
+
+
 def calculate_compliant_buildings(
     building_data: pd.DataFrame,
     latest_year: int,
 ) -> pd.Series:
     compliant_counts = (
-        building_data[building_data["DataYear"] == latest_year]
-        .groupby("Ward")
-        .size()
+        building_data[building_data["DataYear"] == latest_year].groupby("Ward").size()
     )
     compliant_counts.name = "Compliant Buildings"
 
@@ -68,17 +75,20 @@ def compile_ward_stats(
 
     ward_stats = cast(pd.DataFrame, ward_stats.reindex(range(1, 51))).reset_index()
 
-    return cast(pd.DataFrame, ward_stats[
-        [
-            "Ward",
-            "Compliant Buildings",
-            "Total Buildings",
-            "Total GHG Emissions (tons CO2 eq.)",
-            "Avg GHG Intensity (kg CO2 eq./sqft)",
-            "Total Square Footage",
-            "Avg Building Age (years)",
-        ]
-    ])
+    return cast(
+        pd.DataFrame,
+        ward_stats[
+            [
+                "Ward",
+                "Compliant Buildings",
+                "Total Buildings",
+                "Total GHG Emissions (tons CO2 eq.)",
+                "Avg GHG Intensity (kg CO2 eq./sqft)",
+                "Total Square Footage",
+                "Avg Building Age (years)",
+            ]
+        ],
+    )
 
 
 ###
@@ -88,7 +98,7 @@ def main() -> None:
     building_data = pd.read_csv(input_benchmark_data_csv_path)
 
     # find the latest year
-    latest_year = int(building_data["DataYear"].max())
+    latest_year = get_latest_year(building_data)
 
     compliant_counts = calculate_compliant_buildings(building_data, latest_year)
 
