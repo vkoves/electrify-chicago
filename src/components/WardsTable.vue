@@ -1,108 +1,38 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import { IBuilding } from '../common-functions.vue';
 import ExportButton from '../components/ExportButton.vue';
 
-/** Aggregated statistics for a single ward */
 interface IWardStats {
-  ward: number;
-  buildingCount: number;
-  compliantCount: number;
-  complianceRate: number;
-  totalGHGEmissions: number;
-  avgGHGIntensity: number;
-  totalSquareFootage: number;
-  avgBuildingAge: number | null;
+  Ward: number;
+  CompliantBuildings: number;
+  TotalBuildings: number;
+  TotalGHGEmissions: number;
+  AvgGHGIntensity: number;
+  TotalSquareFootage: number;
+  AvgBuildingAge: number | null;
 }
 
 @Component({ components: { ExportButton } })
 export default class WardsTable extends Vue {
-  @Prop({ required: true }) buildings!: Array<{ node: IBuilding }>;
+  @Prop({ required: true }) wardStats!: Array<{ node: IWardStats }>;
 
   @Prop({ default: false }) showBuildingAge!: boolean;
 
   /** Props from Search component to store field (column) being sorted and direction */
-  @Prop({ default: 'ward' }) sortedField!: keyof IWardStats;
+  @Prop({ default: 'Ward' }) sortedField!: keyof IWardStats;
   @Prop({ default: 'asc' }) sortedDirection!: string;
 
   /**
    * Prop to handle whether the sorting buttons should be shown
-   * (ex. with Search component). We then emit the sorting reuqest and the parent handles
+   * (ex. with Search component). We then emit the sorting request and the parent handles
    * actually sorting the data and passing it back in.
    */
   @Prop({ default: false }) showSort!: boolean;
 
-  readonly CurrentYear = new Date().getFullYear();
-
-  get wardStats(): IWardStats[] {
-    const wardMap: Record<number, IBuilding[]> = {};
-
-    for (const { node } of this.buildings) {
-      const ward = Number(node.Ward);
-      //TODO: Fix missing ward data
-      //Filter out buildings with no ward data available.
-      if (!ward || ward == -1) continue;
-
-      if (!wardMap[ward]) wardMap[ward] = [];
-      wardMap[ward].push(node);
-    }
-
-    const stats: IWardStats[] = Object.entries(wardMap).map(
-      ([wardStr, buildings]) => {
-        const ward = Number(wardStr);
-
-        const buildingCount = buildings.length;
-        const compliantCount = buildings.filter(
-          (b) => b.DataYear == 2023,
-        ).length;
-        const complianceRate = (compliantCount / buildingCount) * 100;
-
-        const totalGHGEmissions = buildings.reduce(
-          (sum, b) => sum + (b.TotalGHGEmissions || 0),
-          0,
-        );
-
-        const ghgBuildings = buildings.filter((b) => b.GHGIntensity > 0);
-        const avgGHGIntensity =
-          ghgBuildings.length > 0
-            ? ghgBuildings.reduce((sum, b) => sum + b.GHGIntensity, 0) /
-              ghgBuildings.length
-            : 0;
-
-        const totalSquareFootage = buildings.reduce(
-          (sum, b) => sum + (b.GrossFloorArea || 0),
-          0,
-        );
-
-        const builtBuildings = buildings.filter(
-          (b) => b.YearBuilt && b.YearBuilt > 1800,
-        );
-        const avgBuildingAge =
-          builtBuildings.length > 0
-            ? this.CurrentYear -
-              builtBuildings.reduce((sum, b) => sum + b.YearBuilt, 0) /
-                builtBuildings.length
-            : null;
-
-        return {
-          ward,
-          buildingCount,
-          compliantCount,
-          complianceRate,
-          totalGHGEmissions,
-          avgGHGIntensity,
-          totalSquareFootage,
-          avgBuildingAge,
-        };
-      },
-    );
-
-    return this.sortStats(stats);
+  get sortedStats(): IWardStats[] {
+    return this.sortStats(this.wardStats.map(({ node }) => node));
   }
 
-  /** Rows formatted for ExportButton: header row + one data row per ward
-   * TODO: Fix data for buildings missing build year
-   */
   get exportRows(): (string | number | null)[][] {
     const header = [
       'Ward',
@@ -110,17 +40,21 @@ export default class WardsTable extends Vue {
       'Total GHG Emissions (tons CO2 eq.)',
       'Avg GHG Intensity (kg CO2 eq./sqft)',
       'Total Square Footage (sqft)',
-      //'Avg Building Age (years)',
     ];
-    const rows = this.wardStats.map((s) => [
-      s.ward,
-      s.complianceRate,
-      s.totalGHGEmissions,
-      s.avgGHGIntensity,
-      s.totalSquareFootage,
-      //s.avgBuildingAge,
+    const rows = this.sortedStats.map((s) => [
+      s.Ward,
+      this.complianceRate(s),
+      s.TotalGHGEmissions,
+      s.AvgGHGIntensity,
+      s.TotalSquareFootage,
     ]);
     return [header, ...rows];
+  }
+
+  complianceRate(s: IWardStats): number {
+    return s.TotalBuildings > 0
+      ? (s.CompliantBuildings / s.TotalBuildings) * 100
+      : 0;
   }
 
   sortStats(stats: IWardStats[]): IWardStats[] {
@@ -182,21 +116,19 @@ export default class WardsTable extends Vue {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="stats in wardStats" :key="stats.ward">
+        <tr v-for="stats in sortedStats" :key="stats.Ward">
           <td class="ward-col">
-            <g-link :to="`/ward/${stats.ward}`">Ward {{ stats.ward }}</g-link>
+            <g-link :to="`/ward/${stats.Ward}`">Ward {{ stats.Ward }}</g-link>
           </td>
-          <td class="numeric">{{ formatNumber(stats.complianceRate, 1) }}%</td>
+          <td class="numeric">{{ formatNumber(complianceRate(stats), 1) }}%</td>
           <td class="numeric">
-            {{ stats.compliantCount }}/{{ stats.buildingCount }}
+            {{ stats.CompliantBuildings }}/{{ stats.TotalBuildings }}
           </td>
-          <td class="numeric">{{ formatNumber(stats.totalGHGEmissions) }}</td>
-          <td class="numeric">{{ formatNumber(stats.avgGHGIntensity, 2) }}</td>
-          <td class="numeric">{{ formatNumber(stats.totalSquareFootage) }}</td>
-          <td class="numeric">
-            <template v-if="showBuildingAge">
-              {{ formatNumber(stats.avgBuildingAge, 1) }}
-            </template>
+          <td class="numeric">{{ formatNumber(stats.TotalGHGEmissions) }}</td>
+          <td class="numeric">{{ formatNumber(stats.AvgGHGIntensity, 2) }}</td>
+          <td class="numeric">{{ formatNumber(stats.TotalSquareFootage) }}</td>
+          <td v-if="showBuildingAge" class="numeric">
+            {{ formatNumber(stats.AvgBuildingAge, 1) }}
           </td>
         </tr>
       </tbody>

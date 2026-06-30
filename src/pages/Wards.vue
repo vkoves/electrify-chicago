@@ -37,49 +37,19 @@ export default class Wards extends Vue {
 }
 </script>
 
-<!-- Filter to buildings with the given `ward` from the context -->
 <page-query>
 query {
-  allBuilding(
-    sortBy: "Ward", limit: 5000
-  ) {
+  allWardStats(sortBy: "Ward", order: ASC) {
     edges {
-        node {
-            slugSource
-            path
-            ID
-            DataYear
-            Address
-            ChicagoEnergyRating
-            CommunityArea
-            ENERGYSTARScore
-            DistrictChilledWaterUse
-            DistrictSteamUse
-            ElectricityUse
-            GHGIntensity
-            GrossFloorArea
-            NaturalGasUse
-            NumberOfBuildings
-            PrimaryPropertyType
-            PropertyName
-            SiteEUI
-            SourceEUI
-            TotalGHGEmissions
-            YearBuilt
-            ZIPCode
-            Ward
-            GHGIntensityRank
-            GHGIntensityPercentileRank
-            TotalGHGEmissionsRank
-            TotalGHGEmissionsPercentileRank
-            NaturalGasUse
-            DistrictSteamUse
-            GrossFloorAreaRank
-            GrossFloorAreaPercentileRank
-            DataAnomalies
-            AvgPercentileGrade,
-            AvgPercentileLetterGrade,
-        }
+      node {
+        Ward
+        CompliantBuildings
+        TotalBuildings
+        TotalGHGEmissions
+        AvgGHGIntensity
+        TotalSquareFootage
+        AvgBuildingAge
+      }
     }
   }
 }
@@ -121,7 +91,7 @@ query {
           ward.
         </p>
         <WardsTable
-          :buildings="$page.allBuilding.edges"
+          :ward-stats="$page.allWardStats.edges"
           :show-building-age="false"
         />
       </div>
