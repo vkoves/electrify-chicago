@@ -4,6 +4,8 @@ A script that compiles building emissions data at the ward level
 
 import pandas as pd
 
+from typing import cast
+
 from src.data.scripts.utils import (
     get_data_file_path,
     log_step_completion,
@@ -27,10 +29,10 @@ def calculate_compliant_buildings(
         building_data[building_data["DataYear"] == latest_year]
         .groupby("Ward")
         .size()
-        .rename("Compliant Buildings")
     )
+    compliant_counts.name = "Compliant Buildings"
 
-    return compliant_counts
+    return cast(pd.Series, compliant_counts)
 
 
 def calculate_avg_building_age(
@@ -39,9 +41,10 @@ def calculate_avg_building_age(
 ) -> pd.Series:
     age_df = building_data.dropna(subset=["YearBuilt"]).copy()
     age_df["age"] = latest_year - age_df["YearBuilt"]
-    avg_age = age_df.groupby("Ward")["age"].mean().rename("Avg Building Age (years)")
+    avg_age = age_df.groupby("Ward")["age"].mean()
+    avg_age.name = "Avg Building Age (years)"
 
-    return avg_age
+    return cast(pd.Series, avg_age)
 
 
 def compile_ward_stats(
@@ -63,9 +66,9 @@ def compile_ward_stats(
         ward_stats["Compliant Buildings"].fillna(0).astype(int)
     )
 
-    ward_stats = ward_stats.reindex(range(1, 51)).reset_index()
+    ward_stats = cast(pd.DataFrame, ward_stats.reindex(range(1, 51))).reset_index()
 
-    return ward_stats[
+    return cast(pd.DataFrame, ward_stats[
         [
             "Ward",
             "Compliant Buildings",
@@ -75,7 +78,7 @@ def compile_ward_stats(
             "Total Square Footage",
             "Avg Building Age (years)",
         ]
-    ]
+    ])
 
 
 ###
