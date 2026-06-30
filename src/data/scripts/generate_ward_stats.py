@@ -69,11 +69,12 @@ def compile_ward_stats(
     )
 
     ward_stats = ward_stats.join(compliant_counts).join(avg_age)
+
+    ward_stats = cast(pd.DataFrame, ward_stats.reindex(range(1, 51))).reset_index()
+
     ward_stats["Compliant Buildings"] = (
         ward_stats["Compliant Buildings"].fillna(0).astype(int)
     )
-
-    ward_stats = cast(pd.DataFrame, ward_stats.reindex(range(1, 51))).reset_index()
 
     return cast(
         pd.DataFrame,
