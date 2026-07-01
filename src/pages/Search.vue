@@ -25,6 +25,66 @@ interface ISelectOption {
   value: string;
 }
 
+interface INormalizedFields {
+  name: string;
+  address: string;
+  type: string;
+}
+
+/**
+ * Word-level synonyms folded together so that "50 West Washington" matches
+ * "50 W Washington" and "Daley Street" matches "Daley St". We canonicalize
+ * to the abbreviated form because that's what the city's benchmark data uses.
+ */
+const AddressAbbreviations: Record<string, string> = {
+  // Cardinal/ordinal directions
+  north: 'n',
+  south: 's',
+  east: 'e',
+  west: 'w',
+  northeast: 'ne',
+  northwest: 'nw',
+  southeast: 'se',
+  southwest: 'sw',
+  // Street suffixes
+  street: 'st',
+  avenue: 'ave',
+  boulevard: 'blvd',
+  road: 'rd',
+  drive: 'dr',
+  lane: 'ln',
+  court: 'ct',
+  place: 'pl',
+  terrace: 'ter',
+  parkway: 'pkwy',
+  circle: 'cir',
+  square: 'sq',
+  highway: 'hwy',
+};
+
+const AddressAbbrevRegex = new RegExp(
+  `\\b(${Object.keys(AddressAbbreviations).join('|')})\\b`,
+  'g',
+);
+
+// Strip punctuation entirely so "Richard J. Daley" matches "Richard J Daley".
+const PunctuationRegex = /[.,'"`()[\]{}!?;:]/g;
+
+/**
+ * Normalize text for fuzzy substring matching: lowercase, drop punctuation,
+ * collapse address abbreviations, and squeeze whitespace.
+ */
+function normalizeForSearch(text: string): string {
+  if (!text) return '';
+
+  return text
+    .toLowerCase()
+    .replace(PunctuationRegex, ' ')
+    .replace(AddressAbbrevRegex, (match) => AddressAbbreviations[match])
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
  * This is a known limitation of vue-property-decorator + vue-meta integration
@@ -98,9 +158,34 @@ export default class Search extends Vue {
   /** Dropdown information on database details */
   dataDisclaimer!: HTMLDetailsElement;
 
+  /**
+   * Precomputed normalized PropertyName/Address/PrimaryPropertyType for each
+   * building edge. Built once so searches don't re-normalize ~6k records per
+   * keystroke. Keyed by edge so the table can keep using the original nodes.
+   */
+  normalizedCache: Map<IBuildingEdge, INormalizedFields> = new Map();
+
   created(): void {
+    this.buildNormalizedCache();
+
     // Make sure on load we have some data
     this.setSearchResults(this.$page.allBuilding.edges);
+  }
+
+  buildNormalizedCache(): void {
+    for (const edge of this.$page.allBuilding.edges) {
+      this.normalizedCache.set(edge, {
+        name: normalizeForSearch(edge.node.PropertyName ?? ''),
+        address: normalizeForSearch(edge.node.Address ?? ''),
+        type: normalizeForSearch(edge.node.PrimaryPropertyType ?? ''),
+      });
+    }
+  }
+
+  getNormalized(edge: IBuildingEdge): INormalizedFields {
+    return (
+      this.normalizedCache.get(edge) ?? { name: '', address: '', type: '' }
+    );
   }
 
   mounted(): void {
@@ -121,16 +206,15 @@ export default class Search extends Vue {
     this.submitSearch();
   }
 
-  searchRank(buildingEdge: IBuildingEdge, query: string): number {
+  searchRank(buildingEdge: IBuildingEdge, normalizedQuery: string): number {
+    const fields = this.getNormalized(buildingEdge);
     let matchScore = 0;
 
-    if (buildingEdge.node.PropertyName.toLowerCase().includes(query)) {
+    if (fields.name.includes(normalizedQuery)) {
       matchScore += 3;
-    } else if (buildingEdge.node.Address.toLowerCase().includes(query)) {
+    } else if (fields.address.includes(normalizedQuery)) {
       matchScore += 2;
-    } else if (
-      buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
-    ) {
+    } else if (fields.type.includes(normalizedQuery)) {
       matchScore += 1;
     }
 
@@ -142,12 +226,13 @@ export default class Search extends Vue {
       event.preventDefault();
     }
 
-    const query = this.searchFilter.toLowerCase().trim();
+    const rawQuery = this.searchFilter.trim();
+    const normalizedQuery = normalizeForSearch(rawQuery);
 
     const propertyFilterEncoded = encodeURIComponent(this.propertyTypeFilter);
 
-    // Update URL bar with search query so refresh persists search
-    let newUrl = `/search?${this.QueryParamKeys.search}=${query}`;
+    // Keep the URL bar showing what the user typed, not the normalized form
+    let newUrl = `/search?${this.QueryParamKeys.search}=${encodeURIComponent(rawQuery)}`;
 
     if (propertyFilterEncoded) {
       newUrl += `&${this.QueryParamKeys.propertyType}=${propertyFilterEncoded}`;
@@ -159,7 +244,7 @@ export default class Search extends Vue {
 
     // If no filters are provided, return our max number
     if (
-      !query &&
+      !normalizedQuery &&
       !this.propertyTypeFilter &&
       !this.gradeFilter &&
       !this.gradeQuintileFilter
@@ -169,22 +254,25 @@ export default class Search extends Vue {
       return;
     }
 
-    buildingsResults = buildingsResults.filter(
-      (buildingEdge: IBuildingEdge) => {
-        return (
-          buildingEdge.node.PropertyName.toLowerCase().includes(query) ||
-          buildingEdge.node.Address.toLowerCase().includes(query) ||
-          buildingEdge.node.PrimaryPropertyType.toLowerCase().includes(query)
-        );
-      },
-    );
+    if (normalizedQuery) {
+      buildingsResults = buildingsResults.filter(
+        (buildingEdge: IBuildingEdge) => {
+          const fields = this.getNormalized(buildingEdge);
+          return (
+            fields.name.includes(normalizedQuery) ||
+            fields.address.includes(normalizedQuery) ||
+            fields.type.includes(normalizedQuery)
+          );
+        },
+      );
 
-    // Sort by name matches, then address, then property type
-    buildingsResults = buildingsResults.sort(
-      (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
-        this.searchRank(buildingEdgeB, query) -
-        this.searchRank(buildingEdgeA, query),
-    );
+      // Sort by name matches, then address, then property type
+      buildingsResults = buildingsResults.sort(
+        (buildingEdgeA: IBuildingEdge, buildingEdgeB: IBuildingEdge) =>
+          this.searchRank(buildingEdgeB, normalizedQuery) -
+          this.searchRank(buildingEdgeA, normalizedQuery),
+      );
+    }
 
     // If property type filter is specified, filter down by that
     if (this.propertyTypeFilter) {

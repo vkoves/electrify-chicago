@@ -128,6 +128,27 @@ so:
 </script>
 ```
 
+## Running The Site with Yarn
+
+If Docker can't work for you, you can run the frontend using Yarn alone. Just run:
+
+```sh
+yarn install
+yarn develop
+```
+
+### Known Issues
+
+#### macOS libvips Error
+
+If you encounter an error on macOS such as `sharp Prebuilt libvips 8.10.5 binaries are not yet available for darwin-arm64v8`, you'll need to install these dependencies separately. Install the [Brew package manager](https://brew.sh/), then run the following commands:
+
+```
+brew install --build-from-source gcc
+xcode-select install
+brew install vips
+```
+
 ## Social Images
 
 You can also run scripts to generate social images, which require
@@ -139,6 +160,10 @@ docker compose run --rm electrify-chicago yarn gen-social-imgs
 
 # Generate only building social images
 docker compose run --rm electrify-chicago yarn gen-social-imgs-buildings
+
+# Regenerate building social images for a specific list of building IDs
+# (useful after uploading a new photo for a building)
+docker compose run --rm electrify-chicago yarn gen-social-imgs-buildings 256419 256420
 
 # Generate only page social images
 docker compose run --rm electrify-chicago yarn gen-social-imgs-pages
@@ -447,7 +472,22 @@ We should reasonably crop images if needed and then scale them to be EITHER:
 Make sure to export it as a `.webp` image at a **quality level of 70**, which should ensure a reasonable
 file size under 200 kB.
 
-**Store the image in `/static/building-imgs/`.**
+**Tip!** Use the `yarn convert-img` helper to handle the resize + webp export in one step
+(requires ImageMagick on your PATH — `magick` for v7, `convert` for v6):
+
+```bash
+# Landscape (defaults to 1000px wide, quality 70)
+yarn convert-img path/to/source.png --out=static/building-imgs/owner/ID-XXXXX-name.webp
+
+# Portrait
+yarn convert-img path/to/source.jpg --tall --out=static/building-imgs/owner/ID-XXXXX-name.webp
+```
+
+If `--out` is omitted, it writes alongside the input with a `.webp` extension. The helper warns
+if the result exceeds our 200 kB target.
+
+**Store the image in `/static/building-imgs/`** — preferably under a per-owner subdirectory
+(e.g. `loyola/`, `iit/`) when the building belongs to a tracked owner.
 
 3. **Tell The Site There's a Building Image** - Follow the pattern of other buildings in the
    `building-images.constant.vue`, providing an attribution URL, the image file name, and specify
