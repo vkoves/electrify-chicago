@@ -27,6 +27,26 @@ export default class About extends Vue {}
       </div>
 
       <div class="layout-constrained">
+        <h2>June 30th, 2026 - Improved Ward Summary Table</h2>
+
+        <p>
+          The <g-link to="/wards">Wards Page</g-link> now shows a summary table
+          with aggregate energy and emissions statistics for all 50 of Chicago's
+          aldermanic wards, including total buildings, compliance rate, total GHG
+          emissions, average GHG intensity, total square footage, and average
+          building age.
+        </p>
+
+        <div class="layout-constrained -wide">
+          <img
+            class="-shadowed"
+            src="/release-notes/2026/ward-table.webp"
+            alt="The Wards page showing the new ward summary statistics table"
+          />
+        </div>
+      </div>
+
+      <div class="layout-constrained">
         <h2>April 3rd, 2026 - Update to Map Geocoding</h2>
 
         <p>
@@ -34,7 +54,7 @@ export default class About extends Vue {}
           for buildings in our dataset. Previously, our
           <g-link to="/map">Map</g-link> component had been relying on incorrect
           coordinates being reported from the city's raw data. With this update,
-          <b>21029</b> / buildings are now visible on the map in their proper
+          <b>21029</b> buildings are now visible on the map in their proper
           locations!
         </p>
 
