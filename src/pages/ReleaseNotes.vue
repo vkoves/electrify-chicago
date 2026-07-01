@@ -32,17 +32,20 @@ export default class About extends Vue {}
         <p>
           The <g-link to="/wards">Wards Page</g-link> now shows a summary table
           with aggregate energy and emissions statistics for all 50 of Chicago's
-          aldermanic wards, including total buildings, compliance rate, total GHG
-          emissions, average GHG intensity, total square footage, and average
-          building age.
+          aldermanic wards, including total buildings, compliance rate, total
+          GHG emissions, average GHG intensity, total square footage, and
+          average building age. An export button has also been added, allowing
+          the data to output to CSV
         </p>
 
         <div class="layout-constrained -wide">
-          <img
-            class="-shadowed"
-            src="/release-notes/2026/ward-table.webp"
-            alt="The Wards page showing the new ward summary statistics table"
-          />
+          <a href="/release-notes/2026/ward-table.webp" target="_blank">
+            <img
+              class="-shadowed"
+              src="/release-notes/2026/ward-table.webp"
+              alt="The Wards page showing the new ward summary statistics table"
+            />
+          </a>
         </div>
       </div>
 
