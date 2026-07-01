@@ -119,9 +119,7 @@ so:
 <script lang="ts">
   export default {};
 
-  export const MyConst = {
-    /* ... */
-  };
+  export const MyConst = {/* ... */};
   export interface IMyInterface {
     /* ... */
   }

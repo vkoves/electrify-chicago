@@ -280,14 +280,7 @@ export interface YearData {
 }
 
 export type MetricDetail =
-  | 'count'
-  | 'mean'
-  | 'std'
-  | 'min'
-  | 'max'
-  | '25%'
-  | '50%'
-  | '75%';
+  'count' | 'mean' | 'std' | 'min' | 'max' | '25%' | '50%' | '75%';
 
 /**
  * A constant for what we use as min and max values for flagged ranks
