@@ -338,7 +338,7 @@ query ($ward: String) {
         <BuildingsTable
           :buildings="$page.allBuilding.edges"
           :show-square-footage="true"
-          :printBreak="true"
+          :print-break="true"
         />
 
         <DataSourceFootnote />
