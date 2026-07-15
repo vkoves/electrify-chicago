@@ -237,12 +237,9 @@ export default class BuildingsHero extends Vue {
 
   // Print adjustments
   @media print {
-    .hero-images {
-      display: none;
-    }
-
     .hero-overlay {
       position: relative;
+      background: none;
     }
   }
 }
