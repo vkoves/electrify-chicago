@@ -44,8 +44,8 @@ repos:
         language: system
         pass_filenames: false
         files: "pyproject.toml|uv.lock"
-      - id: typescript-format
-        name: typescript-format
+      - id: prettier-format
+        name: prettier-format
         files: "\\.(js|jsx|ts|tsx|vue|css|scss|json|md)$"
         types: [file]
         exclude: "(node_modules/.*|dist/.*|build/.*|\\.gridsome/.*|static/.*)$"
