@@ -756,6 +756,10 @@ export default class PropertyType extends Vue {
     }
   }
 
+  .stats-panel + h2 {
+    break-before: page;
+  }
+
   .trends-toggle {
     width: 100%;
     padding: 0.6rem 1rem;

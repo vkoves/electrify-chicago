@@ -46,6 +46,8 @@ export default class BuildingsTable extends Vue {
    */
   @Prop({ default: false }) showSort!: boolean;
 
+  @Prop({ default: false }) printBreak!: boolean;
+
   /**
    * Required fields for buildings (from GraphQL query):
    *
@@ -173,7 +175,7 @@ export default class BuildingsTable extends Vue {
 </script>
 
 <template>
-  <div class="buildings-table-cont">
+  <div class="buildings-table-cont" :class="{ '-break': printBreak }">
     <table
       :class="{
         '-wide':
@@ -426,6 +428,10 @@ export default class BuildingsTable extends Vue {
   // Don't change table colors when printing
   print-color-adjust: exact;
 
+  &.-break {
+    break-before: page;
+  }
+
   table {
     width: 100%;
     // Scroll if we get below desktop size table
@@ -455,6 +461,7 @@ export default class BuildingsTable extends Vue {
 
       tr {
         background-color: $grey-dark;
+        break-inside: avoid;
       }
 
       th {
@@ -568,6 +575,12 @@ export default class BuildingsTable extends Vue {
   @media print {
     // Undo negative margin when printing, since we drop page margins
     margin: 0 !important;
+    width: 100%;
+    border: none;
+
+    table {
+      min-width: unset !important;
+    }
   }
 }
 </style>

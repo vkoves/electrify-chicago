@@ -183,7 +183,7 @@ export default class BuildingsMap extends Vue {
 
   static readonly MaxBuildingsCount = 100;
 
-  static readonly OneMileInMeters = 1609.344 /* eq. to 1mi */;
+  static readonly OneMileInMeters = 1609.344; /* eq. to 1mi */
 
   /** Expose stats to template */
   readonly BuildingBenchmarkStats: IBuildingBenchmarkStats =
@@ -626,6 +626,10 @@ export default class BuildingsMap extends Vue {
     summary {
       font-weight: bold;
       font-size: 1.25rem;
+    }
+
+    @media print {
+      display: none;
     }
   }
 
