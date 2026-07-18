@@ -21,6 +21,7 @@ const DataDirectory = './src/data/dist/';
 
 const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 const HistoricBenchmarkingDataFile = 'benchmarking-all-years.csv';
+const WardStatsDataFile = 'ward-stats.csv';
 
 // Get building owner IDs from the centralized JSON file
 const BuildingOwnerIds = Object.keys(buildingOwnersData);
@@ -30,6 +31,7 @@ module.exports = function (api) {
   api.loadSource(async (actions) => {
     loadBuildingBenchmarkData(actions);
     loadHistoricBenchmarkDat(actions);
+    loadWardStatsData(actions);
   });
 
   /**
@@ -204,6 +206,32 @@ function loadBuildingBenchmarkData(actions) {
     } catch (error) {
       console.log('error', error);
     }
+  }
+}
+
+/**
+ * Load in pre-computed ward-level stats
+ *
+ * @param {unknown} actions The actions class?
+ */
+function loadWardStatsData(actions) {
+  const wardStatsRaw = readFileSync(`${DataDirectory}${WardStatsDataFile}`, 'utf8');
+  const wardStatsData = parse(wardStatsRaw, { columns: true, skip_empty_lines: true });
+
+  const collection = actions.addCollection({ typeName: 'WardStats' });
+
+  for (const row of wardStatsData) {
+    collection.addNode({
+      Ward: parseInt(row['Ward'], 10),
+      CompliantBuildings: parseInt(row['Compliant Buildings'], 10),
+      TotalBuildings: parseInt(row['Total Buildings'], 10),
+      TotalGHGEmissions: parseFloat(row['Total GHG Emissions (tons CO2 eq.)']),
+      AvgGHGIntensity: parseFloat(row['Avg GHG Intensity (kg CO2 eq./sqft)']),
+      TotalSquareFootage: parseFloat(row['Total Square Footage']),
+      AvgBuildingAge: row['Avg Building Age (years)']
+        ? parseFloat(row['Avg Building Age (years)'])
+        : null,
+    });
   }
 }
 

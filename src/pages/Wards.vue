@@ -4,6 +4,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
 import WardLookup from '~/components/WardLookup.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
+import WardsTable from '../components/WardsTable.vue';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -16,6 +17,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
     NewTabIcon,
     WardLookup,
     BuildingsHero,
+    WardsTable,
   },
   metaInfo() {
     return generatePageMeta(
@@ -34,6 +36,24 @@ export default class Wards extends Vue {
   ];
 }
 </script>
+
+<page-query>
+query {
+  allWardStats(sortBy: "Ward", order: ASC) {
+    edges {
+      node {
+        Ward
+        CompliantBuildings
+        TotalBuildings
+        TotalGHGEmissions
+        AvgGHGIntensity
+        TotalSquareFootage
+        AvgBuildingAge
+      }
+    }
+  }
+}
+</page-query>
 
 <!-- If this query is updated, make sure to update PageSocialCard as well -->
 <template>
@@ -64,6 +84,16 @@ export default class Wards extends Vue {
             </g-link>
           </li>
         </ol>
+
+        <h2>Ward Summary</h2>
+        <p>
+          Aggregate energy and emissions statistics for each Chicago aldermanic
+          ward.
+        </p>
+        <WardsTable
+          :ward-stats="$page.allWardStats.edges"
+          :show-building-age="false"
+        />
       </div>
     </div>
   </DefaultLayout>

@@ -331,7 +331,7 @@ def test_main_function_integration(
         mock_calc_stats.assert_called()
 
         # verify log_step_completion was called
-        mock_log_step.assert_called_with(5, ["/mock/dist/path", "/mock/debug/path"])
+        mock_log_step.assert_called_with(6, ["/mock/dist/path", "/mock/debug/path"])
 
 
 def test_building_cols_to_analyze_completeness():
