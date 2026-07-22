@@ -33,12 +33,14 @@
 
         <div v-if="socialImageUrl" class="meta-section">
           <h4>Social Image</h4>
-          <img
-            :src="socialImageUrl"
-            :alt="pageTitle"
-            class="social-image-preview"
-            @error="onImageError"
-          />
+          <a :href="socialImageUrl" target="_blank">
+            <img
+              :src="socialImageUrl"
+              :alt="pageTitle"
+              class="social-image-preview"
+              @error="onImageError"
+            />
+          </a>
           <div class="meta-item">
             <strong>URL:</strong> {{ socialImageUrl }}
           </div>
@@ -127,8 +129,16 @@ export default class MetaInfoPanel extends Vue {
 
     // Owner pages: /owner/depaul -> /owner-social-card/depaul
     if (currentPath.startsWith('/owner/')) {
-      const ownerId = currentPath.replace('/owner/', '');
+      const ownerId = currentPath.replace('/owner/', '').replace(/\/$/, '');
       return `/owner-social-card/${ownerId}`;
+    }
+
+    // Property type pages: /property-type/office -> /property-type-social-card/office
+    if (currentPath.startsWith('/property-type/')) {
+      const propertyTypeSlug = currentPath
+        .replace('/property-type/', '')
+        .replace(/\/$/, '');
+      return `/property-type-social-card/${propertyTypeSlug}`;
     }
 
     // Page social cards: check if this page has a custom social image

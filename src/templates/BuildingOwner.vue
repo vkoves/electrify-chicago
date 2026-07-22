@@ -9,6 +9,7 @@ import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import {
   calculateBuildingsStats,
+  GradeColors,
   IBuildingBenchmarkStats,
   IBuilding,
   IBuildingNode,
@@ -25,8 +26,12 @@ interface IBuildingEdge {
   node: IBuilding;
 }
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,
@@ -115,15 +120,6 @@ export default class BiggestBuildings extends Vue {
       this.avgBuildingAge = 'N/A';
     }
 
-    // Grade distribution for pie chart
-    const gradeColors: Record<string, string> = {
-      A: '#009f49', // $grade-a-green
-      B: '#7fa52e', // $grade-b-green
-      C: '#b36a15', // $grade-c-orange
-      D: '#972222', // $grade-d-red
-      F: '#d60101', // $grade-f-red
-    };
-
     // Build data for Pie Chart
     this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
       .filter(([, count]) => count > 0) // Only include grades that exist
@@ -134,7 +130,7 @@ export default class BiggestBuildings extends Vue {
       .map(([grade, count]) => ({
         label: `Grade ${grade}`,
         value: count,
-        color: gradeColors[grade] || '#999999',
+        color: GradeColors[grade] || '#999999',
       }));
   }
 }
@@ -185,6 +181,30 @@ export default class BiggestBuildings extends Vue {
 
           {{ currOwner.name }}
         </h1>
+
+        <div
+          v-if="currOwner.links && currOwner.links.length > 0"
+          class="related-links"
+        >
+          <strong>Related Links</strong>
+          <span class="link-list">
+            <span
+              v-for="(link, idx) in currOwner.links"
+              :key="link.url"
+              class="link-item"
+            >
+              <a :href="link.url" target="_blank" rel="noopener">{{
+                link.text
+              }}</a>
+              <span
+                v-if="idx < currOwner.links.length - 1"
+                class="separator"
+                aria-hidden="true"
+                >|</span
+              >
+            </span>
+          </span>
+        </div>
       </BuildingsHero>
 
       <div class="page-constrained">
@@ -229,10 +249,7 @@ export default class BiggestBuildings extends Vue {
           </div>
         </section>
 
-        <section
-          v-if="gradeDistributionPie.length > 0"
-          class="grade-distribution"
-        >
+        <div v-if="gradeDistributionPie.length > 0" class="grade-distribution">
           <div class="grade-content">
             <div class="grade-chart-container">
               <h3>Grade Distribution</h3>
@@ -262,7 +279,7 @@ export default class BiggestBuildings extends Vue {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         <h2>{{ currOwner.name }} Buildings List</h2>
 
@@ -307,6 +324,39 @@ export default class BiggestBuildings extends Vue {
     }
   }
 
+  .related-links {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: $white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+    strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .link-list {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+    }
+
+    a {
+      color: $white;
+      text-decoration: underline;
+      font-weight: 500;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+
+    .separator {
+      margin: 0 0.25rem;
+    }
+  }
+
   .stats-overview {
     margin: 1rem 0;
 
@@ -318,6 +368,7 @@ export default class BiggestBuildings extends Vue {
 
     .stat-number {
       margin-top: 0.5rem;
+      color: $off-black;
     }
 
     // Override grid for 3 cards layout

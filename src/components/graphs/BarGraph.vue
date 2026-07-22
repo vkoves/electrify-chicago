@@ -24,6 +24,9 @@ export default class BarGraph extends Vue {
 
   @Prop({ required: true }) graphData!: Array<IGraphPoint>;
 
+  /** Color for the bars - defaults to $blue-dark */
+  @Prop({ default: '#006ef0' }) barColor!: string;
+
   @Watch('graphData')
   onDataChanged(): void {
     this.renderGraph();
@@ -99,7 +102,7 @@ export default class BarGraph extends Vue {
       .attr('y', (d) => y(d.y))
       .attr('width', x.bandwidth())
       .attr('height', (d) => this.height - y(d.y))
-      .attr('fill', '#69b3a2');
+      .attr('fill', this.barColor);
   }
 }
 </script>

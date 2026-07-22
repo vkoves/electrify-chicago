@@ -24,7 +24,7 @@
     "font-family-name-quotes": ["always-where-recommended", {"severity": "warning"}],
     "function-url-quotes": ["always", {"severity": "warning"}],
     "selector-attribute-quotes": ["always", {"severity": "warning"}],
-    "no-descending-specificity": [true, {"severity": "warning"}],
+    "no-descending-specificity": [true, {"severity": "error"}],
     "selector-class-pattern": [null, {"severity": "warning"}],
     "rule-empty-line-before": [null, {"severity": "warning"}],
     "shorthand-property-no-redundant-values": [true, {"severity": "warning"}],

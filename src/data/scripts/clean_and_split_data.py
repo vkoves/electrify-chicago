@@ -15,6 +15,7 @@ from src.data.scripts.utils import (
     get_data_file_path,
     log_step_completion,
     output_to_csv,
+    correct_building_locations,
 )
 from src.data.scripts.building_utils import (
     benchmarking_string_cols,
@@ -27,6 +28,9 @@ debug_file_dir = "debug"
 
 # The source file we read from - this is the raw data from the city
 src_emissions_filename = "ChicagoEnergyBenchmarking.csv"
+
+# The geoJSON file we use to replace erroneous coordinates from the city's raw data
+src_verified_coordinates_filename = "benchmark_building_locations_fixed.geojson"
 
 # The output file we generate that has all columns, but just for the latest year reported, which
 # goes into the next step of the data pipeline
@@ -163,6 +167,15 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
     building_data = get_and_clean_csv(file_path)
 
     building_data = rename_columns(building_data)
+
+    # Fix any incorrect coordinate data
+    if latest_year_only:
+        src_verified_coordinates_path = get_data_file_path(
+            file_dir, src_verified_coordinates_filename
+        )
+        building_data = correct_building_locations(
+            building_data, src_verified_coordinates_path
+        )
 
     # Used to be fix_str_cols(cleaned_data, building_data) when this was below the filtering
     cleaned_data = fix_str_cols(building_data, building_data)

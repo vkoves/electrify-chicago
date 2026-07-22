@@ -46,6 +46,8 @@ export default class BuildingsTable extends Vue {
    */
   @Prop({ default: false }) showSort!: boolean;
 
+  @Prop({ default: false }) printBreak!: boolean;
+
   /**
    * Required fields for buildings (from GraphQL query):
    *
@@ -71,7 +73,8 @@ export default class BuildingsTable extends Vue {
    */
 
   // declares the property emit for TS
-  // TODO: Figure out why Vue $emit isn't recognized by Typescript
+  // Vue $emit type is complex and varies by event, using Function type for compatibility
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   $emit: any;
 
   isDebug = false;
@@ -172,7 +175,7 @@ export default class BuildingsTable extends Vue {
 </script>
 
 <template>
-  <div class="buildings-table-cont">
+  <div class="buildings-table-cont" :class="{ '-break': printBreak }">
     <table
       :class="{
         '-wide':
@@ -226,7 +229,7 @@ export default class BuildingsTable extends Vue {
             @click="showSort ? $emit('sort', 'ElectricityUse') : null"
           >
             Electricity Use<br />
-            <span class="unit">(kBtu)</span>
+            <span class="unit">(kWh)</span>
             <button
               v-if="showSort"
               :class="
@@ -375,7 +378,8 @@ export default class BuildingsTable extends Vue {
                 :building="edge.node"
                 :should-round="true"
                 :stats="BuildingBenchmarkStats"
-                :unit="'kBtu'"
+                :unit="'kWh'"
+                :convert-to-kwh="true"
                 stat-key="ElectricityUse"
               />
             </template>
@@ -424,6 +428,10 @@ export default class BuildingsTable extends Vue {
   // Don't change table colors when printing
   print-color-adjust: exact;
 
+  &.-break {
+    break-before: page;
+  }
+
   table {
     width: 100%;
     // Scroll if we get below desktop size table
@@ -453,6 +461,7 @@ export default class BuildingsTable extends Vue {
 
       tr {
         background-color: $grey-dark;
+        break-inside: avoid;
       }
 
       th {
@@ -566,6 +575,12 @@ export default class BuildingsTable extends Vue {
   @media print {
     // Undo negative margin when printing, since we drop page margins
     margin: 0 !important;
+    width: 100%;
+    border: none;
+
+    table {
+      min-width: unset !important;
+    }
   }
 }
 </style>

@@ -9,11 +9,17 @@ import {
   getSocialImagePath,
   getPageSocialImagePath,
   getOwnerSocialImagePath,
+  getPropertyTypeSocialImagePath,
   getAvailablePageIdsFromConfig,
   pageImageExists,
   ownerImageExists,
+  propertyTypeImageExists,
   getAvailableOwnerIds,
+  getAvailablePropertyTypes,
 } from './social-images-helpers';
+
+// Import slugifyPropertyType for generating property type slugs
+import { slugifyPropertyType } from '../src/constants/property-type-helpers.js';
 
 type Browser = puppeteer.Browser;
 type Page = puppeteer.Page;
@@ -45,6 +51,23 @@ async function cleanupExistingImages(): Promise<void> {
       '✅ Social images directory cleaned',
   );
   await fs.emptyDir(SOCIAL_IMAGES_DIR);
+}
+
+/**
+ * Remove the social images for a specific list of building IDs so they
+ * will be regenerated on the next run.
+ */
+async function cleanupBuildingImages(buildingIds: string[]): Promise<void> {
+  console.log(
+    `🧹 Removing existing social images for ${buildingIds.length} building(s)...`,
+  );
+
+  for (const buildingId of buildingIds) {
+    const imagePath = getSocialImagePath(buildingId);
+    if (await fs.pathExists(imagePath)) {
+      await fs.remove(imagePath);
+    }
+  }
 }
 
 /**
@@ -239,6 +262,22 @@ export async function generateOwnerSocialImages(
 }
 
 /**
+ * Generate property type social images for all property types
+ */
+export async function generatePropertyTypeSocialImages(
+  deleteExisting: boolean = true,
+): Promise<void> {
+  const propertyTypes = getAvailablePropertyTypes();
+  await processEntityImages(
+    propertyTypes,
+    'property type',
+    generateSinglePropertyTypeImage,
+    propertyTypeImageExists,
+    deleteExisting,
+  );
+}
+
+/**
  * Generate social images for specific building IDs or all buildings
  *
  * @param reqBuildingIds - Optional array of specific building IDs to generate. If not provided, generates for all buildings.
@@ -252,7 +291,11 @@ export async function generateBuildingSocialImages(
 
   await ensureSocialImagesDirectory();
 
-  if (deleteExisting) {
+  if (reqBuildingIds && reqBuildingIds.length > 0) {
+    // For a targeted regeneration, only delete the requested buildings'
+    // images so they get re-created — leave the rest of the cache alone.
+    await cleanupBuildingImages(reqBuildingIds);
+  } else if (deleteExisting) {
     await cleanupExistingImages();
   }
 
@@ -267,14 +310,14 @@ export async function generateBuildingSocialImages(
 }
 
 /**
- * Generate building, page, and owner social images from scratch
+ * Generate building, page, owner, and property type social images from scratch
  */
 export async function generateAllSocialImages(
   reqBuildingIds: string[] | null = null,
   deleteExisting: boolean = true,
 ): Promise<void> {
   console.log(
-    '🎨 Starting complete social image generation (buildings + pages + owners)...',
+    '🎨 Starting complete social image generation (buildings + pages + owners + property types)...',
   );
 
   // Generate page social images first (they're faster)
@@ -282,6 +325,9 @@ export async function generateAllSocialImages(
 
   // Generate owner social images (also fast)
   await generateOwnerSocialImages(deleteExisting);
+
+  // Generate property type social images (also fast)
+  await generatePropertyTypeSocialImages(deleteExisting);
 
   // Then generate building social images (slowest, since 6k records)
   await generateBuildingSocialImages(reqBuildingIds, false); // Don't delete again
@@ -372,6 +418,28 @@ export async function generateSingleOwnerImage(
 }
 
 /**
+ * Generate a social image for a single property type
+ */
+export async function generateSinglePropertyTypeImage(
+  browser: Browser,
+  propertyType: string,
+): Promise<void> {
+  const outputPath = getPropertyTypeSocialImagePath(
+    propertyType,
+  ) as `${string}.webp`;
+  const slug = (slugifyPropertyType as (pt: string) => string)(propertyType);
+  const url = `${BASE_URL}/property-type-social-card/${slug}`;
+
+  await generateScreenshot(
+    browser,
+    url,
+    outputPath,
+    'property type',
+    propertyType,
+  );
+}
+
+/**
  * Clean up old social images (optional - for when buildings are removed)
  */
 export async function cleanupOldImages(): Promise<void> {
@@ -407,10 +475,17 @@ if (require.main === module) {
     generatePageSocialImages().catch(console.error);
   } else if (command === 'owners') {
     generateOwnerSocialImages().catch(console.error);
+  } else if (command === 'property-types') {
+    generatePropertyTypeSocialImages().catch(console.error);
   } else if (command === 'buildings') {
-    generateBuildingSocialImages().catch(console.error);
+    // Any extra args after `buildings` are treated as a list of specific
+    // building IDs to regenerate (e.g. `... buildings 256419 256420`).
+    const buildingIdArgs = process.argv.slice(3);
+    generateBuildingSocialImages(
+      buildingIdArgs.length > 0 ? buildingIdArgs : null,
+    ).catch(console.error);
   } else {
-    // Default to generating all images (buildings + pages + owners)
+    // Default to generating all images (buildings + pages + owners + property types)
     generateAllSocialImages().catch(console.error);
   }
 }

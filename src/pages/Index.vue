@@ -1,18 +1,23 @@
 <script lang="ts">
-/* global process */
 import { Component, Vue } from 'vue-property-decorator';
 
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 import BuildingTile from '../components/BuildingTile.vue';
+import OwnersList from '../components/OwnersList.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingTile,
     DataDisclaimer,
     DataSourceFootnote,
+    OwnersList,
   },
   metaInfo() {
     return { title: 'Home' };
@@ -90,6 +95,16 @@ export default class Index extends Vue {
           DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
+        }
+      }
+    }
+    allBuildings: allBuilding {
+      edges {
+        node {
+          ID
+          Owner
+          GHGIntensity
+          TotalGHGEmissions
         }
       }
     }
@@ -175,6 +190,8 @@ export default class Index extends Vue {
           </ul>
         </div>
 
+        <OwnersList :buildings="$page.allBuildings.edges" />
+
         <h2>Our Research &amp; Updates</h2>
 
         <div class="row">
@@ -249,11 +266,23 @@ export default class Index extends Vue {
         <div v-if="isDevelopment" class="debug-tools">
           <div class="announce-panel -blue">
             <h3>🔧 Local Debug Tools</h3>
-            <p>
-              <g-link to="/social-cards" class="bold">
-                View Sample Social Cards
-              </g-link>
-            </p>
+            <ul>
+              <li>
+                <g-link to="/admin" class="bold">
+                  View Admin Page (including image helper)
+                </g-link>
+              </li>
+              <li>
+                <g-link to="/social-cards" class="bold">
+                  View Sample Social Cards
+                </g-link>
+              </li>
+              <li>
+                <g-link to="/graph-demos" class="bold">
+                  View Graph Demos
+                </g-link>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

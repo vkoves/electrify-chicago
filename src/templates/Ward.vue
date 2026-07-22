@@ -8,6 +8,7 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import {
   calculateBuildingsStats,
+  GradeColors,
   IBuildingBenchmarkStats,
   IBuildingNode,
 } from '../common-functions.vue';
@@ -23,8 +24,12 @@ import {
 import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import NewTabIcon from '../components/NewTabIcon.vue';
 
-// TODO: Figure out a way to get metaInfo working without any
-// https://github.com/xerebede/gridsome-starter-typescript/issues/37
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
     BuildingsTable,
@@ -136,15 +141,6 @@ export default class BiggestBuildings extends Vue {
       this.avgBuildingAge = 'N/A';
     }
 
-    // Grade distribution for pie chart
-    const gradeColors: Record<string, string> = {
-      A: '#009f49', // $grade-a-green
-      B: '#7fa52e', // $grade-b-green
-      C: '#b36a15', // $grade-c-orange
-      D: '#972222', // $grade-d-red
-      F: '#d60101', // $grade-f-red
-    };
-
     // Build data for Pie Chart
     this.gradeDistributionPie = Object.entries(stats.gradeDistribution)
       .filter(([, count]) => count > 0) // Only include grades that exist
@@ -155,7 +151,7 @@ export default class BiggestBuildings extends Vue {
       .map(([grade, count]) => ({
         label: `Grade ${grade}`,
         value: count,
-        color: gradeColors[grade] || '#999999',
+        color: GradeColors[grade] || '#999999',
       }));
   }
 }
@@ -223,37 +219,53 @@ query ($ward: String) {
       </BuildingsHero>
 
       <div class="page-constrained">
-        <g-link to="/wards" class="grey-link back-link">
+        <g-link to="/wards" class="grey-link back-link no-print">
           <img src="/icons/arrow-back.svg" alt="" />
           Back to All Wards
         </g-link>
 
-        <section v-if="alderInfo" class="alder-info">
-          <div class="alder-content">
-            <img
-              v-if="alderImagePath"
-              :src="alderImagePath"
-              :alt="alderFormattedName"
-              class="alder-photo"
-            />
-            <div class="alder-details">
-              <h2>Ward {{ $context.ward }} Alderperson</h2>
-              <p class="alder-name">{{ alderFormattedName }}</p>
-              <a
-                :href="alderCouncilmaticUrl"
-                target="_blank"
-                rel="noopener"
-                class="blue-link"
-              >
-                Full Profile On Councilmatic
-                <NewTabIcon :white="true" />
-              </a>
+        <div class="ward-header">
+          <div>
+            <div v-if="alderInfo" class="alder-info">
+              <div class="alder-content">
+                <img
+                  v-if="alderImagePath"
+                  :src="alderImagePath"
+                  :alt="alderFormattedName"
+                  class="alder-photo"
+                />
+                <div class="alder-details">
+                  <h2>Ward {{ $context.ward }} Alderperson</h2>
+                  <p class="alder-name">{{ alderFormattedName }}</p>
+                  <a
+                    :href="alderCouncilmaticUrl"
+                    target="_blank"
+                    rel="noopener"
+                    class="blue-link no-print"
+                  >
+                    Full Profile On Councilmatic
+                    <NewTabIcon :white="true" />
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
-        </section>
+
+          <div class="grade-chart-container">
+            <h3>Grade Distribution</h3>
+
+            <PieChart
+              :graph-data="gradeDistributionPie"
+              id-prefix="grade-distribution"
+              :show-labels="true"
+              :sort-by-largest="false"
+            />
+          </div>
+        </div>
 
         <section class="stats-overview -three-col-max">
           <h2>Ward {{ $context.ward }} Quick Stats</h2>
+
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-number">
@@ -287,66 +299,46 @@ query ($ward: String) {
                 kg CO<sub>2</sub>/sqft)
               </div>
             </div>
-          </div>
-        </section>
 
-        <section
-          v-if="gradeDistributionPie.length > 0"
-          class="grade-distribution"
-        >
-          <div class="grade-content">
-            <div class="grade-chart-container">
-              <h3>Grade Distribution</h3>
-
-              <PieChart
-                :graph-data="gradeDistributionPie"
-                id-prefix="grade-distribution"
-                :show-labels="true"
-                :sort-by-largest="false"
-              />
+            <div class="stat-card">
+              <div class="stat-label">Total Square Footage</div>
+              <div class="stat-number">{{ totalSquareFootage }}M</div>
+              <div class="stat-description">million sq ft under management</div>
             </div>
-            <div class="supplementary-stats stats-overview">
-              <div class="stats-grid">
-                <div class="stat-card">
-                  <div class="stat-label">Total Square Footage</div>
-                  <div class="stat-number">{{ totalSquareFootage }}M</div>
-                  <div class="stat-description">
-                    million sq ft under management
-                  </div>
-                </div>
 
-                <div class="stat-card">
-                  <div class="stat-label">Avg Building Age</div>
-                  <div class="stat-number">{{ avgBuildingAge }}</div>
-                  <div class="stat-description">years old</div>
-                </div>
-              </div>
+            <div class="stat-card">
+              <div class="stat-label">Avg Building Age</div>
+              <div class="stat-number">{{ avgBuildingAge }}</div>
+              <div class="stat-description">years old</div>
             </div>
           </div>
         </section>
 
-        <p>
-          This page shows all buildings identified as being in Ward
-          {{ $context.ward }} that submitted building benchmarking data.
-        </p>
-        <p>
-          Learn more at
-          <a
-            :href="`https://www.chicago.gov/city/en/about/wards/${$context.ward.padStart(2, '0')}.html`"
-            target="_blank"
-            rel="noopener"
-          >
-            The City of Chicago - Ward {{ $context.ward }}
+        <div class="no-print">
+          <p>
+            This page shows all buildings identified as being in Ward
+            {{ $context.ward }} that submitted building benchmarking data.
+          </p>
+          <p>
+            Learn more at
+            <a
+              :href="`https://www.chicago.gov/city/en/about/wards/${$context.ward.padStart(2, '0')}.html`"
+              target="_blank"
+              rel="noopener"
+            >
+              The City of Chicago - Ward {{ $context.ward }}
 
-            <NewTabIcon />
-          </a>
-        </p>
+              <NewTabIcon />
+            </a>
+          </p>
+        </div>
 
         <DataDisclaimer />
 
         <BuildingsTable
           :buildings="$page.allBuilding.edges"
           :show-square-footage="true"
+          :print-break="true"
         />
 
         <DataSourceFootnote />
@@ -359,10 +351,29 @@ query ($ward: String) {
 .ward-page {
   .back-link {
     margin-bottom: 1rem;
+
+    @media print {
+      display: none;
+    }
   }
 
   h2 {
     margin-bottom: 0.5rem;
+  }
+
+  .ward-header {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr) !important;
+
+    @media screen and (max-width: $mobile-max-width) {
+      grid-template-columns: repeat(1, 1fr) !important;
+    }
+  }
+
+  .ward-header > :first-child {
+    display: flex;
+    align-items: center;
   }
 
   .alder-info {
@@ -371,7 +382,7 @@ query ($ward: String) {
     background: $off-white;
     border: solid $border-medium $chicago-blue;
     border-radius: $brd-rad-medium;
-    width: fit-content;
+    width: 100%;
 
     @media (max-width: $mobile-max-width) {
       width: 100%;
@@ -381,11 +392,6 @@ query ($ward: String) {
       display: flex;
       align-items: center;
       gap: 1.5rem;
-
-      @media (max-width: $mobile-max-width) {
-        flex-direction: column;
-        align-items: flex-start;
-      }
     }
 
     .alder-photo {
@@ -403,14 +409,19 @@ query ($ward: String) {
     }
 
     .alder-details {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
       h2 {
         margin: 0;
         color: $blue-very-dark;
       }
 
       a {
-        display: inline-block;
-        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
       }
     }
 
@@ -436,7 +447,7 @@ query ($ward: String) {
   }
 
   // Override grid for 3 cards layout
-  &.-three-col-max .stats-grid {
+  .-three-col-max .stats-grid {
     // Mobile: 2 columns
     grid-template-columns: repeat(2, 1fr);
 
@@ -444,6 +455,15 @@ query ($ward: String) {
     @media (min-width: $desktop-min-width) {
       grid-template-columns: repeat(3, 1fr);
     }
+
+    // Print: 2 columns
+    @media print {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  .pie-chart-cont svg {
+    max-height: 20rem;
   }
 
   .grade-distribution {
@@ -465,25 +485,14 @@ query ($ward: String) {
         align-items: flex-start;
       }
     }
+  }
+}
 
-    .supplementary-stats {
-      // Override the default margin from stats-overview
-      margin: 0;
-
-      .stats-grid {
-        // Override default 4-column layout for our 2 stats
-        grid-template-columns: 1fr;
-
-        @media (min-width: $mobile-max-width) {
-          grid-template-columns: repeat(2, 1fr);
-        }
-
-        // Keep it at 2 columns even on large desktop
-        @media (min-width: $large-desktop-min-width) {
-          grid-template-columns: repeat(2, 1fr);
-        }
-      }
-    }
+// Print adjustments
+@media print {
+  .hero-skyline,
+  .hero-images {
+    display: none !important;
   }
 }
 </style>

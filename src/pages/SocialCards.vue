@@ -1,6 +1,8 @@
 <template>
   <DefaultLayout>
     <div class="social-cards-debug page-constrained">
+      <g-link to="/admin" class="grey-link">← Back to Admin</g-link>
+
       <h1>Social Cards Debug Page</h1>
       <p>This page is for testing and debugging social card generation.</p>
 
@@ -141,6 +143,12 @@ import {
 /**
  * TODO: Add this to footer in local dev
  */
+/**
+ * Note: @Component<any> is required for metaInfo to work with TypeScript
+ * This is a known limitation of vue-property-decorator + vue-meta integration
+ * See: https://github.com/xerebede/gridsome-starter-typescript/issues/37
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   metaInfo() {
     return {
@@ -179,9 +187,13 @@ export default class SocialCards extends Vue {
 }
 
 .links {
-  display: flex;
-  gap: 0.75rem;
-  margin-top: 1rem;
+  a {
+    display: inline-block;
+  }
+
+  a + a {
+    margin-top: 0.5rem;
+  }
 
   .grey-link {
     font-weight: bold;

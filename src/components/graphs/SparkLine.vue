@@ -179,9 +179,10 @@ export default class BarGraph extends Vue {
       .attr('stroke-width', 8)
       .attr(
         'd',
-        (d3.line() as any)
-          .x((d: INumGraphPoint) => x(d.x))
-          .y((d: INumGraphPoint) => y(d.y)),
+        d3
+          .line<INumGraphPoint>()
+          .x((d) => x(d.x))
+          .y((d) => y(d.y)),
       );
 
     if (this.minAndMaxPoints) {
