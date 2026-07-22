@@ -4,6 +4,72 @@ import { LatestDataYear } from './constants/globals.vue';
 
 export default {};
 
+/**
+ * A single entry in the building search autocomplete index, generated at build
+ * time by gridsome.server.js and fetched on demand from
+ * /building-search-index.json. `path` is the building's canonical page URL.
+ */
+export interface IBuildingSearchIndexItem {
+  name: string;
+  address: string;
+  type: string;
+  path: string;
+}
+
+/**
+ * Word-level synonyms folded together so that "50 West Washington" matches
+ * "50 W Washington" and "Daley Street" matches "Daley St". We canonicalize
+ * to the abbreviated form because that's what the city's benchmark data uses.
+ */
+export const AddressAbbreviations: Record<string, string> = {
+  // Cardinal/ordinal directions
+  north: 'n',
+  south: 's',
+  east: 'e',
+  west: 'w',
+  northeast: 'ne',
+  northwest: 'nw',
+  southeast: 'se',
+  southwest: 'sw',
+  // Street suffixes
+  street: 'st',
+  avenue: 'ave',
+  boulevard: 'blvd',
+  road: 'rd',
+  drive: 'dr',
+  lane: 'ln',
+  court: 'ct',
+  place: 'pl',
+  terrace: 'ter',
+  parkway: 'pkwy',
+  circle: 'cir',
+  square: 'sq',
+  highway: 'hwy',
+};
+
+const AddressAbbrevRegex = new RegExp(
+  `\\b(${Object.keys(AddressAbbreviations).join('|')})\\b`,
+  'g',
+);
+
+// Strip punctuation entirely so "Richard J. Daley" matches "Richard J Daley".
+const PunctuationRegex = /[.,'"`()[\]{}!?;:]/g;
+
+/**
+ * Normalize text for fuzzy substring matching: lowercase, drop punctuation,
+ * collapse address abbreviations, and squeeze whitespace.
+ */
+export function normalizeForSearch(text: string): string {
+  if (!text) return '';
+
+  return text
+    .toLowerCase()
+    .replace(PunctuationRegex, ' ')
+    .replace(AddressAbbrevRegex, (match) => AddressAbbreviations[match])
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 /** Colors for our energy mix pie chart for each type of energy use */
 export const EnergyBreakdownColors = {
   DistrictChilling: '#01295F',

@@ -5,6 +5,7 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 import BuildingTile from '../components/BuildingTile.vue';
 import OwnersList from '../components/OwnersList.vue';
+import BuildingSearchAutocomplete from '../components/BuildingSearchAutocomplete.vue';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -14,6 +15,7 @@ import OwnersList from '../components/OwnersList.vue';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
+    BuildingSearchAutocomplete,
     BuildingTile,
     DataDisclaimer,
     DataSourceFootnote,
@@ -24,17 +26,9 @@ import OwnersList from '../components/OwnersList.vue';
   },
 })
 export default class Index extends Vue {
-  searchQuery = '';
-
   get isDevelopment(): boolean {
     // This comes from Node during build
     return process.env.NODE_ENV === 'development';
-  }
-
-  submitSearch(event?: Event): void {
-    event?.preventDefault();
-
-    document.location.href = `/search?q=${this.searchQuery}`;
   }
 }
 </script>
@@ -121,21 +115,11 @@ export default class Index extends Vue {
             Find Out How Much Chicago Buildings Pollute
           </h1>
 
-          <form class="search-form">
-            <div class="input-cont">
-              <input
-                id="search"
-                v-model="searchQuery"
-                type="text"
-                name="search"
-                aria-label="Search benchmarked buildings"
-                placeholder="Search property name or address"
-              />
-              <button type="submit" @click="submitSearch">
-                <img src="/search.svg" alt="Search" width="32" height="32" />
-              </button>
-            </div>
-          </form>
+          <BuildingSearchAutocomplete
+            input-id="home-search"
+            placeholder="Search property name or address"
+            :icon-size="32"
+          />
 
           <g-link class="blue-link map-link" to="/map">
             <img src="/icons/location.svg" alt="" width="32" height="32" />
@@ -375,6 +359,13 @@ export default class Index extends Vue {
               filter: invert(1);
             }
           }
+        }
+
+        // Inset the suggestions to sit under the straight portion of the pill,
+        // clearing its ~2rem rounded corners
+        .search-suggestions {
+          left: 1rem;
+          right: 1rem;
         }
       }
     }

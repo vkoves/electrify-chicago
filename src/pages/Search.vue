@@ -9,6 +9,7 @@ import {
   IBuildingNode,
   IHistoricData,
   isNewBuilding,
+  normalizeForSearch,
 } from '../common-functions.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
@@ -37,60 +38,6 @@ interface INormalizedFields {
   name: string;
   address: string;
   type: string;
-}
-
-/**
- * Word-level synonyms folded together so that "50 West Washington" matches
- * "50 W Washington" and "Daley Street" matches "Daley St". We canonicalize
- * to the abbreviated form because that's what the city's benchmark data uses.
- */
-const AddressAbbreviations: Record<string, string> = {
-  // Cardinal/ordinal directions
-  north: 'n',
-  south: 's',
-  east: 'e',
-  west: 'w',
-  northeast: 'ne',
-  northwest: 'nw',
-  southeast: 'se',
-  southwest: 'sw',
-  // Street suffixes
-  street: 'st',
-  avenue: 'ave',
-  boulevard: 'blvd',
-  road: 'rd',
-  drive: 'dr',
-  lane: 'ln',
-  court: 'ct',
-  place: 'pl',
-  terrace: 'ter',
-  parkway: 'pkwy',
-  circle: 'cir',
-  square: 'sq',
-  highway: 'hwy',
-};
-
-const AddressAbbrevRegex = new RegExp(
-  `\\b(${Object.keys(AddressAbbreviations).join('|')})\\b`,
-  'g',
-);
-
-// Strip punctuation entirely so "Richard J. Daley" matches "Richard J Daley".
-const PunctuationRegex = /[.,'"`()[\]{}!?;:]/g;
-
-/**
- * Normalize text for fuzzy substring matching: lowercase, drop punctuation,
- * collapse address abbreviations, and squeeze whitespace.
- */
-function normalizeForSearch(text: string): string {
-  if (!text) return '';
-
-  return text
-    .toLowerCase()
-    .replace(PunctuationRegex, ' ')
-    .replace(AddressAbbrevRegex, (match) => AddressAbbreviations[match])
-    .replace(/\s+/g, ' ')
-    .trim();
 }
 
 /**

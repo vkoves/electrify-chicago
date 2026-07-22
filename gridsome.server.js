@@ -9,7 +9,7 @@
  * From fetching CSV data:
  * https://gridsome.org/docs/fetching-data/#csv
  */
-const { readFileSync } = require('fs');
+const { readFileSync, writeFileSync } = require('fs');
 const build = require('gridsome/lib/build');
 const parse = require('csv-parse/sync').parse;
 const pageSocialConfigsData = require('./src/constants/page-social-images/page-social-configs.json');
@@ -18,6 +18,12 @@ const propertyTypesData = require('./src/data/dist/property-types.json');
 const { slugifyPropertyType } = require('./src/constants/property-type-helpers.js');
 
 const DataDirectory = './src/data/dist/';
+
+// Written to the static/ folder (served at the site root) so the search
+// autocomplete can fetch it on demand rather than bundling ~3.5k records into
+// the initial page JS. Regenerated on every build, so it's gitignored.
+const StaticDirectory = './static/';
+const SearchIndexFile = 'building-search-index.json';
 
 const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 const HistoricBenchmarkingDataFile = 'benchmarking-all-years.csv';
@@ -133,6 +139,9 @@ function loadBuildingBenchmarkData(actions) {
 
   const collection = actions.addCollection({ typeName: 'Building' });
 
+  // Lightweight index powering the search autocomplete (see below for shape)
+  const searchIndex = [];
+
   for (const building of LatestBenchmarksData) {
     // Make a slugSource that is the property name or the address as a fallback (skip one letter
     // names, e.g. '-)
@@ -201,10 +210,34 @@ function loadBuildingBenchmarkData(actions) {
       }
 
       collection.addNode(building);
+
+      // Use the same slugify Gridsome uses for :slugSource so the path here
+      // matches the building's canonical page URL exactly
+      searchIndex.push({
+        name: building.PropertyName,
+        address: building.Address,
+        type: building.PrimaryPropertyType,
+        path: `/building/${actions.slugify(building.slugSource)}`,
+      });
     } catch (error) {
       console.log('error', error);
     }
   }
+
+  writeBuildingSearchIndex(searchIndex);
+}
+
+/**
+ * Write the building search autocomplete index to the static folder as JSON so
+ * the search UI can fetch it on demand instead of bundling it into page JS.
+ *
+ * @param {Array<object>} searchIndex Building name/address/type/path records
+ */
+function writeBuildingSearchIndex(searchIndex) {
+  writeFileSync(
+    `${StaticDirectory}${SearchIndexFile}`,
+    JSON.stringify(searchIndex),
+  );
 }
 
 /**

@@ -41,3 +41,6 @@ settings.json
 /playwright/.cache/
 # Compiled GitHub Action scripts
 .github/scripts/*.js
+
+# Generated at build time by gridsome.server.js
+static/building-search-index.json
