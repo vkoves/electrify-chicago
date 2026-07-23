@@ -42,5 +42,5 @@ settings.json
 # Compiled GitHub Action scripts
 .github/scripts/*.js
 
-# Generated at build time by gridsome.server.js
-static/building-search-index.json
+# Copied into static/ at build time from the pipeline-generated dist file
+static/building-search-index.csv
