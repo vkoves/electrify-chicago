@@ -7,6 +7,10 @@ across all years (our historic data) and one with all columns for the latest yea
 
 This is done because we only show historic data on individual building pages, and loading the
 historic data on pages like search and the homepage would get quite heavy.
+
+Buildings that have never submitted data in any year are still included in the latest-year file
+(with blank metrics) so they remain searchable, even though they're excluded from indexes ranked
+by reported data.
 """
 
 import pandas as pd
@@ -128,6 +132,18 @@ def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame:
     return all_recent_submitted_data
 
 
+def get_never_submitted_buildings(building_data: pd.DataFrame) -> pd.DataFrame:
+    """Get one row (the most recent year seen) for each building that has never submitted data in
+    any year on record, so we still include them in our dataset (with mostly blank metrics) and
+    they're searchable, even though they're excluded from indexes that rank by reported data"""
+
+    submitted_ids = get_submitted_data(building_data)["ID"].unique()
+    never_submitted = building_data.loc[~building_data["ID"].isin(submitted_ids)].copy()
+
+    never_submitted = never_submitted.sort_values(by=["ID", "DataYear"])
+    return never_submitted.drop_duplicates(subset=["ID"], keep="last").copy()
+
+
 def filter_cols_historic(building_data: pd.DataFrame) -> pd.DataFrame:
     """Filter down the reporting entries to only columns relevant to our historical data CSV"""
 
@@ -178,9 +194,17 @@ def process(file_path: str, latest_year_only: bool) -> pd.DataFrame:
 
     # Only filter to the latest reporting year if that's the file we're generating
     if latest_year_only:
-        cleaned_data = get_buildings_with_ghg_intensity(building_data)
-        cleaned_data = get_submitted_data(cleaned_data)
-        cleaned_data = get_last_year_data(cleaned_data)
+        submitted_data = get_buildings_with_ghg_intensity(building_data)
+        submitted_data = get_submitted_data(submitted_data)
+        submitted_data = get_last_year_data(submitted_data)
+
+        # Buildings that have never submitted data have no rows here (no GHGIntensity, never
+        # "Submitted"), but we still want them present (with blank metrics) so they're searchable
+        never_submitted_data = get_never_submitted_buildings(building_data)
+
+        cleaned_data = pd.concat(
+            [submitted_data, never_submitted_data], ignore_index=True
+        )
     else:
         cleaned_data = filter_cols_historic(cleaned_data)
 
