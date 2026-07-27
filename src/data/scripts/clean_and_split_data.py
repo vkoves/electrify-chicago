@@ -137,7 +137,7 @@ def get_never_submitted_buildings(building_data: pd.DataFrame) -> pd.DataFrame:
     any year on record, so we still include them in our dataset (with mostly blank metrics) and
     they're searchable, even though they're excluded from indexes that rank by reported data"""
 
-    submitted_ids = get_submitted_data(building_data)["ID"].unique()
+    submitted_ids = get_submitted_data(building_data)["ID"].unique().tolist()
     never_submitted = building_data.loc[~building_data["ID"].isin(submitted_ids)].copy()
 
     never_submitted = never_submitted.sort_values(by=["ID", "DataYear"])
