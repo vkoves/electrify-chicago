@@ -93,8 +93,21 @@ def test_generate_consistent_reporting_grade():
     # Create test data with varying reporting statuses
     test_data = pd.DataFrame(
         {
-            "ID": [1, 1, 1, 2, 2, 2, 3, 3, 3],
-            "DataYear": [2020, 2021, 2022, 2020, 2021, 2022, 2020, 2021, 2022],
+            "ID": [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4],
+            "DataYear": [
+                2020,
+                2021,
+                2022,
+                2020,
+                2021,
+                2022,
+                2020,
+                2021,
+                2022,
+                2020,
+                2021,
+                2022,
+            ],
             "ReportingStatus": [
                 "Submitted",
                 "Submitted",
@@ -105,6 +118,9 @@ def test_generate_consistent_reporting_grade():
                 "Not Submitted",
                 "Not Submitted",
                 "Submitted",  # ID 3: 33% reporting
+                "Not Submitted",
+                "Not Submitted",
+                "Not Submitted",  # ID 4: never submitted
             ],
         }
     )
@@ -141,6 +157,13 @@ def test_generate_consistent_reporting_grade():
     assert id3_row["SubmittedRecordsLetterGrade"].values[0] in letter_grades
     assert id3_row["MissingRecordsCount"].values[0] == 2
 
+    # ID 4: never submitted (0% reporting) - shouldn't get a reporting grade at all, since
+    # there's nothing to grade, not just a bad grade
+    id4_row = result[result["ID"] == 4]
+    assert pd.isna(id4_row["SubmittedRecordsPercentileGrade"].values[0])
+    assert pd.isna(id4_row["SubmittedRecordsLetterGrade"].values[0])
+    assert id4_row["MissingRecordsCount"].values[0] == 3
+
 
 # Test calculate_weighted_average function
 def test_calculate_weighted_average():
@@ -171,17 +194,18 @@ def test_energy_mix_grading():
     # Create test buildings with different energy mixes
     test_data = pd.DataFrame(
         {
-            "ID": [1, 2, 3, 4],
-            "DataYear": [2022, 2022, 2022, 2022],
+            "ID": [1, 2, 3, 4, 5],
+            "DataYear": [2022, 2022, 2022, 2022, 2022],
             # Building 1: 100% electricity (best)
             # Building 2: 50% electricity, 50% gas (average)
             # Building 3: 100% gas (worst)
             # Building 4: Mix of good and bad sources
-            "ElectricityUse": [1000, 500, 0, 400],
-            "NaturalGasUse": [0, 500, 1000, 400],
-            "DistrictSteamUse": [0, 0, 0, 100],
-            "DistrictChilledWaterUse": [0, 0, 0, 100],
-            "AllOtherFuelUse": [0, 0, 0, 0],
+            # Building 5: never submitted, no energy data at all
+            "ElectricityUse": [1000, 500, 0, 400, None],
+            "NaturalGasUse": [0, 500, 1000, 400, None],
+            "DistrictSteamUse": [0, 0, 0, 100, None],
+            "DistrictChilledWaterUse": [0, 0, 0, 100, None],
+            "AllOtherFuelUse": [0, 0, 0, 0, None],
         }
     )
 
@@ -197,6 +221,12 @@ def test_energy_mix_grading():
     assert result.loc[result["ID"] == 2, "EnergyMixWeightedPctSum"].iloc[0] == 50.0
     assert result.loc[result["ID"] == 3, "EnergyMixWeightedPctSum"].iloc[0] == 0.0
     assert result.loc[result["ID"] == 4, "EnergyMixWeightedPctSum"].iloc[0] == 50.0
+
+    # Building 5: no energy data at all shouldn't be graded as if it had a real 0% mix
+    id5_row = result[result["ID"] == 5]
+    assert pd.isna(id5_row["EnergyMixWeightedPctSum"].iloc[0])
+    assert pd.isna(id5_row["EnergyMixPercentileGrade"].iloc[0])
+    assert pd.isna(id5_row["EnergyMixLetterGrade"].iloc[0])
 
 
 # Integration test with simple mock data
