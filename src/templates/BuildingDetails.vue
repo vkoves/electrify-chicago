@@ -175,7 +175,11 @@ query ($id: ID!, $ID: String) {
         <div class="details-cont">
           <!-- Show warning container if we have anomalies our out of date data -->
           <div
-            v-if="buildingAnomalies.length > 0 || dataYear < LatestDataYear"
+            v-if="
+              buildingAnomalies.length > 0 ||
+              dataYear < LatestDataYear ||
+              hasNeverSubmitted
+            "
             class="building-banner"
           >
             <div v-for="anomaly in buildingAnomalies" :key="anomaly">
@@ -221,8 +225,9 @@ query ($id: ID!, $ID: String) {
               </h2>
 
               <p>
-                This building has never reported full data, so top-level stats
-                may be inconsistent.
+                This building is in the city's benchmarking data, indicating it
+                should have reported energy use, but it has never submitted any
+                benchmarking data.
               </p>
             </div>
           </div>
@@ -245,7 +250,7 @@ query ($id: ID!, $ID: String) {
                   </dd>
                 </div>
 
-                <div>
+                <div v-if="!hasNeverSubmitted">
                   <dt>Built</dt>
                   <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
                 </div>
@@ -381,7 +386,11 @@ query ($id: ID!, $ID: String) {
               </dl>
             </div>
 
-            <ReportCard :building="building" :data-year="dataYear" />
+            <ReportCard
+              v-if="!hasNeverSubmitted"
+              :building="building"
+              :data-year="dataYear"
+            />
           </div>
 
           <details class="hidden">
@@ -546,39 +555,41 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="chart-col">
-          <h3
-            id="energy-mix"
-            class="label-and-grade -energy-mix targetable"
-            tabindex="-1"
-          >
-            Energy Mix
-            <LetterGrade
-              :grade="building.EnergyMixLetterGrade"
-              class="-large -spaced"
-            />
-          </h3>
-          <div class="energy-mix-cont">
-            <p>
-              <strong>Total Energy Use:</strong>
-              {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
-            </p>
+          <template v-if="!hasNeverSubmitted">
+            <h3
+              id="energy-mix"
+              class="label-and-grade -energy-mix targetable"
+              tabindex="-1"
+            >
+              Energy Mix
+              <LetterGrade
+                :grade="building.EnergyMixLetterGrade"
+                class="-large -spaced"
+              />
+            </h3>
+            <div class="energy-mix-cont">
+              <p>
+                <strong>Total Energy Use:</strong>
+                {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
+              </p>
 
-            <PieChart
-              :id-prefix="'energy-mix'"
-              :graph-data="energyBreakdownData"
-            />
+              <PieChart
+                :id-prefix="'energy-mix'"
+                :graph-data="energyBreakdownData"
+              />
 
-            <img
-              v-tooltip.bottom="{
-                content: tooltipMessage,
-                trigger: 'click hover',
-              }"
-              class="tooltip"
-              src="/help.svg"
-              alt="Help icon"
-              tabindex="0"
-            />
-          </div>
+              <img
+                v-tooltip.bottom="{
+                  content: tooltipMessage,
+                  trigger: 'click hover',
+                }"
+                class="tooltip"
+                src="/help.svg"
+                alt="Help icon"
+                tabindex="0"
+              />
+            </div>
+          </template>
 
           <!-- QR Code Container, for printing -->
           <div class="qr-cont print-only">

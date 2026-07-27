@@ -144,53 +144,73 @@
       <template v-else>
         <!-- No Fossil Gas specific messaging, dependant on district heating and anomalies -->
         <div v-if="statKey === 'NaturalGasUse'" class="no-gas-msg">
-          <!-- If not reported but not gas free, show that -->
-          <div v-if="!fullyGasFree">
+          <!-- Never submitted buildings have no gas data, so skip the gas-free / district
+          heating / reporting-error messaging below, none of which apply -->
+          <div v-if="hasNeverSubmitted">
             Not Reported
 
             <p class="empty-notice">
-              This data was not reported for this building this year, which
-              <em>likely</em> means a value of zero for this field.
+              This building has never submitted benchmarking data to the city,
+              so we have no information for this field.
             </p>
           </div>
+          <template v-else>
+            <!-- If not reported but not gas free, show that -->
+            <div v-if="!fullyGasFree">
+              Not Reported
 
-          <div v-if="fullyGasFree">
-            <div class="bold large-text">
-              This Building Didn't Burn Any Fossil Gas! 🎉
+              <p class="empty-notice">
+                This data was not reported for this building this year, which
+                <em>likely</em> means a value of zero for this field.
+              </p>
             </div>
 
-            <p class="smaller">
-              This building hasn't reported burning fossil gas on-site and isn't
-              connected to a district heating system, meaning it's fully
-              electric!
-            </p>
+            <div v-if="fullyGasFree">
+              <div class="bold large-text">
+                This Building Didn't Burn Any Fossil Gas! 🎉
+              </div>
 
-            <g-link class="blue-link smaller" to="/all-electric"
-              >View All of Chicago's All Electric Buildings</g-link
-            >
-          </div>
-          <div v-else-if="building.DataAnomalies" class="panel -warning">
-            <div class="bold">
-              <span class="emoji">⚠️</span> Likely Reporting Error
+              <p class="smaller">
+                This building hasn't reported burning fossil gas on-site and
+                isn't connected to a district heating system, meaning it's fully
+                electric!
+              </p>
+
+              <g-link class="blue-link smaller" to="/all-electric"
+                >View All of Chicago's All Electric Buildings</g-link
+              >
             </div>
+            <div v-else-if="building.DataAnomalies" class="panel -warning">
+              <div class="bold">
+                <span class="emoji">⚠️</span> Likely Reporting Error
+              </div>
 
-            <p class="smaller">
-              This building has burned gas in the past, so this latest year
-              having 0 gas use is likely a reporting error.
-            </p>
-          </div>
-          <div v-else>
-            <div class="bold">This Building Uses District Heating ❗</div>
+              <p class="smaller">
+                This building has burned gas in the past, so this latest year
+                having 0 gas use is likely a reporting error.
+              </p>
+            </div>
+            <div v-else>
+              <div class="bold">This Building Uses District Heating ❗</div>
 
-            <p class="smaller">
-              Although this building didn't burn any fossil gas on site, it's
-              connected to a district heating system, a centralized system for
-              heating multiple buildings. District heating systems can be fully
-              electric, but in Chicago most district heating systems are fossil
-              gas powered, meaning this building was most likely still heated
-              with fossil gas.
-            </p>
-          </div>
+              <p class="smaller">
+                Although this building didn't burn any fossil gas on site, it's
+                connected to a district heating system, a centralized system for
+                heating multiple buildings. District heating systems can be
+                fully electric, but in Chicago most district heating systems are
+                fossil gas powered, meaning this building was most likely still
+                heated with fossil gas.
+              </p>
+            </div>
+          </template>
+        </div>
+        <div v-else-if="hasNeverSubmitted">
+          Not Reported
+
+          <p class="empty-notice">
+            This building has never submitted benchmarking data to the city, so
+            we have no information for this field.
+          </p>
         </div>
         <div v-else>
           Not Reported
@@ -276,6 +296,11 @@ export default class StatTile extends Vue {
 
   get fullyGasFree(): boolean {
     return fullyGasFree(this.building);
+  }
+
+  /** Whether this building has never submitted any benchmarking data */
+  get hasNeverSubmitted(): boolean {
+    return this.building.FirstYearReported === null;
   }
 
   /** The estimated cost for the given utility */
