@@ -545,9 +545,53 @@ form.search-form {
       color: $blue-very-dark;
     }
 
+    &.-geothermal {
+      display: inline-flex;
+      background: $grade-a-green;
+      color: $white;
+      align-items: center;
+
+      .link-icon-btn {
+        display: inline-flex;
+        align-items: center;
+        margin-left: 0.375rem;
+        opacity: 0.85;
+
+        img {
+          width: 0.875rem;
+          height: 0.875rem;
+
+          &.-large {
+            width: 1rem;
+            height: 1rem;
+          }
+        }
+
+        &:hover,
+        &:focus {
+          opacity: 1;
+        }
+      }
+
+      // a.text (not .text) so this matches the specificity of .pills-cont a.pill:hover .text
+      // above, satisfying stylelint's no-descending-specificity rule.
+      a.text {
+        text-decoration: none;
+
+        &:hover,
+        &:focus {
+          text-decoration: underline;
+        }
+      }
+    }
+
     span.icon {
       text-shadow: 0.0625rem 0 0.0625rem $black;
       margin-right: 0.5em;
+    }
+
+    a {
+      color: inherit;
     }
   }
 }
@@ -575,6 +619,9 @@ nav.pager {
   gap: 1rem;
   margin-top: 1rem;
 
+  // Disabled: the only earlier `a` rule (.pills-cont .pill a) lives in a separate DOM tree —
+  // pager anchors and pill anchors never co-exist as the same element.
+  /* stylelint-disable-next-line no-descending-specificity */
   a {
     display: flex;
     align-items: center;
@@ -923,6 +970,9 @@ button.action-btn {
     background-color: $blue-very-dark;
   }
 
+  // Disabled: the earlier `img` rule lives inside .pills-cont .pill.-geothermal .link-icon-btn,
+  // a totally separate DOM tree from action-btn — they never target the same element.
+  /* stylelint-disable-next-line no-descending-specificity */
   img {
     border-radius: 0;
     height: 1.5rem;
@@ -936,6 +986,13 @@ button.action-btn {
     img {
       height: 1.25rem;
     }
+  }
+}
+
+@media not print {
+  // Hide print only content, like duplicate title text
+  .print-only {
+    display: none;
   }
 }
 

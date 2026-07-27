@@ -326,6 +326,42 @@ query ($id: ID!, $ID: String) {
                   <OwnerLogo :building="$page.building" />
                 </div>
 
+                <div v-if="hasGeothermalHeatPump">
+                  <dt>Notable Features</dt>
+
+                  <dd>
+                    <div class="pills-cont">
+                      <span class="pill -geothermal">
+                        <span class="icon">♻️</span>
+                        <g-link class="text" to="/geothermal-buildings/"
+                          >Geothermal Heat Pump</g-link
+                        >
+                        <a
+                          v-if="geothermalSourceLink"
+                          v-tooltip="
+                            geothermalSourceLink.preview
+                              ? '&ldquo;' +
+                                geothermalSourceLink.preview +
+                                '&rdquo;<br><br>Source: ' +
+                                geothermalSourceLink.text
+                              : 'Source: ' + geothermalSourceLink.text
+                          "
+                          class="link-icon-btn"
+                          :href="geothermalSourceLink.url"
+                          target="_blank"
+                          rel="noopener"
+                        >
+                          <img
+                            src="/icons/info-white.svg"
+                            class="-large"
+                            alt="More info"
+                          />
+                        </a>
+                      </span>
+                    </div>
+                  </dd>
+                </div>
+
                 <div v-if="customLinks">
                   <dt>Extra Resources</dt>
 
@@ -706,6 +742,7 @@ import { IGraphPoint } from '../components/graphs/BarGraph.vue';
 import PieChart, { IPieSlice } from '../components/graphs/PieChart.vue';
 import {
   getBuildingCustomInfo,
+  BuildingTags,
   ILink,
 } from '../constants/buildings-custom-info.constant.vue';
 import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
@@ -917,6 +954,21 @@ export default class BuildingDetails extends Vue {
     }
 
     return null;
+  }
+
+  get geothermalSourceLink(): ILink | null {
+    const buildingCustomInfo = getBuildingCustomInfo(this.building);
+    return (
+      buildingCustomInfo?.tagLinks?.[BuildingTags.hasGeothermalHeatPump] ?? null
+    );
+  }
+
+  get hasGeothermalHeatPump(): boolean {
+    const buildingCustomInfo = getBuildingCustomInfo(this.building);
+    return (
+      buildingCustomInfo?.tags?.includes(BuildingTags.hasGeothermalHeatPump) ??
+      false
+    );
   }
 
   get buildingAnomalies(): Array<DataAnomalies> {
@@ -1428,13 +1480,6 @@ export default class BuildingDetails extends Vue {
     .stat-tiles > div {
       flex-basis: 100%;
       max-width: none;
-    }
-  }
-
-  @media not print {
-    // Hide print only content, like duplicate title text
-    .print-only {
-      display: none;
     }
   }
 

@@ -69,5 +69,9 @@ export default class DataDisclaimer extends Vue {
   p {
     margin-top: 0.5em;
   }
+
+  @media print {
+    display: none;
+  }
 }
 </style>

@@ -7,8 +7,8 @@ import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { IBuilding, IBuildingNode } from '../common-functions.vue';
 import {
-  BuildingsCustomInfo,
   BuildingTags,
+  validateTaggedBuildings,
 } from '../constants/buildings-custom-info.constant.vue';
 
 interface IBuildingEdge {
@@ -39,47 +39,11 @@ export default class ChicagoRetrofitParticipants extends Vue {
   buildingsFiltered: Array<IBuildingEdge> = [];
 
   created(): void {
-    this.validateRetrofitBuildings();
+    validateTaggedBuildings(
+      BuildingTags.hasRetrofitCaseStudy,
+      this.$static.allBuilding.edges.map((e) => e.node.ID.toString()),
+    );
     this.buildingsFiltered = this.$static.allBuilding.edges;
-  }
-
-  /**
-   * IMPORTANT: This page uses a hard-coded GraphQL filter for performance optimization.
-   * The building IDs in the GraphQL query MUST match the IDs tagged with hasRetrofitCaseStudy
-   * in buildings-custom-info.constant.vue. This validation ensures they stay in sync.
-   *
-   * If you add/remove buildings with hasRetrofitCaseStudy tags, you MUST also update
-   * the GraphQL query filter in this file.
-   */
-  validateRetrofitBuildings(): void {
-    const expectedIds = Object.entries(BuildingsCustomInfo)
-      .filter(([, info]) =>
-        info.tags?.includes(BuildingTags.hasRetrofitCaseStudy),
-      )
-      .map(([id]) => id)
-      .sort();
-
-    const actualIds = this.$static.allBuilding.edges
-      .map((edge) => edge.node.ID.toString())
-      .sort();
-
-    const missing = expectedIds.filter((id) => !actualIds.includes(id));
-    const extra = actualIds.filter((id) => !expectedIds.includes(id));
-
-    // If anything is off, throw an error
-    if (missing.length > 0 || extra.length > 0) {
-      const details = [
-        missing.length > 0 && `Missing: [${missing.join(', ')}]`,
-        extra.length > 0 && `Extra: [${extra.join(', ')}]`,
-      ]
-        .filter(Boolean)
-        .join(', ');
-
-      throw new Error(
-        `RetrofitChicagoParticipants: GraphQL query mismatch. ${details}. ` +
-          'Update GraphQL query to match hasRetrofitCaseStudy tags.',
-      );
-    }
   }
 }
 </script>

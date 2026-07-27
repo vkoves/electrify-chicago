@@ -181,6 +181,30 @@ export default class BiggestBuildings extends Vue {
 
           {{ currOwner.name }}
         </h1>
+
+        <div
+          v-if="currOwner.links && currOwner.links.length > 0"
+          class="related-links"
+        >
+          <strong>Related Links</strong>
+          <span class="link-list">
+            <span
+              v-for="(link, idx) in currOwner.links"
+              :key="link.url"
+              class="link-item"
+            >
+              <a :href="link.url" target="_blank" rel="noopener">{{
+                link.text
+              }}</a>
+              <span
+                v-if="idx < currOwner.links.length - 1"
+                class="separator"
+                aria-hidden="true"
+                >|</span
+              >
+            </span>
+          </span>
+        </div>
       </BuildingsHero>
 
       <div class="page-constrained">
@@ -225,10 +249,7 @@ export default class BiggestBuildings extends Vue {
           </div>
         </section>
 
-        <section
-          v-if="gradeDistributionPie.length > 0"
-          class="grade-distribution"
-        >
+        <div v-if="gradeDistributionPie.length > 0" class="grade-distribution">
           <div class="grade-content">
             <div class="grade-chart-container">
               <h3>Grade Distribution</h3>
@@ -258,7 +279,7 @@ export default class BiggestBuildings extends Vue {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         <h2>{{ currOwner.name }} Buildings List</h2>
 
@@ -300,6 +321,39 @@ export default class BiggestBuildings extends Vue {
       background: $white;
       padding: 0.5rem;
       border-radius: $brd-rad-medium;
+    }
+  }
+
+  .related-links {
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    color: $white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+
+    strong {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .link-list {
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+    }
+
+    a {
+      color: $white;
+      text-decoration: underline;
+      font-weight: 500;
+
+      &:hover,
+      &:focus {
+        text-decoration: none;
+      }
+    }
+
+    .separator {
+      margin: 0 0.25rem;
     }
   }
 

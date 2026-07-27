@@ -17,6 +17,8 @@ export interface IBuildingOwner {
   nameShort: string; // Name for table view
   logoSmall?: string; // A square logo for table view
   logoLarge?: string; // Any size logo for building details
+  /** Related links (sustainability plans, reports, etc.) shown in the owner page header */
+  links?: Array<ILink>;
 }
 
 export interface IBuildingOwners {
@@ -37,11 +39,15 @@ export function getAvailableOwnerIds(): string[] {
 export interface IBuildingCustomInfo {
   links?: Array<ILink>;
   tags?: Array<BuildingTags>;
+  /** Optional source links scoped to specific tags, to validate/cite a tag's claim */
+  tagLinks?: Partial<Record<BuildingTags, ILink>>;
 }
 
 export interface ILink {
   url: string;
   text: string;
+  /** Optional pull quote to show as a tooltip preview */
+  preview?: string;
 }
 
 /**
@@ -54,6 +60,7 @@ export interface ILink {
  * */
 export enum BuildingTags {
   hasRetrofitCaseStudy = 'has-retrofit-case-study',
+  hasGeothermalHeatPump = 'has-geothermal-heat-pump',
 }
 
 /**
@@ -162,7 +169,75 @@ export const BuildingsCustomInfo: {
       },
     ],
   },
+
+  /**
+   * Geothermal Heat Pump Buildings
+   */
+  // School of Environmental Sustainability (Loyola University)
+  '254170': {
+    tags: [BuildingTags.hasGeothermalHeatPump],
+    tagLinks: {
+      [BuildingTags.hasGeothermalHeatPump]: {
+        url: 'https://www.luc.edu/sustainability/about/ourfacilities/#:~:text=in%20the%20building.-,Geothermal%20System,-%3A%C2%A0A%2091',
+        text: 'Loyola University Sustainability - BVM Hall Geothermal System',
+        preview:
+          'A 91-well geothermal system heats and cools the SES building by tapping into ' +
+          "the earth's constant temperature deep underground. The system is highly " +
+          "efficient, cutting the building's heating and cooling costs by 30 percent.",
+      },
+    },
+  },
+
+  // Eagle Building
+  '256537': {
+    tags: [BuildingTags.hasGeothermalHeatPump],
+    tagLinks: {
+      [BuildingTags.hasGeothermalHeatPump]: {
+        url: 'https://theeaglebuilding.com/#:~:text=and%20natural%20beauty!-,GEOTHERMAL%20HEATING,-%26%20COOLING',
+        text: 'Eagle Building - Geothermal Heating & Cooling',
+        preview:
+          'Geothermal energy offers tenants significant cost savings... by harnessing ' +
+          "the earth's natural temperature, these systems require less energy compared " +
+          'to traditional HVAC methods, leading to lower monthly expenses.',
+      },
+    },
+  },
 };
+
+/**
+ * Validates that a hard-coded GraphQL query filter matches the buildings tagged with the given tag.
+ * Pages that use a hard-coded ID filter for performance MUST call this in created() to detect
+ * mismatches between the GraphQL query and the tag data.
+ *
+ * @param tag - The BuildingTags value to validate against
+ * @param actualIds - The building IDs returned by the GraphQL query (as strings)
+ */
+export function validateTaggedBuildings(
+  tag: BuildingTags,
+  actualIds: string[],
+): void {
+  const expectedIds = Object.entries(BuildingsCustomInfo)
+    .filter(([, info]) => info.tags?.includes(tag))
+    .map(([id]) => id)
+    .sort();
+
+  const sortedActual = [...actualIds].sort();
+  const missing = expectedIds.filter((id) => !sortedActual.includes(id));
+  const extra = sortedActual.filter((id) => !expectedIds.includes(id));
+
+  if (missing.length > 0 || extra.length > 0) {
+    const details = [
+      missing.length > 0 && `Missing: [${missing.join(', ')}]`,
+      extra.length > 0 && `Extra: [${extra.join(', ')}]`,
+    ]
+      .filter(Boolean)
+      .join(', ');
+    throw new Error(
+      `GraphQL query mismatch for tag "${tag}". ${details}. ` +
+        'Update GraphQL query to match tagged buildings.',
+    );
+  }
+}
 
 export function getBuildingCustomInfo(
   building: IBuilding,

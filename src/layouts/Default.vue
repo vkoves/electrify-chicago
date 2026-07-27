@@ -7,7 +7,6 @@
 </static-query>
 
 <script lang="ts">
-/* global process */
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import AppFooter from '../components/layout/AppFooter.vue';
 import AppHeader from '../components/layout/AppHeader.vue';
