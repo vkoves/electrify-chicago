@@ -184,7 +184,7 @@ export default class BiggestBuildings extends Vue {
 
         <div
           v-if="currOwner.links && currOwner.links.length > 0"
-          class="related-links"
+          class="related-links no-print"
         >
           <strong>Related Links</strong>
           <span class="link-list">
@@ -208,13 +208,31 @@ export default class BiggestBuildings extends Vue {
       </BuildingsHero>
 
       <div class="page-constrained">
-        <g-link to="/large-owners" class="back-link grey-link">
+        <g-link to="/large-owners" class="back-link grey-link no-print">
           <img src="/icons/arrow-back.svg" alt="" />
           Back to All Owners
         </g-link>
 
+        <h2>{{ currOwner.name }} Quick Stats</h2>
+
+        <div v-if="gradeDistributionPie.length > 0" class="grade-distribution">
+          <div class="grade-content">
+            <div class="grade-chart-container">
+              <h3>Grade Distribution</h3>
+
+              <div class="grade-chart-wrapper">
+                <PieChart
+                  :graph-data="gradeDistributionPie"
+                  id-prefix="grade-distribution"
+                  :show-labels="true"
+                  :sort-by-largest="false"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
         <section class="stats-overview -three-col-max">
-          <h2>{{ currOwner.name }} Quick Stats</h2>
           <div class="stats-grid">
             <div class="stat-card">
               <div class="stat-number">{{ buildingsFiltered.length }}</div>
@@ -246,40 +264,20 @@ export default class BiggestBuildings extends Vue {
                 kg CO<sub>2</sub>/sqft)
               </div>
             </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Total Square Footage</div>
+              <div class="stat-number">{{ totalSquareFootage }}M</div>
+              <div class="stat-description">million sq ft under management</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Avg Building Age</div>
+              <div class="stat-number">{{ avgBuildingAge }}</div>
+              <div class="stat-description">years old</div>
+            </div>
           </div>
         </section>
-
-        <div v-if="gradeDistributionPie.length > 0" class="grade-distribution">
-          <div class="grade-content">
-            <div class="grade-chart-container">
-              <h3>Grade Distribution</h3>
-
-              <PieChart
-                :graph-data="gradeDistributionPie"
-                id-prefix="grade-distribution"
-                :show-labels="true"
-                :sort-by-largest="false"
-              />
-            </div>
-            <div class="supplementary-stats stats-overview">
-              <div class="stats-grid">
-                <div class="stat-card">
-                  <div class="stat-label">Total Square Footage</div>
-                  <div class="stat-number">{{ totalSquareFootage }}M</div>
-                  <div class="stat-description">
-                    million sq ft under management
-                  </div>
-                </div>
-
-                <div class="stat-card">
-                  <div class="stat-label">Avg Building Age</div>
-                  <div class="stat-number">{{ avgBuildingAge }}</div>
-                  <div class="stat-description">years old</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <h2>{{ currOwner.name }} Buildings List</h2>
 
@@ -324,6 +322,10 @@ export default class BiggestBuildings extends Vue {
     }
   }
 
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+
   .related-links {
     margin-top: 0.75rem;
     font-size: 0.875rem;
@@ -359,6 +361,7 @@ export default class BiggestBuildings extends Vue {
 
   .stats-overview {
     margin: 1rem 0;
+    break-after: page;
 
     .stat-description {
       font-weight: 600;
@@ -384,22 +387,28 @@ export default class BiggestBuildings extends Vue {
   }
 
   .grade-distribution {
-    margin: 2rem 0;
-
     h2 {
       font-size: 1rem;
       margin: 0;
     }
 
+    .grade-chart-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
     .grade-content {
+      width: 100%;
+
       display: grid;
       grid-template-columns: 1fr;
       gap: 2rem;
       align-items: center;
 
-      @media (min-width: $desktop-min-width) {
-        grid-template-columns: 1fr 3fr;
-        align-items: flex-start;
+      @media print {
+        svg {
+          max-height: 175px;
+        }
       }
     }
 
@@ -421,10 +430,6 @@ export default class BiggestBuildings extends Vue {
         }
       }
     }
-  }
-
-  h2 {
-    margin-bottom: 0.5rem;
   }
 }
 </style>
