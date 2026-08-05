@@ -133,6 +133,38 @@ function loadBuildingBenchmarkData(actions) {
 
   const collection = actions.addCollection({ typeName: 'Building' });
 
+  // If we get a duplicate node warning, notate the name here, and then we tack on the ID to the
+  // URL so '/building/salvation-army` becomes `/building/salvation-army-1234`. Gridsome only logs
+  // a console warning (not a catchable error) when a node's path collides with an existing one,
+  // then silently drops the node - so any collision NOT in this list must be caught below and
+  // fail the build loudly, rather than silently hiding a building.
+  const duplicateSlugs = [
+    'illinois-institute-of-technology',
+    'bricktown-square',
+    'the-woodlands-of-bronzeville-condominium-association',
+    'west-side-realty-corporation',
+    'gateway-centre',
+    'salvation-army',
+    'left-bank-at-k-station',
+    'tech-business-center',
+    'iit-research-tower',
+    'oakwood-shores-2d',
+    // Newly surfaced by the Never Submitted Buildings work - these are multi-building
+    // complexes where previously only one building in the pair had reported data
+    'brompton',
+    'kenwin-venture-lllp',
+    "the-buyer's-market-incorporated",
+    'armour',
+    'sutherland',
+    '24-east-washington-street',
+    'park-boulevard',
+    'encuentro-square',
+  ];
+
+  // Tracks every slug we've assigned so far this build, so we can catch NEW collisions (ones not
+  // yet in duplicateSlugs above) immediately instead of letting Gridsome silently drop the node
+  const seenSlugs = new Set();
+
   for (const building of LatestBenchmarksData) {
     // Make a slugSource that is the property name or the address as a fallback (skip one letter
     // names, e.g. '-)
@@ -176,34 +208,30 @@ function loadBuildingBenchmarkData(actions) {
       throw new Error('No building slug source (name or address)!', building);
     }
 
-    // If we get a duplicate node warning, notate the name, and then we tack on the ID to the URL
-    // so '/building/salvation-army` becomes `/building/salvation-army-1234`
-    const duplicateSlugs = [
-      'illinois-institute-of-technology',
-      'bricktown-square',
-      'the-woodlands-of-bronzeville-condominium-association',
-      'west-side-realty-corporation',
-      'gateway-centre',
-      'salvation-army',
-      'left-bank-at-k-station',
-      'tech-business-center',
-      'iit-research-tower',
-      'oakwood-shores-2d',
-    ];
-
-    try {
-      if (
-        duplicateSlugs.includes(
-          building.slugSource.toLowerCase().replaceAll(' ', '-'),
-        )
-      ) {
-        building.slugSource = building.slugSource + building.ID;
-      }
-
-      collection.addNode(building);
-    } catch (error) {
-      console.log('error', error);
+    if (
+      duplicateSlugs.includes(
+        building.slugSource.toLowerCase().replaceAll(' ', '-'),
+      )
+    ) {
+      building.slugSource = building.slugSource + building.ID;
     }
+
+    const normalizedSlug = building.slugSource
+      .toLowerCase()
+      .replaceAll(' ', '-');
+
+    // Fail the build loudly instead of letting Gridsome silently drop the node - a collision
+    // here means a building would otherwise vanish from the site with no warning
+    if (seenSlugs.has(normalizedSlug)) {
+      throw new Error(
+        `Duplicate building slug "${normalizedSlug}" (building ID ${building.ID}) - add its ` +
+          "base name/address to the duplicateSlugs list in gridsome.server.js so it gets " +
+          'disambiguated with its ID instead of silently overwriting another building.',
+      );
+    }
+    seenSlugs.add(normalizedSlug);
+
+    collection.addNode(building);
   }
 }
 
