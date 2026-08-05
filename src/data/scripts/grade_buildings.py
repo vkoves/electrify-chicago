@@ -13,6 +13,7 @@ from scipy.stats import percentileofscore
 from typing import List
 
 from src.data.scripts.utils import get_data_file_path
+from src.data.scripts.generate_historic_stats import hasReportedData
 
 
 data_directory = "dist"
@@ -336,9 +337,11 @@ def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
 
     def calculate_metrics(group):
         total_years = len(group)
-        # TODO: Refactor not submitted to be no GHG Intensity, since that's our true count
-        not_submitted_count = (group["ReportingStatus"] == "Not Submitted").sum()
-        submitted_years = total_years - not_submitted_count
+        # A year only counts as "submitted" if it has real GHG Intensity data - matches
+        # FirstYearReported/LastYearReported, since a ReportingStatus of e.g. "Exempt" isn't a
+        # real submission even though it's not literally "Not Submitted"
+        submitted_years = group["GHGIntensity"].apply(hasReportedData).sum()
+        not_submitted_count = total_years - submitted_years
 
         if total_years == 0:
             submission_rate = 0.0
@@ -390,7 +393,7 @@ def generate_consistent_reporting_grade(
     df = df.copy()
 
     # Relevant columns:
-    df = df.loc[:, ["ID", "DataYear", "ReportingStatus"]]
+    df = df.loc[:, ["ID", "DataYear", "ReportingStatus", "GHGIntensity"]]
 
     # Calculate number of missing records for each building:
     submission_rates_df = calculate_building_submission_rate(df)

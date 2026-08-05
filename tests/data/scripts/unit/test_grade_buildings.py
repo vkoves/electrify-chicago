@@ -93,8 +93,11 @@ def test_generate_consistent_reporting_grade():
     # Create test data with varying reporting statuses
     test_data = pd.DataFrame(
         {
-            "ID": [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4],
+            "ID": [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5],
             "DataYear": [
+                2020,
+                2021,
+                2022,
                 2020,
                 2021,
                 2022,
@@ -121,6 +124,26 @@ def test_generate_consistent_reporting_grade():
                 "Not Submitted",
                 "Not Submitted",
                 "Not Submitted",  # ID 4: never submitted
+                "Exempt",
+                "Exempt",
+                "Not Submitted",  # ID 5: never submitted, but never "Not Submitted" every year
+            ],
+            "GHGIntensity": [
+                10,
+                11,
+                12,  # ID 1: real data every year
+                10,
+                None,
+                12,  # ID 2: real data except the not-submitted year
+                None,
+                None,
+                12,  # ID 3: real data except the not-submitted years
+                None,
+                None,
+                None,  # ID 4: never submitted
+                None,
+                None,
+                None,  # ID 5: "Exempt" years have no real data either
             ],
         }
     )
@@ -163,6 +186,14 @@ def test_generate_consistent_reporting_grade():
     assert pd.isna(id4_row["SubmittedRecordsPercentileGrade"].values[0])
     assert pd.isna(id4_row["SubmittedRecordsLetterGrade"].values[0])
     assert id4_row["MissingRecordsCount"].values[0] == 3
+
+    # ID 5: never submitted real data, but has "Exempt" years rather than "Not Submitted" -
+    # should still be treated as never submitted (regression test for building 160214, which
+    # got a bogus "D" because "Exempt" years were being counted as submitted)
+    id5_row = result[result["ID"] == 5]
+    assert pd.isna(id5_row["SubmittedRecordsPercentileGrade"].values[0])
+    assert pd.isna(id5_row["SubmittedRecordsLetterGrade"].values[0])
+    assert id5_row["MissingRecordsCount"].values[0] == 3
 
 
 # Test calculate_weighted_average function
