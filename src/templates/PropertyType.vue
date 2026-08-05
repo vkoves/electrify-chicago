@@ -336,6 +336,11 @@ export default class PropertyType extends Vue {
       </BuildingsHero>
 
       <div class="page-constrained">
+        <g-link to="/property-types" class="grey-link back-link no-print">
+          <img src="/icons/arrow-back.svg" alt="" />
+          Back to All Property Types
+        </g-link>
+
         <section class="stats-panel">
           <h2 class="stats-heading">{{ propertyType }} Stats</h2>
 
