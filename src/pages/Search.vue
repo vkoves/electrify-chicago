@@ -428,6 +428,7 @@ export default class Search extends Vue {
           slugSource
           ID
           DataYear
+          FirstYearReported
           PropertyName
           Address
           path

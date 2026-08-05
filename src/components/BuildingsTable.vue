@@ -123,6 +123,7 @@ export default class BuildingsTable extends Vue {
       'AvgPercentileLetterGrade',
       'DataYear',
       'DataAnomalies',
+      'FirstYearReported',
       // For gas free check
       'NaturalGasUse',
       'DistrictSteamUse',
