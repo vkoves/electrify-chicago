@@ -43,8 +43,8 @@ export default class About extends Vue {}
         <p>
           This brings <strong>396 previously hidden buildings</strong> back into
           Electrify Chicago, growing our total tracked buildings from
-          <strong>3,448 to 3,852</strong> (including some other buildings previously hidden due to
-          duplicate names).
+          <strong>3,448 to 3,852</strong> (including some other buildings
+          previously hidden due to duplicate names).
         </p>
       </div>
 
