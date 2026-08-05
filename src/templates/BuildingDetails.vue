@@ -228,6 +228,9 @@ query ($id: ID!, $ID: String) {
                 This building is in the city's benchmarking data, indicating it
                 should have reported energy use, but it has never submitted any
                 benchmarking data.
+                <g-link to="/never-submitted" class="bold">
+                  View All Buildings That Never Submitted
+                </g-link>
               </p>
             </div>
           </div>
