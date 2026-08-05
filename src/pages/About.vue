@@ -161,6 +161,9 @@ export default class About extends Vue {
           <g-link to="/all-electric"> All Electric Buildings </g-link>
         </li>
         <li>
+          <g-link to="/never-submitted"> Never Submitted Buildings </g-link>
+        </li>
+        <li>
           <g-link to="/geothermal-buildings">Geothermal Buildings</g-link>
         </li>
         <li>

@@ -101,6 +101,7 @@ export default class AllElectric extends Vue {}
           DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
+          FirstYearReported
         }
       }
     }

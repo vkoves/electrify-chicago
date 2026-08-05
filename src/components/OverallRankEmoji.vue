@@ -27,7 +27,15 @@
     </span>
 
     <span
-      v-if="isOldData && !largeView"
+      v-if="hasNeverSubmitted && !largeView"
+      class="emoji has-img-emoji"
+      title="Building Never Submitted Data"
+    >
+      ❌
+    </span>
+
+    <span
+      v-if="!hasNeverSubmitted && isOldData && !largeView"
       class="emoji has-img-emoji"
       title="Outdated data (did not submit in the latest year)"
     >
@@ -50,6 +58,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import {
   fullyGasFree,
   getOverallRankEmoji,
+  hasNeverSubmitted,
   IBuilding,
   IBuildingBenchmarkStats,
 } from '../common-functions.vue';
@@ -84,9 +93,7 @@ export default class OverallRankEmoji extends Vue {
   /** Whether this building's latest data is old, not matching the latest data year */
   get isOldData(): boolean {
     if (typeof this.building.DataYear === 'undefined') {
-      throw new Error(
-        'Building does not have DataYear! Make sure to add it to GraphQL query',
-      );
+      return false;
     }
 
     return parseInt(this.building.DataYear.toString()) < LatestDataYear;
@@ -104,6 +111,10 @@ export default class OverallRankEmoji extends Vue {
 
   get isGasFree(): boolean {
     return fullyGasFree(this.building);
+  }
+
+  get hasNeverSubmitted(): boolean {
+    return hasNeverSubmitted(this.building);
   }
 }
 </script>

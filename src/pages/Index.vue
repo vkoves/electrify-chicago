@@ -95,6 +95,7 @@ export default class Index extends Vue {
           DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
+          FirstYearReported
         }
       }
     }
