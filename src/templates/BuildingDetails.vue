@@ -745,6 +745,7 @@ import {
   calculateEnergyBreakdown,
   DataAnomalies,
   fullyGasFree,
+  hasNeverSubmitted,
   IBuilding,
   IBuildingBenchmarkStats,
   IHistoricData,
@@ -916,7 +917,7 @@ export default class BuildingDetails extends Vue {
   }
 
   get hasNeverSubmitted(): boolean {
-    return this.building.FirstYearReported === null;
+    return hasNeverSubmitted(this.building);
   }
 
   /** The primary property type of the current building, URL encoded for a link */

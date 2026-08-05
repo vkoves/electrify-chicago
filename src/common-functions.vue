@@ -139,6 +139,14 @@ export function isZeroOrNull(value: number | null): boolean {
 }
 
 /**
+ * Whether a building has never submitted any benchmarking data, despite being expected to
+ * (i.e. it's in the city's dataset). Requires FirstYearReported to be queried via GraphQL.
+ */
+export function hasNeverSubmitted(building: IBuilding): boolean {
+  return building.FirstYearReported === null;
+}
+
+/**
  * Type guard to ensure required building properties exist for calculations
  */
 export function validateBuildingProperties<T extends IBuilding>(

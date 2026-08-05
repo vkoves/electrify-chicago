@@ -58,6 +58,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import {
   fullyGasFree,
   getOverallRankEmoji,
+  hasNeverSubmitted,
   IBuilding,
   IBuildingBenchmarkStats,
 } from '../common-functions.vue';
@@ -113,7 +114,7 @@ export default class OverallRankEmoji extends Vue {
   }
 
   get hasNeverSubmitted(): boolean {
-    return this.building.FirstYearReported === null;
+    return hasNeverSubmitted(this.building);
   }
 }
 </script>

@@ -235,7 +235,11 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import buildingStatsByPropertyType from '../data/dist/building-statistics-by-property-type.json';
-import { fullyGasFree, roundUpLargeNumber } from '../common-functions.vue';
+import {
+  fullyGasFree,
+  hasNeverSubmitted,
+  roundUpLargeNumber,
+} from '../common-functions.vue';
 
 import {
   estimateUtilitySpend,
@@ -300,7 +304,7 @@ export default class StatTile extends Vue {
 
   /** Whether this building has never submitted any benchmarking data */
   get hasNeverSubmitted(): boolean {
-    return this.building.FirstYearReported === null;
+    return hasNeverSubmitted(this.building);
   }
 
   /** The estimated cost for the given utility */
