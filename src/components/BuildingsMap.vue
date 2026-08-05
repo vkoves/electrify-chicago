@@ -67,7 +67,7 @@
             <BuildingImage :building="currBuilding" />
 
             <div class="stats-list">
-              <div>
+              <div v-if="isValidStat(currBuilding.GrossFloorArea)">
                 <h2>Square Footage</h2>
 
                 <RankText
@@ -79,7 +79,7 @@
                 />
               </div>
 
-              <div>
+              <div v-if="isValidStat(currBuilding.GHGIntensity)">
                 <h2>GHG Intensity</h2>
 
                 <RankText
@@ -90,7 +90,7 @@
                 />
               </div>
 
-              <div>
+              <div v-if="isValidStat(currBuilding.TotalGHGEmissions)">
                 <h2>Total GHG Emissions</h2>
 
                 <RankText
@@ -235,6 +235,11 @@ export default class BuildingsMap extends Vue {
   /* Declare dynamic template data for VueJS */
   data(): { currBuilding?: IBuilding } {
     return { currBuilding: this.currBuilding };
+  }
+
+  // Only show a stat if the building actually reported a valid value for it
+  isValidStat(value: unknown): boolean {
+    return typeof value === 'number' && !isNaN(value);
   }
 
   async mounted(): Promise<void> {
