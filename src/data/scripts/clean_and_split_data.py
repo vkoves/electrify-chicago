@@ -135,9 +135,25 @@ def get_last_year_data(all_submitted_data: pd.DataFrame) -> pd.DataFrame:
 def get_never_submitted_buildings(building_data: pd.DataFrame) -> pd.DataFrame:
     """Get one row (the most recent year seen) for each building that has never submitted data in
     any year on record, so we still include them in our dataset (with mostly blank metrics) and
-    they're searchable, even though they're excluded from indexes that rank by reported data"""
+    they're searchable, even though they're excluded from indexes that rank by reported data.
 
-    submitted_ids = get_submitted_data(building_data)["ID"].unique().tolist()
+    A building only counts as having submitted if it has a row with BOTH a "Submitted"/"Submitted
+    Data" status AND real GHGIntensity data - some buildings have a submitted status in the source
+    data but no actual GHGIntensity in any year, which is junk data, not a real submission. This
+    matches the filters used for submitted_data in process() below, so every building ends up in
+    exactly one of the two buckets.
+
+    TODO: This over-corrects for buildings like 101873, which has real electricity/gas use data
+    every year but no calculated GHGIntensity - that's a real (if incomplete) submission, not a
+    never-submitted building, so it shouldn't be lumped in with buildings that have zero data.
+    We need a third status (something like "Submitted, No GHG Data") to label this oddity
+    correctly instead of collapsing it into "never submitted"."""
+
+    submitted_ids = (
+        get_buildings_with_ghg_intensity(get_submitted_data(building_data))["ID"]
+        .unique()
+        .tolist()
+    )
     never_submitted = building_data.loc[~building_data["ID"].isin(submitted_ids)].copy()
 
     never_submitted = never_submitted.sort_values(by=["ID", "DataYear"])

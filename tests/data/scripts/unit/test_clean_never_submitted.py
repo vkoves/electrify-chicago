@@ -53,19 +53,70 @@ def test_property_count_includes_never_submitted(processed_dataframe):
 
 
 def test_get_never_submitted_buildings_excludes_ever_submitted():
-    """Unit test for get_never_submitted_buildings directly: a building with a submitted row in
-    any year should never show up, even if that row isn't the most recent one"""
+    """Unit test for get_never_submitted_buildings directly: a building with a submitted row with
+    real GHGIntensity data in any year should never show up, even if that row isn't the most
+    recent one"""
 
     building_data = pd.DataFrame(
         [
-            {"ID": "1", "DataYear": 2022, "ReportingStatus": "Not Submitted"},
-            {"ID": "1", "DataYear": 2023, "ReportingStatus": "Not Submitted"},
-            {"ID": "2", "DataYear": 2021, "ReportingStatus": "Submitted"},
-            {"ID": "2", "DataYear": 2023, "ReportingStatus": "Not Submitted"},
+            {
+                "ID": "1",
+                "DataYear": 2022,
+                "ReportingStatus": "Not Submitted",
+                "GHGIntensity": None,
+            },
+            {
+                "ID": "1",
+                "DataYear": 2023,
+                "ReportingStatus": "Not Submitted",
+                "GHGIntensity": None,
+            },
+            {
+                "ID": "2",
+                "DataYear": 2021,
+                "ReportingStatus": "Submitted",
+                "GHGIntensity": 10.5,
+            },
+            {
+                "ID": "2",
+                "DataYear": 2023,
+                "ReportingStatus": "Not Submitted",
+                "GHGIntensity": None,
+            },
         ]
     )
 
     result = clean_and_split_data.get_never_submitted_buildings(building_data)
 
     assert list(result["ID"]) == ["1"]
+    assert result.iloc[0]["DataYear"] == 2023
+
+
+def test_get_never_submitted_buildings_includes_submitted_status_with_junk_data():
+    """A building can have a "Submitted"/"Submitted Data" status row in the source data with no
+    real GHGIntensity value - that's junk data, not an actual submission, so the building should
+    still be treated as never submitted (regression test for buildings like 101873, which fell
+    through the cracks: excluded from the submitted bucket for having no real GHGIntensity, but
+    also excluded from the never-submitted bucket because it had a "Submitted" status row)"""
+
+    building_data = pd.DataFrame(
+        [
+            {
+                "ID": "3",
+                "DataYear": 2022,
+                "ReportingStatus": "Submitted",
+                "GHGIntensity": None,
+            },
+            {
+                "ID": "3",
+                "DataYear": 2023,
+                "ReportingStatus": "Submitted Data",
+                "GHGIntensity": 0,
+            },
+        ]
+    )
+
+    result = clean_and_split_data.get_never_submitted_buildings(building_data)
+
+    assert list(result["ID"]) == ["3"]
     assert result.iloc[0]["DataYear"] == 2023
