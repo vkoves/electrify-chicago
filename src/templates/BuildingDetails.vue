@@ -255,14 +255,14 @@ query ($id: ID!, $ID: String) {
                   <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
                 </div>
 
-                <div>
+                <div v-if="propertyType">
                   <dt>Primary Property Type</dt>
                   <dd>
                     <g-link
                       class="nav-link"
                       :to="`/property-type/${propertyTypeSlug}`"
                     >
-                      {{ $page.building.PrimaryPropertyType }}
+                      {{ propertyType }}
                     </g-link>
                   </dd>
                 </div>
@@ -279,7 +279,7 @@ query ($id: ID!, $ID: String) {
                   <dd>{{ $page.building.NumberOfBuildings }}</dd>
                 </div>
 
-                <div class="no-print">
+                <div v-if="$page.building.CommunityArea" class="no-print">
                   <dt>Community Area</dt>
                   <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
                 </div>
