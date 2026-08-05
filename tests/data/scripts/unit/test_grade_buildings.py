@@ -239,15 +239,22 @@ def test_grades_generate_historically():
     # Create historical data with multiple years
     historical_data = pd.DataFrame(
         {
-            "ID": [1, 1, 2, 2],  # Two buildings
-            "DataYear": [2021, 2022, 2021, 2022],  # Two years
-            "GHGIntensity": [10, 15, 20, 25],  # Different values each year
-            "ElectricityUse": [1000, 900, 500, 400],  # More electric = better
-            "NaturalGasUse": [0, 100, 500, 600],  # More gas = worse
-            "DistrictSteamUse": [0, 0, 0, 0],
-            "DistrictChilledWaterUse": [0, 0, 0, 0],
-            "AllOtherFuelUse": [0, 0, 0, 0],
-            "ReportingStatus": ["Submitted", "Submitted", "Submitted", "Submitted"],
+            "ID": [1, 1, 2, 2, 3, 3],  # Three buildings
+            "DataYear": [2021, 2022, 2021, 2022, 2021, 2022],  # Two years
+            "GHGIntensity": [10, 15, 20, 25, 0, 0],  # Building 3: never submitted
+            "ElectricityUse": [1000, 900, 500, 400, 0, 0],  # More electric = better
+            "NaturalGasUse": [0, 100, 500, 600, 0, 0],  # More gas = worse
+            "DistrictSteamUse": [0, 0, 0, 0, 0, 0],
+            "DistrictChilledWaterUse": [0, 0, 0, 0, 0, 0],
+            "AllOtherFuelUse": [0, 0, 0, 0, 0, 0],
+            "ReportingStatus": [
+                "Submitted",
+                "Submitted",
+                "Submitted",
+                "Submitted",
+                "Not Submitted",
+                "Not Submitted",
+            ],
         }
     )
 
@@ -280,6 +287,10 @@ def test_grades_generate_historically():
                 ]:
                     assert col in building_year_data.columns
                     assert not pd.isna(building_year_data[col].iloc[0])
+
+        # Building 3 never submitted, so it shouldn't get a reporting consistency grade
+        building_3_data = result[result["ID"] == 3]
+        assert building_3_data["SubmittedRecordsLetterGrade"].isna().all()
 
 
 def test_building_grade_examples():
