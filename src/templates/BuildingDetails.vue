@@ -898,7 +898,7 @@ export default class BuildingDetails extends Vue {
   }
 
   get isNew(): boolean {
-    return isNewBuilding(this.building, this.historicData);
+    return isNewBuilding(this.historicData);
   }
 
   /** Helper for property name with address fallback */
@@ -913,7 +913,7 @@ export default class BuildingDetails extends Vue {
 
   /** The year of the data for this specific building */
   get dataYear(): number {
-    return this.building.DataYear as number;
+    return this.building.DataYear;
   }
 
   get hasNeverSubmitted(): boolean {
