@@ -113,6 +113,12 @@ export default class ReportCard extends Vue {
 </template>
 <style lang="scss">
 .report-card-cont {
+  // Single sizing knob: every internal font-size and padding scales linearly
+  // with this. Parents (e.g. the social-share square) can override it to
+  // resize the whole card without rewriting individual rules. Defaults to
+  // 1rem so existing call sites render unchanged.
+  --rc-base-font-size: 1rem;
+
   position: relative;
   border-radius: $brd-rad-medium;
   overflow: hidden;
@@ -135,23 +141,23 @@ export default class ReportCard extends Vue {
     .warning-inner {
       width: 80%;
       max-width: 30rem;
-      padding: 1rem;
+      padding: calc(1 * var(--rc-base-font-size));
       border-radius: $brd-rad-small;
       background: rgba(0, 0, 0, 0.5);
       backdrop-filter: blur(0.25rem);
 
       h2 {
         margin-top: 0;
-        font-size: 1rem;
+        font-size: calc(1 * var(--rc-base-font-size));
       }
       p {
-        font-size: 0.8125rem;
+        font-size: calc(0.8125 * var(--rc-base-font-size));
       }
     }
 
     button {
       border-bottom: none;
-      margin-top: 1rem;
+      margin-top: calc(1 * var(--rc-base-font-size));
     }
   }
 
@@ -165,23 +171,27 @@ export default class ReportCard extends Vue {
   }
 
   .report-card {
+    // Anchor for em-based inheritance — h2/strong/etc. scale via their
+    // em-based defaults relative to this size.
+    font-size: var(--rc-base-font-size);
+
     &.-anomalous {
       filter: blur(0.125rem);
     }
 
     h2,
     .grades-cont {
-      padding-left: 1rem;
-      padding-right: 1rem;
+      padding-left: calc(1 * var(--rc-base-font-size));
+      padding-right: calc(1 * var(--rc-base-font-size));
     }
 
     h2.title {
       margin: 0;
       background-color: $chicago-red;
       color: $white;
-      padding-left: 1.5rem;
-      padding-top: 0.5rem;
-      padding-bottom: 0.25rem;
+      padding-left: calc(1.5 * var(--rc-base-font-size));
+      padding-top: calc(0.5 * var(--rc-base-font-size));
+      padding-bottom: calc(0.25 * var(--rc-base-font-size));
     }
 
     hr {
@@ -189,20 +199,21 @@ export default class ReportCard extends Vue {
     }
 
     .grades-cont {
-      padding-top: 0.5rem;
-      padding-bottom: 1rem;
+      background-color: $white;
+      padding-top: calc(0.5 * var(--rc-base-font-size));
+      padding-bottom: calc(1 * var(--rc-base-font-size));
       border: solid $border-thick $grey-dark;
       border-top: none;
       border-bottom-right-radius: $brd-rad-medium;
       border-bottom-left-radius: $brd-rad-medium;
 
       .letter-grade {
-        font-size: 1.5rem;
-        width: 2rem;
+        font-size: calc(1.5 * var(--rc-base-font-size));
+        width: calc(2 * var(--rc-base-font-size));
         text-align: center;
 
         &.-overall {
-          font-size: 3rem;
+          font-size: calc(3 * var(--rc-base-font-size));
         }
       }
     }
@@ -211,12 +222,15 @@ export default class ReportCard extends Vue {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0.5rem 0.5rem 0.5rem 0.25rem;
+      padding: calc(0.5 * var(--rc-base-font-size))
+        calc(0.5 * var(--rc-base-font-size))
+        calc(0.5 * var(--rc-base-font-size))
+        calc(0.25 * var(--rc-base-font-size));
 
       &.-overall {
-        padding-top: 0.25rem;
+        padding-top: calc(0.25 * var(--rc-base-font-size));
         padding-bottom: 0;
-        font-size: 1.5rem;
+        font-size: calc(1.5 * var(--rc-base-font-size));
       }
     }
 
@@ -237,11 +251,11 @@ export default class ReportCard extends Vue {
     }
 
     .learn-more-cont {
-      margin-top: 1rem;
+      margin-top: calc(1 * var(--rc-base-font-size));
 
       a {
         font-weight: 500;
-        font-size: 0.8125rem;
+        font-size: calc(0.8125 * var(--rc-base-font-size));
       }
     }
   }

@@ -168,7 +168,12 @@ query ($id: ID!, $ID: String) {
             </button>
 
             <!-- Share button -->
-            <ShareButton :title="propertyName" :text="shareText" />
+            <ShareButton
+              :title="propertyName"
+              :text="shareText"
+              :enable-share-images="true"
+              @share-images="isShareImagesModalOpen = true"
+            />
           </div>
         </div>
 
@@ -688,6 +693,13 @@ query ($id: ID!, $ID: String) {
 
       <DataSourceFootnote />
 
+      <ShareImagesModal
+        v-if="isShareImagesModalOpen"
+        :building="building"
+        :stats="BuildingBenchmarkStats"
+        @close="isShareImagesModalOpen = false"
+      />
+
       <email-modal
         v-if="isEmailModalOpen"
         title="Email This Building"
@@ -764,6 +776,7 @@ import { slugifyPropertyType } from '../constants/property-type-helpers.vue';
 import EmailModal from '../components/EmailModal.vue';
 import LetterGrade from '../components/LetterGrade.vue';
 import ShareButton from '../components/ShareButton.vue';
+import ShareImagesModal from '../components/ShareImagesModal.vue';
 
 import vToolTip from 'v-tooltip';
 import ReportCard from '../components/ReportCard.vue';
@@ -817,6 +830,7 @@ Vue.use(vToolTip);
     ReportCard,
     ReportingTile,
     ShareButton,
+    ShareImagesModal,
     StatTile,
   },
   filters: {
@@ -887,6 +901,7 @@ export default class BuildingDetails extends Vue {
   totalEnergyUsekBTU!: number;
 
   isEmailModalOpen = false;
+  isShareImagesModalOpen = false;
 
   /** A helper to get the current building, but with proper typing */
   get building(): IBuilding {
