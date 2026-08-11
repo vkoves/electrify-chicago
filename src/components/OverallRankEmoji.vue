@@ -6,6 +6,7 @@
       v-tooltip="{
         content: overallRank.msg,
         trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
       }"
       class="emoji overall-rank-emoji tooltip"
     >
@@ -15,7 +16,11 @@
     <!-- Show image emoji on tables -->
     <span
       v-if="hasBuildingImg && !largeView"
-      v-tooltip="{ content: 'Has building photograph', trigger: 'click hover' }"
+      v-tooltip="{
+        content: 'Has building photograph',
+        trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
+      }"
       class="emoji has-img-emoji tooltip"
     >
       📷
@@ -23,7 +28,11 @@
 
     <span
       v-if="isGasFree && !largeView"
-      v-tooltip="{ content: 'All Electric!', trigger: 'click hover' }"
+      v-tooltip="{
+        content: 'All Electric!',
+        trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
+      }"
       class="emoji has-img-emoji tooltip"
     >
       ⚡
@@ -34,6 +43,7 @@
       v-tooltip="{
         content: 'Building Never Submitted Data',
         trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
       }"
       class="emoji has-img-emoji tooltip"
     >
@@ -45,6 +55,7 @@
       v-tooltip="{
         content: 'Outdated data (did not submit in the latest year)',
         trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
       }"
       class="emoji has-img-emoji tooltip"
     >
@@ -56,6 +67,7 @@
       v-tooltip="{
         content: 'Has anomalous data, likely indicating reporting errors',
         trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
       }"
       class="emoji tooltip"
     >
@@ -152,6 +164,14 @@ export default class OverallRankEmoji extends Vue {
     .overall-rank-emoji {
       font-size: 0.8em;
     }
+  }
+}
+
+.overall-rank-tooltip {
+  .tooltip-inner {
+    font-size: 12px;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 </style>
