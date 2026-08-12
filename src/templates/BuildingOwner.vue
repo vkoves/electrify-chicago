@@ -366,7 +366,6 @@ export default class BiggestBuildings extends Vue {
 
   .stats-overview {
     margin: 1rem 0;
-    break-after: page;
 
     .stat-description {
       font-weight: 600;
@@ -381,12 +380,12 @@ export default class BiggestBuildings extends Vue {
 
     // Override grid for 3 cards layout
     &.-three-col-max .stats-grid {
-      // Mobile: 2 columns
-      grid-template-columns: repeat(2, 1fr);
+      // Print and Desktop: 3 columns (one row with 3 cards)
+      grid-template-columns: repeat(3, 1fr);
 
-      // Desktop: 3 columns (one row with 3 cards)
-      @media (min-width: $desktop-min-width) {
-        grid-template-columns: repeat(3, 1fr);
+      // Mobile: 2 columns
+      @media screen and (max-width: $desktop-min-width) {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   }
@@ -394,7 +393,7 @@ export default class BiggestBuildings extends Vue {
   .quick-stats {
     display: flex;
 
-    @media (max-width: $mobile-max-width) {
+    @media screen and (max-width: $mobile-max-width) {
       flex-direction: column;
     }
   }
