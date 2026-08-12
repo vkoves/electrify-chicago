@@ -215,7 +215,7 @@ query ($ward: String) {
       <BuildingsHero
         :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
         :short="true"
-        :printBreak="true"
+        :print-break="true"
       >
         <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
       </BuildingsHero>

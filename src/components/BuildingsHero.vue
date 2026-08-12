@@ -213,11 +213,11 @@ export default class BuildingsHero extends Vue {
 
       // On very small mobile, only show first 4 images
       .hero-image:not(
-        :nth-child(1),
-        :nth-child(2),
-        :nth-child(3),
-        :nth-child(4)
-      ) {
+          :nth-child(1),
+          :nth-child(2),
+          :nth-child(3),
+          :nth-child(4)
+        ) {
         display: none;
       }
     }
