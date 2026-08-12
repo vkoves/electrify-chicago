@@ -3,8 +3,12 @@
     <!-- Don't show rankings if we think the data is wrong -->
     <span
       v-if="overallRank && !hasAnomalousData"
-      class="emoji overall-rank-emoji"
-      :title="overallRank.msg"
+      v-tooltip="{
+        content: overallRank.msg,
+        trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
+      }"
+      class="emoji overall-rank-emoji tooltip"
     >
       {{ overallRank.emoji }}
     </span>
@@ -12,40 +16,60 @@
     <!-- Show image emoji on tables -->
     <span
       v-if="hasBuildingImg && !largeView"
-      class="emoji has-img-emoji"
-      title="Has building photograph"
+      v-tooltip="{
+        content: 'Has building photograph',
+        trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
+      }"
+      class="emoji has-img-emoji tooltip"
     >
       📷
     </span>
 
     <span
       v-if="isGasFree && !largeView"
-      class="emoji has-img-emoji"
-      title="All Electric!"
+      v-tooltip="{
+        content: 'All Electric!',
+        trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
+      }"
+      class="emoji has-img-emoji tooltip"
     >
       ⚡
     </span>
 
     <span
       v-if="hasNeverSubmitted && !largeView"
-      class="emoji has-img-emoji"
-      title="Building Never Submitted Data"
+      v-tooltip="{
+        content: 'Building Never Submitted Data',
+        trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
+      }"
+      class="emoji has-img-emoji tooltip"
     >
       ❌
     </span>
 
     <span
       v-if="!hasNeverSubmitted && isOldData && !largeView"
-      class="emoji has-img-emoji"
-      title="Outdated data (did not submit in the latest year)"
+      v-tooltip="{
+        content: 'Outdated data (did not submit in the latest year)',
+        trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
+      }"
+      class="emoji has-img-emoji tooltip"
     >
       🕰️
     </span>
 
     <span
       v-if="hasAnomalousData && !largeView"
-      class="emoji"
-      title="Has anomalous data, likely indicating reporting errors"
+      v-tooltip="{
+        content: 'Has anomalous data, likely indicating reporting errors',
+        trigger: 'click hover',
+        classes: ['tooltip', 'overall-rank-tooltip'],
+      }"
+      class="emoji tooltip"
     >
       ⚠️
     </span>
@@ -54,6 +78,9 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import vToolTip from 'v-tooltip';
+
+Vue.use(vToolTip);
 
 import {
   fullyGasFree,
@@ -137,6 +164,14 @@ export default class OverallRankEmoji extends Vue {
     .overall-rank-emoji {
       font-size: 0.8em;
     }
+  }
+}
+
+.overall-rank-tooltip {
+  .tooltip-inner {
+    font-size: 12px;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 }
 </style>
