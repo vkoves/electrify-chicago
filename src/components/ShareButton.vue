@@ -31,6 +31,16 @@
             Copy Link
           </button>
         </li>
+        <li v-if="enableShareImages">
+          <button
+            class="share-link"
+            :class="{ '-with-text': showText }"
+            @click="handleShareImages()"
+          >
+            <img src="/icons/share.svg" alt="" />
+            Share Images
+          </button>
+        </li>
         <li>
           <a
             class="share-link"
@@ -92,7 +102,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue } from 'vue-property-decorator';
 /**
  * Reusable share button that uses the native Web Share API when available,
  * with clipboard fallback. Shows a fade-in alert when link is copied.
@@ -111,6 +121,14 @@ export default class ShareButton extends Vue {
   /** Whether to show the word "Share" or (by default) just an icon */
   @Prop({ type: Boolean, default: false })
   showText!: boolean;
+
+  /**
+   * If true, an extra "Share Images" option is added to the dropdown that
+   * emits the `share-images` event when clicked. The parent is responsible
+   * for opening any associated modal in response.
+   */
+  @Prop({ type: Boolean, default: false })
+  enableShareImages!: boolean;
 
   showCopyAlert = false;
   copyAlertVisible = false;
@@ -132,6 +150,20 @@ export default class ShareButton extends Vue {
 
   copyShareUrl(): void {
     return this.copyToClipboard(this.getShareUrl());
+  }
+
+  /** Emitted when the user picks the "Share Images" option from the dropdown */
+  @Emit('share-images')
+  shareImages(): boolean {
+    return true;
+  }
+
+  handleShareImages(): void {
+    this.shareImages();
+    // Close the dropdown after triggering so focus returns to the page flow
+    if (this.showShareDropdown) {
+      this.enableDropdown();
+    }
   }
 
   getShareUrl(): string {

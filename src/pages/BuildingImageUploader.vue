@@ -234,6 +234,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { IBuilding } from '../common-functions.vue';
+import { downloadBlob } from '../download-helpers.vue';
 
 interface UploadForm {
   buildingId: string;
@@ -408,7 +409,7 @@ export default class BuildingImageUploader extends Vue {
       };
 
       // Download the processed image
-      this.downloadBlob(processedBlob, filename);
+      downloadBlob(processedBlob, filename);
 
       this.results.unshift(result);
       this.resetForm();
@@ -457,17 +458,6 @@ export default class BuildingImageUploader extends Vue {
       img.onerror = () => reject(new Error('Failed to load image'));
       img.src = URL.createObjectURL(file);
     });
-  }
-
-  downloadBlob(blob: Blob, filename: string): void {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
   }
 
   generateCodeSnippet(buildingId: string, relativePath: string): string {
