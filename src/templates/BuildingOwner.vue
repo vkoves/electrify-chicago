@@ -184,7 +184,7 @@ export default class BiggestBuildings extends Vue {
 
         <div
           v-if="currOwner.links && currOwner.links.length > 0"
-          class="related-links"
+          class="related-links no-print"
         >
           <strong>Related Links</strong>
           <span class="link-list">
@@ -208,78 +208,81 @@ export default class BiggestBuildings extends Vue {
       </BuildingsHero>
 
       <div class="page-constrained">
-        <g-link to="/large-owners" class="back-link grey-link">
+        <g-link to="/large-owners" class="back-link grey-link no-print">
           <img src="/icons/arrow-back.svg" alt="" />
           Back to All Owners
         </g-link>
 
-        <section class="stats-overview -three-col-max">
-          <h2>{{ currOwner.name }} Quick Stats</h2>
-          <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-number">{{ buildingsFiltered.length }}</div>
-              <div class="stat-label">Tagged Buildings</div>
-            </div>
+        <h2>{{ currOwner.name }} Quick Stats</h2>
 
-            <div class="stat-card">
-              <div class="stat-label">Total Emissions</div>
-              <div class="stat-number">{{ totalGHGEmissions }}</div>
-              <div class="stat-description">
-                metric tons CO<sub>2</sub> equivalent
-              </div>
-              <div class="stat-footnote">
-                {{ medianGHGEmissionsMultiple }}x the median building ({{
-                  BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
-                }}
-                tons CO<sub>2</sub>e)
+        <section class="quick-stats">
+          <div
+            v-if="gradeDistributionPie.length > 0"
+            class="grade-distribution"
+          >
+            <div class="grade-content">
+              <h3>Grade Distribution</h3>
+
+              <div class="grade-chart-wrapper">
+                <PieChart
+                  :graph-data="gradeDistributionPie"
+                  id-prefix="grade-distribution"
+                  :show-labels="true"
+                  :sort-by-largest="false"
+                />
               </div>
             </div>
+          </div>
 
-            <div class="stat-card">
-              <div class="stat-label">Avg GHG Intensity</div>
-              <div class="stat-number">{{ avgGHGIntensity }}</div>
-              <div class="stat-description">kg CO<sub>2</sub>e/sqft</div>
-              <div class="stat-footnote">
-                {{ medianGHGIntensityMultiple }}x the median building ({{
-                  BuildingBenchmarkStats.GHGIntensity.median
-                }}
-                kg CO<sub>2</sub>/sqft)
+          <div class="stats-overview -three-col-max">
+            <div class="stats-grid">
+              <div class="stat-card">
+                <div class="stat-number">{{ buildingsFiltered.length }}</div>
+                <div class="stat-label">Tagged Buildings</div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Total Emissions</div>
+                <div class="stat-number">{{ totalGHGEmissions }}</div>
+                <div class="stat-description">
+                  metric tons CO<sub>2</sub> equivalent
+                </div>
+                <div class="stat-footnote">
+                  {{ medianGHGEmissionsMultiple }}x the median building ({{
+                    BuildingBenchmarkStats.TotalGHGEmissions.median.toLocaleString()
+                  }}
+                  tons CO<sub>2</sub>e)
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Avg GHG Intensity</div>
+                <div class="stat-number">{{ avgGHGIntensity }}</div>
+                <div class="stat-description">kg CO<sub>2</sub>e/sqft</div>
+                <div class="stat-footnote">
+                  {{ medianGHGIntensityMultiple }}x the median building ({{
+                    BuildingBenchmarkStats.GHGIntensity.median
+                  }}
+                  kg CO<sub>2</sub>/sqft)
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Total Square Footage</div>
+                <div class="stat-number">{{ totalSquareFootage }}M</div>
+                <div class="stat-description">
+                  million sq ft under management
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-label">Avg Building Age</div>
+                <div class="stat-number">{{ avgBuildingAge }}</div>
+                <div class="stat-description">years old</div>
               </div>
             </div>
           </div>
         </section>
-
-        <div v-if="gradeDistributionPie.length > 0" class="grade-distribution">
-          <div class="grade-content">
-            <div class="grade-chart-container">
-              <h3>Grade Distribution</h3>
-
-              <PieChart
-                :graph-data="gradeDistributionPie"
-                id-prefix="grade-distribution"
-                :show-labels="true"
-                :sort-by-largest="false"
-              />
-            </div>
-            <div class="supplementary-stats stats-overview">
-              <div class="stats-grid">
-                <div class="stat-card">
-                  <div class="stat-label">Total Square Footage</div>
-                  <div class="stat-number">{{ totalSquareFootage }}M</div>
-                  <div class="stat-description">
-                    million sq ft under management
-                  </div>
-                </div>
-
-                <div class="stat-card">
-                  <div class="stat-label">Avg Building Age</div>
-                  <div class="stat-number">{{ avgBuildingAge }}</div>
-                  <div class="stat-description">years old</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <h2>{{ currOwner.name }} Buildings List</h2>
 
@@ -322,6 +325,10 @@ export default class BiggestBuildings extends Vue {
       padding: 0.5rem;
       border-radius: $brd-rad-medium;
     }
+  }
+
+  h2 {
+    margin-bottom: 0.5rem;
   }
 
   .related-links {
@@ -373,34 +380,41 @@ export default class BiggestBuildings extends Vue {
 
     // Override grid for 3 cards layout
     &.-three-col-max .stats-grid {
-      // Mobile: 2 columns
-      grid-template-columns: repeat(2, 1fr);
+      // Print and Desktop: 3 columns (one row with 3 cards)
+      grid-template-columns: repeat(3, 1fr);
 
-      // Desktop: 3 columns (one row with 3 cards)
-      @media (min-width: $desktop-min-width) {
-        grid-template-columns: repeat(3, 1fr);
+      // Mobile: 2 columns
+      @media screen and (max-width: $desktop-min-width) {
+        grid-template-columns: repeat(2, 1fr);
       }
     }
   }
 
-  .grade-distribution {
-    margin: 2rem 0;
+  .quick-stats {
+    display: flex;
 
+    @media screen and (max-width: $mobile-max-width) {
+      flex-direction: column;
+    }
+  }
+
+  .grade-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .grade-distribution {
     h2 {
       font-size: 1rem;
       margin: 0;
     }
 
-    .grade-content {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
+    .grade-chart-wrapper {
+      display: flex;
       align-items: center;
-
-      @media (min-width: $desktop-min-width) {
-        grid-template-columns: 1fr 3fr;
-        align-items: flex-start;
-      }
+      justify-content: center;
+      flex: 1;
     }
 
     .supplementary-stats {
@@ -421,10 +435,6 @@ export default class BiggestBuildings extends Vue {
         }
       }
     }
-  }
-
-  h2 {
-    margin-bottom: 0.5rem;
   }
 }
 </style>
