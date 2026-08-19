@@ -35,10 +35,12 @@ export default class HighestEmissionsIntensity extends Vue {
   /** Set by Gridsome to results of GraphQL query */
   $page!: {
     allBuilding: {
+      totalCount: number;
       pageInfo: {
         currentPage: number;
       };
     };
+    neverSubmittedBuildings: { totalCount: number };
   };
 
   pageInput = 0;
@@ -57,9 +59,15 @@ export default class HighestEmissionsIntensity extends Vue {
 
 <page-query>
   query($page: Int) {
+    neverSubmittedBuildings: allBuilding(
+      filter: { FirstYearReported: { eq: null } }
+    ) {
+      totalCount
+    }
     allBuilding(
       sortBy: "GHGIntensity", perPage: 15, page: $page
     ) @paginate {
+      totalCount
       pageInfo {
         hasNextPage
         totalPages
@@ -112,6 +120,20 @@ export default class HighestEmissionsIntensity extends Vue {
       greenhouse gas intensity i.e. emissions per square foot. Large, efficient,
       buildings can perform much better than very inefficient small buildings on
       this metric.
+    </p>
+
+    <p class="constrained -wide">
+      <strong
+        >{{ $page.allBuilding.totalCount.toLocaleString() }} Chicago
+        buildings</strong
+      >
+      have submitted data and are ranked below. This doesn't include the
+      <g-link to="/never-submitted"
+        >{{
+          $page.neverSubmittedBuildings.totalCount.toLocaleString()
+        }}
+        buildings that have never submitted data</g-link
+      >, since we have nothing to rank them by.
     </p>
 
     <DataDisclaimer />

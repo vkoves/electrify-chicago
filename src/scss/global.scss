@@ -104,6 +104,13 @@ a.grey-link {
   }
 }
 
+/** A tight, wrapping row of links */
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
 a.blue-link {
   gap: 1rem;
   padding: 0.5rem 1rem;
