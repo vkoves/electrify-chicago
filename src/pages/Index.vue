@@ -175,6 +175,21 @@ export default class Index extends Vue {
           </ul>
         </div>
 
+        <h2>Quick Links</h2>
+        <div class="link-row -explore">
+          <g-link to="/latest-updates">🎉 Latest Updates</g-link>
+          <g-link to="/citywide-stats">🏙️ City Wide Statistics</g-link>
+          <g-link to="/top-gas-users">🔥 Top Gas Users</g-link>
+          <g-link to="/top-electricity-users">⚡ Top Electricity Users</g-link>
+          <g-link to="/all-electric">🔌 All Electric Buildings</g-link>
+          <g-link to="/never-submitted">🚫 Never Submitted Buildings</g-link>
+          <g-link to="/geothermal-buildings">🌎 Geothermal Buildings</g-link>
+          <g-link to="/retrofit-chicago-participants">
+            🛠️ Retrofit Chicago Case Studies
+          </g-link>
+          <g-link to="/fines-breakdown">💸 Year by Year Predicted Fines</g-link>
+        </div>
+
         <OwnersList :buildings="$page.allBuildings.edges" />
 
         <h2>Our Research &amp; Updates</h2>
@@ -379,6 +394,26 @@ export default class Index extends Vue {
       width: 16rem;
       max-width: 60%;
       font-size: 1.25rem;
+    }
+  }
+
+  .link-row.-explore {
+    margin: 1rem 0 2rem 0;
+    gap: 1rem;
+
+    a {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: $blue-dark;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: solid $border-medium $blue-dark;
+      border-radius: $brd-rad-full;
+
+      &:hover,
+      &:focus {
+        background: $blue-light;
+      }
     }
   }
 

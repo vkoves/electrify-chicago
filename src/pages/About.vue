@@ -3,6 +3,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
+import { Links } from '../constants/links.constant.vue';
 import EmissionsBreakdownGraph from '../components/EmissionsBreakdownGraph.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
 
@@ -27,6 +28,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
 })
 export default class About extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
+  readonly Links: typeof Links = Links;
 }
 </script>
 <template>
@@ -52,11 +54,10 @@ export default class About extends Vue {
           <h2>Why Buildings?</h2>
 
           <p class="constrained -wide main-paragraph">
-            <!-- TODO: Move to consolidated sources object-->
             According to the
             <a
-              ref="noopener"
-              href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
+              rel="noopener"
+              :href="Links.ChicagoClimateActionPlan"
               target="_blank"
             >
               2022 Chicago Climate Action Plan<NewTabIcon /> </a
@@ -201,9 +202,7 @@ export default class About extends Vue {
         >
           Chicago Energy Benchmarking Data <NewTabIcon /> </a
         >, which is data collected and published under the
-        <a
-          href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html"
-        >
+        <a :href="Links.ChicagoEnergyBenchmarkingOrdinance">
           Chicago Energy Benchmarking Ordinance <NewTabIcon /> </a
         >. This site shows data for the year {{ LatestDataYear }} (the latest
         available of March 2023) and filtered down to buildings with total
