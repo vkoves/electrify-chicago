@@ -4,11 +4,14 @@ import { Component, Vue } from 'vue-property-decorator';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
-import NewTabIcon from '~/components/NewTabIcon.vue';
-import { LatestDataYear } from '../constants/globals.vue';
-import DataSourceFootnote from '../components/DataSourceFootnote.vue';
+import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
+import BuildingsMap from '~/components/BuildingsMap.vue';
 import { generatePageMeta } from '../constants/meta-helpers.vue';
 
+/**
+ * Never Submitted Buildings page - shows buildings that are covered by Chicago's energy
+ * benchmarking ordinance but have never submitted any data
+ */
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
  * This is a known limitation of vue-property-decorator + vue-meta integration
@@ -19,28 +22,27 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
   components: {
     BuildingsTable,
     BuildingsHero,
+    BuildingsMap,
     DataDisclaimer,
     DataSourceFootnote,
-    NewTabIcon,
   },
   metaInfo() {
     return generatePageMeta(
-      'biggest-buildings',
-      'Biggest Buildings',
-      "Chicago's largest buildings by floor area - discover which massive " +
-        'buildings are leading or lagging on energy efficiency in the Windy City.',
+      'Never Submitted Buildings',
+      "Buildings covered by Chicago's energy benchmarking ordinance that have " +
+        'never submitted any energy data.',
     );
   },
 })
-export default class BiggestBuildings extends Vue {
-  readonly LatestDataYear: number = LatestDataYear;
-}
+export default class NeverSubmitted extends Vue {}
 </script>
 
-<!-- If this query is updated, make sure to update PageSocialCard as well -->
 <static-query>
   query {
-    allBuilding(sortBy: "GrossFloorArea", limit: 50) {
+    allBuilding(
+      filter: { FirstYearReported: { eq: null } },
+      sortBy: "Address"
+    ) {
       edges {
         node {
           slugSource
@@ -50,22 +52,19 @@ export default class BiggestBuildings extends Vue {
           Address
           ZIPCode
           path
-          PrimaryPropertyType
           GrossFloorArea
           GrossFloorAreaRank
           GrossFloorAreaPercentileRank
+          Latitude
+          Longitude
+          PrimaryPropertyType
           GHGIntensity
           GHGIntensityRank
           GHGIntensityPercentileRank
           TotalGHGEmissions
           TotalGHGEmissionsRank
           TotalGHGEmissionsPercentileRank
-          ElectricityUse
-          ElectricityUseRank
-          ElectricityUsePercentileRank
           NaturalGasUse
-          NaturalGasUseRank
-          NaturalGasUsePercentileRank
           DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
@@ -82,22 +81,32 @@ export default class BiggestBuildings extends Vue {
       :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
     >
       <h1 id="main-content" tabindex="-1">
-        Top {{ $static.allBuilding.edges.length }} Buildings By Square Footage
+        Chicago's {{ $static.allBuilding.edges.length }} Never Submitted
+        Buildings
       </h1>
     </BuildingsHero>
 
     <div class="page-constrained">
       <p class="constrained -wide">
-        These are the biggest buildings in our dataset, which should encompass
-        all of the largest buildings in the city that submitted their energy use
-        for
-        {{ LatestDataYear }}. Being a big building does basically guarantee that
-        you use a lot of energy (and emit a lot of CO<sub>2</sub>), but a lot of
-        big buildings are very energy efficient and use less energy per square
-        foot than much smaller buildings!
+        These buildings are covered by Chicago's energy benchmarking ordinance
+        (based on being present in the city's data), but have
+        <strong>never submitted any energy data</strong>, so we have no
+        emissions or energy use information to show for them.
+      </p>
+
+      <p class="constrained -wide">
+        <strong>Note:</strong> Since these buildings have never reported data,
+        most stats below will show as blank. They're excluded from our other
+        rankings and top lists since we have nothing to rank them by, but are
+        listed here so they're still findable.
       </p>
 
       <DataDisclaimer />
+
+      <BuildingsMap
+        :buildings="$static.allBuilding.edges"
+        filter-label="never submitted"
+      />
 
       <BuildingsTable
         :buildings="$static.allBuilding.edges"

@@ -200,6 +200,7 @@ query ($ward: String) {
             GrossFloorAreaRank
             GrossFloorAreaPercentileRank
             DataAnomalies
+            FirstYearReported
             AvgPercentileGrade,
             AvgPercentileLetterGrade,
         }
@@ -214,6 +215,7 @@ query ($ward: String) {
       <BuildingsHero
         :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
         :short="true"
+        :print-break="true"
       >
         <h1 id="main-content" tabindex="-1">Ward {{ $context.ward }}</h1>
       </BuildingsHero>
@@ -486,13 +488,13 @@ query ($ward: String) {
       }
     }
   }
-}
 
-// Print adjustments
-@media print {
-  .hero-skyline,
-  .hero-images {
-    display: none !important;
+  // Print adjustments
+  @media print {
+    .hero-skyline,
+    .hero-images {
+      display: none !important;
+    }
   }
 }
 </style>

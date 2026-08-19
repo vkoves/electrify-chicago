@@ -1,8 +1,19 @@
+"""
+Grades buildings on GHG intensity, energy mix, and reporting consistency, then combines them into
+an overall letter grade (see grade_cols and overall_grade_weights below).
+
+Buildings that have never submitted any benchmarking data are NOT graded (all grade_cols come back
+NaN/blank for them) - a grade implies we evaluated the building's performance, but with no data at
+all there's nothing to evaluate, and a fabricated grade (e.g. a 0% energy mix or an F for reporting
+consistency) would be misleading rather than informative.
+"""
+
 import pandas as pd
 from scipy.stats import percentileofscore
 from typing import List
 
 from src.data.scripts.utils import get_data_file_path
+from src.data.scripts.generate_historic_stats import hasReportedData
 
 
 data_directory = "dist"
@@ -225,6 +236,10 @@ def generate_energymix_grade(
     calculate a weighted sum for percentages for each building. Then these
     weighted sums are converted to percentile and letter grades.
 
+    Buildings with no energy use data at all (never submitted) are not graded - we use
+    `min_count=1` on the underlying sums so an all-missing row produces NaN instead of being
+    treated as a real 0% mix.
+
     Parameters
     ----------
     df : pd.DataFrame
@@ -264,7 +279,9 @@ def generate_energymix_grade(
         energy_source_cols,
     ]
 
-    total_energy_use_per_bldg: pd.Series = energy_use_df.sum(1)
+    # min_count=1 so a building with no energy data at all (e.g. one that never submitted)
+    # sums to NaN instead of 0, so it doesn't get graded as if it had a real 0% mix
+    total_energy_use_per_bldg: pd.Series = energy_use_df.sum(1, min_count=1)
 
     # Energy use kBtu percentage within each building for this year:
     energy_use_pct_df = energy_use_df.div(total_energy_use_per_bldg, axis="index") * 100
@@ -272,7 +289,7 @@ def generate_energymix_grade(
     # Calculate weighted energy mix grade:
     weighted_pct_scores: pd.Series = energy_use_pct_df.mul(
         energy_mix_grade_weights
-    ).sum(1)
+    ).sum(1, min_count=1)
     weighted_pct_scores.name = "EnergyMixWeightedPctSum"
 
     # Generate percentile and letter grades:
@@ -320,9 +337,11 @@ def calculate_building_submission_rate(df: pd.DataFrame) -> pd.DataFrame:
 
     def calculate_metrics(group):
         total_years = len(group)
-        # TODO: Refactor not submitted to be no GHG Intensity, since that's our true count
-        not_submitted_count = (group["ReportingStatus"] == "Not Submitted").sum()
-        submitted_years = total_years - not_submitted_count
+        # A year only counts as "submitted" if it has real GHG Intensity data - matches
+        # FirstYearReported/LastYearReported, since a ReportingStatus of e.g. "Exempt" isn't a
+        # real submission even though it's not literally "Not Submitted"
+        submitted_years = group["GHGIntensity"].apply(hasReportedData).sum()
+        not_submitted_count = total_years - submitted_years
 
         if total_years == 0:
             submission_rate = 0.0
@@ -353,6 +372,9 @@ def generate_consistent_reporting_grade(
     and we don't care about the average performance. If you report all years, you get a 100%, if you
     report 1/5, you get a 20%.
 
+    Buildings that have never submitted any data (0% submission rate) are not graded - there's no
+    "consistency" to grade, just an absence of data, so we'd rather show nothing than a misleading F.
+
     Parameters
     ----------
     df : pd.DataFrame
@@ -371,7 +393,7 @@ def generate_consistent_reporting_grade(
     df = df.copy()
 
     # Relevant columns:
-    df = df.loc[:, ["ID", "DataYear", "ReportingStatus"]]
+    df = df.loc[:, ["ID", "DataYear", "ReportingStatus", "GHGIntensity"]]
 
     # Calculate number of missing records for each building:
     submission_rates_df = calculate_building_submission_rate(df)
@@ -384,6 +406,12 @@ def generate_consistent_reporting_grade(
         labels=letter_grades,
         right=False,
     )
+
+    # Buildings that have never submitted any data shouldn't get a reporting consistency grade -
+    # there's nothing to grade (they're not "inconsistent", they just have no data)
+    never_submitted = submission_rates_df["submission_rate"] == 0
+    submission_rates_df.loc[never_submitted, "SubmittedRecordsLetterGrade"] = None
+    submission_rates_df.loc[never_submitted, "submission_rate"] = None
 
     # Rename for consistent format:
     submission_rates_df.rename(
@@ -468,6 +496,14 @@ def calculate_weighted_average(graded_df: pd.DataFrame) -> pd.Series:
 
 
 def grade_buildings():
+    """
+    Generate all grade_cols for every building/year in the historical data - GHG intensity, energy
+    mix, and reporting consistency percentile/letter grades, plus the overall weighted average.
+
+    Buildings that never submitted any data get NaN/blank for every grade column (see
+    generate_energymix_grade and generate_consistent_reporting_grade), since we have nothing to
+    grade them on.
+    """
     df_historical = pd.read_csv(data_in_file_historical_path)
 
     # Generate grades for all years for GHG Intensity and Energy Mix:

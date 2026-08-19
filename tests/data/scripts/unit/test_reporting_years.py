@@ -102,6 +102,23 @@ def test_building_with_all_invalid_data():
     assert "12345" not in result
 
 
+def test_never_submitted_building():
+    """Building with 'Not Submitted' status in every year and no valid GHG data should get
+    null (not a bogus FirstYearReported/LastYearReported)"""
+    df = pd.DataFrame(
+        {
+            "ID": ["12345", "12345"],
+            "DataYear": [2021, 2022],
+            "GHGIntensity": [0, 0],
+            "ReportingStatus": ["Not Submitted", "Not Submitted"],
+        }
+    )
+
+    result = calculateFirstAndLastYearReported(df)
+
+    assert result.get("12345") is None
+
+
 def test_multiple_buildings():
     """Multiple buildings with different reporting patterns"""
     df = pd.DataFrame(

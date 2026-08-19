@@ -67,7 +67,7 @@
             <BuildingImage :building="currBuilding" />
 
             <div class="stats-list">
-              <div>
+              <div v-if="isValidStat(currBuilding.GrossFloorArea)">
                 <h2>Square Footage</h2>
 
                 <RankText
@@ -79,7 +79,7 @@
                 />
               </div>
 
-              <div>
+              <div v-if="isValidStat(currBuilding.GHGIntensity)">
                 <h2>GHG Intensity</h2>
 
                 <RankText
@@ -90,7 +90,7 @@
                 />
               </div>
 
-              <div>
+              <div v-if="isValidStat(currBuilding.TotalGHGEmissions)">
                 <h2>Total GHG Emissions</h2>
 
                 <RankText
@@ -135,6 +135,7 @@ import {
   IBuilding,
   IBuildingNode,
   getOverallRankEmoji,
+  hasNeverSubmitted,
   RankConfig,
 } from '../common-functions.vue';
 
@@ -235,6 +236,11 @@ export default class BuildingsMap extends Vue {
   /* Declare dynamic template data for VueJS */
   data(): { currBuilding?: IBuilding } {
     return { currBuilding: this.currBuilding };
+  }
+
+  // Only show a stat if the building actually reported a valid value for it
+  isValidStat(value: unknown): boolean {
+    return typeof value === 'number' && !isNaN(value);
   }
 
   async mounted(): Promise<void> {
@@ -561,14 +567,27 @@ export default class BuildingsMap extends Vue {
           maxWidth: 'auto' as any,
         },
       );
+
+      // Flag never-submitted buildings with a red hover tooltip, so it's clear before you
+      // even click into the popup
+      if (hasNeverSubmitted(currBuilding)) {
+        marker.bindTooltip('Never Submitted Data', {
+          className: 'never-submitted-tooltip',
+          direction: 'top',
+        });
+      }
     });
   }
 
   /**
    * Return a color coded icon for a building based on it's rank emoji (e.g. a trophy maps to green
-   * while an alarm is red)
+   * while an alarm is red), or red for buildings that never submitted data
    */
   getBuildingIcon(building: IBuilding): Leaflet.Icon {
+    if (hasNeverSubmitted(building)) {
+      return this.icons.red;
+    }
+
     const rankEmoji: string | undefined = getOverallRankEmoji(
       building,
       this.BuildingBenchmarkStats,
@@ -733,6 +752,19 @@ export default class BuildingsMap extends Vue {
       // flip map to square to fit portrait displays
       aspect-ratio: 1;
     }
+  }
+}
+
+// Not nested under .map-page since Leaflet appends tooltips to its own pane
+.never-submitted-tooltip {
+  background-color: $red;
+  border-color: $red;
+  color: $white;
+  font-weight: bold;
+
+  &::before {
+    // Recolor the little arrow Leaflet adds pointing at the marker
+    border-top-color: $red;
   }
 }
 </style>

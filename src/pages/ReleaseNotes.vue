@@ -27,6 +27,28 @@ export default class About extends Vue {}
       </div>
 
       <div class="layout-constrained">
+        <h2>August 4th, 2026 - Show Never Submitted Buildings</h2>
+
+        <p>
+          Some buildings appear in the city's benchmarking data, meaning they
+          should be reporting energy use, but have never actually submitted any
+          benchmarking data. These were previously totally filtered out on
+          Electrify Chicago. We now surface these buildings in search and on
+          ward pages, including a new
+          <g-link to="/never-submitted">Never Submitted Buildings</g-link>
+          page listing every one of them, a banner on their individual building
+          pages, and pins on the <g-link to="/map">Map</g-link>.
+        </p>
+
+        <p>
+          This brings <strong>396 previously hidden buildings</strong> back into
+          Electrify Chicago, growing our total tracked buildings from
+          <strong>3,448 to 3,852</strong> (including some other buildings
+          previously hidden due to duplicate names).
+        </p>
+      </div>
+
+      <div class="layout-constrained">
         <h2>April 3rd, 2026 - Update to Map Geocoding</h2>
 
         <p>

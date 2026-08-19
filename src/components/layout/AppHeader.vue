@@ -1,18 +1,21 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 
+import BuildingSearchAutocomplete from '~/components/BuildingSearchAutocomplete.vue';
+
 /**
  * Site Wide Header
  */
 @Component({
   name: 'AppHeader',
+  components: {
+    BuildingSearchAutocomplete,
+  },
 })
 export default class AppHeader extends Vue {
   isHomepage = false;
 
   mobileMenuOpen = false;
-
-  searchQuery = '';
 
   focusMain(): void {
     const mainHeading = document.getElementById('main-content');
@@ -24,12 +27,6 @@ export default class AppHeader extends Vue {
         "No main heading found matching selector '#main-content'!",
       );
     }
-  }
-
-  submitSearch(event?: Event): void {
-    event?.preventDefault();
-
-    document.location.href = `/search?q=${this.searchQuery}`;
   }
 
   toggleMobileMenu(): void {
@@ -94,22 +91,13 @@ export default class AppHeader extends Vue {
 
       <g-link class="nav-link" to="/blog"> Blog </g-link>
 
-      <form v-if="!isHomepage" class="search-form">
-        <div class="input-cont">
-          <input
-            id="search"
-            v-model="searchQuery"
-            type="text"
-            name="search"
-            aria-label="Search benchmarked buildings"
-            placeholder="Search property name/address"
-          />
-          <button type="submit" @click="submitSearch">
-            <img src="/search.svg" alt="" width="18" height="18" />
-            Search
-          </button>
-        </div>
-      </form>
+      <BuildingSearchAutocomplete
+        v-if="!isHomepage"
+        input-id="header-search"
+        placeholder="Search property name/address"
+        button-label="Search"
+        :icon-size="18"
+      />
     </nav>
   </header>
 </template>

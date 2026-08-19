@@ -87,6 +87,10 @@ def main():
             "module": "src.data.scripts.calculate_fines",
             "description": "calculate_fines",
         },
+        {
+            "module": "src.data.scripts.generate_search_index",
+            "description": "generate_search_index",
+        },
     ]
 
     for index, step in enumerate(pipeline_steps):

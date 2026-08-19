@@ -1,5 +1,8 @@
 <template>
-  <div class="buildings-hero" :class="{ short: short }">
+  <div
+    class="buildings-hero"
+    :class="{ short: short, 'print-break': printBreak }"
+  >
     <div
       v-if="buildingsWithImages.length > 0"
       class="hero-images"
@@ -49,6 +52,9 @@ export default class BuildingsHero extends Vue {
 
   /** Whether to use a shorter hero height (14rem instead of 18rem) */
   @Prop({ default: false }) short!: boolean;
+
+  /** Whether to break the header when printing */
+  @Prop({ default: false }) printBreak!: boolean;
 
   /**
    * Import the getBuildingImage function to use in template
@@ -163,11 +169,6 @@ export default class BuildingsHero extends Vue {
       margin: 0;
       font-size: 1.75rem;
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-
-      @media print {
-        color: black;
-        text-shadow: none;
-      }
     }
   }
 
@@ -237,9 +238,19 @@ export default class BuildingsHero extends Vue {
 
   // Print adjustments
   @media print {
-    .hero-overlay {
+    &.print-break .hero-overlay {
       position: relative;
       background: none;
+
+      h1,
+      h2 {
+        color: black;
+        text-shadow: none;
+      }
+    }
+
+    &:not(.print-break) .hero-overlay {
+      print-color-adjust: exact;
     }
   }
 }
