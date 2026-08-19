@@ -19,9 +19,6 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
   },
 })
 export default class MillionsInMissedFine extends Vue {
-  readonly NotifLetterUrl =
-    'https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/sample_notification_letter.pdf';
-
   readonly NonReportingBuildingsDataUrl =
     'https://data.cityofchicago.org/Environment-Sustainable-Development/Chicago-Energy-Benchmarking/xq83-jr8c/explore/query/...';
 

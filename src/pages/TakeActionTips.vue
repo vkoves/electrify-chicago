@@ -1,6 +1,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { Links } from '../constants/links.constant.vue';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -16,7 +17,9 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
     return { title: 'Take Action' };
   },
 })
-export default class TakeActionTips extends Vue {}
+export default class TakeActionTips extends Vue {
+  readonly Links: typeof Links = Links;
+}
 </script>
 
 <template>
@@ -83,7 +86,7 @@ export default class TakeActionTips extends Vue {}
       <ul>
         <li>
           <a
-            href="https://www.chicago.gov/city/en/depts/mayor/supp_info/chicago-energy-benchmarking/Chicago_Energy_Benchmarking_Beyond_Benchmarking.html"
+            :href="Links.ChicagoEnergyBenchmarkingBeyondBenchmarking"
             target="_blank"
             rel="noopener"
           >

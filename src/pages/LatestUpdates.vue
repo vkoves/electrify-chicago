@@ -4,6 +4,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import BuildingsTable from '~/components/BuildingsTable.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
+import { Links } from '../constants/links.constant.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 import {
   IBuilding,
@@ -30,6 +31,7 @@ import {
 export default class LatestUpdates extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
   readonly PreviousDataYear: number = LatestDataYear - 1;
+  readonly Links: typeof Links = Links;
 
   /** Set by Gridsome to results of GraphQL query */
   readonly $static!: {
@@ -148,7 +150,7 @@ export default class LatestUpdates extends Vue {
       >
       or view
       <a
-        href="https://www.chicago.gov/content/dam/city/depts/doe/Reports/43360-20250404-DOE-Sustainability%20Report_C.pdf"
+        :href="Links.ChicagoEnergyBenchmarkingReport2025"
         class="bold"
         target="_blank"
         rel="noopener"

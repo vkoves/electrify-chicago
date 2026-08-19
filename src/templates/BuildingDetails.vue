@@ -304,7 +304,7 @@ query ($id: ID!, $ID: String) {
                 >
                   <dt>
                     <a
-                      href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
+                      :href="Links.ChicagoEnergyRatingInfo"
                       target="_blank"
                       rel="noopener"
                     >
@@ -724,6 +724,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import qrcode from 'qrcode-generator';
 
 import { LatestDataYear } from '../constants/globals.vue';
+import { Links } from '../constants/links.constant.vue';
 import BarGraph from '~/components/graphs/BarGraph.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
@@ -831,6 +832,8 @@ Vue.use(vToolTip);
   },
 })
 export default class BuildingDetails extends Vue {
+  readonly Links: typeof Links = Links;
+
   // TODO: Move to constant
   graphTitles = {
     TotalGHGEmissions: 'Total GHG Emissions (metric tons CO<sub>2</sub>e)',
