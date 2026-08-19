@@ -6,6 +6,7 @@ const Pager = require('gridsome').Pager;
 import { Component, Vue } from 'vue-property-decorator';
 
 import BuildingsTable from '~/components/BuildingsTable.vue';
+import BuildingsHero from '~/components/BuildingsHero.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
@@ -20,6 +21,7 @@ import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 @Component<any>({
   components: {
     BuildingsTable,
+    BuildingsHero,
     DataDisclaimer,
     DataSourceFootnote,
     NewTabIcon,
@@ -47,6 +49,11 @@ export default class HighestEmissionsIntensity extends Vue {
 
   created(): void {
     this.pageInput = this.$page.allBuilding.pageInfo.currentPage;
+  }
+
+  /** Only show the buildings hero image row on the first page */
+  get isFirstPage(): boolean {
+    return this.$page.allBuilding.pageInfo.currentPage === 1;
   }
 
   jumpToPage(event: Event): void {
@@ -110,59 +117,70 @@ export default class HighestEmissionsIntensity extends Vue {
 </page-query>
 
 <template>
-  <DefaultLayout>
-    <h1 id="main-content" tabindex="-1">
-      All Buildings By Greenhouse Gas Intensity
-    </h1>
+  <DefaultLayout main-class="layout -full-width">
+    <BuildingsHero
+      v-if="isFirstPage"
+      :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
+    >
+      <h1 id="main-content" tabindex="-1">
+        All Buildings By Greenhouse Gas Intensity
+      </h1>
+    </BuildingsHero>
 
-    <p class="constrained -wide">
-      These are the Chicago's benchmarked buildings that reported the highest
-      greenhouse gas intensity i.e. emissions per square foot. Large, efficient,
-      buildings can perform much better than very inefficient small buildings on
-      this metric.
-    </p>
+    <div class="page-constrained">
+      <h1 v-if="!isFirstPage" id="main-content" tabindex="-1">
+        All Buildings By Greenhouse Gas Intensity
+      </h1>
 
-    <p class="constrained -wide">
-      <strong
-        >{{ $page.allBuilding.totalCount.toLocaleString() }} Chicago
-        buildings</strong
-      >
-      have submitted data and are ranked below. This doesn't include the
-      <g-link to="/never-submitted"
-        >{{
-          $page.neverSubmittedBuildings.totalCount.toLocaleString()
-        }}
-        buildings that have never submitted data</g-link
-      >, since we have nothing to rank them by.
-    </p>
+      <p class="constrained -wide">
+        These are the Chicago's benchmarked buildings that reported the highest
+        greenhouse gas intensity i.e. emissions per square foot. Large,
+        efficient, buildings can perform much better than very inefficient small
+        buildings on this metric.
+      </p>
 
-    <DataDisclaimer />
-
-    <BuildingsTable :buildings="$page.allBuilding.edges" />
-
-    <div class="pager-cont">
-      <div>
-        <div class="page-number">
-          Page {{ $page.allBuilding.pageInfo.currentPage }} of
-          {{ $page.allBuilding.pageInfo.totalPages }}
-
-          (Building #{{
-            1 +
-            ($page.allBuilding.pageInfo.currentPage - 1) *
-              $page.allBuilding.pageInfo.perPage
+      <p class="constrained -wide">
+        <strong
+          >{{ $page.allBuilding.totalCount.toLocaleString() }} Chicago
+          buildings</strong
+        >
+        have submitted data and are ranked below. This doesn't include the
+        <g-link to="/never-submitted"
+          >{{
+            $page.neverSubmittedBuildings.totalCount.toLocaleString()
           }}
-          to #{{
-            ($page.allBuilding.pageInfo.currentPage - 1) *
-              $page.allBuilding.pageInfo.perPage +
-            $page.allBuilding.edges.length
-          }})
+          buildings that have never submitted data</g-link
+        >, since we have nothing to rank them by.
+      </p>
+
+      <DataDisclaimer />
+
+      <BuildingsTable :buildings="$page.allBuilding.edges" />
+
+      <div class="pager-cont">
+        <div>
+          <div class="page-number">
+            Page {{ $page.allBuilding.pageInfo.currentPage }} of
+            {{ $page.allBuilding.pageInfo.totalPages }}
+
+            (Building #{{
+              1 +
+              ($page.allBuilding.pageInfo.currentPage - 1) *
+                $page.allBuilding.pageInfo.perPage
+            }}
+            to #{{
+              ($page.allBuilding.pageInfo.currentPage - 1) *
+                $page.allBuilding.pageInfo.perPage +
+              $page.allBuilding.edges.length
+            }})
+          </div>
+
+          <Pager class="pager" :info="$page.allBuilding.pageInfo" />
         </div>
-
-        <Pager class="pager" :info="$page.allBuilding.pageInfo" />
       </div>
-    </div>
 
-    <DataSourceFootnote />
+      <DataSourceFootnote />
+    </div>
   </DefaultLayout>
 </template>
 
