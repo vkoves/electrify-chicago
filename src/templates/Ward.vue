@@ -488,13 +488,13 @@ query ($ward: String) {
       }
     }
   }
-}
 
-// Print adjustments
-@media print {
-  .hero-skyline,
-  .hero-images {
-    display: none !important;
+  // Print adjustments
+  @media print {
+    .hero-skyline,
+    .hero-images {
+      display: none !important;
+    }
   }
 }
 </style>
