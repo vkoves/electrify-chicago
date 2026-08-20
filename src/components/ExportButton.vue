@@ -15,7 +15,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 /**
- * Reusable Export button that exports building stats to .CSV
+ * Reusable Export button that exports data to .CSV
  *
  * Source - https://stackoverflow.com/a/24922761
  * Posted by Xavier John, modified by community. See post 'Timeline' for change history
@@ -26,6 +26,11 @@ export default class ExportButton extends Vue {
   @Prop({ type: String, required: true })
   filename!: string;
 
+  /**                                          
+  * 2D array to create CSV row data, outer array is rows                                     
+  * and inner array is each row's cell values.
+  * Header MUST be appended to array beforehand.                                             
+  **/
   @Prop({ type: Array, required: true })
   rows!: (string | number | Date | null)[][];
 

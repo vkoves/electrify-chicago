@@ -29,7 +29,11 @@ def get_latest_year(
         raise ValueError("No valid DataYear values found in building data")
     return int(valid_years.max())
 
-
+"""
+Uses the latest_year variable extracted from the most up-to-date
+raw city data. Filters building data to rows matching the latest year reported,
+then groups and aggregates the total per ward.
+"""
 def calculate_compliant_buildings(
     building_data: pd.DataFrame,
     latest_year: int,

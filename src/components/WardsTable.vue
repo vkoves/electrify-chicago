@@ -108,7 +108,6 @@ export default class WardsTable extends Vue {
             Total Square Footage<br />
             <span class="unit">(sqft)</span>
           </th>
-          <!-- TODO: Need to add method to handle invalid or null YearBuilt value-->
           <th v-if="showBuildingAge" scope="col">
             Avg Building Age<br />
             <span class="unit">(years)</span>
