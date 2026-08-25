@@ -51,6 +51,7 @@ export default class WardsTable extends Vue {
     return [header, ...rows];
   }
 
+  // TODO: Move compliance rate to a BE process for wards.json
   complianceRate(s: IWardStats): number {
     return s.TotalBuildings > 0
       ? (s.CompliantBuildings / s.TotalBuildings) * 100
@@ -89,54 +90,60 @@ export default class WardsTable extends Vue {
       :show-text="true"
     />
 
-    <table>
-      <thead>
-        <tr>
-          <th scope="col">Ward</th>
-          <!-- TODO: Add Click handlers on numeric columns for sorting -->
-          <th scope="col">Compliance Rate</th>
-          <th scope="col">Total Compliant Buildings</th>
-          <th scope="col">
-            Total GHG Emissions<br />
-            <span class="unit">(tons CO<sub>2</sub> eq.)</span>
-          </th>
-          <th scope="col">
-            Avg GHG Intensity<br />
-            <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
-          </th>
-          <th scope="col">
-            Total Square Footage<br />
-            <span class="unit">(sqft)</span>
-          </th>
-          <th v-if="showBuildingAge" scope="col">
-            Avg Building Age<br />
-            <span class="unit">(years)</span>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="stats in sortedStats" :key="stats.Ward">
-          <td class="ward-col">
-            <g-link :to="`/ward/${stats.Ward}`">Ward {{ stats.Ward }}</g-link>
-          </td>
-          <td class="numeric">{{ formatNumber(complianceRate(stats), 1) }}%</td>
-          <td class="numeric">
-            {{ stats.CompliantBuildings }}/{{ stats.TotalBuildings }}
-          </td>
-          <td class="numeric">{{ formatNumber(stats.TotalGHGEmissions) }}</td>
-          <td class="numeric">{{ formatNumber(stats.AvgGHGIntensity, 2) }}</td>
-          <td class="numeric">{{ formatNumber(stats.TotalSquareFootage) }}</td>
-          <td v-if="showBuildingAge" class="numeric">
-            {{ formatNumber(stats.AvgBuildingAge, 1) }}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="wards-table">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Ward</th>
+            <!-- TODO: Add Click handlers on numeric columns for sorting -->
+            <th scope="col">Compliance Rate</th>
+            <th scope="col">Total Compliant Buildings</th>
+            <th scope="col">
+              Total GHG Emissions<br />
+              <span class="unit">(tons CO<sub>2</sub> eq.)</span>
+            </th>
+            <th scope="col">
+              Avg GHG Intensity<br />
+              <span class="unit">(kg CO<sub>2</sub> eq./sqft)</span>
+            </th>
+            <th scope="col">
+              Total Square Footage<br />
+              <span class="unit">(sqft)</span>
+            </th>
+            <th v-if="showBuildingAge" scope="col">
+              Avg Building Age<br />
+              <span class="unit">(years)</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="stats in sortedStats" :key="stats.Ward">
+            <td class="ward-col">
+              <g-link :to="`/ward/${stats.Ward}`">Ward {{ stats.Ward }}</g-link>
+            </td>
+            <td class="numeric">{{ formatNumber(complianceRate(stats), 1) }}%</td>
+            <td class="numeric">
+              {{ stats.CompliantBuildings }}/{{ stats.TotalBuildings }}
+            </td>
+            <td class="numeric">{{ formatNumber(stats.TotalGHGEmissions) }}</td>
+            <td class="numeric">{{ formatNumber(stats.AvgGHGIntensity, 2) }}</td>
+            <td class="numeric">{{ formatNumber(stats.TotalSquareFootage) }}</td>
+            <td v-if="showBuildingAge" class="numeric">
+              {{ formatNumber(stats.AvgBuildingAge, 1) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <style lang="scss">
 .wards-table-cont {
+  .action-btn { margin: 1rem 0; }
+}
+
+.wards-table {
   width: 100%;
   max-height: 80vh;
   overflow: auto;

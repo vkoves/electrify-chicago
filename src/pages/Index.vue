@@ -5,6 +5,7 @@ import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '../components/DataSourceFootnote.vue';
 import BuildingTile from '../components/BuildingTile.vue';
 import OwnersList from '../components/OwnersList.vue';
+import BuildingSearchAutocomplete from '../components/BuildingSearchAutocomplete.vue';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -14,6 +15,7 @@ import OwnersList from '../components/OwnersList.vue';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 @Component<any>({
   components: {
+    BuildingSearchAutocomplete,
     BuildingTile,
     DataDisclaimer,
     DataSourceFootnote,
@@ -24,17 +26,9 @@ import OwnersList from '../components/OwnersList.vue';
   },
 })
 export default class Index extends Vue {
-  searchQuery = '';
-
   get isDevelopment(): boolean {
     // This comes from Node during build
     return process.env.NODE_ENV === 'development';
-  }
-
-  submitSearch(event?: Event): void {
-    event?.preventDefault();
-
-    document.location.href = `/search?q=${this.searchQuery}`;
   }
 }
 </script>
@@ -95,6 +89,7 @@ export default class Index extends Vue {
           DistrictSteamUse
           AvgPercentileLetterGrade
           DataAnomalies
+          FirstYearReported
         }
       }
     }
@@ -121,21 +116,11 @@ export default class Index extends Vue {
             Find Out How Much Chicago Buildings Pollute
           </h1>
 
-          <form class="search-form">
-            <div class="input-cont">
-              <input
-                id="search"
-                v-model="searchQuery"
-                type="text"
-                name="search"
-                aria-label="Search benchmarked buildings"
-                placeholder="Search property name or address"
-              />
-              <button type="submit" @click="submitSearch">
-                <img src="/search.svg" alt="Search" width="32" height="32" />
-              </button>
-            </div>
-          </form>
+          <BuildingSearchAutocomplete
+            input-id="home-search"
+            placeholder="Search property name or address"
+            :icon-size="32"
+          />
 
           <g-link class="blue-link map-link" to="/map">
             <img src="/icons/location.svg" alt="" width="32" height="32" />
@@ -188,6 +173,21 @@ export default class Index extends Vue {
               />
             </li>
           </ul>
+        </div>
+
+        <h2>Quick Links</h2>
+        <div class="link-row -explore">
+          <g-link to="/latest-updates">🎉 Latest Updates</g-link>
+          <g-link to="/citywide-stats">🏙️ City Wide Statistics</g-link>
+          <g-link to="/top-gas-users">🔥 Top Gas Users</g-link>
+          <g-link to="/top-electricity-users">⚡ Top Electricity Users</g-link>
+          <g-link to="/all-electric">🔌 All Electric Buildings</g-link>
+          <g-link to="/never-submitted">🚫 Never Submitted Buildings</g-link>
+          <g-link to="/geothermal-buildings">🌎 Geothermal Buildings</g-link>
+          <g-link to="/retrofit-chicago-participants">
+            🛠️ Retrofit Chicago Case Studies
+          </g-link>
+          <g-link to="/fines-breakdown">💸 Year by Year Predicted Fines</g-link>
         </div>
 
         <OwnersList :buildings="$page.allBuildings.edges" />
@@ -376,6 +376,13 @@ export default class Index extends Vue {
             }
           }
         }
+
+        // Inset the suggestions to sit under the straight portion of the pill,
+        // clearing its ~2rem rounded corners
+        .search-suggestions {
+          left: 1rem;
+          right: 1rem;
+        }
       }
     }
 
@@ -387,6 +394,26 @@ export default class Index extends Vue {
       width: 16rem;
       max-width: 60%;
       font-size: 1.25rem;
+    }
+  }
+
+  .link-row.-explore {
+    margin: 1rem 0 2rem 0;
+    gap: 1rem;
+
+    a {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: $blue-dark;
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border: solid $border-medium $blue-dark;
+      border-radius: $brd-rad-full;
+
+      &:hover,
+      &:focus {
+        background: $blue-light;
+      }
     }
   }
 

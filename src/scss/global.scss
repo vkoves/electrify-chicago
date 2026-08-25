@@ -104,6 +104,13 @@ a.grey-link {
   }
 }
 
+/** A tight, wrapping row of links */
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
 a.blue-link {
   gap: 1rem;
   padding: 0.5rem 1rem;
@@ -986,6 +993,13 @@ button.action-btn {
     img {
       height: 1.25rem;
     }
+  }
+}
+
+@media not print {
+  // Hide print only content, like duplicate title text
+  .print-only {
+    display: none;
   }
 }
 
