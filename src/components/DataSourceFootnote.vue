@@ -24,4 +24,15 @@ export default {
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+@media print {
+  a {
+    color: unset;
+    text-decoration: none;
+
+    img {
+      display: none;
+    }
+  }
+}
+</style>

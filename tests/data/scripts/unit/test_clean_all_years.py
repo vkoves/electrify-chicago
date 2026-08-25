@@ -36,10 +36,11 @@ def processed_dataframe() -> pd.DataFrame:
 
 
 def test_data_has_positive_ghg_data(processed_dataframe):
-    """confirm each property in the processed dataframe has non-zero GHGIntensity"""
+    """confirm each property that has GHGIntensity data has a positive value - buildings that
+    never submitted real data (e.g. ID 240068) are still included, but with blank GHGIntensity"""
 
     df = processed_dataframe
-    assert all([ghg > 0 for ghg in df["GHGIntensity"]])
+    assert all([ghg > 0 for ghg in df["GHGIntensity"] if pd.notna(ghg)])
 
 
 def test_data_has_submitted_status(processed_dataframe):
@@ -139,17 +140,20 @@ def test_property_count(processed_dataframe):
     """confirm the processed dataframe has the correct number of properties"""
 
     df = processed_dataframe
-    assert len(df) == 5
+    assert len(df) == 6
 
 
-def test_no_ghg_property_is_excluded(processed_dataframe):
-    """confirm property with submitted data but no GHGIntensity data
-    ie excluded from the processed dataframe"""
+def test_no_ghg_property_is_included_as_never_submitted(processed_dataframe):
+    """confirm a property with a "Submitted"/"Submitted Data" status but no real GHGIntensity
+    data in any year is still included, with blank GHGIntensity (treated as never submitted,
+    since a submitted status with no real data isn't a real submission)"""
 
     df = processed_dataframe
-    # property ID 240068 is present in test source data but
-    # 2016-2022 submitted data has no GHGIntensity data
-    assert len(df[df["ID"] == "240068"]) == 0
+    # property ID 240068 is present in test source data but has no real GHGIntensity data in
+    # any year, despite some years having a "Submitted"/"Submitted Data" status
+    bldg_240068_df = df[df["ID"] == 240068]
+    assert len(bldg_240068_df) == 1
+    assert pd.isna(bldg_240068_df.iloc[0]["GHGIntensity"])
 
 
 def test_csv_is_produced(processed_dataframe):

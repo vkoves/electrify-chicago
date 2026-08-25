@@ -93,8 +93,24 @@ def test_generate_consistent_reporting_grade():
     # Create test data with varying reporting statuses
     test_data = pd.DataFrame(
         {
-            "ID": [1, 1, 1, 2, 2, 2, 3, 3, 3],
-            "DataYear": [2020, 2021, 2022, 2020, 2021, 2022, 2020, 2021, 2022],
+            "ID": [1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5],
+            "DataYear": [
+                2020,
+                2021,
+                2022,
+                2020,
+                2021,
+                2022,
+                2020,
+                2021,
+                2022,
+                2020,
+                2021,
+                2022,
+                2020,
+                2021,
+                2022,
+            ],
             "ReportingStatus": [
                 "Submitted",
                 "Submitted",
@@ -105,6 +121,29 @@ def test_generate_consistent_reporting_grade():
                 "Not Submitted",
                 "Not Submitted",
                 "Submitted",  # ID 3: 33% reporting
+                "Not Submitted",
+                "Not Submitted",
+                "Not Submitted",  # ID 4: never submitted
+                "Exempt",
+                "Exempt",
+                "Not Submitted",  # ID 5: never submitted, but never "Not Submitted" every year
+            ],
+            "GHGIntensity": [
+                10,
+                11,
+                12,  # ID 1: real data every year
+                10,
+                None,
+                12,  # ID 2: real data except the not-submitted year
+                None,
+                None,
+                12,  # ID 3: real data except the not-submitted years
+                None,
+                None,
+                None,  # ID 4: never submitted
+                None,
+                None,
+                None,  # ID 5: "Exempt" years have no real data either
             ],
         }
     )
@@ -141,6 +180,21 @@ def test_generate_consistent_reporting_grade():
     assert id3_row["SubmittedRecordsLetterGrade"].values[0] in letter_grades
     assert id3_row["MissingRecordsCount"].values[0] == 2
 
+    # ID 4: never submitted (0% reporting) - shouldn't get a reporting grade at all, since
+    # there's nothing to grade, not just a bad grade
+    id4_row = result[result["ID"] == 4]
+    assert pd.isna(id4_row["SubmittedRecordsPercentileGrade"].values[0])
+    assert pd.isna(id4_row["SubmittedRecordsLetterGrade"].values[0])
+    assert id4_row["MissingRecordsCount"].values[0] == 3
+
+    # ID 5: never submitted real data, but has "Exempt" years rather than "Not Submitted" -
+    # should still be treated as never submitted (regression test for building 160214, which
+    # got a bogus "D" because "Exempt" years were being counted as submitted)
+    id5_row = result[result["ID"] == 5]
+    assert pd.isna(id5_row["SubmittedRecordsPercentileGrade"].values[0])
+    assert pd.isna(id5_row["SubmittedRecordsLetterGrade"].values[0])
+    assert id5_row["MissingRecordsCount"].values[0] == 3
+
 
 # Test calculate_weighted_average function
 def test_calculate_weighted_average():
@@ -171,17 +225,18 @@ def test_energy_mix_grading():
     # Create test buildings with different energy mixes
     test_data = pd.DataFrame(
         {
-            "ID": [1, 2, 3, 4],
-            "DataYear": [2022, 2022, 2022, 2022],
+            "ID": [1, 2, 3, 4, 5],
+            "DataYear": [2022, 2022, 2022, 2022, 2022],
             # Building 1: 100% electricity (best)
             # Building 2: 50% electricity, 50% gas (average)
             # Building 3: 100% gas (worst)
             # Building 4: Mix of good and bad sources
-            "ElectricityUse": [1000, 500, 0, 400],
-            "NaturalGasUse": [0, 500, 1000, 400],
-            "DistrictSteamUse": [0, 0, 0, 100],
-            "DistrictChilledWaterUse": [0, 0, 0, 100],
-            "AllOtherFuelUse": [0, 0, 0, 0],
+            # Building 5: never submitted, no energy data at all
+            "ElectricityUse": [1000, 500, 0, 400, None],
+            "NaturalGasUse": [0, 500, 1000, 400, None],
+            "DistrictSteamUse": [0, 0, 0, 100, None],
+            "DistrictChilledWaterUse": [0, 0, 0, 100, None],
+            "AllOtherFuelUse": [0, 0, 0, 0, None],
         }
     )
 
@@ -198,6 +253,12 @@ def test_energy_mix_grading():
     assert result.loc[result["ID"] == 3, "EnergyMixWeightedPctSum"].iloc[0] == 0.0
     assert result.loc[result["ID"] == 4, "EnergyMixWeightedPctSum"].iloc[0] == 50.0
 
+    # Building 5: no energy data at all shouldn't be graded as if it had a real 0% mix
+    id5_row = result[result["ID"] == 5]
+    assert pd.isna(id5_row["EnergyMixWeightedPctSum"].iloc[0])
+    assert pd.isna(id5_row["EnergyMixPercentileGrade"].iloc[0])
+    assert pd.isna(id5_row["EnergyMixLetterGrade"].iloc[0])
+
 
 # Integration test with simple mock data
 # Test that grades are generated for historical years
@@ -209,15 +270,22 @@ def test_grades_generate_historically():
     # Create historical data with multiple years
     historical_data = pd.DataFrame(
         {
-            "ID": [1, 1, 2, 2],  # Two buildings
-            "DataYear": [2021, 2022, 2021, 2022],  # Two years
-            "GHGIntensity": [10, 15, 20, 25],  # Different values each year
-            "ElectricityUse": [1000, 900, 500, 400],  # More electric = better
-            "NaturalGasUse": [0, 100, 500, 600],  # More gas = worse
-            "DistrictSteamUse": [0, 0, 0, 0],
-            "DistrictChilledWaterUse": [0, 0, 0, 0],
-            "AllOtherFuelUse": [0, 0, 0, 0],
-            "ReportingStatus": ["Submitted", "Submitted", "Submitted", "Submitted"],
+            "ID": [1, 1, 2, 2, 3, 3],  # Three buildings
+            "DataYear": [2021, 2022, 2021, 2022, 2021, 2022],  # Two years
+            "GHGIntensity": [10, 15, 20, 25, 0, 0],  # Building 3: never submitted
+            "ElectricityUse": [1000, 900, 500, 400, 0, 0],  # More electric = better
+            "NaturalGasUse": [0, 100, 500, 600, 0, 0],  # More gas = worse
+            "DistrictSteamUse": [0, 0, 0, 0, 0, 0],
+            "DistrictChilledWaterUse": [0, 0, 0, 0, 0, 0],
+            "AllOtherFuelUse": [0, 0, 0, 0, 0, 0],
+            "ReportingStatus": [
+                "Submitted",
+                "Submitted",
+                "Submitted",
+                "Submitted",
+                "Not Submitted",
+                "Not Submitted",
+            ],
         }
     )
 
@@ -250,6 +318,10 @@ def test_grades_generate_historically():
                 ]:
                     assert col in building_year_data.columns
                     assert not pd.isna(building_year_data[col].iloc[0])
+
+        # Building 3 never submitted, so it shouldn't get a reporting consistency grade
+        building_3_data = result[result["ID"] == 3]
+        assert building_3_data["SubmittedRecordsLetterGrade"].isna().all()
 
 
 def test_building_grade_examples():

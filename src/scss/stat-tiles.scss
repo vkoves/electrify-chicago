@@ -54,6 +54,7 @@
     transition: box-shadow 0.2s ease-in-out;
     height: 100%; // Fill the full link height
     min-height: 8.75rem; // 140px Minimum height to prevent cards from being too short
+    print-color-adjust: exact;
 
     .stat-number {
       font-size: 2.5rem;
