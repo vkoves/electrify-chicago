@@ -281,6 +281,7 @@ function loadWardStatsData(actions) {
   const collection = actions.addCollection({ typeName: 'WardStats' });
 
   for (const row of wardStatsData) {
+    // Shape must match IWardStats in src/components/WardsTable.vue
     collection.addNode({
       Ward: parseInt(row['Ward'], 10),
       CompliantBuildings: parseInt(row['Compliant Buildings'], 10),
