@@ -81,6 +81,8 @@ export default class AppHeader extends Vue {
 
       <g-link class="nav-link" to="/large-owners"> Large Owners </g-link>
 
+      <g-link class="nav-link" to="/property-types"> Property Types </g-link>
+
       <g-link class="nav-link" to="/cleanest-buildings">
         Cleanest Buildings
       </g-link>
