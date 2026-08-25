@@ -12,6 +12,13 @@ from src.data.scripts.utils import (
     output_to_csv,
 )
 
+COMPLIANT_BUILDINGS = "Compliant Buildings"
+TOTAL_BUILDINGS = "Total Buildings"
+TOTAL_GHG_EMISSIONS = "Total GHG Emissions (tons CO2 eq.)"
+AVG_GHG_INTENSITY = "Avg GHG Intensity (kg CO2 eq./sqft)"
+TOTAL_SQUARE_FOOTAGE = "Total Square Footage"
+AVG_BUILDING_AGE = "Avg Building Age (years)"
+
 out_dir = "dist"
 
 # Input file path (also written to)
@@ -41,7 +48,7 @@ def calculate_compliant_buildings(
     compliant_counts = (
         building_data[building_data["DataYear"] == latest_year].groupby("Ward").size()
     )
-    compliant_counts.name = "Compliant Buildings"
+    compliant_counts.name = COMPLIANT_BUILDINGS
 
     return cast(pd.Series, compliant_counts)
 
@@ -53,7 +60,7 @@ def calculate_avg_building_age(
     age_df = building_data.dropna(subset=["YearBuilt"]).copy()
     age_df["age"] = latest_year - age_df["YearBuilt"]
     avg_age = age_df.groupby("Ward")["age"].mean()
-    avg_age.name = "Avg Building Age (years)"
+    avg_age.name = AVG_BUILDING_AGE
 
     return cast(pd.Series, avg_age)
 
@@ -65,10 +72,10 @@ def compile_ward_stats(
 ) -> pd.DataFrame:
     ward_stats = building_data.groupby("Ward").agg(
         **{
-            "Total Buildings": ("Ward", "size"),
-            "Total GHG Emissions (tons CO2 eq.)": ("TotalGHGEmissions", "sum"),
-            "Avg GHG Intensity (kg CO2 eq./sqft)": ("GHGIntensity", "mean"),
-            "Total Square Footage": ("GrossFloorArea", "sum"),
+            TOTAL_BUILDINGS: ("Ward", "size"),
+            TOTAL_GHG_EMISSIONS: ("TotalGHGEmissions", "sum"),
+            AVG_GHG_INTENSITY: ("GHGIntensity", "mean"),
+            TOTAL_SQUARE_FOOTAGE: ("GrossFloorArea", "sum"),
         }
     )
 
@@ -76,8 +83,8 @@ def compile_ward_stats(
 
     ward_stats = cast(pd.DataFrame, ward_stats.reindex(range(1, 51))).reset_index()
 
-    ward_stats["Compliant Buildings"] = (
-        ward_stats["Compliant Buildings"].fillna(0).astype(int)
+    ward_stats[COMPLIANT_BUILDINGS] = (
+        ward_stats[COMPLIANT_BUILDINGS].fillna(0).astype(int)
     )
 
     return cast(
@@ -85,12 +92,12 @@ def compile_ward_stats(
         ward_stats[
             [
                 "Ward",
-                "Compliant Buildings",
-                "Total Buildings",
-                "Total GHG Emissions (tons CO2 eq.)",
-                "Avg GHG Intensity (kg CO2 eq./sqft)",
-                "Total Square Footage",
-                "Avg Building Age (years)",
+                COMPLIANT_BUILDINGS,
+                TOTAL_BUILDINGS,
+                TOTAL_GHG_EMISSIONS,
+                AVG_GHG_INTENSITY,
+                TOTAL_SQUARE_FOOTAGE,
+                AVG_BUILDING_AGE,
             ]
         ],
     )
