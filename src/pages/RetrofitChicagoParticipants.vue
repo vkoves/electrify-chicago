@@ -5,6 +5,7 @@ import BuildingsTable from '~/components/BuildingsTable.vue';
 import DataDisclaimer from '~/components/DataDisclaimer.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { Links } from '../constants/links.constant.vue';
 import { IBuilding, IBuildingNode } from '../common-functions.vue';
 import {
   BuildingTags,
@@ -33,6 +34,8 @@ interface IBuildingEdge {
   },
 })
 export default class ChicagoRetrofitParticipants extends Vue {
+  readonly Links: typeof Links = Links;
+
   /** Set by Gridsome to results of GraphQL query */
   readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
 
@@ -105,9 +108,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
 
       <p>
         Buildings sourced from
-        <a
-          href="https://www.chicago.gov/city/en/sites/retrofit-chicago2/home/participant-achievments/past-participants.html#case-studies"
-        >
+        <a :href="Links.ChicagoRetrofitParticipants">
           City of Chicago - Retrofit Chicago </a
         >.
       </p>

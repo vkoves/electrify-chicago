@@ -231,7 +231,6 @@ export default class WardLookup extends Vue {
   private async loadGoogleMaps(): Promise<void> {
     // In Gridsome, client-side env vars must be prefixed with GRIDSOME_
     // Access via process.env which gets compiled at build time
-    // eslint-disable-next-line no-undef
     const apiKey = process.env.GRIDSOME_GOOGLE_MAPS_API_KEY || '';
 
     if (!apiKey) {

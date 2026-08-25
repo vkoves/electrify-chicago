@@ -10,7 +10,8 @@
     "sourceMap": true,
     "strict": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "skipLibCheck": true
   },
   "paths": {
     "~/*": ["./src/*"],

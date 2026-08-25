@@ -128,6 +128,27 @@ so:
 </script>
 ```
 
+## Running The Site with Yarn
+
+If Docker can't work for you, you can run the frontend using Yarn alone. Just run:
+
+```sh
+yarn install
+yarn develop
+```
+
+### Known Issues
+
+#### macOS libvips Error
+
+If you encounter an error on macOS such as `sharp Prebuilt libvips 8.10.5 binaries are not yet available for darwin-arm64v8`, you'll need to install these dependencies separately. Install the [Brew package manager](https://brew.sh/), then run the following commands:
+
+```
+brew install --build-from-source gcc
+xcode-select install
+brew install vips
+```
+
 ## Social Images
 
 You can also run scripts to generate social images, which require
@@ -139,6 +160,10 @@ docker compose run --rm electrify-chicago yarn gen-social-imgs
 
 # Generate only building social images
 docker compose run --rm electrify-chicago yarn gen-social-imgs-buildings
+
+# Regenerate building social images for a specific list of building IDs
+# (useful after uploading a new photo for a building)
+docker compose run --rm electrify-chicago yarn gen-social-imgs-buildings 256419 256420
 
 # Generate only page social images
 docker compose run --rm electrify-chicago yarn gen-social-imgs-pages

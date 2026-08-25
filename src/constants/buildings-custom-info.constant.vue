@@ -181,7 +181,9 @@ export const BuildingsCustomInfo: {
         url: 'https://www.luc.edu/sustainability/about/ourfacilities/#:~:text=in%20the%20building.-,Geothermal%20System,-%3A%C2%A0A%2091',
         text: 'Loyola University Sustainability - BVM Hall Geothermal System',
         preview:
-          'A 91-well geothermal system heats and cools the SES building by tapping into the earth\'s constant temperature deep underground. The system is highly efficient, cutting the building\'s heating and cooling costs by 30 percent.',
+          'A 91-well geothermal system heats and cools the SES building by tapping into ' +
+          "the earth's constant temperature deep underground. The system is highly " +
+          "efficient, cutting the building's heating and cooling costs by 30 percent.",
       },
     },
   },
@@ -194,7 +196,9 @@ export const BuildingsCustomInfo: {
         url: 'https://theeaglebuilding.com/#:~:text=and%20natural%20beauty!-,GEOTHERMAL%20HEATING,-%26%20COOLING',
         text: 'Eagle Building - Geothermal Heating & Cooling',
         preview:
-          'Geothermal energy offers tenants significant cost savings... by harnessing the earth\'s natural temperature, these systems require less energy compared to traditional HVAC methods, leading to lower monthly expenses.',
+          'Geothermal energy offers tenants significant cost savings... by harnessing ' +
+          "the earth's natural temperature, these systems require less energy compared " +
+          'to traditional HVAC methods, leading to lower monthly expenses.',
       },
     },
   },

@@ -47,6 +47,7 @@ query ($id: ID!, $ID: String) {
     SourceEUIRankByPropertyType
     SiteEUIRankByPropertyType
     DataAnomalies
+    FirstYearReported
     # Grade data
     GHGIntensityPercentileGrade,
     GHGIntensityLetterGrade,
@@ -174,7 +175,11 @@ query ($id: ID!, $ID: String) {
         <div class="details-cont">
           <!-- Show warning container if we have anomalies our out of date data -->
           <div
-            v-if="buildingAnomalies.length > 0 || dataYear < LatestDataYear"
+            v-if="
+              buildingAnomalies.length > 0 ||
+              dataYear < LatestDataYear ||
+              hasNeverSubmitted
+            "
             class="building-banner"
           >
             <div v-for="anomaly in buildingAnomalies" :key="anomaly">
@@ -204,7 +209,7 @@ query ($id: ID!, $ID: String) {
               </div>
             </div>
 
-            <div v-if="dataYear < LatestDataYear">
+            <div v-if="!hasNeverSubmitted && dataYear < LatestDataYear">
               <h2><span class="emoji">🕰️</span> Out Of Date Data</h2>
 
               <p>
@@ -212,6 +217,20 @@ query ($id: ID!, $ID: String) {
                 so
                 <span class="bold">top-level stats are from {{ dataYear }}</span
                 >, the latest full year reported.
+              </p>
+            </div>
+            <div v-if="hasNeverSubmitted">
+              <h2>
+                <span class="emoji">❌</span> Building Never Reported Data
+              </h2>
+
+              <p>
+                This building is in the city's benchmarking data, indicating it
+                should have reported energy use, but it has never submitted any
+                benchmarking data.
+                <g-link to="/never-submitted" class="bold">
+                  View All Buildings That Never Submitted
+                </g-link>
               </p>
             </div>
           </div>
@@ -234,19 +253,19 @@ query ($id: ID!, $ID: String) {
                   </dd>
                 </div>
 
-                <div>
+                <div v-if="!hasNeverSubmitted">
                   <dt>Built</dt>
                   <dd>{{ Math.round($page.building.YearBuilt) }}</dd>
                 </div>
 
-                <div>
+                <div v-if="propertyType">
                   <dt>Primary Property Type</dt>
                   <dd>
                     <g-link
                       class="nav-link"
                       :to="`/property-type/${propertyTypeSlug}`"
                     >
-                      {{ $page.building.PrimaryPropertyType }}
+                      {{ propertyType }}
                     </g-link>
                   </dd>
                 </div>
@@ -263,7 +282,7 @@ query ($id: ID!, $ID: String) {
                   <dd>{{ $page.building.NumberOfBuildings }}</dd>
                 </div>
 
-                <div class="no-print">
+                <div v-if="$page.building.CommunityArea" class="no-print">
                   <dt>Community Area</dt>
                   <dd>{{ $page.building.CommunityArea | titlecase }}</dd>
                 </div>
@@ -285,7 +304,7 @@ query ($id: ID!, $ID: String) {
                 >
                   <dt>
                     <a
-                      href="https://www.chicago.gov/city/en/progs/env/ChicagoEnergyRating.html"
+                      :href="Links.ChicagoEnergyRatingInfo"
                       target="_blank"
                       rel="noopener"
                     >
@@ -341,8 +360,9 @@ query ($id: ID!, $ID: String) {
                           rel="noopener"
                         >
                           <img
-                            src="/icons/link.svg"
-                            alt="Source"
+                            src="/icons/info-white.svg"
+                            class="-large"
+                            alt="More info"
                           />
                         </a>
                       </span>
@@ -369,7 +389,11 @@ query ($id: ID!, $ID: String) {
               </dl>
             </div>
 
-            <ReportCard :building="building" :data-year="dataYear" />
+            <ReportCard
+              v-if="!hasNeverSubmitted"
+              :building="building"
+              :data-year="dataYear"
+            />
           </div>
 
           <details class="hidden">
@@ -534,39 +558,41 @@ query ($id: ID!, $ID: String) {
         </div>
 
         <div class="chart-col">
-          <h3
-            id="energy-mix"
-            class="label-and-grade -energy-mix targetable"
-            tabindex="-1"
-          >
-            Energy Mix
-            <LetterGrade
-              :grade="building.EnergyMixLetterGrade"
-              class="-large -spaced"
-            />
-          </h3>
-          <div class="energy-mix-cont">
-            <p>
-              <strong>Total Energy Use:</strong>
-              {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
-            </p>
+          <template v-if="!hasNeverSubmitted">
+            <h3
+              id="energy-mix"
+              class="label-and-grade -energy-mix targetable"
+              tabindex="-1"
+            >
+              Energy Mix
+              <LetterGrade
+                :grade="building.EnergyMixLetterGrade"
+                class="-large -spaced"
+              />
+            </h3>
+            <div class="energy-mix-cont">
+              <p>
+                <strong>Total Energy Use:</strong>
+                {{ Math.round(totalEnergyUsekBTU).toLocaleString() }} kBTU
+              </p>
 
-            <PieChart
-              :id-prefix="'energy-mix'"
-              :graph-data="energyBreakdownData"
-            />
+              <PieChart
+                :id-prefix="'energy-mix'"
+                :graph-data="energyBreakdownData"
+              />
 
-            <img
-              v-tooltip.bottom="{
-                content: tooltipMessage,
-                trigger: 'click hover',
-              }"
-              class="tooltip"
-              src="/help.svg"
-              alt="Help icon"
-              tabindex="0"
-            />
-          </div>
+              <img
+                v-tooltip.bottom="{
+                  content: tooltipMessage,
+                  trigger: 'click hover',
+                }"
+                class="tooltip"
+                src="/help.svg"
+                alt="Help icon"
+                tabindex="0"
+              />
+            </div>
+          </template>
 
           <!-- QR Code Container, for printing -->
           <div class="qr-cont print-only">
@@ -698,6 +724,7 @@ import { Component, Vue } from 'vue-property-decorator';
 import qrcode from 'qrcode-generator';
 
 import { LatestDataYear } from '../constants/globals.vue';
+import { Links } from '../constants/links.constant.vue';
 import BarGraph from '~/components/graphs/BarGraph.vue';
 import BuildingImage from '~/components/BuildingImage.vue';
 import DataSourceFootnote from '~/components/DataSourceFootnote.vue';
@@ -719,6 +746,7 @@ import {
   calculateEnergyBreakdown,
   DataAnomalies,
   fullyGasFree,
+  hasNeverSubmitted,
   IBuilding,
   IBuildingBenchmarkStats,
   IHistoricData,
@@ -804,6 +832,8 @@ Vue.use(vToolTip);
   },
 })
 export default class BuildingDetails extends Vue {
+  readonly Links: typeof Links = Links;
+
   // TODO: Move to constant
   graphTitles = {
     TotalGHGEmissions: 'Total GHG Emissions (metric tons CO<sub>2</sub>e)',
@@ -871,7 +901,7 @@ export default class BuildingDetails extends Vue {
   }
 
   get isNew(): boolean {
-    return isNewBuilding(this.building, this.historicData);
+    return isNewBuilding(this.historicData);
   }
 
   /** Helper for property name with address fallback */
@@ -886,7 +916,11 @@ export default class BuildingDetails extends Vue {
 
   /** The year of the data for this specific building */
   get dataYear(): number {
-    return this.building.DataYear as number;
+    return this.building.DataYear;
+  }
+
+  get hasNeverSubmitted(): boolean {
+    return hasNeverSubmitted(this.building);
   }
 
   /** The primary property type of the current building, URL encoded for a link */
@@ -1464,13 +1498,6 @@ export default class BuildingDetails extends Vue {
     .stat-tiles > div {
       flex-basis: 100%;
       max-width: none;
-    }
-  }
-
-  @media not print {
-    // Hide print only content, like duplicate title text
-    .print-only {
-      display: none;
     }
   }
 

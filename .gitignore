@@ -41,3 +41,6 @@ settings.json
 /playwright/.cache/
 # Compiled GitHub Action scripts
 .github/scripts/*.js
+
+# Copied into static/ at build time from the pipeline-generated dist file
+static/building-search-index.csv
