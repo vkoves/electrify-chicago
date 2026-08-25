@@ -2,6 +2,7 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { Links } from '../../constants/links.constant.vue';
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -20,8 +21,7 @@ import NewTabIcon from '~/components/NewTabIcon.vue';
   },
 })
 export default class MillionsInMissedFine extends Vue {
-  readonly NotifLetterUrl =
-    'https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/sample_notification_letter.pdf';
+  readonly Links: typeof Links = Links;
 
   /** Buildings from 2018 - 2022 that didn't report */
   readonly NonReportingBuildingsDataUrl =
@@ -53,7 +53,11 @@ export default class MillionsInMissedFine extends Vue {
         Electrify Chicago has analyzed the last five years of city benchmark
         data, and found 3,325 instances of building owners not submitting data.
         Based on the
-        <a :href="NotifLetterUrl" target="_blank" rel="noopener">
+        <a
+          :href="Links.ChicagoSampleNotificationLetter"
+          target="_blank"
+          rel="noopener"
+        >
           latest (2024) official notification letter <NewTabIcon />
         </a>
         fines for non-compliance could total up to $9,200 per year.
@@ -70,7 +74,7 @@ export default class MillionsInMissedFine extends Vue {
       <p class="caption">
         A screenshot of the energy benchmarking notification letter&apos;s
         section on fines, as of Feb. 2024 (<a
-          :href="NotifLetterUrl"
+          :href="Links.ChicagoSampleNotificationLetter"
           target="_blank"
           rel="noopener"
           >source <NewTabIcon /></a
@@ -88,8 +92,7 @@ export default class MillionsInMissedFine extends Vue {
         <strong>$30,590,000 dollars of fines could have been collected</strong>
         by the city&apos;s commissioner of business affairs and consumer
         protection (who is given this responsibility in the
-        <a
-          href="https://www.chicago.gov/content/dam/city/progs/env/EnergyBenchmark/BenchmarkingOrdinance11SEP2013.pdf"
+        <a :href="Links.ChicagoEnergyBenchmarkingOrdinancePdf2013"
           >original ordinance</a
         >).
       </p>
@@ -155,7 +158,7 @@ export default class MillionsInMissedFine extends Vue {
         budget, $25.3 million was suggested to be put towards lead line
         replacement, meaning these potential fines could have fully funded that
         program in 2024 (<a
-          href="https://www.chicago.gov/content/dam/city/sites/committeeonthebudget/2024/FY2024/2024-Budget-Overview.pdf"
+          :href="Links.ChicagoBudgetOverview2024"
           target="_blank"
           rel="noopener"
           >source - City of Chicago 2024 Budget Overview <NewTabIcon /></a

@@ -9,7 +9,7 @@
         <strong>Note:</strong> This data only includes buildings whose emissions
         are reported under the
         <a
-          href="https://www.chicago.gov/city/en/progs/env/building-energy-benchmarking---transparency.html"
+          :href="Links.ChicagoEnergyBenchmarkingOrdinance"
           target="_blank"
           rel="noopener"
         >
@@ -35,6 +35,7 @@
 <script lang="ts">
 import NewTabIcon from './NewTabIcon.vue';
 import { LatestDataYear } from '../constants/globals.vue';
+import { Links } from '../constants/links.constant.vue';
 import { Component, Vue } from 'vue-property-decorator';
 
 /**
@@ -48,6 +49,7 @@ import { Component, Vue } from 'vue-property-decorator';
 })
 export default class DataDisclaimer extends Vue {
   readonly LatestDataYear: number = LatestDataYear;
+  readonly Links: typeof Links = Links;
 }
 </script>
 

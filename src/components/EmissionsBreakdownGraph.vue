@@ -2,13 +2,16 @@
 import { Component, Vue } from 'vue-property-decorator';
 
 import NewTabIcon from '~/components/NewTabIcon.vue';
+import { Links } from '../constants/links.constant.vue';
 
 @Component({
   components: {
     NewTabIcon,
   },
 })
-export default class EmissionsBreakdownGraph extends Vue {}
+export default class EmissionsBreakdownGraph extends Vue {
+  readonly Links: typeof Links = Links;
+}
 </script>
 
 <template>
@@ -26,11 +29,7 @@ export default class EmissionsBreakdownGraph extends Vue {}
     />
 
     <p class="footnote">
-      <a
-        ref="noopener"
-        href="https://www.chicago.gov/city/en/sites/climate-action-plan/home.html"
-        target="_blank"
-      >
+      <a rel="noopener" :href="Links.ChicagoClimateActionPlan" target="_blank">
         Chicago 2022 CAP <NewTabIcon />
       </a>
     </p>
