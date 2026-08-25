@@ -78,8 +78,17 @@ module.exports = function (api) {
       });
     });
 
-    // Create social card routes (only in development)
+    // Create dev-only tooling and social card routes (only in development). These pages live in
+    // src/templates rather than src/pages so they aren't picked up by Gridsome's automatic
+    // filesystem routing, which would build them (and run their queries) on every build
+    // regardless of NODE_ENV.
     if (process.env.NODE_ENV !== 'production') {
+      // Create the building image uploader admin page
+      createPage({
+        path: '/building-image-uploader',
+        component: './src/templates/BuildingImageUploader.vue',
+      });
+
       // Create page social card routes
       const pageIds = Object.keys(pageSocialConfigsData);
 
