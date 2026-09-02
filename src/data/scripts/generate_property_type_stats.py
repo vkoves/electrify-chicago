@@ -196,7 +196,7 @@ def main() -> None:
     )
     outputted_paths += generate_property_types(latest_property_types)
 
-    log_step_completion(3, outputted_paths)
+    log_step_completion(4, outputted_paths)
 
 
 if __name__ == "__main__":
