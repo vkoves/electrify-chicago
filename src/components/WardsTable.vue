@@ -37,6 +37,8 @@ export default class WardsTable extends Vue {
     const header = [
       'Ward',
       'Compliance Rate',
+      'Compliant Buildings',
+      'Total Buildings',
       'Total GHG Emissions (tons CO2 eq.)',
       'Avg GHG Intensity (kg CO2 eq./sqft)',
       'Total Square Footage (sqft)',
@@ -44,6 +46,8 @@ export default class WardsTable extends Vue {
     const rows = this.sortedStats.map((s) => [
       s.Ward,
       this.complianceRate(s),
+      s.CompliantBuildings,
+      s.TotalBuildings,
       s.TotalGHGEmissions,
       s.AvgGHGIntensity,
       s.TotalSquareFootage,
