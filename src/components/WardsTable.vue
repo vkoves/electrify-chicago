@@ -125,13 +125,19 @@ export default class WardsTable extends Vue {
             <td class="ward-col">
               <g-link :to="`/ward/${stats.Ward}`">Ward {{ stats.Ward }}</g-link>
             </td>
-            <td class="numeric">{{ formatNumber(complianceRate(stats), 1) }}%</td>
+            <td class="numeric">
+              {{ formatNumber(complianceRate(stats), 1) }}%
+            </td>
             <td class="numeric">
               {{ stats.CompliantBuildings }}/{{ stats.TotalBuildings }}
             </td>
             <td class="numeric">{{ formatNumber(stats.TotalGHGEmissions) }}</td>
-            <td class="numeric">{{ formatNumber(stats.AvgGHGIntensity, 2) }}</td>
-            <td class="numeric">{{ formatNumber(stats.TotalSquareFootage) }}</td>
+            <td class="numeric">
+              {{ formatNumber(stats.AvgGHGIntensity, 2) }}
+            </td>
+            <td class="numeric">
+              {{ formatNumber(stats.TotalSquareFootage) }}
+            </td>
             <td v-if="showBuildingAge" class="numeric">
               {{ formatNumber(stats.AvgBuildingAge, 1) }}
             </td>
@@ -144,7 +150,9 @@ export default class WardsTable extends Vue {
 
 <style lang="scss">
 .wards-table-cont {
-  .action-btn { margin: 1rem 0; }
+  .action-btn {
+    margin: 1rem 0;
+  }
 }
 
 .wards-table {
