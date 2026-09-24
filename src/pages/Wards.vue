@@ -91,10 +91,13 @@ query {
           ward.
         </p>
         <details class="wards-table">
-          <WardsTable
-            :ward-stats="$page.allWardStats.edges"
-            :show-building-age="false"
-          />
+          <summary>Details</summary>
+          <div class="details-content">
+            <WardsTable
+              :ward-stats="$page.allWardStats.edges"
+              :show-building-age="false"
+            />
+          </div>
         </details>
       </div>
     </div>
@@ -144,6 +147,10 @@ query {
         padding: 0.5rem 1rem;
       }
     }
+  }
+
+  .wards-table {
+    margin-top: 1rem;
   }
 
   @media (max-width: $mobile-max-width) {

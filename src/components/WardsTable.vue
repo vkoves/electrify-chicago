@@ -150,8 +150,13 @@ export default class WardsTable extends Vue {
 
 <style lang="scss">
 .wards-table-cont {
-  .action-btn {
-    margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 37.5rem;
+
+  .export-button-container {
+    align-self: flex-end;
+    margin-bottom: 1rem;
   }
 }
 
