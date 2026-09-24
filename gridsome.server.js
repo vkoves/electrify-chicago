@@ -29,6 +29,7 @@ const SearchIndexFile = 'building-search-index.csv';
 
 const BuildingEmissionsDataFile = 'building-benchmarks.csv';
 const HistoricBenchmarkingDataFile = 'benchmarking-all-years.csv';
+const WardStatsDataFile = 'ward-stats.csv';
 
 // Get building owner IDs from the centralized JSON file
 const BuildingOwnerIds = Object.keys(buildingOwnersData);
@@ -38,6 +39,7 @@ module.exports = function (api) {
   api.loadSource(async (actions) => {
     loadBuildingBenchmarkData(actions);
     loadHistoricBenchmarkDat(actions);
+    loadWardStatsData(actions);
   });
 
   /**
@@ -78,8 +80,17 @@ module.exports = function (api) {
       });
     });
 
-    // Create social card routes (only in development)
+    // Create dev-only tooling and social card routes (only in development). These pages live in
+    // src/templates rather than src/pages so they aren't picked up by Gridsome's automatic
+    // filesystem routing, which would build them (and run their queries) on every build
+    // regardless of NODE_ENV.
     if (process.env.NODE_ENV !== 'production') {
+      // Create the building image uploader admin page
+      createPage({
+        path: '/building-image-uploader',
+        component: './src/templates/BuildingImageUploader.vue',
+      });
+
       // Create page social card routes
       const pageIds = Object.keys(pageSocialConfigsData);
 
@@ -256,6 +267,33 @@ function copyBuildingSearchIndexToStatic() {
     `${DataDirectory}${SearchIndexFile}`,
     `${StaticDirectory}${SearchIndexFile}`,
   );
+}
+
+/**
+ * Load in pre-computed ward-level stats
+ *
+ * @param {unknown} actions The actions class?
+ */
+function loadWardStatsData(actions) {
+  const wardStatsRaw = readFileSync(`${DataDirectory}${WardStatsDataFile}`, 'utf8');
+  const wardStatsData = parse(wardStatsRaw, { columns: true, skip_empty_lines: true });
+
+  const collection = actions.addCollection({ typeName: 'WardStats' });
+
+  for (const row of wardStatsData) {
+    // Shape must match IWardStats in src/components/WardsTable.vue
+    collection.addNode({
+      Ward: parseInt(row['Ward'], 10),
+      CompliantBuildings: parseInt(row['Compliant Buildings'], 10),
+      TotalBuildings: parseInt(row['Total Buildings'], 10),
+      TotalGHGEmissions: parseFloat(row['Total GHG Emissions (tons CO2 eq.)']),
+      AvgGHGIntensity: parseFloat(row['Avg GHG Intensity (kg CO2 eq./sqft)']),
+      TotalSquareFootage: parseFloat(row['Total Square Footage']),
+      AvgBuildingAge: row['Avg Building Age (years)']
+        ? parseFloat(row['Avg Building Age (years)'])
+        : null,
+    });
+  }
 }
 
 /**

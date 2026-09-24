@@ -227,7 +227,7 @@ def main():
     # Calculate statistics by year for all buildings
     stats_files = calculateBuildingStatsByYear(building_data)
 
-    log_step_completion(5, stats_files)
+    log_step_completion(6, stats_files)
 
 
 if __name__ == "__main__":
