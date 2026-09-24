@@ -76,7 +76,7 @@ def main():
     calculate_fines()
 
     # Log completion of this step
-    log_step_completion(6, calculate_fines())
+    log_step_completion(9, calculate_fines())
 
 
 if __name__ == "__main__":
