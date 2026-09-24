@@ -31,10 +31,11 @@ export default class About extends Vue {}
 
         <p>
           We added a new <g-link to="/property-types">Property Types</g-link>
-          page that lets you browse all 47 property types we have data for n one place!
-          Each one has a tile with a sample building photo, the number of buildings in the
-          benchmarking data of that type, their total emissions, share of citywide emissions,
-          and average emissions intensity.
+          page that lets you browse all 47 property types we have data for n one
+          place! Each one has a tile with a sample building photo, the number of
+          buildings in the benchmarking data of that type, their total
+          emissions, share of citywide emissions, and average emissions
+          intensity.
         </p>
 
         <div class="layout-constrained -wide">
