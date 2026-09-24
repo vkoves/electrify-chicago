@@ -249,12 +249,14 @@ export default class PropertyTypes extends Vue {
                 <span v-if="type.totalGHGEmissions" class="type-stat">
                   <span class="type-stat-title">Total Emissions</span>
 
-                  <strong>{{ formatEmissions(type.totalGHGEmissions) }}</strong>
-                  metric tons CO<sub>2</sub>e
+                  <div class="type-total">
+                    <strong>{{ formatEmissions(type.totalGHGEmissions) }}</strong>
+                    metric tons CO<sub>2</sub>e
+                  </div>
 
                   <span class="type-percent">
-                    {{ formatPercent(type.percentOfTotalEmissions) }} of total
-                    benchmarked
+                    <strong>{{ formatPercent(type.percentOfTotalEmissions) }}</strong>
+                    of total benchmarked
                   </span>
                 </span>
 
@@ -306,7 +308,6 @@ export default class PropertyTypes extends Vue {
       border-bottom: solid $border-thick $chicago-blue;
       border-radius: $brd-rad-medium;
       text-decoration: none;
-      color: $text-main;
 
       &:hover,
       &:focus {
@@ -382,7 +383,7 @@ export default class PropertyTypes extends Vue {
         gap: 0.75rem;
         padding: 0.75rem;
         font-size: 0.875rem;
-        color: $text-mid-light;
+        color: $off-black;
 
         .type-stat-title {
           display: block;
@@ -390,13 +391,21 @@ export default class PropertyTypes extends Vue {
           font-weight: 700;
           text-transform: uppercase;
           letter-spacing: 0.03em;
-          color: $off-black;
+        }
+
+        .type-total {
+          font-size: 1rem;
         }
 
         .type-percent {
           display: block;
           font-size: 0.875rem;
-          font-weight: 600;
+          color: $text-mid-light;
+
+          strong {
+            font-size: 1.25em;
+            color: $text-main;
+          }
         }
       }
     }
