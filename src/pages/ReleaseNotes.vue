@@ -27,7 +27,35 @@ export default class About extends Vue {}
       </div>
 
       <div class="layout-constrained">
-        <h2>August, 2026 - Improved Overall Ward Statistics</h2>
+        <h2>Sept 23rd, 2026 - New Property Home Page</h2>
+
+        <p>
+          We added a new <g-link to="/property-types">Property Types</g-link>
+          page that lets you browse all 47 property types we have data for n one place!
+          Each one has a tile with a sample building photo, the number of buildings in the
+          benchmarking data of that type, their total emissions, share of citywide emissions,
+          and average emissions intensity.
+        </p>
+
+        <div class="layout-constrained -wide">
+          <a
+            href="/release-notes/2026/property-types-page.webp"
+            target="_blank"
+          >
+            <img
+              class="-shadowed"
+              src="/release-notes/2026/property-types-page.webp"
+              alt="The new Buildings By Property Type page showing a hero, an intro paragraph
+                noting 47 property types covering 3,432 benchmarked buildings, and cards for
+                Multifamily Housing and K-12 School Buildings with building counts, total
+                emissions, share of citywide emissions, and average emissions intensity"
+            />
+          </a>
+        </div>
+      </div>
+
+      <div class="layout-constrained">
+        <h2>Sept 23rd, 2026 - Improved Overall Ward Statistics</h2>
 
         <p>
           The <g-link to="/wards">Wards Page</g-link> now shows a summary table

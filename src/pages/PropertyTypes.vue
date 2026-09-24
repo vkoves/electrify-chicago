@@ -250,12 +250,16 @@ export default class PropertyTypes extends Vue {
                   <span class="type-stat-title">Total Emissions</span>
 
                   <div class="type-total">
-                    <strong>{{ formatEmissions(type.totalGHGEmissions) }}</strong>
+                    <strong>{{
+                      formatEmissions(type.totalGHGEmissions)
+                    }}</strong>
                     metric tons CO<sub>2</sub>e
                   </div>
 
                   <span class="type-percent">
-                    <strong>{{ formatPercent(type.percentOfTotalEmissions) }}</strong>
+                    <strong>{{
+                      formatPercent(type.percentOfTotalEmissions)
+                    }}</strong>
                     of total benchmarked
                   </span>
                 </span>
