@@ -9,3 +9,9 @@
   NETLIFY_USE_YARN = "true"
   NETLIFY_RESTORE_PYTHON = "false"  # Prevent automatic Python setup
   PIP_DISABLE_PIP_VERSION_CHECK = "1"
+
+  # TODO: Revert once the GitHub attestations API outage is resolved - this
+  # skips mise's supply-chain verification of the Python interpreter binary,
+  # which was failing builds with "No GitHub artifact attestations found"
+  # (GitHub's attestation endpoint was returning 503s)
+  MISE_PYTHON_GITHUB_ATTESTATIONS = "false"
