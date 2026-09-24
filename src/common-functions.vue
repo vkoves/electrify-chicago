@@ -351,6 +351,30 @@ export interface PropertyTypeStats {
   gradeDistribution?: Record<string, number>;
 }
 
+/**
+ * Total emissions across every property type we have stats for, used as the
+ * denominator for a property type's share of citywide emissions. This covers
+ * a few types that don't have their own page, so shares across all types add
+ * up to slightly under 100%.
+ */
+export function getCitywideTotalEmissions(
+  statsByPropertyType: Record<string, PropertyTypeStats>,
+): number {
+  return Object.values(statsByPropertyType).reduce(
+    (sum, stats) => sum + (stats.TotalGHGEmissions?.total ?? 0),
+    0,
+  );
+}
+
+/** Show a floor of "<0.1%" so tiny categories don't all read as 0% */
+export function formatEmissionsPercent(percent: number): string {
+  if (percent > 0 && percent < 0.1) {
+    return '<0.1%';
+  }
+
+  return `${percent.toFixed(1)}%`;
+}
+
 export interface YearData {
   GHGIntensity?: MetricStats;
   TotalGHGEmissions?: MetricStats;
