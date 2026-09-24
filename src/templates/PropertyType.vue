@@ -13,6 +13,8 @@ import {
   PropertyTypeStats,
   YearData,
   buildEnergyPieSlices,
+  formatEmissionsPercent,
+  getCitywideTotalEmissions,
   getMedianMultipleMsg,
   kBtuToKwh,
   kBtuToKwhTooltip,
@@ -28,6 +30,16 @@ import BuildingBenchmarkStats from '../data/dist/building-benchmark-stats.json';
 import HistoricStatsByPropertyType from '../data/dist/historic-stats-by-property-type.json';
 
 Vue.use(vToolTip);
+
+/**
+ * Total emissions across every property type we have stats for, used as the
+ * denominator for this property type's share of citywide emissions. This
+ * covers a few types that don't have their own page, so shares across all
+ * types add up to slightly under 100%.
+ */
+const CitywideTotalEmissions = getCitywideTotalEmissions(
+  BuildingStatsByPropertyType as Record<string, PropertyTypeStats>,
+);
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -206,6 +218,17 @@ export default class PropertyType extends Vue {
     );
   }
 
+  /** This property type's share of all benchmarked emissions citywide, formatted (e.g. "12.4%") */
+  get percentOfTotalEmissions(): string {
+    const totalGHGEmissions = this.propertyTypeStats?.TotalGHGEmissions?.total;
+
+    if (!totalGHGEmissions || !CitywideTotalEmissions) return '0%';
+
+    return formatEmissionsPercent(
+      (totalGHGEmissions / CitywideTotalEmissions) * 100,
+    );
+  }
+
   get historicPropertyTypeStats(): Record<string, YearData> | null {
     return (
       (HistoricStatsByPropertyType as Record<string, Record<string, YearData>>)[
@@ -357,6 +380,10 @@ export default class PropertyType extends Vue {
               <div class="stat-label">
                 <strong>Total Emissions</strong> <br />
                 <span class="unit">metric tons CO<sub>2</sub>e</span>
+              </div>
+              <div class="stat-percent">
+                <strong>{{ percentOfTotalEmissions }}</strong>
+                <span>of total benchmarked</span>
               </div>
             </div>
 
@@ -701,6 +728,22 @@ export default class PropertyType extends Vue {
       font-size: 0.75rem;
       color: $text-mid-light;
       margin-top: 0.25rem;
+    }
+
+    .stat-percent {
+      margin-top: 0.125rem;
+      line-height: 1;
+
+      strong {
+        display: block;
+        font-size: 1rem;
+        color: $off-black;
+      }
+
+      span {
+        font-size: 0.75rem;
+        color: $text-mid-light;
+      }
     }
 
     .stat-median-compare {

@@ -7,6 +7,8 @@ import {
   IBuilding,
   IBuildingNode,
   PropertyTypeStats,
+  formatEmissionsPercent,
+  getCitywideTotalEmissions,
   pluralizePropertyType,
 } from '../common-functions.vue';
 import {
@@ -40,9 +42,9 @@ interface IPropertyTypeSummary {
  * denominator for each type's share. This covers a few types that don't have
  * their own page, so the listed shares add up to slightly under 100%.
  */
-const CitywideTotalEmissions = Object.values(
+const CitywideTotalEmissions = getCitywideTotalEmissions(
   BuildingStatsByPropertyType as Record<string, PropertyTypeStats>,
-).reduce((sum, stats) => sum + (stats.TotalGHGEmissions?.total ?? 0), 0);
+);
 
 /**
  * Note: @Component<any> is required for metaInfo to work with TypeScript
@@ -145,13 +147,8 @@ export default class PropertyTypes extends Vue {
     return Math.round(emissions).toLocaleString();
   }
 
-  /** Show a floor of "<0.1%" so tiny categories don't all read as 0% */
   formatPercent(percent: number): string {
-    if (percent > 0 && percent < 0.1) {
-      return '<0.1%';
-    }
-
-    return `${percent.toFixed(1)}%`;
+    return formatEmissionsPercent(percent);
   }
 
   formatIntensity(intensity: number): string {
