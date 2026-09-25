@@ -37,6 +37,9 @@ interface IPropertyTypeSummary {
   imgUrl: string | null;
 }
 
+/** The fields the property type list can be sorted by */
+type PropertyTypeSortField = 'buildingCount' | 'totalGHGEmissions';
+
 /**
  * Total emissions across every property type we have stats for, used as the
  * denominator for each type's share. This covers a few types that don't have
@@ -66,14 +69,30 @@ const CitywideTotalEmissions = getCitywideTotalEmissions(
   },
 })
 export default class PropertyTypes extends Vue {
-  /** Set by Gridsome to results of the static GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  /** Set by Gridsome to results of the page GraphQL query */
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
+
+  /** The sort options shown in the toggle, in display order */
+  readonly SortOptions: Array<{ field: PropertyTypeSortField; label: string }> =
+    [
+      { field: 'buildingCount', label: 'Most Buildings' },
+      { field: 'totalGHGEmissions', label: 'Highest Emissions' },
+    ];
+
+  /** All property types that have a generated page, unsorted */
+  propertyTypes: Array<IPropertyTypeSummary> = [];
 
   /**
-   * All property types that have a generated page, sorted by building count
-   * descending, since the largest categories are the most useful to browse
+   * The field to sort by, descending. Defaults to building count since the
+   * largest categories are the most useful to browse
    */
-  propertyTypes: Array<IPropertyTypeSummary> = [];
+  sortField: PropertyTypeSortField = 'buildingCount';
+
+  get sortedPropertyTypes(): Array<IPropertyTypeSummary> {
+    return [...this.propertyTypes].sort(
+      (a, b) => b[this.sortField] - a[this.sortField],
+    );
+  }
 
   created(): void {
     const featuredBuildings = this.buildFeaturedBuildingMap();
@@ -104,7 +123,8 @@ export default class PropertyTypes extends Vue {
             : null,
         };
       })
-      .sort((a, b) => b.buildingCount - a.buildingCount);
+      // Ignore types with no buildings
+      .filter((type) => type.buildingCount > 0);
   }
 
   /**
@@ -115,7 +135,7 @@ export default class PropertyTypes extends Vue {
   private buildFeaturedBuildingMap(): Record<string, IBuilding> {
     const featuredBuildings: Record<string, IBuilding> = {};
 
-    this.$static.allBuilding.edges.forEach(({ node }) => {
+    this.$page.allBuilding.edges.forEach(({ node }) => {
       const propertyType = node.PrimaryPropertyType;
 
       if (
@@ -161,7 +181,7 @@ export default class PropertyTypes extends Vue {
   Sorted by GrossFloorArea descending so we can pick the largest building with
   a photo for each property type in a single pass
 -->
-<static-query>
+<page-query>
   query {
     allBuilding(sortBy: "GrossFloorArea") {
       edges {
@@ -175,7 +195,7 @@ export default class PropertyTypes extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">
@@ -201,8 +221,24 @@ export default class PropertyTypes extends Vue {
           city as a whole is trending.
         </p>
 
+        <div
+          class="toggle-buttons sort-toggle"
+          role="group"
+          aria-label="Sort property types"
+        >
+          <button
+            v-for="option in SortOptions"
+            :key="option.field"
+            type="button"
+            :aria-pressed="sortField === option.field ? 'true' : 'false'"
+            @click="sortField = option.field"
+          >
+            {{ option.label }}
+          </button>
+        </div>
+
         <ul class="property-type-list">
-          <li v-for="type in propertyTypes" :key="type.slug">
+          <li v-for="type in sortedPropertyTypes" :key="type.slug">
             <g-link
               class="property-type-tile"
               :to="`/property-type/${type.slug}`"
@@ -288,6 +324,10 @@ export default class PropertyTypes extends Vue {
 
   .subtitle {
     margin-top: 0;
+  }
+
+  .sort-toggle {
+    margin-top: 1rem;
   }
 
   ul.property-type-list {

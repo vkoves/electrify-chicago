@@ -37,16 +37,16 @@ export default class ChicagoRetrofitParticipants extends Vue {
   readonly Links: typeof Links = Links;
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   buildingsFiltered: Array<IBuildingEdge> = [];
 
   created(): void {
     validateTaggedBuildings(
       BuildingTags.hasRetrofitCaseStudy,
-      this.$static.allBuilding.edges.map((e) => e.node.ID.toString()),
+      this.$page.allBuilding.edges.map((e) => e.node.ID.toString()),
     );
-    this.buildingsFiltered = this.$static.allBuilding.edges;
+    this.buildingsFiltered = this.$page.allBuilding.edges;
   }
 }
 </script>
@@ -55,7 +55,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
   This page grabs all buildings and then filters by owner on the client-side, since that data isn't
   baked into the actual building CSV
 -->
-<static-query>
+<page-query>
   query {
     # PERFORMANCE OPTIMIZATION: Hard-coded filter for buildings with hasRetrofitCaseStudy tag
     # These IDs MUST match buildings-custom-info.constant.vue (validated at runtime)
@@ -91,7 +91,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout>

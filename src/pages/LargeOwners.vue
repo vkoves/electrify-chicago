@@ -32,7 +32,7 @@ export default class LargeOwners extends Vue {
 }
 </script>
 
-<static-query>
+<page-query>
   query {
     allBuilding(sortBy: "GHGIntensity", limit: 50) {
       edges {
@@ -64,7 +64,7 @@ export default class LargeOwners extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout>

@@ -35,7 +35,7 @@ export default class TopElectricityUsers extends Vue {}
 </script>
 
 <!-- If this query is updated, make sure to update PageSocialCard as well -->
-<static-query>
+<page-query>
   query {
     allBuilding(sortBy: "ElectricityUse", limit: 50) {
       edges {
@@ -68,15 +68,15 @@ export default class TopElectricityUsers extends Vue {}
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">
     <BuildingsHero
-      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+      :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
     >
       <h1 id="main-content" tabindex="-1">
-        Top {{ $static.allBuilding.edges.length }} Electricity Users
+        Top {{ $page.allBuilding.edges.length }} Electricity Users
       </h1>
     </BuildingsHero>
 
@@ -84,7 +84,7 @@ export default class TopElectricityUsers extends Vue {}
       <DataDisclaimer />
 
       <BuildingsTable
-        :buildings="$static.allBuilding.edges"
+        :buildings="$page.allBuilding.edges"
         :show-electricity-use="true"
       />
 
