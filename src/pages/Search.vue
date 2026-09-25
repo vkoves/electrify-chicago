@@ -72,12 +72,10 @@ export default class Search extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: {
+  readonly $page!: {
     allBuilding: { edges: Array<IBuildingNode> };
     allBenchmark: { edges: Array<{ node: IHistoricData }> };
   };
-
-  // readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** The search query */
   searchFilter = '';
@@ -143,11 +141,11 @@ export default class Search extends Vue {
     this.buildNormalizedCache();
 
     // Make sure on load we have some data
-    this.setSearchResults(this.$static.allBuilding.edges);
+    this.setSearchResults(this.$page.allBuilding.edges);
   }
 
   buildNormalizedCache(): void {
-    for (const edge of this.$static.allBuilding.edges) {
+    for (const edge of this.$page.allBuilding.edges) {
       this.normalizedCache.set(edge, {
         name: normalizeForSearch(edge.node.PropertyName ?? ''),
         address: normalizeForSearch(edge.node.Address ?? ''),
@@ -284,12 +282,12 @@ export default class Search extends Vue {
     // If no filters are active, return all results
     if (activeFilters.length === 0) {
       this.hasFilteredResults = false;
-      this.setSearchResults(this.$static.allBuilding.edges);
+      this.setSearchResults(this.$page.allBuilding.edges);
       return;
     }
 
     // Apply all active filters in sequence
-    let buildingsResults: Array<IBuildingEdge> = this.$static.allBuilding.edges;
+    let buildingsResults: Array<IBuildingEdge> = this.$page.allBuilding.edges;
     for (const filter of activeFilters) {
       buildingsResults = filter.apply(buildingsResults);
     }
@@ -318,7 +316,7 @@ export default class Search extends Vue {
     if (this.hasFilteredResults) {
       buildingsToSort = [...this.searchResults];
     } else {
-      buildingsToSort = [...this.$static.allBuilding.edges];
+      buildingsToSort = [...this.$page.allBuilding.edges];
     }
 
     this.runSort(buildingsToSort);
@@ -370,7 +368,7 @@ export default class Search extends Vue {
   private initializeHistoricalDataIndex(): void {
     this.historicalDataIndex.clear();
 
-    for (const edge of this.$static.allBenchmark.edges) {
+    for (const edge of this.$page.allBenchmark.edges) {
       const buildingId = edge.node.ID;
       if (!this.historicalDataIndex.has(buildingId)) {
         this.historicalDataIndex.set(buildingId, []);
@@ -419,11 +417,11 @@ export default class Search extends Vue {
 }
 </script>
 
-<static-query>
+<page-query>
   query {
-    # TODO: Unbounded static-query (all buildings + all historic benchmarks) gets
-    # inlined into the JS bundle and bloats build memory. Precompute the "new
-    # building" flag instead of querying allBenchmark, and switch to page-query.
+    # TODO: Querying all historic benchmarks ships 10k+ records to the client just
+    # to detect new buildings. Precompute an "is new building" flag on Building
+    # instead of querying allBenchmark.
     # Search page only needs core BuildingsTable fields (no conditional fields)
     allBuilding(sortBy: "GHGIntensity") {
       edges {
@@ -460,7 +458,7 @@ export default class Search extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout>
