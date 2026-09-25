@@ -41,7 +41,6 @@ interface IPropertyTypeSummary {
 
 /** Only show a property type's emissions rank if it's at least this high */
 const MaxEmissionsRankShown = 10;
-
 /** The fields the property type list can be sorted by */
 type PropertyTypeSortField = 'buildingCount' | 'totalGHGEmissions';
 
@@ -74,8 +73,8 @@ const CitywideTotalEmissions = getCitywideTotalEmissions(
   },
 })
 export default class PropertyTypes extends Vue {
-  /** Set by Gridsome to results of the static GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  /** Set by Gridsome to results of the page GraphQL query */
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /** The sort options shown in the toggle, in display order */
   readonly SortOptions: Array<{ field: PropertyTypeSortField; label: string }> =
@@ -104,8 +103,8 @@ export default class PropertyTypes extends Vue {
   created(): void {
     const featuredBuildings = this.buildFeaturedBuildingMap();
 
-    this.propertyTypes = PropertyTypesConstant.propertyTypes.map(
-      (propertyType: string) => {
+    this.propertyTypes = PropertyTypesConstant.propertyTypes
+      .map((propertyType: string) => {
         const stats = (
           BuildingStatsByPropertyType as Record<string, PropertyTypeStats>
         )[propertyType] as PropertyTypeStats | undefined;
@@ -131,8 +130,9 @@ export default class PropertyTypes extends Vue {
             ? (getBuildingImage(featuredBuilding)?.imgUrl ?? null)
             : null,
         };
-      },
-    );
+      })
+      // Ignore types with no buildings
+      .filter((type) => type.buildingCount > 0);
 
     [...this.propertyTypes]
       .sort((a, b) => b.totalGHGEmissions - a.totalGHGEmissions)
@@ -149,7 +149,7 @@ export default class PropertyTypes extends Vue {
   private buildFeaturedBuildingMap(): Record<string, IBuilding> {
     const featuredBuildings: Record<string, IBuilding> = {};
 
-    this.$static.allBuilding.edges.forEach(({ node }) => {
+    this.$page.allBuilding.edges.forEach(({ node }) => {
       const propertyType = node.PrimaryPropertyType;
 
       if (
@@ -195,7 +195,7 @@ export default class PropertyTypes extends Vue {
   Sorted by GrossFloorArea descending so we can pick the largest building with
   a photo for each property type in a single pass
 -->
-<static-query>
+<page-query>
   query {
     allBuilding(sortBy: "GrossFloorArea") {
       edges {
@@ -209,7 +209,7 @@ export default class PropertyTypes extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">
