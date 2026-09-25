@@ -104,6 +104,8 @@ export default class PropertyTypes extends Vue {
             : null,
         };
       })
+      // Ignore types with no buildings
+      .filter((type) => type.buildingCount > 0)
       .sort((a, b) => b.buildingCount - a.buildingCount);
   }
 
