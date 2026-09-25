@@ -217,6 +217,8 @@
 
 <static-query>
   query {
+    # TODO: Unbounded static-query (all buildings) gets inlined into the JS bundle
+    # and bloats build memory. Switch to page-query.
     allBuilding {
       edges {
         node {

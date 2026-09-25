@@ -421,6 +421,9 @@ export default class Search extends Vue {
 
 <static-query>
   query {
+    # TODO: Unbounded static-query (all buildings + all historic benchmarks) gets
+    # inlined into the JS bundle and bloats build memory. Precompute the "new
+    # building" flag instead of querying allBenchmark, and switch to page-query.
     # Search page only needs core BuildingsTable fields (no conditional fields)
     allBuilding(sortBy: "GHGIntensity") {
       edges {

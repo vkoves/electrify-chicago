@@ -66,8 +66,8 @@ const CitywideTotalEmissions = getCitywideTotalEmissions(
   },
 })
 export default class PropertyTypes extends Vue {
-  /** Set by Gridsome to results of the static GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  /** Set by Gridsome to results of the page GraphQL query */
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   /**
    * All property types that have a generated page, sorted by building count
@@ -115,7 +115,7 @@ export default class PropertyTypes extends Vue {
   private buildFeaturedBuildingMap(): Record<string, IBuilding> {
     const featuredBuildings: Record<string, IBuilding> = {};
 
-    this.$static.allBuilding.edges.forEach(({ node }) => {
+    this.$page.allBuilding.edges.forEach(({ node }) => {
       const propertyType = node.PrimaryPropertyType;
 
       if (
@@ -161,7 +161,7 @@ export default class PropertyTypes extends Vue {
   Sorted by GrossFloorArea descending so we can pick the largest building with
   a photo for each property type in a single pass
 -->
-<static-query>
+<page-query>
   query {
     allBuilding(sortBy: "GrossFloorArea") {
       edges {
@@ -175,7 +175,7 @@ export default class PropertyTypes extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">
