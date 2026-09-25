@@ -215,10 +215,8 @@
   </DefaultLayout>
 </template>
 
-<static-query>
+<page-query>
   query {
-    # TODO: Unbounded static-query (all buildings) gets inlined into the JS bundle
-    # and bloats build memory. Switch to page-query.
     allBuilding {
       edges {
         node {
@@ -231,7 +229,7 @@
       }
     }
   }
-</static-query>
+</page-query>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
@@ -279,7 +277,7 @@ export default class BuildingImageUploader extends Vue {
   };
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: {
+  readonly $page!: {
     allBuilding: { edges: Array<{ node: IBuilding }> };
   };
 
@@ -304,9 +302,9 @@ export default class BuildingImageUploader extends Vue {
   }
 
   get selectedBuilding(): IBuilding | null {
-    if (!this.form.buildingId.trim() || !this.$static?.allBuilding) return null;
+    if (!this.form.buildingId.trim() || !this.$page?.allBuilding) return null;
 
-    const building = this.$static.allBuilding.edges.find(
+    const building = this.$page.allBuilding.edges.find(
       (edge) => edge.node.ID.toString() === this.form.buildingId.trim(),
     );
 
