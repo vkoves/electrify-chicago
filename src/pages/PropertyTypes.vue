@@ -30,6 +30,8 @@ interface IPropertyTypeSummary {
   totalGHGEmissions: number;
   /** Share of all benchmarked emissions, as a percent (e.g. 12.4) */
   percentOfTotalEmissions: number;
+  /** Rank by total emissions among all property types, 1 being the highest */
+  emissionsRank: number;
   avgGHGIntensity: number;
   /** The largest building of this type that has a photo, if any */
   featuredBuilding: IBuilding | null;
@@ -37,6 +39,8 @@ interface IPropertyTypeSummary {
   imgUrl: string | null;
 }
 
+/** Only show a property type's emissions rank if it's at least this high */
+const MaxEmissionsRankShown = 10;
 /** The fields the property type list can be sorted by */
 type PropertyTypeSortField = 'buildingCount' | 'totalGHGEmissions';
 
@@ -88,6 +92,8 @@ export default class PropertyTypes extends Vue {
    */
   sortField: PropertyTypeSortField = 'buildingCount';
 
+  readonly MaxEmissionsRankShown = MaxEmissionsRankShown;
+
   get sortedPropertyTypes(): Array<IPropertyTypeSummary> {
     return [...this.propertyTypes].sort(
       (a, b) => b[this.sortField] - a[this.sortField],
@@ -116,6 +122,8 @@ export default class PropertyTypes extends Vue {
           percentOfTotalEmissions: CitywideTotalEmissions
             ? (totalGHGEmissions / CitywideTotalEmissions) * 100
             : 0,
+          // Set below, once we have every type's emissions to compare
+          emissionsRank: 0,
           avgGHGIntensity: stats?.GHGIntensity?.mean ?? 0,
           featuredBuilding,
           imgUrl: featuredBuilding
@@ -125,6 +133,12 @@ export default class PropertyTypes extends Vue {
       })
       // Ignore types with no buildings
       .filter((type) => type.buildingCount > 0);
+
+    [...this.propertyTypes]
+      .sort((a, b) => b.totalGHGEmissions - a.totalGHGEmissions)
+      .forEach((type, index) => {
+        type.emissionsRank = index + 1;
+      });
   }
 
   /**
@@ -295,6 +309,14 @@ export default class PropertyTypes extends Vue {
                     }}</strong>
                     of total benchmarked
                   </span>
+
+                  <span
+                    v-if="type.emissionsRank <= MaxEmissionsRankShown"
+                    class="type-rank"
+                  >
+                    <strong>#{{ type.emissionsRank }}</strong>
+                    highest
+                  </span>
                 </span>
 
                 <span v-if="type.avgGHGIntensity" class="type-stat">
@@ -438,7 +460,8 @@ export default class PropertyTypes extends Vue {
           font-size: 1rem;
         }
 
-        .type-percent {
+        .type-percent,
+        .type-rank {
           display: block;
           font-size: 0.875rem;
           color: $text-mid-light;
