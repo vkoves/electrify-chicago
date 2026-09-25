@@ -30,7 +30,8 @@ module.exports = {
     {
       use: '@gridsome/plugin-sitemap',
       options: {
-        exclude: ['/social-card*', '/social-card/*'],
+        // /building-id/* pages just redirect to the canonical /building/* URL
+        exclude: ['/social-card*', '/social-card/*', '/building-id/*'],
       },
     },
   ],
