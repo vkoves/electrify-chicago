@@ -1,10 +1,10 @@
-<page-query>
+<static-query>
   query {
     metadata {
       siteName
     }
   }
-</page-query>
+</static-query>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';

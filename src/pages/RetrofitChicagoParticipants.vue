@@ -37,16 +37,16 @@ export default class ChicagoRetrofitParticipants extends Vue {
   readonly Links: typeof Links = Links;
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingNode> } };
+  readonly $page!: { allBuilding: { edges: Array<IBuildingNode> } };
 
   buildingsFiltered: Array<IBuildingEdge> = [];
 
   created(): void {
     validateTaggedBuildings(
       BuildingTags.hasRetrofitCaseStudy,
-      this.$static.allBuilding.edges.map((e) => e.node.ID.toString()),
+      this.$page.allBuilding.edges.map((e) => e.node.ID.toString()),
     );
-    this.buildingsFiltered = this.$static.allBuilding.edges;
+    this.buildingsFiltered = this.$page.allBuilding.edges;
   }
 }
 </script>

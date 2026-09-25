@@ -111,10 +111,10 @@ export default class AllElectric extends Vue {}
 <template>
   <DefaultLayout main-class="layout -full-width">
     <BuildingsHero
-      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+      :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
     >
       <h1 id="main-content" tabindex="-1">
-        Chicago's {{ $static.allBuilding.edges.length }} All Electric Buildings
+        Chicago's {{ $page.allBuilding.edges.length }} All Electric Buildings
       </h1>
     </BuildingsHero>
 
@@ -135,12 +135,12 @@ export default class AllElectric extends Vue {}
       <DataDisclaimer />
 
       <BuildingsMap
-        :buildings="$static.allBuilding.edges"
+        :buildings="$page.allBuilding.edges"
         filter-label="all electric"
       />
 
       <BuildingsTable
-        :buildings="$static.allBuilding.edges"
+        :buildings="$page.allBuilding.edges"
         :show-square-footage="true"
       />
 

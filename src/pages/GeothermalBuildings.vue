@@ -32,16 +32,16 @@ interface IBuildingEdge {
 })
 export default class GeothermalBuildings extends Vue {
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: { allBuilding: { edges: Array<IBuildingEdge> } };
+  readonly $page!: { allBuilding: { edges: Array<IBuildingEdge> } };
 
   buildingsFiltered: Array<IBuildingEdge> = [];
 
   created(): void {
     validateTaggedBuildings(
       BuildingTags.hasGeothermalHeatPump,
-      this.$static.allBuilding.edges.map((e) => e.node.ID.toString()),
+      this.$page.allBuilding.edges.map((e) => e.node.ID.toString()),
     );
-    this.buildingsFiltered = this.$static.allBuilding.edges;
+    this.buildingsFiltered = this.$page.allBuilding.edges;
   }
 }
 </script>

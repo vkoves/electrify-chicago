@@ -73,10 +73,10 @@ export default class TopGasUsers extends Vue {}
 <template>
   <DefaultLayout main-class="layout -full-width">
     <BuildingsHero
-      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+      :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
     >
       <h1 id="main-content" tabindex="-1">
-        Top {{ $static.allBuilding.edges.length }} Buildings by Fossil Gas Use
+        Top {{ $page.allBuilding.edges.length }} Buildings by Fossil Gas Use
       </h1>
     </BuildingsHero>
 
@@ -91,7 +91,7 @@ export default class TopGasUsers extends Vue {}
       <DataDisclaimer />
 
       <BuildingsTable
-        :buildings="$static.allBuilding.edges"
+        :buildings="$page.allBuilding.edges"
         :show-gas-use="true"
       />
 

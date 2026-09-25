@@ -72,10 +72,10 @@ export default class TopEmitters extends Vue {}
 <template>
   <DefaultLayout main-class="layout -full-width">
     <BuildingsHero
-      :buildings="$static.allBuilding.edges.map((edge) => edge.node)"
+      :buildings="$page.allBuilding.edges.map((edge) => edge.node)"
     >
       <h1 id="main-content" tabindex="-1">
-        Top {{ $static.allBuilding.edges.length }} Buildings by Greenhouse Gas
+        Top {{ $page.allBuilding.edges.length }} Buildings by Greenhouse Gas
         Emissions
       </h1>
     </BuildingsHero>
@@ -104,7 +104,7 @@ export default class TopEmitters extends Vue {}
 
       <DataDisclaimer />
 
-      <BuildingsTable :buildings="$static.allBuilding.edges" />
+      <BuildingsTable :buildings="$page.allBuilding.edges" />
 
       <DataSourceFootnote />
     </div>

@@ -34,7 +34,7 @@ export default class LatestUpdates extends Vue {
   readonly Links: typeof Links = Links;
 
   /** Set by Gridsome to results of GraphQL query */
-  readonly $static!: {
+  readonly $page!: {
     newBuildings: { edges: Array<IBuildingNode> };
     stoppedReporting: { edges: Array<IBuildingNode> };
     consistentReporters: { totalCount: number };
@@ -47,14 +47,14 @@ export default class LatestUpdates extends Vue {
 
   get newBuildings(): Array<{ node: IBuilding }> {
     // Already filtered by GraphQL, just sort by square footage
-    return this.$static.newBuildings.edges
+    return this.$page.newBuildings.edges
       .slice()
       .sort((a, b) => b.node.GrossFloorArea - a.node.GrossFloorArea);
   }
 
   get consistentReportersCount(): number {
     // Already calculated by GraphQL totalCount
-    return this.$static.consistentReporters.totalCount;
+    return this.$page.consistentReporters.totalCount;
   }
 
   get netChangeInReporting(): number {
@@ -63,7 +63,7 @@ export default class LatestUpdates extends Vue {
 
   get stoppedReportingBuildings(): Array<{ node: IBuilding }> {
     // Already filtered by GraphQL, just sort by square footage
-    return this.$static.stoppedReporting.edges
+    return this.$page.stoppedReporting.edges
       .slice()
       .sort((a, b) => b.node.GrossFloorArea - a.node.GrossFloorArea);
   }
