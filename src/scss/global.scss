@@ -955,6 +955,44 @@ img.tooltip {
 }
 
 /**
+ * Toggle Buttons - a joined, pill-shaped group of buttons where one option is
+ * selected at a time. Mark the selected button with aria-pressed="true", and
+ * give the container role="group" and an aria-label.
+ */
+.toggle-buttons {
+  display: inline-flex;
+
+  // Disabled: form.search-form button (above) targets a separate DOM tree from
+  // .toggle-buttons, so they never style the same element.
+  /* stylelint-disable no-descending-specificity */
+  button {
+    padding: 0.5rem 1rem;
+    background-color: $grey;
+    border-bottom: none;
+    border-radius: 0;
+
+    &:first-child {
+      border-radius: $brd-rad-full 0 0 $brd-rad-full;
+    }
+
+    &:last-child {
+      border-radius: 0 $brd-rad-full $brd-rad-full 0;
+    }
+
+    &:hover,
+    &:focus {
+      background-color: $grey-dark;
+    }
+
+    &[aria-pressed='true'] {
+      background-color: $blue-dark;
+      color: $white;
+    }
+  }
+  /* stylelint-enable no-descending-specificity */
+}
+
+/**
  * Blue Action Button Styling - shared styles for large call-to-action buttons
  */
 button.action-btn {
