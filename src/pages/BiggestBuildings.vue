@@ -38,7 +38,7 @@ export default class BiggestBuildings extends Vue {
 </script>
 
 <!-- If this query is updated, make sure to update PageSocialCard as well -->
-<static-query>
+<page-query>
   query {
     allBuilding(sortBy: "GrossFloorArea", limit: 50) {
       edges {
@@ -74,7 +74,7 @@ export default class BiggestBuildings extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">

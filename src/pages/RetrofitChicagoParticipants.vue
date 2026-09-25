@@ -55,7 +55,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
   This page grabs all buildings and then filters by owner on the client-side, since that data isn't
   baked into the actual building CSV
 -->
-<static-query>
+<page-query>
   query {
     # PERFORMANCE OPTIMIZATION: Hard-coded filter for buildings with hasRetrofitCaseStudy tag
     # These IDs MUST match buildings-custom-info.constant.vue (validated at runtime)
@@ -91,7 +91,7 @@ export default class ChicagoRetrofitParticipants extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout>

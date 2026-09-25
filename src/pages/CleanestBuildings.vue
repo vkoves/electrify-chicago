@@ -39,7 +39,7 @@ export default class CleanestBuildings extends Vue {
 </script>
 
 <!-- If this query is updated, make sure to update PageSocialCard as well -->
-<static-query>
+<page-query>
   query {
     allBuilding(
       filter: {
@@ -86,7 +86,7 @@ export default class CleanestBuildings extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">

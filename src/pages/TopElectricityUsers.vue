@@ -35,7 +35,7 @@ export default class TopElectricityUsers extends Vue {}
 </script>
 
 <!-- If this query is updated, make sure to update PageSocialCard as well -->
-<static-query>
+<page-query>
   query {
     allBuilding(sortBy: "ElectricityUse", limit: 50) {
       edges {
@@ -68,7 +68,7 @@ export default class TopElectricityUsers extends Vue {}
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">

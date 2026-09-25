@@ -51,7 +51,7 @@ export default class GeothermalBuildings extends Vue {
   performance optimization. The IDs MUST match buildings tagged with hasGeothermalHeatPump in
   buildings-custom-info.constant.vue (validated at runtime via validateTaggedBuildings).
 -->
-<static-query>
+<page-query>
   query {
     # PERFORMANCE OPTIMIZATION: Hard-coded filter for buildings with hasGeothermalHeatPump tag
     # These IDs MUST match buildings-custom-info.constant.vue (validated at runtime)
@@ -87,7 +87,7 @@ export default class GeothermalBuildings extends Vue {
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout>

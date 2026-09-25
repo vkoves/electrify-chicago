@@ -37,7 +37,7 @@ import { generatePageMeta } from '../constants/meta-helpers.vue';
 export default class NeverSubmitted extends Vue {}
 </script>
 
-<static-query>
+<page-query>
   query {
     allBuilding(
       filter: { FirstYearReported: { eq: null } },
@@ -73,7 +73,7 @@ export default class NeverSubmitted extends Vue {}
       }
     }
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout main-class="layout -full-width">

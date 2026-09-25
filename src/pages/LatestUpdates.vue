@@ -70,7 +70,7 @@ export default class LatestUpdates extends Vue {
 }
 </script>
 
-<static-query>
+<page-query>
   query {
     # New buildings: FirstYearReported equals latest year (2023)
     newBuildings: allBuilding(filter: { FirstYearReported: { eq: 2023 } }) {
@@ -126,7 +126,7 @@ export default class LatestUpdates extends Vue {
     FirstYearReported
     LastYearReported
   }
-</static-query>
+</page-query>
 
 <template>
   <DefaultLayout>
